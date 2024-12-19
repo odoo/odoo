@@ -5,17 +5,17 @@ from datetime import timedelta
 
 from odoo import fields
 from odoo.addons.mrp.tests.common import TestMrpCommon
-from odoo.addons.sale.tests.common import TestSaleCommonBase
+from odoo.addons.sale.tests.common import TestSaleCommon
 
 from odoo.tests import Form
 
 
-class TestSaleMrpLeadTime(TestMrpCommon, TestSaleCommonBase):
+class TestSaleMrpLeadTime(TestMrpCommon, TestSaleCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._enable_sale_salesman()
+        cls._enable_sale_salesman(cls.user_stock_user)
 
         cls.env.ref('stock.route_warehouse0_mto').active = True
         # Update the product_1 with type, route, Manufacturing Lead Time and Customer Lead Time

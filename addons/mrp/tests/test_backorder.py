@@ -76,10 +76,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         should be MO/001-02.
         Check that all MO are reachable through the procurement group.
         """
-        # Required for `manufacture_steps` to be visible in the view
-        self.env.user.groups_id += self.env.ref("stock.group_adv_location")
-        with Form(self.warehouse_1) as warehouse:
-            warehouse.manufacture_steps = 'pbm'
+        self.warehouse_1.manufacture_steps = 'pbm'
 
         production, _, _, product_to_use_1, product_to_use_2 = self.generate_mo(
             qty_base_1=4, qty_final=4, picking_type_id=self.warehouse_1.manu_type_id

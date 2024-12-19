@@ -31,7 +31,7 @@ class TestStockLot(TestStockCommon):
         """ Test Scheduled Task on lot with an alert_date in the past creates an activity """
 
         # create product
-        self.productAAA = self.ProductObj.create({
+        self.productAAA = self.ProductObj.with_user(self.user_stock_manager).create({
             'name': 'Product AAA',
             'is_storable': True,
             'tracking':'lot',
@@ -129,7 +129,7 @@ class TestStockLot(TestStockCommon):
         """ Test Scheduled Task on lot with an alert_date in future does not create an activity """
 
         # create product
-        self.productBBB = self.ProductObj.create({
+        self.productBBB = self.ProductObj.with_user(self.user_stock_manager).create({
             'name': 'Product BBB',
             'is_storable': True,
             'tracking':'lot'
@@ -187,7 +187,11 @@ class TestStockLot(TestStockCommon):
         """ Test Scheduled Task on lot without an alert_date does not create an activity """
 
         # create product
-        self.productCCC = self.ProductObj.create({'name': 'Product CCC', 'is_storable': True, 'tracking': 'lot'})
+        self.productCCC = self.ProductObj.with_user(self.user_stock_manager).create({
+            'name': 'Product CCC',
+            'is_storable': True,
+            'tracking': 'lot'
+        })
 
         # create a new lot with with alert date in the past
         self.lot1_productCCC = self.LotObj.create({'name': 'Lot 1 ProductCCC', 'product_id': self.productCCC.id})
@@ -293,16 +297,12 @@ class TestStockLot(TestStockCommon):
     def test_04_expiration_date_on_receipt(self):
         """ Test we can set an expiration date on receipt and all expiration
         date will be correctly set. """
-        partner = self.env['res.partner'].create({
-            'name': 'Apple\'s Joe',
-            'company_id': self.company.id,
-        })
         expiration_date = datetime.today() + timedelta(days=30)
         time_gap = timedelta(seconds=10)
 
         # Receives a tracked production using expiration date.
         picking_form = Form(self.env['stock.picking'])
-        picking_form.partner_id = partner
+        picking_form.partner_id = self.partner
         picking_form.picking_type_id = self.picking_type_in
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.apple_product
@@ -337,10 +337,6 @@ class TestStockLot(TestStockCommon):
     def test_04_2_expiration_date_on_receipt(self):
         """ Test we can set an expiration date on receipt even if all expiration
         date related fields aren't set on product. """
-        partner = self.env['res.partner'].create({
-            'name': 'Apple\'s Joe',
-            'company_id': self.company.id,
-        })
         # Unset some fields.
         self.apple_product.expiration_time = False
         self.apple_product.removal_time = False
@@ -350,7 +346,7 @@ class TestStockLot(TestStockCommon):
 
         # Receives a tracked production using expiration date.
         picking_form = Form(self.env['stock.picking'])
-        picking_form.partner_id = partner
+        picking_form.partner_id = self.partner
         picking_form.picking_type_id = self.picking_type_in
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.apple_product
@@ -386,10 +382,6 @@ class TestStockLot(TestStockCommon):
     def test_05_confirmation_on_delivery(self):
         """ Test when user tries to delivery expired lot, he/she gets a
         confirmation wizard. """
-        partner = self.env['res.partner'].create({
-            'name': 'Cider & Son',
-            'company_id': self.company.id,
-        })
         # Creates 3 lots (1 non-expired lot, 2 expired lots)
         lot_form = Form(self.LotObj)  # Creates the lot.
         lot_form.name = 'good-apple-lot'
@@ -406,7 +398,7 @@ class TestStockLot(TestStockCommon):
 
         # Case #1: make a delivery with no expired lot.
         picking_form = Form(self.env['stock.picking'])
-        picking_form.partner_id = partner
+        picking_form.partner_id = self.partner
         picking_form.picking_type_id = self.picking_type_out
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.apple_product
@@ -431,7 +423,7 @@ class TestStockLot(TestStockCommon):
 
         # Case #2: make a delivery with one non-expired lot and one expired lot.
         picking_form = Form(self.env['stock.picking'])
-        picking_form.partner_id = partner
+        picking_form.partner_id = self.partner
         picking_form.picking_type_id = self.picking_type_out
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.apple_product
@@ -466,7 +458,7 @@ class TestStockLot(TestStockCommon):
 
         # Case #3: make a delivery with only on expired lot.
         picking_form = Form(self.env['stock.picking'])
-        picking_form.partner_id = partner
+        picking_form.partner_id = self.partner
         picking_form.picking_type_id = self.picking_type_out
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.apple_product
@@ -650,17 +642,12 @@ class TestStockLot(TestStockCommon):
         self.assertEqual(picking_out.move_line_ids.lot_id, apple_lot)
 
     def test_compute_expiration_date_from_scheduled_date(self):
-        partner = self.env['res.partner'].create({
-            'name': 'Apple\'s Joe',
-            'company_id': self.company.id,
-        })
-
         delta = timedelta(seconds=10)
         new_date = datetime.today() + timedelta(days=42)
         expiration_date = new_date + timedelta(days=self.apple_product.expiration_time)
 
         picking_form = Form(self.env['stock.picking'])
-        picking_form.partner_id = partner
+        picking_form.partner_id = self.partner
         picking_form.scheduled_date = new_date
         picking_form.picking_type_id = self.picking_type_in
 

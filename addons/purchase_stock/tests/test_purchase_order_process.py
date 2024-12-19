@@ -12,10 +12,10 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
 
         # In order to test the cancel flow,start it from canceling confirmed purchase order.
         purchase_order = self.env['purchase.order'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'My Partner'}).id,
+            'partner_id': self.partner.id,
             'state': 'draft',
         })
-        po_edit_with_user = purchase_order.with_user(self.res_users_purchase_user)
+        po_edit_with_user = purchase_order.with_user(self.user_stock_manager)
 
         # Confirm the purchase order.
         po_edit_with_user.button_confirm()
@@ -36,18 +36,18 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
         """Create a PO with lines using packaging, check the packaging propagate
         to its move.
         """
-        product = self.env['product.product'].create({
+        product = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Product with packaging',
             'is_storable': True,
         })
 
-        packaging = self.env['product.packaging'].create({
+        packaging = self.env['product.packaging'].with_user(self.user_stock_manager).create({
             'name': 'box',
             'product_id': product.id,
         })
 
         po = self.env['purchase.order'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'My Partner'}).id,
+            'partner_id': self.partner.id,
             'order_line': [
                 (0, 0, {
                     'product_id': product.id,
@@ -61,7 +61,7 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
 
     def test_02_vendor_delay_report_partially_cancelled_purchase_order(self):
         """ Test vendor delay reports for partially cancelled purchase order"""
-        partner = self.partner_1
+        partner = self.partner
         purchase_order = self.env['purchase.order'].create({
             'partner_id': partner.id,
             'order_line': [

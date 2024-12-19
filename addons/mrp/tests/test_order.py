@@ -4303,7 +4303,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(wos[0].date_finished, dt + timedelta(hours=1, minutes=1))
         self.assertEqual(wos[1].date_finished, dt + timedelta(hours=1, minutes=2))
 
-    @users('hilda')
+    @users('stock')
     def test_update_mo_with_mrp_user(self):
         """
         Create an MO with an MRP user, in Draft status, try to update its quantity.

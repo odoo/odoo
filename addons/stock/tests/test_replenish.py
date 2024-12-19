@@ -10,6 +10,8 @@ from odoo import fields
 
 
 class TestStockReplenish(TestStockCommon):
+    def setUp(self):
+        self.uid = self.user_stock_manager
 
     def test_base_delay(self):
         """Open the replenish view and check if delay is taken into account

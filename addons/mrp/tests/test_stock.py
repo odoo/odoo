@@ -17,14 +17,17 @@ class TestWarehouseMrp(common.TestMrpCommon):
             'name': 'Depot',
             'usage': 'internal',
             'location_id': cls.stock_location.id,
+            'company_id': cls.stock_company.id,
         })
-        cls.env["stock.putaway.rule"].create({
-            "location_in_id": cls.stock_location.id,
-            "location_out_id": cls.depot_location.id,
+        cls.env['stock.putaway.rule'].create({
+            'location_in_id': cls.stock_location.id,
+            'location_out_id': cls.depot_location.id,
+            'company_id': cls.stock_company.id,
         })
         cls.env['mrp.workcenter'].create({
             'name': 'Assembly Line 1',
             'resource_calendar_id': cls.env.ref('resource.resource_calendar_std').id,
+            'company_id': cls.stock_company.id,
         })
         cls.env['stock.quant'].create({
             'location_id': cls.stock_location_14.id,
@@ -45,6 +48,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
             'operation_ids': [
                 (0, 0, {'name': 'Cutting Machine', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
             ],
+            'company_id': cls.stock_company.id,
         })
 
     def new_mo_laptop(self):
@@ -85,9 +89,12 @@ class TestWarehouseMrp(common.TestMrpCommon):
         """ Ensures that a manufacturing rule can define a destination the rule itself and have it
             applied instead of the one from the operation type if location_dest_from_rule is set.
         """
+        self.uid = self.user_stock_manager
+
         freezer_loc = self.env['stock.location'].create({
             'name': 'Freezer',
             'location_id': self.warehouse_1.view_location_id.id,
+            'company_id': self.stock_company.id,
         })
         route = self.env['stock.route'].create({
             'name': 'Manufacture then freeze',
@@ -146,12 +153,14 @@ class TestWarehouseMrp(common.TestMrpCommon):
             product_6 is sold from warehouse_1, its component (product_4) is
             resupplied from warehouse_2 and manufactured in warehouse_2.
             Everything in mto """
+        self.uid = self.user_stock_manager
 
         mto = self.env.ref('stock.route_warehouse0_mto')
         mto.active = True
         warehouse_2 = self.env['stock.warehouse'].create({
             'name': 'Warehouse 2',
             'code': 'WH2',
+            'company_id': self.stock_company.id,
         })
         # product 4 can only be manufacture in WH2
         self.bom_1.picking_type_id = warehouse_2.manu_type_id
@@ -286,7 +295,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
     def test_backorder_unpacking(self):
         """ Test that movement of pack in backorder is correctly handled. """
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        warehouse.write({'manufacture_steps': 'pbm'})
+        warehouse.with_user(self.user_stock_manager).write({'manufacture_steps': 'pbm'})
 
         self.product_1.is_storable = True
         self.env['stock.quant']._update_available_quantity(self.product_1, self.stock_location, 100)

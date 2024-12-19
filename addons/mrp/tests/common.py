@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.tests import Form
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.stock.tests.common import TestStockCommon
 
 
@@ -13,19 +14,19 @@ class TestMrpCommon(TestStockCommon):
         the tracking/qty for each different products. It returns the
         MO, used bom and the tree products.
         """
-        product_to_build = cls.env['product.product'].create({
+        product_to_build = cls.ProductObj.create({
             'name': 'Young Tom',
             'type': 'consu',
             'is_storable': True,
             'tracking': tracking_final,
         })
-        product_to_use_1 = cls.env['product.product'].create({
+        product_to_use_1 = cls.ProductObj.create({
             'name': 'Botox',
             'type': 'consu',
             'is_storable': True,
             'tracking': tracking_base_1,
         })
-        product_to_use_2 = cls.env['product.product'].create({
+        product_to_use_2 = cls.ProductObj.create({
             'name': 'Old Tom',
             'type': 'consu',
             'is_storable': True,
@@ -41,9 +42,12 @@ class TestMrpCommon(TestStockCommon):
             'bom_line_ids': [
                 (0, 0, {'product_id': product_to_use_2.id, 'product_qty': qty_base_2, 'manual_consumption': tracking_base_2 != 'none'}),
                 (0, 0, {'product_id': product_to_use_1.id, 'product_qty': qty_base_1, 'manual_consumption': tracking_base_1 != 'none'})
-            ]})
+            ],
+            'company_id': cls.stock_company.id,
+        })
         mo_form = Form(cls.env['mrp.production'])
         mo_form.product_id = product_to_build
+        mo_form.company_id = cls.stock_company
         if picking_type_id:
             mo_form.picking_type_id = picking_type_id
         mo_form.bom_id = bom_1
@@ -52,47 +56,39 @@ class TestMrpCommon(TestStockCommon):
         mo.action_confirm()
         return mo, bom_1, product_to_build, product_to_use_1, product_to_use_2
 
-    @classmethod
-    def setup_by_admin(cls):
-        super().setup_by_admin()
-        # User Data: mrp user and mrp manager
-        cls.user_mrp_user = cls.env['res.users'].sudo().create({
-            'name': 'Hilda Ferachwal',
-            'login': 'hilda',
-            'email': 'h.h@example.com',
-            'notification_type': 'inbox',
-            'groups_id': [
-                cls.env.ref('mrp.group_mrp_user').id,
-                # cls.env.ref('mrp.group_stock_user').id,
-                cls.env.ref('mrp.group_mrp_byproducts').id,
-                cls.env.ref('uom.group_uom').id,
-            ],
-            'company_id': cls.env.company.id,
-        })
-        cls.user_mrp_manager = cls.env['res.users'].sudo().create({
-            'name': 'Gary Youngwomen',
-            'login': 'gary',
-            'email': 'g.g@example.com',
-            'notification_type': 'inbox',
-            'groups_id': [
-                cls.env.ref('mrp.group_mrp_manager').id,
-                # cls.env.ref('mrp.group_stock_user').id,
-                cls.env.ref('mrp.group_mrp_byproducts').id,
-                cls.env.ref('uom.group_uom').id,
-            ],
-            'company_id': cls.env.company.id,
-        })
+    def setUp(self):
+        super().setUp()
+        self.uid = self.user_stock_manager
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        # User Data: mrp user and mrp manager
+        cls.user_mrp_user = mail_new_test_user(
+            cls.env,
+            name='Hilda Ferachwal',
+            login='hilda',
+            email='h.h@example.com',
+            notification_type='inbox',
+            groups='mrp.group_mrp_user, mrp.group_mrp_byproducts, uom.group_uom',
+            company_id=cls.env.company.id,
+        )
+        cls.user_mrp_manager = mail_new_test_user(
+            cls.env,
+            name='Gary Youngwomen',
+            login='gary',
+            email='g.g@example.com',
+            notification_type='inbox',
+            groups='mrp.group_mrp_manager, mrp.group_mrp_byproducts, uom.group_uom',
+            company_id=cls.env.company.id,
+        )
 
         (
             cls.product_4,
             cls.product_5,
             cls.product_6,
             cls.product_8,
-        ) = cls.env['product.product'].create([{
+        ) = cls.ProductObj.create([{
             'name': 'Stick',  # product_4
             'uom_id': cls.uom_dozen.id,
             'uom_po_id': cls.uom_dozen.id,
@@ -114,7 +110,12 @@ class TestMrpCommon(TestStockCommon):
         # `workorder_ids` to be visible in the view of `mrp.production`. The
         # field `product_uom_id` must be set by many tests, and subviews of
         # `workorder_ids` must be present in many tests to create records.
-        cls.user.groups_id += \
+        cls.user_stock_user.groups_id += \
+            cls.env.ref('uom.group_uom') + \
+            cls.env.ref('mrp.group_mrp_user') + \
+            cls.env.ref('mrp.group_mrp_routings')
+
+        cls.user_stock_manager.groups_id += \
             cls.env.ref('uom.group_uom') + \
             cls.env.ref('mrp.group_mrp_manager') + \
             cls.env.ref('mrp.group_mrp_routings')
@@ -125,6 +126,8 @@ class TestMrpCommon(TestStockCommon):
             'time_start': 10,
             'time_stop': 5,
             'time_efficiency': 80,
+            'company_id': cls.stock_company.id,
+            'resource_calendar_id': cls.stock_company.resource_calendar_id.id,
         })
         cls.workcenter_2 = cls.env['mrp.workcenter'].create({
             'name': 'Simple Workcenter',
@@ -132,6 +135,8 @@ class TestMrpCommon(TestStockCommon):
             'time_start': 0,
             'time_stop': 0,
             'time_efficiency': 100,
+            'company_id': cls.stock_company.id,
+            'resource_calendar_id': cls.stock_company.resource_calendar_id.id,
         })
         cls.workcenter_3 = cls.env['mrp.workcenter'].create({
             'name': 'Double Workcenter',
@@ -139,8 +144,10 @@ class TestMrpCommon(TestStockCommon):
             'time_start': 0,
             'time_stop': 0,
             'time_efficiency': 100,
+            'company_id': cls.stock_company.id,
+            'resource_calendar_id': cls.stock_company.resource_calendar_id.id,
         })
-        cls.calendar = cls.company.resource_calendar_id
+        cls.calendar = cls.stock_company.resource_calendar_id
 
         cls.bom_1 = cls.env['mrp.bom'].create({
             'product_id': cls.product_4.id,
@@ -154,7 +161,9 @@ class TestMrpCommon(TestStockCommon):
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.product_2.id, 'product_qty': 2}),
                 (0, 0, {'product_id': cls.product_1.id, 'product_qty': 4})
-            ]})
+            ],
+            'company_id': cls.stock_company.id,
+        })
         cls.bom_2 = cls.env['mrp.bom'].create({
             'product_id': cls.product_5.id,
             'product_tmpl_id': cls.product_5.product_tmpl_id.id,
@@ -169,7 +178,9 @@ class TestMrpCommon(TestStockCommon):
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.product_4.id, 'product_qty': 2}),
                 (0, 0, {'product_id': cls.product_3.id, 'product_qty': 3})
-            ]})
+            ],
+            'company_id': cls.stock_company.id,
+        })
         cls.bom_3 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
@@ -186,7 +197,9 @@ class TestMrpCommon(TestStockCommon):
                 (0, 0, {'product_id': cls.product_5.id, 'product_qty': 2}),
                 (0, 0, {'product_id': cls.product_4.id, 'product_qty': 8}),
                 (0, 0, {'product_id': cls.product_2.id, 'product_qty': 12})
-            ]})
+            ],
+            'company_id': cls.stock_company.id,
+        })
         cls.bom_4 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
@@ -199,7 +212,9 @@ class TestMrpCommon(TestStockCommon):
             'type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.product_1.id, 'product_qty': 1}),
-            ]})
+            ],
+            'company_id': cls.stock_company.id,
+        })
         cls.bom_5 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
@@ -212,7 +227,9 @@ class TestMrpCommon(TestStockCommon):
             'type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.product_1.id, 'product_qty': 1}),
-            ]})
+            ],
+            'company_id': cls.stock_company.id,
+        })
         cls.bom_6 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
@@ -225,18 +242,22 @@ class TestMrpCommon(TestStockCommon):
             'type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.product_1.id, 'product_qty': 1}),
-            ]})
+            ],
+            'company_id': cls.stock_company.id,
+        })
 
         cls.pbm_location = cls.warehouse_1.pbm_loc_id
-        cls.stock_location_14 = cls.env['stock.location'].create({
+        cls.stock_location_14 = cls.StockLocationObj.create({
             'name': 'Shelf 2',
             'location_id': cls.stock_location.id,
+            'company_id': cls.stock_company.id,
         })
-        cls.stock_location_components = cls.env['stock.location'].create({
+        cls.stock_location_components = cls.StockLocationObj.create({
             'name': 'Shelf 1',
             'location_id': cls.stock_location.id,
+            'company_id': cls.stock_company.id,
         })
-        cls.laptop = cls.env['product.product'].create({
+        cls.laptop = cls.ProductObj.create({
             'name': 'Acoustic Bloc Screens',
             'uom_id': cls.uom_unit.id,
             'uom_po_id': cls.uom_unit.id,
@@ -244,7 +265,7 @@ class TestMrpCommon(TestStockCommon):
             'is_storable': True,
             'tracking': 'none',
         })
-        cls.graphics_card = cls.env['product.product'].create({
+        cls.graphics_card = cls.ProductObj.create({
             'name': 'Individual Workplace',
             'uom_id': cls.uom_unit.id,
             'uom_po_id': cls.uom_unit.id,
@@ -256,7 +277,7 @@ class TestMrpCommon(TestStockCommon):
     @classmethod
     def make_prods(cls, n):
         return [
-            cls.env["product.product"].create(
+            cls.ProductObj.create(
                 {"name": f"p{k + 1}", 'is_storable': True}
             )
             for k in range(n)
@@ -283,5 +304,6 @@ class TestMrpCommon(TestStockCommon):
         )
 
     @classmethod
-    def _enable_mrp_byproducts(cls):
-        cls.user.groups_id += cls.env.ref('mrp.group_mrp_byproducts')
+    def _enable_mrp_byproducts(cls, user=None):
+        user = user or cls.user
+        user.groups_id += cls.env.ref('mrp.group_mrp_byproducts')

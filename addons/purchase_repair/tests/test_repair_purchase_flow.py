@@ -20,24 +20,21 @@ class TestRepairPurchaseFlow(TestStockCommon):
         Validates that a repair order triggers a purchase order with correct product
         and quantity, and ensures proper linking via the procurement group.
         """
-        self.env.ref('stock.route_warehouse0_mto').active = True
+        self.env.ref('stock.route_warehouse0_mto').with_user(self.user_stock_manager).active = True
         mto_route = self.env['stock.route'].search([('name', '=', 'Replenish on Order (MTO)')])
         buy_route = self.env['stock.route'].search([('name', '=', 'Buy')])
         rule = mto_route.rule_ids.filtered(lambda r: r.picking_type_id.code == 'repair_operation')
-        rule.update({'procure_method': 'make_to_order'})
-
-        seller = self.env['res.partner'].create({
-            'name': 'Vendor',
-        })
+        rule.with_user(self.user_stock_manager).update({'procure_method': 'make_to_order'})
 
         product = self.productA
         product.write({
             'route_ids': [(4, mto_route.id), (4, buy_route.id)],
             'seller_ids': [
                 Command.create({
-                    'partner_id': seller.id,
+                    'partner_id': self.partner.id,
                     'min_qty': 1,
                     'price': 150,
+                    'company_id': self.stock_company.id,
                 }),
             ],
         })

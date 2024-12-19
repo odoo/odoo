@@ -54,17 +54,6 @@ class TestSaleCommon(AccountTestInvoicingCommon):
     def collect_company_accounting_data(cls, company):
         company_data = super().collect_company_accounting_data(company)
 
-    @classmethod
-    def setup_sale_configuration_for_company(cls, company):
-        Users = cls.env['res.users'].with_context(no_reset_password=True).sudo()
-
-        company_data = {
-            # Sales Team
-            'default_sale_team': cls.env['crm.team'].with_context(tracking_disable=True).sudo().create({
-                'name': 'Test Channel',
-                'company_id': company.id,
-            }),
-
         company_data.update({
             # Users
             'default_user_salesman': cls.env['res.users'].create({
@@ -209,28 +198,12 @@ class TestSaleCommon(AccountTestInvoicingCommon):
         return company_data
 
     @classmethod
-    def _enable_sale_salesman(cls):
+    def _enable_sale_salesman(cls, user=None):
         """ Required to confirm a sale order """
-        cls.user.groups_id += cls.env.ref('sales_team.group_sale_salesman')
+        user = user or cls.user
+        user.groups_id += cls.env.ref('sales_team.group_sale_salesman')
 
     @classmethod
-    def _enable_sale_manager(cls):
-        cls.user.groups_id += cls.env.ref('sales_team.group_sale_manager')
-
-
-class TestSaleCommon(AccountTestInvoicingCommon, TestSaleCommonBase):
-    ''' Setup to be used post-install with sale and accounting test configuration.'''
-
-    @classmethod
-    def collect_company_accounting_data(cls, company):
-        company_data = super().collect_company_accounting_data(company)
-
-        company_data.update(cls.setup_sale_configuration_for_company(company_data['company']))
-
-        company_data['product_category'].write({
-            'property_account_income_categ_id': company_data['default_account_revenue'].id,
-            'property_account_expense_categ_id': company_data['default_account_expense'].id,
-        })
-
-        return company_data
->>>>>>> 46ba20461bb9 ([REF] test: address code review comments)
+    def _enable_sale_manager(cls, user=None):
+        user = user or cls.user
+        user.groups_id += cls.env.ref('sales_team.group_sale_manager')

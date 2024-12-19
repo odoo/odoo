@@ -24,6 +24,7 @@ class StockQuant(TransactionCase):
             notification_type='inbox',
             groups='base.group_user',
         )
+        # TODO: remove?
         cls.stock_user = mail_new_test_user(
             cls.env,
             name='Pauline Poivraisselle',

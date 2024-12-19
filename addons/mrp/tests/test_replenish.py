@@ -27,17 +27,17 @@ class TestMrpReplenish(TestMrpCommon):
         product = self.product_4
         product.route_ids = route
         wh = self.warehouse_1
-        self.env.company.sudo().manufacturing_lead = 0
+        self.stock_company.manufacturing_lead = 0
         self.env['ir.config_parameter'].sudo().set_param('mrp.use_manufacturing_lead', True)
 
         with freeze_time("2023-01-01"):
             wizard = self._create_wizard(product, wh)
             self.assertEqual(fields.Datetime.from_string('2023-01-01 00:00:00'), wizard.date_planned)
-            self.env.company.sudo().manufacturing_lead = 3
+            self.stock_company.manufacturing_lead = 3
 
             wizard2 = self._create_wizard(product, wh)
             self.assertEqual(fields.Datetime.from_string('2023-01-04 00:00:00'), wizard2.date_planned)
-            route.rule_ids[0].delay = 2
+            route.with_user(self.user_stock_manager).rule_ids[0].delay = 2
             wizard3 = self._create_wizard(product, wh)
             self.assertEqual(fields.Datetime.from_string('2023-01-06 00:00:00'), wizard3.date_planned)
 
@@ -60,7 +60,7 @@ class TestMrpReplenish(TestMrpCommon):
         })
 
         # setup orderpoint (reordering rule)
-        rr = self.env['stock.warehouse.orderpoint'].create({
+        rr = self.env['stock.warehouse.orderpoint'].with_user(self.user_stock_manager).create({
             'name': 'Cake RR',
             'location_id': self.warehouse.lot_stock_id.id,
             'product_id': product_1.id,
@@ -68,7 +68,9 @@ class TestMrpReplenish(TestMrpCommon):
             'product_max_qty': 5,
         })
 
-        info = self.env['stock.replenishment.info'].create({'orderpoint_id': rr.id})
+        info = self.env['stock.replenishment.info'].with_user(self.user_stock_manager).create({
+            'orderpoint_id': rr.id,
+        })
 
         # for manufacturing delay should be taken from the bom
         self.assertEqual("4.0 days", info.wh_replenishment_option_ids.lead_time)
@@ -80,7 +82,7 @@ class TestMrpReplenish(TestMrpCommon):
         self.product_4.route_ids = self.env.ref('mrp.route_warehouse0_manufacture')
         picking_type_2 = self.warehouse_1.manu_type_id.copy({'sequence': 100})
         self.product_4.bom_ids.picking_type_id = picking_type_2
-        rr = self.env['stock.warehouse.orderpoint'].create({
+        rr = self.env['stock.warehouse.orderpoint'].with_user(self.user_stock_manager).create({
             'name': 'Cake RR',
             'location_id': self.warehouse_1.lot_stock_id.id,
             'product_id': self.product_4.id,
@@ -101,8 +103,7 @@ class TestMrpReplenish(TestMrpCommon):
         bom = product.bom_ids
         product.route_ids = route
         wh = self.warehouse_1
-        with self.with_user('admin'):
-            self.env.company.manufacturing_lead = 0
+        self.stock_company.manufacturing_lead = 0
         with freeze_time("2023-01-01"):
             wizard = self._create_wizard(product, wh)
             self.assertEqual(fields.Datetime.from_string('2023-01-01 00:00:00'), wizard.date_planned)

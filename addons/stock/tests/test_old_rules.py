@@ -10,8 +10,6 @@ class TestOldRules(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.partner = cls.env['res.partner'].create({'name': 'Partner'})
-
         # Since the old rules are still a valid setup for multi-step routes, we need to make sure they still work.
         # Create a warehouse with 3 steps using old rules setup so we need to restore it only once.
         cls.warehouse_3_steps = cls.env['stock.warehouse'].create({
@@ -19,6 +17,7 @@ class TestOldRules(TestStockCommon):
             'code': '3S',
             'reception_steps': 'three_steps',
             'delivery_steps': 'pick_pack_ship',
+            'company_id': cls.stock_company.id,
         })
         delivery_route_3 = cls.warehouse_3_steps.delivery_route_id
         delivery_route_3.rule_ids[0].write({
@@ -40,6 +39,7 @@ class TestOldRules(TestStockCommon):
             'code': '2S',
             'reception_steps': 'two_steps',
             'delivery_steps': 'pick_ship',
+            'company_id': cls.stock_company.id,
         })
         delivery_route_2 = cls.warehouse_2_steps.delivery_route_id
         delivery_route_2.rule_ids[0].write({
@@ -183,7 +183,7 @@ class TestOldRules(TestStockCommon):
         warehouse = self.warehouse_3_steps
         partner_demo_customer = self.partner
         final_location = partner_demo_customer.property_stock_customer
-        product_a = self.env['product.product'].create({
+        product_a = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'ProductA',
             'is_storable': True,
         })
@@ -328,7 +328,10 @@ class TestOldRules(TestStockCommon):
           * Put products in a package then validate the receipt.
           * The automatically generated internal transfer should have package set by default.
         """
-        prod = self.env['product.product'].create({'name': 'bad dragon', 'type': 'consu'})
+        prod = self.env['product.product'].with_user(self.user_stock_manager).create({
+            'name': 'bad dragon',
+            'type': 'consu'
+        })
         ship_move = self.env['stock.move'].create({
             'name': 'The ship move',
             'product_id': prod.id,
@@ -362,7 +365,7 @@ class TestOldRules(TestStockCommon):
         """
         # create a procurement group and set in on the pick stock rule
         procurement_group0 = self.env['procurement.group'].create({})
-        product1 = self.env['product.product'].create({
+        product1 = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'test_procurement_group_merge',
             'is_storable': True,
         })
@@ -423,11 +426,10 @@ class TestOldRules(TestStockCommon):
         """ Run a procurement for 5 products when there are only 4 in stock then
         check that MTO is applied on the moves when the rule is set to 'mts_else_mto'
         """
-        self.partner = self.env['res.partner'].create({'name': 'Partner'})
         final_location = self.partner.property_stock_customer
 
         # Create a product and add 10 units in stock
-        product_a = self.env['product.product'].create({
+        product_a = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'ProductA',
             'is_storable': True,
         })
@@ -435,7 +437,7 @@ class TestOldRules(TestStockCommon):
         warehouse = self.warehouse_2_steps
         # Create a route which will allows 'wave picking'
         wave_pg = self.env['procurement.group'].create({'name': 'Wave PG'})
-        wave_route = self.env['stock.route'].create({
+        wave_route = self.env['stock.route'].with_user(self.user_stock_manager).create({
             'name': 'Wave for ProductA',
             'product_selectable': True,
             'sequence': 1,
@@ -507,7 +509,7 @@ class TestOldRules(TestStockCommon):
         """
 
         warehouse = self.warehouse_3_steps
-        self.product = self.env['product.product'].create({
+        self.product = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Test product',
             'is_storable': True,
         })

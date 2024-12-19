@@ -3,66 +3,46 @@
 import re
 
 from odoo import Command
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.product.tests.common import TestProductCommon
-from odoo.tests import new_test_user
 
 
 class TestStockCommon(TestProductCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.setup_by_admin()
-        cls.setup_by_user()
-
-    def _create_move(self, product, src_location, dst_location, **values):
-        # TDE FIXME: user as parameter
-        Move = self.env['stock.move']
-        # simulate create + onchange
-        move = Move.new({'product_id': product.id, 'location_id': src_location.id, 'location_dest_id': dst_location.id})
-        move._onchange_product_id()
-        move_values = move._convert_to_write(move._cache)
-        move_values.update(**values)
-        return Move.create(move_values)
-
-    @classmethod
-    def _enable_adv_location(cls):
-        """ Required for `manufacture_steps` to be visible in the view """
-        cls.user.groups_id += cls.env.ref('stock.group_adv_location')
-
-    @classmethod
-    def setup_by_admin(cls):
         # Partner
         cls.partner_1 = cls.env['res.partner'].create({
             'name': 'Julia Agrolait',
             'email': 'julia@agrolait.example.com',
         })
+        cls.stock_company = cls.env['res.company'].create({
+            'name': 'Test Logistics Company A',
+        })
 
-        cls.user.groups_id += \
-            cls.env.ref('base.group_multi_company') + \
-            cls.env.ref('stock.group_production_lot')
         #######################################################################
         # TODO: refactor these changes from common2.py
         #######################################################################
-        # User Data: stock user and stock manager
-        cls.user_stock_user = cls.env['res.users'].sudo().create({
-            'name': 'Pauline Poivraisselle',
-            'login': 'pauline',
-            'email': 'p.p@example.com',
-            'notification_type': 'inbox',
-            'groups_id': [cls.env.ref('stock.group_stock_user').id],
-            'company_id': cls.env.company.id,
-        })
-        cls.user_stock_manager = cls.env['res.users'].sudo().create({
-            'name': 'Julie Tablier',
-            'login': 'julie',
-            'email': 'j.j@example.com',
-            'notification_type': 'inbox',
-            'groups_id': [cls.env.ref('stock.group_stock_manager').id],
-            'company_id': cls.env.company.id,
-        })
 
-    @classmethod
-    def setup_by_user(cls):
+        # User Data: stock user and stock manager
+        cls.user_stock_user = mail_new_test_user(
+            cls.env,
+            name='Test Stock User',
+            login='stock',
+            email='stock@test.com',
+            notification_type='inbox',
+            groups='stock.group_stock_user,base.group_multi_company,stock.group_production_lot',
+            company_id=cls.stock_company.id,
+        )
+        cls.user_stock_manager = mail_new_test_user(
+            cls.env,
+            name='Julie Tablier',
+            login='julie',
+            email='j.j@example.com',
+            notification_type='inbox',
+            groups='stock.group_stock_manager,base.group_multi_company,stock.group_production_lot',
+            company_id=cls.stock_company.id,
+        )
         cls.ProductObj = cls.env['product.product']
         cls.UomObj = cls.env['uom.uom']
         cls.PartnerObj = cls.env['res.partner']
@@ -74,6 +54,20 @@ class TestStockCommon(TestProductCommon):
         cls.MoveObj = cls.env['stock.move']
         cls.LotObj = cls.env['stock.lot']
         cls.StockLocationObj = cls.env['stock.location']
+
+        # cls.ProductObj = cls.env['product.product'].with_context({'allowed_company_ids': cls.stock_company.ids})
+        # cls.UomObj = cls.env['uom.uom'].with_context({'allowed_company_ids': cls.stock_company.ids})
+        # cls.PartnerObj = cls.env['res.partner'].with_context({'allowed_company_ids': cls.stock_company.ids})
+        # cls.ModelDataObj = cls.env['ir.model.data'].with_context({'allowed_company_ids': cls.stock_company.ids})
+        # cls.StockPackObj = cls.env['stock.move.line'].with_context({'allowed_company_ids': cls.stock_company.ids})
+        # cls.StockQuantObj = cls.env['stock.quant'].with_context({'allowed_company_ids': cls.stock_company.ids})
+        # cls.PickingObj = cls.env['stock.picking'].with_context({'allowed_company_ids': cls.stock_company.ids})
+        # cls.PickingTypeObj = cls.env['stock.picking.type'].with_context({'allowed_company_ids': cls.stock_company.ids})
+        # cls.MoveObj = cls.env['stock.move'].with_context({'allowed_company_ids': cls.stock_company.ids})
+        # cls.LotObj = cls.env['stock.lot'].with_context({'allowed_company_ids': cls.stock_company.ids})
+        # cls.StockLocationObj = cls.env['stock.location'].with_context({'allowed_company_ids': cls.stock_company.ids})
+        # cls.WarehouseObj = cls.env['stock.warehouse'].with_context({'allowed_company_ids': cls.stock_company.ids})
+        # cls.ReturnPickingObj = cls.env['stock.return.picking'].with_context({'allowed_company_ids': cls.stock_company.ids})
 
         cls.categ_unit = cls.ModelDataObj._xmlid_to_res_id('uom.product_uom_categ_unit')
         cls.categ_kgm = cls.ModelDataObj._xmlid_to_res_id('uom.product_uom_categ_kgm')
@@ -140,7 +134,7 @@ class TestStockCommon(TestProductCommon):
         cls.productE = cls.ProductObj.create({'name': 'Product E', 'is_storable': True})
         cls.setup_product_common()
         # Product
-        cls.product_3 = cls.env['product.product'].create({
+        cls.product_3 = cls.ProductObj.create({
             'name': 'Stone',  # product_3
             'uom_id': cls.uom_dozen.id,
             'uom_po_id': cls.uom_dozen.id,
@@ -154,21 +148,21 @@ class TestStockCommon(TestProductCommon):
         cls.gB = cls.ProductObj.create({'name': 'g-B', 'is_storable': True, 'uom_id': cls.uom_gm.id, 'uom_po_id': cls.uom_gm.id})
 
         # Warehouses
-        cls.warehouse_1 = cls.env['stock.warehouse'].search([('company_id', '=', cls.company.id)])
-        # created with sudo to avoid problems with unauthorized access of access groups and config settings
-        cls.warehouse_2 = cls.env['stock.warehouse'].sudo().create({
+        cls.warehouse_1 = cls.env['stock.warehouse'].search([('company_id', '=', cls.stock_company.id)])
+        cls.warehouse_2 = cls.env['stock.warehouse'].create({
             'name': 'Base Warehouse',
             'reception_steps': 'one_step',
             'delivery_steps': 'ship_only',
             'code': 'BWH',
-            'company_id': cls.company.id,
+            'company_id': cls.stock_company.id,
         })
 
         # Locations
-        cls.location_1 = cls.env['stock.location'].create({
+        cls.location_1 = cls.StockLocationObj.create({
             'name': 'TestLocation1',
             'posx': 3,
             'location_id': cls.warehouse_1.lot_stock_id.id,
+            'company_id': cls.stock_company.id,
         })
 
         cls.picking_type_in = cls.warehouse_1.in_type_id
@@ -176,7 +170,7 @@ class TestStockCommon(TestProductCommon):
         cls.picking_type_out = cls.warehouse_1.out_type_id
         cls.warehouse_1.out_type_id.reservation_method = 'manual'
 
-        cls.supplier_location = cls.env['stock.location'].browse(
+        cls.supplier_location = cls.StockLocationObj.browse(
             [cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_suppliers')]
         )[0]
         cls.stock_location = cls.warehouse_1.lot_stock_id
@@ -197,18 +191,50 @@ class TestStockCommon(TestProductCommon):
         output_location = cls.warehouse_1.wh_output_stock_loc_id
         output_location.active = True
         cls.output_location = output_location
-        cls.customer_location = cls.env['stock.location'].browse(
+        cls.customer_location = cls.StockLocationObj.browse(
             [cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_customers')]
         )[0]
-        cls.production_location = cls.env['stock.location'].search(
-            [('usage', '=', 'production'), ('company_id', '=', cls.company.id)]
+        cls.production_location = cls.StockLocationObj.search(
+            [('usage', '=', 'production'), ('company_id', '=', cls.stock_company.id)]
         )
         cls.production_location_id = cls.production_location.id
 
         # Existing data
-        cls.existing_inventories = cls.env['stock.quant'].search([('inventory_quantity', '!=', 0.0)])
-        cls.existing_quants = cls.env['stock.quant'].search([])
+        cls.existing_inventories = cls.StockQuantObj.search([('inventory_quantity', '!=', 0.0)])
+        cls.existing_quants = cls.StockQuantObj.search([])
         cls.env.ref('stock.route_warehouse0_mto').rule_ids.procure_method = "make_to_order"
+
+    def setUp(self):
+        super().setUp()
+        self.env = self.env(context={'allowed_company_ids': self.stock_company.ids})
+        self.uid = self.user_stock_user
+        self.ProductObj = self.env['product.product']
+        self.UomObj = self.env['uom.uom']
+        self.PartnerObj = self.env['res.partner']
+        self.ModelDataObj = self.env['ir.model.data']
+        self.StockPackObj = self.env['stock.move.line']
+        self.StockQuantObj = self.env['stock.quant']
+        self.PickingObj = self.env['stock.picking']
+        self.PickingTypeObj = self.env['stock.picking.type']
+        self.MoveObj = self.env['stock.move']
+        self.LotObj = self.env['stock.lot']
+        self.StockLocationObj = self.env['stock.location']
+
+    def _create_move(self, product, src_location, dst_location, **values):
+        # TDE FIXME: user as parameter
+        Move = self.MoveObj
+        # simulate create + onchange
+        move = Move.new({'product_id': product.id, 'location_id': src_location.id, 'location_dest_id': dst_location.id})
+        move._onchange_product_id()
+        move_values = move._convert_to_write(move._cache)
+        move_values.update(**values)
+        return Move.create(move_values)
+
+    @classmethod
+    def _enable_adv_location(cls, user=None):
+        """ Required for `manufacture_steps` to be visible in the view """
+        user = user or cls.user
+        user.groups_id += cls.env.ref('stock.group_adv_location')
 
     def url_extract_rec_id_and_model(self, url):
         # Extract model and record ID
@@ -216,39 +242,6 @@ class TestStockCommon(TestProductCommon):
         model_name = self.env.ref(action_match[0]).sudo().res_model
         rec_id = re.findall(r'/(\d+)$', url)[0]
         return rec_id, model_name
-
-    @classmethod
-    def setup_independent_user(cls):
-        return new_test_user(
-            cls.env,
-            name='Test Stock User',
-            login='stock',
-            password='stockpass',
-            email='stock@test.com',
-            groups_id=[cls.env.ref('stock.group_stock_manager').id],
-        )
-
-    @classmethod
-    def setup_independent_company(cls, **kwargs):
-        return cls.env['res.company'].sudo().create({
-            'name': 'Test Logistics Company A',
-        })
-
-    @staticmethod
-    def assign_company_to_user(user, company):
-        """
-        A company cannot be assigned to a user until it is added to the list of
-        allowed companies. Therefore, this method needs 3 steps:
-
-        * add given company to the user's company list
-        * set user's company to the given one
-        * remove the remaining companies from the list
-
-        That leaves the user with access only to the newly added company.
-        """
-        user.company_ids |= company
-        user.company_id = company
-        user.company_ids = company
 
     @classmethod
     def setup_product_common(cls):
@@ -263,7 +256,7 @@ class TestStockCommon(TestProductCommon):
             'rounding': 0.001,
         })
 
-        cls.product_1, cls.product_2 = cls.env['product.product'].create([{
+        cls.product_1, cls.product_2 = cls.ProductObj.create([{
             'name': 'Courage',  # product_1
             'type': 'consu',
             'default_code': 'PROD-1',

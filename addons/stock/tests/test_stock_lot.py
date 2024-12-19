@@ -14,14 +14,17 @@ class TestLotSerial(TestStockCommon):
         cls.locationA = cls.env['stock.location'].create({
             'name': 'Location A',
             'usage': 'internal',
+            'company_id': cls.stock_company.id,
         })
         cls.locationB = cls.env['stock.location'].create({
             'name': 'Location B',
             'usage': 'internal',
+            'company_id': cls.stock_company.id,
         })
         cls.locationC = cls.env['stock.location'].create({
             'name': 'Location C',
             'usage': 'internal',
+            'company_id': cls.stock_company.id,
         })
         cls.productA.tracking = 'lot'
         cls.lot_p_a = cls.LotObj.create({
@@ -140,7 +143,7 @@ class TestLotSerial(TestStockCommon):
         """
         Check that the reservation of is bypassed when a stock move is added after the picking is done
         """
-        customer = self.PartnerObj.create({'name': 'bob'})
+        customer = self.PartnerObj.with_user(self.user_stock_manager).create({'name': 'bob'})
         delivery_picking = self.env['stock.picking'].create({
             'partner_id': customer.id,
             'picking_type_id': self.picking_type_out.id,

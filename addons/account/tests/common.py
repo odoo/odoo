@@ -333,7 +333,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                     *journal_company_domain,
                     ('type', '=', 'cash')
                 ], limit=1),
-            'default_journal_credit': cls.env['account.journal'].sudo().create({
+            'default_journal_credit': cls.env['account.journal'].create({
                 'name': 'Credit Journal',
                 'type': 'credit',
                 'code': 'CCD1',
@@ -357,7 +357,7 @@ class AccountTestInvoicingCommon(ProductCommon):
     def setup_armageddon_tax(cls, tax_name, company_data, **kwargs):
         type_tax_use = kwargs.get('type_tax_use', 'sale')
         cash_basis_transition_account = company_data['default_account_tax_sale'] and company_data['default_account_tax_sale'].copy()
-        return cls.env['account.tax'].sudo().create({
+        return cls.env['account.tax'].create({
             'name': '%s (group)' % tax_name,
             'amount_type': 'group',
             'amount': 0.0,

@@ -18,13 +18,14 @@ class PurchaseTestCommon(TestStockCommon):
         }
         return ProcurementGroup.run([self.env['procurement.group'].Procurement(
             product, product_qty, self.uom_unit, self.warehouse_1.lot_stock_id,
-            product.name, '/', self.env.company, order_values)
+            product.name, '/', self.stock_company, order_values)
         ])
 
     @classmethod
     def setUpClass(cls):
         super(PurchaseTestCommon, cls).setUpClass()
-        cls.user.groups_id += cls.env.ref('purchase.group_purchase_user')
+        cls.user_stock_user.groups_id += cls.env.ref('purchase.group_purchase_user')
+        cls.user_stock_manager.groups_id += cls.env.ref('purchase.group_purchase_user')
         cls.env.ref('stock.route_warehouse0_mto').active = True
 
         cls.route_buy = cls.warehouse_1.buy_pull_id.route_id.id
@@ -35,7 +36,11 @@ class PurchaseTestCommon(TestStockCommon):
         cls.product_1.write({
             'is_storable': True,
             'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
-            'seller_ids': [(0, 0, {'partner_id': cls.partner_1.id, 'delay': 5})],
+            'seller_ids': [(0, 0, {
+                'partner_id': cls.partner.id,
+                'delay': 5,
+                'company_id': cls.stock_company.id,
+            })],
             'categ_id': cls.categ_id,
         })
 
@@ -43,14 +48,22 @@ class PurchaseTestCommon(TestStockCommon):
             'name': 'T-shirt',
             'description': 'Internal Notes',
             'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
-            'seller_ids': [(0, 0, {'partner_id': cls.partner_1.id, 'delay': 5})]
+            'seller_ids': [(0, 0, {
+                'partner_id': cls.partner.id,
+                'delay': 5,
+                'company_id': cls.stock_company.id,
+            })],
         })
 
         # Update product_2 with type, route and Delivery Lead Time
         cls.product_2.write({
             'is_storable': True,
             'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
-            'seller_ids': [(0, 0, {'partner_id': cls.partner_1.id, 'delay': 2})],
+            'seller_ids': [(0, 0, {
+                'partner_id': cls.partner.id,
+                'delay': 2,
+                'company_id': cls.stock_company.id,
+            })],
             'categ_id': cls.categ_id,
         })
 

@@ -12,10 +12,8 @@ class TestDeleteOrder(PurchaseTestCommon):
         ''' Testcase for deleting purchase order with purchase user group'''
 
         # In order to test delete process on purchase order,tried to delete a confirmed order and check Error Message.
-        partner = self.env['res.partner'].create({'name': 'My Partner'})
-
         purchase_order = self.env['purchase.order'].create({
-            'partner_id': partner.id,
+            'partner_id': self.partner.id,
             'state': 'purchase',
         })
         purchase_order_1 = purchase_order.with_user(self.res_users_purchase_user)
@@ -24,7 +22,7 @@ class TestDeleteOrder(PurchaseTestCommon):
 
         # Delete 'cancelled' purchase order with user group
         purchase_order = self.env['purchase.order'].create({
-            'partner_id': partner.id,
+            'partner_id': self.partner.id,
             'state': 'purchase',
         })
         purchase_order_2 = purchase_order.with_user(self.res_users_purchase_user)
@@ -34,7 +32,7 @@ class TestDeleteOrder(PurchaseTestCommon):
 
         # Delete 'draft' purchase order with user group
         purchase_order = self.env['purchase.order'].create({
-            'partner_id': partner.id,
+            'partner_id': self.partner.id,
             'state': 'draft',
         })
         purchase_order_3 = purchase_order.with_user(self.res_users_purchase_user)
@@ -44,8 +42,6 @@ class TestDeleteOrder(PurchaseTestCommon):
 
     def test_01_delete_propagation(self):
         ''' Testcase for deleting purchase order with linked move and propagate cancel off'''
-
-        partner = self.env['res.partner'].create({'name': 'My Partner'})
 
         move = self.env['stock.move'].create({
             'name': self.product_2.name,
@@ -60,7 +56,7 @@ class TestDeleteOrder(PurchaseTestCommon):
         self.assertEqual(move.state, 'confirmed', 'Move should be confirmed as there is no quantity in stock')
 
         purchase_order = self.env['purchase.order'].create({
-            'partner_id': partner.id,
+            'partner_id': self.partner.id,
             'order_line': [
                 Command.create({
                     'product_id': self.product_2.id,

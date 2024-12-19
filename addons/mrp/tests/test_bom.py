@@ -14,7 +14,7 @@ class TestBoM(TestMrpCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._enable_product_variant()
+        cls._enable_product_variant(cls.user_stock_user)
 
     def test_01_explode(self):
         boms, lines = self.bom_1.explode(self.product_4, 3)
@@ -1350,7 +1350,7 @@ class TestBoM(TestMrpCommon):
         bom_from_mo_2.active = False  # Archives the created BoM to avoid to use it for the next MOs
 
         # Generates a BoM from a confirmed MO using operations and by-products.
-        self._enable_mrp_byproducts()
+        self._enable_mrp_byproducts(self.user_stock_user) # TODO: sudo?
         # Produces 3 qties to check if the operations' duration will be correctly divided by 3.
         mo_3 = create_mo(3)
         mo_3.action_confirm()
@@ -1433,7 +1433,7 @@ class TestBoM(TestMrpCommon):
         """ Creates a Manufacturing Order without BoM then to generate a new BoM from this MO and
         modifies by-products values.
         """
-        self._enable_mrp_byproducts()
+        self._enable_mrp_byproducts(self.user_stock_user) # TODO: sudo?
         # Creates some products.
         common_vals = {'is_storable': True}
         finished_product = self.env['product.product'].create(dict(common_vals, name="Banana Bread"))
@@ -1501,7 +1501,7 @@ class TestBoM(TestMrpCommon):
         Checks the BoM will be marked as updated in the right situation, and checks the "Update BoM"
         action update the MO accordingly to the changes done in the BoM.
         """
-        self._enable_mrp_byproducts()
+        self._enable_mrp_byproducts(self.user_stock_user) # TODO: sudo?
         # Creates a BoM.
         common_vals = {'is_storable': True}
         finished_product = self.env['product.product'].create(dict(common_vals, name="Monster in Jar"))
@@ -1785,7 +1785,7 @@ class TestBoM(TestMrpCommon):
         replacing one of its BoM line's product. Updates the MO and checks a new
         move for this product was created in the MO's picking.
         """
-        self._enable_adv_location()
+        self._enable_adv_location(self.user_stock_user) # TODO: sudo?
         self.warehouse_1.manufacture_steps = 'pbm'
 
         # Creates a MO.
