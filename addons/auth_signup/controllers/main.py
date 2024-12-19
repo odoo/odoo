@@ -89,7 +89,7 @@ class AuthSignupHome(Home):
             try:
                 if qcontext.get('token'):
                     self.do_signup(qcontext)
-                    return self.web_login(*args, **kw)
+                    qcontext['message'] = _("Your password has been reset successfully.")
                 else:
                     login = qcontext.get('login')
                     assert login, _("No login provided.")
@@ -97,7 +97,7 @@ class AuthSignupHome(Home):
                         "Password reset attempt for <%s> by user <%s> from %s",
                         login, request.env.user.login, request.httprequest.remote_addr)
                     request.env['res.users'].sudo().reset_password(login)
-                    qcontext['message'] = _("Password reset instructions sent to your email")
+                    qcontext['message'] = _("Password reset instructions sent to your email address.")
             except UserError as e:
                 qcontext['error'] = e.args[0]
             except SignupError:
@@ -145,10 +145,12 @@ class AuthSignupHome(Home):
 
     def _prepare_signup_values(self, qcontext):
         values = { key: qcontext.get(key) for key in ('login', 'name', 'password') }
+        password = values.get('password')
         if not values:
             raise UserError(_("The form was not properly filled in."))
-        if values.get('password') != qcontext.get('confirm_password'):
+        if password != qcontext.get('confirm_password'):
             raise UserError(_("Passwords do not match; please retype them."))
+        request.env['res.users']._check_password_policy([password])
         supported_lang_codes = [code for code, _ in request.env['res.lang'].get_installed()]
         lang = request.context.get('lang', '')
         if lang in supported_lang_codes:
