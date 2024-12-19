@@ -4,6 +4,7 @@ import {
     changeOption,
     clickOnSave,
     registerWebsitePreviewTour,
+    goBackToBlocks,
 } from '@website/js/tours/tour_utils';
 
 const carouselInnerSelector = ":iframe .carousel-inner";
@@ -27,6 +28,23 @@ registerWebsitePreviewTour("carousel_content_removal", {
 }, {
     trigger: ":iframe .carousel .carousel-item.active .container:not(:has(*)):not(:visible)",
     content: "Check for a carousel slide with an empty container tag",
+},
+    goBackToBlocks(),
+    ...insertSnippet({
+        id: "s_quotes_carousel",
+        name: "Blockquote",
+        groupName: "People",
+}), {
+    trigger: ":iframe .s_quotes_carousel_wrapper .carousel-item.active .s_blockquote",
+    content: "Select the blockquote.",
+    run: "click",
+}, {
+    trigger: ":iframe .oe_overlay.oe_active .oe_snippet_remove",
+    content: "Remove the blockquote from the carousel item.",
+    run: "click",
+}, {
+    trigger: ":iframe .s_quotes_carousel_wrapper .carousel-item.active:not(:has(.s_blockquote))",
+    content: "Check that the blockquote has been removed and the carousel item is empty.",
 }]);
 
 registerWebsitePreviewTour("snippet_carousel", {
