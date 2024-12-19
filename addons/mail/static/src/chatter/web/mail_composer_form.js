@@ -19,7 +19,7 @@ export class MailComposerFormRenderer extends formView.Renderer {
         // Autofocus the visible editor in edition mode.
         this.root = useRef("compiled_view_root");
         useEffect((isInEdition, root) => {
-            if (root && root.el && isInEdition) {
+            if (root && root.el && isInEdition && !this.props.record.data.in_forward_mode) {
                 const element = root.el.querySelector(".note-editable[contenteditable]");
                 if (element) {
                     element.focus();
