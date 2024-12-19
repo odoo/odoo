@@ -21,7 +21,7 @@
                             <select name="link_type" class="form-select form-select-sm" t-att-class="{'mb-1': state.type !==  ''}" t-on-change="(ev)=>this.state.type = ev.target.value">
                                 <t t-foreach="this.colorsData" t-as="colorData" t-key="colorData.type">
                                     <t t-if="colorData.type !== 'custom'">
-                                        <option t-att-value="colorData.type" t-att-selected="state.type === colorData.type" t-attf-class="o_btn_preview dropdown-item">
+                                        <option t-att-value="colorData.type" t-att-selected="state.type === colorData.type" t-attf-class="o_btn_preview">
                                             <span t-esc="colorData.label"/>
                                         </option>
                                     </t>
@@ -47,7 +47,7 @@
                         </div>
                     </div>
 
-                    <div t-if="!this.ui.isSmall" class="col o_link_dialog_preview" style="max-width: 125px;border-left: 1px solid #DEE2E6;">
+                    <div t-if="!this.ui.isSmall" class="col o_link_dialog_preview" style="max-width: 125px;border-left: 1px solid var(--border-color);">
                         <div class="text-center p-2">
                             <label>Preview</label>
                             <div style="max-width: 100px; max-height: 200px;" class="text-truncate">
