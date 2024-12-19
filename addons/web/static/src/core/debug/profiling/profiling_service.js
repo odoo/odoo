@@ -89,6 +89,9 @@ const profilingService = {
             async toggleProfiling() {
                 await setProfiling({ profile: !state.isEnabled });
             },
+            async checkIncompleteProfiles() {
+                await orm.call("ir.profile", "check_incomplete_profiles");
+            },
             async toggleCollector(collector) {
                 const nextCollectors = state.collectors.slice();
                 const index = nextCollectors.indexOf(collector);
