@@ -28,6 +28,7 @@ paymentForm.include({
             return;
         }
 
+
         // Check if instantiation of the component is needed.
         this.mercadoPagoComponents ??= {}; // Store the component of each instantiated payment method.
         if (flow === 'token') {
@@ -45,79 +46,95 @@ paymentForm.include({
         const inlineForm = this._getInlineForm(radio);
         const inlineFormValues = JSON.parse(radio.dataset['mercadoPagoInlineFormValues']);
         const mercadoPagoContainer = inlineForm.querySelector('[id="o_mercado_pago_component_container"]');
-
+        this.mercadoPagoComponents ??= {};
         const amount = inlineFormValues['amount'];
+        // const response = await rpc('/mercado_pago/create_preference', {
+        //     partner_id: inlineFormValues['partner_id'],
+        //     amount: amount,
+        //     currency: inlineFormValues['currency'],
+        //     payment_method: inlineFormValues['payment_method'],
+        //     provider_id: inlineFormValues['provider'],//maybe don't need this?
+        // });
+
 
         // Create the checkout object if not already done for another payment method.
-        if (!this.mercadoPagoCheckout) {
             try {
                 const mp = new MercadoPago('TEST-8ae53c37-e5e3-44b4-94d4-abf8dbe81689', {
-                locale: 'en-US'
+                    locale: 'en-US'
                 });
                 const bricksBuilder = mp.bricks();
-                const x = mercadoPagoContainer.getAttribute('id')
+                let item = {}
+                item[paymentMethodCode] = 'all'
 
                 const settings = {
                     initialization: {
-                      /*
-                        "amout" is the total sum to be paid from all payment methods but Mercado Pago Wallet and Parcels without credit card which have their processing value determined on the backend via "preferenceId"
-                      */
-                      amount: amount,
+                        /*
+                          "amout" is the total sum to be paid from all payment methods but Mercado Pago Wallet and Parcels without credit card which have their processing value determined on the backend via "preferenceId"
+                        */
+                        amount: amount,
+                        // preferenceId: response,
+                        payer: {
+                            email: inlineFormValues['email'],
+                        },
                     },
                     customization: {
-                      visual: {
-                          hideFormTitle: true,
-                          hidePaymentButton: true,
-                      },
-                      paymentMethods: {
-                          creditCard: "all",
-                          debitCard: "all",
-                          atm: "banamex",
-                          bankTransfer: "all",
-                        maxInstallments: 1
-                      },
+                        visual: {
+                            hideFormTitle: true,
+                            hidePaymentButton: true,
+                            defaultPaymentOption: {
+                            ticketForm: true,
+                        }
+                        },
+                        paymentMethods: {
+                            ...item,
+                            //bank_transfer: 'all',
+                            maxInstallments: 1
+                        },
+
                     },
                     callbacks: {
-                      onReady: () => {
-                        /*
-                         Callback called when Brick is ready.
-                         Here, you may omit loadings from your website, for instance.
-                        */
-                      },
-                      onSubmit: ({ selectedPaymentMethod, formData }) => {
-                        // callback when sending data button is clicked
-                        return new Promise((resolve, reject) => {
-                          fetch("/process_payment", {
-                            method: "POST",
-                            headers: {
-                              "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify(formData),
-                          })
-                            .then((response) => response.json())
-                            .then((response) => {
-                              // receive payment result
-                              resolve();
-                            })
-                            .catch((error) => {
-                              // manage the error answer when trying to create a payment
-                              reject();
-                            });
-                        });
-                      },
-                      onError: (error) => {
-                        // callback called to all error cases related to the Brick
-                        console.error(error);
-                      },
-                    },
-                  };
-                 //i dont need this function at all i just need
+                        onReady: () => {
 
-              this.mercadoPagoCheckout = await bricksBuilder.create(
-                  "cardPayment",
-                  x,
-                  settings
-              );
+                        },
+                        onSubmit: ({selectedPaymentMethod, formData}) => {
+                            // callback when sending data button is clicked
+                            return new Promise((resolve, reject) => {
+                                fetch("/process_payment", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify(formData),
+                                })
+                                    .then((response) => response.json())
+                                    .then((response) => {
+                                        // receive payment result
+                                        resolve();
+                                    })
+                                    .catch((error) => {
+                                        // manage the error answer when trying to create a payment
+                                        reject();
+                                    });
+                            });
+                        },
+                        onError: (error) => {
+                            // callback called to all error cases related to the Brick
+                            console.error(error);
+                        },
+                    },
+                };
+                //i dont need this function at all i just need
+                const brickType = paymentMethodCode === 'card' ? 'cardPayment' : 'payment';
+                const method_container = `o_mercado_pago_express_checkout_container_${providerId}_${paymentOptionId}`
+                const key = paymentMethodCode
+
+                settings.paymentMethodCode = 'all'
+                this.mercadoPagoCheckout = await bricksBuilder.create(
+                    brickType,
+                    method_container,
+                    settings
+                );
+                //maybe I will need to unmout it?
 
                 // Await the RPC to let it create AdyenCheckout before using it.
                 // Create the Adyen Checkout SDK.
@@ -129,21 +146,39 @@ paymentForm.include({
                     );
                     this._enableButton();
                     return;
-                }
-                else {
+                } else {
                     return Promise.reject(error);
                 }
             }
+
+
+            this.mercadoPagoComponents[paymentOptionId] = this.mercadoPagoCheckout; //i think only here the brick should be rendered
+
+    },
+    async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
+        if (providerCode !== 'mercado_pago' || flow === 'token') {
+            await this._super(...arguments); // Tokens are handled by the generic flow.
+            return;
         }
 
-
-        this.mercadoPagoComponents[paymentOptionId] = this.mercadoPagoCheckout; //i think only here the brick should be rendered
+        // Trigger form validation and wallet collection.
+        const _super = this._super.bind(this);
+        try {
+            await this.mercadoPagoCheckout.getFormData().then(({formData}) =>{
+                console.log(formData)
+            });
+        } catch (error) {
+            this._displayErrorDialog(_t("Incorrect payment details"), error.message);
+            this._enableButton();
+            return
+        }
+        return await _super(...arguments);
     },
 
     _renderPaymentBrick(brick)  {
         const settings = {
             initialization: {
-                preferenceId: "To be done, maybe use the function earlier to get methds",
+                // preferenceId: "To be done, maybe use the function earlier to get methds",
                 payer: {
                     firstName: "to be done",
                 },
@@ -154,7 +189,8 @@ paymentForm.include({
                     bankTransfer: "all",
                     atm: "all",
                     onboarding_credits: "all",
-                    maxInstallments: 1
+                    maxInstallments: 1,
+
                 },
                 visual: {
                     hideFormTitle: true,
@@ -163,6 +199,5 @@ paymentForm.include({
             }
         }
         this.mercadoPagoCheckout = brick.create("payment", "o_mercado_pago_component_container", settings);
-        const x = 3
     }
 });

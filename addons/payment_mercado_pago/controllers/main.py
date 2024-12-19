@@ -3,6 +3,8 @@
 import logging
 import pprint
 
+import requests
+
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
@@ -62,3 +64,48 @@ class MercadoPagoController(http.Controller):
             except ValidationError:  # Acknowledge the notification to avoid getting spammed.
                 _logger.exception("Unable to handle the notification data; skipping to acknowledge")
         return ''  # Acknowledge the notification.
+
+    @http.route('/mercado_pago/methods', type='http')
+    def mercado_pago_methods(self):
+
+        headers = {'Content-Type':'application/json','Authorization': f'Bearer TEST-8088927131040927-082108-480b8790088df9ec287c80b5982f31ad-1074382083'}
+
+        x = requests.get('https://api.mercadopago.com/v1/payment_methods', params=None, headers=headers, timeout=10)
+        print(x)
+
+    @http.route('/mercado_pago/create_preference', type='jsonrpc', auth='public')
+    def mercado_pago_preference(self, partner_id, amount, currency, payment_method, provider_id):
+
+        #get the list of mercado pago payment methods
+
+        provider_sudo = request.env['payment.provider'].sudo().browse(provider_id)
+        partner_sudo = partner_id and request.env['res.partner'].sudo().browse(partner_id).exists()
+        #search trhotugh payment methods to find the one with this id
+
+        y = provider_sudo.payment_method_ids.filtered(lambda l: l.id != payment_method)
+        excluded_payment_methods = []
+        # for z in y:
+        #     excluded_payment_methods.append({'id': z.code})
+        excluded_payment_methods.append({"id": "credit_card"})
+        x = {
+            'items': [{
+                'title':'Test',
+                'quantity': 1,
+                'currency_id': currency,
+                'unit_price': amount,
+                'id': "3",
+            }],
+            'payment_methods': {
+                'excluded_payment_types': [
+        { "id": "ticket" }
+    ],
+
+            },
+        }
+
+        headers = {'Content-Type': 'application/json', 'Authorization': f'Bearer {provider_sudo.mercado_pago_access_token}' }
+
+        f =  requests.post('https://api.mercadopago.com/checkout/preferences', json=x,
+                         headers=headers, timeout=10).json()
+
+        return f.get('id')

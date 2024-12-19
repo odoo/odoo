@@ -92,14 +92,16 @@ class PaymentProvider(models.Model):
             return default_codes
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
-    def _mercado_pago_get_inline_form_values(self, amount=None):
+    def _mercado_pago_get_inline_form_values(self, partner_id, amount, currency, payment_method):
         self.ensure_one()
-
+        partner = self.env['res.partner'].browse(partner_id).exists()
         inline_form_values = {
             'amount': amount,
-            'preferenceId':'',
-            'payer': {'firtName': 'Dupa',
-                      'lastName': 'Dupa,',
-                      'email': 'dupa@dupa.pl'},
+            'email': partner.email,
+            'currency': currency.name,
+            'payment_method': payment_method.id,
+            'provider': self.id,
+            'partner_id': partner.id,
+
         }
         return json.dumps(inline_form_values)
