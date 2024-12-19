@@ -140,7 +140,7 @@ class ThreadController(http.Controller):
             raise NotFound()
         if not request.env[thread_model]._get_thread_with_access(thread_id, "write"):
             thread.env.context = frozendict(
-                thread.env.context, mail_create_nosubscribe=True, mail_post_autofollow=False
+                thread.env.context, mail_create_nosubscribe=True, mail_post_autofollow=False, message_source='webclient'
             )
         post_data = {
                 key: value
