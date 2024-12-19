@@ -14,6 +14,15 @@
     }
 }
 
+.category-list {
+    @include media-breakpoint-down(sm) {
+        overflow-y: auto;
+        height: 9rem;
+        flex-shrink: 0;
+        margin-bottom: map-get($spacers, 2);
+    }
+}
+
 .button-no-demo {
     color: #017e84 !important;
 }
