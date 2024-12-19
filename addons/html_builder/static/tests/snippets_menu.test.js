@@ -36,23 +36,23 @@ test("navigate between builder tab don't fetch snippet description again", async
         expect.step("render_public_asset");
     });
     await setupWebsiteBuilder(`<h1> Homepage </h1>`);
-    expect(queryAllTexts(".o-website-sidebarbuilder .o-snippets-tabs span")).toEqual([
+    expect(queryAllTexts(".o-website-builder_sidebar .o-snippets-tabs span")).toEqual([
         "BLOCKS",
         "CUSTOMIZE",
         "THEME",
     ]);
-    expect(queryOne(".o-website-sidebarbuilder .o-snippets-tabs button.active")).toHaveText(
+    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
         "BLOCKS"
     );
     expect.verifySteps(["render_public_asset"]);
 
-    await contains(".o-website-sidebarbuilder .o-snippets-tabs span:contains(THEME)").click();
-    expect(queryOne(".o-website-sidebarbuilder .o-snippets-tabs button.active")).toHaveText(
+    await contains(".o-website-builder_sidebar .o-snippets-tabs span:contains(THEME)").click();
+    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
         "THEME"
     );
 
-    await contains(".o-website-sidebarbuilder .o-snippets-tabs span:contains(BLOCK)").click();
-    expect(queryOne(".o-website-sidebarbuilder .o-snippets-tabs button.active")).toHaveText(
+    await contains(".o-website-builder_sidebar .o-snippets-tabs span:contains(BLOCK)").click();
+    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
         "BLOCKS"
     );
     expect.verifySteps([]);
@@ -89,11 +89,13 @@ test("undo and redo buttons", async () => {
 
 test("activate customize tab without any selection", async () => {
     await setupWebsiteBuilder("<h1> Homepage </h1>");
-    expect(queryOne(".o-website-sidebarbuilder .o-snippets-tabs button.active")).toHaveText(
+    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
         "BLOCKS"
     );
-    await contains(".o-website-sidebarbuilder .o-snippets-tabs button:contains(CUSTOMIZE)").click();
-    expect(queryOne(".o-website-sidebarbuilder .o-snippets-tabs button.active")).toHaveText(
+    await contains(
+        ".o-website-builder_sidebar .o-snippets-tabs button:contains(CUSTOMIZE)"
+    ).click();
+    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
         "CUSTOMIZE"
     );
 });

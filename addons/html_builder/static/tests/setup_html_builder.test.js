@@ -18,25 +18,25 @@ test("setup of the editable elements", async () => {
 });
 
 test("history back", async () => {
-    let sidebarBuilder;
+    let builder_sidebar;
     // Patch to get the builder sidebar instance
     patchWithCleanup(BuilderSidebar.prototype, {
         setup() {
             super.setup(...arguments);
-            sidebarBuilder = this;
+            builder_sidebar = this;
         },
     });
     // Navigating back in the browser history should not lead to a warning popup
     // if the website was not edited.
     const { getEditor } = await setupWebsiteBuilder(getEditable(exampleWebsiteContent));
-    sidebarBuilder.onBeforeLeave();
+    builder_sidebar.onBeforeLeave();
     await animationFrame();
     expect(".modal-content:contains('If you proceed, your changes will be lost')").toHaveCount(0);
     // Navigating back in the browser history should lead to a warning popup if
     // the website was edited.
     await modifyText(getEditor());
     await animationFrame();
-    sidebarBuilder.onBeforeLeave();
+    builder_sidebar.onBeforeLeave();
     await animationFrame();
     expect(".modal-content:contains('If you proceed, your changes will be lost')").toHaveCount(1);
 });

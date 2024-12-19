@@ -12,7 +12,7 @@
             </div>
         </div>
         <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
-        <div  t-attf-style="width:{{state.isEditing ? 288 : 0}}px" class="o-website-sidebarbuilder border-start border-dark">
+        <div  t-attf-style="width:{{state.isEditing ? 288 : 0}}px" class="o-website-builder_sidebar border-start border-dark">
             <LazyComponent  t-if="state.isEditing" Component="'website.BuilderSidebar'" props="this.menuProps" bundle="'website.assets_builder'"/>
         </div>
     </div>

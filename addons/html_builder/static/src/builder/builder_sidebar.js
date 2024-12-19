@@ -59,7 +59,7 @@ export class BuilderSidebar extends Component {
     setup() {
         // const actionService = useService("action");
         this.pages = [blockTab, customizeTab];
-        this.sidebarBuilderRef = useRef("sidebarBuilder");
+        this.builder_sidebarRef = useRef("builder_sidebar");
         this.state = useState({
             canUndo: false,
             canRedo: false,
@@ -186,7 +186,7 @@ export class BuilderSidebar extends Component {
     async save() {
         this.isSaving = true;
         // TODO: handle the urgent save and the fail of the save operation
-        const snippetMenuEl = this.sidebarBuilderRef.el;
+        const snippetMenuEl = this.builder_sidebarRef.el;
         // Add a loading effect on the save button and disable the other actions
         addButtonLoadingEffect(snippetMenuEl.querySelector("[data-action='save']"));
         const actionButtonEls = snippetMenuEl.querySelectorAll("[data-action]");
