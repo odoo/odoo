@@ -11,7 +11,7 @@ from psycopg2 import IntegrityError, OperationalError, errorcodes, errors
 import odoo
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
-from odoo.models import check_method_name
+from odoo.models import BaseModel, check_method_name
 from odoo.modules.registry import Registry
 from odoo.tools import lazy
 
@@ -22,6 +22,53 @@ _logger = logging.getLogger(__name__)
 PG_CONCURRENCY_ERRORS_TO_RETRY = (errorcodes.LOCK_NOT_AVAILABLE, errorcodes.SERIALIZATION_FAILURE, errorcodes.DEADLOCK_DETECTED)
 PG_CONCURRENCY_EXCEPTIONS_TO_RETRY = (errors.LockNotAvailable, errors.SerializationFailure, errors.DeadlockDetected)
 MAX_TRIES_ON_CONCURRENCY_FAILURE = 5
+
+
+class Params:
+    """Representation of parameters to a function call that can be stringified for display/logging"""
+    def __init__(self, args, kwargs):
+        self.args = args
+        self.kwargs = kwargs
+
+    def __str__(self):
+        params = [repr(arg) for arg in self.args]
+        params.extend(f"{key}={value!r}" for key, value in sorted(self.kwargs.items()))
+        return ', '.join(params)
+
+
+def call_kw(model: BaseModel, name: str, args: list, kwargs: Mapping):
+    """ Invoke the given method ``name`` on the recordset ``model``. """
+    method = getattr(model, name, None)
+    if not method:
+        raise AttributeError(f"The method '{name}' does not exist on the model '{model._name}'")
+
+    # get the records and context
+    api = getattr(method, '_api', None)
+    if api and api.startswith('model'):
+        # @api.model -> no ids
+        recs = model
+    else:
+        ids, args = args[0], args[1:]
+        recs = model.browse(ids)
+
+    # altering kwargs is a cause of errors, for instance when retrying a request
+    # after a serialization error: the retry is done without context!
+    kwargs = dict(kwargs)
+    context = kwargs.pop('context', None) or {}
+    recs = recs.with_context(context)
+
+    # call
+    _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
+    result = getattr(recs, name)(*args, **kwargs)
+
+    # adapt the result
+    if name == "create":
+        # special case for method 'create'
+        result = result.id if isinstance(args[0], Mapping) else result.ids
+    elif isinstance(result, BaseModel):
+        result = result.ids
+
+    return result
 
 
 def dispatch(method, params):
@@ -49,7 +96,7 @@ def execute_cr(cr, uid, obj, method, *args, **kw):
     recs = env.get(obj)
     if recs is None:
         raise UserError(env._("Object %s doesn't exist", obj))
-    result = retrying(partial(odoo.api.call_kw, recs, method, args, kw), env)
+    result = retrying(partial(call_kw, recs, method, args, kw), env)
     # force evaluation of lazy values before the cursor is closed, as it would
     # error afterwards if the lazy isn't already evaluated (and cached)
     for l in _traverse_containers(result, lazy):

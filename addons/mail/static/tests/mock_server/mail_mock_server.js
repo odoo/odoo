@@ -681,18 +681,18 @@ export async function mail_message_post(request) {
         }
     }
     const kwargs = makeKwArgs({ ...finalData, context });
-    let messageId;
+    let messageIds;
     if (thread_model === "discuss.channel") {
-        messageId = DiscussChannel.message_post(thread_id, kwargs);
+        messageIds = DiscussChannel.message_post(thread_id, kwargs);
     } else {
         const model = this.env[thread_model];
-        messageId = MailThread.message_post.call(model, [thread_id], {
+        messageIds = MailThread.message_post.call(model, [thread_id], {
             ...kwargs,
             model: thread_model,
         });
     }
     return new mailDataHelpers.Store(
-        MailMessage.browse(messageId),
+        MailMessage.browse(messageIds[0]),
         makeKwArgs({ for_current_user: true })
     ).get_result();
 }
