@@ -118,7 +118,6 @@ class AccountMoveLine(models.Model):
     )
     amount_currency = fields.Monetary(
         string='Amount in Currency',
-        group_operator=None,
         compute='_compute_amount_currency', inverse='_inverse_amount_currency', store=True, readonly=False, precompute=True,
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one(
