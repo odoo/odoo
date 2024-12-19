@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.tools import groupby
 
 
 class AccountMove(models.Model):
@@ -32,14 +32,20 @@ class AccountMove(models.Model):
             downpayment_lines.unlink()
         return res
 
-    @api.depends('invoice_user_id')
+    @api.depends('invoice_user_id', 'partner_id')
     def _compute_team_id(self):
-        for move in self:
-            if not move.invoice_user_id.sale_team_id or not move.is_sale_document(include_receipts=True):
-                continue
-            move.team_id = self.env['crm.team']._get_default_team_id(
-                user_id=move.invoice_user_id.id,
-                domain=[('company_id', '=', move.company_id.id)])
+        sale_moves = self.filtered(lambda move: move.is_sale_document(include_receipts=True))
+        for ((user_id, company_id, partner_team_id), moves) in groupby(
+            sale_moves,
+            key=lambda m: (m.invoice_user_id.id, m.company_id.id, m.partner_id.team_id.id)
+        ):
+            default_team_id = self.env.context.get('default_team_id', False) or partner_team_id
+            self.concat(*moves).team_id = self.env['crm.team'].with_context(
+                allowed_company_ids=[company_id],
+                default_team_id=default_team_id,
+            )._get_default_team_id(
+                user_id=user_id,
+            )
 
     @api.depends('line_ids.sale_line_ids')
     def _compute_origin_so_count(self):
