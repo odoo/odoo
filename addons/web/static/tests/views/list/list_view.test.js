@@ -17077,7 +17077,6 @@ test(`context keys not passed down the stack and not to fields`, async () => {
                 allowed_company_ids: [1],
                 bin_size: true,
                 list_view_ref: "foo_view_ref",
-                current_company_id: 1,
             },
         },
     ]);
@@ -17111,7 +17110,6 @@ test(`context keys not passed down the stack and not to fields`, async () => {
                 uid: 7,
                 allowed_company_ids: [1],
                 bin_size: true,
-                current_company_id: 1,
             },
         },
     ]);

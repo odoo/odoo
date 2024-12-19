@@ -134,7 +134,6 @@ test("SelectCreateDialog use domain, group_by and search default on desktop", as
                     context: {
                         allowed_company_ids: [1],
                         bin_size: true,
-                        current_company_id: 1,
                         lang: "en",
                         tz: "taht",
                         uid: 7,
@@ -162,7 +161,6 @@ test("SelectCreateDialog use domain, group_by and search default on desktop", as
                     context: {
                         allowed_company_ids: [1],
                         bin_size: true,
-                        current_company_id: 1,
                         lang: "en",
                         tz: "taht",
                         uid: 7,
@@ -247,7 +245,6 @@ test("SelectCreateDialog use domain, group_by and search default on mobile", asy
                     context: {
                         allowed_company_ids: [1],
                         bin_size: true,
-                        current_company_id: 1,
                         lang: "en",
                         tz: "taht",
                         uid: 7,
@@ -275,7 +272,6 @@ test("SelectCreateDialog use domain, group_by and search default on mobile", asy
                     context: {
                         allowed_company_ids: [1],
                         bin_size: true,
-                        current_company_id: 1,
                         lang: "en",
                         tz: "taht",
                         uid: 7,
