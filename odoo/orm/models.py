@@ -2033,8 +2033,8 @@ class BaseModel(metaclass=MetaModel):
                 # If the granularity uses date_trunc, we need to convert the timestamp back to a date.
                 sql_expr = SQL("%s::date", sql_expr)
 
-        elif field.type == 'boolean':
-            sql_expr = SQL("COALESCE(%s, FALSE)", sql_expr)
+        if field.falsy_value is not None and not field.required:
+            sql_expr = SQL("COALESCE(%s, %s)", sql_expr, field.falsy_value)
 
         return sql_expr
 
