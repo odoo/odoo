@@ -2508,6 +2508,7 @@ class AccountMove(models.Model):
         return self.currency_id == currency \
             and self.move_type in ('out_invoice', 'out_receipt', 'in_invoice', 'in_receipt') \
             and self.invoice_payment_term_id.early_discount \
+            and self.invoice_date \
             and (not reference_date or reference_date <= self.invoice_payment_term_id._get_last_discount_date(self.invoice_date)) \
             and not (payment_terms.matched_debit_ids + payment_terms.matched_credit_ids)
 
