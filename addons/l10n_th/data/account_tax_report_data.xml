@@ -100,11 +100,12 @@
             </record>
             <record id="tax_report_vat" model="account.report.line">
                 <field name="name">Value Added Tax</field>
-                <field name="aggregation_formula">10_EXCESS_TAX_PAYMENT_CARRIED_FORWARD_FROM_LAST_PERIOD.balance</field>
+                <field name="aggregation_formula">10_EXCESS_CARRIED_FORWARD.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_vat_payable" model="account.report.line">
-                        <field name="name">8. Tax payable (5. minus 7. (if 5. is greater than 7.))</field>
+                        <field name="name">8. Tax payable (if 5. is greater than 7.)</field>
+                        <field name="code">8_TAX_PAYABLE</field>
                         <field name="expression_ids">
                             <record id="tax_report_vat_payable_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -115,7 +116,8 @@
                         </field>
                     </record>
                     <record id="tax_report_vat_excess" model="account.report.line">
-                        <field name="name">9. Excess tax payable (7. minus 5. (if 5. is less than 7.))</field>
+                        <field name="name">9. Excess tax payable (if 5. is less than 7.)</field>
+                        <field name="code">9_VAT_EXCESS</field>
                         <field name="expression_ids">
                             <record id="tax_report_vat_excess_balance" model="account.report.expression">
                                 <field name="label">balance</field>
@@ -127,13 +129,23 @@
                     </record>
                     <record id="tax_report_vat_payment_last_period" model="account.report.line">
                         <field name="name">10. Excess tax payment carried forward from last period</field>
-                        <field name="code">10_EXCESS_TAX_PAYMENT_CARRIED_FORWARD_FROM_LAST_PERIOD</field>
+                        <field name="code">10_EXCESS_CARRIED_FORWARD</field>
                         <field name="expression_ids">
+                            <record id="tax_report_vat_payment_last_period_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_tax_period</field>
+                            </record>
+                            <record id="tax_report_vat_payment_last_period_tag" model="account.report.expression">
+                                <field name="label">tag</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">10. Excess tax payment carried forward from last period</field>
+                            </record>
                             <record id="tax_report_vat_payment_last_period_formula" model="account.report.expression">
                                 <field name="label">balance</field>
-                                <field name="engine">external</field>
-                                <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">10_EXCESS_CARRIED_FORWARD._applied_carryover_balance + 10_EXCESS_CARRIED_FORWARD.tag</field>
                             </record>
                         </field>
                     </record>
@@ -141,28 +153,51 @@
             </record>
             <record id="tax_report_net_vat" model="account.report.line">
                 <field name="name">Net Tax</field>
-                <field name="aggregation_formula">11_NET_TAX_PAYABLE_IF_8_IS_GREATER_THAN_10.balance + 12_NET_EXCESS_TAX_PAYABLE_IF_10_IS_GREATER_THAN_8_OR_9_PLUS_10.balance</field>
+                <field name="aggregation_formula">11_NET_TAX_PAYABLE_IF_8_IS_GREATER_THAN_10.balance + 12_NET_VAT_EXCESS.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_net_vat_payable" model="account.report.line">
                         <field name="name">11. Net tax payable (if 8. is greater than 10.)</field>
                         <field name="code">11_NET_TAX_PAYABLE_IF_8_IS_GREATER_THAN_10</field>
+                        <!-- If 8 > 10, this should be filled with 8 - 10 -->
                         <field name="expression_ids">
                             <record id="tax_report_net_vat_payable_tag" model="account.report.expression">
                                 <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">11. Net tax payable (if 8. is greater than 10.)</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">8_TAX_PAYABLE.balance - 10_EXCESS_CARRIED_FORWARD.balance</field>
+                                <field name="subformula">if_above(THB(0))</field>
                             </record>
                         </field>
                     </record>
                     <record id="tax_report_net_vat_excess" model="account.report.line">
                         <field name="name">12. Net excess tax payable ((if 10. is greater than 8.) or (9. plus 10.))</field>
-                        <field name="code">12_NET_EXCESS_TAX_PAYABLE_IF_10_IS_GREATER_THAN_8_OR_9_PLUS_10</field>
+                        <field name="code">12_NET_VAT_EXCESS</field>
                         <field name="expression_ids">
+                            <!-- First part. If 10 - 8 > 0 we use this value -->
+                            <record id="tax_report_net_vat_payable_and_carried_forward" model="account.report.expression">
+                                <field name="label">vpcf</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">10_EXCESS_CARRIED_FORWARD.balance - 8_TAX_PAYABLE.balance</field>
+                                <field name="subformula">if_above(THB(0))</field>
+                            </record>
+                            <!-- If 9 is set we also want to use it. -->
+                            <record id="tax_report_net_vat_excess_and_carried_forward" model="account.report.expression">
+                                <field name="label">ecf</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">9_VAT_EXCESS.balance</field>
+                                <field name="subformula">if_other_expr_above(9_VAT_EXCESS.balance, THB(0))</field>
+                            </record>
+                            <!-- 10 - 8 or 10 + 9 (you will never have both 8 and 9)-->
                             <record id="tax_report_net_vat_excess_tag" model="account.report.expression">
                                 <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">12. Net excess tax payable ((if 10. is greater than 8.) or (9. plus 10.))</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">12_NET_VAT_EXCESS.vpcf + 12_NET_VAT_EXCESS.ecf</field>
+                            </record>
+                            <record id="tax_report_net_vat_excess_carryover" model="account.report.expression">
+                                <field name="label">_carryover_balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">12_NET_VAT_EXCESS.balance</field>
+                                <field name="carryover_target">10_EXCESS_CARRIED_FORWARD._applied_carryover_balance</field>
                             </record>
                         </field>
                     </record>
