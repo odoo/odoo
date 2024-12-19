@@ -4,8 +4,8 @@ from werkzeug import urls
 from werkzeug.exceptions import Forbidden, NotFound
 
 from odoo import http
+from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv import expression
 from odoo.tools import consteq
 from odoo.addons.mail.controllers import mail
 from odoo.addons.mail.tools.discuss import Store
@@ -62,9 +62,9 @@ class PortalChatter(http.Controller):
         # extract domain from the 'website_message_ids' field
         model = request.env[thread_model]
         field = model._fields['website_message_ids']
-        domain = expression.AND([
+        domain = Domain.AND([
             self._setup_portal_message_fetch_extra_domain(kw),
-            field.get_domain_list(model),
+            field.get_comodel_domain(model),
             [('res_id', '=', thread_id), '|', ('body', '!=', ''), ('attachment_ids', '!=', False),
              ("subtype_id", "=", request.env.ref("mail.mt_comment").id)]
         ])
@@ -79,7 +79,7 @@ class PortalChatter(http.Controller):
                 raise Forbidden()
             # Non-employee see only messages with not internal subtype (aka, no internal logs)
             if not request.env.user._is_internal():
-                domain = expression.AND([Message._get_search_domain_share(), domain])
+                domain = Domain.AND([Message._get_search_domain_share(), domain])
             Message = request.env["mail.message"].sudo()
         res = Message._message_fetch(domain, **(fetch_params or {}))
         messages = res.pop("messages")
