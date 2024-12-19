@@ -33,6 +33,7 @@ export class DiscussCorePublicWeb {
         }
         this.busService.subscribe("discuss.channel/joined", async (payload) => {
             const { channel, invited_by_user_id: invitedByUserId } = payload;
+            // debugger
             const thread = this.store.Thread.insert(channel);
             await thread.fetchChannelInfo();
             if (invitedByUserId && invitedByUserId !== this.store.self.userId) {

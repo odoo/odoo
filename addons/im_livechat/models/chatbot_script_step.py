@@ -338,7 +338,7 @@ class ChatbotScriptStep(models.Model):
             return self._process_step_forward_operator(discuss_channel)
         return discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
 
-    def _process_step_forward_operator(self, discuss_channel):
+    def _process_step_forward_operator(self, discuss_channel,step=None):
         """ Special type of step that will add a human operator to the conversation when reached,
         which stops the script and allow the visitor to discuss with a real person.
 
@@ -368,7 +368,14 @@ class ChatbotScriptStep(models.Model):
                 posted_message = discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
 
             # next, add the human_operator to the channel and post a "Operator joined the channel" notification
-            discuss_channel.with_user(human_operator).sudo().add_members(human_operator.partner_id.ids, open_chat_window=True)
+            
+            chat_msg = self.env['chatbot.message'].search([
+                ('discuss_channel_id', '=', discuss_channel.id),
+                ('script_step_id', '=', self.id),
+            ], limit=1)
+            human = discuss_channel.with_user(human_operator).sudo().add_members(human_operator.partner_id.ids, open_chat_window=True,seen_id=chat_msg.mail_message_id.id)
+            # breakpoint()
+            # human.seen_message_id = False
             # sudo - discuss.channel: let the chat bot proceed to the forward step (change channel operator, add human operator
             # as member, remove bot from channel, rename channel and finally broadcast the channel to the new operator).
             channel_sudo = discuss_channel.sudo()
