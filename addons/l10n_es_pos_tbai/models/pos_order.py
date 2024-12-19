@@ -27,3 +27,16 @@ class PosOrder(models.Model):
             return super(PosOrder, self.with_context(skip_account_edi_cron_trigger=True))._generate_pos_order_invoice()
         else:
             return super()._generate_pos_order_invoice()
+
+    def _process_order(self, order, draft):
+        if'l10n_es_tbai_refund_reason' in order:
+            refund_reason = order.pop('l10n_es_tbai_refund_reason')
+            return super(PosOrder, self.with_context(l10n_es_tbai_refund_reason=refund_reason))._process_order(order, draft)
+        else:
+            return super()._process_order(order, draft)
+
+    def _prepare_invoice_vals(self):
+        res = super()._prepare_invoice_vals()
+        if self.env.context.get('l10n_es_tbai_refund_reason'):
+            res['l10n_es_tbai_refund_reason'] = self.env.context.get('l10n_es_tbai_refund_reason')
+        return res
