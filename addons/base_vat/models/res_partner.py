@@ -33,7 +33,7 @@ _ref_vat = {
     'cr': _lt('3101012009'),
     'ch': _lt('CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA'),  # Swiss by Yannick Vaucher @ Camptocamp
     'cl': '76086428-5',
-    'co': _lt('213123432-1 or 213.123.432-1'),
+    'co': _lt('2131234321'),
     'cy': 'CY10259033P',
     'cz': 'CZ12345679',
     'de': _lt('DE123456788 or 12/345/67890'),
