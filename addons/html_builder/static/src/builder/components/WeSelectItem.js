@@ -1,6 +1,7 @@
 import { Component, onMounted, onWillDestroy, useRef } from "@odoo/owl";
 import {
     clickableWeWidgetProps,
+    defaultWeWidgetProps,
     useClickableWeWidget,
     useDependecyDefinition,
     WeComponent,
@@ -14,6 +15,7 @@ export class WeSelectItem extends Component {
         title: { type: String, optional: true },
         slots: { type: Object, optional: true },
     };
+    static defaultProps = defaultWeWidgetProps;
     static components = { WeComponent };
 
     setup() {

@@ -222,10 +222,8 @@ export function useClickableWeWidget() {
     }
     function callApply(applySpecs) {
         comp.env.actionBus?.trigger("BEFORE_CALL_ACTIONS");
-        if (comp.props.inheritedActions) {
-            for (const actionId of comp.props.inheritedActions) {
-                comp.env.dependencyManager.get(actionId).bus?.trigger("BEFORE_CALL_ACTIONS");
-            }
+        for (const actionId of comp.props.inheritedActions) {
+            comp.env.dependencyManager.get(actionId).bus?.trigger("BEFORE_CALL_ACTIONS");
         }
         const shouldClean = shouldToggle && isActive();
         for (const applySpec of applySpecs) {
@@ -279,18 +277,15 @@ export function useClickableWeWidget() {
         if (actionId) {
             actions.push({ actionId, actionParam, actionValue });
         }
-        const inheritedActions =
-            (comp.props.inheritedActions &&
-                comp.props.inheritedActions
-                    .map(
-                        (actionId) =>
-                            comp.env.dependencyManager
-                                // The dependency might not be loaded yet.
-                                .get(actionId)
-                                ?.getActions?.() || []
-                    )
-                    .flat()) ||
-            [];
+        const inheritedActions = comp.props.inheritedActions
+            .map(
+                (actionId) =>
+                    comp.env.dependencyManager
+                        // The dependency might not be loaded yet.
+                        .get(actionId)
+                        ?.getActions?.() || []
+            )
+            .flat();
 
         return actions.concat(inheritedActions);
     }
@@ -478,4 +473,7 @@ export const clickableWeWidgetProps = {
     styleActionValue: { type: [String, Array, validateIsNull], optional: true },
 
     inheritedActions: { type: Array, element: String, optional: true },
+};
+export const defaultWeWidgetProps = {
+    inheritedActions: [],
 };

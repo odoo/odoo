@@ -287,12 +287,12 @@ describe("WeButton", () => {
             };
             if (async) {
                 let resolve;
-                const p = new Promise((resolvee) => {
-                    resolve = resolvee;
+                const promise = new Promise((r) => {
+                    resolve = r;
                 });
                 action.load = async ({ param, value }) => {
                     expect.step(`customAction${n} load ${param} ${value}`);
-                    return p;
+                    return promise;
                 };
                 return { action, resolve };
             }

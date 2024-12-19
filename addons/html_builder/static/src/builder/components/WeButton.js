@@ -4,6 +4,7 @@ import {
     useClickableWeWidget,
     WeComponent,
     useDependecyDefinition,
+    defaultWeWidgetProps,
 } from "../builder_helpers";
 
 export class WeButton extends Component {
@@ -21,6 +22,7 @@ export class WeButton extends Component {
 
         slots: { type: Object, optional: true },
     };
+    static defaultProps = defaultWeWidgetProps;
 
     setup() {
         const { state, operation, isActive, getActions } = useClickableWeWidget();
