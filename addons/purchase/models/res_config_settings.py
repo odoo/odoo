@@ -10,6 +10,7 @@ class ResConfigSettings(models.TransientModel):
     lock_confirmed_po = fields.Boolean("Lock Confirmed Orders", default=lambda self: self.env.company.po_lock == 'lock')
     po_lock = fields.Selection(related='company_id.po_lock', string="Purchase Order Modification *", readonly=False)
     po_order_approval = fields.Boolean("Purchase Order Approval", default=lambda self: self.env.company.po_double_validation == 'two_step')
+    group_po_approve_filter_visibility = fields.Boolean("Show hide To approve filter", compute="_compute_po_approve_filter_visibility", implied_group='purchase.group_po_approve_filter_visibility')
     po_double_validation = fields.Selection(related='company_id.po_double_validation', string="Levels of Approvals *", readonly=False)
     po_double_validation_amount = fields.Monetary(related='company_id.po_double_validation_amount', string="Minimum Amount", currency_field='company_currency_id', readonly=False)
     company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string="Company Currency", readonly=True)
@@ -58,3 +59,7 @@ class ResConfigSettings(models.TransientModel):
             self.po_lock = po_lock
         if self.po_double_validation != po_double_validation:
             self.po_double_validation = po_double_validation
+
+    @api.depends('po_order_approval')
+    def _compute_po_approve_filter_visibility(self):
+        self.group_po_approve_filter_visibility = self.po_order_approval
