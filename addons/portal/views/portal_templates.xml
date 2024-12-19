@@ -143,7 +143,11 @@
     <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
         <ol t-if="page_name != 'home'" class="o_portal_submenu breadcrumb mb-0 flex-grow-1 px-0">
             <li class="breadcrumb-item ms-1"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
-            <li t-if="page_name == 'my_details'" class="breadcrumb-item">Details</li>
+            <li t-if="page_name == 'my_addresses'" class="breadcrumb-item">Addresses</li>
+            <li t-if="page_name == 'address_form'" class="breadcrumb-item">
+                <a href="/my/addresses" aria-label="Home" title="Home">Addresses</a>
+            </li>
+            <li t-if="page_name in ['my_details', 'address_form']" class="breadcrumb-item">Details</li>
         </ol>
     </template>
 
@@ -230,7 +234,13 @@
                     <div t-if="portal_service_category_enable" class="o_portal_category row g-2 mt-3" id="portal_service_category"/>
                     <div t-if="portal_vendor_category_enable" class="o_portal_category row g-2 mt-3" id="portal_vendor_category"/>
                     <div class="o_portal_category row g-2 mt-3" id="portal_common_category">
-                        <t t-call="portal.portal_docs_entry" t-if="False"/>
+                        <t t-call="portal.portal_docs_entry">
+                            <t t-set="icon" t-value="'/portal/static/src/img/portal-addresses.svg'"/>
+                            <t t-set="title">Addresses</t>
+                            <t t-set="text">Add, remove or modify your addresses</t>
+                            <t t-set="url" t-value="'/my/addresses'"/>
+                            <t t-set="config_card" t-value="True"/>
+                        </t>
                         <t t-call="portal.portal_docs_entry">
                             <t t-set="icon" t-value="'/portal/static/src/img/portal-connection.svg'"/>
                             <t t-set="title">Connection &amp; Security</t>

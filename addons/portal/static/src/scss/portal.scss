@@ -447,6 +447,21 @@ img, .media_iframe_video, .o_image {
     }
 }
 
+// Address
+.all_delivery, .all_billing {
+    @include media-breakpoint-down(md) {
+        overflow-x: auto;
+
+        > div {
+            width: auto;
+        }
+    }
+
+    .o_portal_add_address {
+        min-height: 12rem;
+    }
+}
+
 // Copyright
 .o_footer_copyright {
     .o_footer_copyright_name {
