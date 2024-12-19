@@ -37,6 +37,10 @@ patch(Wysiwyg.prototype, {
      **/
     async startEdition() {
         if (!this.options.inIframe) {
+            if (this.options.iframe) {
+                this.$iframe = $(this.options.iframe);
+                this.options.inIframe = true;
+            }
             return super.startEdition();
         } else {
             this.defAsset = this._getAssets();
