@@ -2958,6 +2958,38 @@ options.registry.HideFooter = VisibilityPageOptionUpdate.extend({
     shownValue: 'shown',
 });
 
+options.registry.FooterTemplateSelector = options.Class.extend({
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+    /**
+     * Call python route to enable the footer view and its corresponding copyright view
+     * @override
+     */
+    customizeWebsiteViews: async function (previewMode, widgetValue, params) {
+        await rpc("/website/update_footer_template", {
+            template_key: widgetValue,
+            possible_values: this._getDataKeysFromPossibleValues(params.possibleValues),
+        })
+    },
+});
+
+options.registry.ContainerWidthFooter = options.registry.ContainerWidth.extend({
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+    /**
+     * Allow to customize the view only if the footer copyright section
+     * is the target (due to the data-apply-to)
+     * @override
+     */
+    customizeWebsiteViews: async function (previewMode, widgetValue, params) {
+        if (this.$target[0].closest(".o_footer_copyright")) {
+            await this._super(...arguments);
+        }
+    },
+});
+
 /**
  * Handles the edition of snippet's anchor name.
  */
