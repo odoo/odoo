@@ -6,25 +6,6 @@
             <field name="implied_ids" eval="[(4, ref('product.group_product_variant'))]"/>
         </record>
 
-        <!-- Expensable products -->
-        <record id="expense_product" model="product.product">
-            <field name="name">Restaurant Expenses</field>
-            <field name="list_price">14.0</field>
-            <field name="standard_price">8.0</field>
-            <field name="type">service</field>
-            <field name="categ_id" ref="product.product_category_expenses"/>
-        </record>
-
-        <record id="expense_hotel" model="product.product">
-            <field name="name">Hotel Accommodation</field>
-            <field name="list_price">400.0</field>
-            <field name="standard_price">400.0</field>
-            <field name="type">service</field>
-            <field name="uom_id" ref="uom.product_uom_day"/>
-            <field name="uom_po_id" ref="uom.product_uom_day"/>
-            <field name="categ_id" ref="product_category_expenses"/>
-        </record>
-
         <!-- Service products -->
         <record id="product_product_1" model="product.product">
             <field name="name">Virtual Interior Design</field>
@@ -44,6 +25,24 @@
             <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_hour"/>
             <field name="uom_po_id" ref="uom.product_uom_hour"/>
+        </record>
+
+        <record id="product_restaurant" model="product.product">
+            <field name="name">Restaurant Facilities</field>
+            <field name="categ_id" ref="product_category_services"/>
+            <field name="list_price">14.0</field>
+            <field name="standard_price">8.0</field>
+            <field name="type">service</field>
+        </record>
+
+        <record id="product_hotel" model="product.product">
+            <field name="name">Hotel Facilities</field>
+            <field name="categ_id" ref="product_category_services"/>
+            <field name="list_price">400.0</field>
+            <field name="standard_price">400.0</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_day"/>
+            <field name="uom_po_id" ref="uom.product_uom_day"/>
         </record>
 
         <!-- Physical Products -->
