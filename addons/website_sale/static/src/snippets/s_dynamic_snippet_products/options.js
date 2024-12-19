@@ -37,7 +37,11 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
      * @override
      */
      _computeWidgetVisibility(widgetName, params) {
-        if (this.isAlternativeProductSnippet && alternativeSnippetRemovedOptions.includes(widgetName)) {
+        if (
+            (this.isAlternativeProductSnippet &&
+                alternativeSnippetRemovedOptions.includes(widgetName)) ||
+            (this.$target.hasClass("s_dynamic_snippet_products") && widgetName === "template_opt")
+        ) {
             return false;
         }
         return this._super(...arguments);
