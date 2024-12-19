@@ -6,11 +6,12 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='banks']" position="after">
                 <group string="Electronic Invoicing" name="electronic_invoicing">
+                    <field name="hide_peppol_fields" invisible="True"/>
                     <field name="ubl_cii_format" widget="selection"/>
                     <field name="peppol_eas" widget="selection"
-                           invisible="ubl_cii_format in ('facturx', False)"/>
+                           invisible="hide_peppol_fields"/>
                     <field name="peppol_endpoint"
-                           invisible="ubl_cii_format in ('facturx', False)"/>
+                           invisible="hide_peppol_fields"/>
                 </group>
             </xpath>
         </field>
