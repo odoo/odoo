@@ -78,7 +78,7 @@
             <div t-if="thread and thread.importantCounter > 0" class="o-mail-ChatWindow-counter mx-1 badge rounded-pill fw-bold o-discuss-badge" t-ref="needactionCounter">
                 <t t-out="thread.importantCounter"/>
             </div>
-            <div class="o-mail-ChatWindow-quickActions d-flex flex-shrink-0 me-2">
+            <div class="o-mail-ChatWindow-quickActions d-flex flex-shrink-0 me-2 o-gap-0_5">
                 <t t-foreach="partitionedActions.quick.slice(0, ui.isSmall ? 2 : 4).reverse()" t-as="action" t-key="action.id" t-call="mail.ChatWindow.quickAction">
                     <t t-if="action_last" t-set="itemClass" t-value="ui.isSmall ? 'mx-2' : ''"/>
                 </t>

@@ -12,7 +12,7 @@
             'ps-3 pe-2 py-2': !ui.isSmall,
             'o-active': props.isActive,
         }">
-            <span class="o-mail-NotificationItem-unreadIndicator position-absolute" t-att-class="{ 'opacity-0': props.muted, 'opacity-50': !props.muted }"><i class="fa fa-circle"/></span>
+            <span class="o-mail-NotificationItem-unreadIndicator position-absolute" t-att-class="{ 'opacity-0': props.muted, 'opacity-75': !props.muted }"><i class="fa fa-circle"/></span>
             <div class="o-mail-NotificationItem-avatarContainer position-relative bg-inherit flex-shrink-0 align-self-start" t-att-class="{ 'o-small': ui.isSmall }">
                 <img class="o_avatar w-100 h-100 rounded" alt="Notification Item Image" t-att-src="props.iconSrc"/>
                 <t t-slot="icon"/>
