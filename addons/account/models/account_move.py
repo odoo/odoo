@@ -1195,12 +1195,7 @@ class AccountMove(models.Model):
                     'currency': move.currency_id or move.journal_id.currency_id or move.company_id.currency_id,
                 }
 
-                if move.id:
-                    kwargs['tax_lines'] = [
-                        line._convert_to_tax_line_dict()
-                        for line in move.line_ids.filtered(lambda line: line.display_type == 'tax')
-                    ]
-                else:
+                if not move.id:
                     # In case the invoice isn't yet stored, the early payment discount lines are not there. Then,
                     # we need to simulate them.
                     epd_aggregated_values = {}
@@ -1230,6 +1225,23 @@ class AccountMove(models.Model):
                             handle_price_include=False,
                             extra_context={'_extra_grouping_key_': 'epd'},
                         ))
+
+                for tax in move.line_ids.tax_ids:
+                    tax_lines = move.line_ids.filtered(lambda line: line.display_type == 'tax' and line.name == tax.name)
+                    tax_base_lines = move.invoice_line_ids.filtered(lambda line: tax in line.tax_ids)
+
+                    kwargs_base_lines = [item["record"] for item in base_line_values_list if item["record"] in base_lines]
+                    tax_group_old_base_amount = sum([record.amount_currency for record in kwargs_base_lines])
+
+                    tax_amount_mismatch = sum([line.amount_currency for line in tax_base_lines]) * (tax.amount / 100) != sum([line.amount_currency for line in tax_lines])
+                    base_amount_mismatch = tax_group_old_base_amount != sum([line.price_unit * line.quantity for line in tax_base_lines])
+                    should_match = (tax_amount_mismatch and not base_amount_mismatch) or base_amount_mismatch
+                    if should_match:
+                        kwargs['tax_lines'] = [
+                            line._convert_to_tax_line_dict()
+                            for line in move.line_ids.filtered(lambda line: line.display_type == 'tax' and line.name == tax.name)
+                        ]
+
                 move.tax_totals = self.env['account.tax']._prepare_tax_totals(**kwargs)
                 if move.invoice_cash_rounding_id:
                     rounding_amount = move.invoice_cash_rounding_id.compute_difference(move.currency_id, move.tax_totals['amount_total'])
