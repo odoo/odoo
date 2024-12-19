@@ -2690,7 +2690,11 @@ class TestMrpOrder(TestMrpCommon):
         production_form = Form(production)
         production_form.qty_producing = 1
         with production_form.workorder_ids.edit(0) as wo:
-            wo.duration = 15 # in 15 minutes
+            with wo.time_ids.new() as time:
+                time.workcenter_id = wo.workcenter_id
+                now = fields.Datetime.now()
+                time.date_start = now
+                time.date_end = now + timedelta(minutes=15) # in 15 minutes
         production = production_form.save()
         production.button_mark_done()
         # It is saved and done, registered in the db. There are now 1 productions of that operation
@@ -2707,7 +2711,11 @@ class TestMrpOrder(TestMrpCommon):
         production_form = Form(production)
         production_form.qty_producing = 1
         with production_form.workorder_ids.edit(0) as wo:
-            wo.duration = 10  # In 10 minutes this time
+            with wo.time_ids.new() as time:
+                time.workcenter_id = wo.workcenter_id
+                now = fields.Datetime.now()
+                time.date_start = now
+                time.date_end = now + timedelta(minutes=10) # in 10 minutes
         production = production_form.save()
         production.button_mark_done()
         # It is saved and done, registered in the db. There are now 2 productions of that operation
@@ -2738,7 +2746,11 @@ class TestMrpOrder(TestMrpCommon):
         production_form = Form(production)
         production_form.qty_producing = 1
         with production_form.workorder_ids.edit(0) as wo:
-            wo.duration = 10  # in 10 minutes
+            with wo.time_ids.new() as time:
+                time.workcenter_id = wo.workcenter_id
+                now = fields.Datetime.now()
+                time.date_start = now
+                time.date_end = now + timedelta(minutes=10) # in 10 minutes
         production = production_form.save()
         production.button_mark_done()
         # It is saved and done, registered in the db. There are now 1 productions of that operation
@@ -2757,7 +2769,11 @@ class TestMrpOrder(TestMrpCommon):
         production_form = Form(production)
         production_form.qty_producing = 2
         with production_form.workorder_ids.edit(0) as wo:
-            wo.duration = 10  # In 10 minutes this time
+            with wo.time_ids.new() as time:
+                time.workcenter_id = wo.workcenter_id
+                now = fields.Datetime.now()
+                time.date_start = now
+                time.date_end = now + timedelta(minutes=10) # in 10 minutes
         production = production_form.save()
         production.button_mark_done()
         # It is saved and done, registered in the db. There are now 2 productions of that operation but they have the same duration
@@ -2791,7 +2807,11 @@ class TestMrpOrder(TestMrpCommon):
         production_form = Form(production)
         production_form.qty_producing = 1
         with production_form.workorder_ids.edit(0) as wo:
-            wo.duration = 10  # in 10 minutes
+            with wo.time_ids.new() as time:
+                time.workcenter_id = wo.workcenter_id
+                now = fields.Datetime.now()
+                time.date_start = now
+                time.date_end = now + timedelta(minutes=10) # in 10 minutes
         production = production_form.save()
         production.button_mark_done()
 
@@ -4880,7 +4900,11 @@ class TestMrpOrder(TestMrpCommon):
         production_form = Form(production)
         production_form.qty_producing = 1
         with production_form.workorder_ids.edit(0) as wo:
-            wo.duration = 15  # Complete the work order in 15 minutes
+            with wo.time_ids.new() as time:
+                time.workcenter_id = wo.workcenter_id
+                now = fields.Datetime.now()
+                time.date_start = now
+                time.date_end = now + timedelta(minutes=15)# Complete the work order in 15 minutes
         production = production_form.save()
         production.button_mark_done()
 
