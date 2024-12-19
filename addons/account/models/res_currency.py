@@ -216,7 +216,7 @@ class ResCurrency(models.Model):
             """,
             period_key=period_key,
             main_company_id=main_company.root_id.id,
-            fiscal_year_bounds_values=SQL(",").join(SQL("(%(fy_from)s,%(fy_to)s)", fy_from=fy_from, fy_to=fy_to) for fy_from, fy_to in fiscal_year_bounds),
+            fiscal_year_bounds_values=SQL(",").join(SQL("(%(fy_from)s::date,%(fy_to)s::date)", fy_from=fy_from, fy_to=fy_to) for fy_from, fy_to in fiscal_year_bounds),
             other_company_ids=tuple(other_companies.ids),
             date_to=date_to,
             main_company_unit_factor=main_company_unit_factor,
