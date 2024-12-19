@@ -6,7 +6,8 @@ import { rpc } from "@web/core/network/rpc";
 import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
 
 export class Follow extends Interaction {
-    static selector = "#wrapwrap:has(.js_follow)";
+    static selector = "#wrapwrap";
+    static selectorHas = ".js_follow";
     dynamicContent = {
         ".js_follow > .d-none": { "t-att-class": () => ({ "d-none": false }) },
         ".js_follow_btn, .js_unfollow_btn": { "t-on-click.prevent": this.onClick },
@@ -78,7 +79,7 @@ export class Follow extends Interaction {
     }
 
     /**
-     * @param {HTMLElement} jsFollowEl    
+     * @param {HTMLElement} jsFollowEl
      * @param {boolean} status
      */
     toggleEmailError(jsFollowEl, status) {
