@@ -28,6 +28,7 @@ _default_parameters = {
 
 class IrConfig_Parameter(models.Model):
     """Per-database storage of configuration key-value pairs."""
+    _name = 'ir.config_parameter'
     _description = 'System Parameter'
     _rec_name = 'key'
     _order = 'key'

@@ -18,6 +18,7 @@ class SequenceMixin(models.AbstractModel):
     docstring of _get_last_sequence.
     """
 
+    _name = 'sequence.mixin'
     _description = "Automatic sequence"
 
     _sequence_field = "name"

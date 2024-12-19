@@ -561,7 +561,7 @@ class IrQweb(models.AbstractModel):
     incompatible with other subsystems, you should create a local object
     inheriting from ``ir.qweb`` and customize that.
     """
-
+    _name = 'ir.qweb'
     _description = 'Qweb'
 
     @QwebTracker.wrap_render
