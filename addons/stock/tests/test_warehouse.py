@@ -12,6 +12,10 @@ class TestWarehouse(TestStockCommon):
         super().setUpClass()
         cls.partner = cls.env['res.partner'].create({'name': 'Deco Addict'})
 
+    def setUp(self):
+        super().setUp()
+        self.uid = self.user_stock_manager
+
     def test_inventory_product(self):
         self.product_1.is_storable = True
         product_1_quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
@@ -508,7 +512,7 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(warehouse_B.resupply_route_ids, resupply_route)
         self.assertTrue(resupply_route.active, 'Route should now be active')
 
-    def test_muti_step_resupply_warehouse(self):
+    def test_multi_step_resupply_warehouse(self):
         """ Simulate the following situation:
         - First warehouse has a 3-steps delivery
         - Second warehouse has a 3-steps reception
@@ -614,7 +618,6 @@ class TestWarehouse(TestStockCommon):
 
     def test_noleak(self):
         # non-regression test to avoid company_id leaking to other warehouses (see blame)
-        partner = self.env['res.partner'].create({'name': 'Chicago partner'})
         company = self.env['res.company'].sudo().create({
             'name': 'My Company (Chicago)1',
             'currency_id': self.ref('base.USD')
@@ -623,7 +626,7 @@ class TestWarehouse(TestStockCommon):
             'name': 'Chicago Warehouse2',
             'company_id': company.id,
             'code': 'Chic2',
-            'partner_id': partner.id
+            'partner_id': self.partner.id
         })
         wh = self.env["stock.warehouse"].search([])
 

@@ -12,9 +12,9 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._enable_adv_location()
+        cls._enable_adv_location(cls.user_stock_manager)
 
-        cls.warehouse = cls.warehouse_1
+        cls.warehouse = cls.warehouse_1.with_user(cls.user_stock_manager)
 
         # Create manufactured product
         product_form = Form(cls.env['product.product'])
@@ -35,6 +35,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
 
         # Create bom for manufactured product
         bom_product_form = Form(cls.env['mrp.bom'])
+        bom_product_form.company_id = cls.stock_company
         bom_product_form.product_id = cls.finished_product
         bom_product_form.product_tmpl_id = cls.finished_product.product_tmpl_id
         bom_product_form.product_qty = 1.0

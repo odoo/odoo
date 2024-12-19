@@ -60,7 +60,7 @@ class TestReturnPicking(TestStockCommon):
         """
             Test returns of pickings with serial tracked products put in packs
         """
-        product_serial = self.env['product.product'].create({
+        product_serial = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Tracked by SN',
             'is_storable': True,
             'tracking': 'serial',
@@ -144,7 +144,7 @@ class TestReturnPicking(TestStockCommon):
         """
             Test returns of incoming pickings have the same partner assigned to them
         """
-        partner = self.env['res.partner'].create({'name': 'Jean'})
+        partner = self.env['res.partner'].with_user(self.user_stock_manager).create({'name': 'Jean'})
         receipt = self.env['stock.picking'].create({
             'picking_type_id': self.picking_type_in.id,
             'location_id': self.supplier_location.id,
@@ -177,7 +177,7 @@ class TestReturnPicking(TestStockCommon):
         create a return exchange.
         '''
         # create a storable product
-        product_serial = self.env['product.product'].create({
+        product_serial = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Tracked by SN',
             'is_storable': True,
             'tracking': 'serial',

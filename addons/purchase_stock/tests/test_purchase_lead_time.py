@@ -16,7 +16,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             and company's Purchase Lead Time."""
 
         # Update company with Purchase Lead Time
-        self.company.sudo().write({'po_lead': 3.00})
+        self.stock_company.sudo().po_lead = 3.0
 
         # Make procurement request from product_1's form view, create procurement and check it's state
         date_planned = fields.Datetime.now() + timedelta(days=10)
@@ -46,7 +46,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             we create two procurements for the two different product with same vendor
             and different Delivery Lead Time."""
 
-        self.company.sudo().write({'po_lead': 0.00})
+        self.stock_company.sudo().po_lead = 3.0
 
         # Make procurement request from product_1's form view, create procurement and check it's state
         date_planned1 = fields.Datetime.now() + timedelta(days=10)
@@ -95,10 +95,10 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         """Change that merging po line for same procurement is done."""
 
         # create a product with manufacture route
-        product_1 = self.env['product.product'].create({
+        product_1 = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'AAA',
             'route_ids': [(4, self.route_buy)],
-            'seller_ids': [(0, 0, {'partner_id': self.partner_1.id, 'delay': 5})]
+            'seller_ids': [(0, 0, {'partner_id': self.partner.id, 'delay': 5})]
         })
 
         # create a move for product_1 from stock to output and reserve to trigger the
@@ -139,7 +139,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
     def test_merge_po_line_3(self):
         """Change merging po line if same procurement is done depending on custom values."""
-        self.company.sudo().write({'po_lead': 0.00})
+        self.stock_company.sudo().po_lead = 3.0
 
         # The seller has a specific product name and code which must be kept in the PO line
         self.t_shirt.seller_ids.write({
@@ -166,7 +166,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         order_1_values = procurement_values
         ProcurementGroup.run([self.env['procurement.group'].Procurement(
             self.t_shirt, 5, self.uom_unit, self.warehouse_1.lot_stock_id,
-            self.t_shirt.name, '/', self.company, order_1_values)
+            self.t_shirt.name, '/', self.stock_company, order_1_values)
         ])
         purchase_order = self.env['purchase.order.line'].search([('product_id', '=', self.t_shirt.id)], limit=1).order_id
         order_line_description = purchase_order.order_line.product_id.description_pickingin or ''
@@ -177,7 +177,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         order_2_values = procurement_values
         ProcurementGroup.run([self.env['procurement.group'].Procurement(
             self.t_shirt, 10, self.uom_unit, self.warehouse_1.lot_stock_id,
-            self.t_shirt.name, '/', self.company, order_2_values)
+            self.t_shirt.name, '/', self.stock_company, order_2_values)
         ])
         self.env['procurement.group'].run_scheduler()
         self.assertEqual(len(purchase_order.order_line), 1, 'line with same custom value should be merged')
@@ -188,7 +188,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         order_3_values = procurement_values
         ProcurementGroup.run([self.env['procurement.group'].Procurement(
             self.t_shirt, 10, self.uom_unit, self.warehouse_1.lot_stock_id,
-            self.t_shirt.name, '/', self.company, order_3_values)
+            self.t_shirt.name, '/', self.stock_company, order_3_values)
         ])
         self.assertEqual(len(purchase_order.order_line), 2, 'line with different custom value should not be merged')
         self.assertEqual(purchase_order.order_line.filtered(lambda x: x.product_qty == 15).name, t_shirt.display_name + "\n" + "Color (Red)", 'wrong description in po lines')
@@ -199,12 +199,12 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(purchase_order.picking_ids[0].move_ids_without_package.filtered(lambda x: x.product_uom_qty == 10).description_picking, t_shirt.display_name + "\n" + order_line_description + "Color (Green)", 'wrong description in picking')
 
     def test_reordering_days_to_purchase(self):
-        self.company.sudo().write({'po_lead': 0.00})
         with self.with_user('admin'):
+            self.company.write({'po_lead': 0.00})
             company2 = self.env['res.company'].create({
                 'name': 'Second Company',
             })
-            self.user.company_ids |= company2
+            self.user_stock_user.company_ids |= company2
         self.patcher = patch('odoo.addons.stock.models.stock_orderpoint.fields.Date', wraps=fields.Date)
         self.mock_date = self.startPatcher(self.patcher)
         vendor = self.env['res.partner'].create({

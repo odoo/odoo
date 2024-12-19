@@ -11,17 +11,19 @@ class TestStockFlow(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.ref('product.decimal_product_uom').sudo().digits = 3
+        cls.env.ref('product.decimal_product_uom').digits = 3
         partner = cls.env['res.partner'].create({
-            'name': 'My Company (Chicago)-demo',
+            'name': 'Test Logictics Partner Company',
             'email': 'chicago@yourcompany.com',
             'company_id': False,
         })
-        cls.partner_company = cls.env['res.company'].sudo().create({
+        cls.partner_company = cls.env['res.company'].create({
             'currency_id': cls.env.ref('base.USD').id,
             'partner_id': partner.id,
-            'name': 'My Company (Chicago)-demo',
+            'name': 'Test Logictics Partner Company',
         })
+        cls.user_stock_user.company_ids += cls.partner_company
+        cls.user_stock_manager.company_ids += cls.partner_company
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_00_picking_create_and_transfer_quantity(self):
@@ -933,7 +935,12 @@ class TestStockFlow(TestStockCommon):
         # Create product in kg and receive in ton.
         # -----------------------------------------
 
-        productKG = self.ProductObj.create({'name': 'Product KG', 'uom_id': self.uom_kg.id, 'uom_po_id': self.uom_kg.id, 'is_storable': True})
+        productKG = self.ProductObj.with_user(self.user_stock_manager).create({
+            'name': 'Product KG',
+            'uom_id': self.uom_kg.id,
+            'uom_po_id': self.uom_kg.id,
+            'is_storable': True,
+        })
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in.id,
             'location_id': self.supplier_location.id,
@@ -1098,8 +1105,18 @@ class TestStockFlow(TestStockCommon):
         # TEST EMPTY INVENTORY WITH PACKS and LOTS
         # ---------------------------------------------------------
 
-        packproduct = self.ProductObj.create({'name': 'Pack Product', 'uom_id': self.uom_unit.id, 'uom_po_id': self.uom_unit.id, 'is_storable': True})
-        lotproduct = self.ProductObj.create({'name': 'Lot Product', 'uom_id': self.uom_unit.id, 'uom_po_id': self.uom_unit.id, 'is_storable': True})
+        packproduct = self.ProductObj.with_user(self.user_stock_manager).create({
+            'name': 'Pack Product',
+            'uom_id': self.uom_unit.id,
+            'uom_po_id': self.uom_unit.id,
+            'is_storable': True,
+        })
+        lotproduct = self.ProductObj.with_user(self.user_stock_manager).create({
+            'name': 'Lot Product',
+            'uom_id': self.uom_unit.id,
+            'uom_po_id': self.uom_unit.id,
+            'is_storable': True,
+        })
         quant_obj = self.env['stock.quant'].with_context(inventory_mode=True)
         pack_obj = self.env['stock.quant.package']
         lot_obj = self.env['stock.lot']
@@ -1839,22 +1856,15 @@ class TestStockFlow(TestStockCommon):
         """ Ensure that inter company rules set the correct company on picking
         and their moves.
         """
-        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        grp_multi_routes = self.env.ref('stock.group_adv_location')
-        grp_multi_companies = self.env.ref('base.group_multi_company')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
-        self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
-        self.env.user.write({'groups_id': [(4, grp_multi_companies.id)]})
-
+        self.uid = self.user_stock_manager
         company_2 = self.partner_company
-        # Need to add a new company on user.
-        self.env.user.write({'company_ids': [(4, company_2.id)]})
+        self.env = self.env(context={'allowed_company_ids': [self.stock_company.id, company_2.id]})
 
-        warehouse_company_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse_company_1 = self.env['stock.warehouse'].search([('company_id', '=', self.stock_company.id)], limit=1)
 
         f = Form(self.env['stock.route'])
         f.name = 'From Company 1 to InterCompany'
-        f.company_id = self.env.company
+        f.company_id = self.stock_company
         with f.rule_ids.new() as rule:
             rule.name = 'From Company 1 to InterCompany'
             rule.action = 'pull'
@@ -1891,8 +1901,8 @@ class TestStockFlow(TestStockCommon):
         incoming_picking = self.env['stock.picking'].search([('product_id', '=', product.id), ('picking_type_id', '=', warehouse_company_1.in_type_id.id)])
         outgoing_picking = self.env['stock.picking'].search([('product_id', '=', product.id), ('picking_type_id', '=', warehouse_company_2.out_type_id.id)])
 
-        self.assertEqual(incoming_picking.company_id, self.env.company)
-        self.assertEqual(incoming_picking.move_ids.company_id, self.env.company)
+        self.assertEqual(incoming_picking.company_id, self.stock_company)
+        self.assertEqual(incoming_picking.move_ids.company_id, self.stock_company)
         self.assertEqual(outgoing_picking.company_id, company_2)
         self.assertEqual(outgoing_picking.move_ids.company_id, company_2)
 
@@ -1903,22 +1913,22 @@ class TestStockFlow(TestStockCommon):
         should create moves for company_2 and company_3 at the same time.
         Ensure they are not create in the same batch.
         """
-        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        grp_multi_routes = self.env.ref('stock.group_adv_location')
-        grp_multi_companies = self.env.ref('base.group_multi_company')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
-        self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
-        self.env.user.write({'groups_id': [(4, grp_multi_companies.id)]})
-
+        self.uid = self.user_stock_manager
+        company_1 = self.stock_company
         company_2 = self.partner_company
-        # Need to add a new company on user.
-        self.env.user.write({'company_ids': [(4, company_2.id)]})
+        company_3 = self.env['res.company'].sudo().create({'name': 'Alaska Company'})
 
-        warehouse_company_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        self.env = self.env(context={'allowed_company_ids': [
+            self.stock_company.id, company_2.id, company_3.id
+        ]})
+
+        warehouse_company_1 = self.warehouse_1
+        warehouse_company_2 = self.env['stock.warehouse'].search([('company_id', '=', company_2.id)], limit=1)
+        warehouse_company_3 = self.env['stock.warehouse'].search([('company_id', '=', company_3.id)], limit=1)
 
         f = Form(self.env['stock.route'])
         f.name = 'From Company 1 to InterCompany'
-        f.company_id = self.env.company
+        f.company_id = company_1
         with f.rule_ids.new() as rule:
             rule.name = 'From Company 1 to InterCompany'
             rule.action = 'pull'
@@ -1927,7 +1937,6 @@ class TestStockFlow(TestStockCommon):
             rule.procure_method = 'make_to_order'
         route_a = f.save()
 
-        warehouse_company_2 = self.env['stock.warehouse'].search([('company_id', '=', company_2.id)], limit=1)
         f = Form(self.env['stock.route'])
         f.name = 'From InterCompany to Company 2'
         f.company_id = company_2
@@ -1939,11 +1948,6 @@ class TestStockFlow(TestStockCommon):
             rule.procure_method = 'make_to_stock'
         route_b = f.save()
 
-        company_3 = self.env['res.company'].sudo().create({
-            'name': 'Alaska Company'
-        })
-
-        warehouse_company_3 = self.env['stock.warehouse'].search([('company_id', '=', company_3.id)], limit=1)
         f = Form(self.env['stock.route'])
         f.name = 'From InterCompany to Company 3'
         f.company_id = company_3
@@ -1983,16 +1987,16 @@ class TestStockFlow(TestStockCommon):
         incoming_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_2.id), ('picking_type_id', '=', warehouse_company_1.in_type_id.id)])
         outgoing_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_2.id), ('picking_type_id', '=', warehouse_company_2.out_type_id.id)])
 
-        self.assertEqual(incoming_picking.company_id, self.env.company)
-        self.assertEqual(incoming_picking.move_ids.mapped('company_id'), self.env.company)
+        self.assertEqual(incoming_picking.company_id, company_1)
+        self.assertEqual(incoming_picking.move_ids.mapped('company_id'), company_1)
         self.assertEqual(outgoing_picking.company_id, company_2)
         self.assertEqual(outgoing_picking.move_ids.company_id, company_2)
 
         incoming_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_3.id), ('picking_type_id', '=', warehouse_company_1.in_type_id.id)])
         outgoing_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_3.id), ('picking_type_id', '=', warehouse_company_3.out_type_id.id)])
 
-        self.assertEqual(incoming_picking.company_id, self.env.company)
-        self.assertEqual(incoming_picking.move_ids.mapped('company_id'), self.env.company)
+        self.assertEqual(incoming_picking.company_id, company_1)
+        self.assertEqual(incoming_picking.move_ids.mapped('company_id'), company_1)
         self.assertEqual(outgoing_picking.company_id, company_3)
         self.assertEqual(outgoing_picking.move_ids.company_id, company_3)
 
@@ -2000,9 +2004,14 @@ class TestStockFlow(TestStockCommon):
         """ As it seems we keep breaking this thing over and over this small
         test ensure the scheduled_date is writable on a picking in state 'draft' or 'confirmed'
         """
-        partner = self.env['res.partner'].create({'name': 'Hubert Bonisseur de la Bath'})
-        product = self.env['product.product'].create({'name': 'Un petit coup de polish', 'is_storable': True})
-        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        partner = self.env['res.partner'].with_user(self.user_stock_manager).create({
+            'name': 'Hubert Bonisseur de la Bath'
+        })
+        product = self.env['product.product'].with_user(self.user_stock_manager).create({
+            'name': 'Un petit coup de polish',
+            'is_storable': True
+        })
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.stock_company.id)], limit=1)
 
         picking = self.env['stock.picking'].create({
             'state': 'draft',
@@ -2034,11 +2043,11 @@ class TestStockFlow(TestStockCommon):
         test ensure the location and scrap_location is writable on a scrap order in state 'draft'
         but not in state 'confirmed'.
         """
-        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id, 0)]})
-
-        product = self.env['product.product'].create({'name': 'Un petit coup de polish', 'is_storable': True})
-        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        product = self.env['product.product'].with_user(self.user_stock_manager).create({
+            'name': 'Un petit coup de polish',
+            'is_storable': True,
+        })
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.stock_company.id)], limit=1)
 
         self.env['stock.quant']._update_available_quantity(product, wh.wh_qc_stock_loc_id, 10)
 
@@ -2066,12 +2075,12 @@ class TestStockFlow(TestStockCommon):
         different pickings and those pickings are validated together.
         """
         # Creates two tracked products (one by lots and one by SN).
-        product_lot = self.env['product.product'].create({
+        product_lot = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Tracked by lot',
             'is_storable': True,
             'tracking': 'lot',
         })
-        product_serial = self.env['product.product'].create({
+        product_serial = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Tracked by SN',
             'is_storable': True,
             'tracking': 'serial',
@@ -2143,11 +2152,10 @@ class TestStockFlow(TestStockCommon):
 
         # Checks also it still raise an error when it tries to create multiple time
         # the same serial numbers (same scenario but with SN instead of lots).
-        picking_type = self.picking_type_in
         picking = self.env['stock.picking'].create({
             'state': 'draft',
-            'picking_type_id':  picking_type.id,
-            })
+            'picking_type_id': self.picking_type_in.id,
+        })
         picking_form = Form(picking)
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = product_serial
@@ -2165,8 +2173,8 @@ class TestStockFlow(TestStockCommon):
 
         picking = self.env['stock.picking'].create({
             'state': 'draft',
-            'picking_type_id': picking_type.id,
-            })
+            'picking_type_id': self.picking_type_in.id,
+        })
         picking_form = Form(picking)
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = product_serial
@@ -2306,14 +2314,15 @@ class TestStockFlow(TestStockCommon):
         """ Ensure that the partner_id of the picking entry is
         transmitted to the SM upon object creation.
         """
+        self.uid = self.user_stock_manager
+
         partner_1 = self.env['res.partner'].create({'name': 'Hubert Bonisseur de la Bath'})
         partner_2 = self.env['res.partner'].create({'name': 'Donald Clairvoyant du Bled'})
         product = self.env['product.product'].create({'name': 'Un petit coup de polish', 'is_storable': True})
-        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
         f = Form(self.env['stock.picking'])
         f.partner_id = partner_1
-        f.picking_type_id = wh.out_type_id
+        f.picking_type_id = self.warehouse_1.out_type_id
         with f.move_ids_without_package.new() as move:
             move.product_id = product
             move.product_uom_qty = 5
@@ -2393,9 +2402,11 @@ class TestStockFlow(TestStockCommon):
         We trigger an orderpoint for each product
         There should be two pickings (out from WH01 + in to WH02)
         """
+        self.uid = self.user_stock_manager
+
         wh01_address, wh02_address = self.env['res.partner'].create([{
             'name': 'Address %s' % i,
-            'parent_id': self.env.company.partner_id.id,
+            'parent_id': self.stock_company.partner_id.id,
             'type': 'delivery',
         } for i in [1, 2]])
 
@@ -2448,7 +2459,7 @@ class TestStockFlow(TestStockCommon):
         steps), the out-move should be automatically assigned.
         """
         self.env['ir.config_parameter'].sudo().set_param('stock.picking_no_auto_reserve', False)
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse = self.warehouse_1.with_user(self.user_stock_manager)
         warehouse.out_type_id.reservation_method = 'by_date'
         warehouse.reception_steps = 'two_steps'
 
@@ -2493,9 +2504,6 @@ class TestStockFlow(TestStockCommon):
         destination location should not changed. Same when marking the picking
         as done
         """
-        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id, 0)]})
-
         sub_loc = self.stock_location.child_ids[0]
 
         self.productA.tracking = 'lot'
@@ -2617,7 +2625,7 @@ class TestStockFlow(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'picking_type_id': self.picking_type_in.id,
-            'company_id': self.env.company.id,
+            'company_id': self.stock_company.id,
         })
         no_tracking_move = self.env['stock.move'].create({
             'name': self.productA.name,
@@ -2650,9 +2658,11 @@ class TestStockFlow(TestStockCommon):
 class TestStockFlowPostInstall(TestStockCommon):
 
     def test_last_delivery_partner_field_on_lot(self):
-        partner = self.env['res.partner'].create({'name': 'Super Partner'})
+        partner = self.env['res.partner'].with_user(self.user_stock_manager).create({
+            'name': 'Super Partner',
+        })
 
-        product = self.env['product.product'].create({
+        product = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Super Product',
             'is_storable': True,
             'tracking': 'serial',
@@ -2721,12 +2731,12 @@ class TestStockFlowPostInstall(TestStockCommon):
         """
         when changing picking_type_id of a stock.picking, should change the name too
         """
-        picking_type_1 = self.env['stock.picking.type'].create({
+        picking_type_1 = self.env['stock.picking.type'].with_user(self.user_stock_manager).create({
             'name': 'new_picking_type_1',
             'code': 'internal',
             'sequence_code': 'PT1/',
         })
-        picking_type_2 = self.env['stock.picking.type'].create({
+        picking_type_2 = self.env['stock.picking.type'].with_user(self.user_stock_manager).create({
             'name': 'new_picking_type_2',
             'code': 'internal',
             'sequence_code': 'PT2/',
@@ -2750,6 +2760,8 @@ class TestStockFlowPostInstall(TestStockCommon):
             If name str has a parent location prefix we try to create as child location
             else ignore prefixes
         """
+        self.uid = self.user_stock_manager
+
         parent_location = self.env['stock.location'].create({'name': 'ParentLocation'})
         new_location_id = self.env['stock.location'].name_create('ParentLocation/TestLocation1')[0]
         new_location = self.env['stock.location'].browse(new_location_id)

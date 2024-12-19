@@ -1,17 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.stock.tests.common import TestStockCommon
-from odoo.addons.sale.tests.common import TestSaleCommonBase
+from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 
 
-class TestReInvoice(TestStockCommon, TestSaleCommonBase, TestProjectCommon):
+class TestReInvoice(TestStockCommon, TestSaleCommon, TestProjectCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._enable_sale_manager()
-        cls._enable_project_manager()
+        cls._enable_sale_manager(cls.user_stock_user)
+        cls._enable_project_manager(cls.user_stock_user)
         cls.partner = cls.env['res.partner'].create({'name': 'Test Partner'})
         cls.sale_order = cls.env['sale.order'].create({
             'partner_id': cls.partner.id,

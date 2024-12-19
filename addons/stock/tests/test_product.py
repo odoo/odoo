@@ -35,6 +35,7 @@ class TestVirtualAvailable(TestStockCommon):
         cls.picking_out = cls.env['stock.picking'].create({
             'state': 'draft',
             'picking_type_id': cls.picking_type_out.id,
+            'company_id': cls.stock_company.id,
         })
         cls.env['stock.move'].create({
             'name': 'a move',
@@ -44,11 +45,13 @@ class TestVirtualAvailable(TestStockCommon):
             'picking_id': cls.picking_out.id,
             'location_id': cls.stock_location.id,
             'location_dest_id': cls.customer_location.id,
+            'company_id': cls.stock_company.id,
         })
 
         cls.picking_out_2 = cls.env['stock.picking'].create({
             'state': 'draft',
             'picking_type_id': cls.picking_type_out.id,
+            'company_id': cls.stock_company.id,
         })
         cls.env['stock.move'].create({
             'restrict_partner_id': cls.user_stock_user.partner_id.id,
@@ -59,6 +62,7 @@ class TestVirtualAvailable(TestStockCommon):
             'picking_id': cls.picking_out_2.id,
             'location_id': cls.stock_location.id,
             'location_dest_id': cls.customer_location.id,
+            'company_id': cls.stock_company.id,
         })
 
     def test_without_owner(self):
@@ -102,7 +106,9 @@ class TestVirtualAvailable(TestStockCommon):
     def test_archive_product_2(self):
         """Archiving a product should archive its reordering rules"""
         self.assertTrue(self.product_3.active)
-        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form = Form(
+            self.env['stock.warehouse.orderpoint'].with_user(self.user_stock_manager)
+        )
         orderpoint_form.product_id = self.product_3
         orderpoint_form.location_id = self.stock_location
         orderpoint_form.product_min_qty = 0.0
@@ -115,8 +121,13 @@ class TestVirtualAvailable(TestStockCommon):
     def test_change_product_company(self):
         """ Checks we can't change the product's company if this product has
         quant in another company. """
-        company1 = self.company
-        company2 = self.env['res.company'].sudo().create({'name': 'Second Company'})
+        self.uid = self.user_stock_manager
+
+        company1 = self.stock_company
+        company2 = self.env['res.company'].sudo().create({
+            'name': 'Second Company',
+        })
+        self.env = self.env(context={'allowed_company_ids': [company1.id, company2.id]})
         product = self.env['product.product'].create({
             'name': 'Product [TEST - Change Company]',
             'is_storable': True,
@@ -142,11 +153,12 @@ class TestVirtualAvailable(TestStockCommon):
     def test_change_product_company_02(self):
         """ Checks we can't change the product's company if this product has
         stock move line in another company. """
-        company1 = self.company
+        company1 = self.stock_company
         company2 = self.env['res.company'].sudo().create({'name': 'Second Company'})
-        product = self.env['product.product'].create({
+        product = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Product [TEST - Change Company]',
             'type': 'consu',
+            'company_id': company1.id,
         })
         picking = self.env['stock.picking'].create({
             'location_id': self.customer_location.id,
@@ -173,10 +185,7 @@ class TestVirtualAvailable(TestStockCommon):
     def test_change_product_company_exclude_vendor_and_customer_location(self):
         """ Checks we can change product company where only exist single company
         and exist quant in vendor/customer location"""
-        company1 = self.company
-        customer_location = self.env.ref('stock.stock_location_customers')
-        supplier_location = self.env.ref('stock.stock_location_suppliers')
-        product = self.env['product.product'].create({
+        product = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Product Single Company',
             'is_storable': True,
         })
@@ -191,18 +200,18 @@ class TestVirtualAvailable(TestStockCommon):
         self.env['stock.quant'].create({
             'product_id': product.id,
             'product_uom_id': self.uom_unit.id,
-            'location_id': supplier_location.id,
+            'location_id': self.supplier_location.id,
             'quantity': -15,
         })
         # Creates a quant for customer location.
         self.env['stock.quant'].create({
             'product_id': product.id,
             'product_uom_id': self.uom_unit.id,
-            'location_id': customer_location.id,
+            'location_id': self.customer_location.id,
             'quantity': 10,
         })
         # Assigns a company: should be ok because only exist one company (exclude vendor and customer location)
-        product.company_id = company1.id
+        product.company_id = self.stock_company.id
 
         # Reset product company to empty
         product.company_id = False
@@ -212,7 +221,7 @@ class TestVirtualAvailable(TestStockCommon):
             product.company_id = company2.id
 
     def test_search_qty_available(self):
-        product = self.env['product.product'].create({
+        product = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Brand new product',
             'is_storable': True,
         })
@@ -232,7 +241,8 @@ class TestVirtualAvailable(TestStockCommon):
         calling `name_search` with a negative operator will exclude T from the
         result.
         """
-        self._enable_product_variant()
+        self.uid = self.user_stock_manager
+
         template = self.env['product.template'].create({
             'name': 'Super Product',
         })
@@ -291,9 +301,10 @@ class TestVirtualAvailable(TestStockCommon):
         self.assertTrue(other_warehouse, 'The test needs another warehouse')
 
         (main_loc | other_loc).name = 'Stock'
-        sub_loc01, sub_loc02, sub_loc03 = self.env['stock.location'].create([{
+        sub_loc01, sub_loc02, sub_loc03 = self.env['stock.location'].with_user(self.user_stock_manager).create([{
             'name': 'Sub0%s' % (i + 1),
             'location_id': main_loc.id,
+            'company_id': self.stock_company.id,
         } for i in range(3)])
 
         self.env['stock.quant'].search([('product_id', '=', self.product_3.id)]).sudo().unlink()
@@ -327,7 +338,7 @@ class TestVirtualAvailable(TestStockCommon):
             self.assertEqual(product_qty, expected)
 
     def test_change_type_tracked_product(self):
-        product = self.env['product.template'].create({
+        product = self.env['product.template'].with_user(self.user_stock_manager).create({
             'name': 'Brand new product',
             'is_storable': True,
             'tracking': 'serial',
@@ -347,24 +358,29 @@ class TestVirtualAvailable(TestStockCommon):
         self.assertEqual(product.tracking, 'none')
 
     def test_domain_locations_only_considers_selected_companies(self):
-        product = self.env['product.product'].create({'name': 'Product', 'is_storable': True})
-        with self.with_user('admin'):
-            company_a = self.env['res.company'].create({'name': 'Company A'})
-            company_b = self.env['res.company'].create({'name': 'Company B'})
-            warehouse_a = self.env['stock.warehouse'].search([('company_id', '=', company_a.id)])
-            warehouse_b = self.env['stock.warehouse'].search([('company_id', '=', company_b.id)])
-            self.env['stock.quant'].create([
-                {'product_id': product.id, 'location_id': warehouse_a.lot_stock_id.id, 'quantity': 1},
-                {'product_id': product.id, 'location_id': warehouse_b.lot_stock_id.id, 'quantity': 2},
-            ])
+        self.uid = self.user_stock_manager
 
-        self.assertEqual(product.sudo().with_context(
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'is_storable': True
+        })
+        company_a = self.env['res.company'].sudo().create({'name': 'Company A'})
+        company_b = self.env['res.company'].sudo().create({'name': 'Company B'})
+        self.env = self.env(context={'allowed_company_ids': [company_a.id, company_b.id]})
+        warehouse_a = self.env['stock.warehouse'].search([('company_id', '=', company_a.id)])
+        warehouse_b = self.env['stock.warehouse'].search([('company_id', '=', company_b.id)])
+        self.env['stock.quant'].create([
+            {'product_id': product.id, 'location_id': warehouse_a.lot_stock_id.id, 'quantity': 1},
+            {'product_id': product.id, 'location_id': warehouse_b.lot_stock_id.id, 'quantity': 2},
+        ])
+
+        self.assertEqual(product.with_context(
             allowed_company_ids=[company_a.id]
         ).qty_available, 1)
-        self.assertEqual(product.sudo().with_context(
+        self.assertEqual(product.with_context(
             allowed_company_ids=[company_b.id]
         ).qty_available, 2)
-        self.assertEqual(product.sudo().with_context(
+        self.assertEqual(product.with_context(
             allowed_company_ids=[company_a.id, company_b.id]
         ).qty_available, 3)
 

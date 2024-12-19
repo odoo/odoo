@@ -11,13 +11,13 @@ class TestReplenishWizard(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.vendor = cls.env['res.partner'].create(dict(name='The Replenisher'))
         cls.product1_price = 500
 
         # Create a supplier info witch the previous vendor
         cls.supplierinfo = cls.env['product.supplierinfo'].create({
-            'partner_id': cls.vendor.id,
+            'partner_id': cls.partner.id,
             'price': cls.product1_price,
+            'company_id': cls.stock_company.id,
         })
 
         # Create a product with the 'buy' route and
@@ -32,6 +32,10 @@ class TestReplenishWizard(TestStockCommon):
         # Additional Values required by the replenish wizard
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.wh = cls.warehouse_1
+
+    def setUp(self):
+        super().setUp()
+        self.uid = self.user_stock_manager
 
     def test_replenish_buy_1(self):
         """ Set a quantity to replenish via the "Buy" route and check if
@@ -282,7 +286,7 @@ class TestReplenishWizard(TestStockCommon):
 
         self.env['product.supplierinfo'].create({
             'product_tmpl_id': self.product1.product_tmpl_id.id,
-            'partner_id': self.vendor.id,
+            'partner_id': self.partner.id,
             'price': 110,
             'discount': 20.0,
         })
@@ -302,7 +306,7 @@ class TestReplenishWizard(TestStockCommon):
         last_po_id = False
         if purchase_order_id and model_name:
             last_po_id = self.env[model_name].browse(int(purchase_order_id))
-        self.assertEqual(last_po_id.partner_id, self.vendor)
+        self.assertEqual(last_po_id.partner_id, self.partner)
         self.assertEqual(last_po_id.order_line.price_unit, 110)
         self.assertEqual(last_po_id.order_line.discount, 20.0)
 
@@ -347,23 +351,22 @@ class TestReplenishWizard(TestStockCommon):
             'is_storable': True,
             'route_ids': [(4, self.env.ref('purchase_stock.route_warehouse0_buy').id, 0)],
         })
-        vendor = self.env['res.partner'].create({'name': 'vendor1', 'email': 'from.test@example.com'})
         supplier1 = self.env['product.supplierinfo'].create({
-            'partner_id': vendor.id,
+            'partner_id': self.partner.id,
             'price': 100,
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
             'min_qty': 2,
             'delay': 0
         })
         supplier2 = self.env['product.supplierinfo'].create({
-            'partner_id': vendor.id,
+            'partner_id': self.partner.id,
             'price': 100,
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
             'min_qty': 2,
             'delay' : 0
         })
         self.env['ir.config_parameter'].sudo().set_param('purchase.use_po_lead', True)
-        self.company.sudo().days_to_purchase = 0
+        self.stock_company.days_to_purchase = 0
 
         with freeze_time("2023-01-01"):
             wizard = self.env['product.replenish'].create({
@@ -376,7 +379,7 @@ class TestReplenishWizard(TestStockCommon):
             })
             wizard.supplier_id = supplier1
             self.assertEqual(fields.Datetime.from_string('2023-01-01 00:00:00'), wizard.date_planned)
-            self.company.sudo().days_to_purchase = 5
+            self.stock_company.days_to_purchase = 5
             # change the supplier to trigger the date computation
             wizard.supplier_id = supplier2
             self.assertEqual(fields.Datetime.from_string('2023-01-06 00:00:00'), wizard.date_planned)
@@ -387,16 +390,15 @@ class TestReplenishWizard(TestStockCommon):
             'is_storable': True,
             'route_ids': [(4, self.env.ref('purchase_stock.route_warehouse0_buy').id, 0)],
         })
-        vendor = self.env['res.partner'].create({'name': 'vendor1', 'email': 'from.test@example.com'})
         supplier = self.env['product.supplierinfo'].create({
-            'partner_id': vendor.id,
+            'partner_id': self.partner.id,
             'price': 100,
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
             'min_qty': 2,
             'delay': 2
         })
         self.env['ir.config_parameter'].sudo().set_param('purchase.use_po_lead', True)
-        self.company.sudo().days_to_purchase = 5
+        self.stock_company.days_to_purchase = 5
 
         with freeze_time("2023-01-01"):
             wizard = self.env['product.replenish'].create({
@@ -411,15 +413,11 @@ class TestReplenishWizard(TestStockCommon):
             self.assertEqual(fields.Datetime.from_string('2023-01-08 00:00:00'), wizard.date_planned)
 
     def test_unit_price_expired_price_list(self):
-        vendor = self.env['res.partner'].create({
-            'name': 'Contact',
-            'type': 'contact',
-        })
         product = self.env['product.product'].create({
             'name': 'Product',
             'standard_price': 60,
             'seller_ids': [(0, 0, {
-                'partner_id': vendor.id,
+                'partner_id': self.partner.id,
                 'price': 1.0,
                 'date_end': '2019-01-01',
             })],
@@ -441,7 +439,7 @@ class TestReplenishWizard(TestStockCommon):
             ('origin', 'ilike', '%Manual Replenishment%'),
         ])[-1]
 
-        self.assertEqual(last_po_id.partner_id, vendor)
+        self.assertEqual(last_po_id.partner_id, self.partner)
         self.assertEqual(last_po_id.order_line.price_unit, 60)
 
     def test_correct_supplier(self):

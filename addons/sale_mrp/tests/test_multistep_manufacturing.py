@@ -3,17 +3,17 @@
 
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
-from odoo.addons.sale.tests.common import TestSaleCommonBase
+from odoo.addons.sale.tests.common import TestSaleCommon
 
 
-class TestMultistepManufacturing(TestMrpCommon, TestSaleCommonBase):
+class TestMultistepManufacturing(TestMrpCommon, TestSaleCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._enable_adv_location()
-        cls._enable_product_variant()
-        cls._enable_sale_salesman()
+        cls._enable_adv_location(cls.user_stock_user)
+        cls._enable_product_variant(cls.user_stock_user)
+        cls._enable_sale_salesman(cls.user_stock_user)
 
         cls.env.ref('stock.route_warehouse0_mto').active = True
         cls.MrpProduction = cls.env['mrp.production']

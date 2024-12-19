@@ -49,6 +49,7 @@ class TestStockLot(TestMrpCommon):
             'product_qty': 1.0,
             'consumption': 'flexible',
             'type': 'normal',
+            'company_id': cls.stock_company.id,
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.product_apple.id, 'product_qty': 3, 'manual_consumption': True}),
             ]})
@@ -62,6 +63,7 @@ class TestStockLot(TestMrpCommon):
             'time_start': 10,
             'time_stop': 5,
             'time_efficiency': 80,
+            'company_id': cls.stock_company.id,
         })
 
     def test_01_product_produce(self):

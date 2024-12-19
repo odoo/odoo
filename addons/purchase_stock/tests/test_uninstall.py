@@ -13,9 +13,8 @@ from .common import PurchaseTestCommon
 @tagged('post_install', '-at_install')
 class TestUninstallPurchaseStock(PurchaseTestCommon):
     def test_qty_received_method(self):
-        partner = self.env['res.partner'].create({'name': 'Test Partner'})
         purchase_order = self.env['purchase.order'].create({
-            'partner_id': partner.id,
+            'partner_id': self.partner.id,
             'state': 'purchase',
             'order_line': [fields.Command.create({
                 'product_id': self.product_1.id,

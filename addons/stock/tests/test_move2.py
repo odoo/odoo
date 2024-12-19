@@ -111,7 +111,7 @@ class TestPickShip(TestStockCommon):
         return picking_pick, picking_pack, picking_ship
 
     def test_unreserve_only_required_quantity(self):
-        product_unreserve = self.env['product.product'].create({
+        product_unreserve = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'product unreserve',
             'is_storable': True,
         })
@@ -357,7 +357,7 @@ class TestPickShip(TestStockCommon):
         """
         picking_pick, picking_pack, picking_ship = self.create_pick_pack_ship()
         self.warehouse_1.write({'delivery_steps': 'pick_pack_ship'})
-        warehouse_2 = self.env['stock.warehouse'].create({
+        warehouse_2 = self.env['stock.warehouse'].with_user(self.user_stock_manager).create({
             'name': 'Small Warehouse',
             'code': 'SWH'
         })
@@ -553,7 +553,7 @@ class TestPickShip(TestStockCommon):
         delivery pickings.
         """
         picking_pick, picking_ship = self.create_pick_ship()
-        picking_ship.picking_type_id.return_picking_type_id = False
+        picking_ship.picking_type_id.with_user(self.user_stock_manager).return_picking_type_id = False
         self.productA.tracking = 'lot'
         lot = self.env['stock.lot'].create({
             'product_id': self.productA.id,
@@ -816,8 +816,8 @@ class TestPickShip(TestStockCommon):
         """
         pick_location = self.stock_location
 
-        return_warehouse = self.env['stock.warehouse'].create({'name': 'return warehouse', 'code': 'rw'})
-        return_location = self.env['stock.location'].create({
+        return_warehouse = self.env['stock.warehouse'].with_user(self.user_stock_manager).create({'name': 'return warehouse', 'code': 'rw'})
+        return_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'return internal',
             'usage': 'internal',
             'location_id': return_warehouse.view_location_id.id
@@ -1930,17 +1930,17 @@ class TestSinglePicking(TestStockCommon):
         quantity done. Check that we still have only 2 moves after
         validation.
         """
-        product_attribute = self.env['product.attribute'].create({
+        product_attribute = self.env['product.attribute'].with_user(self.user_stock_manager).create({
             'name': 'PA',
             'create_variant': 'no_variant',
         })
 
-        self.env['product.attribute.value'].create([{
+        self.env['product.attribute.value'].with_user(self.user_stock_manager).create([{
             'name': 'PAV' + str(i),
             'attribute_id': product_attribute.id
         } for i in range(2)])
 
-        tmpl_attr_lines = self.env['product.template.attribute.line'].create({
+        tmpl_attr_lines = self.env['product.template.attribute.line'].with_user(self.user_stock_manager).create({
             'attribute_id': product_attribute.id,
             'product_tmpl_id': self.productA.product_tmpl_id.id,
             'value_ids': [(6, 0, product_attribute.value_ids.ids)],
@@ -2002,7 +2002,7 @@ class TestSinglePicking(TestStockCommon):
                         Move Input-> QC - Move QC -> Stock
         Move receipt 2 /
         """
-        warehouse = self.env['stock.warehouse'].create({
+        warehouse = self.env['stock.warehouse'].with_user(self.user_stock_manager).create({
             'name': 'TEST WAREHOUSE',
             'code': 'TEST1',
             'reception_steps': 'three_steps',
@@ -2067,7 +2067,7 @@ class TestSinglePicking(TestStockCommon):
         This existing picking is confirm in the same time (not possible in stock, but can be with batch picking)
         and have some move to merge.
         """
-        warehouse = self.env['stock.warehouse'].create({
+        warehouse = self.env['stock.warehouse'].with_user(self.user_stock_manager).create({
             'name': 'TEST WAREHOUSE',
             'code': 'TEST1',
             'reception_steps': 'three_steps',
@@ -2206,6 +2206,8 @@ class TestSinglePicking(TestStockCommon):
         self.assertFalse(back_order, 'There should be no back order')
 
     def test_unlink_move_1(self):
+        self.uid = self.user_stock_manager
+
         picking = Form(self.env['stock.picking'])
         picking.picking_type_id = self.picking_type_out
         with picking.move_ids_without_package.new() as move:
@@ -2328,7 +2330,7 @@ class TestSinglePicking(TestStockCommon):
         # Required for `owner_id` to be visible in the view
         self.env.user.groups_id += self.env.ref("stock.group_tracking_owner")
         """Make a receipt, set an owner and validate"""
-        owner1 = self.env['res.partner'].create({'name': 'owner'})
+        owner1 = self.env['res.partner'].sudo().create({'name': 'owner'})
         receipt = self.env['stock.picking'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -2362,21 +2364,17 @@ class TestSinglePicking(TestStockCommon):
         """ Checks picking's move lines will take in account the putaway rules
         to define the `location_dest_id`.
         """
-        partner = self.env['res.partner'].create({'name': 'Partner'})
-        stock_location = self.env['stock.location'].create({
+        stock_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'test-stock',
             'usage': 'internal',
         })
-        shelf_location = self.env['stock.location'].create({
+        shelf_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': stock_location.id,
         })
 
-        # We need to activate multi-locations to use putaway rules.
-        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
-        putaway_product = self.env['stock.putaway.rule'].create({
+        putaway_product = self.env['stock.putaway.rule'].with_user(self.user_stock_manager).create({
             'product_id': self.productA.id,
             'location_in_id': stock_location.id,
             'location_out_id': shelf_location.id,
@@ -2384,7 +2382,7 @@ class TestSinglePicking(TestStockCommon):
 
         # Changes config of receipt type to allow to edit move lines directly.
         receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
-        receipt_form.partner_id = partner
+        receipt_form.partner_id = self.partner
         receipt_form.picking_type_id = self.picking_type_in
         # <field name="location_id" invisible="picking_type_code' == 'incoming'"
         receipt_form.location_dest_id = stock_location
@@ -2534,7 +2532,7 @@ class TestSinglePicking(TestStockCommon):
         Check that the move_lines are unreserved backwards on qty
         decrease to respect lifo/fifo/... removal strategies
         """
-        tracked_product = self.env['product.product'].create({
+        tracked_product = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': "Lovely Product",
             'is_storable': True,
             'tracking': 'lot',
@@ -2551,7 +2549,7 @@ class TestSinglePicking(TestStockCommon):
             }
             for i in range(lot_count)
         ])
-        locations = self.env['stock.location'].create([
+        locations = self.env['stock.location'].with_user(self.user_stock_manager).create([
             {
                 'name': f'Shell {lot_count - i}',
                 'usage': 'internal',
@@ -2577,7 +2575,7 @@ class TestSinglePicking(TestStockCommon):
                 })
             ]
         })
-        delivery.picking_type_id.reservation_method = 'at_confirm'
+        delivery.picking_type_id.with_user(self.user_stock_manager).reservation_method = 'at_confirm'
         delivery.action_confirm()
         self.assertEqual(delivery.move_line_ids.mapped(lambda sml: (sml.location_id.name, sml.lot_id.name, sml.quantity)), [
             ('Shell 1', 'LOT005', 10.0),
@@ -2624,6 +2622,8 @@ class TestStockUOM(TestStockCommon):
 
     def test_pickings_transfer_with_different_uom_and_back_orders(self):
         """ Picking transfer with diffrent unit of meassure. """
+        self.uid = self.user_stock_manager
+
         # weight category
         categ_test = self.env['uom.category'].create({'name': 'Bigger than tons'})
 
@@ -2696,14 +2696,12 @@ class TestStockUOM(TestStockCommon):
         (more than the quantity in stock), we check that
         we reserve less than the quantity in stock
         """
-        with self.with_user('admin'):
-            precision = self.env.ref('product.decimal_product_uom')
-            precision.digits = 3
+        self.env.ref('product.decimal_product_uom').sudo().digits = 3
 
         self.uom_kg.rounding = 0.0001
         self.uom_gm.rounding = 0.01
 
-        product_G = self.env['product.product'].create({
+        product_G = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Product G',
             'is_storable': True,
             'uom_id': self.uom_gm.id,
@@ -2755,21 +2753,19 @@ class TestStockUOM(TestStockCommon):
         in stock. Similar initial configuration as
         test_move_product_with_different_uom.
         """
-        with self.with_user('admin'):
-            precision = self.env.ref('product.decimal_product_uom')
-            precision.digits = 3
+        self.env.ref('product.decimal_product_uom').sudo().digits = 3
 
         self.uom_kg.rounding = 0.0001
         self.uom_gm.rounding = 0.01
 
-        product_LtDA = self.env['product.product'].create({
+        product_LtDA = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Product Less than DA',
             'is_storable': True,
             'uom_id': self.uom_gm.id,
             'uom_po_id': self.uom_gm.id,
         })
 
-        product_GtDA = self.env['product.product'].create({
+        product_GtDA = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Product Greater than DA',
             'is_storable': True,
             'uom_id': self.uom_gm.id,
@@ -2872,7 +2868,6 @@ class TestRoutes(TestStockCommon):
             'is_storable': True,
         })
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
-        cls.partner = cls.env['res.partner'].create({'name': 'Partner'})
 
     def _enable_pick_ship(self):
         self.wh = self.warehouse_1
@@ -2887,7 +2882,7 @@ class TestRoutes(TestStockCommon):
         """
         self.product_uom_qty = 42
 
-        warehouse_2 = self.env['stock.warehouse'].create({
+        warehouse_2 = self.env['stock.warehouse'].with_user(self.user_stock_manager).create({
             'name': 'Small Warehouse',
             'code': 'SWH'
         })
@@ -2929,8 +2924,8 @@ class TestRoutes(TestStockCommon):
         it will still trigger the push rule from the sublocation as well to continue the route.
         """
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        warehouse.delivery_steps = 'pick_ship'
-        subloc = self.env['stock.location'].create({
+        warehouse.with_user(self.user_stock_manager).delivery_steps = 'pick_ship'
+        subloc = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'name': 'Fancy Spot',
             'location_id': warehouse.wh_output_stock_loc_id.id,
             'usage': 'internal',
@@ -2962,13 +2957,13 @@ class TestRoutes(TestStockCommon):
         """
         self._enable_pick_ship()
 
-        push_location = self.env['stock.location'].create({
+        push_location = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'location_id': self.stock_location.location_id.id,
             'name': 'push location',
         })
 
         # TODO: maybe add a new type on the "applicable on" fields?
-        route = self.env['stock.route'].create({
+        route = self.env['stock.route'].with_user(self.user_stock_manager).create({
             'name': 'new route',
             'rule_ids': [(0, False, {
                 'name': 'create a move to push location',
@@ -3002,6 +2997,8 @@ class TestRoutes(TestStockCommon):
         with auto field set to transparent is done correctly. The stock_move
         is create with the move line directly to pass into action_confirm() via
         action_done(). """
+        self.uid = self.user_stock_manager
+
         self.wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         new_loc = self.env['stock.location'].create({
             'name': 'New_location',
@@ -3064,11 +3061,11 @@ class TestRoutes(TestStockCommon):
         - SM for B is 'make_to_stock'
         """
         final_location = self.partner.property_stock_customer
-        product_A = self.env['product.product'].create({
+        product_A = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Product A',
             'is_storable': True,
         })
-        product_B = self.env['product.product'].create({
+        product_B = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Product B',
             'is_storable': True,
         })
@@ -3077,7 +3074,7 @@ class TestRoutes(TestStockCommon):
         rule = self.env['procurement.group']._get_rule(
             product_A, final_location, {'warehouse_id': self.warehouse_1}
         )
-        rule.procure_method = 'mts_else_mto'
+        rule.with_user(self.user_stock_manager).procure_method = 'mts_else_mto'
 
         self.env['stock.quant']._update_available_quantity(product_A, self.stock_location, 5.0)
         self.env['stock.quant']._update_available_quantity(product_B, self.stock_location, 3.0)
@@ -3113,17 +3110,17 @@ class TestRoutes(TestStockCommon):
         a move of this product with this packaging. Check packaging route has
         priority over product route.
         """
-        push_location_1 = self.env['stock.location'].create({
+        push_location_1 = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'location_id': self.stock_location.location_id.id,
             'name': 'push location 1',
         })
 
-        push_location_2 = self.env['stock.location'].create({
+        push_location_2 = self.env['stock.location'].with_user(self.user_stock_manager).create({
             'location_id': self.stock_location.location_id.id,
             'name': 'push location 2',
         })
 
-        route_on_product = self.env['stock.route'].create({
+        route_on_product = self.env['stock.route'].with_user(self.user_stock_manager).create({
             'name': 'route on product',
             'rule_ids': [(0, False, {
                 'name': 'create a move to push location 1',
@@ -3136,7 +3133,7 @@ class TestRoutes(TestStockCommon):
             })],
         })
 
-        route_on_packaging = self.env['stock.route'].create({
+        route_on_packaging = self.env['stock.route'].with_user(self.user_stock_manager).create({
             'name': 'route on packaging',
             'packaging_selectable': True,
             'rule_ids': [(0, False, {
@@ -3150,13 +3147,13 @@ class TestRoutes(TestStockCommon):
             })],
         })
 
-        product = self.env['product.product'].create({
+        product = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'Product with packaging',
             'is_storable': True,
             'route_ids': [(4, route_on_product.id, 0)]
         })
 
-        packaging = self.env['product.packaging'].create({
+        packaging = self.env['product.packaging'].with_user(self.user_stock_manager).create({
             'name': 'box',
             'product_id': product.id,
             'route_ids': [(4, route_on_packaging.id, 0)]
@@ -3182,7 +3179,10 @@ class TestRoutes(TestStockCommon):
 
     def test_cross_dock(self):
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        warehouse.write({'reception_steps': 'two_steps', 'delivery_steps': 'pick_ship'})
+        warehouse.with_user(self.user_stock_manager).write({
+            'reception_steps': 'two_steps',
+            'delivery_steps': 'pick_ship'
+        })
         self.product1.write({
             'route_ids': [Command.link(warehouse.crossdock_route_id.id)]
         })
@@ -3479,7 +3479,7 @@ class TestAutoAssign(TestStockCommon):
 
     def test_serial_lot_ids(self):
         self.uom_unit = self.env.ref('uom.product_uom_unit')
-        self.product_serial = self.env['product.product'].create({
+        self.product_serial = self.env['product.product'].with_user(self.user_stock_manager).create({
             'name': 'PSerial',
             'is_storable': True,
             'tracking': 'serial',

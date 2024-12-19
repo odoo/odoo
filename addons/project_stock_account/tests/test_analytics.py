@@ -11,18 +11,22 @@ class TestAnalytics(TestStockCommon, TestProjectCommon, AnalyticCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._enable_project_manager()
-        cls._enable_analytic_accounting()
+        cls._enable_project_manager(cls.user_stock_user)
+        cls._enable_analytic_accounting(cls.user_stock_user)
+        cls._enable_project_manager(cls.user_stock_manager)
+        cls._enable_analytic_accounting(cls.user_stock_manager)
         cls.plan1_name = cls.analytic_plan_1._column_name()
         cls.plan2_name = cls.analytic_plan_2._column_name()
         cls.analytic_account1, cls.analytic_account2 = cls.env['account.analytic.account'].create([
             {
                 'name': 'Account 1',
                 'plan_id': cls.analytic_plan_1.id,
+                'company_id': cls.stock_company.id,
             },
             {
                 'name': 'Account 2',
                 'plan_id': cls.analytic_plan_2.id,
+                'company_id': cls.stock_company.id,
             },
         ])
         cls.project = cls.env['project.project'].create({
@@ -93,18 +97,23 @@ class TestAnalytics(TestStockCommon, TestProjectCommon, AnalyticCommon):
             an aal for the move line created. These aals should be taken into account when computing the 'project
             profitability' right side panel and displayed under the 'costs -> materials' section.
         """
+        self.uid = self.user_stock_manager
+
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'project_id': self.project.id,
+            'company_id': self.stock_company.id,
         })
+
         picking_in.picking_type_id.analytic_costs = True
         move_values = {
             'product_uom': self.uom_unit.id,
             'picking_id': picking_in.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
+            'company_id': self.stock_company.id,
         }
         self.MoveObj.create([
             {
