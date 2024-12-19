@@ -2,9 +2,9 @@ import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, resize, select } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
-import { defineParams, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { DateTimePicker } from "@web/core/datetime/datetime_picker";
 import { ensureArray } from "@web/core/utils/arrays";
+import { defineParams, mountWithCleanup, makeMockEnv, serverState } from "@web/../tests/web_test_helpers";
 import { assertDateTimePicker, getPickerCell } from "../../datetime/datetime_test_helpers";
 
 const { DateTime } = luxon;
@@ -70,6 +70,10 @@ test("default params", async () => {
 });
 
 test("minDate: correct days/month/year/decades are disabled", async () => {
+    serverState.lang = "en-US";
+    // necessary to configure the lang before minDate/maxDate are created
+    await makeMockEnv();
+
     await mountWithCleanup(DateTimePicker, {
         props: {
             minDate: DateTime.fromISO("2023-04-20T00:00:00.000"),
@@ -305,6 +309,10 @@ test("maxDate: correct days/month/year/decades are disabled", async () => {
 });
 
 test("min+max date: correct days/month/year/decades are disabled", async () => {
+    serverState.lang = "en-US";
+    // necessary to configure the lang before minDate/maxDate are created
+    await makeMockEnv();
+
     await mountWithCleanup(DateTimePicker, {
         props: {
             minDate: DateTime.fromISO("2023-04-20T00:00:00.000"),
