@@ -616,8 +616,8 @@ class configmanager:
         ]))
 
         self._runtime_options['init'] = dict.fromkeys(self['init'], True) or {}
-        self._runtime_options['demo'] = dict(self['init']) if not self['without_demo'] else {}
         self._runtime_options['update'] = dict.fromkeys(self['update'], True) or {}
+        self._runtime_options['load_data_init'] = {}
         self._runtime_options['translate_modules'] = sorted(self['translate_modules'])
 
         if 'all' in self['dev_mode']:

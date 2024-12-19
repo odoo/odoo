@@ -60,7 +60,7 @@ def check_super(passwd):
     raise odoo.exceptions.AccessDenied()
 
 # This should be moved to odoo.modules.db, along side initialize().
-def _initialize_db(id, db_name, demo, lang, user_password, login='admin', country_code=None, phone=None):
+def _initialize_db(id, db_name, lang, user_password, login='admin', country_code=None, phone=None):
     try:
         db = odoo.sql_db.db_connect(db_name)
         with closing(db.cursor()) as cr:
@@ -69,7 +69,7 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
             odoo.tools.config['load_language'] = lang
             cr.commit()
 
-        registry = odoo.modules.registry.Registry.new(db_name, demo, update_module=True)
+        registry = odoo.modules.registry.Registry.new(db_name, update_module=True)
 
         with closing(registry.cursor()) as cr:
             env = odoo.api.Environment(cr, SUPERUSER_ID, {})
@@ -153,7 +153,12 @@ def exp_create_database(db_name, demo, lang, user_password='admin', login='admin
     """ Similar to exp_create but blocking."""
     _logger.info('Create database `%s`.', db_name)
     _create_empty_database(db_name)
-    _initialize_db(id, db_name, demo, lang, user_password, login, country_code, phone)
+    _initialize_db(id, db_name, lang, user_password, login, country_code, phone)
+    if demo and odoo.tools.config['without_demo']:
+        with odoo.modules.registry.Registry(db_name).cursor() as cr:
+            env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+            from odoo.modules.loading import force_demo
+            force_demo(env)
     return True
 
 @check_db_management_enabled
@@ -389,7 +394,7 @@ def exp_migrate_databases(databases):
     for db in databases:
         _logger.info('migrate database %s', db)
         odoo.tools.config['update']['base'] = True
-        odoo.modules.registry.Registry.new(db, force_demo=False, update_module=True)
+        odoo.modules.registry.Registry.new(db, update_module=True)
     return True
 
 #----------------------------------------------------------

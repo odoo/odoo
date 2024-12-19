@@ -42,7 +42,7 @@ if typing.TYPE_CHECKING:
     from odoo.fields import Field
     from odoo.models import BaseModel
     from odoo.sql_db import BaseCursor, Connection, Cursor
-    from odoo.modules import graph
+    from odoo.modules import packages
 
 
 _logger = logging.getLogger('odoo.registry')
@@ -120,7 +120,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
     @classmethod
     @locked
-    def new(cls, db_name: str, force_demo: bool = False, status: None = None, update_module: bool = False) -> Registry:
+    def new(cls, db_name: str, status: None = None, update_module: bool = False) -> Registry:
         """ Create and return a new registry for the given database name. """
         if status is not None:
             warnings.warn("Deprecated since 19.0, do not set status", DeprecationWarning)
@@ -140,7 +140,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             # This should be a method on Registry
             from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
             try:
-                load_modules(registry, force_demo, update_module=update_module)
+                load_modules(registry, update_module=update_module)
             except Exception:
                 reset_modules_state(db_name)
                 raise
@@ -284,7 +284,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 queue.extend(func(model))
         return models
 
-    def load(self, cr: Cursor, module: graph.Node) -> OrderedSet[str]:
+    def load(self, cr: Cursor, module: packages.Package) -> OrderedSet[str]:
         """ Load a given module in the registry, and return the names of the
         modified models.
 
