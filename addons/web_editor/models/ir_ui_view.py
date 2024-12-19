@@ -70,6 +70,8 @@ class IrUiView(models.Model):
         try:
             value = converter.from_html(Model, Model._fields[field], el)
             if value is not None:
+                if (Model._fields[field].required and isinstance(value, str) and not value.strip()):
+                    return
                 # TODO: batch writes?
                 record = Model.browse(int(el.get('data-oe-id')))
                 if not self.env.context.get('lang') and self.get_default_lang_code():
