@@ -2173,7 +2173,8 @@ class MailThread(models.AbstractModel):
     def message_post(self, *,
                      body='', subject=None, message_type='notification',
                      email_from=None, author_id=None, parent_id=False,
-                     subtype_xmlid=None, subtype_id=False, partner_ids=None,
+                     subtype_xmlid=None, subtype_id=False,
+                     partner_ids=None, incoming_email_to=False, incoming_email_cc=False,
                      attachments=None, attachment_ids=None, body_is_html=False,
                      **kwargs):
         """ Post a new message in an existing thread, returning the new mail.message.
@@ -2194,6 +2195,10 @@ class MailThread(models.AbstractModel):
             notification mechanism;
         :param list(int) partner_ids: partner_ids to notify in addition to partners
             computed based on subtype / followers matching;
+        :param str incoming_email_to: comma-separated list of emails, already notified
+            by incoming email;
+        :param str incoming_email_cc: comma-separated list of emails, already notified
+            by incoming email;
         :param list(tuple(str,str), tuple(str,str, dict)) attachments : list of attachment
             tuples in the form ``(name,content)`` or ``(name,content, info)`` where content
             is NOT base64 encoded;
@@ -2301,6 +2306,8 @@ class MailThread(models.AbstractModel):
             'subtype_id': subtype_id,
             # recipients
             'partner_ids': partner_ids,
+            'incoming_email_to': incoming_email_to,
+            'incoming_email_cc': incoming_email_cc,
         })
         # add default-like values afterwards, to avoid useless queries
         if 'record_alias_domain_id' not in msg_values:
@@ -2554,7 +2561,7 @@ class MailThread(models.AbstractModel):
         # preliminary value safety check
         self._raise_for_invalid_parameters(
             set(kwargs.keys()),
-            forbidden_names={'body', 'composition_mode', 'model', 'res_id', 'values'}
+            forbidden_names={'body', 'composition_mode', 'incoming_email_cc', 'incoming_email_to', 'model', 'res_id', 'values'}
         )
 
         # with a view, render bodies in batch (template is managed by composer)
@@ -2630,7 +2637,7 @@ class MailThread(models.AbstractModel):
         # preliminary value safety check
         self._raise_for_invalid_parameters(
             set(kwargs.keys()),
-            forbidden_names={'body', 'composition_mode', 'model', 'res_id', 'values'}
+            forbidden_names={'body', 'composition_mode', 'incoming_email_cc', 'incoming_email_to', 'model', 'res_id', 'values'}
         )
 
         # with a view, render bodies in batch (template is managed by composer)
@@ -2726,7 +2733,7 @@ class MailThread(models.AbstractModel):
         # preliminary value safety check
         self._raise_for_invalid_parameters(
             set(kwargs.keys()),
-            forbidden_names={'message_id', 'message_type', 'parent_id'}
+            forbidden_names={'incoming_email_cc', 'incoming_email_to', 'message_id', 'message_type', 'parent_id'}
         )
         if attachments:
             # attachments should be a list (or tuples) of 3-elements list (or tuple)
@@ -2820,7 +2827,7 @@ class MailThread(models.AbstractModel):
         """
         self._raise_for_invalid_parameters(
             set(kwargs.keys()),
-            forbidden_names={'body', 'bodies'}
+            forbidden_names={'body', 'bodies', 'incoming_email_cc', 'incoming_email_to'}
         )
 
         # with a view, render bodies in batch (template is managed by composer)
@@ -3021,6 +3028,8 @@ class MailThread(models.AbstractModel):
             'email_add_signature',
             'email_from',
             'email_layout_xmlid',
+            'incoming_email_cc',
+            'incoming_email_to',
             'is_internal',
             'mail_activity_type_id',
             'mail_server_id',
