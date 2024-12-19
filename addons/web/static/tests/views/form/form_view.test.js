@@ -58,7 +58,6 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { session } from "@web/session";
 import { CharField } from "@web/views/fields/char/char_field";
 import { DateTimeField } from "@web/views/fields/datetime/datetime_field";
 import { Field } from "@web/views/fields/field";
@@ -10384,7 +10383,11 @@ test(`company_dependent field in form view, in multi company group`, async () =>
         help: "this is a tooltip",
     });
 
-    patchWithCleanup(session, { display_switch_company_menu: true });
+    serverState.companies = [
+        { id: 1, name: "Company 1", sequence: 1, parent_id: false, child_ids: [] },
+        { id: 2, name: "Company 2", sequence: 2, parent_id: false, child_ids: [] },
+        { id: 3, name: "Company 3", sequence: 3, parent_id: false, child_ids: [] },
+    ];
     await mountView({
         resModel: "partner",
         type: "form",
@@ -10417,7 +10420,10 @@ test(`company_dependent field in form view, not in multi company group`, async (
         help: "this is a tooltip",
     });
 
-    patchWithCleanup(session, { display_switch_company_menu: false });
+    serverState.companies = [
+        { id: 1, name: "Company 1", sequence: 1, parent_id: false, child_ids: [] },
+    ];
+
     await mountView({
         resModel: "partner",
         type: "form",
@@ -11200,9 +11206,11 @@ test(`setting : boolean field`, async () => {
 });
 
 test(`setting : char field`, async () => {
-    patchWithCleanup(session, {
-        display_switch_company_menu: true,
-    });
+    serverState.companies = [
+        { id: 1, name: "Company 1", sequence: 1, parent_id: false, child_ids: [] },
+        { id: 2, name: "Company 2", sequence: 2, parent_id: false, child_ids: [] },
+        { id: 3, name: "Company 3", sequence: 3, parent_id: false, child_ids: [] },
+    ];
 
     await mountView({
         resModel: "partner",

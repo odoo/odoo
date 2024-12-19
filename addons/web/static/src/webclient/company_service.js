@@ -90,6 +90,10 @@ export const companyService = {
                 return allowedCompanies[activeCompanyIds[0]];
             },
 
+            get isMultiCompany() {
+                return Object.values(allowedCompanies).length > 1;
+            },
+
             getCompany(companyId) {
                 return allowedCompaniesWithAncestors[companyId];
             },

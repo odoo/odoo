@@ -170,7 +170,6 @@ class IrHttp(models.AbstractModel):
                     },
                 },
                 "show_effect": True,
-                "display_switch_company_menu": user.has_group('base.group_multi_company') and len(user_company_ids) > 1,
             })
         return session_info
 
