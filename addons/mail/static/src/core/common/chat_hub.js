@@ -22,6 +22,7 @@ export class ChatHub extends Component {
         super.setup();
         this.store = useState(useService("mail.store"));
         this.ui = useState(useService("ui"));
+        this.busMonitoring = useState(useService("bus.monitoring_service"));
         this.bubblesHover = useHover("bubbles");
         this.moreHover = useHover(["more-button", "more-menu*"], {
             onHover: () => (this.more.isOpen = true),
