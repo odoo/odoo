@@ -827,7 +827,7 @@ export class DiscussChannel extends models.ServerModel {
             ]).map((member) => member.partner_id);
         }
         delete kwargs.special_mentions;
-        const messageId = MailThread.message_post.call(this, [id], kwargs);
+        const messageIds = MailThread.message_post.call(this, [id], kwargs);
         // simulate compute of message_unread_counter
         const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
         const otherMembers = DiscussChannelMember._filter([
@@ -839,7 +839,7 @@ export class DiscussChannel extends models.ServerModel {
                 message_unread_counter: member.message_unread_counter + 1,
             });
         }
-        return messageId;
+        return messageIds;
     }
 
     /**
