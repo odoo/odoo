@@ -19,7 +19,7 @@ export class DynamicList extends DataPoint {
             this.handleField = DEFAULT_HANDLE_FIELD;
         }
         this.isDomainSelected = false;
-        this.evalContext = this.context;
+        this.evalContext = { ...this.context, companies: this.config.companies };
     }
 
     // -------------------------------------------------------------------------
@@ -263,16 +263,16 @@ export class DynamicList extends DataPoint {
         if (!Object.keys(changes).length || record === this._recordToDiscard) {
             return;
         }
-        const validSelection = this.selection.filter((record) => {
-            return Object.keys(changes).every((fieldName) => {
+        const validSelection = this.selection.filter((record) =>
+            Object.keys(changes).every((fieldName) => {
                 if (record._isReadonly(fieldName)) {
                     return false;
                 } else if (record._isRequired(fieldName) && !changes[fieldName]) {
                     return false;
                 }
                 return true;
-            });
-        });
+            })
+        );
         const canProceed = await this.model.hooks.onWillSaveMulti(record, changes, validSelection);
         if (canProceed === false) {
             return false;

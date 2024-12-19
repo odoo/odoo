@@ -77,8 +77,8 @@ export class DataPoint extends Reactive {
         return this.config.context;
     }
 
-    get currentCompanyId() {
-        return this.config.currentCompanyId;
+    get companies() {
+        return this.config.companies;
     }
 
     // -------------------------------------------------------------------------
