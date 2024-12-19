@@ -340,6 +340,10 @@ export class EmojiPicker extends Component {
         return emojisToDisplay;
     }
 
+    getEmojisFromSearch() {
+        return [...this.recentEmojis, ...this.getEmojis()];
+    }
+
     selectCategory(ev) {
         const id = Number(ev.currentTarget.dataset.id);
         this.searchTerm = "";
