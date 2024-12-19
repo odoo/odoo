@@ -2,6 +2,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError, UserError
+from odoo.tools import html2plaintext
 
 
 class AccountTax(models.Model):
@@ -37,18 +38,17 @@ class AccountTax(models.Model):
         string="Exoneration",
         help="Exoneration type",
     )
-    l10n_it_law_reference = fields.Char(string="Law Reference", size=100)
 
     @api.constrains('l10n_it_exempt_reason',
-                    'l10n_it_law_reference',
+                    'invoice_legal_notes',
                     'amount',
                     'invoice_repartition_line_ids',
                     'refund_repartition_line_ids')
     def _l10n_it_edi_check_exoneration_with_no_tax(self):
         for tax in self:
             if tax.country_id.code == 'IT':
-                if tax.amount_type == 'percent' and tax.amount == 0 and not (tax.l10n_it_exempt_reason and tax.l10n_it_law_reference):
-                    raise ValidationError(_("If the tax amount is 0%, you must enter the exoneration code and the related law reference."))
+                if tax.amount_type == 'percent' and tax.amount == 0 and not (tax.l10n_it_exempt_reason and html2plaintext(tax.invoice_legal_notes)):
+                    raise ValidationError(_("If the tax amount is 0%, you must enter the exoneration code and the related legal notes."))
                 if tax.l10n_it_exempt_reason == 'N6' and tax._l10n_it_is_split_payment():
                     raise UserError(_("Split Payment is not compatible with exoneration of kind 'N6'"))
 
