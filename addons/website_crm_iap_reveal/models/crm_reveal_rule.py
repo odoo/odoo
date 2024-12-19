@@ -362,7 +362,7 @@ class CRMRevealRule(models.Model):
             return False
         if not result['clearbit_id']:
             return False
-        already_created_lead = self.env['crm.lead'].search([('reveal_id', '=', result['clearbit_id'])])
+        already_created_lead = self.env['crm.lead'].search_count([('reveal_id', '=', result['clearbit_id'])], limit=1)
         if already_created_lead:
             _logger.info('Existing lead for this clearbit_id [%s]', result['clearbit_id'])
             # Does not create a lead if the reveal_id is already known
