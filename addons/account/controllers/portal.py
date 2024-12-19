@@ -57,7 +57,7 @@ class PortalAccount(CustomerPortal):
         return [
             ('state', 'not in', ('cancel', 'draft')),
             ('move_type', 'in', ('out_invoice', 'out_receipt')),
-            ('payment_state', 'not in', ('in_payment', 'paid')),
+            ('payment_state', 'not in', ('in_payment', 'paid', 'reversed', 'blocked', 'invoicing_legacy')),
             ('invoice_date_due', '<', fields.Date.today()),
             ('partner_id', '=', partner_id or request.env.user.partner_id.id),
         ]
