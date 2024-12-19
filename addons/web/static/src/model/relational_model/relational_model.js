@@ -325,13 +325,7 @@ export class RelationalModel extends Model {
         if (config.countLimit !== Number.MAX_SAFE_INTEGER) {
             config.countLimit = Math.max(config.countLimit, config.offset + config.limit);
         }
-        const { records, length } = await this._loadUngroupedList({
-            ...config,
-            context: {
-                ...config.context,
-                current_company_id: config.companies.active_id,
-            },
-        });
+        const { records, length } = await this._loadUngroupedList(config);
         if (config.offset && !records.length) {
             config.offset = 0;
             return this._loadData(config);
