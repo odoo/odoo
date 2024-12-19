@@ -63,7 +63,6 @@ test("list activity widget with no activity", async () => {
                 tz: "taht",
                 uid: serverState.userId,
                 bin_size: true,
-                current_company_id: companyService.currentCompany.id,
                 allowed_company_ids: Object.values(companyService.allowedCompanies).map(
                     (c) => c.id
                 ),
