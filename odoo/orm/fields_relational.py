@@ -73,13 +73,17 @@ class _Relational(Field[M], typing.Generic[M]):
             _logger.warning("Field %s with unknown comodel_name %r", self, self.comodel_name)
             self.comodel_name = '_unknown'
 
-    def get_domain_list(self, model):
-        """ Return a list domain from the domain parameter. """
-        # TODO rename and make it return a Domain
+    def get_comodel_domain(self, model: BaseModel) -> Domain:
+        """ Return a domain from the domain parameter. """
         domain = self.domain
         if callable(domain):
+            # the callable can return either a list, Domain or a string
             domain = domain(model)
-        return domain if isinstance(domain, list) else []
+        if not domain or isinstance(domain, str):
+            # if we don't have a domain or
+            # domain=str is used only for the client-side
+            return Domain.TRUE
+        return Domain(domain)
 
     @property
     def _related_domain(self):
@@ -100,8 +104,12 @@ class _Relational(Field[M], typing.Generic[M]):
     _description_relation = property(attrgetter('comodel_name'))
     _description_context = property(attrgetter('context'))
 
-    def _description_domain(self, env):
-        domain = self.domain(env[self.model_name]) if callable(self.domain) else self.domain  # pylint: disable=not-callable
+    def _description_domain(self, env) -> str | list:
+        domain = self.domain
+        if callable(domain):
+            domain = domain(env[self.model_name])
+        if not isinstance(domain, str):
+            domain = list(self.get_comodel_domain(env[self.model_name]))
         if self.check_company:
             field_to_check = None
             if self.company_dependent:
@@ -362,7 +370,7 @@ class Many2one(_Relational[M]):
         cache = records.env.cache
         corecord = self.convert_to_record(value, records)
         for invf in records.pool.field_inverses[self]:
-            valid_records = records.filtered_domain(invf.get_domain_list(corecord))
+            valid_records = records.filtered_domain(invf.get_comodel_domain(corecord))
             if not valid_records:
                 continue
             ids0 = cache.get(corecord, invf, None)
@@ -568,11 +576,18 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
 
     def get_depends(self, model):
         depends, depends_context = super().get_depends(model)
-        if not self.compute and isinstance(self.domain, list):
+        if not self.compute:
+            try:
+                domain = self.get_comodel_domain(model)
+            except ValueError:
+                if model.env.registry.ready:
+                    raise
+                # "external ID not found" is raised during installation for callable domains
+                # ignore the domain in that case
+                domain = Domain.TRUE
             depends = unique(itertools.chain(depends, (
-                self.name + '.' + arg[0]
-                for arg in self.domain
-                if isinstance(arg, (tuple, list)) and isinstance(arg[0], str)
+                self.name + '.' + condition.field_expr
+                for condition in domain.iter_conditions()
             )))
         return depends, depends_context
 
@@ -658,7 +673,7 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
 
     def _get_query_for_condition_value(self, model: BaseModel, comodel: BaseModel, value: Domain | Query) -> Query:
         """ Return Query run on the comodel with the field.domain injected."""
-        field_domain = Domain(self.get_domain_list(model))
+        field_domain = self.get_comodel_domain(model)
         if isinstance(value, Domain):
             domain = value & field_domain
             comodel = comodel.with_context(**self.context)
@@ -746,12 +761,13 @@ class One2many(_RelationalMulti[M]):
                     comodel=self.comodel_name
                 ))
 
-    def get_domain_list(self, records):
-        comodel = records.env.registry[self.comodel_name]
-        inverse_field = comodel._fields[self.inverse_name]
-        domain = super(One2many, self).get_domain_list(records)
-        if inverse_field.type == 'many2one_reference':
-            domain = domain + [(inverse_field.model_field, '=', records._name)]
+    def get_comodel_domain(self, records) -> Domain:
+        domain = super().get_comodel_domain(records)
+        if self.comodel_name and self.inverse_name:
+            comodel = records.env.registry[self.comodel_name]
+            inverse_field = comodel._fields[self.inverse_name]
+            if inverse_field.type == 'many2one_reference':
+                domain &= Domain(inverse_field.model_field, '=', records._name)
         return domain
 
     def __get__(self, records, owner=None):
@@ -772,7 +788,7 @@ class One2many(_RelationalMulti[M]):
         inverse_field = comodel._fields[inverse]
 
         # optimization: fetch the inverse and active fields with search()
-        domain = self.get_domain_list(records) + [(inverse, 'in', records.ids)]
+        domain = self.get_comodel_domain(records) & Domain(inverse, 'in', records.ids)
         field_names = [inverse]
         if comodel._active_name:
             field_names.append(comodel._active_name)
@@ -861,8 +877,7 @@ class One2many(_RelationalMulti[M]):
                         flush()
                         # assign the given lines to the last record only
                         lines = comodel.browse(line_ids)
-                        domain = self.get_domain_list(model) + \
-                            [(inverse, 'in', recs.ids), ('id', 'not in', lines.ids)]
+                        domain = self.get_comodel_domain(model) & Domain(inverse, 'in', recs.ids) & Domain('id', 'not in', lines.ids)
                         unlink(comodel.search(domain))
                         lines[inverse] = recs[-1]
 
@@ -1192,7 +1207,7 @@ class Many2many(_RelationalMulti[M]):
         comodel = records.env[self.comodel_name].with_context(**context)
 
         # make the query for the lines
-        domain = self.get_domain_list(records)
+        domain = self.get_comodel_domain(records)
         query = comodel._where_calc(domain)
         comodel._apply_ir_rules(query, 'read')
         query.order = comodel._order_to_sql(comodel._order, query)
@@ -1321,7 +1336,7 @@ class Many2many(_RelationalMulti[M]):
                 y_to_xs[y].add(x)
                 modified_corecord_ids.add(y)
             for invf in records.pool.field_inverses[self]:
-                domain = invf.get_domain_list(comodel)
+                domain = invf.get_comodel_domain(comodel)
                 valid_ids = set(records.filtered_domain(domain)._ids)
                 if not valid_ids:
                     continue
@@ -1450,7 +1465,7 @@ class Many2many(_RelationalMulti[M]):
                 y_to_xs[y].add(x)
                 modified_corecord_ids.add(y)
             for invf in records.pool.field_inverses[self]:
-                domain = invf.get_domain_list(comodel)
+                domain = invf.get_comodel_domain(comodel)
                 valid_ids = set(records.filtered_domain(domain)._ids)
                 if not valid_ids:
                     continue
