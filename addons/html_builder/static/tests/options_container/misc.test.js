@@ -3,7 +3,7 @@ import { animationFrame, queryAllTexts } from "@odoo/hoot-dom";
 import { Component, onWillStart, xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
-import { defaultOptionComponents } from "../../src/builder/builder_components/defaultComponents";
+import { defaultBuilderComponents } from "../../src/builder/builder_components/default_builder_components";
 import { OptionsContainer } from "../../src/builder/components/option_container";
 
 defineWebsiteModels();
@@ -28,7 +28,7 @@ test("Open custom tab with Component option", async () => {
             <BuilderRow label="'Row 1'">
                 Test
             </BuilderRow>`;
-        static components = { ...defaultOptionComponents };
+        static components = { ...defaultBuilderComponents };
         static props = {};
     }
     addOption({

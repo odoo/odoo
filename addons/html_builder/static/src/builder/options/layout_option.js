@@ -1,5 +1,5 @@
 import { Component } from "@odoo/owl";
-import { defaultOptionComponents } from "../builder_components/defaultComponents";
+import { defaultBuilderComponents } from "../builder_components/default_builder_components";
 import { useDomState } from "../builder_helpers";
 import { SpacingOption } from "./spacing_option";
 import { AddElementOption } from "./add_element_option";
@@ -12,6 +12,7 @@ import {
     reloadLazyImages,
     toggleGridMode,
 } from "@html_builder/builder/utils/grid_layout_utils";
+import { Button } from "../components/Button";
 
 class LayoutOptionPlugin extends Plugin {
     static id = "LayoutOption";
@@ -28,7 +29,7 @@ registry.category("website-plugins").add(LayoutOptionPlugin.id, LayoutOptionPlug
 
 export class LayoutOption extends Component {
     static template = "html_builder.LayoutOption";
-    static components = { ...defaultOptionComponents, SpacingOption, AddElementOption };
+    static components = { ...defaultBuilderComponents, Button, SpacingOption, AddElementOption };
     static props = {};
 
     setup() {

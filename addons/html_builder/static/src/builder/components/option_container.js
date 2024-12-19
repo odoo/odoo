@@ -1,11 +1,11 @@
 import { Component, useSubEnv } from "@odoo/owl";
-import { defaultOptionComponents } from "../builder_components/defaultComponents";
+import { defaultBuilderComponents } from "../builder_components/default_builder_components";
 import { useVisibilityObserver, useApplyVisibility } from "../builder_helpers";
 import { DependencyManager } from "../plugins/dependency_manager";
 
 export class OptionsContainer extends Component {
     static template = "html_builder.OptionsContainer";
-    static components = { ...defaultOptionComponents };
+    static components = { ...defaultBuilderComponents };
     static props = {
         options: { type: Array },
         editingElement: true, // HTMLElement from iframe

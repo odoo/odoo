@@ -1,11 +1,11 @@
 import { Component } from "@odoo/owl";
-import { defaultOptionComponents } from "../builder_components/defaultComponents";
+import { defaultBuilderComponents } from "../builder_components/default_builder_components";
 import { useDomState } from "../builder_helpers";
 
 export class SpacingOption extends Component {
     static template = "html_builder.SpacingOption";
     static components = {
-        ...defaultOptionComponents,
+        ...defaultBuilderComponents,
     };
     static props = {};
 

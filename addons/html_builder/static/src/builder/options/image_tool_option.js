@@ -7,7 +7,7 @@ import {
 import { Component } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
-import { defaultOptionComponents } from "../builder_components/defaultComponents";
+import { defaultBuilderComponents } from "../builder_components/default_builder_components";
 import { AddElementOption } from "./add_element_option";
 import { SpacingOption } from "./spacing_option";
 import { Plugin } from "@html_editor/plugin";
@@ -127,7 +127,7 @@ registry.category("website-plugins").add(ImageToolOptionPlugin.id, ImageToolOpti
 
 class ImageToolOption extends Component {
     static template = "html_builder.ImageToolOption";
-    static components = { ...defaultOptionComponents, SpacingOption, AddElementOption };
+    static components = { ...defaultBuilderComponents, SpacingOption, AddElementOption };
     static props = {};
 }
 

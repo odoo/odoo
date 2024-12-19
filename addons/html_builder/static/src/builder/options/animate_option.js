@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { defaultOptionComponents } from "../builder_components/defaultComponents";
+import { defaultBuilderComponents } from "../builder_components/default_builder_components";
 import { withSequence } from "@html_editor/utils/resource";
 
 class AnimateOptionPlugin extends Plugin {
@@ -34,6 +34,6 @@ registry.category("website-plugins").add(AnimateOptionPlugin.id, AnimateOptionPl
 
 class AnimateOption extends Component {
     static template = "html_builder.AnimateOption";
-    static components = { ...defaultOptionComponents };
+    static components = { ...defaultBuilderComponents };
     static props = {};
 }
