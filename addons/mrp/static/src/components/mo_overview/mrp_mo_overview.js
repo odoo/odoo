@@ -28,6 +28,7 @@ export class MoOverview extends Component {
         this.state = useState({
             data: {},
             showOptions: this.getDefaultConfig(),
+            isFolded: true,
         });
 
         useSubEnv({ overviewBus: new EventBus() });
@@ -91,8 +92,9 @@ export class MoOverview extends Component {
         });
     }
 
-    onUnfold() {
-        this.env.overviewBus.trigger("unfold-all")
+    toggleFold() {
+        this.state.isFolded = !this.state.isFolded;
+        this.env.overviewBus.trigger("toggle-fold-all-mo")
     }
 
     //---- Helpers ----
