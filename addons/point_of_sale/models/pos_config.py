@@ -688,7 +688,7 @@ class PosConfig(models.Model):
         except (TypeError, ValueError, OverflowError):
             return default_limit
 
-    def get_limited_partners_loading(self):
+    def get_limited_partners_loading(self, offset=0):
         return self.env.execute_query(SQL("""
             WITH pm AS
             (
@@ -705,8 +705,8 @@ class PosConfig(models.Model):
                 partner.company_id=%s OR partner.company_id IS NULL
             )
             ORDER BY  COALESCE(pm.order_count, 0) DESC,
-                      NAME limit %s;
-        """, self.company_id.id, 100))
+                      NAME limit %s offset %s;
+        """, self.company_id.id, 100, offset))
 
     def action_pos_config_modal_edit(self):
         return {
