@@ -4,10 +4,11 @@
 from odoo import Command
 from odoo.addons.project.tests.test_access_rights import TestProjectPortalCommon
 from odoo.exceptions import AccessError
+from odoo.tests import HttpCase
 from odoo.tools import mute_logger
 
 
-class TestPortalProject(TestProjectPortalCommon):
+class TestPortalProject(TestProjectPortalCommon, HttpCase):
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_portal_project_access_rights(self):
         pigs = self.project_pigs
@@ -82,3 +83,37 @@ class TestPortalProject(TestProjectPortalCommon):
         self.project_pigs.privacy_visibility = 'employees'
         self.assertFalse(self.project_pigs.access_token, 'The access token should no longer be set since now the project is only available by internal users.')
         self.assertFalse(all(self.project_pigs.tasks.mapped('access_token')), 'The access token should no longer be set in any tasks linked to the project since now the project is only available by internal users.')
+
+    def test_search_validates_results(self):
+        project_manager = self.env['res.users'].search([
+            ('groups_id', 'in', [self.env.ref('project.group_project_manager').id])
+        ],limit=1)
+        self.authenticate(project_manager.login, project_manager.login)
+        self.project_1 = self.env['project.project'].create({'name': 'Portal Search Project 1'})
+        self.project_2 = self.env['project.project'].create({'name': 'Portal Search Project 2'})
+        self.task_1 = self.env['project.task'].create({
+            'name': 'Test Task Name Match',
+            'project_id': self.project_1.id,
+            'user_ids': project_manager,
+        })
+
+        self.task_2 = self.env['project.task'].create({
+            'name': 'Another Task For Searching',
+            'project_id': self.project_2.id,
+            'user_ids': project_manager,
+        })
+
+        url = '/my/tasks'
+        response = self.url_open(url)
+        self.assertIn(self.task_1.name, response.text)
+        self.assertIn(self.task_2.name, response.text)
+
+        url = '/my/tasks?search_in=name&search=Test+Task+Name+Match'
+        response = self.url_open(url)
+        self.assertIn(self.task_1.name, response.text)
+        self.assertNotIn(self.task_2.name, response.text)
+
+        url = '/my/tasks?search_in=project_id&search=%s' % (self.project_1.name)
+        response = self.url_open(url)
+        self.assertIn(self.task_1.name, response.text)
+        self.assertNotIn(self.task_2.name, response.text)
