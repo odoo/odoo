@@ -265,7 +265,9 @@ patch(Chatter.prototype, {
         if (this.attachments.length === 0) {
             return;
         }
-        this.state.isAttachmentBoxOpened = !this.state.isAttachmentBoxOpened;
+        this.state.isAttachmentBoxOpened =
+            this.state.isSearchOpen || !this.state.isAttachmentBoxOpened;
+        this.state.isSearchOpen = false;
         if (this.state.isAttachmentBoxOpened) {
             this.rootRef.el.scrollTop = 0;
             this.state.thread.scrollTop = "bottom";
@@ -273,6 +275,9 @@ patch(Chatter.prototype, {
     },
 
     async onClickAttachFile(ev) {
+        if (this.attachments.length === 0 && this.state.isSearchOpen) {
+            this.state.isSearchOpen = false;
+        }
         if (this.state.thread.id) {
             return;
         }
