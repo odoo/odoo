@@ -102,7 +102,7 @@ class PaymentTransaction(models.Model):
         return_url = f'{urls.url_join(base_url, return_route)}?{return_url_params}'
         payload = {
             'hostedCheckoutSpecificInput': {
-                'locale': self.partner_lang,
+                'locale': self.partner_lang or '',
                 'returnUrl': return_url,
                 'showResultPage': False,
             },
@@ -113,15 +113,15 @@ class PaymentTransaction(models.Model):
                 },
                 'customer': {  # required to create a token and for some redirected payment methods
                     'billingAddress': {
-                        'city': self.partner_city,
-                        'countryCode': self.partner_country_id.code,
-                        'state': self.partner_state_id.name,
-                        'street': self.partner_address,
-                        'zip': self.partner_zip,
+                        'city': self.partner_city or '',
+                        'countryCode': self.partner_country_id.code or '',
+                        'state': self.partner_state_id.name or '',
+                        'street': self.partner_address or '',
+                        'zip': self.partner_zip or '',
                     },
                     'contactDetails': {
-                        'emailAddress': self.partner_email,
-                        'phoneNumber': self.partner_phone,
+                        'emailAddress': self.partner_email or '',
+                        'phoneNumber': self.partner_phone or '',
                     },
                 },
                 'references': {
