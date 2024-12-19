@@ -7,7 +7,6 @@
             <field name="inherit_id" ref="account.view_account_move_reversal"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='reason']" position="after">
-                    <field name="country_code" invisible="True"/>
                     <field name="l10n_vn_edi_adjustment_type" placeholder="Adjustment type..." invisible="country_code != 'VN'" required="country_code == 'VN'"/>
                     <field name="l10n_vn_edi_agreement_document_name" invisible="country_code != 'VN'" placeholder="Agreement document name..."/>
                     <field name="l10n_vn_edi_agreement_document_date" invisible="country_code != 'VN'" placeholder="Agreement document date..."/>
