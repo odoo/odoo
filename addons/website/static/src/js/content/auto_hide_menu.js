@@ -282,11 +282,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const header = document.querySelector('header#top');
     if (header) {
         const topMenu = header.querySelector(".top_menu");
-        if (header.classList.contains('o_no_autohide_menu')) {
+        const unfoldable = ".divider, .divider ~ li, .o_no_autohide_item, .js_language_selector";
+        if (!topMenu.querySelector(`:scope > :not(${unfoldable})`)
+                || header.classList.contains("o_no_autohide_menu")) {
             topMenu.classList.remove('o_menu_loading');
             return;
         }
-        const unfoldable = '.divider, .divider ~ li, .o_no_autohide_item, .js_language_selector';
         const excludedImagesSelector = '.o_mega_menu, .o_offcanvas_logo_container, .o_lang_flag';
         const excludedImages = [...header.querySelectorAll(excludedImagesSelector)];
         const images = [...header.querySelectorAll('img')].filter((img) => {
