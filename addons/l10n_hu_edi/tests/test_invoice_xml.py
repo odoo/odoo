@@ -122,3 +122,27 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
                     self.get_xml_tree_from_string(invoice_xml),
                     self.get_xml_tree_from_string(expected_xml_file.read()),
                 )
+
+    def test_invoice_simple_deduction(self):
+        with freeze_time('2024-02-01'):
+            invoice = self.create_invoice_simple_discount()
+            invoice.action_post()
+            invoice_xml = invoice._l10n_hu_edi_generate_xml()
+
+            with tools.file_open('l10n_hu_edi/tests/invoice_xmls/invoice_simple_discount.xml', 'rb') as expected_xml_file:
+                self.assertXmlTreeEqual(
+                    self.get_xml_tree_from_string(invoice_xml),
+                    self.get_xml_tree_from_string(expected_xml_file.read()),
+                )
+
+    def test_invoice_tax_price_include(self):
+        with freeze_time('2024-02-01'):
+            invoice = self.create_invoice_tax_price_include()
+            invoice.action_post()
+            invoice_xml = invoice._l10n_hu_edi_generate_xml()
+
+            with tools.file_open('l10n_hu_edi/tests/invoice_xmls/invoice_tax_price_include.xml', 'rb') as expected_xml_file:
+                self.assertXmlTreeEqual(
+                    self.get_xml_tree_from_string(invoice_xml),
+                    self.get_xml_tree_from_string(expected_xml_file.read()),
+                )
