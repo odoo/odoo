@@ -206,3 +206,7 @@ class StockValuationLayer(models.Model):
             new_valuation = unit_cost * new_valued_qty
 
         return new_valued_qty, new_valuation
+
+    def _should_impact_price_unit_receipt_value(self):
+        self.ensure_one()
+        return True
