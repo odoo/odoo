@@ -4,7 +4,6 @@
         <record id="team_sales_department" model="crm.team">
             <field name="name">Sales</field>
             <field name="sequence">0</field>
-            <field name="company_id" eval="False"/>
         </record>
         <record id="crm_team_member_admin_sales" model="crm.team.member" forcecreate="0">
             <field name="crm_team_id" ref="team_sales_department"/>
