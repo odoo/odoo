@@ -2,6 +2,7 @@
 
 import { logger } from "./core/logger";
 import { Runner } from "./core/runner";
+import { urlParams } from "./core/url";
 import { makeRuntimeHook } from "./hoot_utils";
 import { setRunner } from "./main_runner";
 import { setupHootUI } from "./ui/setup_hoot_ui";
@@ -17,7 +18,7 @@ import { setupHootUI } from "./ui/setup_hoot_ui";
 // Internal
 //-----------------------------------------------------------------------------
 
-const runner = new Runner();
+const runner = new Runner(urlParams);
 
 setRunner(runner);
 
