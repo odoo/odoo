@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="ecpay_invoice_view_form" model="ir.ui.view">
+            <field name="name">ecpay_invoice_view_form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                    <button
+                        name="l10n_tw_edi_run_refund"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-trash-o"
+                        string="Refund e-invoice"
+                        invisible="l10n_tw_edi_refund_finish or move_type not in ['in_refund', 'out_refund']"
+                    />
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Ecpay">
+                        <group
+                            string="ECpay E-invoice Information"
+                            invisible="move_type in ['in_refund', 'out_refund']"
+                        >
+                            <group>
+                                <field name="l10n_tw_edi_state"/>
+                                <field name="l10n_tw_edi_ecpay_invoice_id"/>
+                                <field name="l10n_tw_edi_invoice_shop_custom_number"/>
+                                <field name="l10n_tw_edi_invoice_amount"/>
+                                <field name="l10n_tw_edi_remain_refundable_amount"/>
+                                <field name="l10n_tw_edi_invoice_valid_status"/>
+                                <field name="l10n_tw_edi_invoice_issue_status"/>
+                                <field name="l10n_tw_edi_ecpay_tax_type" readonly="state != 'draft'"/>
+                                <field name="l10n_tw_edi_invoice_create_date" />
+                            </group>
+                            <group>
+                                <field name="l10n_tw_edi_is_donate"/>
+                                <field name="l10n_tw_edi_love_code" invisible="not l10n_tw_edi_is_donate"/>
+                                <field name="l10n_tw_edi_is_print"/>
+                                <field name="l10n_tw_edi_customer_address"/>
+                                <field name="l10n_tw_edi_customer_identifier"/>
+                                <field name="l10n_tw_edi_customer_name"/>
+                                <field name="l10n_tw_edi_customer_email"/>
+                                <field name="l10n_tw_edi_customer_phone"/>
+                                <field name="l10n_tw_edi_carrier_type"/>
+                                <field name="l10n_tw_edi_carrier_number" invisible="l10n_tw_edi_carrier_type not in ['2', '3']" />
+                            </group>
+                        </group>
+                        <group
+                            string="ECpay E-invoice Refund"
+                            invisible="move_type not in ['in_refund', 'out_refund']"
+                        >
+                            <group>
+                                <field name="l10n_tw_edi_ecpay_invoice_id"/>
+                                <field name="l10n_tw_edi_origin_invoice_number"/>
+                                <field name="l10n_tw_edi_refund_invoice_number"/>
+                                <field name="l10n_tw_edi_refund_finish" invisible="1"/>
+                                <field name="l10n_tw_edi_refund_state"/>
+                                <field name="l10n_tw_edi_refund_agreement_type"/>
+                            </group>
+                            <group/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        <record id="ecpay_account_invoice_view_tree" model="ir.ui.view">
+            <field name="name">ecpay_account_invoice_view_tree</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='status_in_payment']" position="after">
+                    <field name="l10n_tw_edi_ecpay_invoice_id"/>
+                    <field name="l10n_tw_edi_invoice_amount"/>
+                    <field name="l10n_tw_edi_invoice_valid_status"/>
+                    <field name="l10n_tw_edi_invoice_issue_status"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

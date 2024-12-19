@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="ecpay_invoice_invoice_stage" name="Ecpay Invoice Invoice Stage" inherit_id="payment.form">
+            <xpath expr="//div[@id='o_payment_form_options']" position="after">
+                <div id="ecpay_invoice_method" class="mt-3">
+                    <h3 class="mb24">ECpay E-invoice</h3>
+                    <div class="col-md-12" id="ecpay_invoice_print">
+                        <select class="form-control" id="print_group" name="print_group">
+                            <option t-attf-value="0" selected="selected">Not getting printed version invoice</option>
+                            <option t-attf-value="1">Get printed version invoice</option>
+                            <option t-attf-value="2">Donate</option>
+                        </select>
+                    </div>
+                    <br />
+                    <div id="ecpay_invoice_identifier_group" class="d-none">
+                        <div class="col-md-12" id="ecpay_invoice_identifier">
+                            <select class="form-control" id="identifier_group" name="identifier_group">
+                                <option t-attf-value="0" selected="selected">Do not need Tax ID Number</option>
+                                <option t-attf-value="1">Need Tax ID Number</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12 store-info d-none" id="ecpay_invoice_customer_name">
+                            <div id="div-l10n_tw_edi_customer_name" class="form-group col-md-6">
+                                <label for="l10n_tw_edi_customer_name">Customer Name</label>
+                                <input class="form-control" id="l10n_tw_edi_customer_name" name="l10n_tw_edi_customer_name" type="text"/>
+                            </div>
+                            <div id="div-identifier" class="form-group col-md-6">
+                                <label for="identifier">Tax ID Number</label>
+                                <input
+                                    class="form-control"
+                                    id="identifier"
+                                    maxlength="8"
+                                    name="identifier"
+                                    type="text"
+                                />
+                                <button type="button" id="validate_tax_id" class="btn btn-link d-none">
+                                    Validate Tax ID
+                                </button>
+                                <div id="div-customer_info" class="form-group col-md-6">
+                                    <div>
+                                        <label for="l10n_tw_edi_customer_email">Customer Email</label>
+                                        <input id="l10n_tw_edi_customer_email" name="l10n_tw_edi_customer_email" type="text" />
+                                    </div>
+                                    <div>
+                                        <label for="l10n_tw_edi_customer_phone">Customer Phone</label>
+                                        <input id="l10n_tw_edi_customer_phone" name="l10n_tw_edi_customer_phone" type="text" />
+                                    </div>
+                                    <div id="warning-customer-info" class="bg-danger padding-5">
+                                        Please enter customer email or phone number
+                                    </div>
+                                </div>
+                                <div id="warning-identifier" class="bg-danger padding-5">
+                                    Please enter valid Tax ID Number (Max 8 digits)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="div-l10n_tw_edi_customer_address" class="col-md-12 d-none">
+                        <label for="l10n_tw_edi_customer_address">Customer Address</label>
+                        <input class="form-control" id="l10n_tw_edi_customer_address" name="l10n_tw_edi_customer_address" type="text"/>
+                    </div>
+                    <div id="ecpay_carrier_type_group">
+                        <div class="col-md-12 o_website_sale_rightfit" id="carrier_type_selection">
+                            <label for="l10n_tw_edi_carrier_type">Carrier</label>
+                            <select class="form-control" id="l10n_tw_edi_carrier_type" name="l10n_tw_edi_carrier_type">
+                                <option t-attf-value="0"/>
+                                <option t-attf-value="1" selected="selected">ECpay e-invoice carrier</option>
+                                <option t-attf-value="2">Citizen Digital Certificate</option>
+                                <option t-attf-value="3">Mobile Barcode</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12 d-none" id="ecpay_invoice_carrier_number">
+                            <label for="l10n_tw_edi_carrier_number">Carrier Number</label>
+                            <input
+                                class="form-control"
+                                id="l10n_tw_edi_carrier_number"
+                                maxlength="20"
+                                name="l10n_tw_edi_carrier_number"
+                                type="text"
+                            />
+                            <div id="warning-l10n_tw_edi_carrier_number" class="bg-danger padding-5">
+                                Correct Format: '/' following 7 alphanumeric or +-. string
+                            </div>
+                            <button type="button" id="validate_carrier_number" class="btn btn-link d-none">
+                                Validate Carrier Number
+                            </button>
+                            <button type="button" id="reenter_carrier_number" class="btn btn-link d-none">
+                                ReEnter Carrier Number
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-12 d-none" id="ecpay_invoice_love_code">
+                        <label for="l10n_tw_edi_love_code">
+                            Love Code
+                            <a href="https://www.einvoice.nat.gov.tw/APCONSUMER/BTC603W/" target="_blank">
+                                Love code enquire
+                            </a>
+                        </label>
+                        <input class="form-control" id="l10n_tw_edi_love_code" maxlength="7" name="l10n_tw_edi_love_code" type="text"/>
+                        <div id="warning-l10n_tw_edi_love_code" class="bg-danger padding-5">
+                            Love code format is 3-7 digits
+                        </div>
+                        <button type="button" id="validate_love_code" class="btn btn-link d-none">
+                            Validate Love Code
+                        </button>
+                        <button type="button" id="reenter_love_code" class="btn btn-link d-none">
+                            ReEnter Love Code
+                        </button>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>
