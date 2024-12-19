@@ -1427,6 +1427,8 @@ class AccountTax(models.Model):
             'tax_amount': 0.0,
             'raw_tax_amount_currency': 0.0,
             'raw_tax_amount': 0.0,
+            'forced_tax_amount_currency': None,
+            'forced_tax_amount': None,
             'base_lines': [],
         })
 
@@ -1461,13 +1463,6 @@ class AccountTax(models.Model):
                 if not base_line['special_type']:
                     amounts['base_lines'].append(base_line)
 
-        # Round 'total_per_tax'.
-        for (tax, currency, _is_refund), amounts in total_per_tax.items():
-            amounts['raw_tax_amount_currency'] = currency.round(amounts['raw_tax_amount_currency'])
-            amounts['raw_tax_amount'] = company.currency_id.round(amounts['raw_tax_amount'])
-            amounts['raw_base_amount_currency'] = currency.round(amounts['raw_base_amount_currency'])
-            amounts['raw_base_amount'] = company.currency_id.round(amounts['raw_base_amount'])
-
         # If tax lines are provided, the totals will be aggregated according them.
         if tax_lines:
             manually_edited_tax_key = set()
@@ -1479,32 +1474,52 @@ class AccountTax(models.Model):
                 key = (tax, currency, tax_rep.document_type == 'refund')
 
                 if key not in manually_edited_tax_key:
-                    total_per_tax[key]['raw_tax_amount_currency'] = 0.0
-                    total_per_tax[key]['raw_tax_amount'] = 0.0
+                    total_per_tax[key]['forced_tax_amount_currency'] = 0.0
+                    total_per_tax[key]['forced_tax_amount'] = 0.0
                     manually_edited_tax_key.add(key)
-                total_per_tax[key]['raw_tax_amount_currency'] += sign * tax_line['amount_currency']
-                total_per_tax[key]['raw_tax_amount'] += sign * tax_line['balance']
+                total_per_tax[key]['forced_tax_amount_currency'] += sign * tax_line['amount_currency']
+                total_per_tax[key]['forced_tax_amount'] += sign * tax_line['balance']
 
         # Dispatch the delta accross the base lines.
-        for (tax, _currency, _is_refund), amounts in total_per_tax.items():
+        for (tax, currency, _is_refund), amounts in total_per_tax.items():
             if not amounts['base_lines']:
                 continue
 
-            base_line = min(
+            base_line = max(
                 amounts['base_lines'],
                 key=lambda base_line: base_line['tax_details']['total_included_currency'],
             )
             tax_details = base_line['tax_details']
             index, tax_data = next((i, x) for i, x in enumerate(tax_details['taxes_data']) if x['tax'] == tax)
-            delta_base_amount_currency = amounts['raw_base_amount_currency'] - amounts['base_amount_currency']
-            delta_base_amount = amounts['raw_base_amount'] - amounts['base_amount']
+            delta_amount_currency = (
+                currency.round(amounts['raw_base_amount_currency'] + amounts['raw_tax_amount_currency'])
+                - amounts['base_amount_currency']
+                - amounts['tax_amount_currency']
+            )
+            delta_amount = (
+                company.currency_id.round(amounts['raw_base_amount'] + amounts['raw_tax_amount'])
+                - amounts['base_amount']
+                - amounts['tax_amount']
+            )
+            if amounts['forced_tax_amount_currency'] is None:
+                target_tax_amount_currency = currency.round(amounts['raw_tax_amount_currency'])
+            else:
+                target_tax_amount_currency = amounts['forced_tax_amount_currency']
+            delta_tax_amount_currency = target_tax_amount_currency - amounts['tax_amount_currency']
+            if amounts['forced_tax_amount'] is None:
+                target_tax_amount = company.currency_id.round(amounts['raw_tax_amount'])
+            else:
+                target_tax_amount = amounts['forced_tax_amount']
+            delta_tax_amount = target_tax_amount - amounts['tax_amount']
+            delta_base_amount_currency = delta_amount_currency - delta_tax_amount_currency
+            delta_base_amount = delta_amount - delta_tax_amount
             if index == 0:
                 tax_details['delta_base_amount_currency'] += delta_base_amount_currency
                 tax_details['delta_base_amount'] += delta_base_amount
             tax_data['base_amount_currency'] += delta_base_amount_currency
             tax_data['base_amount'] += delta_base_amount
-            tax_data['tax_amount_currency'] += amounts['raw_tax_amount_currency'] - amounts['tax_amount_currency']
-            tax_data['tax_amount'] += amounts['raw_tax_amount'] - amounts['tax_amount']
+            tax_data['tax_amount_currency'] += delta_tax_amount_currency
+            tax_data['tax_amount'] += delta_tax_amount
 
     @api.model
     def _prepare_base_line_grouping_key(self, base_line):
