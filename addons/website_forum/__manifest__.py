@@ -66,6 +66,7 @@ Ask questions, get answers, no distractions
         ],
         'web.assets_tests': [
             'website_forum/static/tests/**/*',
+            ('remove', 'website_forum/static/tests/interactions/**/*'),
         ],
         'web.assets_backend': [
             'website_forum/static/src/js/tours/website_forum.js',
