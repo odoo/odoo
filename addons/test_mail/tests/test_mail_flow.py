@@ -132,6 +132,8 @@ class TestMailFlow(MailCommon, TestRecipients):
                     'message_values': {
                         'author_id': self.env['res.partner'],
                         'email_from': self.test_emails[0],
+                        'incoming_email_cc': email_cc,
+                        'incoming_email_to': email_to,
                         'mail_server_id': self.env['ir.mail_server'],
                         'parent_id': self.env['mail.message'],
                         'notified_partner_ids': self.env['res.partner'],
@@ -239,6 +241,8 @@ class TestMailFlow(MailCommon, TestRecipients):
                     'message_values': {
                         'author_id': self.partner_employee,
                         'email_from': self.partner_employee.email_formatted,
+                        'incoming_email_cc': False,
+                        'incoming_email_to': False,
                         'mail_server_id': self.env['ir.mail_server'],
                         'notified_partner_ids': external_partners + self.partner_employee_2,
                         'parent_id': incoming_email,
@@ -283,6 +287,8 @@ class TestMailFlow(MailCommon, TestRecipients):
                     'message_values': {
                         'author_id': partner_sylvie,
                         'email_from': partner_sylvie.email_formatted,
+                        'incoming_email_cc': f'{self.test_emails[3]}, {self.test_emails[4]}',
+                        'incoming_email_to': expected_chatter_reply_to,  # reply_all not already implemented, hence just alias
                         'mail_server_id': self.env['ir.mail_server'],
                         # notified: followers, behaves like classic post
                         'notified_partner_ids': internal_partners + self.partner_portal,
