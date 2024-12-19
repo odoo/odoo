@@ -545,7 +545,7 @@ class PosSession(models.Model):
             }
 
         self.message_post(body='Point of Sale Session ended')
-
+        self.config_id._notify(('CLOSING_SESSION', {'login_number': self.env.context.get('login_number', False)}))
         return {'successful': True}
 
     def update_closing_control_state_session(self, notes):

@@ -152,7 +152,45 @@ export class PosStore extends Reactive {
     async initServerData() {
         await this.processServerData();
         this.onNotified = getOnNotified(this.bus, this.config.access_token);
+        this.onNotified("CLOSING_SESSION", this.closingSessionNotification.bind(this));
+        this.onNotified("CANCEL_ORDERS", this.cancelOrderNotification.bind(this));
+
         return await this.afterProcessServerData();
+    }
+
+    async cancelOrderNotification(data) {
+        if (data.login_number === this.session.login_number) {
+            return;
+        }
+
+        const orders = this.models["pos.order"].readMany(data.order_ids);
+        for (const order of orders) {
+            if (!order.finalized) {
+                order.state = "cancel";
+            }
+        }
+    }
+
+    async closingSessionNotification(data) {
+        if (data.login_number === this.session.login_number) {
+            return;
+        }
+
+        const orders = this.models["pos.order"].getAll();
+        for (const order of orders) {
+            if (!order.finalized) {
+                order.state = "cancel";
+            }
+        }
+
+        this.dialog.add(AlertDialog, {
+            title: _t("Closing Session"),
+            body: _t("The session is being closed by another user. The page will be reloaded."),
+        });
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 3000);
     }
 
     get session() {
@@ -281,7 +319,9 @@ export class PosStore extends Reactive {
 
         if (ids.size > 0) {
             this.pendingOrder.delete.clear();
-            await this.data.call("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
+            await this.data.call("pos.order", "action_pos_order_cancel", [Array.from(ids)], {
+                context: { login_number: this.session.login_number },
+            });
             return true;
         }
 
@@ -984,6 +1024,7 @@ export class PosStore extends Reactive {
     getSyncAllOrdersContext(orders, options = {}) {
         return {
             config_id: this.config.id,
+            login_number: this.session.login_number,
         };
     }
 
@@ -1188,6 +1229,18 @@ export class PosStore extends Reactive {
             this.get_order().updateSavedQuantity();
         }
         this.selectedOrderUuid = order?.uuid;
+    }
+
+    async verifiyOpenOrder() {
+        const openOrderIds = this.get_open_orders()
+            .map((order) => order.id)
+            .filter((id) => typeof id === "number");
+
+        if (!openOrderIds.length) {
+            return;
+        }
+
+        await this.data.read("pos.order", openOrderIds);
     }
 
     // return the list of unpaid orders
