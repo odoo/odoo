@@ -17,8 +17,6 @@
                       string="SInvoice"
                       invisible="move_type not in ['out_invoice', 'out_refund'] or country_code != 'VN'">
                     <group>
-                        <field name="l10n_vn_edi_replacement_origin_id" invisible="1"/>
-                        <field name="l10n_vn_edi_reversed_entry_invoice_number" invisible="1"/>
                         <group>
                             <field name="l10n_vn_edi_invoice_symbol" readonly="l10n_vn_edi_invoice_number"/>
                             <field name="l10n_vn_edi_issue_date" invisible="not l10n_vn_edi_invoice_number"/>
