@@ -18,7 +18,7 @@ from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 
-from odoo.tools import date_utils, ormcache
+from odoo.tools import date_utils, ormcache, format_list
 from .utils import Intervals, float_to_time, make_aware, datetime_to_string, string_to_datetime
 from odoo.addons.hr_work_entry_contract.models.hr_work_intervals import WorkIntervals
 
@@ -133,6 +133,22 @@ class ResourceCalendar(models.Model):
                 'global_leave_ids': [(5, 0, 0)] + [
                     (0, 0, leave._copy_leave_vals()) for leave in calendar.company_id.resource_calendar_id.global_leave_ids]
             })
+
+    @api.constrains('company_id')
+    def _check_company_id(self):
+        for calendar, resources in self.env['resource.resource']._read_group(
+            domain=[('calendar_id', 'in', self.ids)],
+            groupby=['calendar_id'],
+            aggregates=['id:recordset'],
+        ):
+            if not resources:
+                continue
+            raise ValidationError(_(
+                "You cannot change the company for calendar %(calendar_name)s as it's still linked to employee.\n"
+                "Duplicate the calendar or unlink the resource %(resource_names)s from the calendar first.",
+                calendar_name=calendar.name,
+                resource_names=format_list(self.env, [r.name for r in resources]),
+            ))
 
     @api.depends('tz')
     def _compute_tz_offset(self):
