@@ -754,6 +754,9 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                         'author_id': self.partner_employee,
                         'body': '<p>Body</p>',
                         'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
+                        # incoming_email_cc/_to are informative and do not trigger any notification
+                        'incoming_email_cc': '"Leo Pol" <leo@test.example.com>, fab@test.example.com',
+                        'incoming_email_to': '"Gaby Tlair" <gab@test.example.com>, ted@test.example.com',
                         'is_internal': False,
                         'message_type': 'comment',
                         'model': test_record._name,
@@ -766,6 +769,8 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             ):
             new_message = test_record.message_post(
                 body='Body',
+                incoming_email_cc='"Leo Pol" <leo@test.example.com>, fab@test.example.com',
+                incoming_email_to='"Gaby Tlair" <gab@test.example.com>, ted@test.example.com',
                 message_type='comment',
                 subtype_xmlid='mail.mt_comment',
                 partner_ids=[self.partner_employee_2.id],
@@ -2000,6 +2005,47 @@ class TestMessagePostLang(MailCommon, TestRecipients):
                               '"View document" should be translated')
                 self.assertNotIn(f'View {test_records[1]._description}', body,
                                  '"View document" should be translated')
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_post_multi_lang_inactive(self):
+        """ Test posting using an inactive lang, due do some data in DB. It
+        should not crash when trying to search for translated terms / fetch
+        lang bits. """
+        installed = self.env['res.lang'].get_installed()
+        self.assertNotIn('fr_FR', [code for code, _name in installed])
+        test_records = self.test_records.with_env(self.env)
+        customer_inactive_lang = self.env['res.partner'].create({
+            'email': 'test.partner.fr@test.example.com',
+            'lang': 'fr_FR',
+            'name': 'French Inactive Customer',
+        })
+        test_records.message_subscribe(partner_ids=customer_inactive_lang.ids)
+
+        for record in test_records:
+            with self.subTest(record=record.name):
+                with self.mock_mail_gateway(mail_unlink_sent=False), \
+                        self.mock_mail_app():
+                    record.message_post(
+                        body=Markup('<p>Hi there</p>'),
+                        email_layout_xmlid='mail.test_layout',
+                        message_type='comment',
+                        subject='TeDeum',
+                        subtype_xmlid='mail.mt_comment',
+                    )
+                    message = record.message_ids[0]
+                    self.assertEqual(message.notified_partner_ids, customer_inactive_lang)
+
+                    email = self._find_sent_email(
+                        self.partner_employee.email_formatted,
+                        [customer_inactive_lang.email_formatted]
+                    )
+                    self.assertTrue(bool(email), 'Email not found, check recipients')
+
+                    exp_layout_content_en = 'English Layout for Lang Chatter Model'
+                    exp_button_en = 'View Lang Chatter Model'
+                    self.assertIn(exp_layout_content_en, email['body'])
+                    self.assertIn(exp_button_en, email['body'])
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
