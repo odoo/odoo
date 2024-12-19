@@ -1,7 +1,7 @@
 import { Component, EventBus, onMounted, useRef, useSubEnv } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import {
-    basicContainerWeWidgetProps,
+    basicContainerBuilderComponentProps,
     useVisibilityObserver,
     useApplyVisibility,
     useBuilderComponent,
@@ -14,7 +14,7 @@ import { useDebounced } from "@web/core/utils/timing";
 export class BuilderSelect extends Component {
     static template = "html_builder.BuilderSelect";
     static props = {
-        ...basicContainerWeWidgetProps,
+        ...basicContainerBuilderComponentProps,
         slots: Object,
     };
     static components = {

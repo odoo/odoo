@@ -1,17 +1,17 @@
 import { Component } from "@odoo/owl";
 import {
-    clickableWeWidgetProps,
-    useClickableWeWidget,
+    clickableBuilderComponentProps,
+    useClickableBuilderComponent,
     BuilderComponent,
     useDependecyDefinition,
-    defaultWeWidgetProps,
+    defaultBuilderComponentProps,
 } from "../builder_helpers";
 
 export class BuilderButton extends Component {
     static template = "html_builder.BuilderButton";
     static components = { BuilderComponent };
     static props = {
-        ...clickableWeWidgetProps,
+        ...clickableBuilderComponentProps,
 
         id: { type: String, optional: true },
         title: { type: String, optional: true },
@@ -22,10 +22,10 @@ export class BuilderButton extends Component {
 
         slots: { type: Object, optional: true },
     };
-    static defaultProps = defaultWeWidgetProps;
+    static defaultProps = defaultBuilderComponentProps;
 
     setup() {
-        const { state, operation, isActive, getActions } = useClickableWeWidget();
+        const { state, operation, isActive, getActions } = useClickableBuilderComponent();
         if (this.props.id) {
             useDependecyDefinition({
                 id: this.props.id,

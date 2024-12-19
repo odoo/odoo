@@ -1,8 +1,8 @@
 import { Component, onMounted, onWillDestroy, useRef } from "@odoo/owl";
 import {
-    clickableWeWidgetProps,
-    defaultWeWidgetProps,
-    useClickableWeWidget,
+    clickableBuilderComponentProps,
+    defaultBuilderComponentProps,
+    useClickableBuilderComponent,
     useDependecyDefinition,
     BuilderComponent,
 } from "../builder_helpers";
@@ -10,12 +10,12 @@ import {
 export class BuilderSelectItem extends Component {
     static template = "html_builder.BuilderSelectItem";
     static props = {
-        ...clickableWeWidgetProps,
+        ...clickableBuilderComponentProps,
         id: { type: String, optional: true },
         title: { type: String, optional: true },
         slots: { type: Object, optional: true },
     };
-    static defaultProps = defaultWeWidgetProps;
+    static defaultProps = defaultBuilderComponentProps;
     static components = { BuilderComponent };
 
     setup() {
@@ -23,7 +23,7 @@ export class BuilderSelectItem extends Component {
             throw new Error("BuilderSelectItem must be used inside a BuilderSelect component.");
         }
         const item = useRef("item");
-        const { state, operation, isActive, getActions, priority } = useClickableWeWidget();
+        const { state, operation, isActive, getActions, priority } = useClickableBuilderComponent();
         if (this.props.id) {
             useDependecyDefinition({ id: this.props.id, isActive, getActions });
         }

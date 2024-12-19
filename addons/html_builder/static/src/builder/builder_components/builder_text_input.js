@@ -1,7 +1,7 @@
 import { Component } from "@odoo/owl";
 import {
-    basicContainerWeWidgetProps,
-    useInputWeWidget,
+    basicContainerBuilderComponentProps,
+    useInputBuilderComponent,
     useBuilderComponent,
     BuilderComponent,
 } from "../builder_helpers";
@@ -9,14 +9,14 @@ import {
 export class BuilderTextInput extends Component {
     static template = "html_builder.BuilderTextInput";
     static props = {
-        ...basicContainerWeWidgetProps,
+        ...basicContainerBuilderComponentProps,
         placeholder: { type: String, optional: true },
     };
     static components = { BuilderComponent };
 
     setup() {
         useBuilderComponent();
-        const { state, onChange, onInput } = useInputWeWidget();
+        const { state, onChange, onInput } = useInputBuilderComponent();
         this.onChange = onChange;
         this.onInput = onInput;
         this.state = state;

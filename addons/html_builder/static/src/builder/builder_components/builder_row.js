@@ -2,7 +2,7 @@ import { Component } from "@odoo/owl";
 import {
     useVisibilityObserver,
     useApplyVisibility,
-    basicContainerWeWidgetProps,
+    basicContainerBuilderComponentProps,
     useBuilderComponent,
     BuilderComponent,
 } from "../builder_helpers";
@@ -11,7 +11,7 @@ export class BuilderRow extends Component {
     static template = "html_builder.BuilderRow";
     static components = { BuilderComponent };
     static props = {
-        ...basicContainerWeWidgetProps,
+        ...basicContainerBuilderComponentProps,
         label: String,
         dependencies: { type: [String, Array], optional: true },
         tooltip: { type: String, optional: true },

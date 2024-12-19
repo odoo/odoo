@@ -1,22 +1,24 @@
 import { Component } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import {
-    clickableWeWidgetProps,
-    useClickableWeWidget,
+    clickableBuilderComponentProps,
+    useClickableBuilderComponent,
     BuilderComponent,
     useDependecyDefinition,
+    defaultBuilderComponentProps,
 } from "../builder_helpers";
 
 export class BuilderCheckbox extends Component {
     static template = "html_builder.BuilderCheckbox";
     static components = { BuilderComponent, CheckBox };
     static props = {
-        ...clickableWeWidgetProps,
+        ...clickableBuilderComponentProps,
         id: { type: String, optional: true },
     };
+    static defaultProps = defaultBuilderComponentProps;
 
     setup() {
-        const { state, operation, isActive } = useClickableWeWidget();
+        const { state, operation, isActive } = useClickableBuilderComponent();
         if (this.props.id) {
             useDependecyDefinition({ id: this.props.id, isActive });
         }

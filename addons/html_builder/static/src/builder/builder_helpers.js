@@ -128,7 +128,7 @@ export function useDependencies(dependencies) {
     return isDependenciesVisible;
 }
 
-export function useClickableWeWidget() {
+export function useClickableBuilderComponent() {
     useBuilderComponent();
     const comp = useComponent();
     const getAction = comp.env.editor.shared.builderActions.getAction;
@@ -337,7 +337,7 @@ export function useClickableWeWidget() {
         getActions: getAllActions,
     };
 }
-export function useInputWeWidget() {
+export function useInputBuilderComponent() {
     const comp = useComponent();
     const getAction = comp.env.editor.shared.builderActions.getAction;
     const state = useDomState(getState);
@@ -441,7 +441,7 @@ export function useVisibilityObserver(contentName, callback) {
     );
 }
 
-export const basicContainerWeWidgetProps = {
+export const basicContainerBuilderComponentProps = {
     applyTo: { type: String, optional: true },
     preview: { type: Boolean, optional: true },
     dependencies: { type: [String, Array], optional: true },
@@ -458,8 +458,8 @@ export const basicContainerWeWidgetProps = {
     styleAction: { type: String, optional: true },
 };
 const validateIsNull = { validate: (value) => value === null };
-export const clickableWeWidgetProps = {
-    ...basicContainerWeWidgetProps,
+export const clickableBuilderComponentProps = {
+    ...basicContainerBuilderComponentProps,
 
     actionValue: {
         type: [Boolean, String, Number, { type: Array, element: [Boolean, String, Number] }],
@@ -474,6 +474,6 @@ export const clickableWeWidgetProps = {
 
     inheritedActions: { type: Array, element: String, optional: true },
 };
-export const defaultWeWidgetProps = {
+export const defaultBuilderComponentProps = {
     inheritedActions: [],
 };

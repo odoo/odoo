@@ -307,11 +307,11 @@ describe("BuilderButton", () => {
             addOption({
                 selector: ".test-options-target",
                 template: xml`
-                <WeButtonGroup>
-                    <WeButton action="'customAction1'" actionParam="'myParam1'" actionValue="'myValue1'"  id="'c1'">MyAction1</WeButton>
-                    <WeButton action="'customAction2'" actionParam="'myParam2'" actionValue="'myValue2'">MyAction2</WeButton>
-                </WeButtonGroup>
-                <WeButton action="'customAction3'" actionParam="'myParam3'" actionValue="'myValue3'" inheritedActions="['c1']" >MyAction2</WeButton>
+                <BuilderButtonGroup>
+                    <BuilderButton action="'customAction1'" actionParam="'myParam1'" actionValue="'myValue1'"  id="'c1'">MyAction1</BuilderButton>
+                    <BuilderButton action="'customAction2'" actionParam="'myParam2'" actionValue="'myValue2'">MyAction2</BuilderButton>
+                </BuilderButtonGroup>
+                <BuilderButton action="'customAction3'" actionParam="'myParam3'" actionValue="'myValue3'" inheritedActions="['c1']" >MyAction2</BuilderButton>
             `,
             });
             await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);
@@ -340,12 +340,12 @@ describe("BuilderButton", () => {
             addOption({
                 selector: ".test-options-target",
                 template: xml`
-                <WeButtonGroup>
-                    <WeButton action="'customAction1'" actionParam="'myParam1'" actionValue="'myValue1'"  id="'c1'">MyAction1</WeButton>
-                    <WeButton action="'customAction2'" actionParam="'myParam2'" actionValue="'myValue2'">MyAction2</WeButton>
-                </WeButtonGroup>
-                <WeButton action="'customAction3'" actionParam="'myParam3'" actionValue="'myValue3'"  id="'c3'">MyAction1</WeButton>
-                <WeButton action="'customAction4'" actionParam="'myParam4'" actionValue="'myValue4'" inheritedActions="['c1', 'c3']" >MyAction2</WeButton>
+                <BuilderButtonGroup>
+                    <BuilderButton action="'customAction1'" actionParam="'myParam1'" actionValue="'myValue1'"  id="'c1'">MyAction1</BuilderButton>
+                    <BuilderButton action="'customAction2'" actionParam="'myParam2'" actionValue="'myValue2'">MyAction2</BuilderButton>
+                </BuilderButtonGroup>
+                <BuilderButton action="'customAction3'" actionParam="'myParam3'" actionValue="'myValue3'"  id="'c3'">MyAction1</BuilderButton>
+                <BuilderButton action="'customAction4'" actionParam="'myParam4'" actionValue="'myValue4'" inheritedActions="['c1', 'c3']" >MyAction2</BuilderButton>
             `,
             });
             await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);

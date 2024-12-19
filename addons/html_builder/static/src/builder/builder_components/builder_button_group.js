@@ -1,6 +1,6 @@
 import { Component, EventBus, useSubEnv } from "@odoo/owl";
 import {
-    basicContainerWeWidgetProps,
+    basicContainerBuilderComponentProps,
     useVisibilityObserver,
     useApplyVisibility,
     useBuilderComponent,
@@ -10,7 +10,7 @@ import {
 export class BuilderButtonGroup extends Component {
     static template = "html_builder.BuilderButtonGroup";
     static props = {
-        ...basicContainerWeWidgetProps,
+        ...basicContainerBuilderComponentProps,
         dependencies: { type: [String, Array], optional: true },
         slots: { type: Object, optional: true },
     };
