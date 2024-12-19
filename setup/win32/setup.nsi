@@ -112,11 +112,6 @@ Var HWNDPostgreSQLPort
 Var HWNDPostgreSQLUsername
 Var HWNDPostgreSQLPassword
 
-Var ProxyTokenDialog
-Var ProxyTokenLabel
-Var ProxyTokenText
-Var ProxyTokenPwd
-
 !define STATIC_PATH "static"
 !define PIXMAPS_PATH "${STATIC_PATH}\pixmaps"
 
@@ -139,7 +134,6 @@ Page Custom ShowPostgreSQL LeavePostgreSQL
 !define MUI_PAGE_CUSTOMFUNCTION_LEAVE dir_leave
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
-Page Custom ShowProxyTokenDialogPage
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_FINISHPAGE_RUN
 !define MUI_FINISHPAGE_RUN_CHECKED
@@ -175,12 +169,8 @@ LangString DESC_PostgreSQL_Username ${LANG_ENGLISH} "Username"
 LangString DESC_PostgreSQL_Password ${LANG_ENGLISH} "Password"
 LangString Profile_AllInOne ${LANG_ENGLISH} "Odoo Server And PostgreSQL Server"
 LangString Profile_Server ${LANG_ENGLISH} "Odoo Server Only"
-LangString Profile_IOT ${LANG_ENGLISH} "Odoo IoT"
 LangString TITLE_Odoo_Server ${LANG_ENGLISH} "Odoo Server"
 LangString TITLE_PostgreSQL ${LANG_ENGLISH} "PostgreSQL Database"
-LangString TITLE_IOT ${LANG_ENGLISH} "Odoo IoT"
-LangString TITLE_Nginx ${LANG_ENGLISH} "Nginx WebServer"
-LangString TITLE_Ghostscript ${LANG_ENGLISH} "Ghostscript interpreter"
 LangString DESC_FinishPageText ${LANG_ENGLISH} "Start Odoo"
 LangString UnsafeDirText ${LANG_ENGLISH} "Installing outside of $PROGRAMFILES64 is not recommended.$\nDo you want to continue ?"
 
@@ -201,22 +191,17 @@ LangString DESC_PostgreSQL_Username ${LANG_FRENCH} "Utilisateur"
 LangString DESC_PostgreSQL_Password ${LANG_FRENCH} "Mot de passe"
 LangString Profile_AllInOne ${LANG_FRENCH} "Serveur Odoo Et Serveur PostgreSQL"
 LangString Profile_Server ${LANG_FRENCH} "Seulement Le Serveur Odoo"
-LangString Profile_IOT ${LANG_FRENCH} "Odoo IoT"
 LangString TITLE_Odoo_Server ${LANG_FRENCH} "Serveur Odoo"
 LangString TITLE_PostgreSQL ${LANG_FRENCH} "Installation du serveur de base de données PostgreSQL"
-LangString TITLE_IOT ${LANG_FRENCH} "Odoo IoT"
-LangString TITLE_Nginx ${LANG_FRENCH} "Installation du serveur web Nginx"
-LangString TITLE_Ghostscript ${LANG_FRENCH} "Installation de l'interpréteur Ghostscript"
 LangString DESC_FinishPageText ${LANG_FRENCH} "Démarrer Odoo"
 LangString UnsafeDirText ${LANG_FRENCH} "Installer en dehors de $PROGRAMFILES64 n'est pas recommandé.$\nVoulez-vous continuer ?"
 
 InstType /NOCUSTOM
 InstType $(Profile_AllInOne)
 InstType $(Profile_Server)
-InstType $(Profile_IOT)
 
 Section $(TITLE_Odoo_Server) SectionOdoo_Server
-    SectionIn 1 2 3
+    SectionIn 1 2
 
     # Installing winpython
     SetOutPath "$INSTDIR\python"
@@ -246,8 +231,6 @@ Section $(TITLE_Odoo_Server) SectionOdoo_Server
     # Fix the addons path
     WriteIniStr "$INSTDIR\server\odoo.conf" "options" "addons_path" "$INSTDIR\server\odoo\addons"
     WriteIniStr "$INSTDIR\server\odoo.conf" "options" "bin_path" "$INSTDIR\thirdparty"
-    # Set data_dir
-    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "data_dir" "$INSTDIR\sessions"
 
     # if we're going to install postgresql force it's path,
     # otherwise we consider it's always done and/or correctly tune by users
@@ -262,8 +245,6 @@ Section $(TITLE_Odoo_Server) SectionOdoo_Server
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe"'
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppDirectory "$\"$INSTDIR\python$\""'
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppParameters "\"$INSTDIR\server\odoo-bin\" -c "\"$INSTDIR\server\odoo.conf\"'
-    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} ObjectName "LOCALSERVICE"'
-    AccessControl::GrantOnFile  "$INSTDIR" "LOCALSERVICE" "FullAccess"
 
     Call RestartOdooService
 SectionEnd
@@ -301,73 +282,6 @@ Section $(TITLE_PostgreSQL) SectionPostgreSQL
         --serverport $TextPostgreSQLPort'
 SectionEnd
 
-Section $(TITLE_IOT) IOT
-    SectionIn 3
-    DetailPrint "Configuring TITLE_IOT"
-    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "server_wide_modules" "web,hw_posbox_homepage,hw_drivers"
-    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "list_db" "False"
-    WriteIniStr "$INSTDIR\server\odoo.conf" "options" "max_cron_threads" "0"
-    nsExec::ExecToStack '"$INSTDIR\python\python.exe" "$INSTDIR\server\odoo-bin" genproxytoken'
-    pop $0
-    pop $ProxyTokenPwd
-SectionEnd
-
-
-Section $(TITLE_Nginx) Nginx
-    SectionIn 3
-    SetOutPath '$TEMP'
-    VAR /GLOBAL nginx_zip_filename
-    VAR /GLOBAL nginx_url
-
-    # need unzip plugin:
-    # https://nsis.sourceforge.io/mediawiki/images/5/5a/NSISunzU.zip
-    StrCpy $nginx_zip_filename "nginx-1.22.0.zip"
-    StrCpy $nginx_url "https://nginx.org/download/$nginx_zip_filename"
-
-    DetailPrint "Downloading Nginx"
-    NScurl::http get "$nginx_url" "$TEMP\$nginx_zip_filename" /PAGE /END
-    DetailPrint "Temp dir: $TEMP\$nginx_zip_filename"
-    DetailPrint "Unzip Nginx"
-    nsisunz::UnzipToLog "$TEMP\$nginx_zip_filename" "$INSTDIR"
-
-    Pop $0
-    StrCmp $0 "success" ok
-      DetailPrint "$0" ;print error message to log
-    ok:
-
-    FindFirst $0 $1 "$INSTDIR\nginx*"
-    DetailPrint "Setting up nginx"
-    SetOutPath "$INSTDIR\$1\conf"
-    CreateDirectory $INSTDIR\$1\temp
-    CreateDirectory $INSTDIR\$1\logs
-    FindClose $0
-    File "conf\nginx\nginx.conf"
-    # Temporary certs for the first start
-    File "..\..\odoo\addons\iot_box_image\overwrite_after_init\etc\ssl\certs\nginx-cert.crt"
-    File "..\..\odoo\addons\iot_box_image\overwrite_after_init\etc\ssl\private\nginx-cert.key"
-SectionEnd
-
-Section $(TITLE_Ghostscript) SectionGhostscript
-    SectionIn 3
-    SetOutPath '$TEMP'
-    VAR /GLOBAL ghostscript_exe_filename
-    VAR /GLOBAL ghostscript_url
-
-    StrCpy $ghostscript_exe_filename "gs10012w64.exe"
-    StrCpy $ghostscript_url "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10012/$ghostscript_exe_filename"
-
-    DetailPrint "Downloading Ghostscript"
-    NScurl::http get "$ghostscript_url" "$TEMP\$ghostscript_exe_filename" /PAGE /END
-    DetailPrint "Temp dir: $TEMP\$ghostscript_exe_filename"
-
-    Rmdir /r "INSTDIR\Ghostscript"
-    DetailPrint "Installing Ghostscript"
-    ExecWait '"$TEMP\$ghostscript_exe_filename" \
-        /S \
-        /D=$INSTDIR\Ghostscript'
-    Call RestartOdooService
-SectionEnd
-
 Section -Post
     WriteRegExpandStr HKLM "${UNINSTALL_REGISTRY_KEY}" "UninstallString" "$INSTDIR\Uninstall.exe"
     WriteRegExpandStr HKLM "${UNINSTALL_REGISTRY_KEY}" "InstallLocation" "$INSTDIR"
@@ -394,20 +308,15 @@ Section "Uninstall"
     Pop $R0
     ReadRegStr $0 HKLM "${UNINSTALL_REGISTRY_KEY_SERVER}" "UninstallString"
     ExecWait '"$0" /S'
-    ExecWait '"$INSTDIR\Ghostscript\uninstgs.exe" /S'
 
     nsExec::Exec "net stop ${SERVICENAME}"
     nsExec::Exec "sc delete ${SERVICENAME}"
     sleep 2
 
     Rmdir /r "$INSTDIR\server"
-    Rmdir /r "$INSTDIR\sessions"
     Rmdir /r "$INSTDIR\thirdparty"
     Rmdir /r "$INSTDIR\python"
     Rmdir /r "$INSTDIR\nssm"
-    FindFirst $0 $1 "$INSTDIR\nginx*"
-    Rmdir /R "$INSTDIR\$1"
-    FindClose $0
     DeleteRegKey HKLM "${UNINSTALL_REGISTRY_KEY}"
 SectionEnd
 
@@ -539,27 +448,6 @@ Function LeavePostgreSQL
         MessageBox MB_ICONEXCLAMATION|MB_OK $(WARNING_PasswordIsEmpty)
         Abort
     ${EndIf}
-FunctionEnd
-
-Function ShowProxyTokenDialogPage
-    GetCurInstType $R0
-    IntCmp $R0 2 doProxyToken bypassProxyToken
-    doProxyToken:
-        nsDialogs::Create 1018
-        Pop $ProxyTokenDialog
-        ${IF} $ProxyTokenDialog == !error
-            Abort
-        ${EndIf}
-
-        ${NSD_CreateLabel} 0 0 100% 25% "Here is your access token for the Odoo IOT, please write it down in a safe place, you will need it to configure the IOT"
-        Pop $ProxyTokenLabel
-
-        ${NSD_CreateText} 0 30% 100% 13u $ProxyTokenPwd
-        Pop $ProxyTokenText
-        ${NSD_Edit_SetreadOnly} $ProxyTokenText 1
-        ${NSD_AddStyle}  $ProxyTokenText ${SS_CENTER}
-        nsDialogs::Show
-    bypassProxyToken:
 FunctionEnd
 
 Function ComponentLeave
