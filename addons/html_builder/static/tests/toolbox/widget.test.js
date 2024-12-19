@@ -276,21 +276,33 @@ describe("WeButton", () => {
         expect("[data-class-action='test']").not.toHaveClass("active");
     });
     describe("inherited actions", () => {
-        test("inherit actions for another button", async () => {
-            function makeAction(n) {
-                return {
-                    clean({ param, value }) {
-                        expect.step(`customAction${n} clean ${param} ${value}`);
-                    },
-                    apply: ({ param, value }) => {
-                        expect.step(`customAction${n} apply ${param} ${value}`);
-                    },
+        function makeAction(n, { async } = {}) {
+            const action = {
+                clean({ param, value }) {
+                    expect.step(`customAction${n} clean ${param} ${value}`);
+                },
+                apply: ({ param, value }) => {
+                    expect.step(`customAction${n} apply ${param} ${value}`);
+                },
+            };
+            if (async) {
+                let resolve;
+                const p = new Promise((resolvee) => {
+                    resolve = resolvee;
+                });
+                action.load = async ({ param, value }) => {
+                    expect.step(`customAction${n} load ${param} ${value}`);
+                    return p;
                 };
+                return { action, resolve };
             }
+            return { action };
+        }
+        test("inherit actions for another button", async () => {
             addActionOption({
-                customAction1: makeAction(1),
-                customAction2: makeAction(2),
-                customAction3: makeAction(3),
+                customAction1: makeAction(1).action,
+                customAction2: makeAction(2).action,
+                customAction3: makeAction(3).action,
             });
             addOption({
                 selector: ".test-options-target",
@@ -299,7 +311,7 @@ describe("WeButton", () => {
                     <WeButton action="'customAction1'" actionParam="'myParam1'" actionValue="'myValue1'"  id="'c1'">MyAction1</WeButton>
                     <WeButton action="'customAction2'" actionParam="'myParam2'" actionValue="'myValue2'">MyAction2</WeButton>
                 </WeButtonGroup>
-                <WeButton action="'customAction3'" actionParam="'myParam3'" actionValue="'myValue3'" inheritedActions="'c1'" >MyAction2</WeButton>
+                <WeButton action="'customAction3'" actionParam="'myParam3'" actionValue="'myValue3'" inheritedActions="['c1']" >MyAction2</WeButton>
             `,
             });
             await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);
@@ -314,34 +326,16 @@ describe("WeButton", () => {
                 "customAction1 apply myParam1 myValue1",
             ]);
         });
-        test("inherit actions for another button with async", async () => {
-            function makeAction(n, { async } = {}) {
-                const action = {
-                    clean({ param, value }) {
-                        expect.step(`customAction${n} clean ${param} ${value}`);
-                    },
-                    apply: ({ param, value }) => {
-                        expect.step(`customAction${n} apply ${param} ${value}`);
-                    },
-                };
-                if (async) {
-                    let resolve;
-                    const p = new Promise((resolvee) => {
-                        resolve = resolvee;
-                    });
-                    action.load = async ({ param, value }) => {
-                        expect.step(`customAction${n} load ${param} ${value}`);
-                        return p;
-                    };
-                    return { action, resolve };
-                }
-                return { action };
-            }
+        test("inherit actions for another button (with async)", async () => {
+            const action1 = makeAction(1, { async: true });
+            const action2 = makeAction(2, { async: true });
             const action3 = makeAction(3, { async: true });
+            const action4 = makeAction(4, { async: true });
             addActionOption({
-                customAction1: makeAction(1).action,
-                customAction2: makeAction(2).action,
+                customAction1: action1.action,
+                customAction2: action2.action,
                 customAction3: action3.action,
+                customAction4: action4.action,
             });
             addOption({
                 selector: ".test-options-target",
@@ -350,22 +344,29 @@ describe("WeButton", () => {
                     <WeButton action="'customAction1'" actionParam="'myParam1'" actionValue="'myValue1'"  id="'c1'">MyAction1</WeButton>
                     <WeButton action="'customAction2'" actionParam="'myParam2'" actionValue="'myValue2'">MyAction2</WeButton>
                 </WeButtonGroup>
-                <WeButton action="'customAction3'" actionParam="'myParam3'" actionValue="'myValue3'" inheritedActions="'c1'" >MyAction2</WeButton>
+                <WeButton action="'customAction3'" actionParam="'myParam3'" actionValue="'myValue3'"  id="'c3'">MyAction1</WeButton>
+                <WeButton action="'customAction4'" actionParam="'myParam4'" actionValue="'myValue4'" inheritedActions="['c1', 'c3']" >MyAction2</WeButton>
             `,
             });
             await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);
             await contains(":iframe .test-options-target").click();
 
-            await contains("[data-action-id='customAction3']").hover();
+            await contains("[data-action-id='customAction4']").hover();
+            action4.resolve();
             action3.resolve();
+            action1.resolve();
             await new Promise((resolve) => setTimeout(resolve, 0));
             expect.verifySteps([
+                "customAction4 load myParam4 myValue4",
+                "customAction1 load myParam1 myValue1",
                 "customAction3 load myParam3 myValue3",
+
                 "customAction2 clean myParam2 myValue2",
                 "customAction1 clean myParam1 myValue1",
 
-                "customAction3 apply myParam3 myValue3",
+                "customAction4 apply myParam4 myValue4",
                 "customAction1 apply myParam1 myValue1",
+                "customAction3 apply myParam3 myValue3",
             ]);
         });
     });
