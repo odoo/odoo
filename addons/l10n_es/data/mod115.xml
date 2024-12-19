@@ -3,6 +3,7 @@
 <data auto_sequence="1">
     <record id="mod_115" model="account.report">
         <field name="name">Tax Report(Mod 115)</field>
+        <field name="name@es">Informe de impuestos (Mod 115)</field>
         <field name="sequence">115</field>
         <field name="filter_analytic" eval="False"/>
         <field name="filter_date_range" eval="True"/>
@@ -15,17 +16,20 @@
         <field name="column_ids">
             <record id="mod_115_column" model="account.report.column">
                 <field name="name">Balance</field>
+                <field name="name@es">Saldo</field>
                 <field name="expression_label">balance</field>
             </record>
         </field>
         <field name="line_ids">
             <record id="mod_115_title_1" model="account.report.line">
                 <field name="name">Withholdings and payments on account</field>
+                <field name="name@es">Retenciones e ingresos a cuenta</field>
                 <field name="code">aeat_mod_115_title_1</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="mod_115_casilla_01" model="account.report.line">
                         <field name="name">[01] Nº of recipients</field>
+                        <field name="name@es">[01] Nº de perceptores</field>
                         <field name="code">aeat_mod_115_01</field>
                         <field name="groupby">partner_id</field>
                         <field name="foldable" eval="True"/>
@@ -41,6 +45,7 @@
                     </record>
                     <record id="mod_115_casilla_02" model="account.report.line">
                         <field name="name">[02] Base withholdings</field>
+                        <field name="name@es">[02] Base retenciones</field>
                         <field name="code">aeat_mod_115_02</field>
                         <field name="groupby">account_id</field>
                         <field name="foldable" eval="True"/>
@@ -54,6 +59,7 @@
                     </record>
                     <record id="mod_115_casilla_03" model="account.report.line">
                         <field name="name">[03] Withholdings</field>
+                        <field name="name@es">[03] Retenciones</field>
                         <field name="code">aeat_mod_115_03</field>
                         <field name="groupby">account_id</field>
                         <field name="foldable" eval="True"/>
@@ -69,11 +75,13 @@
             </record>
             <record id="mod_115_title_2" model="account.report.line">
                 <field name="name">Total liquidation</field>
+                <field name="name@es">Total liquidación</field>
                 <field name="code">aeat_mod_115_title_2</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="mod_115_casilla_04" model="account.report.line">
                         <field name="name">[04] Previous results to report</field>
+                        <field name="name@es">[04] Resultados a ingresar anteriores</field>
                         <field name="code">aeat_mod_115_04</field>
                         <field name="expression_ids">
                             <record id="mod_115_casilla_04_balance" model="account.report.expression">
@@ -86,6 +94,7 @@
                     </record>
                     <record id="mod_115_casilla_05" model="account.report.line">
                         <field name="name">[05] Result to report</field>
+                        <field name="name@es">[05] Resultado a ingresar</field>
                         <field name="code">aeat_mod_115_05</field>
                         <field name="aggregation_formula">aeat_mod_115_03.balance - aeat_mod_115_04.balance</field>
                     </record>

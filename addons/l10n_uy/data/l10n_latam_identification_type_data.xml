@@ -11,6 +11,7 @@
 
     <record model="l10n_latam.identification.type" id="it_rut">
         <field name="name">RUT / RUC</field>
+        <field name="name@es">Registro Único Tributario / Registro Único de Contribuyente</field>
         <field name="description">Unique Tax Registry / Unique Taxpayer Registry</field>
         <field name='country_id' ref='base.uy'/>
         <field name='is_vat' eval='True'/>
@@ -20,6 +21,7 @@
 
     <record model="l10n_latam.identification.type" id="it_ci">
         <field name="name">CI</field>
+        <field name="name@es">Cédula de Identidad</field>
         <field name="description">Identification Card</field>
         <field name='country_id' ref='base.uy'/>
         <field name="sequence">40</field>
@@ -28,6 +30,7 @@
 
     <record model="l10n_latam.identification.type" id="it_other">
         <field name="name">OTR</field>
+        <field name="name@es">Otros</field>
         <field name="description">Others</field>
         <field name='country_id' ref='base.uy'/>
         <field name="sequence">50</field>
@@ -36,6 +39,7 @@
 
     <record model="l10n_latam.identification.type" id="it_pass">
         <field name="name">PAS</field>
+        <field name="name@es">Pasaporte (todos los paises)</field>
         <field name="description">Passport (all countries)</field>
         <field name='country_id' ref='base.uy'/>
         <field name="sequence">60</field>
@@ -44,6 +48,7 @@
 
     <record model="l10n_latam.identification.type" id="it_dni">
         <field name="name">DNI</field>
+        <field name="name@es">Documento Nacional de identidad de Argentina, Brasil, Chile o Paraguay</field>
         <field name="description">National identity document of Argentina, Brazil, Chile or Paraguay</field>
         <field name='country_id' ref='base.uy'/>
         <field name="sequence">70</field>
