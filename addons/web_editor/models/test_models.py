@@ -14,6 +14,7 @@ class ConverterTest(models.Model):
     char = fields.Char()
     integer = fields.Integer()
     float = fields.Float()
+    float_time = fields.Char()
     numeric = fields.Float(digits=(16, 2))
     many2one = fields.Many2one('web_editor.converter.test.sub')
     binary = fields.Binary(attachment=False)
