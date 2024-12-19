@@ -424,8 +424,19 @@ class MrpWorkorder(models.Model):
         if self.date_start and self.workcenter_id:
             self.date_finished = self._calculate_date_finished()
 
+<<<<<<< master
     def _calculate_date_finished(self, date_start=False, new_workcenter=False):
         workcenter = new_workcenter or self.workcenter_id
+||||||| 07a0c98bb7be63d38f2c2148919f2ddd8bd370b6
+    def _calculate_date_finished(self, date_start=False):
+        workcenter = self.env.context.get('new_workcenter_id') or self.workcenter_id
+=======
+    def _calculate_date_finished(self, date_start=False):
+        workcenter = self.env.context.get('new_workcenter_id') or self.workcenter_id
+        if not workcenter.resource_calendar_id:
+            duration_in_seconds = self.duration_expected * 60
+            return (date_start or self.date_start) + timedelta(seconds=duration_in_seconds)
+>>>>>>> f97fc57cbfc83515b4cc366ae502549d68805a53
         return workcenter.resource_calendar_id.plan_hours(
             self.duration_expected / 60.0, date_start or self.date_start,
             compute_leaves=True, domain=[('time_type', 'in', ['leave', 'other'])]
@@ -440,6 +451,8 @@ class MrpWorkorder(models.Model):
                               "You should unplan the Manufacturing Order instead in order to unplan all the linked operations."))
 
     def _calculate_duration_expected(self, date_start=False, date_finished=False):
+        if not self.workcenter_id.resource_calendar_id:
+            return ((date_finished or self.date_finished) - (date_start or self.date_start)).total_seconds() / 60
         interval = self.workcenter_id.resource_calendar_id.get_work_duration_data(
             date_start or self.date_start, date_finished or self.date_finished,
             domain=[('time_type', 'in', ['leave', 'other'])]
