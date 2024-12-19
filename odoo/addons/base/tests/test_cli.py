@@ -5,9 +5,12 @@ import subprocess as sp
 import unittest
 from pathlib import Path
 
+import odoo.addons
+import odoo.modules
 from odoo.cli.command import commands, load_addons_commands, load_internal_commands
 from odoo.tools import config, file_path
 from odoo.tests import BaseCase, Like
+
 
 class TestCommand(BaseCase):
 
