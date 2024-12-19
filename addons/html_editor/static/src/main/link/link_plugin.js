@@ -494,7 +494,8 @@ export class LinkPlugin extends Plugin {
         if (
             this.linkElement &&
             cleanZWChars(this.linkElement.innerText) === "" &&
-            !this.linkElement.querySelector("img")
+            !this.linkElement.querySelector("img") &&
+            this.linkElement.parentElement?.isContentEditable
         ) {
             this.linkElement.remove();
         }
