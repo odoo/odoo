@@ -1168,7 +1168,9 @@ export class PosStore extends Reactive {
 
                 if (refundedOrderLine) {
                     const order = refundedOrderLine.order_id;
-                    delete order.uiState.lineToRefund[refundedOrderLine.uuid];
+                    if (order) {
+                        delete order.uiState.lineToRefund[refundedOrderLine.uuid];
+                    }
                     refundedOrderLine.refunded_qty += Math.abs(line.qty);
                 }
             }
