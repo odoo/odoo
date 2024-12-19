@@ -320,3 +320,31 @@ class TestMembership(TestSalesCommon):
         self.sales_team_1_m1.unlink()
         self.assertEqual(self.user_sales_leads.crm_team_ids, self.new_team)
         self.assertEqual(self.user_sales_leads.sale_team_id, self.new_team)
+
+    def test_member_company_id(self):
+        companies = self.env['res.company'].create([{
+            'name': f'Company {iterator}',
+        } for iterator in range(2)])
+
+        partners = self.env['res.partner'].create([{
+            'name': 'Partner ' + company.name,
+            'company_id': company.id
+        } for company in companies])
+
+        users = self.env['res.users'].create([{
+            'login': partner.name,
+            'partner_id': partner.id,
+            'company_id': partner.company_id.id,
+            'company_ids': companies.ids
+        } for partner in partners])
+
+        crm_team = self.env['crm.team'].create({
+            'name': 'CRM Team',
+            'member_ids': users.ids,
+            'company_id': False,
+        })
+
+        crm_team.company_id = companies[0]
+        self.assertEqual(crm_team.company_id, crm_team.crm_team_member_ids.company_id)
+        crm_team.company_id = False
+        self.assertTrue(all(member.company_id == member.user_id.company_id for member in crm_team.crm_team_member_ids))
