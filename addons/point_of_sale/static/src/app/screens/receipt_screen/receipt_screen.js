@@ -93,7 +93,45 @@ export class ReceiptScreen extends Component {
     isResumeVisible() {
         return this.pos.get_open_orders().length > 0;
     }
+<<<<<<< saas-17.4
     async _sendReceiptToCustomer({ action }) {
+||||||| a2b7fd05c46ca8fe6103d4276ca08b7aaab4fde4
+    async _sendReceiptToCustomer() {
+        const partner = this.currentOrder.get_partner();
+        const orderPartner = {
+            email: this.orderUiState.inputEmail,
+            name: partner ? partner.name : this.orderUiState.inputEmail,
+        };
+        await this.sendToCustomer(orderPartner, "action_receipt_to_customer");
+    }
+    async sendToCustomer(orderPartner, methodName) {
+        const ticketImage = await this.renderer.toJpeg(
+            OrderReceipt,
+            {
+                data: this.pos.get_order().export_for_printing(),
+                formatCurrency: this.env.utils.formatCurrency,
+            },
+            { addClass: "pos-receipt-print" }
+        );
+=======
+    async _sendReceiptToCustomer() {
+        const partner = this.currentOrder.get_partner();
+        const orderPartner = {
+            email: this.orderUiState.inputEmail,
+            name: partner ? partner.name : this.orderUiState.inputEmail,
+        };
+        await this.sendToCustomer(orderPartner, "action_receipt_to_customer");
+    }
+    async sendToCustomer(orderPartner, methodName) {
+        const ticketImage = await this.renderer.toJpeg(
+            OrderReceipt,
+            {
+                data: this.pos.get_order().export_for_printing(),
+                formatCurrency: this.env.utils.formatCurrency,
+            },
+            { addClass: "pos-receipt-print", addEmailMargins: true }
+        );
+>>>>>>> 8a97d41f53d788565229491a17260a4ce126e066
         const order = this.currentOrder;
         if (typeof order.id !== "number") {
             this.dialog.add(ConfirmationDialog, {
