@@ -4,7 +4,7 @@ import {
     clickableBuilderComponentProps,
     useClickableBuilderComponent,
     BuilderComponent,
-    useDependecyDefinition,
+    useDependencyDefinition,
     defaultBuilderComponentProps,
 } from "../builder_helpers";
 
@@ -20,7 +20,7 @@ export class BuilderCheckbox extends Component {
     setup() {
         const { state, operation, isActive } = useClickableBuilderComponent();
         if (this.props.id) {
-            useDependecyDefinition({ id: this.props.id, isActive });
+            useDependencyDefinition({ id: this.props.id, isActive });
         }
         this.state = state;
         this.onChange = operation.commit;

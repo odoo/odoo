@@ -3,7 +3,7 @@ import {
     clickableBuilderComponentProps,
     useClickableBuilderComponent,
     BuilderComponent,
-    useDependecyDefinition,
+    useDependencyDefinition,
     defaultBuilderComponentProps,
 } from "../builder_helpers";
 
@@ -27,7 +27,7 @@ export class BuilderButton extends Component {
     setup() {
         const { state, operation, isActive, getActions } = useClickableBuilderComponent();
         if (this.props.id) {
-            useDependecyDefinition({
+            useDependencyDefinition({
                 id: this.props.id,
                 isActive,
                 getActions,

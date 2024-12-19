@@ -101,7 +101,7 @@ export function useBuilderComponent() {
     }
     useSubEnv(newEnv);
 }
-export function useDependecyDefinition({ id, isActive, getActions, bus }) {
+export function useDependencyDefinition({ id, isActive, getActions, bus }) {
     const comp = useComponent();
     comp.env.dependencyManager.add(id, { isActive, getActions, bus });
     onWillDestroy(() => {

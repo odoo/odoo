@@ -3,7 +3,7 @@ import {
     clickableBuilderComponentProps,
     defaultBuilderComponentProps,
     useClickableBuilderComponent,
-    useDependecyDefinition,
+    useDependencyDefinition,
     BuilderComponent,
 } from "../builder_helpers";
 
@@ -25,7 +25,7 @@ export class BuilderSelectItem extends Component {
         const item = useRef("item");
         const { state, operation, isActive, getActions, priority } = useClickableBuilderComponent();
         if (this.props.id) {
-            useDependecyDefinition({ id: this.props.id, isActive, getActions });
+            useDependencyDefinition({ id: this.props.id, isActive, getActions });
         }
 
         const selectableItem = {
