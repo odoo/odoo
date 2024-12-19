@@ -12,8 +12,8 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': 6,
             'property_account_receivable_id': 'fr_pcg_recv',
             'property_account_payable_id': 'fr_pcg_pay',
-            'property_account_expense_categ_id': 'pcg_6071',
-            'property_account_income_categ_id': 'pcg_7071',
+            'property_account_expense_categ_id': 'pcg_607_account',
+            'property_account_income_categ_id': 'pcg_707_account',
         }
 
     @template('fr', 'res.company')
