@@ -122,12 +122,11 @@
 
     // ----------------------------------------------------------------------------
     // Inner components contextual adaptations
-
-    --Ribbon-font-size: #{$font-size-sm};
-    --Ribbon-gap-top: calc(var(--KanbanRecord-padding-v) * -1 - #{$border-width});
-    --Ribbon-gap-right: 0;
-    --Ribbon-wrapper-width: 6.5rem;
-    --Ribbon-height:  calc(var(--Ribbon-font-size) * 2);
+    .o_kanban_record {
+        --Ribbon-font-size: #{$font-size-sm};
+        --Ribbon-wrapper-width: 6.5rem;
+        --Ribbon-height:  calc(var(--Ribbon-font-size) * 2);
+    }
 
     // ----------------------------------------------------------------------------
 
