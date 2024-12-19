@@ -5890,8 +5890,6 @@ test(`switching to non-existing record`, async () => {
 
 test.tags("desktop");
 test(`switching to non-existing record on desktop`, async () => {
-    expect.errors(1);
-
     await mountView({
         resModel: "partner",
         type: "form",
@@ -5902,7 +5900,9 @@ test(`switching to non-existing record on desktop`, async () => {
     expect(getPagerValue()).toEqual([1]);
     expect(getPagerLimit()).toBe(3);
 
+    expect.errors(1);
     await contains(`.o_pager_next`).click();
+    expect.verifyErrors([Error]);
     expect(getPagerValue()).toEqual([1]);
     expect(getPagerLimit()).toBe(2);
 
