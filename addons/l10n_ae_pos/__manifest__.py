@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'United Arab Emirates - Point of Sale',
-    'author': 'Odoo PS',
+    'author': 'Odoo S.A.',
     'category': 'Accounting/Localizations/Point of Sale',
+    'icon': '/l10n_ae/static/description/icon.png',
     'description': """
 United Arab Emirates POS Localization
 =======================================================
