@@ -143,13 +143,29 @@ class ChatbotCase(MailCommon, common.HttpCase):
             })]
         })
 
-    @classmethod
-    def _post_answer_and_trigger_next_step(cls, discuss_channel, answer, chatbot_script_answer=False):
-        mail_message = discuss_channel.message_post(body=answer)
+    def _post_answer_and_trigger_next_step(
+        self, discuss_channel, body=None, email=None, chatbot_script_answer=None
+    ):
+        data = self.make_jsonrpc_request(
+            "/mail/message/post",
+            {
+                "thread_model": "discuss.channel",
+                "thread_id": discuss_channel.id,
+                "post_data": {"body": body or email or chatbot_script_answer.name},
+            },
+        )
+        if email:
+            self.make_jsonrpc_request(
+                "/chatbot/step/validate_email", {"channel_id": discuss_channel.id}
+            )
         if chatbot_script_answer:
-            cls.env['chatbot.message'].search([
-                ('mail_message_id', '=', mail_message.id)
-            ], limit=1).user_script_answer_id = chatbot_script_answer.id
-
-        next_step = discuss_channel.chatbot_current_step_id._process_answer(discuss_channel, mail_message.body)
-        next_step._process_step(discuss_channel)
+            message = self.env["mail.message"].browse(data["mail.message"][0]["id"])
+            self.make_jsonrpc_request(
+                "/chatbot/answer/save",
+                {
+                    "channel_id": discuss_channel.id,
+                    "message_id": message.id,
+                    "selected_answer_id": chatbot_script_answer.id,
+                },
+            )
+        self.make_jsonrpc_request("/chatbot/step/trigger", {"channel_id": discuss_channel.id})

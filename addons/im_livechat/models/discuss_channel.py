@@ -155,9 +155,11 @@ class DiscussChannel(models.Model):
         """
         Converting message body back to plaintext for correct data formatting in HTML field.
         """
-        return Markup('').join(
-            Markup('%s: %s<br/>') % (message.author_id.name or self.anonymous_name, html2plaintext(message.body))
-            for message in self.message_ids.sorted('id')
+        return Markup("").join(
+            Markup("%s: %s<br/>")
+            % (message.author_id.name or self.anonymous_name, html2plaintext(message.body))
+            # sudo: discuss.channel: can read all previous messages when converting to lead
+            for message in self.sudo().message_ids.sorted("id")
         )
 
     # =======================
