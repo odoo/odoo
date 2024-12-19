@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<template id="ubl_rs_Invoice_Type" inherit_id="account_edi_ubl_cii.ubl_21_InvoiceType" primary="True">
+    <xpath expr="//*[local-name()='InvoicePeriod']" position="inside">
+        <cbc:DescriptionCode
+            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+            t-out="foreach_vals.get('description_code')" />
+    </xpath>
+</template>
+
+<template id="ubl_rs_CreditNoteType" inherit_id="account_edi_ubl_cii.ubl_21_CreditNoteType" primary="True">
+    <xpath expr="//*[local-name()='InvoicePeriod']" position="inside">
+        <cbc:DescriptionCode
+            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+            t-out="foreach_vals.get('description_code')" />
+    </xpath>
+</template>
+</odoo>
