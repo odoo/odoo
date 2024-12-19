@@ -422,8 +422,7 @@ def download_iot_handlers(auto=True):
             if resp.data:
                 delete_iot_handlers()
                 with writable():
-                    drivers_path = ['odoo', 'addons', 'hw_drivers', 'iot_handlers']
-                    path = path_file(str(Path().joinpath(*drivers_path)))
+                    path = path_file('odoo', 'addons', 'hw_drivers', 'iot_handlers')
                     zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
                     zip_file.extractall(path)
         except Exception:
@@ -469,12 +468,16 @@ def odoo_restart(delay=0):
     IR.start()
 
 
-def path_file(filename):
+def path_file(*args):
+    """Return the path to the file from IoT Box root or Windows Odoo
+    server folder
+    :return: The path to the file
+    """
     platform_os = platform.system()
     if platform_os == 'Linux':
-        return Path.home() / filename
+        return Path("~pi", *args).expanduser() # Path.home() returns odoo user's home instead of pi's
     elif platform_os == 'Windows':
-        return Path().absolute().parent.joinpath('server/' + filename)
+        return Path().absolute().parent.joinpath('server', *args)
 
 
 def read_file_first_line(filename):
