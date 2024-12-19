@@ -10,12 +10,12 @@ import { Select } from "@web/core/tree_editor/tree_editor_components";
 
 const OPERATOR_DESCRIPTIONS = {
     // valid operators (see TERM_OPERATORS in expression.py)
-    "=": "=",
-    "!=": "!=",
-    "<=": "<=",
-    "<": "<",
-    ">": ">",
-    ">=": ">=",
+    "=": _t("is equal"),
+    "!=": _t("is not equal"),
+    "<=": _t("is lower or equal"),
+    "<": _t("is lower"),
+    ">": _t("is greater"),
+    ">=": _t("is greater or equal"),
     "=?": "=?",
     "=like": _t("=like"),
     "=ilike": _t("=ilike"),
