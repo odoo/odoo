@@ -906,6 +906,9 @@ class PosOrder(models.Model):
 
     def action_pos_order_cancel(self):
         cancellable_orders = self.filtered(lambda order: order.state == 'draft')
+        cancellable_orders[0].config_id._notify(('CANCEL_ORDERS',
+            {"order_ids": cancellable_orders.ids, 'login_number': self.env.context.get('login_number', False)},
+        ))
         return cancellable_orders.write({'state': 'cancel'})
 
     def _apply_invoice_payments(self, is_reverse=False):
