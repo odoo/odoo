@@ -152,12 +152,12 @@
 
                 <div class="mb-3 field-login">
                     <label for="login" class="form-label d-flex justify-content-between">Email</label>
-                    <input type="text" placeholder="Email" name="login" t-att-value="login" id="login" class="form-control" required="required" autocapitalize="off" autocomplete="username"/>
+                    <input type="text" placeholder="Enter your email" name="login" t-att-value="login" id="login" class="form-control" required="required" autocapitalize="off" autocomplete="username"/>
                 </div>
 
                 <div class="mb-3">
                     <label for="password" class="form-label d-flex justify-content-between">Password</label>
-                    <input type="password" placeholder="Password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
+                    <input type="password" placeholder="Enter your password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
                 </div>
 
                 <p class="alert alert-danger" t-if="error" role="alert">
@@ -167,12 +167,12 @@
                     <t t-esc="message"/>
                 </p>
 
-                <div class="oe_login_buttons text-center gap-1 d-grid mb-1 pt-3">
+                <div class="oe_login_buttons text-center d-grid mb-1 pt-3">
                     <button type="submit" class="btn btn-primary">Log in</button>
                     <t t-if="debug">
                         <button type="submit" name="redirect" value="/web/become" class="btn btn-link btn-sm">Log in as superuser</button>
                     </t>
-                    <div class="o_login_auth"/>
+                    <t t-call="web.login_oauth"/>
                 </div>
 
                 <input type="hidden" name="type" value="password"/>
@@ -193,6 +193,21 @@
                 </div>
             </div>
         </t>
+    </template>
+
+    <template id="web.login_oauth" name="Login OAuth">
+        <!-- Use auth_btns to insert login options displayed under the
+        login form -->
+        <t t-set="auth_btns" t-value="[]"/>
+        <div t-if="auth_btns" class="o_login_auth">
+            <em class="d-block my-3 small text-center text-muted">- or -</em>
+            <div class="list-group">
+                <a t-foreach="auth_btns" t-as="p" t-attf-class="{{p.get('list_item_class')}} list-group-item list-group-item-action d-flex align-items-center gap-2 py-2" t-att-href="p.get('auth_link') or '#'">
+                    <i t-att-class="p['css_class']" role="presentation"/>
+                    <span class="mx-auto" t-out="p['body']"/>
+                </a>
+            </div>
+        </div>
     </template>
 
     <template id="web.test_helpers">

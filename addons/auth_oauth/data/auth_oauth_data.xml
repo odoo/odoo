@@ -6,8 +6,8 @@
             <field name="auth_endpoint">https://accounts.odoo.com/oauth2/auth</field>
             <field name="scope">userinfo</field>
             <field name="validation_endpoint">https://accounts.odoo.com/oauth2/tokeninfo</field>
-            <field name="css_class">fa fa-fw o_custom_icon</field>
-            <field name="body">Log in with Odoo.com</field>
+            <field name="css_class">o_auth_oauth_provider_icon o_odoo_provider</field>
+            <field name="body">Sign in with Odoo.com</field>
             <field name="enabled" eval="True"/>
         </record>
         <record id="provider_facebook" model="auth.oauth.provider">
@@ -16,16 +16,16 @@
             <field name="scope">public_profile,email</field>
             <field name="validation_endpoint">https://graph.facebook.com/me</field>
             <field name="data_endpoint">https://graph.facebook.com/me?fields=id,name,email</field>
-            <field name="css_class">fa fa-fw fa-facebook-square</field>
-            <field name="body">Log in with Facebook</field>
+            <field name="css_class">o_auth_oauth_provider_icon o_facebook_provider</field>
+            <field name="body">Sign in with Facebook</field>
         </record>
         <record id="provider_google" model="auth.oauth.provider">
             <field name="name">Google OAuth2</field>
             <field name="auth_endpoint">https://accounts.google.com/o/oauth2/auth</field>
             <field name="scope">openid profile email</field>
             <field name="validation_endpoint">https://www.googleapis.com/oauth2/v3/userinfo</field>
-            <field name="css_class">fa fa-fw fa-google</field>
-            <field name="body">Log in with Google</field>
+            <field name="css_class">o_auth_oauth_provider_icon o_google_provider</field>
+            <field name="body">Sign in with Google</field>
         </record>
 
         <!-- Use database uuid as client_id for OpenERP oauth provider -->
