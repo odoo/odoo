@@ -25,10 +25,16 @@ export class BuilderSelectItem extends Component {
         const item = useRef("item");
         const { state, operation, isActive, getActions, priority } = useClickableBuilderComponent();
         if (this.props.id) {
-            useDependencyDefinition({ id: this.props.id, isActive, getActions });
+            useDependencyDefinition({
+                id: this.props.id,
+                isActive: () =>
+                    this.env.BuilderSelectContext?.getSelectedItemId() === this.props.id,
+                getActions,
+            });
         }
 
         const selectableItem = {
+            id: this.props.id,
             isActive,
             priority,
             getLabel: () => item.el?.innerHTML || "",

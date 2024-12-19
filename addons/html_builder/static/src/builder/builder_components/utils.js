@@ -35,13 +35,16 @@ export class BuilderComponent extends Component {
         this.state = useDomState(() => ({
             isVisible: isVisible(),
         }));
+        useBus(this.env.dependencyManager, "dependency-updated", () => {
+            this.state.isVisible = isVisible();
+        });
         if (this.props.dependencies?.length) {
             const listener = () => {
                 this.state.isVisible = isVisible();
             };
-            this.env.dependencyManager.addEventListener("dependency-added", listener);
+            this.env.dependencyManager.addEventListener("dependency-updated", listener);
             onWillDestroy(() => {
-                this.env.dependencyManager.removeEventListener("dependency-added", listener);
+                this.env.dependencyManager.removeEventListener("dependency-updated", listener);
             });
         }
     }

@@ -8,8 +8,8 @@ export class DependencyManager extends EventBus {
         this.dependenciesMap = {};
         this.count = 0;
         this.dirty = false;
-        this.triggerDependencyAdded = batched(() => {
-            this.trigger("dependency-added");
+        this.triggerDependencyUpdated = batched(() => {
+            this.trigger("dependency-updated");
         });
     }
     update() {
@@ -23,7 +23,7 @@ export class DependencyManager extends EventBus {
     add(id, value) {
         // In case the dependency is added after a dependent try to get it
         // an event is scheduled to notify the dependent about it.
-        this.triggerDependencyAdded();
+        this.triggerDependencyUpdated();
         this.dependencies.push([id, value]);
         this.dirty = true;
     }

@@ -23,50 +23,58 @@ export class BuilderSelect extends Component {
     };
 
     setup() {
-        const button = useRef("button");
+        this.buttonRef = useRef("button");
         useBuilderComponent();
         useVisibilityObserver("content", useApplyVisibility("root"));
         this.dropdown = useDropdownState();
-        const selectableItems = [];
-        const setLabelDebounced = useDebounced(setLabel, 0);
+        this.selectableItems = [];
+        this.setItem = this.setItem.bind(this);
+        const setLabelDebounced = useDebounced(this.setItem, 0);
+
         useSubEnv({
             actionBus: new EventBus(),
             BuilderSelectContext: {
                 bus: new EventBus(),
                 addSelectableItem: (item) => {
-                    selectableItems.push(item);
+                    this.selectableItems.push(item);
                 },
                 removeSelectableItem: (item) => {
-                    const index = selectableItems.indexOf(item);
+                    const index = this.selectableItems.indexOf(item);
                     if (index !== -1) {
-                        selectableItems.splice(index, 1);
+                        this.selectableItems.splice(index, 1);
                     }
                 },
                 update: setLabelDebounced,
+                getSelectedItemId: () => this.currentSelectedItemId,
             },
         });
-        function setLabel() {
-            let item;
-            let itemPriority = 0;
-            for (const selectableItem of selectableItems) {
-                if (selectableItem.isActive() && selectableItem.priority >= itemPriority) {
-                    item = selectableItem;
-                    itemPriority = selectableItem.priority;
-                }
-            }
-            if (item) {
-                button.el.innerHTML = item.getLabel();
-            }
-        }
-        onMounted(setLabel);
+
+        onMounted(this.setItem);
         useBus(this.env.editorBus, "STEP_ADDED", (ev) => {
             if (ev.detail.isPreviewing) {
                 return;
             }
-            setLabel();
+            this.setItem();
         });
         useBus(this.env.BuilderSelectContext.bus, "select-item", (item) => {
             this.dropdown.close();
         });
+    }
+    setItem() {
+        let currentItem;
+        let itemPriority = 0;
+        for (const selectableItem of this.selectableItems) {
+            if (selectableItem.isActive() && selectableItem.priority >= itemPriority) {
+                currentItem = selectableItem;
+                itemPriority = selectableItem.priority;
+            }
+        }
+        if (currentItem) {
+            this.buttonRef.el.innerHTML = currentItem.getLabel();
+        }
+        if (currentItem && currentItem.id !== this.currentSelectedItemId) {
+            this.currentSelectedItemId = currentItem.id;
+            this.env.dependencyManager.triggerDependencyUpdated();
+        }
     }
 }

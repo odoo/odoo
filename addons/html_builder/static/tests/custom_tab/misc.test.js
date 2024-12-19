@@ -421,6 +421,37 @@ describe("dependencies", () => {
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
         ).not.toBeDisplayed();
     });
+    test("a button should not be visible if its dependency isn't (in a BuilderSelect with priority)", async () => {
+        addOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderSelect>
+                    <BuilderSelectItem classAction="'a'" id="'x'">x</BuilderSelectItem>
+                    <BuilderSelectItem classAction="'a b'" id="'y'">y</BuilderSelectItem>
+                </BuilderSelect>
+                <BuilderButton classAction="'b1'" dependencies="'x'">b1</BuilderButton>
+                <BuilderButton classAction="'b2'" dependencies="'y'">b2</BuilderButton>
+            `,
+        });
+        await setupWebsiteBuilder(`<div class="test-options-target a">a</div>`);
+        setSelection({
+            anchorNode: queryFirst(":iframe .test-options-target").childNodes[0],
+            anchorOffset: 0,
+        });
+        await contains(":iframe .test-options-target").click();
+        await animationFrame();
+        expect(".options-container").toBeDisplayed();
+
+        expect(".we-bg-options-container .dropdown").toHaveText("x");
+        expect("[data-class-action='b1']").toBeDisplayed();
+        expect("[data-class-action='b2']").not.toBeDisplayed();
+
+        await contains(".we-bg-options-container .dropdown").click();
+        await contains("[data-class-action='a b']").click();
+        expect(".we-bg-options-container .dropdown").toHaveText("y");
+        expect("[data-class-action='b1']").not.toBeDisplayed();
+        expect("[data-class-action='b2']").toBeDisplayed();
+    });
     test("a button should not be visible if the dependency is active", async () => {
         addOption({
             selector: ".test-options-target",
