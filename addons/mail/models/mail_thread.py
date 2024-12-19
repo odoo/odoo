@@ -1348,9 +1348,15 @@ class MailThread(models.AbstractModel):
                 else:
                     subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
 
-            post_params = dict(subtype_id=subtype_id, partner_ids=partner_ids, **message_dict)
+            post_params = dict(
+                incoming_email_cc=message_dict.pop('cc', False),
+                incoming_email_to=message_dict.pop('to', False),
+                subtype_id=subtype_id,
+                partner_ids=partner_ids,
+                **message_dict,
+            )
             # remove computational values not stored on mail.message and avoid warnings when creating it
-            for x in ('from', 'to', 'cc', 'recipients', 'references', 'in_reply_to', 'x_odoo_message_id',
+            for x in ('from', 'recipients', 'references', 'in_reply_to', 'x_odoo_message_id',
                       'is_bounce', 'bounced_email', 'bounced_message', 'bounced_msg_ids', 'bounced_partner'):
                 post_params.pop(x, None)
             new_msg = False
