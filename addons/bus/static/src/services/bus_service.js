@@ -8,16 +8,10 @@ import { EventBus } from "@odoo/owl";
 import { user } from "@web/core/user";
 
 // List of worker events that should not be broadcasted.
-const INTERNAL_EVENTS = new Set([
-    "initialized",
-    "outdated",
-    "log_debug",
-    "notification",
-    "update_state",
-]);
+const INTERNAL_EVENTS = new Set(["initialized", "outdated", "log_debug", "notification"]);
 // Slightly delay the reconnection when coming back online as the network is not
 // ready yet and the exponential backoff would delay the reconnection by a lot.
-const BACK_ONLINE_RECONNECT_DELAY = 5000;
+export const BACK_ONLINE_RECONNECT_DELAY = 5000;
 /**
  * Communicate with a SharedWorker in order to provide a single websocket
  * connection shared across multiple tabs.
@@ -26,6 +20,7 @@ const BACK_ONLINE_RECONNECT_DELAY = 5000;
  *  @emits disconnect
  *  @emits reconnect
  *  @emits reconnecting
+ *  @emits worker_state_updated
  */
 export const busService = {
     dependencies: ["bus.parameters", "localization", "multi_tab", "notification"],
@@ -91,7 +86,7 @@ export const busService = {
                     connectionInitializedDeferred.resolve();
                     break;
                 }
-                case "update_state":
+                case "worker_state_updated":
                     workerState = data;
                     break;
                 case "log_debug":
@@ -202,25 +197,35 @@ export const busService = {
                 send("leave");
             }
         });
-        browser.addEventListener("online", () => {
-            backOnlineTimeout = browser.setTimeout(() => {
-                if (this.isActive) {
-                    send("start");
-                }
-            }, BACK_ONLINE_RECONNECT_DELAY);
-        });
-        browser.addEventListener("offline", () => {
-            clearTimeout(backOnlineTimeout);
-            send("stop");
-        });
+        browser.addEventListener(
+            "online",
+            () => {
+                backOnlineTimeout = browser.setTimeout(() => {
+                    if (isActive) {
+                        send("start");
+                    }
+                }, BACK_ONLINE_RECONNECT_DELAY);
+            },
+            { capture: true }
+        );
+        browser.addEventListener(
+            "offline",
+            () => {
+                clearTimeout(backOnlineTimeout);
+                send("stop");
+            },
+            {
+                capture: true,
+            }
+        );
 
         return {
             addEventListener: bus.addEventListener.bind(bus),
             addChannel: async (channel) => {
                 if (!worker) {
                     startWorker();
-                    await connectionInitializedDeferred;
                 }
+                await connectionInitializedDeferred;
                 send("add_channel", channel);
                 send("start");
                 isActive = true;
@@ -233,8 +238,8 @@ export const busService = {
             start: async () => {
                 if (!worker) {
                     startWorker();
-                    await connectionInitializedDeferred;
                 }
+                await connectionInitializedDeferred;
                 send("start");
                 isActive = true;
             },
