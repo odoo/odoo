@@ -17,7 +17,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'payment_mercado_pago/static/src/js/payment_form.js',
+            'payment_mercado_pago/static/src/**/*',
         ],
     },
     'post_init_hook': 'post_init_hook',

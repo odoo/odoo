@@ -37,7 +37,7 @@ class PaymentProvider(models.Model):
             )
         return supported_currencies
 
-    def _mercado_pago_make_request(self, endpoint, payload=None, method='POST'):
+    def _mercado_pago_make_request(self, endpoint, payload=None, method='POST', idempotency_key=None):
         """ Make a request to Mercado Pago API at the specified endpoint.
 
         Note: self.ensure_one()
@@ -52,7 +52,9 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         url = urls.url_join('https://api.mercadopago.com', endpoint)
-        headers = {'Authorization': f'Bearer {self.mercado_pago_access_token}'}
+        headers = {'Content-Type': 'application/json',
+                   'Authorization': f'Bearer {self.mercado_pago_access_token}',
+                   'X-Idempotency-Key': idempotency_key}
         try:
             if method == 'GET':
                 response = requests.get(url, params=payload, headers=headers, timeout=10)
@@ -92,14 +94,12 @@ class PaymentProvider(models.Model):
             return default_codes
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
-    def _mercado_pago_get_inline_form_values(self, amount=None):
+    def _mercado_pago_get_inline_form_values(self, partner_id, currency):
         self.ensure_one()
-
+        partner = self.env['res.partner'].browse(partner_id).exists()
         inline_form_values = {
-            'amount': amount,
-            'preferenceId':'',
-            'payer': {'firtName': 'Dupa',
-                      'lastName': 'Dupa,',
-                      'email': 'dupa@dupa.pl'},
+            'email': partner.email,
+            'currency': currency.name,
+            'partner_id': partner.id,
         }
         return json.dumps(inline_form_values)
