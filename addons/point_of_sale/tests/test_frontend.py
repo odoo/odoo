@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from odoo import Command
 
 from odoo.api import Environment
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
@@ -953,6 +952,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ShowTaxExcludedTour', login="pos_user")
 
+<<<<<<< 17.0
     def test_chrome_without_cash_move_permission(self):
         self.env.user.write({'groups_id': [
             Command.set(
@@ -984,6 +984,21 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'BarcodeScanningProductPackagingTour', login="pos_user")
 
+||||||| 51296055790f8c6f01dfbbc82ca340756c54cdb3
+    def test_chrome_without_cash_move_permission(self):
+        self.env.user.write({'groups_id': [
+            Command.set(
+                [
+                    self.env.ref('base.group_user').id,
+                    self.env.ref('point_of_sale.group_pos_user').id,
+                ]
+            )
+        ]})
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'chrome_without_cash_move_permission', login="accountman")
+
+=======
+>>>>>>> c2acc7045d4e27d2ff68e7a61de9a50117f8ac2f
     def test_GS1_pos_barcodes_scan(self):
         barcodes_gs1_nomenclature = self.env.ref("barcodes_gs1_nomenclature.default_gs1_nomenclature")
         self.main_pos_config.company_id.write({
