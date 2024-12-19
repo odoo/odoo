@@ -6,7 +6,7 @@
             <field name="auth_endpoint">https://accounts.odoo.com/oauth2/auth</field>
             <field name="scope">userinfo</field>
             <field name="validation_endpoint">https://accounts.odoo.com/oauth2/tokeninfo</field>
-            <field name="css_class">fa fa-fw o_custom_icon</field>
+            <field name="css_class">oi oi-odoo</field>
             <field name="body">Log in with Odoo.com</field>
             <field name="enabled" eval="True"/>
         </record>
@@ -16,7 +16,7 @@
             <field name="scope">public_profile,email</field>
             <field name="validation_endpoint">https://graph.facebook.com/me</field>
             <field name="data_endpoint">https://graph.facebook.com/me?fields=id,name,email</field>
-            <field name="css_class">fa fa-fw fa-facebook-square</field>
+            <field name="css_class">fa fa-fw fa-facebook</field>
             <field name="body">Log in with Facebook</field>
         </record>
         <record id="provider_google" model="auth.oauth.provider">
