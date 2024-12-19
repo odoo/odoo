@@ -7,6 +7,7 @@ import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import website_sale_utils from "@website_sale/js/website_sale_utils";
 import { _t } from "@web/core/l10n/translation";
 import { renderToString } from "@web/core/utils/render";
+import { debounce } from "@web/core/utils/timing";
 
 const cartHandlerMixin = website_sale_utils.cartHandlerMixin;
 
@@ -36,6 +37,11 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      */
     start: function () {
         var self = this;
+        // TODO: Adapt code in Vanilla JS in master.
+        this.scrollingElement = $().getScrollingElement()[0];
+        this.scrollingTarget = $().getScrollingTarget(this.scrollingElement)[0];
+        this.__hideCompareButtonPopoverScroll = debounce(() => this._hideCompareButtonPopoverScroll(), 100);
+        this.scrollingTarget.addEventListener("scroll", this.__hideCompareButtonPopoverScroll);
 
         self._loadProducts(this.comparelist_product_ids).then(function () {
             self._updateContent('hide');
@@ -79,6 +85,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      */
     destroy: function () {
         this._super.apply(this, arguments);
+        this.scrollingTarget.removeEventListener("scroll", this.__hideCompareButtonPopoverScroll);
         $(document.body).off('.product_comparaison_widget');
     },
 
@@ -133,6 +140,15 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
 
     /**
      * @private
+     *
+     * To hide popover on scroll.
+     */
+    _hideCompareButtonPopoverScroll() {
+        const panelHeaderEl = document.querySelector("#comparelist .o_product_panel_header");
+        Popover.getOrCreateInstance(panelHeaderEl).hide();
+    },
+    /**
+     * @private
      */
     _loadProducts: function (product_ids) {
         var self = this;
@@ -169,11 +185,10 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     _addNewProductsImpl: function (product_id) {
         var self = this;
         $('.o_product_feature_panel').addClass('d-md-block');
+        this._updateContent();
         if (!self.comparelist_product_ids.includes(product_id)) {
             self.comparelist_product_ids.push(product_id);
-            if (Object.prototype.hasOwnProperty.call(self.product_data, product_id)) {
-                self._updateContent();
-            } else {
+            if (!Object.prototype.hasOwnProperty.call(this.product_data, product_id)) {
                 return self._loadProducts([product_id]).then(function () {
                     self._updateContent();
                     self._updateCookie();
