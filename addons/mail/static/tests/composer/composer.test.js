@@ -505,7 +505,6 @@ test("Can handle leave notification from unknown member", async () => {
     await withUser(userId, () =>
         getService("orm").call("discuss.channel", "action_unfollow", [channelId])
     );
-    await click("button[title='Members']");
     await contains(".o-discuss-ChannelMember", { text: "Mitchell Admin" });
     await contains(".o-discuss-ChannelMember", { count: 0, text: "Dobby" });
 });

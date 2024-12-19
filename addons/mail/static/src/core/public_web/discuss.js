@@ -94,6 +94,23 @@ export class Discuss extends Component {
         }
         onMounted(() => (this.store.discuss.isActive = true));
         onWillUnmount(() => (this.store.discuss.isActive = false));
+        useEffect(
+            (memberListAction) => {
+                if (!memberListAction) {
+                    return;
+                }
+                if (this.store.discuss.isMemberPanelOpenByDefault) {
+                    if (!this.threadActions.activeAction) {
+                        memberListAction.open();
+                    } else if (this.threadActions.activeAction === memberListAction) {
+                        return; // no-op (already open)
+                    } else {
+                        this.store.discuss.isMemberPanelOpenByDefault = false;
+                    }
+                }
+            },
+            () => [this.threadActions.actions.find((a) => a.id === "member-list")]
+        );
     }
 
     get thread() {

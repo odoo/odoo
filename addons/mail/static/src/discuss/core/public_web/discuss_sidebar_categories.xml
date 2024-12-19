@@ -67,10 +67,10 @@
 
     <t t-name="mail.DiscussSidebarCategory.actions">
         <div class="d-flex">
-            <div class="o-mail-DiscussSidebarCategory-actions" t-att-class="{ 'd-flex flex-column align-items-start pt-1': store.discuss.isSidebarCompact, 'btn-group btn-group-sm mx-1': !store.discuss.isSidebarCompact }">
+            <div class="o-mail-DiscussSidebarCategory-actions" t-att-class="{ 'd-flex flex-column align-items-start pt-1': store.discuss.isSidebarCompact, 'btn-group btn-group-sm mx-1 o-gap-0_5': !store.discuss.isSidebarCompact }">
                 <t name="action-group">
                     <t t-foreach="actions" t-as="action" t-key="action_index">
-                        <button class="btn w-100 opacity-50 opacity-100-hover" t-on-click="() => action.onSelect()" t-att-class="{ 'd-flex align-items-center px-1 py-0 gap-1 text-start smaller btn-secondary': store.discuss.isSidebarCompact, 'btn-light bg-transparent rounded-circle p-0': !store.discuss.isSidebarCompact }" t-attf-class="#{action.class}" t-att-title="store.discuss.isSidebarCompact ? '' : action.label" t-att-data-hotkey="action.hotkey">
+                        <button class="btn w-100 opacity-50 opacity-100-hover" t-on-click="() => action.onSelect()" t-att-class="{ 'd-flex align-items-center px-1 py-0 gap-1 text-start smaller btn-secondary': store.discuss.isSidebarCompact, 'btn-light bg-transparent rounded-3 p-0': !store.discuss.isSidebarCompact }" t-attf-class="#{action.class}" t-att-title="store.discuss.isSidebarCompact ? '' : action.label" t-att-data-hotkey="action.hotkey">
                             <i role="img" class="fa-fw" t-att-class="action.icon"/>
                             <span t-if="store.discuss.isSidebarCompact" class="text-muted" t-esc="action.label"/>
                         </button>
@@ -81,7 +81,7 @@
     </t>
 
     <t t-name="mail.DiscussSidebarChannel">
-        <div class="o-mail-DiscussSidebarChannel-container d-flex flex-column mx-2 bg-inherit" t-att-class="attClassContainer">
+        <div class="o-mail-DiscussSidebarChannel-container d-flex flex-column mx-2 bg-inherit o-py-0_5" t-att-class="attClassContainer">
             <t name="root">
                 <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-view border p-2 mx-2 my-0 min-w-0 shadow-sm'" manual="true">
                     <t t-call="mail.DiscussSidebarChannel.main"/>
@@ -145,7 +145,7 @@
     </t>
 
     <t t-name="mail.DiscussSidebar.unreadIndicator">
-        <span class="o-mail-DiscussSidebar-unreadIndicator position-absolute" t-att-class="{ 'o-compact': store.discuss.isSidebarCompact }" title="Thread has unread messages"><i class="fa fa-circle smaller"/></span>
+        <span class="o-mail-DiscussSidebar-unreadIndicator position-absolute opacity-50" t-att-class="{ 'o-compact': store.discuss.isSidebarCompact }" title="Thread has unread messages"><i class="fa fa-circle smaller"/></span>
     </t>
 
     <t t-name="mail.DiscussSidebarChannel.main">
@@ -181,10 +181,14 @@
     </t>
 
     <t t-name="mail.DiscussSidebarChannel.commands">
-        <div class="o-mail-DiscussSidebarChannel-commands" t-att-class="{ 'd-none mx-1': !store.discuss.isSidebarCompact }">
-            <div t-att-class="{ 'd-flex flex-column align-items-start ps-1 pt-1': store.discuss.isSidebarCompact, 'btn-group btn-group-sm gap-1': !store.discuss.isSidebarCompact }">
+        <div class="o-mail-DiscussSidebarChannel-commands" t-att-class="{
+            'd-none': !store.discuss.isSidebarCompact,
+            'mx-1': !store.discuss.isSidebarCompact and thread.importantCounter === 0,
+            'ms-1': !store.discuss.isSidebarCompact and thread.importantCounter > 0,
+        }">
+            <div t-att-class="{ 'd-flex flex-column align-items-start ps-1 pt-1': store.discuss.isSidebarCompact, 'btn-group btn-group-sm o-gap-0_5': !store.discuss.isSidebarCompact }">
                 <t t-foreach="sortedCommands" t-as="command" t-key="command_index">
-                    <button class="btn opacity-50 opacity-100-hover" t-att-class="{ 'd-flex align-items-center px-1 py-0 gap-1 text-start smaller btn-secondary': store.discuss.isSidebarCompact, 'btn-light rounded-circle p-0': !store.discuss.isSidebarCompact }" t-on-click.stop="() => command.onSelect()" t-att-title="store.discuss.isSidebarCompact ? '' : command.label">
+                    <button class="btn opacity-50 opacity-100-hover" t-att-class="{ 'd-flex align-items-center px-1 py-0 gap-1 text-start smaller btn-secondary': store.discuss.isSidebarCompact, 'btn-light rounded-3 p-0': !store.discuss.isSidebarCompact }" t-on-click.stop="() => command.onSelect()" t-att-title="store.discuss.isSidebarCompact ? '' : command.label">
                         <i role="img" class="fa-fw" t-att-class="command.icon"/>
                         <span t-if="store.discuss.isSidebarCompact" t-esc="command.label"/>
                     </button>
