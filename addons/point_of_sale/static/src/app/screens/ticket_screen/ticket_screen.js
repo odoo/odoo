@@ -102,8 +102,8 @@ export class TicketScreen extends Component {
     }
     async onFilterSelected(selectedFilter) {
         this.state.filter = selectedFilter;
-        this.pos.ticketScreenState.totalCount = 0;
-        this.pos.ticketScreenState.offsetByDomain = {};
+        this.pos.screenState.ticketSCreen.totalCount = 0;
+        this.pos.screenState.ticketSCreen.offsetByDomain = {};
 
         if (this.state.filter == "SYNCED") {
             await this._fetchSyncedOrders();
@@ -397,7 +397,7 @@ export class TicketScreen extends Component {
                 this.state.page * NBR_BY_PAGE
             );
         } else {
-            this.pos.ticketScreenState.totalCount = orders.length;
+            this.pos.screenState.ticketSCreen.totalCount = orders.length;
             return sortOrders(orders, true).slice(
                 (this.state.page - 1) * NBR_BY_PAGE,
                 this.state.page * NBR_BY_PAGE
@@ -485,16 +485,16 @@ export class TicketScreen extends Component {
         };
     }
     getNbrPages() {
-        return Math.ceil(this.pos.ticketScreenState.totalCount / NBR_BY_PAGE);
+        return Math.ceil(this.pos.screenState.ticketSCreen.totalCount / NBR_BY_PAGE);
     }
     getPageNumber() {
-        if (!this.pos.ticketScreenState.totalCount) {
+        if (!this.pos.screenState.ticketSCreen.totalCount) {
             return `0/0`;
         } else {
             return `${(this.state.page - 1) * NBR_BY_PAGE + 1}-${Math.min(
                 this.state.page * NBR_BY_PAGE,
-                this.pos.ticketScreenState.totalCount
-            )} / ${this.pos.ticketScreenState.totalCount}`;
+                this.pos.screenState.ticketSCreen.totalCount
+            )} / ${this.pos.screenState.ticketSCreen.totalCount}`;
         }
     }
     getHasItemsToRefund() {
@@ -738,7 +738,7 @@ export class TicketScreen extends Component {
      * order is not fetched anymore, instead, we use info from cache.
      */
     async _fetchSyncedOrders() {
-        const screenState = this.pos.ticketScreenState;
+        const screenState = this.pos.screenState.ticketSCreen;
         const domain = this._computeSyncedOrdersDomain();
         const offset = screenState.offsetByDomain[JSON.stringify(domain)] || 0;
         const config_id = this.pos.config.id;
