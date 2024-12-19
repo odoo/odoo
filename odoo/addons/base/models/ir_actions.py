@@ -539,7 +539,7 @@ class IrActionsServer(models.Model):
         ('object_create', 'Create Record'),
         ('code', 'Execute Code'),
         ('webhook', 'Send Webhook Notification'),
-        ('multi', 'Execute Existing Actions')], string='Type',
+        ('multi', 'Multi Actions')], string='Type',
         default='object_write', required=True, copy=True,
         help="Type of server action. The following values are available:\n"
              "- 'Update a Record': update the values of a record\n"
@@ -550,7 +550,7 @@ class IrActionsServer(models.Model):
              "- 'Create Record': create a new record with new values\n"
              "- 'Execute Code': a block of Python code that will be executed\n"
              "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
-             "- 'Execute Existing Actions': define an action that triggers several other server actions\n")
+             "- 'Multi Actions': define an action that triggers several other server actions\n")
     # Generic
     sequence = fields.Integer(default=5,
                               help="When dealing with multiple actions, the execution order is "
@@ -565,7 +565,9 @@ class IrActionsServer(models.Model):
                        help="Write Python code that the action will execute. Some variables are "
                             "available for use; help about python expression is given in the help tab.")
     # Multi
-    child_ids = fields.Many2many('ir.actions.server', 'rel_server_actions', 'server_id', 'action_id',
+    parent_id = fields.Many2one('ir.actions.server', string='Parent Action', ondelete='cascade')
+    child_ids = fields.One2many('ir.actions.server', 'parent_id', copy=True, domain="[('model_id', '=', model_id), ('parent_id', 'in', [False, id])]",
+                                 context={'default_model_id': 'model_id', 'default_parent_id': 'id'},
                                  string='Child Actions', help='Child server actions that will be executed. Note that the last return returned action value will be used as global return value.')
     # Create
     crud_model_id = fields.Many2one(
@@ -767,9 +769,9 @@ class IrActionsServer(models.Model):
             if msg:
                 raise ValidationError(msg)
 
-    @api.constrains('child_ids')
+    @api.constrains('parent_id')
     def _check_child_recursion(self):
-        if self._has_cycle('child_ids'):
+        if self._has_cycle():
             raise ValidationError(_('Recursion found in child server actions'))
 
     def _get_readable_fields(self):
