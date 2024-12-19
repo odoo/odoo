@@ -1608,12 +1608,15 @@ def format_decimalized_amount(amount: float, currency=None) -> str:
     return "%s %s" % (formated_amount, currency.symbol or '')
 
 
-def format_amount(env: Environment, amount: float, currency, lang_code: str | None = None) -> str:
+def format_amount(env: Environment, amount: float, currency, lang_code: str | None = None, trailing_zeroes: bool = True) -> str:
     fmt = "%.{0}f".format(currency.decimal_places)
     lang = env['res.lang'].browse(get_lang(env, lang_code).id)
 
     formatted_amount = lang.format(fmt, currency.round(amount), grouping=True)\
         .replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
+
+    if not trailing_zeroes:
+        formatted_amount = re.sub(fr'{re.escape(lang.decimal_point)}?0+$', '', formatted_amount)
 
     pre = post = u''
     if currency.position == 'before':

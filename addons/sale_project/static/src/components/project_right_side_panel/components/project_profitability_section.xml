@@ -35,9 +35,9 @@
                                 <t t-set="uom_name" t-value="sale_item.product_uom_id and sale_item.product_uom_id[1]"/>
                                 <td style="padding-left: 30px">
                                     <a t-if="sale_item.action" href="#" t-on-click="() => this.onSaleItemActionClick(sale_item.action)">
-                                        <t t-esc="sale_item.name"/>
+                                        <t t-esc="sale_item.display_name"/>
                                     </a>
-                                    <t t-else="" t-esc="sale_item.name"/>
+                                    <t t-else="" t-esc="sale_item.display_name"/>
                                 </td>
                                 <td class="text-end align-middle"><t t-esc="formatValue(sale_item.product_uom_qty, uom_name)"/> <t t-esc="uom_name"/></td>
                                 <td class="text-end align-middle"><t t-esc="formatValue(sale_item.qty_delivered, uom_name)"/> <t t-esc="uom_name"/></td>
