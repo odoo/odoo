@@ -189,10 +189,10 @@ class configmanager:
                          help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
         group.add_option("-u", "--update", dest="update", type='comma',  metavar="MODULE,...", my_default=[], file_loadable=False,
                          help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
-        group.add_option("--without-demo", dest="without_demo", my_default=False, type='without_demo', metavar='BOOL', nargs='?', const=True,
-                         help="(DEPRECATED) use with -i/--init, skip installing fake demonstration data (e.g. Mitchel Admin/Azure Interior)")
+        group.add_option("--without-demo", dest="with_demo", my_default=False, type='without_demo', metavar='BOOL', nargs='?', const=False,
+                         help="Enable loading demo data for modules to be installed. Requires -d or -i. Default is %default")
         group.add_option("--with-demo", dest="with_demo", action="store_true", my_default=False,
-                         help="Enable loading demo data for modules to be installed. Requires -d and -i. Default is %default")
+                         help="Enable loading demo data for modules to be installed. Requires -d or -i. Default is %default")
         group.add_option("-P", "--import-partial", dest="import_partial", type='path', my_default='',
                          help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", type='path', my_default='',
@@ -670,13 +670,6 @@ class configmanager:
                         "to different values. Please remove the first "
                         "one and make sure the second is correct."
                     )
-        if self.options.get('without_demo'):
-            self._warn(
-                "The without-demo option has been deprecated. "
-                "The default behavior is to load without demo data. "
-                "Please use --with-demo if you wish to install demo data.",
-                DeprecationWarning
-            )
 
     @classmethod
     def _is_addons_path(cls, path):
@@ -746,11 +739,19 @@ class configmanager:
 
     @classmethod
     def _check_without_demo(cls, option, opt, value):
+        if value == 'False':
+            return False
+        else:
+            cls._warn(
+                "The without-demo option should be used as a flag.",
+                DeprecationWarning
+            )
+        # We store the variable within the config option 'with_demo' so the result is reversed.
         try:
-            return cls._check_bool(option, opt, value)
+            return not cls._check_bool(option, opt, value)
         except optparse.OptionValueError:
             cls._log(logging.WARNING, "option %s: since 19.0, invalid boolean value: %r, assume %s", opt, value, value != 'None')
-            return value != 'None'
+            return value == 'None'
 
     def parse(self, option_name, value):
         if not isinstance(value, str):
