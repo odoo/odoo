@@ -408,6 +408,7 @@ export class OdooEditor extends EventTarget {
                 colNumber: ev.detail.colNumber,
             });
         });
+        this._appendVideoElements();
         // Create the table UI.
         this._tableUiContainer = this.document.createElement('div');
         this._tableUiContainer.classList.add('o_table_ui_container');
@@ -892,6 +893,7 @@ export class OdooEditor extends EventTarget {
             this._makeHint(this.editable.firstChild, this.options.placeholder, true);
         }
         this.multiselectionRefresh();
+        this._appendVideoElements();
     }
 
     sanitize(target) {
@@ -5373,6 +5375,16 @@ export class OdooEditor extends EventTarget {
         }
         this.historyUnpauseSteps();
         this.historyStep();
+    }
+
+    _appendVideoElements() {
+        this.editable.querySelectorAll('.media_iframe_video').forEach(videoElement => {
+            if (videoElement.querySelector('iframe')) {
+                return;
+            }
+            videoElement.innerHTML += '<iframe frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>';
+            videoElement.querySelector('iframe').setAttribute('src', videoElement.getAttribute('data-oe-expression'));
+        })
     }
 
     /**
