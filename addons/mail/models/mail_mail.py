@@ -626,6 +626,8 @@ class MailMail(models.Model):
         """
         for mail_server_id, alias_domain_id, smtp_from, batch_ids in self._split_by_mail_configuration():
             smtp_session = None
+            # read the mail server and smtp_from from the odoo.conf file
+            smtp_from = tools.config.get('smtp_from', smtp_from)
             try:
                 smtp_session = self.env['ir.mail_server'].connect(mail_server_id=mail_server_id, smtp_from=smtp_from)
             except Exception as exc:
@@ -639,6 +641,7 @@ class MailMail(models.Model):
                     batch._postprocess_sent_message(success_pids=[], failure_type="mail_smtp")
             else:
                 mail_server = self.env['ir.mail_server'].browse(mail_server_id)
+                print("mail_server", mail_server)
                 self.browse(batch_ids)._send(
                     auto_commit=auto_commit,
                     raise_exception=raise_exception,
