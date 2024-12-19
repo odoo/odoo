@@ -75,7 +75,7 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {},
             'update': {},
-            'without_demo': False,
+            'with_demo': False,
             'demo': {},
             'import_partial': '',
             'pidfile': '',
@@ -192,7 +192,7 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {},  # blacklist for save, ignored from the config file
             'update': {},  # blacklist for save, ignored from the config file
-            'without_demo': True,
+            'with_demo': True,
             'demo': {},  # blacklist for save, ignored from the config file
             'import_partial': '/tmp/import-partial',
             'pidfile': '/tmp/pidfile',
@@ -366,7 +366,7 @@ class TestConfigManager(TransactionCase):
             'unaccent': False,
             'update': {},
             'upgrade_path': [],
-            'without_demo': False,
+            'with_demo': False,
 
             # options that are not taken from the file (also in 14.0)
             'addons_path': [],
@@ -467,7 +467,7 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {'hr': True, 'stock': True},
             'update': {'account': True, 'website': True},
-            'without_demo': True,
+            'with_demo': False,
             'demo': {},
             'import_partial': '/tmp/import-partial',
             'pidfile': '/tmp/pidfile',
@@ -610,15 +610,3 @@ class TestConfigManager(TransactionCase):
             with self.subTest(args=args):
                 _, options = self.parse_reset(args)
                 self.assertEqual(options['stop_after_init'], stop_after_init)
-
-    def test_12_without_demo_equal_1(self):
-        _, options = self.parse_reset(['-i', 'mail'])
-        self.assertEqual(options['demo'], {'mail': 1})
-        _, options = self.parse_reset(['-i', 'mail', '--without-demo'])
-        self.assertEqual(options['demo'], {})
-        _, options = self.parse_reset(['--without-demo', '-i', 'mail'])
-        self.assertEqual(options['demo'], {})
-        _, options = self.parse_reset(['-i', 'mail', '--without-demo', '1'])
-        self.assertEqual(options['demo'], {})
-        _, options = self.parse_reset(['-i', 'mail', '--without-demo=1'])
-        self.assertEqual(options['demo'], {})
