@@ -107,13 +107,16 @@ export class PosStore extends WithLazyGetterTrap {
         this.ticket_screen_mobile_pane = "left";
         this.productListView = window.localStorage.getItem("productListView") || "grid";
 
-        this.ticketScreenState = {
-            offsetByDomain: {},
-            totalCount: 0,
-        };
-
         this.loadingOrderState = false; // used to prevent orders fetched to be put in the update set during the reactive change
-
+        this.screenState = {
+            ticketSCreen: {
+                offsetByDomain: {},
+                totalCount: 0,
+            },
+            partnerList: {
+                offsetBySearch: {},
+            },
+        };
         // Handle offline mode
         // All of Set of ids
         this.pendingOrder = {
@@ -146,6 +149,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.hardwareProxy.pos = this;
         this.syncingOrders = new Set();
         await this.initServerData();
+        this.screenState.partnerList.offsetBySearch[""] = this.models["res.partner"].length;
         if (this.useProxy()) {
             await this.connectToProxy();
         }
