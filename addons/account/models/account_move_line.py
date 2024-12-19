@@ -509,25 +509,39 @@ class AccountMoveLine(models.Model):
                 values.append(product.display_name)
                 if product.description_purchase:
                     values.append(product.description_purchase)
-            return '\n'.join(values)
+            return '\n'.join(values) if values else False
 
         term_by_move = (self.move_id.line_ids | self).filtered(lambda l: l.display_type == 'payment_term').sorted(lambda l: l.date_maturity or date.max).grouped('move_id')
         for line in self.filtered(lambda l: l.move_id.inalterable_hash is False):
             if line.display_type == 'payment_term':
                 term_lines = term_by_move.get(line.move_id, self.env['account.move.line'])
                 n_terms = len(line.move_id.invoice_payment_term_id.line_ids)
+<<<<<<< 18.0
                 if line.move_id.payment_reference and line.move_id.ref:
                     name = f'{line.move_id.ref} - {line.move_id.payment_reference}'
                 else:
                     name = line.move_id.payment_reference or ''
 
+||||||| 6c0589ff983005663a2b2b7b2f377572cbbdb44b
+                name = line.move_id.payment_reference or ''
+=======
+                name = line.move_id.payment_reference or False
+>>>>>>> 97094b788ef003b3e8ab5b5da7258acfb143750c
                 if n_terms > 1:
                     index = term_lines._ids.index(line.id) if line in term_lines else len(term_lines)
+<<<<<<< 18.0
                     name = _('%(name)s installment #%(number)s', name=name, number=index + 1).lstrip()
                 if n_terms > 1 or not line.name or line._origin.name == line._origin.move_id.payment_reference or (
                     line._origin.move_id.payment_reference and line._origin.move_id.ref
                     and line._origin.name == f'{line._origin.move_id.ref} - {line._origin.move_id.payment_reference}'
                 ):
+||||||| 6c0589ff983005663a2b2b7b2f377572cbbdb44b
+                    name = _('%(name)s installment #%(number)s', name=name, number=index + 1).lstrip()
+                if n_terms > 1 or not line.name or line._origin.name == line._origin.move_id.payment_reference:
+=======
+                    name = _('%(name)s installment #%(number)s', name=name if name else '', number=index + 1).lstrip()
+                if n_terms > 1 or not line.name or line._origin.name == line._origin.move_id.payment_reference:
+>>>>>>> 97094b788ef003b3e8ab5b5da7258acfb143750c
                     line.name = name
             if not line.product_id or line.display_type in ('line_section', 'line_note'):
                 continue
