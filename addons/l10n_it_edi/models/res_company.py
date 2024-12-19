@@ -36,6 +36,15 @@ class ResCompany(models.Model):
         comodel_name="account_edi_proxy_client.user",
         compute="_compute_l10n_it_edi_proxy_user_id",
     )
+    l10n_it_edi_register = fields.Boolean(default=False)
+    l10n_it_edi_purchase_journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string='Italian Default Purchase Journal',
+        domain=[('type', '=', 'purchase')],
+        compute='_compute_l10n_it_edi_purchase_journal_id',
+        store=True,
+        readonly=False,
+    )
 
     # Economic and Administrative Index
     l10n_it_has_eco_index = fields.Boolean(
@@ -72,6 +81,12 @@ class ResCompany(models.Model):
         purposes and which takes avail of a tax representative in\
         Italy")
     l10n_it_tax_representative_partner_id = fields.Many2one('res.partner', string='Tax representative partner')
+
+    @api.constrains('l10n_it_edi_purchase_journal_id')
+    def _check_l10n_it_edi_purchase_journal_id(self):
+        for company in self:
+            if company.l10n_it_edi_purchase_journal_id and not company.l10n_it_edi_purchase_journal_id.default_account_id:
+                raise ValidationError(_("The Italian default purchase journal requires a default account."))
 
     @api.constrains('l10n_it_has_eco_index',
                     'l10n_it_eco_index_office',
@@ -115,6 +130,18 @@ class ResCompany(models.Model):
     def _compute_l10n_it_edi_proxy_user_id(self):
         for company in self:
             company.l10n_it_edi_proxy_user_id = company.account_edi_proxy_client_ids.filtered(lambda x: x.proxy_type == 'l10n_it_edi')
+
+    @api.depends('country_code')
+    def _compute_l10n_it_edi_purchase_journal_id(self):
+        for company in self:
+            if not company.l10n_it_edi_purchase_journal_id and company.country_code == 'IT':
+                company.l10n_it_edi_purchase_journal_id = self.env['account.journal'].search([
+                    *self.env['account.journal']._check_company_domain(company),
+                    ('type', '=', 'purchase'),
+                    ('default_account_id', '!=', False),
+                ], limit=1)
+            else:
+                company.l10n_it_edi_purchase_journal_id = company.l10n_it_edi_purchase_journal_id
 
     def _l10n_it_edi_export_check(self):
         checks = {

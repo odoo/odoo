@@ -28,3 +28,18 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 raise UserError(_('Please fill your codice fiscale to be able to receive invoices from FatturaPA'))
             return company.partner_id._l10n_it_edi_normalized_codice_fiscale()
         return super()._get_proxy_identification(company, proxy_type)
+
+    def _toggle_proxy_user_active(self):
+        """
+        Toggle the value of the ``active`` boolean field of the proxy_user,
+        and handle sending the reactivate/deactivate requests to the IAP side.
+        """
+        self.ensure_one()
+        server_url = self._get_proxy_urls()['l10n_it_edi'][self.edi_mode]
+
+        if self.active:
+            self._make_request(f"{server_url}/api/l10n_it_edi/1/deactivate_user")
+        else:
+            self._make_request(f"{server_url}/api/l10n_it_edi/1/reactivate_user")
+
+        self.active = not self.active

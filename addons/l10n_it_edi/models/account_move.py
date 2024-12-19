@@ -1019,6 +1019,10 @@ class AccountMove(models.Model):
 
             self.move_type = move_type
 
+            # Set the move journal to the preferred/default purchase journal set from the italian EDI settings
+            if self.move_type in self.get_purchase_types(include_receipts=True) and self.company_id.l10n_it_edi_purchase_journal_id:
+                self.journal_id = self.company_id.l10n_it_edi_purchase_journal_id
+
             if self.name and self.name != '/':
                 # the journal might've changed, so we need to recompute the name in case it was set (first entry in journal)
                 self.name = False

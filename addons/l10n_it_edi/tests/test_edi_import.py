@@ -6,6 +6,7 @@ from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import fields, sql_db, tools, Command
+from odoo.exceptions import ValidationError
 from odoo.tests import new_test_user, tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
@@ -151,6 +152,39 @@ class TestItEdiImport(TestItEdi):
                 self.proxy_user,
             )
             self.assertEqual(len(created_moves), 1)
+
+    def test_cron_receives_bill_in_preferred_journal(self):
+        """ Ensure that the received bill is in the preferred journal set from the setting. """
+        preferred_journal = self.company_data_2['default_journal_purchase'].copy()
+        filename = 'IT01234567890_FPR02.xml'
+
+        with self.assertRaisesRegex(ValidationError, "The Italian default purchase journal requires a default account."):
+            # When copying journal, the default_account_id are not copied.
+            # It should raise an error when we try to set the company's default purchase journal in the Settings.
+            self.company.l10n_it_edi_purchase_journal_id = preferred_journal
+
+        preferred_journal.default_account_id = self.company_data_2['default_journal_purchase'].default_account_id.id
+
+        with tools.file_open(f'{self.module}/tests/import_xmls/{filename}', mode='rb') as fd:
+            fake_bill_content = fd.read()
+
+        with (patch.object(self.env.registry['account_edi_proxy_client.user'], '_decrypt_data', return_value=fake_bill_content),
+              freeze_time('2019-01-01')):
+            self.env['account.move'].with_company(self.company)._l10n_it_edi_process_downloads({
+                '999999999': {
+                    'filename': filename,
+                    'file': fake_bill_content,
+                    'key': str(uuid.uuid4()),
+                }},
+                self.proxy_user,
+            )
+
+        imported_bill = self.env['account.move'].with_company(self.company).search([])
+        self.assertEqual(len(imported_bill), 1)
+        self.assertRecordValues(imported_bill.journal_id, [{
+            'id': preferred_journal.id,
+            'default_account_id': self.company_data_2['default_journal_purchase'].default_account_id.id,
+        }])
 
     def test_cron_receives_bill_from_another_company(self):
         """ Ensure that when from one of your company, you bill the other, the
