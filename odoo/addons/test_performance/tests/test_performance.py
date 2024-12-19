@@ -617,42 +617,6 @@ class TestPerformance(SavepointCaseWithUserDemo):
         result = list(zip(result_name, result_value, result_value_pc))
         self.assertEqual(result, [('1', 1, 0.01), ('2', 42, 0.42), ('3', 3, 0.03)])
 
-    def expected_read_group(self):
-        groups = defaultdict(list)
-        all_records = self.env['test_performance.base'].search([])
-        for record in all_records:
-            groups[record.partner_id.id].append(record.value)
-        partners = self.env['res.partner'].search([('id', 'in', all_records.mapped('partner_id').ids)])
-        return [{
-            '__domain': [('partner_id', '=', partner.id)],
-            'partner_id': (partner.id, partner.display_name),
-            'partner_id_count': len(groups[partner.id]),
-            'value': sum(groups[partner.id]),
-        } for partner in partners]
-
-    @users('__system__', 'demo')
-    def test_read_group_with_display_name(self):
-        model = self.env['test_performance.base']
-        expected = self.expected_read_group()
-        # use read_group and check the expected result
-        with self.assertQueryCount(__system__=2, demo=2):
-            self.env.invalidate_all()
-            result = model.read_group([], ['partner_id', 'value'], ['partner_id'])
-            self.assertEqual(result, expected)
-
-        # Modify the data so that each record has the same partner,
-        # and test that the _compute_display_name is called once with the correct recordset.
-        all_records = model.search([])
-        all_records.partner_id = all_records[0].partner_id
-        self.env.invalidate_all()
-
-        old_compute_display_name = self.registry['res.partner']._compute_display_name
-
-        with patch.object(self.registry['res.partner'], '_compute_display_name', side_effect=old_compute_display_name, autospec=True) as compute_display_name_spy:
-            model.read_group([], ['__count'], ['partner_id', 'value'], lazy=False)
-            compute_display_name_spy.assert_called_once()
-            self.assertEqual(compute_display_name_spy.call_args.args[0].id, all_records[0].partner_id.id)
-
 
 @tagged('bacon_and_eggs')
 class TestIrPropertyOptimizations(TransactionCase):

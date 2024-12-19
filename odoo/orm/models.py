@@ -561,7 +561,7 @@ class BaseModel(metaclass=MetaModel):
     """dependencies of models backed up by SQL views
     ``{model_name: field_names}``, where ``field_names`` is an iterable.
     This is only used to determine the changes to flush to database before
-    executing ``search()`` or ``read_group()``. It won't be used for cache
+    executing any search/read operation. It won't be used for cache
     invalidation or recomputing fields.
     """
 
@@ -1839,6 +1839,21 @@ class BaseModel(metaclass=MetaModel):
 
         return defaults
 
+    def search_read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[list]:
+        """ Get raw result of :meth:`~._read_group`. """
+        result = self._read_group(domain, groupby, aggregates, having, offset, limit, order)
+
+        def value_to_raw_value(value):
+            if not isinstance(value, BaseModel):
+                return value
+            if len(value) > 1:  # For :recordset aggregates
+                return value._ids
+            return value._ids[0]
+
+        return [
+            [value_to_raw_value(value) for value in row] for row in result
+        ]
+
     @api.model
     def _read_group(self, domain: DomainType, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[tuple]:
         """ Get fields aggregations specified by ``aggregates`` grouped by the given ``groupby``
@@ -2635,28 +2650,9 @@ class BaseModel(metaclass=MetaModel):
                 row['__domain'] &= Domain(fullname, '=', row[fullname])
 
     @api.model
-    def _read_group_get_annotated_groupby(self, groupby, lazy):
-        groupby = [groupby] if isinstance(groupby, str) else groupby
-        lazy_groupby = groupby[:1] if lazy else groupby
-
-        annotated_groupby = {}  # Key as the name in the result, value as the explicit groupby specification
-        for group_spec in lazy_groupby:
-            field_name, property_name, granularity = parse_read_group_spec(group_spec)
-            if field_name not in self._fields:
-                raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
-            field = self._fields[field_name]
-            if property_name and field.type != 'properties':
-                raise ValueError(f"Property name {property_name!r} has to be used on a property field.")
-            if field.type in ('date', 'datetime'):
-                annotated_groupby[group_spec] = f"{field_name}:{granularity or 'month'}"
-            else:
-                annotated_groupby[group_spec] = group_spec
-        return annotated_groupby
-
-    @api.model
     @api.readonly
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        """Get the list of records in list view grouped by the given ``groupby`` fields.
+        """Deprecated - Get the list of records in list view grouped by the given ``groupby`` fields.
 
         :param list domain: :ref:`A search domain <reference/orm/domains>`. Use an empty
                      list to match all records.
@@ -2694,7 +2690,10 @@ class BaseModel(metaclass=MetaModel):
         :rtype: [{'field_name_1': value, ...}, ...]
         :raise AccessError: if user is not allowed to access requested information
         """
-
+        warnings.warn(
+            "Since 19.0, read_group is deprecated. Please use _read_group in the backend code, web_read_group for a complete formatted result or search_read_group for an unformatted result",
+            DeprecationWarning
+        )
         groupby = [groupby] if isinstance(groupby, str) else groupby
         lazy_groupby = groupby[:1] if lazy else groupby
 
@@ -2702,7 +2701,21 @@ class BaseModel(metaclass=MetaModel):
         # - Modify `groupby` default value 'month' into specific groupby specification
         # - Modify `fields` into aggregates specification of _read_group
         # - Modify the order to be compatible with the _read_group specification
-        annotated_groupby = self._read_group_get_annotated_groupby(groupby, lazy=lazy)
+        groupby = [groupby] if isinstance(groupby, str) else groupby
+        lazy_groupby = groupby[:1] if lazy else groupby
+
+        annotated_groupby = {}  # Key as the name in the result, value as the explicit groupby specification
+        for group_spec in lazy_groupby:
+            field_name, property_name, granularity = parse_read_group_spec(group_spec)
+            if field_name not in self._fields:
+                raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
+            field = self._fields[field_name]
+            if property_name and field.type != 'properties':
+                raise ValueError(f"Property name {property_name!r} has to be used on a property field.")
+            if field.type in ('date', 'datetime'):
+                annotated_groupby[group_spec] = f"{field_name}:{granularity or 'month'}"
+            else:
+                annotated_groupby[group_spec] = group_spec
 
         annotated_aggregates = {  # Key as the name in the result, value as the explicit aggregate specification
             f"{lazy_groupby[0].split(':')[0]}_count" if lazy and len(lazy_groupby) == 1 else '__count': '__count',
@@ -6360,7 +6373,7 @@ class BaseModel(metaclass=MetaModel):
         recordsets are guaranteed to be part of the same prefetch-set.
 
         Provides a convenience method to partition existing recordsets without
-        the overhead of a :meth:`~.read_group`, but performs no aggregation.
+        the overhead of a :meth:`~._read_group`, but performs no aggregation.
 
         .. note:: unlike :func:`itertools.groupby`, does not care about input
                   ordering, however the tradeoff is that it can not be lazy
