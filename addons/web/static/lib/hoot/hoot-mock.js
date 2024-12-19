@@ -5,11 +5,11 @@
  */
 
 export {
-    Deferred,
     advanceFrame,
     advanceTime,
     animationFrame,
     cancelAllTimers,
+    Deferred,
     delay,
     freezeTime,
     microTick,

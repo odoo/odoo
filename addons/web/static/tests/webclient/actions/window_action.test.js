@@ -1048,6 +1048,7 @@ test("execute_action of type object raises error: re-enables buttons", async () 
     await click('.o_form_view button[name="object"]');
     expect(".o_form_button_create").not.toBeEnabled();
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(".o_form_button_create").toBeEnabled();
 });
 
@@ -1072,6 +1073,7 @@ test("execute_action of type object raises error in modal: re-enables buttons", 
     expect(".modal .o_form_view").toHaveCount(1);
     expect(".modal footer button").not.toBeEnabled();
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(".modal .o_form_view").toHaveCount(1);
     expect(".modal footer button").toBeEnabled();
 });
@@ -2452,10 +2454,10 @@ test("window action in target new fails (onchange) on desktop", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(2);
     await contains(".o_form_view button[name='5']").click();
-    await waitFor(".modal"); // errors are async
-    expect(".modal").toHaveCount(1);
-    expect(".modal .o_error_dialog").toHaveCount(1);
-    expect(".modal .modal-title").toHaveText("Validation Error");
+    await expect(waitFor(".modal .o_error_dialog .modal-title")).resolves.toHaveText(
+        "Validation Error"
+    );
+    expect.verifyErrors(["RPC_ERROR"]);
 });
 
 test.tags("mobile");
@@ -2478,10 +2480,10 @@ test("window action in target new fails (onchange) on mobile", async () => {
     await getService("action").doAction(2);
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
     await contains(".o-dropdown-item-unstyled-button button[name='5']").click();
-    await waitFor(".modal"); // errors are async
-    expect(".modal").toHaveCount(1);
-    expect(".modal .o_error_dialog").toHaveCount(1);
-    expect(".modal .modal-title").toHaveText("Validation Error");
+    await expect(waitFor(".modal .o_error_dialog .modal-title")).resolves.toHaveText(
+        "Validation Error"
+    );
+    expect.verifyErrors(["RPC_ERROR"]);
 });
 
 test.tags("desktop");
@@ -2513,10 +2515,10 @@ test("Uncaught error in target new is catch only once on desktop", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(2);
     await contains(".o_form_view button[name='26']").click();
-    await waitFor(".modal"); // errors are async
-    expect(".modal").toHaveCount(1);
-    expect(".modal .o_error_dialog").toHaveCount(1);
-    expect(".modal .modal-title").toHaveText("Validation Error");
+    await expect(waitFor(".modal .o_error_dialog .modal-title")).resolves.toHaveText(
+        "Validation Error"
+    );
+    expect.verifyErrors(["RPC_ERROR"]);
 });
 
 test.tags("mobile");
@@ -2549,10 +2551,10 @@ test("Uncaught error in target new is catch only once on mobile", async () => {
     await getService("action").doAction(2);
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
     await contains(".o-dropdown-item-unstyled-button button[name='26']").click();
-    await waitFor(".modal"); // errors are async
-    expect(".modal").toHaveCount(1);
-    expect(".modal .o_error_dialog").toHaveCount(1);
-    expect(".modal .modal-title").toHaveText("Validation Error");
+    await expect(waitFor(".modal .o_error_dialog .modal-title")).resolves.toHaveText(
+        "Validation Error"
+    );
+    expect.verifyErrors(["RPC_ERROR"]);
 });
 
 test("action and get_views rpcs are cached", async () => {
