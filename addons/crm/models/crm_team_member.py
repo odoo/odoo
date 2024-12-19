@@ -135,7 +135,7 @@ class TeamMember(models.Model):
         for member in members:
             lead_domain = expression.AND([
                 literal_eval(member.assignment_domain or '[]'),
-                ['&', '&', ('user_id', '=', False), ('date_open', '=', False), ('team_id', '=', member.crm_team_id.id)]
+                ['&', ('user_id', '=', False), ('team_id', '=', member.crm_team_id.id)]
             ])
 
             leads = self.env["crm.lead"].search(lead_domain, order='probability DESC, id', limit=lead_limit)
