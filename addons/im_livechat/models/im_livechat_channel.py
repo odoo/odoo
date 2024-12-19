@@ -147,18 +147,65 @@ class Im_LivechatChannel(models.Model):
         for record in self:
             record.nbr_channel = channel_count.get(record.id, 0)
 
+    # --------------------------------------------------
+    # CRUD
+    # --------------------------------------------------
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        channels = super().create(vals_list)
+        for channel in channels:
+            payload = {
+                "channel": {
+                    "id": channel.id,
+                    "model": "im_livechat.channel",
+                    "name": channel.display_name,
+                }
+            }
+            payload['invited_by_user_id'] = self.env.user.id
+            for user in channel.user_ids:
+                user._bus_send("im_livechat.channel/join", payload)
+        return channels
+
+    def write(self, vals):
+        user_ids_cmd = vals.get('user_ids') or []
+        user_ids = [cmd[1] for cmd in user_ids_cmd if cmd[0] in (3, 4)]
+        all_users = self.env['res.users'].browse(user_ids)
+        add_users = all_users.filtered(lambda u: u.id in [cmd[1] for cmd in user_ids_cmd if cmd[0] == 4])
+        remove_users = all_users.filtered(lambda u: u.id in [cmd[1] for cmd in user_ids_cmd if cmd[0] == 3])
+        payload = {
+            "channel": {
+                "id": self.id,
+                "model": "im_livechat.channel",
+                "name": self.display_name,
+            }
+        }
+        for user in remove_users:
+            user._bus_send("im_livechat.channel/leave", payload)
+        payload['invited_by_user_id'] = self.env.user.id
+        for user in add_users:
+            user._bus_send("im_livechat.channel/join", payload)
+        return super().write(vals)
+
+    def unlink(self):
+        for channel in self:
+            for user in channel.user_ids:
+                user._bus_send("im_livechat.channel/delete", {
+                    "id": channel.id,
+                    "model": "im_livechat.channel",
+                })
+        return super().unlink()
+
     # --------------------------
     # Action Methods
     # --------------------------
     def action_join(self):
         self.ensure_one()
         self.user_ids = [Command.link(self.env.user.id)]
-        self.env.user._bus_send_store(self, ["are_you_inside", "name"])
 
     def action_quit(self):
         self.ensure_one()
         self.user_ids = [Command.unlink(self.env.user.id)]
-        self.env.user._bus_send_store(self, ["are_you_inside", "name"])
 
     def action_view_rating(self):
         """ Action to display the rating relative to the channel, so all rating of the
