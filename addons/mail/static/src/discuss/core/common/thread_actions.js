@@ -126,6 +126,16 @@ threadActionsRegistry
         icon: "fa fa-fw fa-users",
         iconLarge: "fa fa-fw fa-lg fa-users",
         name: _t("Members"),
+        close(component) {
+            if (component.env.inDiscussApp) {
+                component.store.discuss.isMemberPanelOpenByDefault = false;
+            }
+        },
+        open(component) {
+            if (component.env.inDiscussApp) {
+                component.store.discuss.isMemberPanelOpenByDefault = true;
+            }
+        },
         sequence: 30,
         sequenceGroup: 10,
         toggle: true,
