@@ -50,7 +50,7 @@ export const tooltipService = {
         let target = null;
         let touchPressed;
         let mouseEntered;
-        const elementsWithTooltips = new Map();
+        const elementsWithTooltips = new WeakMap();
 
         /**
          * Closes the currently opened tooltip if any, or prevent it from opening.

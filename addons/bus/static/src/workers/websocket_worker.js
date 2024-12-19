@@ -5,7 +5,7 @@ import { debounce, Deferred } from "@bus/workers/websocket_worker_utils";
 /**
  * Type of events that can be sent from the worker to its clients.
  *
- * @typedef { 'connect' | 'reconnect' | 'disconnect' | 'reconnecting' | 'notification' | 'initialized' | 'outdated'|'update_state' | 'log_debug' } WorkerEvent
+ * @typedef { 'connect' | 'reconnect' | 'disconnect' | 'reconnecting' | 'notification' | 'initialized' | 'outdated'| 'worker_state_updated' | 'log_debug' } WorkerEvent
  */
 
 /**
@@ -243,8 +243,8 @@ export class WebsocketWorker {
         if (this.newestStartTs && this.newestStartTs > startTs) {
             this.debugModeByClient.set(client, debug);
             this.isDebug = [...this.debugModeByClient.values()].some(Boolean);
-            this.sendToClient(client, "initialized");
             this.sendToClient(client, "update_state", this.state);
+            this.sendToClient(client, "initialized");
             return;
         }
         this.newestStartTs = startTs;
@@ -265,8 +265,8 @@ export class WebsocketWorker {
             }
             this.channelsByClient.forEach((_, key) => this.channelsByClient.set(key, []));
         }
-        this.sendToClient(client, "initialized");
         this.sendToClient(client, "update_state", this.state);
+        this.sendToClient(client, "initialized");
         if (!this.active) {
             this.sendToClient(client, "outdated");
         }
@@ -441,6 +441,13 @@ export class WebsocketWorker {
         }
     }
 
+    _removeWebsocketListeners() {
+        this.websocket?.removeEventListener("open", this._onWebsocketOpen);
+        this.websocket?.removeEventListener("message", this._onWebsocketMessage);
+        this.websocket?.removeEventListener("error", this._onWebsocketError);
+        this.websocket?.removeEventListener("close", this._onWebsocketClose);
+    }
+
     /**
      * Start the worker by opening a websocket connection.
      */
@@ -449,12 +456,7 @@ export class WebsocketWorker {
         if (!this.active || this._isWebsocketConnected() || this._isWebsocketConnecting()) {
             return;
         }
-        if (this.websocket) {
-            this.websocket.removeEventListener("open", this._onWebsocketOpen);
-            this.websocket.removeEventListener("message", this._onWebsocketMessage);
-            this.websocket.removeEventListener("error", this._onWebsocketError);
-            this.websocket.removeEventListener("close", this._onWebsocketClose);
-        }
+        this._removeWebsocketListeners();
         if (this._isWebsocketClosing()) {
             // close event was not triggered and will never be, broadcast the
             // disconnect event for consistency sake.
@@ -478,9 +480,8 @@ export class WebsocketWorker {
         this.connectRetryDelay = this.INITIAL_RECONNECT_DELAY;
         this.isReconnecting = false;
         this.lastChannelSubscription = null;
-        if (this.websocket) {
-            this.websocket.close();
-        }
+        this.websocket?.close();
+        this._removeWebsocketListeners();
     }
 
     /**
@@ -513,6 +514,6 @@ export class WebsocketWorker {
      */
     _updateState(newState) {
         this.state = newState;
-        this.broadcast("update_state", newState);
+        this.broadcast("worker_state_updated", newState);
     }
 }
