@@ -24,13 +24,13 @@ class TestGroupExpand(common.TransactionCase):
                 {
                     'state': 'a',
                     '__count': 0,
-                    'value:sum': False,
+                    'value:sum': 0,
                     '__extra_domain': [('state', '=', 'a')],
                 },
                 {
                     'state': 'b',
                     '__count': 0,
-                    'value:sum': False,
+                    'value:sum': 0,
                     '__extra_domain': [('state', '=', 'b')],
                 },
                 {
@@ -60,7 +60,7 @@ class TestGroupExpand(common.TransactionCase):
                 {
                     'state': 'b',
                     '__count': 0,
-                    'value:sum': False,
+                    'value:sum': 0,
                     '__extra_domain': [('state', '=', 'b')],
                 },
                 {
@@ -348,13 +348,13 @@ class TestGroupExpand(common.TransactionCase):
                 'order_expand_id': (order_3.id, 'O3 empty'),
                 '__fold': False,
                 '__extra_domain': [('order_expand_id', '=', order_3.id)],
-                'value:sum': False,
+                'value:sum': 0,
             },
             {
                 'order_expand_id': (order_4.id, 'O4 empty'),
                 '__fold': True,
                 '__extra_domain': [('order_expand_id', '=', order_4.id)],
-                'value:sum': False,
+                'value:sum': 0,
             },
             {
                 'order_expand_id': False,
@@ -472,19 +472,19 @@ class TestGroupExpand(common.TransactionCase):
                         '__extra_domain': [('order_expand_id', '=', order_2.id)],
                         '__fold': True,
                         'order_expand_id': (order_2.id, 'O2'),
-                        'value:sum': False,
+                        'value:sum': 0,
                     },
                     {
                         '__extra_domain': [('order_expand_id', '=', order_3.id)],
                         '__fold': True,
                         'order_expand_id': (order_3.id, 'O3'),
-                        'value:sum': False,
+                        'value:sum': 0,
                     },
                     {
                         '__extra_domain': [('order_expand_id', '=', order_unused.id)],
                         '__fold': True,
                         'order_expand_id': (order_unused.id, 'Not used'),
-                        'value:sum': False,
+                        'value:sum': 0,
                     },
                 ],
             )

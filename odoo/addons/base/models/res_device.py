@@ -58,7 +58,7 @@ class ResDeviceLog(models.Model):
         for device in self:
             device.linked_ip_addresses = '\n'.join(
                 OrderedSet(device_group_map.get(
-                    (device.session_identifier, device.platform, device.browser), []
+                    (device.session_identifier or '', device.platform or '', device.browser or ''), []
                 ))
             )
 
