@@ -1,6 +1,14 @@
 .s_dynamic {
+    .s_dynamic_snippet_holder {
+        display: none;
+    }
     &.o_dynamic_snippet_empty:not(.o_check_scroll_position) {
-        display: none !important;
+        section:not(.s_dynamic_snippet_holder) {
+            display: none !important;
+        }
+        .s_dynamic_snippet_holder {
+            display: block;
+        }
     }
     [data-url] {
         cursor: pointer;

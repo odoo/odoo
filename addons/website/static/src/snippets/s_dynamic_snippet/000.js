@@ -40,11 +40,8 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * @override
      */
     willStart: function () {
-        return this._super.apply(this, arguments).then(
-            () => Promise.all([
-                this._fetchData(),
-            ])
-        );
+        this.snippetMode = this.el.dataset.snippetMode || "filters";
+        return this._super.apply(this, arguments).then(() => Promise.all([this._fetchData()]));
     },
     /**
      *
@@ -92,7 +89,13 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * @private
      */
     _isConfigComplete: function () {
-        return this.$el.get(0).dataset.filterId !== undefined && this.$el.get(0).dataset.templateKey !== undefined;
+        if (this.snippetMode === "mono") {
+            return (
+                this.el.dataset.snippetResModel !== undefined &&
+                this.el.dataset.snippetResId !== undefined
+            );
+        }
+        return this.el.dataset.filterId !== undefined && this.el.dataset.templateKey !== undefined;
     },
     /**
      * Method to be overridden in child components in order to provide a search

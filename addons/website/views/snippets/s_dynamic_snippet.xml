@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="website.s_dynamic_snippet_template">
-        <section t-attf-class="#{snippet_name} #{snippet_classes} s_dynamic s_dynamic_empty pt32 pb32" t-att-data-snippet="snippet_name" t-att-data-custom-template-data="custom_template_data or '{}'">
+        <section t-att-data-snippet="snippet_name"
+            t-attf-class="#{snippet_name} #{snippet_classes} s_dynamic s_dynamic_empty pt32 pb32"
+            t-att-data-custom-template-data="custom_template_data or '{}'"
+            t-att-data-snippet-mode="snippet_mode">
             <div class="container">
                 <div class="row s_nb_column_fixed">
+                    <section class="s_dynamic_snippet_holder p-0 placeholder-glow">
+                        <div class="row">
+                            <span class="placeholder col-3 rounded"/>
+                            <span class="placeholder col-1 offset-8 rounded"/>
+                            <span class="placeholder mt-3 col-6 rounded"/>
+                        </div>
+                        <div class="row mt-4" style="height: 250px;">
+                            <span class="placeholder col-12 rounded"/>
+                        </div>
+                    </section>
                     <section class="s_dynamic_snippet_title oe_unremovable oe_unmovable d-flex flex-column flex-md-row justify-content-between mb-lg-0 pb-3 pb-md-0">
                         <div>
                             <h4>Our latest content</h4>
@@ -30,15 +43,49 @@
     <template id="s_dynamic_snippet" name="Dynamic Snippet">
         <t t-call="website.s_dynamic_snippet_template">
             <t t-set="snippet_name" t-value="'s_dynamic_snippet'"/>
+            <t t-set="snippet_mode" t-value="'filters'"/>
         </t>
     </template>
     <template id="website.s_dynamic_snippet_options_template">
         <div t-attf-data-js="#{snippet_name}" t-attf-data-selector="#{snippet_selector}" data-no-preview="true">
-            <we-select string="Filter" data-name="filter_opt" data-attribute-name="filterId" data-no-preview="true">
+            <we-button-group string="Mode"
+                data-attribute-name="snippetMode"
+                data-no-preview="true">
+                <we-button title="Mono-record Snippet" data-select-mode="mono" data-select-data-attribute="mono" data-name="snippet_mode_mono_opt">Mono</we-button>
+                <we-button title="Filter-based Snippet" data-select-mode="filters" data-select-data-attribute="filters" data-name="snippet_mode_filters_opt">Filters</we-button>
+            </we-button-group>
+            <!-- "Mono" Mode Options -->
+            <we-select string="Model"
+                data-name="model_opt"
+                data-attribute-name="snippetResModel"
+                data-dependencies="snippet_mode_mono_opt"
+                data-no-preview="true"
+                data-attribute-default-value="">
             </we-select>
-            <we-select string="Template" data-name="template_opt" data-attribute-name="templateKey" data-no-preview="true">
+            <we-many2one string="Record"
+                class="o_we_sublevel_1"
+                data-model=""
+                data-set-snippet-res-id=""
+                data-name="record_opt"
+                data-dependencies="snippet_mode_mono_opt"
+                data-no-preview="true"/>
+            <!-- "Filters" Mode Options -->
+            <we-select string="Filter"
+                data-name="filter_opt"
+                data-attribute-name="filterId"
+                data-dependencies="snippet_mode_filters_opt"
+                data-no-preview="true">
             </we-select>
-            <we-select string="Fetched Elements" data-name="number_of_records_opt" data-attribute-name="numberOfRecords" data-no-preview="true">
+            <we-select string="Template"
+                data-name="template_opt"
+                data-attribute-name="templateKey"
+                data-no-preview="true">
+            </we-select>
+            <we-select string="Fetched Elements"
+                data-name="number_of_records_opt"
+                data-attribute-name="numberOfRecords"
+                data-dependencies="snippet_mode_filters_opt"
+                data-no-preview="true">
                 <we-button t-foreach="range(1, 17)" t-as="value" t-att-data-select-data-attribute="value" t-esc="value"/>
             </we-select>
             <t t-out="0"/>

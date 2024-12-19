@@ -3,6 +3,7 @@
     <template id="s_dynamic_snippet_products" name="Products">
         <t t-call="website.s_dynamic_snippet_template">
             <t t-set="snippet_name" t-value="'s_dynamic_snippet_products'"/>
+            <t t-set="snippet_mode" t-value="'filters'"/>
             <t t-call="website_sale.s_dynamic_snippet_products_preview_data"/>
         </t>
     </template>
@@ -17,7 +18,11 @@
     <template id="s_dynamic_snippet_products_template_options" inherit_id="website.s_dynamic_snippet_options_template">
         <xpath expr="//we-select[@data-name='filter_opt']" position="after">
             <t t-if="snippet_name == 'dynamic_snippet_products'">
-                <we-select string="Category" data-name="product_category_opt" data-attribute-name="productCategoryId" data-no-preview="true">
+                <we-select string="Category"
+                    data-name="product_category_opt"
+                    data-attribute-name="productCategoryId"
+                    data-no-preview="true"
+                    data-dependencies="snippet_mode_filters_opt">
                     <we-button data-select-data-attribute="all">All Products</we-button>
                     <we-button data-select-data-attribute="current">Current Category or All</we-button>
                 </we-select>
@@ -28,15 +33,26 @@
                     data-model="product.tag"
                     data-allow-delete="true"
                     data-fakem2m="true"
-                    data-select-data-attribute=""/>
+                    data-select-data-attribute=""
+                    data-dependencies="snippet_mode_filters_opt"/>
                 <we-checkbox string="Show variants"
                     data-select-data-attribute="true"
                     data-attribute-name="showVariants"
-                    data-no-preview="true"/>
-                <we-input string="Product Names" class="o_we_large" data-name="product_names_opt"
-                    data-attribute-name="productNames" data-no-preview="true" data-select-data-attribute=""
-                    placeholder="e.g. lamp,bin" title="Comma-separated list of parts of product names, barcodes or internal reference"/>
+                    data-no-preview="true"
+                    data-dependencies="snippet_mode_filters_opt"/>
+                <we-input string="Product Names"
+                    class="o_we_large"
+                    data-name="product_names_opt"
+                    data-attribute-name="productNames"
+                    data-no-preview="true"
+                    data-select-data-attribute=""
+                    placeholder="e.g. lamp,bin"
+                    title="Comma-separated list of parts of product names, barcodes or internal reference"
+                    data-dependencies="snippet_mode_filters_opt"/>
             </t>
+        </xpath>
+        <xpath expr="//we-select[@data-name='model_opt']" position="inside">
+            <we-button title="Product Records" data-select-data-attribute="product.product">Products</we-button>
         </xpath>
     </template>
 

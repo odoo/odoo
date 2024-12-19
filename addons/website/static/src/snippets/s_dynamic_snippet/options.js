@@ -80,6 +80,9 @@ const dynamicSnippetOptions = options.Class.extend({
         if (params.attributeName === 'templateKey' && previewMode === false) {
             this._templateUpdated(widgetValue, params.activeValue);
         }
+        if (params.attributeName === "snippetResModel" && previewMode === false) {
+            this.rerender = true;
+        }
     },
     /**
      * Saves the template data that will be handled later by the public widget.
@@ -89,6 +92,14 @@ const dynamicSnippetOptions = options.Class.extend({
     customizeTemplateValues(previewMode, widgetValue, params) {
         this.customTemplateData[params.customizeTemplateKey] = widgetValue === "true";
         this.$target[0].dataset.customTemplateData = JSON.stringify(this.customTemplateData);
+    },
+    /**
+     * ...
+     *
+     * @see this.selectClass for parameters
+     */
+    setSnippetResId(previewMode, widgetValue, params) {
+        this.el.dataset.snippetResId = widgetValue;
     },
 
     //--------------------------------------------------------------------------
@@ -131,16 +142,19 @@ const dynamicSnippetOptions = options.Class.extend({
      * @private
      */
     _computeWidgetVisibility: function (widgetName, params) {
-        if (widgetName === 'filter_opt') {
-            // Hide if exaclty one is available: show when none to help understand what is missing
-            return Object.keys(this.dynamicFilters).length !== 1;
+        switch (widgetName) {
+            case "filter_opt": {
+                // Hide if exaclty one is available: show when none to help understand what is missing
+                return Object.keys(this.dynamicFilters).length !== 1;
+            }
+            case "number_of_records_opt": {
+                const template = this._getCurrentTemplate();
+                return template && !template.numOfElFetch;
+            }
+            case "model_opt": {
+                return params.optionsPossibleValues.selectDataAttribute.filter(Boolean).length;
+            }
         }
-
-        if (widgetName === 'number_of_records_opt') {
-            const template = this._getCurrentTemplate();
-            return template && !template.numOfElFetch;
-        }
-
         return this._super.apply(this, arguments);
     },
     /**
@@ -215,6 +229,17 @@ const dynamicSnippetOptions = options.Class.extend({
     _renderCustomXML: async function (uiFragment) {
         await this._renderDynamicFiltersSelector(uiFragment);
         await this._renderDynamicFilterTemplatesSelector(uiFragment);
+        const defaultModelName = this.dynamicFilters[this._defaultFilterId]?.model_name;
+        if (defaultModelName) {
+            // Get the default options values to handle the "mono-ecord" mode.
+            const modeldSelectorEl = uiFragment.querySelector('we-select[data-name="model_opt"]');
+            const recordSelectorEl = uiFragment.querySelector(
+                'we-many2one[data-name="record_opt"]'
+            );
+            modeldSelectorEl.dataset.attributeDefaultValue = defaultModelName;
+            recordSelectorEl.dataset.model =
+                this.$target[0].dataset.snippetResModel || defaultModelName;
+        }
     },
     /**
      * Renders the dynamic filter option selector content into the provided uiFragment.
