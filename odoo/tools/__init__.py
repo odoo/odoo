@@ -2,6 +2,7 @@
 # ruff: noqa: F401
 
 from . import constants
+from .ast import *
 from .parse_version import parse_version
 from .barcode import check_barcode_encoding
 from .cache import ormcache, ormcache_context
