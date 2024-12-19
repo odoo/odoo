@@ -2326,13 +2326,13 @@ $o-offcanvas-horizontal-width: var(--Offcanvas-horizontal-width, #{$o-offcanvas-
 };
 
 @mixin o-tag-right() {
-    @include o-position-absolute($top: 0, $right: 0);
-    padding: 0.25rem 1rem;
+    @include o-position-absolute($top: 5px, $right: 5px);
+    padding: 0.25rem 0.7rem;
 };
 
 @mixin o-tag-left() {
-    @include o-position-absolute($top: 0, $left: 0);
-    padding: 0.25rem 1rem;
+    @include o-position-absolute($top: 5px, $left: 5px);
+    padding: 0.25rem 0.7rem;
 };
 
 @mixin o-add-gradient($key) {

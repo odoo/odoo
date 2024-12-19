@@ -116,7 +116,10 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         this.ppr = this.$target.closest('[data-ppr]').data('ppr');
         this.defaultSort = this.$target[0].closest('[data-default-sort]').dataset.defaultSort
         this.productTemplateID = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
-        this.ribbonPositionClasses = {'left': 'o_ribbon_left', 'right': 'o_ribbon_right'};
+        this.PositionClasses = {
+            'ribbon': {'left': 'o_ribbon_left', 'right': 'o_ribbon_right'},
+            'tag': {'left': 'o_tag_left', 'right': 'o_tag_right'},
+        };
         this.ribbons = await new Promise(resolve => this.trigger_up('get_ribbons', {callback: resolve}));
         this.$ribbon = this.$target.find('.o_ribbon');
         return _super(...arguments);
@@ -214,12 +217,29 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
     /**
      * @see this.selectClass for params
      */
+
     async setRibbonPosition(previewMode, widgetValue, params) {
+        const currentStyle = (
+            this.$ribbon[0].classList.contains('o_ribbon_left')
+            || this.$ribbon[0].classList.contains('o_ribbon_right')
+        )? 'ribbon' : 'tag';
         this.$ribbon[0].className = this.$ribbon[0].className.replace(
-            /o_ribbon_(left|right)/, this.ribbonPositionClasses[widgetValue]
+            /o_(ribbon|tag)_(left|right)/, this.PositionClasses[currentStyle][widgetValue]
         );
         await this._saveRibbon();
     },
+
+    async setRibbonStyle(previewMode, widgetValue, params) {
+        const currentPosition = (
+            this.$ribbon[0].classList.contains('o_ribbon_left')
+            || this.$ribbon[0].classList.contains('o_tag_left')
+        )? 'left' : 'right';
+        this.$ribbon[0].className = this.$ribbon[0].className.replace(
+            /o_(ribbon|tag)_(left|right)/, this.PositionClasses[widgetValue][currentPosition]
+        );
+        await this._saveRibbon();
+    },
+
     /**
      * @see this.selectClass for params
      */
@@ -297,10 +317,16 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
             case 'setRibbonName':
                 return this.$ribbon.text();
             case 'setRibbonPosition': {
-                if (classList.contains('o_ribbon_left')) {
+                if (classList.contains('o_ribbon_left') || classList.contains('o_tag_left')){
                     return 'left';
                 }
                 return 'right';
+            }
+            case 'setRibbonStyle': {
+                if (classList.contains('o_ribbon_right') || classList.contains('o_ribbon_left')){
+                    return 'ribbon';
+                }
+                return 'tag';
             }
         }
         return this._super(methodName, params);
@@ -315,6 +341,14 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
             return !this.ribbonEditMode;
         } else if (widgetName === 'o_wsale_change_sequence_widget'){
             return isDefaultSortFeatured;
+        } else if (widgetName === 'edit_ribbon_opt'){
+            if(
+                this.$target[0].dataset.hasOwnProperty('ribbonId')
+                && this.ribbons.hasOwnProperty(this.$target[0].dataset['ribbonId'])
+            ){
+                return true;
+            }
+            return false;
         }
         return this._super(...arguments);
     },
@@ -330,7 +364,14 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
             'name': text,
             'bg_color': this.$ribbon[0].style.backgroundColor,
             'text_color': this.$ribbon[0].style.color,
-            'position': (this.$ribbon.attr('class').includes('o_ribbon_left')) ? 'left' : 'right',
+            'position': (
+                this.$ribbon.attr('class').includes('o_ribbon_left')
+                || this.$ribbon.attr('class').includes('o_tag_left')
+            ) ? 'left' : 'right',
+            'style': (
+                this.$ribbon.attr('class').includes('o_ribbon_left')
+                || this.$ribbon.attr('class').includes('o_ribbon_right')
+            ) ? 'ribbon': 'tag',
         };
         ribbon.id = isNewRibbon ? Date.now() : parseInt(this.$target.closest('.oe_product')[0].dataset.ribbonId);
         this.trigger_up('set_ribbon', {ribbon: ribbon});
@@ -352,7 +393,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         });
         const ribbon = (
             this.ribbons[ribbonId] ||
-            {name: '', bg_color: '', text_color: '', position: 'left'}
+            {name: '', bg_color: '', text_color: '', position: 'left', style: 'ribbon'}
         );
         // This option also manages other products' ribbon, therefore we need a
         // way to access all of them at once. With the content being in an iframe,
@@ -364,7 +405,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         this.trigger_up('get_ribbon_classes', {callback: classes => htmlClasses = classes});
         $ribbons.removeClass(htmlClasses);
 
-        $ribbons.addClass(this.ribbonPositionClasses[ribbon.position]);
+        $ribbons.addClass(this.PositionClasses[ribbon.style][ribbon.position]);
         $ribbons.css('background-color', ribbon.bg_color || '');
         $ribbons.css('color', ribbon.text_color || '');
 
