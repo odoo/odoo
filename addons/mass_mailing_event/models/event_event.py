@@ -16,7 +16,11 @@ class Event(models.Model):
             'target': 'current',
             'context': {
                 'default_mailing_model_id': self.env.ref('event.model_event_registration').id,
-                'default_mailing_domain': repr([('event_id', 'in', self.ids), ('state', 'not in', ['cancel', 'draft'])])
+                'default_mailing_domain': repr([('event_id', 'in', self.ids), ('state', 'not in', ['cancel', 'draft'])]),
+                # keys 'force_mailing_model_id' and 'force_mailing_domain' are needed because 'default_' keys
+                # are removed from context when processing a compute method with compute_sudo flag enabled
+                'force_mailing_model_id': self.env['ir.model']._get_id('event.registration'),
+                'force_mailing_domain': repr([('event_id', 'in', self.ids), ('state', 'not in', ['cancel', 'draft'])]),
             },
         }
 
