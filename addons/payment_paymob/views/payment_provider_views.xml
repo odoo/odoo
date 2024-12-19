@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Paymob Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position='inside'>
+                <group invisible="code != 'paymob'">
+                    <field
+                        name="paymob_account_country_id"
+                        string="Account Country"
+                        required="code == 'paymob' and state != 'disabled'"
+                        options="{'no_create': True}"
+                    />
+                    <field
+                        name="paymob_hmac_key"
+                        string="HMAC Key"
+                        password="True"
+                        required="code == 'paymob' and state != 'disabled'"
+                    />
+                    <field
+                        name="paymob_api_key"
+                        string="API Key"
+                        password="True"
+                        required="code == 'paymob' and state != 'disabled'"
+                    />
+                    <field
+                        name="paymob_secret_key"
+                        string="Secret Key"
+                        password="True"
+                        required="code == 'paymob' and state != 'disabled'"
+                    />
+                    <field
+                        name="paymob_public_key"
+                        string="Public Key"
+                        required="code == 'paymob' and state != 'disabled'"
+                    />
+                </group>
+            </group>
+            <a name="action_view_payment_methods" position="after">
+                <button
+                    string="Synchronize With Paymob"
+                    help="Make the payment methods compatible with the Paymob portal."
+                    type="object"
+                    name="action_sync_paymob_payment_methods"
+                    invisible="code != 'paymob' or state == 'disabled'"
+                    class="btn-secondary"
+                />
+            </a>
+            <field name="available_currency_ids" position="attributes">
+                <attribute name="readonly" separator="or" add="code == 'paymob'"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -83,7 +83,7 @@ class PaymentTransaction(models.Model):
                         'display_data': {
                             'brand_name': self.provider_id.company_id.name,
                         },
-                        'email_address': paypal_utils.get_normalized_email_account(self.provider_id)
+                        'email_address': self.provider_id.paypal_email_account,
                     },
                     **shipping_address_vals,
                 },
