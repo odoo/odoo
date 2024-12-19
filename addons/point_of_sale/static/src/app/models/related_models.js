@@ -211,10 +211,10 @@ export class Base {
                         .map((id) => {
                             let serData = false;
                             let data = {};
-
                             if (
-                                !SERIALIZABLE_MODELS.includes(params.relation) &&
-                                typeof id === "number"
+                                typeof id === "number" &&
+                                (!SERIALIZABLE_MODELS.includes(params.relation) ||
+                                    !this.models.commands[params.relation].update.has(id))
                             ) {
                                 return [4, id];
                             } else if (!SERIALIZABLE_MODELS.includes(params.relation)) {
