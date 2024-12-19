@@ -241,11 +241,11 @@ class TestSaleCommonBase(TransactionCase):
     @classmethod
     def _enable_sale_salesman(cls):
         """ Required to confirm a sale order """
-        cls.user.groups_id += cls.env.ref('sales_team.group_sale_salesman')
+        cls.user_stock_user.groups_id += cls.env.ref('sales_team.group_sale_salesman')
 
     @classmethod
     def _enable_sale_manager(cls):
-        cls.user.groups_id += cls.env.ref('sales_team.group_sale_manager')
+        cls.user_stock_user.groups_id += cls.env.ref('sales_team.group_sale_manager')
 
 
 class TestSaleCommon(AccountTestInvoicingCommon, TestSaleCommonBase):

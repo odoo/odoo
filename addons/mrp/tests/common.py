@@ -2,6 +2,7 @@
 
 from odoo.tests import Form
 from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 class TestMrpCommon(TestStockCommon):
@@ -114,7 +115,7 @@ class TestMrpCommon(TestStockCommon):
         # `workorder_ids` to be visible in the view of `mrp.production`. The
         # field `product_uom_id` must be set by many tests, and subviews of
         # `workorder_ids` must be present in many tests to create records.
-        cls.user.groups_id += \
+        cls.user_stock_user.groups_id += \
             cls.env.ref('uom.group_uom') + \
             cls.env.ref('mrp.group_mrp_manager') + \
             cls.env.ref('mrp.group_mrp_routings')

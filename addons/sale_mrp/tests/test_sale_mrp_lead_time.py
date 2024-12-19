@@ -12,10 +12,12 @@ from odoo.tests import Form
 
 class TestSaleMrpLeadTime(TestMrpCommon, TestSaleCommonBase):
 
+    def setUp(self):
+        self._enable_sale_salesman()
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._enable_sale_salesman()
 
         cls.env.ref('stock.route_warehouse0_mto').active = True
         # Update the product_1 with type, route, Manufacturing Lead Time and Customer Lead Time
