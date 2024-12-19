@@ -110,7 +110,6 @@ test("Only necessary requests are made when creating a new chat", async () => {
             channel_id: livechatChannelId,
             anonymous_name: "Visitor",
             previous_operator_id: operatorPartnerId,
-            temporary_id: -1,
             persisted: true,
         })}`,
         `/mail/data - ${JSON.stringify({

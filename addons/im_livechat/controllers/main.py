@@ -110,7 +110,7 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/get_session', methods=["POST"], type="jsonrpc", auth='public')
     @add_guest_to_context
-    def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, persisted=True, **kwargs):
+    def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, persisted=True):
         store = Store()
         user_id = None
         country_id = None

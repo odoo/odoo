@@ -46,12 +46,13 @@ class LivechatChatbotScriptController(http.Controller):
         # sudo: chatbot.script.step - visitor can access current step of the script
         if current_step := discuss_channel.sudo().chatbot_current_step_id:
             chatbot = current_step.chatbot_script_id
-            user_messages = discuss_channel.message_ids.filtered(
-                lambda message: message.author_id != chatbot.operator_partner_id
-            )
-            user_answer = request.env['mail.message'].sudo()
-            if user_messages:
-                user_answer = user_messages.sorted(lambda message: message.id)[-1]
+            domain = [
+                ("author_id", "!=", chatbot.operator_partner_id.id),
+                ("model", "=", "discuss.channel"),
+                ("res_id", "=", channel_id),
+            ]
+            # sudo: mail.message - accessing last message to process answer is allowed
+            user_answer = self.env["mail.message"].sudo().search(domain, order="id desc", limit=1)
             next_step = current_step._process_answer(discuss_channel, user_answer.body)
         elif chatbot_script_id:  # when restarting, we don't have a "current step" -> set "next" as first step of the script
             chatbot = request.env['chatbot.script'].sudo().browse(chatbot_script_id)
@@ -60,7 +61,8 @@ class LivechatChatbotScriptController(http.Controller):
 
         if not next_step:
             return None
-
+        # sudo: discuss.channel - updating current step on the channel is allowed
+        discuss_channel.sudo().chatbot_current_step_id = next_step.id
         posted_message = next_step._process_step(discuss_channel)
         store = Store(posted_message, for_current_user=True)
         store.add(next_step)
@@ -101,14 +103,16 @@ class LivechatChatbotScriptController(http.Controller):
 
         # sudo: chatbot.script - visitor can access chatbot script of their channel
         chatbot = discuss_channel.sudo().chatbot_current_step_id.chatbot_script_id
-        user_messages = discuss_channel.message_ids.filtered(
-            lambda message: message.author_id != chatbot.operator_partner_id
-        )
-
-        if user_messages:
-            user_answer = user_messages.sorted(lambda message: message.id)[-1]
-            result = chatbot._validate_email(user_answer.body, discuss_channel)
-
+        domain = [
+            ("author_id", "!=", chatbot.operator_partner_id.id),
+            ("model", "=", "discuss.channel"),
+            ("res_id", "=", channel_id),
+        ]
+        # sudo: mail.message - accessing last message to validate email is allowed
+        last_user_message = self.env["mail.message"].sudo().search(domain, order="id desc", limit=1)
+        result = {}
+        if last_user_message:
+            result = chatbot._validate_email(last_user_message.body, discuss_channel)
             if posted_message := result.pop("posted_message"):
                 result["data"] = Store(posted_message, for_current_user=True).get_result()
         return result
