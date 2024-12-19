@@ -268,7 +268,7 @@ class PaymentTransaction(models.Model):
 
         # Update the provider reference.
         payment_data = notification_data['payment']
-        self.provider_reference = payment_data.get('id', '').removesuffix('_0')
+        self.provider_reference = payment_data.get('id', '').rsplit('_', 1)[0]
 
         # Update the payment method.
         payment_output = payment_data.get('paymentOutput', {})
