@@ -164,6 +164,15 @@
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button name="action_open_split_expense"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-file-text-o"
+                            invisible="not split_expense_origin_id"
+                            string="Split"
+                        />
+                    </div>
+                    <div class="oe_button_box" name="button_box">
                         <button name="action_open_account_move"
                             class="oe_stat_button"
                             icon="fa-bars"
