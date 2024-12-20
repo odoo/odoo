@@ -1117,6 +1117,7 @@ class ModelChild(models.Model):
     name = fields.Char()
     company_id = fields.Many2one('res.company')
     parent_id = fields.Many2one('test_new_api.model_parent', check_company=True)
+    parent_ids = fields.Many2many('test_new_api.model_parent', check_company=True)
 
 
 class ModelChildNoCheck(models.Model):
