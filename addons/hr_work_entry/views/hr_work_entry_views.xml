@@ -6,7 +6,6 @@
     <record id="hr_work_entry_action_conflict" model="ir.actions.act_window">
         <field name="name">Work Entry</field>
         <field name="res_model">hr.work.entry</field>
-        <field name="context">{'search_default_work_entries_error': 1}</field>
         <field name="view_mode">list,calendar,form,pivot</field>
     </record>
 
@@ -15,9 +14,6 @@
         <field name="res_model">hr.work.entry</field>
         <field name="path">work-entries</field>
         <field name="view_mode">calendar,list,form,pivot</field>
-        <field name="context">{
-            'search_default_work_entries_error': True
-        }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No data to display
@@ -118,6 +114,7 @@
         <field name="model">hr.work.entry</field>
         <field name="arch" type="xml">
             <search string="Search Work Entry">
+
                 <field name="employee_id"/>
                 <field name="department_id"/>
                 <field name="work_entry_type_id"/>
@@ -137,6 +134,10 @@
                 <filter name="group_start_date" string="Start Date" context="{'group_by': 'date_start'}"/>
                 <separator/>
                 <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                                <searchpanel view_types="calendar,list">
+                    <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
+                    <field name="employee_id" icon="fa-users"/>
+                </searchpanel>
             </search>
         </field>
     </record>
