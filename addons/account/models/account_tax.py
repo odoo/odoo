@@ -2,6 +2,7 @@
 from odoo import api, fields, models, _, Command
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Domain
 from odoo.tools import frozendict, groupby, html2plaintext, is_html_empty, split_every
 from odoo.tools.float_utils import float_repr, float_round, float_compare
 from odoo.tools.misc import clean_context, formatLang
@@ -483,13 +484,11 @@ class AccountTax(models.Model):
         Intercept the search on `name` to allow searching more freely on taxes
         when using `like` or `ilike`.
         """
-        def preprocess_name_search(leaf):
-            match leaf:
-                case ('name', 'ilike' | 'like' as operator, str() as value):
-                    return ('name', operator, AccountTax._parse_name_search(value))
-                case _:
-                    return leaf
-        domain = [preprocess_name_search(leaf) for leaf in domain]
+        def preprocess_name(cond):
+            if cond.field_expr == 'name' and cond.operator in ('like', 'ilike') and isinstance(cond.value, str):
+                return Domain('name', cond.operator, AccountTax._parse_name_search(cond.value))
+            return cond
+        domain = Domain(domain).map_conditions(preprocess_name)
         return super()._search(domain, offset, limit, order)
 
     def _search_name(self, operator, value):
