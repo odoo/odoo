@@ -56,6 +56,14 @@
                     <field string="Purchases" name="purchase_order_count" widget="statinfo" invisible="purchase_order_count == 1"/>
                 </button>
             </xpath>
+            <header position="after">
+                <div class="alert alert-warning" role="alert" invisible="not purchase_warning_text or move_type != 'in_invoice'">
+                    <field name="purchase_warning_text" class="fw-bold"/>
+                </div>
+            </header>
+            <list name="journal_items" position="attributes">
+                <attribute name="decoration-warning" add="(purchase_line_warn_msg and move_type == 'in_invoice')" separator=" or "/>
+            </list>
         </field>
     </record>
 </odoo>
