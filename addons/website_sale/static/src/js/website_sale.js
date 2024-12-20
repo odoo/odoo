@@ -15,7 +15,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         'click .a-submit': '_onClickSubmit',
         'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute',
         'submit .o_wsale_products_searchbar_form': '_onSubmitSaleSearch',
-        'click #add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit': '_onClickAdd',
+//        'click #add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit': '_onClickAdd',
         'click input.js_product_change': 'onChangeVariant',
         'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
         'click .o_product_page_reviews_link': '_onClickReviewsLink',
