@@ -16,7 +16,7 @@
 @mixin form-break-table() {
     --fieldWidget-margin-bottom: 0;
 
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     margin-bottom: $o-form-spacing-unit * 4;
 
     .o_cell {
