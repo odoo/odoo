@@ -11,6 +11,7 @@ from werkzeug.exceptions import BadRequest, NotFound, Unauthorized
 from odoo import _, fields, http, tools
 from odoo.http import request, Response
 from odoo.tools import consteq
+from odoo.tools.mail import is_html_empty
 
 
 class MassMailController(http.Controller):
@@ -123,15 +124,11 @@ class MassMailController(http.Controller):
         mailing.contact_list_ids._update_subscription_from_email(email, opt_out=True)
         # compute name of unsubscribed list: hide non public lists
         if all(not mlist.is_public for mlist in mailing.contact_list_ids):
-            lists_unsubscribed_name = _('You are no longer part of our mailing list(s).')
+            lists_unsubscribed_name = False
         elif len(mailing.contact_list_ids) == 1:
-            lists_unsubscribed_name = _('You are no longer part of the %(mailing_name)s mailing list.',
-                                        mailing_name=mailing.contact_list_ids.name)
+            lists_unsubscribed_name = mailing.contact_list_ids.name
         else:
-            lists_unsubscribed_name = _(
-                'You are no longer part of the %(mailing_names)s mailing list.',
-                mailing_names=', '.join(mlist.name for mlist in mailing.contact_list_ids if mlist.is_public)
-            )
+            lists_unsubscribed_name = ', '.join(mlist.name for mlist in mailing.contact_list_ids if mlist.is_public)
 
         return request.render(
             'mass_mailing.page_mailing_unsubscribe',
@@ -140,6 +137,7 @@ class MassMailController(http.Controller):
                     mailing, document_id, email, hash_token
                 ),
                 last_action='subscription_updated',
+                unsubscribed=True,
                 unsubscribed_name=lists_unsubscribed_name,
             )
         )
@@ -164,7 +162,7 @@ class MassMailController(http.Controller):
                     mailing, document_id, email, hash_token
                 ),
                 last_action='blocklist_add',
-                unsubscribed_name=_('You are no longer part of our services and will not be contacted again.'),
+                unsubscribed_message=_('You are no longer part of our services and will not be contacted again.'),
             )
         )
 
@@ -210,23 +208,27 @@ class MassMailController(http.Controller):
             'blocklist_enabled': bool(
                 request.env['ir.config_parameter'].sudo().get_param(
                     'mass_mailing.show_blacklist_buttons',
-                    default=True,
+                    default=False,  # If the param is unchecked, it is removed, so set default to False.
                 )
             ),
             'blocklist_possible': mail_blocklist is not None,
             'is_blocklisted': mail_blocklist.active if mail_blocklist else False,
             # mailing lists
             'contacts': contacts,
-            'lists_contacts': contacts.subscription_ids.list_id.filtered('active'),
             'lists_optin': lists_optin,
             'lists_optout': lists_optout,
             'lists_public': lists_public,
+            # display
+            'is_html_empty': is_html_empty,
+            'lists_optin_public': lists_optin.filtered('is_public'),
+            'lists_optout_public': lists_optout.filtered('is_public'),
+            'show_subscription_form': any(mlist.is_public for mlist in lists_optin + lists_optout) or lists_public,
         }
 
     @http.route('/mailing/list/update', type='jsonrpc', auth='public', csrf=True)
     def mailing_update_list_subscription(self, mailing_id=None, document_id=None,
                                          email=None, hash_token=None,
-                                         lists_optin_ids=None, **post):
+                                         lists_optin_ids=None, opt_out_reason_id=None, **post):
         email_found, hash_token_found = self._fetch_user_information(email, hash_token)
         try:
             _mailing_sudo = self._check_mailing_email_token(
@@ -240,10 +242,14 @@ class MassMailController(http.Controller):
 
         contacts = self._fetch_contacts(email_found)
         lists_optin = request.env['mailing.list'].sudo().browse(lists_optin_ids or []).exists()
-        # opt-out all not chosen lists
-        lists_to_optout = contacts.subscription_ids.filtered(
-            lambda sub: not sub.opt_out and sub.list_id not in lists_optin
-        ).list_id
+        lists_optin_private = contacts.subscription_ids.filtered(
+            lambda sub: not sub.opt_out and not sub.list_id.is_public
+        ).mapped("list_id")
+        # opt-out all not chosen lists (except hidden lists)
+        subscriptions_to_optout = contacts.subscription_ids.filtered(
+            lambda sub: not sub.opt_out and sub.list_id not in (lists_optin + lists_optin_private)
+        )
+        lists_to_optout = subscriptions_to_optout.list_id
         # opt-in in either already member, either public (to avoid trying to opt-in
         # in private lists)
         lists_to_optin = lists_optin.filtered(
@@ -251,6 +257,9 @@ class MassMailController(http.Controller):
         )
         lists_to_optout._update_subscription_from_email(email_found, opt_out=True)
         lists_to_optin._update_subscription_from_email(email_found, opt_out=False)
+
+        if subscriptions_to_optout and opt_out_reason_id:
+            subscriptions_to_optout.opt_out_reason_id = opt_out_reason_id
 
         return len(lists_to_optout)
 
