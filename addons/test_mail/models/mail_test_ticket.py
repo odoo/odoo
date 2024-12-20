@@ -39,9 +39,8 @@ class MailTestTicket(models.Model):
             } for record in self
         }
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
-        """ Activate more groups to test query counters notably (and be backward
-        compatible for tests). """
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
+        # Activate more groups to test query counters notably (and be backward compatible for tests)
         groups = super()._notify_get_recipients_groups(
             message, model_description, msg_vals=msg_vals
         )
@@ -188,9 +187,8 @@ class MailTestContainer(models.Model):
             } for record in self
         }
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
-        """ Activate more groups to test query counters notably (and be backward
-        compatible for tests). """
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
+        # Activate more groups to test query counters notably (and be backward compatible for tests)
         groups = super()._notify_get_recipients_groups(
             message, model_description, msg_vals=msg_vals
         )
