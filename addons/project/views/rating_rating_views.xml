@@ -145,7 +145,7 @@
                 </filter>
             </xpath>
             <xpath expr="//filter[@name='month']" position="attributes">
-                <attribute name="context">{'group_by':'write_date:month'}</attribute>
+                <attribute name="context" operation="update">{'group_by':'write_date:month'}</attribute>
             </xpath>
         </field>
     </record>

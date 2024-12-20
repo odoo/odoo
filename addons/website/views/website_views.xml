@@ -180,7 +180,7 @@
             <field name="inherit_id" ref="base.reset_view_arch_wizard_view"/>
             <field name="arch" type="xml">
                 <field name="compare_view_id" position="attributes">
-                    <attribute name="context">{'display_website': True}</attribute>
+                    <attribute name="context" operation="update">{'display_website': True}</attribute>
                 </field>
             </field>
         </record>

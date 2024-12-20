@@ -26,7 +26,7 @@
                 </div>
             </xpath>
             <xpath expr="//field[@name='tag_ids']" position="attributes">
-                <attribute name="context">{'default_website_id': website_id}</attribute>
+                <attribute name="context" operation="update">{'default_website_id': website_id}</attribute>
                 <attribute name="groups">website.group_multi_website</attribute>
             </xpath>
             <xpath expr="//button[@name='%(event.event_registration_action_stats_from_event)d']" position="before">
