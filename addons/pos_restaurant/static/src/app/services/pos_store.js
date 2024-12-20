@@ -1,25 +1,11 @@
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
-import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
-import { FloorScreen } from "@pos_restaurant/app/screens/floor_screen/floor_screen";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { EditOrderNamePopup } from "@pos_restaurant/app/popup/edit_order_name_popup/edit_order_name_popup";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
 import { TipScreen } from "../screens/tip_screen/tip_screen";
-
-const NON_IDLE_EVENTS = [
-    "mousemove",
-    "mousedown",
-    "touchstart",
-    "touchend",
-    "touchmove",
-    "click",
-    "scroll",
-    "keypress",
-];
-let IDLE_TIMER_SETTER;
 
 patch(PosStore.prototype, {
     /**
@@ -30,6 +16,18 @@ patch(PosStore.prototype, {
         this.tableSyncing = false;
         this.tableSelectorState = false;
         await super.setup(...arguments);
+    },
+    get idleTimeout() {
+        return [
+            ...super.idleTimeout,
+            {
+                timeout: 180000, // 3 minutes
+                action: () =>
+                    this.config.module_pos_restaurant &&
+                    this.mainScreen.component.name !== "PaymentScreen" &&
+                    this.showScreen("FloorScreen"),
+            },
+        ];
     },
     get firstScreen() {
         const screen = super.firstScreen;
@@ -234,38 +232,6 @@ patch(PosStore.prototype, {
     get selectedTable() {
         return this.getOrder()?.table_id;
     },
-    setActivityListeners() {
-        IDLE_TIMER_SETTER = this.setIdleTimer.bind(this);
-        for (const event of NON_IDLE_EVENTS) {
-            window.addEventListener(event, IDLE_TIMER_SETTER);
-        }
-    },
-    setIdleTimer() {
-        clearTimeout(this.idleTimer);
-        if (this.shouldResetIdleTimer()) {
-            this.idleTimer = setTimeout(() => this.actionAfterIdle(), 180000);
-        }
-    },
-    async actionAfterIdle() {
-        if (!document.querySelector(".modal-open")) {
-            const order = this.getOrder();
-            if (order && order.getScreenData().name === "ReceiptScreen") {
-                // When the order is finalized, we can safely remove it from the memory
-                // We check that it's in ReceiptScreen because we want to keep the order if it's in a tipping state
-                this.removeOrder(order);
-            }
-            this.showScreen(this.defaultScreen);
-        }
-    },
-    shouldResetIdleTimer() {
-        const stayPaymentScreen =
-            this.mainScreen.component === PaymentScreen && this.getOrder().payment_ids.length > 0;
-        return (
-            this.config.module_pos_restaurant &&
-            !stayPaymentScreen &&
-            this.mainScreen.component !== FloorScreen
-        );
-    },
     showScreen(screenName, props = {}, newOrder = false) {
         const order = this.getOrder();
         if (
@@ -277,9 +243,6 @@ patch(PosStore.prototype, {
             this.removeOrder(order);
         }
         super.showScreen(...arguments);
-        if (this.screenName != this.defaultScreen) {
-            this.setIdleTimer();
-        }
     },
     closeScreen() {
         if (this.config.module_pos_restaurant && !this.getOrder()) {
@@ -295,25 +258,11 @@ patch(PosStore.prototype, {
             return super.addOrderIfEmpty(...arguments);
         }
     },
-    /**
-     * @override
-     * Before closing pos, we remove the event listeners set on window
-     * for detecting activities outside FloorScreen.
-     */
-    async closePos() {
-        if (IDLE_TIMER_SETTER) {
-            for (const event of NON_IDLE_EVENTS) {
-                window.removeEventListener(event, IDLE_TIMER_SETTER);
-            }
-        }
-        return super.closePos(...arguments);
-    },
     //@override
     async afterProcessServerData() {
         this.floorPlanStyle =
             localStorage.getItem("floorPlanStyle") || (this.ui.isSmall ? "kanban" : "default");
         if (this.config.module_pos_restaurant) {
-            this.setActivityListeners();
             this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
             this.bus.subscribe("SYNC_ORDERS", this.wsSyncTableCount.bind(this));
         }
