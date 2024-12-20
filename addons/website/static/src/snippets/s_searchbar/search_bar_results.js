@@ -14,9 +14,7 @@ export class SearchBarResults extends Interaction {
             "t-att-style": () => {
                 const bcr = this.el.closest(".o_searchbar_form").getBoundingClientRect();
                 return {
-                    "position": "fixed !important",
-                    "top": `${bcr.bottom}px !important`,
-                    "left": `${bcr.left}px !important`,
+                    "position": "absolute !important",
                     "max-width": `${bcr.width}px !important`,
                     "max-height": `${document.body.clientHeight - bcr.bottom - 16}px !important`,
                     "min-width": this.autocompleteMinWidth,
@@ -30,10 +28,10 @@ export class SearchBarResults extends Interaction {
             "t-att-data-bs-popper": () => this.isDropup ? "" : undefined,
         },
         _window: {
-            "t-on-resize": () => {}, // Re-apply _root:t-att-style.
+            "t-on-resize": () => { }, // Re-apply _root:t-att-style.
         },
         _scrollingParent: {
-            "t-on-scroll": () => {}, // Re-apply _root:t-att-style.
+            "t-on-scroll": () => { }, // Re-apply _root:t-att-style.
         },
         ".dropdown-item": {
             "t-on-mousedown": this.onMousedown,
@@ -94,14 +92,14 @@ export class SearchBarResults extends Interaction {
         // to get around that behavior to avoid onFocusOut() from triggering
         // render(), as this would prevent the click from working.
         if (isBrowserSafari) {
-            this.searchBarEl.dispatchEvent(new CustomEvent('safarihack', {detail: {linkHasFocus: true}}));
+            this.searchBarEl.dispatchEvent(new CustomEvent('safarihack', { detail: { linkHasFocus: true } }));
         }
     }
 
     onMouseup(ev) {
         // See comment in onMousedown.
         if (isBrowserSafari) {
-            this.searchBarEl.dispatchEvent(new CustomEvent('safarihack', {detail: {linkHasFocus: false}}));
+            this.searchBarEl.dispatchEvent(new CustomEvent('safarihack', { detail: { linkHasFocus: false } }));
         }
     }
 
