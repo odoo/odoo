@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import {
     isColorGradient,
-    rgbToHex,
+    rgbaToHex,
     hasColor,
     hasAnyNodesColor,
     TEXT_CLASSES_REGEX,
@@ -120,9 +120,9 @@ export class ColorPlugin extends Plugin {
         }
 
         this.selectedColors.color =
-            hasGradient && hasTextGradientClass ? backgroundImage : rgbToHex(elStyle.color);
+            hasGradient && hasTextGradientClass ? backgroundImage : rgbaToHex(elStyle.color);
         this.selectedColors.backgroundColor =
-            hasGradient && !hasTextGradientClass ? backgroundImage : rgbToHex(backgroundColor);
+            hasGradient && !hasTextGradientClass ? backgroundImage : rgbaToHex(backgroundColor);
     }
 
     /**
@@ -233,14 +233,14 @@ export class ColorPlugin extends Plugin {
             }
         }
 
-        const hexColor = rgbToHex(color).toLowerCase();
+        const hexColor = rgbaToHex(color).toLowerCase();
         const selectedNodes = selectionNodes.filter((node) => {
             if (mode === "backgroundColor" && color) {
                 return !closestElement(node, "table.o_selected_table");
             }
             const li = closestElement(node, "li");
             if (li && color && this.dependencies.selection.isNodeContentsFullySelected(li)) {
-                return rgbToHex(li.style.color).toLowerCase() !== hexColor;
+                return rgbaToHex(li.style.color).toLowerCase() !== hexColor;
             }
             return true;
         });
@@ -394,7 +394,7 @@ export class ColorPlugin extends Plugin {
         const usedCustomColors = new Set();
         for (const font of allFont) {
             if (isCSSColor(font.style[mode])) {
-                usedCustomColors.add(rgbToHex(font.style[mode]));
+                usedCustomColors.add(rgbaToHex(font.style[mode]));
             }
         }
         return usedCustomColors;
