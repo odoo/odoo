@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ScreenSaver">
+        <t t-if="this.timer.idle">
+            <div class="position-absolute fixed-top w-100 h-100 z-2" style="backdrop-filter: blur(30px)" />
+            <div class="position-absolute h-100 w-100 screen-login z-3 flex-grow-1 d-flex flex-column top-0">
+                <div class="login-body d-flex flex-column flex-md-row gap-3 m-auto">
+                    <img t-att-height="env.isSmall ? 40 : 182" src="/point_of_sale/static/src/img/logo_color.png" alt="Logo"/>
+                </div>
+            </div>
+            <div class="position-absolute top-0 p-5 z-3">
+                <div class="screen-login-header d-flex" t-attf-class="{{ env.isSmall ? 'justify-content-center' : 'justify-content-between'}}">
+                    <div class="screen-login-timer d-flex align-items-center gap-2 bg-transparent">
+                        <div class="timer-hours fs-1" t-esc="time.hours" />
+                        <div class="timer-date-container d-flex flex-column smaller">
+                            <div class="timer-day" t-esc="time.day" />
+                            <div class="timer-date" t-esc="time.date" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>
