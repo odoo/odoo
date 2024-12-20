@@ -67,6 +67,7 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
         self.url_open(domain_1 + '/web')
         check_asset()
 
+<<<<<<< 17.0
     def test_02_t_cache_invalidation(self):
         self.authenticate(None, None)
         page = self.url_open('/').text # add to cache
@@ -273,3 +274,37 @@ class TestWebAssets(odoo.tests.HttpCase):
         })
         with mute_logger('odoo.addons.base.models.assetsbundle'):
             self.start_tour('/', 'css_error_tour_frontend', login='admin')
+||||||| 185012b275c768d9bd3acf9d7574b4550b7040c7
+=======
+    def test_02_multi_domain_assets_generation(self):
+        # Create an additional website to ensure it works in multi-website setup
+        website2 = self.env['website'].create({'name': 'Second Website'})
+
+        self.authenticate('admin', 'admin')
+        # Edit one of the website to force assets to be different
+        self.env['web_editor.assets'].with_context(website_id=1).make_scss_customization(
+            '/website/static/src/scss/options/colors/user_color_palette.scss',
+            {"o-cc1-bg": "'400'"},
+        )
+
+        def get_backend_asset_attach():
+            return self.env['ir.attachment'].search([('name', '=', 'web.assets_backend.min.js')])
+
+        self.url_open('/website/force/1')
+        self.url_open('/web')
+        asset_website1 = get_backend_asset_attach().filtered(lambda r: r.website_id.id == 1)
+        self.assertIn(1, get_backend_asset_attach().mapped('website_id').ids)
+        self.url_open('/website/force/%s' % website2.id)
+        self.url_open('/web')
+        asset_website2 = get_backend_asset_attach().filtered(lambda r: r.website_id.id == website2.id)
+        self.assertIn(1, get_backend_asset_attach().mapped('website_id').ids)
+        self.assertIn(website2.id, get_backend_asset_attach().mapped('website_id').ids)
+        self.url_open('/website/force/1')
+        self.url_open('/web')
+        self.assertIn(1, get_backend_asset_attach().mapped('website_id').ids)
+        self.assertIn(website2.id, get_backend_asset_attach().mapped('website_id').ids)
+        self.url_open('/website/force/%s' % website2.id)
+        self.url_open('/web')
+        self.assertEqual(asset_website1, get_backend_asset_attach().filtered(lambda r: r.website_id.id == 1))
+        self.assertEqual(asset_website2, get_backend_asset_attach().filtered(lambda r: r.website_id.id == website2.id))
+>>>>>>> 5c89f86d6a4235b03f38022986f6b0ee2c39a58c
