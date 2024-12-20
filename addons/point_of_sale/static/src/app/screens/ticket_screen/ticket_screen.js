@@ -17,7 +17,8 @@ import {
     BACKSPACE,
     Numpad,
     getButtons,
-    DEFAULT_LAST_ROW,
+    ZERO,
+    DECIMAL,
 } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { PosOrderLineRefund } from "@point_of_sale/app/models/pos_order_line_refund";
 import { fuzzyLookup } from "@web/core/utils/search";
@@ -93,12 +94,15 @@ export class TicketScreen extends Component {
         }
     }
     getNumpadButtons() {
-        return getButtons(DEFAULT_LAST_ROW, [
-            { value: "quantity", text: _t("Qty"), class: "active border-primary" },
-            { value: "discount", text: _t("% Disc"), disabled: true },
-            { value: "price", text: _t("Price"), disabled: true },
-            BACKSPACE,
-        ]);
+        return getButtons(
+            [{ value: "-", text: "+/-", disabled: true }, ZERO, DECIMAL],
+            [
+                { value: "quantity", text: _t("Qty"), class: "active border-primary" },
+                { value: "discount", text: _t("% Disc"), disabled: true },
+                { value: "price", text: _t("Price"), disabled: true },
+                BACKSPACE,
+            ]
+        );
     }
     async onSearch(search) {
         this.state.search = search;
