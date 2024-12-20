@@ -2,17 +2,25 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-from odoo import fields, models, api, _
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
 class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
-    aba_routing = fields.Char(string="ABA/Routing", help="American Bankers Association Routing Number")
+    show_aba_routing = fields.Boolean(compute="_compute_show_aba_routing")
 
-    @api.constrains('aba_routing')
-    def _check_aba_routing(self):
+    @api.depends('country_code', 'acc_type')
+    def _compute_show_aba_routing(self):
         for bank in self:
-            if bank.aba_routing and not re.match(r'^\d{1,9}$', bank.aba_routing):
+            if bank.country_code == 'US' and bank.acc_type != 'iban':
+                bank.show_aba_routing = True
+            else:
+                bank.show_aba_routing = False
+
+    @api.constrains('clearing_number')
+    def _check_clearing_number_us(self):
+        for bank in self:
+            if bank.country_code == 'US' and bank.clearing_number and not re.match(r'^\d{1,9}$', bank.clearing_number):
                 raise ValidationError(_('ABA/Routing should only contains numbers (maximum 9 digits).'))
