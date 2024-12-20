@@ -46,8 +46,11 @@ registry.category("web_tour.tours").add('forum_question', {
         trigger: '#wrap:has(.fa-star)',
     },
     {
+        trigger: ".o_wforum_question:contains(marc demo)",
+    },
+    {
         content: "Close modal once modal animation is done.",
-        trigger: ".modal .modal-header button.btn-close",
+        trigger: ".modal:contains(thanks for posting!) .modal-header button.btn-close",
         run: "click",
     },
     {
