@@ -420,7 +420,6 @@ class PosConfig(models.Model):
         if ('is_order_printer' in vals and not vals['is_order_printer']):
             vals['printer_ids'] = [fields.Command.clear()]
 
-        bypass_categories_forbidden_change = self.env.context.get('bypass_categories_forbidden_change', False)
         bypass_payment_method_ids_forbidden_change = self.env.context.get('bypass_payment_method_ids_forbidden_change', False)
 
         self._preprocess_x2many_vals_from_settings_view(vals)
@@ -430,45 +429,22 @@ class PosConfig(models.Model):
             forbidden_fields = []
             for key in self._get_forbidden_change_fields():
                 if key in vals.keys():
-                    if bypass_categories_forbidden_change and key in ('limit_categories', 'iface_available_categ_ids'):
-                        continue
                     if bypass_payment_method_ids_forbidden_change and key == 'payment_method_ids':
                         continue
-                    if key == 'use_pricelist' and vals[key]:
-                        continue
-                    if key == 'available_pricelist_ids':
-                        will_unlink_a_pricelist = \
-                            (
-                                (not isinstance(vals[key], list) or len(vals[key]) == 0)
-                                and self.available_pricelist_ids
-                            ) or (
-                                isinstance(vals[key], list) and any(
-                                    (
-                                        len(cmd) >= 1
-                                        and cmd[0] == Command.CLEAR
-                                        and self.available_pricelist_ids
-                                    ) or (
-                                        len(cmd) >= 2
-                                        and cmd[0] in {Command.UNLINK, Command.DELETE}
-                                        and cmd[1] in self.available_pricelist_ids.ids
-                                    ) or (
-                                        len(cmd) == 3
-                                        and cmd[0] == Command.SET
-                                        and set(self.available_pricelist_ids.ids) - set(cmd[2])
-                                    )
-                                    for cmd in vals[key]
-                                )
-                            )
-
-                        if not will_unlink_a_pricelist:
-                            continue
                     field_name = self._fields[key].get_description(self.env)["string"]
                     forbidden_fields.append(field_name)
+
             if len(forbidden_fields) > 0:
                 raise UserError(_(
                     "Unable to modify this PoS Configuration because you can't modify %s while a session is open.",
                     ", ".join(forbidden_fields)
                 ))
+
+            sessions_sync_required = any(key in vals for key in self._get_session_sync_required_fields())
+            if sessions_sync_required:
+                for session in opened_session:
+                    session.sync_required = True
+
 
         result = super(PosConfig, self).write(vals)
 
@@ -532,10 +508,12 @@ class PosConfig(models.Model):
         return new_vals
 
     def _get_forbidden_change_fields(self):
-        forbidden_keys = ['module_pos_hr', 'module_pos_restaurant', 'available_pricelist_ids',
-                          'limit_categories', 'iface_available_categ_ids', 'use_pricelist', 'module_pos_discount',
-                          'payment_method_ids', 'iface_tipproduct', 'use_presets', 'default_preset_id']
-        return forbidden_keys
+        return ['module_pos_restaurant', 'payment_method_ids', 'use_presets', 'default_preset_id']
+
+    def _get_session_sync_required_fields(self):
+        # The opened sessions must be refreshed if any of their fields are modified
+        return ['module_pos_hr', 'available_pricelist_ids', 'limit_categories', 'iface_available_categ_ids',
+                'use_pricelist', 'module_pos_discount', 'iface_tipproduct', 'default_preset_id']
 
     def unlink(self):
         # Delete the pos.config records first then delete the sequences linked to them
