@@ -174,6 +174,8 @@ class Task(models.Model):
         graph_view_id = self.env.ref("hr_timesheet.view_hr_timesheet_line_graph_by_employee").id
         new_views = []
         for view in action['views']:
+            if self.env.context.get('is_project_sharing', False) and view[1] not in ['tree', 'kanban', 'form']:
+                continue
             if not is_internal_user:
                 if view[1] == 'tree':
                     tree_view_id = self.env['ir.model.data']._xmlid_to_res_id('hr_timesheet.hr_timesheet_line_portal_tree')
