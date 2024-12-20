@@ -57,7 +57,7 @@ class SaleOrder(models.Model):
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
         tasks_per_so = self.env['project.task']._read_group(
-            domain=['&', ('display_project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids)],
+            domain=self._tasks_ids_domain(),
             fields=['sale_order_id', 'ids:array_agg(id)'],
             groupby=['sale_order_id'],
         )
@@ -147,9 +147,12 @@ class SaleOrder(models.Model):
                 action['views'] = [(form_view_id, 'form')]
                 action['res_id'] = self.tasks_ids.id
         # filter on the task of the current SO
-        action['domain'] = [('id', 'in', self.tasks_ids.ids)]
+        action['domain'] = self._tasks_ids_domain()
         action.setdefault('context', {})
         return action
+
+    def _tasks_ids_domain(self):
+        return ['&', ('display_project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids)]
 
     def action_view_project_ids(self):
         self.ensure_one()
