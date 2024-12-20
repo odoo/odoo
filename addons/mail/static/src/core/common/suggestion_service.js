@@ -19,15 +19,15 @@ export class SuggestionService {
         return [["@"], ["#"], [":"]];
     }
 
-    async fetchSuggestions({ delimiter, term }, { thread } = {}) {
+    async fetchSuggestions({ delimiter, term }, { thread, abortSignal } = {}) {
         const cleanedSearchTerm = cleanTerm(term);
         switch (delimiter) {
             case "@": {
-                await this.fetchPartners(cleanedSearchTerm, thread);
+                await this.fetchPartners(cleanedSearchTerm, thread, { abortSignal });
                 break;
             }
             case "#":
-                await this.fetchThreads(cleanedSearchTerm);
+                await this.fetchThreads(cleanedSearchTerm, { abortSignal });
                 break;
             case ":":
                 await this.store.cannedReponses.fetch();
@@ -36,21 +36,49 @@ export class SuggestionService {
     }
 
     /**
+     * Make an ORM call with a cancellable signal. Usefull to abort fetch
+     * requests from outside of the suggestion service.
+     *
+     * @param {String} model
+     * @param {String} method
+     * @param {Array} args
+     * @param {Object} kwargs
+     * @param {Object} options
+     * @param {AbortSignal} options.abortSignal
+     */
+    makeOrmCall(model, method, args, kwargs, { abortSignal } = {}) {
+        return new Promise((res, rej) => {
+            const req = this.orm.silent.call(model, method, args, kwargs);
+            const onAbort = () => {
+                try {
+                    req.abort();
+                } catch (e) {
+                    rej(e);
+                }
+            };
+            abortSignal?.addEventListener("abort", onAbort);
+            req.then(res)
+                .catch(rej)
+                .finally(() => abortSignal?.removeEventListener("abort", onAbort));
+        });
+    }
+    /**
      * @param {string} term
      * @param {import("models").Thread} [thread]
      */
-    async fetchPartners(term, thread) {
+    async fetchPartners(term, thread, { abortSignal } = {}) {
         const kwargs = { search: term };
         if (thread?.model === "discuss.channel") {
             kwargs.channel_id = thread.id;
         }
-        const data = await this.orm.silent.call(
+        const data = await this.makeOrmCall(
             "res.partner",
             thread?.model === "discuss.channel"
                 ? "get_mention_suggestions_from_channel"
                 : "get_mention_suggestions",
             [],
-            kwargs
+            kwargs,
+            { abortSignal }
         );
         this.store.insert(data);
     }
@@ -58,21 +86,20 @@ export class SuggestionService {
     /**
      * @param {string} term
      */
-    async fetchThreads(term) {
-        const suggestedThreads = await this.orm.silent.call(
+    async fetchThreads(term, { abortSignal } = {}) {
+        const suggestedThreads = await this.makeOrmCall(
             "discuss.channel",
             "get_mention_suggestions",
             [],
-            { search: term }
+            { search: term },
+            { abortSignal }
         );
         this.store.Thread.insert(suggestedThreads);
     }
 
     searchCannedResponseSuggestions(cleanedSearchTerm, sort) {
         const cannedResponses = Object.values(this.store["mail.canned.response"].records).filter(
-            (cannedResponse) => {
-                return cleanTerm(cannedResponse.source).includes(cleanedSearchTerm);
-            }
+            (cannedResponse) => cleanTerm(cannedResponse.source).includes(cleanedSearchTerm)
         );
         const sortFunc = (c1, c2) => {
             const cleanedName1 = cleanTerm(c1.source);

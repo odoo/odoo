@@ -519,7 +519,7 @@ test("Mention a partner with special character (e.g. apostrophe ')", async () =>
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "Pyn");
-    await click(".o-mail-Composer-suggestion");
+    await click(".o-mail-Composer-suggestion", { text: "Pynya's spokesman" });
     await contains(".o-mail-Composer-input", { value: "@Pynya's spokesman " });
     await press("Enter");
     await contains(
