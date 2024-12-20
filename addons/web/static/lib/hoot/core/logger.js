@@ -155,7 +155,7 @@ export const logger = {
         $log(
             ...styledArguments([
                 `Test ${stringify(fullName)} passed`,
-                lastResults.assertions.length,
+                lastResults.counts.assertion,
                 `assertions (time: ${formatTime(lastResults.duration)})`,
             ])
         );

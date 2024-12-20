@@ -64,7 +64,6 @@ defineActions([
         xml_id: "action_1",
         name: "Partners Action 1",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [[1, "kanban"]],
     },
     {
@@ -72,7 +71,6 @@ defineActions([
         xml_id: "action_4",
         name: "Partners Action 4",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [
             [1, "kanban"],
             [2, "list"],
@@ -85,7 +83,6 @@ defineActions([
         name: "Create a Partner",
         res_model: "partner",
         target: "new",
-        type: "ir.actions.act_window",
         views: [[false, "form"]],
     },
     {
@@ -93,7 +90,6 @@ defineActions([
         name: "Partners Action Fullscreen",
         res_model: "partner",
         target: "fullscreen",
-        type: "ir.actions.act_window",
         views: [[1, "kanban"]],
     },
 ]);
@@ -179,23 +175,24 @@ describe("new", () => {
                 </form>`,
             "search,false": "<search></search>",
         };
-        defineActions([
-            {
-                id: 4,
-                name: "Partners Action 4",
-                res_model: "partner",
-                type: "ir.actions.act_window",
-                views: [[false, "form"]],
-            },
-            {
-                id: 5,
-                name: "Create a Partner",
-                res_model: "partner",
-                target: "new",
-                type: "ir.actions.act_window",
-                views: [[17, "form"]],
-            },
-        ]);
+        defineActions(
+            [
+                {
+                    id: 4,
+                    name: "Partners Action 4",
+                    res_model: "partner",
+                    views: [[false, "form"]],
+                },
+                {
+                    id: 5,
+                    name: "Create a Partner",
+                    res_model: "partner",
+                    target: "new",
+                    views: [[17, "form"]],
+                },
+            ],
+            { mode: "replace" }
+        );
 
         onRpc("/web/dataset/call_button/*", async (request) => {
             const { params } = await request.json();
@@ -242,7 +239,6 @@ describe("new", () => {
                 id: 4,
                 name: "Partners Action 4",
                 res_model: "partner",
-                type: "ir.actions.act_window",
                 views: [[false, "form"]],
             },
             {
@@ -250,7 +246,6 @@ describe("new", () => {
                 name: "Create a Partner",
                 res_model: "partner",
                 target: "new",
-                type: "ir.actions.act_window",
                 views: [[17, "form"]],
             },
         ]);
@@ -286,7 +281,6 @@ describe("new", () => {
                 name: "Create a Partner",
                 res_model: "partner",
                 target: "new",
-                type: "ir.actions.act_window",
                 views: [[3, "form"]],
             },
         ]);
@@ -327,7 +321,6 @@ describe("new", () => {
                 name: "A window action",
                 res_model: "partner",
                 target: "new",
-                type: "ir.actions.act_window",
                 views: [[999, "form"]],
             },
         ]);
@@ -585,7 +578,6 @@ describe("fullscreen", () => {
                 res_id: 2,
                 res_model: "partner",
                 target: "current",
-                type: "ir.actions.act_window",
                 views: [[false, "form"]],
             },
         ]);
@@ -617,7 +609,6 @@ describe("fullscreen", () => {
                 res_id: 2,
                 res_model: "partner",
                 target: "fullscreen",
-                type: "ir.actions.act_window",
                 views: [[false, "form"]],
             },
         ]);
@@ -649,7 +640,6 @@ describe("fullscreen", () => {
                 res_id: 2,
                 res_model: "partner",
                 target: "current",
-                type: "ir.actions.act_window",
                 views: [[false, "form"]],
             },
             {
@@ -657,7 +647,6 @@ describe("fullscreen", () => {
                 name: "Partner",
                 res_id: 2,
                 res_model: "partner",
-                type: "ir.actions.act_window",
                 views: [[666, "form"]],
             },
         ]);

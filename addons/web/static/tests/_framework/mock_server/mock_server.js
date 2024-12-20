@@ -18,7 +18,10 @@ import {
 const { DateTime } = luxon;
 
 /**
- * @typedef {Record<string, any>} ActionDefinition
+ * @typedef {{
+ *  type: string;
+ *  [key: string]: any;
+ * }} ActionDefinition
  *
  * @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr
  *
@@ -76,6 +79,11 @@ const { DateTime } = luxon;
  * @typedef {string | Iterable<string> | RegExp} StringMatcher
  *
  * @typedef {(string | RegExp)[]} StringMatchers
+ */
+
+/**
+ * @template T
+ * @typedef {{ mode?: "add" | "replace" = T; }} DefineOptions
  */
 
 /**
@@ -147,6 +155,26 @@ const deepCopy = (object) => {
  */
 const ensureError = (error) => (error instanceof Error ? error : new Error(error));
 
+/**
+ * @param {DefineOptions<"replace">} [options]
+ */
+const getAssignAction = (options) => {
+    const shouldAdd = options?.mode === "add";
+    return function assign(target, key, value) {
+        if (shouldAdd && isObject(target[key])) {
+            // Add value
+            if (Array.isArray(target[key])) {
+                target[key].push(...value);
+            } else {
+                Object.assign(target[key], value);
+            }
+        } else {
+            // Replace value
+            target[key] = value;
+        }
+    };
+};
+
 const getCurrentMockServer = () => {
     const { test } = getCurrent();
     if (!test || !test.run) {
@@ -164,8 +192,7 @@ const getCurrentParams = createJobScopedGetter(
      */
     (previous) => ({
         ...previous,
-        actions: deepCopy(previous?.actions || {}),
-        embeddedActions: deepCopy(previous?.embeddedActions || []),
+        actions: deepCopy(previous?.actions || []),
         menus: deepCopy(previous?.menus || [DEFAULT_MENU]),
         models: [...(previous?.models || [])], // own instance getters, no need to deep copy
         routes: [...(previous?.routes || [])], // functions, no need to deep copy
@@ -199,6 +226,14 @@ const modelNotFoundError = (modelName, consequence) => {
     message += ` (did you forget to use \`defineModels()?\`)`;
     return new MockServerError(message);
 };
+
+/**
+ * @param {Record<string, string> | Iterable<{ id: string, string: string }>} translations
+ */
+const parseTranslations = (translations) =>
+    isIterable(translations)
+        ? translations
+        : Object.entries(translations).map(([id, string]) => ({ id, string }));
 
 /**
  * @param {unknown} value
@@ -252,6 +287,19 @@ class MockServerBaseEnvironment {
     }
 }
 
+const ACTION_IDENTIFIERS = ["id", "xml_id", "path"];
+const ACTION_TYPES = {
+    actions: "ir.actions.actions",
+    client: "ir.actions.client",
+    close: "ir.actions.act_window_close",
+    embedded: "ir.embedded.actions",
+    report: "ir.actions.report",
+    server: "ir.actions.server",
+    todo: "ir.actions.todo",
+    url: "ir.actions.act_url",
+    view: "ir.actions.act_window.view",
+    window: "ir.actions.act_window",
+};
 const ALLOWED_CHARS = {
     default: "[^/]",
     int: "\\d",
@@ -312,10 +360,8 @@ export class MockServer {
     env = this.makeServerEnv();
 
     // Data
-    /** @type {Record<string, ActionDefinition>} */
-    actions = Object.create(null);
-    /** @type {Record<string, ActionDefinition>[]} */
-    embeddedActions = [];
+    /** @type {ActionDefinition[]} */
+    actions = [];
     /** @type {MenuDefinition[]} */
     menus = [];
     /** @type {Record<string, Model>} */
@@ -403,39 +449,50 @@ export class MockServer {
 
     /**
      * @param {Partial<ServerParams>} params
+     * @param {DefineOptions<"replace">} [options]
      */
-    configure(params) {
+    configure(params, options) {
+        const assign = getAssignAction(options);
         if (params.actions) {
-            Object.assign(this.actions, params.actions);
-        }
-        if (params.embeddedActions) {
-            this.embeddedActions.push(...params.embeddedActions);
+            assign(this, "actions", params.actions);
         }
         if (params.lang) {
-            serverState.lang = params.lang;
+            assign(serverState, "lang", params.lang);
         }
         if (params.lang_parameters) {
+            // Never fully replace "lang_parameters"
             Object.assign(this.lang_parameters, params.lang_parameters);
         }
         if (params.menus) {
-            this.menus.push(...params.menus);
+            assign(this, "menus", params.menus);
         }
         if (params.models) {
-            this.registerModels(params.models);
+            for (const ModelClass of params.models) {
+                const model = this.getModelDefinition(ModelClass);
+                assign(this.modelSpecs, model._name, model);
+            }
+            if (this.started) {
+                this.loadModels();
+            }
         }
         if (params.modules) {
             for (const [module, values] in Object.entries(params.modules)) {
-                this.registerTranslations(module, values.message || values);
+                this.modules[module] ||= { messages: [] };
+                assign(
+                    this.modules[module],
+                    "messages",
+                    parseTranslations(values.message || values)
+                );
             }
         }
         if (params.multi_lang) {
-            serverState.multiLang = params.multi_lang;
+            assign(serverState, "multiLang", params.multi_lang);
         }
         if (params.timezone) {
-            serverState.timezone = params.timezone;
+            assign(serverState, "timezone", params.timezone);
         }
         if (params.translations) {
-            this.registerTranslations("web", params.translations);
+            assign(this.modules.web, "messages", parseTranslations(params.translations));
         }
         if (params.routes) {
             for (const args of params.routes) {
@@ -444,6 +501,31 @@ export class MockServer {
         }
 
         return this;
+    }
+
+    /**
+     * @param {string | number | false} id
+     */
+    findAction(id) {
+        const strId = String(id);
+        const actions = this.actions.filter((action) => {
+            for (const identifier of ACTION_IDENTIFIERS) {
+                if (String(action[identifier]) === strId) {
+                    return action;
+                }
+            }
+        });
+        if (!actions.length) {
+            throw makeServerError({
+                errorName: "odoo.addons.web.controllers.action.MissingActionError",
+                message: `The action ${JSON.stringify(id)} does not exist`,
+            });
+        } else if (actions.length > 1) {
+            throw new MockServerError(
+                `found ${actions.length} actions matching the same id: ${JSON.stringify(id)}`
+            );
+        }
+        return this.getAction(actions[0]);
     }
 
     /**
@@ -532,22 +614,88 @@ export class MockServer {
     }
 
     /**
-     * @param {string | number | false} id
+     * @param {Partial<ActionDefinition>} rawAction
      */
-    getAction(id) {
-        const action =
-            this.actions[id] ||
-            Object.values(this.actions).find((act) => act.xml_id === id || act.path === id);
-        if (!action) {
-            throw makeServerError({
-                errorName: "odoo.addons.web.controllers.action.MissingActionError",
-                message: `The action ${JSON.stringify(id)} does not exist`,
-            });
-        }
-        if (action.type === "ir.actions.act_window") {
-            action["embedded_action_ids"] = this.embeddedActions.filter(
-                (act) => act && act.parent_action_id === id
-            );
+    getAction(rawAction) {
+        const mainIdentifier = ACTION_IDENTIFIERS.find((identifier) => rawAction[identifier]);
+        const id = rawAction[mainIdentifier];
+        const action = {
+            binding_type: "action",
+            binding_view_types: "list,form",
+            id,
+            type: ACTION_TYPES.window,
+            xml_id: id,
+            ...rawAction,
+        };
+        switch (action.type) {
+            case ACTION_TYPES.client: {
+                action.context ||= {};
+                action.target ??= "current";
+                break;
+            }
+            case ACTION_TYPES.embedded: {
+                // Embedded actions are treated as regular actions for simplicity's sake
+                action.context ||= {};
+                action.domain ||= [];
+                action.filter_ids ||= [];
+                action.groups_id ||= [];
+                break;
+            }
+            case ACTION_TYPES.report: {
+                action.binding_type = rawAction.binding_type ?? "report";
+                action.report_type ??= "qweb-pdf";
+                action.groups_id ||= [];
+                break;
+            }
+            case ACTION_TYPES.server: {
+                action.available_model_ids ||= [];
+                action.child_ids ||= [];
+                action.code ??= "";
+                action.evaluation_type ??= "value";
+                action.groups_id ||= [];
+                action.sequence ??= 5;
+                action.state ??= "object_write";
+                action.update_boolean_value ??= "true";
+                action.update_m2m_operation ??= "add";
+                action.usage ??= "ir_actions_server";
+                action.webhook_field_ids ||= [];
+                break;
+            }
+            case ACTION_TYPES.todo: {
+                action.sequence ??= 10;
+                action.state ??= "open";
+                break;
+            }
+            case ACTION_TYPES.url: {
+                action.target ??= "new";
+                break;
+            }
+            case ACTION_TYPES.window: {
+                action.context ||= {};
+                action.embedded_action_ids ||= [];
+                action.group_ids ||= [];
+                action.limit ??= 80;
+                action.mobile_view_mode ??= "kanban";
+                action.target ??= "current";
+                action.view_ids ||= [];
+                action.view_mode ??= "list,form";
+                for (const embeddedAction of this.actions) {
+                    if (
+                        embeddedAction.type === ACTION_TYPES.embedded &&
+                        embeddedAction.parent_action_id === id
+                    ) {
+                        action.embedded_action_ids.push(this.getAction(embeddedAction));
+                    }
+                }
+                break;
+            }
+            default: {
+                if (!(action.type in ACTION_TYPES)) {
+                    throw new MockServerError(
+                        `invalid action type "${action.type}" in action ${id}`
+                    );
+                }
+            }
         }
         return action;
     }
@@ -899,36 +1047,6 @@ export class MockServer {
         return this;
     }
 
-    /**
-     * @param {Iterable<ModelConstructor>} ModelClasses
-     */
-    registerModels(ModelClasses) {
-        for (const ModelClass of ModelClasses) {
-            const model = this.getModelDefinition(ModelClass);
-            this.modelSpecs[model._name] = model;
-        }
-
-        if (this.started) {
-            this.loadModels();
-        }
-    }
-
-    /**
-     * @param {string} module
-     * @param {Record<string, string>} translations
-     */
-    registerTranslations(module, translations) {
-        this.modules[module] ||= Object.create(null);
-        this.modules[module].messages ||= Object.create(null);
-        if (Array.isArray(translations)) {
-            this.modules.web.messages.push(...translations);
-        } else {
-            for (const [id, string] of Object.entries(translations)) {
-                this.modules.web.messages.push({ id, string });
-            }
-        }
-    }
-
     async start() {
         if (this.started) {
             throw new MockServerError("MockServer has already been started");
@@ -948,7 +1066,7 @@ export class MockServer {
     /** @type {RouteCallback} */
     async mockActionLoad(request) {
         const { params } = await request.json();
-        return this.getAction(params.action_id);
+        return this.findAction(params.action_id);
     }
 
     /** @type {RouteCallback} */
@@ -959,7 +1077,7 @@ export class MockServer {
             /** @type {string} */
             let displayName;
             if (actionId) {
-                const action = this.getAction(actionId);
+                const action = this.findAction(actionId);
                 if (resId) {
                     displayName = this.env[action.res_model].browse(resId)[0].display_name;
                 } else {
@@ -1093,37 +1211,27 @@ export function authenticate(login, password) {
 
 /**
  * @param {ActionDefinition[]} actions
+ * @param {DefineOptions<"add">} [options]
  */
-export function defineActions(actions) {
-    return defineParams(
-        { actions: Object.fromEntries(actions.map((a) => [a.id || a.xml_id, { ...a }])) },
-        "add"
-    ).actions;
-}
-
-/**
- * @param {ActionDefinition[]} actions
- */
-export function defineEmbeddedActions(actions) {
-    return defineParams(
-        { embeddedActions: Object.fromEntries(actions.map((a) => [a.id || a.xml_id, { ...a }])) },
-        "add"
-    ).embeddedActions;
+export function defineActions(actions, options) {
+    return defineParams({ actions }, { mode: "add", ...options }).actions;
 }
 
 /**
  * @param {MenuDefinition[]} menus
+ * @param {DefineOptions<"add">} [options]
  */
-export function defineMenus(menus) {
-    return defineParams({ menus }, "add").menus;
+export function defineMenus(menus, options) {
+    return defineParams({ menus }, { mode: "add", ...options }).menus;
 }
 
 /**
  * Registers a list of model classes on the current/future {@link MockServer} instance.
  *
  * @param  {ModelConstructor[] | Record<string, ModelConstructor>} ModelClasses
+ * @param {DefineOptions<"add">} [options]
  */
-export function defineModels(ModelClasses) {
+export function defineModels(ModelClasses, options) {
     const models = Object.values(ModelClasses);
     for (const ModelClass of models) {
         const instance = new ModelClass();
@@ -1133,28 +1241,19 @@ export function defineModels(ModelClasses) {
         }
     }
 
-    return defineParams({ models }, "add").models;
+    return defineParams({ models }, { mode: "add", ...options }).models;
 }
 
 /**
  * @param {ServerParams} params
- * @param {"add" | "replace"} [mode="replace"]
+ * @param {DefineOptions<"replace">} [options]
  */
-export function defineParams(params, mode) {
+export function defineParams(params, options) {
+    const assign = getAssignAction(options);
     before(() => {
         const currentParams = getCurrentParams();
         for (const [key, value] of Object.entries(params)) {
-            if (mode === "add" && isObject(value)) {
-                if (isIterable(value)) {
-                    currentParams[key] ||= [];
-                    currentParams[key].push(...value);
-                } else {
-                    currentParams[key] ||= {};
-                    Object.assign(currentParams[key], value);
-                }
-            } else {
-                currentParams[key] = value;
-            }
+            assign(currentParams, key, value);
         }
 
         MockServer.current?.configure(params);
@@ -1226,7 +1325,7 @@ export async function makeMockServer() {
  * @type {MockServer["onRpc"]}
  */
 export function onRpc(...args) {
-    return defineParams({ routes: [args] }, "add").routes;
+    return defineParams({ routes: [args] }, { mode: "add" }).routes;
 }
 
 /**

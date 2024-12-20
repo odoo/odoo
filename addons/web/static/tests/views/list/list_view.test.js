@@ -1,4 +1,3 @@
-import { Component, markup, onRendered, onWillStart, useRef, xml } from "@odoo/owl";
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import {
     clear,
@@ -27,6 +26,11 @@ import {
     runAllTimers,
     tick,
 } from "@odoo/hoot-mock";
+import { Component, markup, onRendered, onWillStart, useRef, xml } from "@odoo/owl";
+import {
+    getPickerApplyButton,
+    getPickerCell,
+} from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickModalButton,
     clickSave,
@@ -63,23 +67,19 @@ import {
     validateSearch,
     webModels,
 } from "@web/../tests/web_test_helpers";
-import {
-    getPickerApplyButton,
-    getPickerCell,
-} from "@web/../tests/core/datetime/datetime_test_helpers";
 
 import { currencies } from "@web/core/currency";
-import { registry } from "@web/core/registry";
-import { RelationalModel } from "@web/model/relational_model/relational_model";
-import { WebClient } from "@web/webclient/webclient";
-import { keyUp } from "../../../lib/hoot-dom/helpers/events";
-import { ListController } from "@web/views/list/list_controller";
-import { floatField } from "@web/views/fields/float/float_field";
-import { session } from "@web/session";
 import { Domain } from "@web/core/domain";
+import { registry } from "@web/core/registry";
+import { useBus } from "@web/core/utils/hooks";
+import { RelationalModel } from "@web/model/relational_model/relational_model";
+import { session } from "@web/session";
+import { floatField } from "@web/views/fields/float/float_field";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { useBus } from "@web/core/utils/hooks";
+import { ListController } from "@web/views/list/list_controller";
+import { WebClient } from "@web/webclient/webclient";
+import { keyUp } from "../../../lib/hoot-dom/helpers/events";
 
 describe.current.tags("desktop");
 
@@ -2880,7 +2880,6 @@ test(`editable list view: check that controlpanel buttons are updating when grou
             id: 11,
             name: "Partners Action 11",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [[3, "list"]],
             search_view_id: [9, "search"],
         },
@@ -2921,7 +2920,6 @@ test(`editable list view: check that add button is present when groupby applied`
             id: 11,
             name: "Partners Action 11",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [
                 [3, "list"],
                 [4, "form"],
@@ -4522,8 +4520,6 @@ test(`custom delete confirmation dialog`, async () => {
 });
 
 test(`deleting record which throws UserError should close confirmation dialog`, async () => {
-    expect.errors(1);
-
     onRpc("unlink", () => {
         throw makeServerError({ message: "Odoo Server Error" });
     });
@@ -4541,9 +4537,12 @@ test(`deleting record which throws UserError should close confirmation dialog`, 
     await toggleMenuItem("Delete");
     expect(`.modal`).toHaveCount(1, { message: "should have open the confirmation dialog" });
 
+    expect.errors(1);
+
     await contains(`.modal footer button.btn-primary`).click();
-    await waitFor(".modal");
-    expect(`.modal .modal-title`).toHaveText("Invalid Operation");
+    await waitFor(".modal .modal-title:contains(Invalid Operation)");
+
+    expect.verifyErrors(["Odoo Server Error"]);
 });
 
 test(`delete all records matching the domain`, async () => {
@@ -4812,7 +4811,6 @@ test(`archive/unarchive handles returned action`, async () => {
             id: 11,
             name: "Action 11",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [[3, "list"]],
             search_view_id: [9, "search"],
         },
@@ -7872,7 +7870,6 @@ test(`execute ActionMenus actions`, async () => {
                     {
                         id: 44,
                         name: "Custom Action",
-                        type: "ir.actions.act_window",
                         target: "new",
                     },
                 ],
@@ -10371,8 +10368,6 @@ test(`editable list view: many2one with readonly modifier`, async () => {
 });
 
 test(`editable list view: multi edition server error handling`, async () => {
-    expect.errors(1);
-
     onRpc("write", () => {
         throw makeServerError();
     });
@@ -10391,8 +10386,11 @@ test(`editable list view: multi edition server error handling`, async () => {
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
     await contains(`.o_selected_row [name=foo] input`).edit("abc");
     await contains(`.o_list_view`).click();
+
+    expect.errors(1);
     await contains(`.modal .btn-primary`).click();
-    // Server error: if there was a crash manager, there would be an open error at this point...
+    expect.verifyErrors(["RPC_ERROR"]);
+
     expect(`.o_data_row:eq(0) .o_data_cell`).toHaveText("yop", {
         message: "first cell should have discarded any change",
     });
@@ -11518,7 +11516,6 @@ test(`add filter in a grouped list with a pager`, async () => {
             id: 11,
             name: "Action 11",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [[3, "list"]],
             search_view_id: [9, "search"],
             context: { group_by: ["int_field"] },
@@ -13376,7 +13373,6 @@ test(`optional fields is shown only if enabled`, async () => {
             id: 1,
             name: "Currency Action 1",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [[1, "list"]],
         },
     ]);
@@ -13497,14 +13493,12 @@ test(`change the viewType of the current action`, async () => {
             id: 1,
             name: "Partners Action 1",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [[1, "kanban"]],
         },
         {
             id: 2,
             name: "Partners",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [1, "kanban"],
@@ -13686,7 +13680,6 @@ test(`list view with optional fields from local storage being the empty array`, 
             id: 1,
             name: "Action 1",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [[42, "list"]],
             search_view_id: [1, "search"],
         },
@@ -13856,7 +13849,6 @@ test(`Auto save: add a record and leave action`, async () => {
             id: 1,
             name: "Action 1",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [[2, "list"]],
             search_view_id: [1, "search"],
         },
@@ -13864,7 +13856,6 @@ test(`Auto save: add a record and leave action`, async () => {
             id: 2,
             name: "Action 2",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [[3, "list"]],
             search_view_id: [1, "search"],
         },
@@ -13897,7 +13888,6 @@ test(`Auto save: create a new record without modifying it and leave action`, asy
             id: 1,
             name: "Action 1",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [[2, "list"]],
             search_view_id: [1, "search"],
         },
@@ -13905,7 +13895,6 @@ test(`Auto save: create a new record without modifying it and leave action`, asy
             id: 2,
             name: "Action 2",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [[3, "list"]],
             search_view_id: [1, "search"],
         },
@@ -13937,7 +13926,6 @@ test(`Auto save: modify a record and leave action`, async () => {
             id: 1,
             name: "Action 1",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [[2, "list"]],
             search_view_id: [1, "search"],
         },
@@ -13945,7 +13933,6 @@ test(`Auto save: modify a record and leave action`, async () => {
             id: 2,
             name: "Action 2",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [[3, "list"]],
             search_view_id: [1, "search"],
         },
@@ -13974,7 +13961,6 @@ test(`Auto save: modify a record and leave action (reject)`, async () => {
             id: 1,
             name: "Action 1",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [[2, "list"]],
             search_view_id: [1, "search"],
         },
@@ -13982,7 +13968,6 @@ test(`Auto save: modify a record and leave action (reject)`, async () => {
             id: 2,
             name: "Action 2",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [[3, "list"]],
             search_view_id: [1, "search"],
         },
@@ -14871,8 +14856,6 @@ test(`view widgets are rendered in list view`, async () => {
 });
 
 test(`edit a record then select another record with a throw error when saving`, async () => {
-    expect.errors(1);
-
     onRpc("web_save", () => {
         throw makeServerError({ message: "Can't write" });
     });
@@ -14886,8 +14869,10 @@ test(`edit a record then select another record with a throw error when saving`, 
     await contains(`[name=foo] input`).edit("plop", { confirm: false });
     expect(`[name=foo] input`).toHaveCount(1);
 
+    expect.errors(1);
     await contains(`.o_data_cell:eq(0)`).click();
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(`.o_error_dialog`).toHaveCount(1);
 
     await contains(`.o_error_dialog .btn-primary.o-default-button`).click();
@@ -15904,7 +15889,6 @@ test(`restore orderBy from state when using default order`, async () => {
             id: 1,
             name: "Foo",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -16001,7 +15985,6 @@ test(`context keys not passed down the stack and not to fields`, async () => {
             id: 1,
             name: "Foo",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [[false, "list"]],
             context: {
                 list_view_ref: "foo_view_ref",

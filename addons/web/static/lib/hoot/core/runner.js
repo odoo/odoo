@@ -7,6 +7,7 @@ import { enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
 import { cleanupTime, setupTime } from "@web/../lib/hoot-dom/helpers/time";
 import { isIterable, parseRegExp } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
+    CASE_EVENT_TYPES,
     Callbacks,
     HootError,
     INCLUDE_LEVEL,
@@ -25,6 +26,7 @@ import {
     storageSet,
     stringify,
 } from "../hoot_utils";
+import { cleanupAnimations } from "../mock/animation";
 import { cleanupDate } from "../mock/date";
 import { internalRandom } from "../mock/math";
 import { cleanupNavigator, mockUserAgent } from "../mock/navigator";
@@ -32,7 +34,7 @@ import { cleanupNetwork } from "../mock/network";
 import { cleanupWindow, getViewPortHeight, getViewPortWidth, mockTouch } from "../mock/window";
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
 import { makeExpect } from "./expect";
-import { makeFixtureManager } from "./fixture";
+import { HootFixtureElement, makeFixtureManager } from "./fixture";
 import { logLevels, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
 import { Tag, getTagSimilarities } from "./tag";
@@ -853,7 +855,7 @@ export class Runner {
         this.state.status = "running";
 
         /** @type {Runner["_handleError"]} */
-        const handleError = !this.config.notrycatch && this._handleError.bind(this);
+        const handleError = this._handleError.bind(this);
 
         /**
          * @param {Job} [job]
@@ -1006,8 +1008,8 @@ export class Runner {
                 this._failed++;
 
                 const failReasons = [];
-                const failedAssertions = lastResults.assertions.filter(
-                    (assertion) => !assertion.pass
+                const failedAssertions = lastResults.events.filter(
+                    (event) => event.type === CASE_EVENT_TYPES.assertion && !event.pass
                 );
                 if (failedAssertions.length) {
                     const s = failedAssertions.length === 1 ? "" : "s";
@@ -1016,11 +1018,11 @@ export class Runner {
                         ...formatAssertions(failedAssertions)
                     );
                 }
-                if (lastResults.errors.length) {
-                    const s = lastResults.errors.length === 1 ? "" : "s";
+                if (lastResults.currentErrors.length) {
+                    const s = lastResults.currentErrors.length === 1 ? "" : "s";
                     failReasons.push(
                         `\nError${s} during test:`,
-                        ...lastResults.errors.map((e) => `\n${e.message}`)
+                        ...lastResults.currentErrors.map((error) => `\n${error.message}`)
                     );
                 }
                 logger.error(
@@ -1566,10 +1568,13 @@ export class Runner {
      * @param {Error | ErrorEvent | PromiseRejectionEvent} ev
      */
     _handleError(ev) {
-        const error = ensureError(ev);
-        if (this.config.notrycatch || handledErrors.has(error)) {
-            // Already handled
+        if (this.config.notrycatch) {
             return;
+        }
+        const error = ensureError(ev);
+        if (handledErrors.has(error)) {
+            // Already handled
+            return safePrevent(ev);
         }
         handledErrors.add(error);
 
@@ -1621,8 +1626,8 @@ export class Runner {
             return false;
         }
 
-        lastResults.registerError(error);
-        if (lastResults.expectedErrors >= lastResults.caughtErrors) {
+        lastResults.registerEvent("error", error);
+        if (lastResults.expectedErrors >= lastResults.counts.error) {
             return true;
         }
 
@@ -1697,6 +1702,10 @@ export class Runner {
         }
 
         // Register default hooks
+        this.beforeAll(() => {
+            document.head.appendChild(HootFixtureElement.styleElement);
+            return () => HootFixtureElement.styleElement.remove();
+        });
         this.afterAll(
             // Warn user events
             !this.debug && on(window, "pointermove", warnUserEvent),
@@ -1705,10 +1714,10 @@ export class Runner {
         );
         this.beforeEach(this.fixture.setup, setupTime);
         this.afterEach(
+            cleanupAnimations,
             cleanupWindow,
             cleanupNetwork,
             cleanupNavigator,
-            this.fixture.cleanup,
             cleanupDOM,
             cleanupTime,
             cleanupDate

@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { describe, expect, makeExpect, test } from "@odoo/hoot";
-import { check, manuallyDispatchProgrammaticEvent, tick } from "@odoo/hoot-dom";
+import { check, manuallyDispatchProgrammaticEvent, tick, waitFor } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import { mountForTest, parseUrl } from "../local_helpers";
 
@@ -23,7 +23,7 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(true);
-        expect(results.assertions).toHaveLength(2);
+        expect(results.events).toHaveLength(2);
     });
 
     test("makeExpect failing, without a test", () => {
@@ -37,7 +37,7 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.assertions).toHaveLength(2);
+        expect(results.events).toHaveLength(2);
     });
 
     test("makeExpect with a test", async () => {
@@ -72,10 +72,26 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.assertions[0].pass).toBe(true);
+        expect(results.events[0].pass).toBe(true);
     });
 
-    test("makeExpect with no assertions", () => {
+    test("makeExpect with no assertions & query events", async () => {
+        await mountForTest(/* xml */ `<div>ABC</div>`);
+
+        const [, hooks] = makeExpect({ headless: true });
+
+        hooks.before();
+
+        await waitFor("div:contains(ABC)");
+
+        const results = hooks.after();
+
+        expect(results.pass).toBe(true);
+        expect(results.events).toHaveLength(1);
+        expect(results.events[0].label).toBe("waitFor");
+    });
+
+    test("makeExpect with no assertions & no query events", () => {
         const [customExpect, hooks] = makeExpect({ headless: true });
 
         hooks.before();
@@ -87,9 +103,9 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.assertions).toHaveLength(1);
-        expect(results.assertions[0].message).toBe(
-            "expected at least 1 assertion, but none were run"
+        expect(results.events).toHaveLength(1);
+        expect(results.events[0].message).toBe(
+            "expected at least 1 assertion or query event, but none were run"
         );
     });
 
@@ -104,8 +120,8 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.assertions).toHaveLength(1);
-        expect(results.assertions[0].message).toBe("called once without calling any matchers");
+        expect(results.events).toHaveLength(1);
+        expect(results.events[0].message).toBe("called once without calling any matchers");
     });
 
     test("makeExpect with unverified steps", () => {
@@ -120,8 +136,8 @@ describe(parseUrl(import.meta.url), () => {
         const results = hooks.after();
 
         expect(results.pass).toBe(false);
-        expect(results.assertions).toHaveLength(2);
-        expect(results.assertions[1].message).toBe("unverified steps");
+        expect(results.events).toHaveLength(4); // 2 'step' + 1 'verifySteps' + 1 'unverified steps'
+        expect(results.events.at(-1).message).toBe("unverified steps");
     });
 
     test("makeExpect retains current values", () => {
@@ -135,7 +151,7 @@ describe(parseUrl(import.meta.url), () => {
 
         const testResult = hooks.after();
 
-        const [assertion] = testResult.assertions;
+        const [assertion] = testResult.events;
         expect(assertion.pass).toBe(false);
         expect(assertion.failedDetails[1][1]).toEqual({ a: 1 });
         expect(object).toEqual({ a: 1, b: 2 });
@@ -201,10 +217,8 @@ describe(parseUrl(import.meta.url), () => {
         const testResult = hooks.after();
 
         expect(testResult.pass).toBe(true);
-        expect(testResult.assertions).toHaveLength(matchers.length);
-        expect(testResult.assertions.map(({ label }) => label)).toEqual(
-            matchers.map(([name]) => name)
-        );
+        expect(testResult.events).toHaveLength(matchers.length);
+        expect(testResult.events.map(({ label }) => label)).toEqual(matchers.map(([name]) => name));
     });
 
     describe("standard matchers", () => {

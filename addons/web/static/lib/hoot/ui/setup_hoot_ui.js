@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { mount, reactive, whenReady } from "@odoo/owl";
+import { CASE_EVENT_TYPES } from "../hoot_utils";
 import { getRunner } from "../main_runner";
 import { patchWindow } from "../mock/window";
 import { generateStyleSheets, setColorRoot } from "./hoot_colors";
@@ -29,6 +30,7 @@ const {
 
 const makeUiState = () =>
     reactive({
+        displayedEvents: CASE_EVENT_TYPES.assertion | CASE_EVENT_TYPES.error,
         resultsPage: 0,
         resultsPerPage: 40,
         /** @type {string | null} */

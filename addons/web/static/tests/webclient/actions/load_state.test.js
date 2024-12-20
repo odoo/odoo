@@ -60,7 +60,6 @@ defineActions([
         xml_id: "action_1",
         name: "Partners Action 1",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [[1, "kanban"]],
     },
     {
@@ -73,8 +72,6 @@ defineActions([
         xml_id: "action_3",
         name: "Partners",
         res_model: "partner",
-        mobile_view_mode: "kanban",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [1, "kanban"],
@@ -86,7 +83,6 @@ defineActions([
         xml_id: "action_4",
         name: "Partners Action 4",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [
             [1, "kanban"],
             [2, "list"],
@@ -99,7 +95,6 @@ defineActions([
         name: "Create a Partner",
         res_model: "partner",
         target: "new",
-        type: "ir.actions.act_window",
         views: [[false, "form"]],
     },
     {
@@ -373,16 +368,19 @@ describe(`new urls`, () => {
     });
 
     test(`supports opening action in dialog`, async () => {
-        defineActions([
-            {
-                id: 1099,
-                xml_id: "wowl.client_action",
-                tag: "__test__client__action__",
-                target: "new",
-                type: "ir.actions.client",
-                params: { description: "xmlId" },
-            },
-        ]);
+        defineActions(
+            [
+                {
+                    id: 1099,
+                    xml_id: "wowl.client_action",
+                    tag: "__test__client__action__",
+                    target: "new",
+                    type: "ir.actions.client",
+                    params: { description: "xmlId" },
+                },
+            ],
+            { mode: "replace" }
+        );
         // FIXME this is super weird: we open an action in target new from the url?
         redirect("/odoo/action-wowl.client_action");
         logHistoryInteractions();
@@ -966,7 +964,6 @@ describe(`new urls`, () => {
                 id: 999,
                 name: "Partner",
                 res_model: "partner",
-                type: "ir.actions.act_window",
                 views: [
                     [false, "list"],
                     [666, "form"],
@@ -1001,7 +998,6 @@ describe(`new urls`, () => {
                 id: 1000,
                 name: "Partner",
                 res_model: "partner",
-                type: "ir.actions.act_window",
                 views: [
                     [false, "list"],
                     [false, "form"],
@@ -1225,34 +1221,34 @@ describe(`new urls`, () => {
     });
 
     test(`initial loading with multiple path segments loads the breadcrumbs`, async () => {
-        defineActions([
-            {
-                id: 27,
-                xml_id: "action_27",
-                name: "Partners Action 27",
-                res_model: "partner",
-                mobile_view_mode: "kanban",
-                type: "ir.actions.act_window",
-                path: "partners",
-                views: [
-                    [false, "list"],
-                    [1, "kanban"],
-                    [false, "form"],
-                ],
-            },
-            {
-                id: 28,
-                xml_id: "action_28",
-                name: "Partners Action 28",
-                res_model: "partner",
-                type: "ir.actions.act_window",
-                views: [
-                    [1, "kanban"],
-                    [2, "list"],
-                    [false, "form"],
-                ],
-            },
-        ]);
+        defineActions(
+            [
+                {
+                    id: 27,
+                    xml_id: "action_27",
+                    name: "Partners Action 27",
+                    res_model: "partner",
+                    path: "partners",
+                    views: [
+                        [false, "list"],
+                        [1, "kanban"],
+                        [false, "form"],
+                    ],
+                },
+                {
+                    id: 28,
+                    xml_id: "action_28",
+                    name: "Partners Action 28",
+                    res_model: "partner",
+                    views: [
+                        [1, "kanban"],
+                        [2, "list"],
+                        [false, "form"],
+                    ],
+                },
+            ],
+            { mode: "replace" }
+        );
 
         redirect("/odoo/partners/2/action-28/1");
         logHistoryInteractions();
@@ -1516,16 +1512,19 @@ describe(`legacy urls`, () => {
     });
 
     test(`supports opening action in dialog`, async () => {
-        defineActions([
-            {
-                id: 1099,
-                xml_id: "wowl.client_action",
-                tag: "__test__client__action__",
-                target: "new",
-                type: "ir.actions.client",
-                params: { description: "xmlId" },
-            },
-        ]);
+        defineActions(
+            [
+                {
+                    id: 1099,
+                    xml_id: "wowl.client_action",
+                    tag: "__test__client__action__",
+                    target: "new",
+                    type: "ir.actions.client",
+                    params: { description: "xmlId" },
+                },
+            ],
+            { mode: "replace" }
+        );
         redirect("/web#action=wowl.client_action");
 
         await mountWebClient();
@@ -1594,31 +1593,34 @@ describe(`legacy urls`, () => {
     test(`properly load records with existing first APP`, async () => {
         // simulate a real scenario with a first app (e.g. Discuss), to ensure that we don't
         // fallback on that first app when only a model and res_id are given in the url
-        defineActions([
-            {
-                id: "root",
-                name: "root",
-                appID: "root",
-                children: [
-                    {
-                        id: 1,
-                        children: [],
-                        name: "App1",
-                        appID: 1,
-                        actionID: 1001,
-                        xmlid: "menu_1",
-                    },
-                    {
-                        id: 2,
-                        children: [],
-                        name: "App2",
-                        appID: 2,
-                        actionID: 1002,
-                        xmlid: "menu_2",
-                    },
-                ],
-            },
-        ]);
+        defineActions(
+            [
+                {
+                    id: "root",
+                    name: "root",
+                    appID: "root",
+                    children: [
+                        {
+                            id: 1,
+                            children: [],
+                            name: "App1",
+                            appID: 1,
+                            actionID: 1001,
+                            xmlid: "menu_1",
+                        },
+                        {
+                            id: 2,
+                            children: [],
+                            name: "App2",
+                            appID: 2,
+                            actionID: 1002,
+                            xmlid: "menu_2",
+                        },
+                    ],
+                },
+            ],
+            { mode: "replace" }
+        );
 
         redirect("/web#id=2&model=partner");
         stepAllNetworkCalls();
@@ -1703,6 +1705,8 @@ describe(`legacy urls`, () => {
         onRpc("web_read", () => Promise.reject());
 
         await mountWebClient();
+
+        expect.verifyErrors([Error]);
         expect(`.o_form_view`).toHaveCount(0);
         expect(`.o_list_view`).toHaveCount(1); // Show the lazy loaded list view
 
@@ -1785,18 +1789,20 @@ describe(`legacy urls`, () => {
     });
 
     test(`load state: in a form view, no id in initial state`, async () => {
-        defineActions([
-            {
-                id: 999,
-                name: "Partner",
-                res_model: "partner",
-                type: "ir.actions.act_window",
-                views: [
-                    [false, "list"],
-                    [666, "form"],
-                ],
-            },
-        ]);
+        defineActions(
+            [
+                {
+                    id: 999,
+                    name: "Partner",
+                    res_model: "partner",
+                    views: [
+                        [false, "list"],
+                        [666, "form"],
+                    ],
+                },
+            ],
+            { mode: "replace" }
+        );
 
         redirect("/web#action=999&view_type=form&id=");
         stepAllNetworkCalls();
@@ -1817,18 +1823,20 @@ describe(`legacy urls`, () => {
     test(`load state: in a form view, wrong id in the state`, async () => {
         expect.errors(1);
 
-        defineActions([
-            {
-                id: 1000,
-                name: "Partner",
-                res_model: "partner",
-                type: "ir.actions.act_window",
-                views: [
-                    [false, "list"],
-                    [false, "form"],
-                ],
-            },
-        ]);
+        defineActions(
+            [
+                {
+                    id: 1000,
+                    name: "Partner",
+                    res_model: "partner",
+                    views: [
+                        [false, "list"],
+                        [false, "form"],
+                    ],
+                },
+            ],
+            { mode: "replace" }
+        );
 
         redirect("/web#action=1000&view_type=form&id=999");
 
