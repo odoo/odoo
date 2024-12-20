@@ -15,6 +15,7 @@ import { registry } from "@web/core/registry";
 import { deepEqual } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
 import { patchWebsocketWorkerWithCleanup } from "./mock_websocket";
+import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
 
 patch(busService, {
     _onMessage(id, type, payload) {
@@ -275,4 +276,31 @@ export function lockBusServiceStart() {
         },
     });
     return () => unlockDeferred.resolve();
+}
+
+/**
+ *  Lock the websocket connection until the returned function is called. Usefull
+ *  to simulate server being unavailable.
+ *
+ * @returns {Function} A function that can be used to unlock the websocket
+ * connection.
+ */
+export function lockWebsocketConnect() {
+    let locked = true;
+    const ogSocket = window.WebSocket;
+    patchWithCleanup(window, {
+        WebSocket: function () {
+            const ws = locked ? new EventTarget() : new ogSocket(...arguments);
+            if (locked) {
+                queueMicrotask(() => {
+                    ws.dispatchEvent(new Event("error"));
+                    ws.dispatchEvent(
+                        new CloseEvent("close", { code: WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE })
+                    );
+                });
+            }
+            return ws;
+        },
+    });
+    return () => (locked = false);
 }

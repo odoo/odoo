@@ -9,7 +9,7 @@ import { busParametersService } from "@bus/bus_parameters_service";
 import { busService } from "@bus/services/bus_service";
 import { WEBSOCKET_CLOSE_CODES, WORKER_STATE } from "@bus/workers/websocket_worker";
 import { describe, expect, test } from "@odoo/hoot";
-import { Deferred, waitFor } from "@odoo/hoot-dom";
+import { Deferred, runAllTimers, waitFor } from "@odoo/hoot-dom";
 import {
     asyncStep,
     contains,
@@ -258,12 +258,15 @@ test("disconnect on offline, re-connect on online", async () => {
     const env = await makeMockEnv();
     env.services.bus_service.addEventListener("connect", () => asyncStep("connect"));
     env.services.bus_service.addEventListener("disconnect", () => asyncStep("disconnect"));
+    browser.addEventListener("online", () => asyncStep("online"));
     unlockBus();
     await env.services.bus_service.start();
     await waitForSteps(["connect"]);
     window.dispatchEvent(new Event("offline"));
     await waitForSteps(["disconnect"]);
     window.dispatchEvent(new Event("online"));
+    await waitForSteps(["online"]);
+    await runAllTimers();
     await waitForSteps(["connect"]);
 });
 
@@ -296,6 +299,7 @@ test("can reconnect after late close event", async () => {
     env.services.bus_service.addEventListener("disconnect", () => asyncStep("disconnect"));
     env.services.bus_service.addEventListener("reconnecting", () => asyncStep("reconnecting"));
     env.services.bus_service.addEventListener("reconnect", () => asyncStep("reconnect"));
+    browser.addEventListener("online", () => asyncStep("online"));
     unlockBus();
     await env.services.bus_service.start();
     await waitForSteps(["connect"]);
@@ -319,6 +323,8 @@ test("can reconnect after late close event", async () => {
     window.dispatchEvent(new Event("offline"));
     // Worker reconnects upon the reception of the online event.
     window.dispatchEvent(new Event("online"));
+    await waitForSteps(["online"]);
+    await runAllTimers();
     await waitForSteps(["disconnect", "connect"]);
     // Trigger the close event, it shouldn't have any effect since it is
     // related to an old connection that is no longer in use.
