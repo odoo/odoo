@@ -6,7 +6,9 @@ import { rpc } from "@web/core/network/rpc";
 class TestError extends Interaction {
     static selector = ".rpc_error";
     dynamicContent = {
-        "a:t-on-click.prevent": (ev) => rpc(ev.currentTarget.getAttribute("href")),
+        "a": {
+            "t-on-click.prevent": (ev) => rpc(ev.currentTarget.getAttribute("href")),
+        },
     }
 }
 
