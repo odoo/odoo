@@ -1884,6 +1884,38 @@ export class PosStore extends Reactive {
             canCreateLots = true;
         }
 
+        const usedLotsQty = this.models["pos.pack.operation.lot"]
+            .filter(
+                (lot) =>
+                    lot.pos_order_line_id?.product_id?.id === product.id &&
+                    lot.pos_order_line_id?.order_id?.state === "draft"
+            )
+            .reduce((acc, lot) => {
+                if (!acc[lot.lot_name]) {
+                    acc[lot.lot_name] = { total: 0, currentOrderCount: 0 };
+                }
+                acc[lot.lot_name].total += lot.pos_order_line_id?.qty || 0;
+
+                if (lot.pos_order_line_id?.order_id?.id === this.selectedOrder.id) {
+                    acc[lot.lot_name].currentOrderCount += lot.pos_order_line_id?.qty || 0;
+                }
+                return acc;
+            }, {});
+
+        // Remove lot/serial names that are already used in draft orders
+        existingLots = existingLots.filter((lot) => {
+            return lot.product_qty > (usedLotsQty[lot.name]?.total || 0);
+        });
+
+        // Check if the input lot/serial name is already used in another order
+        const isLotNameUsed = (itemValue) => {
+            const totalQty = existingLots.find((lt) => lt.name == itemValue)?.product_qty || 0;
+            const usedQty = usedLotsQty[itemValue]
+                ? usedLotsQty[itemValue].total - usedLotsQty[itemValue].currentOrderCount
+                : 0;
+            return usedQty ? usedQty >= totalQty : false;
+        };
+
         const existingLotsName = existingLots.map((l) => l.name);
         const payload = await makeAwaitable(this.dialog, EditListPopup, {
             title: _t("Lot/Serial Number(s) Required"),
@@ -1893,6 +1925,7 @@ export class PosStore extends Reactive {
             options: existingLotsName,
             customInput: canCreateLots,
             uniqueValues: product.tracking === "serial",
+            isLotNameUsed: isLotNameUsed,
         });
         if (payload) {
             // Segregate the old and new packlot lines
