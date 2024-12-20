@@ -20,7 +20,7 @@ class AccountRoot(models.Model):
         return super().browse(ids)
 
     def _search(self, domain, offset=0, limit=None, order=None) -> Query:
-        match domain:
+        match list(domain):
             case [('id', 'in', ids)]:
                 return self.browse(sorted(ids))._as_query()
             case [('id', 'parent_of', ids)]:
