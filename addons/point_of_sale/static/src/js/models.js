@@ -1712,7 +1712,7 @@ class Orderline extends PosModel {
         this.product = this.pos.db.get_product_by_id(json.product_id);
         this.set_product_lot(this.product);
         this.price = json.price_unit;
-        this.price_manually_set = json.price_manually_set;
+        this.price_manually_set = json.price_manually_set || this.price != this.product.lst_price;
         this.price_automatically_set = json.price_automatically_set;
         this.set_discount(json.discount);
         this.set_quantity(json.qty, 'do not recompute unit price');
