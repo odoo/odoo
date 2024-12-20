@@ -499,6 +499,15 @@ class AccountEdiCommon(models.AbstractModel):
             line_values = self._retrieve_invoice_line_vals(line_tree, invoice_line, qty_factor)
             logs += self._retrieve_taxes(invoice_line, line_values)
             self._retrieve_line_charges(invoice_line, line_values)
+            # Start and End date (enterprise fields)
+            if invoice_line._fields.get('deferred_start_date'):
+                start_date = line_tree.find('./{*}InvoicePeriod/{*}StartDate')
+                end_date = line_tree.find('./{*}InvoicePeriod/{*}EndDate')
+                if start_date is not None and end_date is not None:  # there is a constraint forcing none or the two to be set
+                    invoice_line.write({
+                        'deferred_start_date': start_date.text,
+                        'deferred_end_date': end_date.text,
+                    })
             if not line_values['product_uom_id']:
                 line_values.pop('product_uom_id')  # if no uom, pop it so it's inferred from the product_id
             invoice_line.write(line_values)
