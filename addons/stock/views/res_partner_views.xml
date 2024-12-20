@@ -26,14 +26,14 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <page name="internal_notes" position="inside">
-                <group groups="stock.group_warning_stock">
-                    <group col="2">
-                        <separator string="Instructions on the Stock Operations" colspan="2"/>
-                        <field name="picking_warn_msg" placeholder="Type a message..." colspan="2" nolabel="1"/>
-                    </group>
+            <group name="warnings" position="inside">
+                <group groups="stock.group_warning_stock" col="2">
+                    <separator string="Instructions on the Stock Operations" colspan="2"/>
+                    <field name="picking_warn_msg"
+                           placeholder="e.g. The delivery area is at the back of the building."
+                           nolabel="1" colspan="2"/>
                 </group>
-            </page>
+            </group>
 
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button type="object"

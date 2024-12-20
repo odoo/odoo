@@ -723,6 +723,10 @@ class StockPicking(models.Model):
         search='_search_date_category', readonly=True
     )
     partner_country_id = fields.Many2one('res.country', related='partner_id.country_id')
+    picking_warning_text = fields.Text(
+        "Picking Instructions",
+        help="Internal instructions for the partner or its parent company as set by the user.",
+        compute='_compute_picking_warning_text')
 
     _name_uniq = models.Constraint(
         'unique(name, company_id)',
@@ -988,6 +992,16 @@ class StockPicking(models.Model):
     def _compute_return_count(self):
         for picking in self:
             picking.return_count = len(picking.return_ids)
+
+    @api.depends('partner_id.name', 'partner_id.parent_id.name')
+    def _compute_picking_warning_text(self):
+        for picking in self:
+            text = ''
+            if partner_msg := picking.partner_id.picking_warn_msg:
+                text += partner_msg + '\n'
+            if parent_msg := picking.partner_id.parent_id.picking_warn_msg:
+                text += parent_msg + '\n'
+            picking.picking_warning_text = text
 
     def _get_next_transfers(self):
         next_pickings = self.move_ids.move_dest_ids.picking_id

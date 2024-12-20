@@ -14,6 +14,7 @@ class AccountMoveLine(models.Model):
         'sale_order_line_invoice_rel',
         'invoice_line_id', 'order_line_id',
         string='Sales Order Lines', readonly=True, copy=False)
+    sale_line_warn_msg = fields.Text(related='product_id.sale_line_warn_msg')
 
     def _copy_data_extend_business_fields(self, values):
         # OVERRIDE to copy the 'sale_line_ids' field as well.
