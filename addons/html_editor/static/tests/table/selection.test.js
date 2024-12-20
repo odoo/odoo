@@ -37,15 +37,14 @@ describe("custom selection", () => {
                 </tbody>
             </table>`)
         );
-        const defaultBackgroundColor = getComputedStyle(el)["background-color"];
-        const backgroundColorTDs = queryAll("table td").map(
-            (td) => getComputedStyle(td)["background-color"]
+        const overlayColorTDs = queryAll("table td").map(
+            (td) => getComputedStyle(td)["box-shadow"]
         );
-        // Unselected cells should have the default background color
-        expect(backgroundColorTDs[0]).toBe(defaultBackgroundColor);
-        // Selected cells should have a distinct background color
-        expect(backgroundColorTDs[1]).not.toBe(defaultBackgroundColor);
-        expect(backgroundColorTDs[2]).not.toBe(defaultBackgroundColor);
+        // Unselected cells should have the default background color, without any overlay
+        expect(overlayColorTDs[0]).toBe("none");
+        // Selected cells should have a box-shadow color
+        expect(overlayColorTDs[1]).not.toBe("none");
+        expect(overlayColorTDs[2]).not.toBe("none");
     });
 });
 
