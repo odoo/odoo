@@ -7,6 +7,7 @@ import { scrollTo } from "@web_editor/js/common/scrolling";
 
 import SurveyPreloadImageMixin from "@survey/js/survey_preload_image_mixin";
 import { SurveyImageZoomer } from "@survey/js/survey_image_zoomer";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import {
     deserializeDate,
     deserializeDateTime,
@@ -251,7 +252,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         }
     },
 
-    _onSubmit: function (event) {
+    _onSubmit(event) {
         event.preventDefault();
         const options = {};
         const target = event.currentTarget;
@@ -260,7 +261,18 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         } else if (target.value === 'next_skipped') {
             options.nextSkipped = true;
         } else if (target.value === 'finish') {
-            options.isFinish = true;
+            // Adding pop-up before the survey is submitted
+            this.call("dialog", "add", ConfirmationDialog, {
+                title: _t("Submit confirmation"),
+                body: _t("Are you sure you want to submit the survey?"),
+                confirmLabel: _t("Submit"),
+                confirm: () => {
+                    options.isFinish = true;
+                    this._submitForm(options);
+                },
+                cancel: () => {},
+            });
+            return;
         }
         this._submitForm(options);
     },
