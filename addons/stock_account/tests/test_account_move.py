@@ -337,3 +337,28 @@ class TestAccountMove(TestAccountMoveStockCommon):
 
         cogs_line = move.line_ids.filtered(lambda l: l.account_id == self.product_A.property_account_expense_id)
         self.assertEqual(cogs_line.analytic_distribution, {str(analytic_account.id): 100})
+
+    def test_cogs_account_branch_company(self):
+        """Check branch company accounts are selected"""
+        branch = self.branch_a['company']
+        test_account = self.env['account.account'].with_company(branch.id).create({
+            'name': '10001 Test Account',
+            'code': 'STCKIN',
+            'reconcile': True,
+            'account_type': 'asset_current',
+        })
+        self.auto_categ.with_company(branch.id).property_valuation = "real_time"
+        self.auto_categ.with_company(branch.id).property_stock_account_input_categ_id = test_account
+
+        bill = self.env['account.move'].with_company(branch.id).with_context(default_move_type='in_invoice').create({
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.today(),
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'price_unit': 100,
+                }),
+            ],
+        })
+
+        self.assertEqual(bill.invoice_line_ids.account_id, test_account)
