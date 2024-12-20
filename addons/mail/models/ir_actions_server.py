@@ -278,7 +278,7 @@ class IrActionsServer(models.Model):
         cleaned_ctx = dict(self.env.context)
         cleaned_ctx.pop('default_type', None)
         cleaned_ctx.pop('default_parent_id', None)
-        cleaned_ctx['mail_create_nosubscribe'] = True  # do not subscribe random people to records
+        cleaned_ctx['mail_post_autofollow_author_skip'] = True  # do not subscribe random people to records
         cleaned_ctx['mail_post_autofollow'] = self.mail_post_autofollow
 
         if self.mail_post_method in ('comment', 'note'):

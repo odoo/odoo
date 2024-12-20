@@ -537,21 +537,21 @@ class TestChatterTweaks(MailCommon, TestRecipients):
 
     def test_post_no_subscribe_author(self):
         original = self.test_record.message_follower_ids
-        self.test_record.with_user(self.user_employee).with_context({'mail_create_nosubscribe': True}).message_post(
+        self.test_record.with_user(self.user_employee).with_context({'mail_post_autofollow_author_skip': True}).message_post(
             body='Test Body', message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id'))
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_no_subscribe_recipients(self):
         original = self.test_record.message_follower_ids
-        self.test_record.with_user(self.user_employee).with_context({'mail_create_nosubscribe': True}).message_post(
+        self.test_record.with_user(self.user_employee).with_context({'mail_post_autofollow_author_skip': True}).message_post(
             body='Test Body', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[self.partner_1.id, self.partner_2.id])
         self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id'))
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_subscribe_recipients(self):
         original = self.test_record.message_follower_ids
-        self.test_record.with_user(self.user_employee).with_context({'mail_create_nosubscribe': True, 'mail_post_autofollow': True}).message_post(
+        self.test_record.with_user(self.user_employee).with_context({'mail_post_autofollow_author_skip': True, 'mail_post_autofollow': True}).message_post(
             body='Test Body', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[self.partner_1.id, self.partner_2.id])
         self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id') | self.partner_1 | self.partner_2)
 

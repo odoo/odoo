@@ -341,7 +341,7 @@ class MailingList(models.Model):
                     _('%(contact_name)s subscribed to the following mailing list(s)', contact_name=contact.display_name),
                     Markup().join(Markup('<li>%s</li>') % name for name in updated.mapped('name')),
                 )
-            contact.with_context(mail_create_nosubscribe=True).message_post(
+            contact.with_context(mail_post_autofollow_author_skip=True).message_post(
                 body=body,
                 subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
             )
