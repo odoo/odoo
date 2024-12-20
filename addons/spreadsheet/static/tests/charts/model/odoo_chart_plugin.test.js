@@ -822,6 +822,77 @@ test("See records when clicking on a pie chart slice", async () => {
     expect.verifySteps(["do-action"]);
 });
 
+test("See records when clicking on a waterfall chart bar", async () => {
+    let lastActionCalled = undefined;
+    const fakeActionService = {
+        doAction: async (request, options = {}) => (lastActionCalled = request),
+        loadAction(actionRequest) {
+            expect(actionRequest).toBe("test.my_action");
+            return { type: "ir.actions.act_window" };
+        },
+    };
+    mockService("action", fakeActionService);
+    const serverData = getBasicServerData();
+    serverData.models.partner.records = [
+        { date: "2020-01-01", probability: 10, bar: true },
+        { date: "2020-02-01", probability: 2, bar: true },
+        { date: "2020-01-01", probability: 4, bar: false },
+        { date: "2020-02-01", probability: 5, bar: false },
+    ];
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_waterfall",
+        serverData,
+        definition: {
+            type: "odoo_waterfall",
+            metaData: {
+                groupBy: ["bar", "date"],
+                measure: "probability",
+                order: null,
+                resModel: "partner",
+            },
+            searchParams: { context: {}, domain: [], groupBy: [], orderBy: [] },
+            actionXmlId: "test.my_action",
+            title: { text: "Partners" },
+            dataSourceId: "42",
+            id: "42",
+            showSubTotals: true,
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+    const runtime = model.getters.getChartRuntime(chartId);
+
+    // First dataset
+    await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 0 }]);
+    await animationFrame();
+    expect(lastActionCalled?.domain).toEqual([
+        ["date", ">=", "2020-01-01"],
+        ["date", "<", "2020-02-01"],
+        ["bar", "=", false],
+    ]);
+
+    // First dataset subtotal
+    await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 2 }]);
+    await animationFrame();
+    expect(lastActionCalled?.domain).toEqual([
+        "&",
+        "&",
+        ["date", ">=", "2020-01-01"],
+        ["date", "<", "2020-02-01"],
+        [1, "=", 1],
+    ]);
+
+    // Second dataset
+    await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 3 }]);
+    await animationFrame();
+    expect(lastActionCalled?.domain).toEqual([
+        ["date", ">=", "2020-02-01"],
+        ["date", "<", "2020-03-01"],
+        ["bar", "=", false],
+    ]);
+});
+
 test("import/export action xml id", async () => {
     const { model } = await createSpreadsheetWithChart({
         type: "odoo_bar",
