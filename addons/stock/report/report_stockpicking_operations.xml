@@ -85,6 +85,10 @@
                                         <p t-field="o.scheduled_date" t-options='{"widget": "date"}'>2023-09-24</p>
                                     </t>
                                 </div>
+                                <div name="div_warn" t-if="o.picking_warning_text">
+                                    <strong>Instructions:</strong>
+                                    <div t-field="o.picking_warning_text"/>
+                                </div>
                                 <div name="div_vendor" t-if="o.picking_type_id.code=='incoming' and o.partner_id">
                                     <strong>Vendor:</strong>
                                     <div t-field="o.partner_id.commercial_partner_id"
