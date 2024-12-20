@@ -934,7 +934,7 @@ class AccountJournal(models.Model):
         })
         # In case of test environment, don't create the pdf
         if tools.config['test_enable'] or tools.config['test_file']:
-            bill.with_context(no_new_invoice=True).message_post()
+            bill.message_post()
         else:
             addr = [x for x in [
                 company.street,
@@ -959,7 +959,7 @@ class AccountJournal(models.Model):
                 'res_model': 'mail.compose.message',
                 'datas': base64.encodebytes(content),
             })
-            bill.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
+            bill.message_post(attachment_ids=[attachment.id])
         return {
             'name': _('Bills'),
             'res_id': bill.id,
