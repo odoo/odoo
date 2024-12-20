@@ -13,7 +13,7 @@ class AccountMoveLine(models.Model):
         project_amls = self.filtered(lambda aml: aml.analytic_distribution and any(aml.sale_line_ids.project_id))
         super(AccountMoveLine, self - project_amls)._compute_analytic_distribution()
         project_id = self._context.get('project_id', False)
-        if project_id:
+        if project_id and self.display_type != 'payment_term':
             project = self.env['project.project'].browse(project_id)
             self.analytic_distribution = project._get_analytic_distribution()
 
