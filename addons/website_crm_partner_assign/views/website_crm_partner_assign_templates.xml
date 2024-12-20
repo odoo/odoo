@@ -297,28 +297,23 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home_lead" name="Leads / Opps" inherit_id="portal.portal_my_home" priority="15">
-        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
-            <t t-set="portal_vendor_category_enable" t-value="True"/>
-        </xpath>
-        <div id="portal_vendor_category" position="inside">
-            <t t-call="portal.portal_docs_entry">
-                <t t-set="icon" t-value="'/website_crm_partner_assign/static/src/img/leads.svg'"/>
-                <t t-set="text">Follow and convert your leads</t>
-                <t t-set="title">Leads</t>
-                <t t-set="url" t-value="'/my/leads'"/>
-                <t t-set="placeholder_count" t-value="'lead_count'"/>
-            </t>
-            <t t-call="portal.portal_docs_entry">
-                <t t-set="icon" t-value="'/website_crm_partner_assign/static/src/img/quotation.svg'"/>
-                <t t-set="text">Follow and convert your opportunities</t>
-                <t t-set="title">Opportunities</t>
-                <t t-set="url" t-value="'/my/opportunities'"/>
-                <t t-set="placeholder_count" t-value="'opp_count'"/>
-                <t t-set="config_card" t-value="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id"/>
-            </t>
-        </div>
-    </template>
+    <data noupdate="1">
+        <record id="portal_entry_leads" model="portal.entry">
+            <field name="title">Leads</field>
+            <field name="text">Follow and convert your leads</field>
+            <field name="url">/my/leads</field>
+            <field name="icon">/website_crm_partner_assign/static/src/img/leads.svg</field>
+            <field name="placeholder_count">lead_count</field>
+        </record>
+
+        <record id="portal_entry_opportunities" model="portal.entry">
+            <field name="title">Opportunities</field>
+            <field name="text">Follow and convert your opportunities</field>
+            <field name="url">/my/opportunities</field>
+            <field name="icon">/website_crm_partner_assign/static/src/img/quotation.svg</field>
+            <field name="placeholder_count">opp_count</field>
+        </record>
+    </data>
 
     <template id="portal_my_leads" name="My Leads">
         <t t-call="portal.portal_layout">

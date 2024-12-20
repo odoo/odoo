@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data noupdate="1">
+        <record id="portal_entry_base" model="portal.entry">
+            <field name="title">Connection &amp; Security</field>
+            <field name="text">Configure your connection parameters</field>
+            <field name="url">/my/security</field>
+            <field name="icon">/portal/static/src/img/portal-connection.svg</field>
+        </record>
+    </data>
+
     <template id="frontend_layout" name="Main Frontend Layout" inherit_id="web.frontend_layout">
         <xpath expr="//div[@id='wrapwrap']" position="attributes">
             <attribute name="t-attf-class" add="#{request.env['res.lang']._get_data(code=request.env.lang).direction == 'rtl' and 'o_rtl' or ''}" separator=" "/>
@@ -225,42 +234,55 @@
             <div class="o_portal_my_home">
                 <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
                 <div class="o_portal_docs row g-2">
-                    <div t-if="portal_alert_category_enable" class="o_portal_category row g-2 mt-3" id="portal_alert_category"/>
                     <div t-if="portal_client_category_enable" class="o_portal_category row g-2 mt-3" id="portal_client_category"/>
-                    <div t-if="portal_service_category_enable" class="o_portal_category row g-2 mt-3" id="portal_service_category"/>
-                    <div t-if="portal_vendor_category_enable" class="o_portal_category row g-2 mt-3" id="portal_vendor_category"/>
-                    <div class="o_portal_category row g-2 mt-3" id="portal_common_category">
-                        <t t-call="portal.portal_docs_entry" t-if="False"/>
+
+                    <!-- Section for Alerts -->
+
+                    <div t-foreach="portal_entries" t-as="entry" t-if="entry.is_alert">
                         <t t-call="portal.portal_docs_entry">
-                            <t t-set="icon" t-value="'/portal/static/src/img/portal-connection.svg'"/>
-                            <t t-set="title">Connection &amp; Security</t>
-                            <t t-set="text">Configure your connection parameters</t>
-                            <t t-set="url" t-value="'/my/security'"/>
-                            <t t-set="config_card" t-value="True"/>
+                            <t t-set="show_count" t-value="True"/>
                         </t>
+
                     </div>
-                    <div class="o_portal_doc_spinner spinner-border text-o-color-2 align-self-center mt-5"/>
+
+                    <!-- General Section modificato per le due colonne -->
+                    <div class="row row-cols-1 row-cols-md-2 g-2">
+                        <div t-foreach="portal_entries" t-as="entry" t-if="not entry.is_alert" class="col">
+                            <t t-call="portal.portal_docs_entry">
+                                <t t-set="show_count" t-value="True"/>
+                            </t>
+                        </div>
+                    </div>
                 </div>
+                <div class="o_portal_doc_spinner spinner-border text-o-color-2 align-self-center mt-5"/>
             </div>
             <div class="oe_structure" id="oe_structure_portal_my_home_2"/>
         </t>
     </template>
 
     <template id="portal_docs_entry" name="My Portal Docs Entry">
+<!-- TODO: implement show_count
+
         <t t-set="force_show" t-value="placeholder_count and request.session.get('portal_counters', {}).get(placeholder_count) and not show_count"/>
+-->
+        <t t-set="force_show" t-value="True"/>
         <div t-att-class="'o_portal_index_card ' +  ('' if force_show or config_card else 'd-none ') + ('col-12 order-0' if show_count else 'col-md-6 order-2')">
-            <a t-att-href="url" t-att-title="title" t-attf-class="d-flex gap-2 gap-md-3 py-3 pe-2 px-md-3 h-100 rounded text-decoration-none #{bg_color if bg_color else 'bg-100'}">
-                <div t-if="icon" class="o_portal_icon d-none">
-                    <img t-attf-src="#{icon}"/>
+            <a t-att-href="url" t-att-title="title" t-attf-class="d-flex gap-2 gap-md-3 py-3 pe-2 px-md-3 h-100 rounded text-decoration-none #{entry.bg_color if entry.bg_color else 'bg-100'}">
+                <div class="o_portal_icon">
+                    <span t-field="entry.img"
+                          t-options="{'widget': 'image', 'width': 40, 'height': 40}"
+                          role="img"
+                          style="display: block; width: 40px; height: auto;"
+                          t-attf-aria-label="'Icon for %s' % entry.title"
+                          t-attf-title="entry.title"/>
                 </div>
-                <div t-att-class="'alert-link' if bg_color else ''">
-                    <div t-attf-class="mt-0 mb-1 fs-5 fw-normal lh-1 #{'d-flex gap-2' if placeholder_count or count else ''}">
-                        <t t-out="count"/>
-                        <span t-if="placeholder_count and not force_show" t-att-class="'fw-bold' if show_count else 'd-none'" t-att-data-placeholder_count="placeholder_count"/>
-                        <span t-out="title"/>
+                <div t-att-class="'alert-link' if entry.bg_color else ''">
+                    <div t-attf-class="mt-0 mb-1 fs-5 fw-normal lh-1 #{'d-flex gap-2' if entry.placeholder_count or count else ''}">
+                        <span t-if="entry.placeholder_count" t-att-class="'fw-bold' if show_count else 'd-none'" t-field="entry.placeholder_count" t-att-data-placeholder_count="entry.placeholder_count"/>
+                        <span t-field="entry.title"/>
                     </div>
                     <div class="opacity-75">
-                        <t t-out="text"/>
+                        <p t-field="entry.text"></p>
                     </div>
                 </div>
             </a>

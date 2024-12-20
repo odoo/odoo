@@ -12,30 +12,24 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home_invoice" name="Invoices / Bills" inherit_id="portal.portal_my_home" customize_show="True" priority="30">
-        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
-            <t t-set="portal_client_category_enable" t-value="True"/>
-            <t t-set="portal_vendor_category_enable" t-value="True"/>
-        </xpath>
-        <div id="portal_client_category" position="inside">
-            <t t-call="portal.portal_docs_entry">
-                <t t-set="icon" t-value="'/account/static/src/img/Bill.svg'"/>
-                <t t-set="title">Your Invoices</t>
-                <t t-set="url" t-value="'/my/invoices?filterby=invoices'"/>
-                <t t-set="text">Follow, download or pay your invoices</t>
-                <t t-set="placeholder_count" t-value="'invoice_count'"/>
-            </t>
-        </div>
-        <div id="portal_vendor_category" position="inside">
-            <t t-call="portal.portal_docs_entry">
-                <t t-set="icon" t-value="'/account/static/src/img/Bill.svg'"/>
-                <t t-set="title">Our Invoices</t>
-                <t t-set="url" t-value="'/my/invoices?filterby=bills'"/>
-                <t t-set="text">Follow, download or pay our invoices</t>
-                <t t-set="placeholder_count" t-value="'bill_count'"/>
-            </t>
-        </div>
-    </template>
+    <data noupdate="1">
+        <record id="portal_invoice_client" model="portal.entry">
+            <field name="title">Your Invoices</field>
+            <field name="text">Follow, download or pay your invoices</field>
+            <field name="url">/my/invoices?filterby=invoices</field>
+            <field name="icon">/account/static/src/img/Bill.svg</field>
+            <field name="placeholder_count">invoice_count</field>
+            <field name="bg_color">bg-light</field>
+        </record>
+        <record id="portal_invoice_vendor" model="portal.entry">
+            <field name="title">Our Invoices</field>
+            <field name="text">Follow, download or pay our invoices</field>
+            <field name="url">/my/invoices?filterby=bills</field>
+            <field name="icon">/account/static/src/img/Bill.svg</field>
+            <field name="placeholder_count">bill_count</field>
+            <field name="bg_color">bg-light</field>
+        </record>
+    </data>
 
     <template id="portal_my_invoices" name="My Invoices and Payments">
       <t t-call="portal.portal_layout">
