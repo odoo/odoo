@@ -291,7 +291,14 @@ class SaleOrder(models.Model):
         base_lines = []
         for line in order_lines:
             base_line = line._prepare_base_line_for_taxes_computation()
-            base_line['discount_taxes'] = base_line['tax_ids'].flatten_taxes_hierarchy().filtered(lambda tax: tax.amount_type != 'fixed')
+            taxes = base_line['tax_ids'].flatten_taxes_hierarchy()
+            if not reward.program_id.is_payment_program:
+                # To compute the discountable amount we get the subtotal and add
+                # non-fixed tax totals. This way fixed taxes will not be discounted
+                # This does not apply to Gift Cards and e-Wallet, where the total
+                # order amount may be paid with the card balance
+                taxes = taxes.filtered(lambda t: t.amount_type != 'fixed')
+            base_line['discount_taxes'] = taxes
             base_lines.append(base_line)
         AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
