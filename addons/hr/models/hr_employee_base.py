@@ -201,7 +201,8 @@ class HrEmployeeBase(models.AbstractModel):
     @api.depends('job_id')
     def _compute_job_title(self):
         for employee in self.filtered('job_id'):
-            employee.job_title = employee.job_id.name
+            if not employee.job_title:
+                employee.job_title = employee.job_id.name
 
     @api.depends('address_id')
     def _compute_phones(self):

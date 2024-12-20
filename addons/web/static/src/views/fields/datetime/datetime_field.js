@@ -17,6 +17,7 @@ import { standardFieldProps } from "../standard_field_props";
  *  maxDate?: string;
  *  minDate?: string;
  *  placeholder?: string;
+ *  endDatePlaceholder?: string;
  *  required?: boolean;
  *  rounding?: number;
  *  startDateField?: string;
@@ -39,6 +40,7 @@ export class DateTimeField extends Component {
         minDate: { type: String, optional: true },
         alwaysRange: { type: Boolean, optional: true },
         placeholder: { type: String, optional: true },
+        endDatePlaceholder: { type: String, optional: true },
         required: { type: Boolean, optional: true },
         rounding: { type: Number, optional: true },
         startDateField: { type: String, optional: true },
@@ -349,6 +351,7 @@ export const dateField = {
         minDate: options.min_date,
         alwaysRange: exprToBoolean(options.always_range),
         placeholder: attrs.placeholder,
+        endDatePlaceholder: options['placeholder'],
         required: dynamicInfo.required,
         rounding: options.rounding && parseInt(options.rounding, 10),
         startDateField: options[START_DATE_FIELD_OPTION],
