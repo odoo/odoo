@@ -644,11 +644,11 @@ class HrEmployee(models.Model):
             employee.barcode = '041'+"".join(choice(digits) for i in range(9))
 
     def _get_tz(self):
-        # Finds the first valid timezone in his tz, his work hours tz,
-        #  the company calendar tz or UTC and returns it as a string
+        # Finds the first valid timezone in his work hours tz, his tz,
+        # the company calendar tz or UTC and returns it as a string
         self.ensure_one()
-        return self.tz or\
-               self.resource_calendar_id.tz or\
+        return self.resource_calendar_id.tz or\
+               self.tz or\
                self.company_id.resource_calendar_id.tz or\
                'UTC'
 
