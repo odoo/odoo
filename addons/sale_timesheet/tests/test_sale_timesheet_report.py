@@ -35,7 +35,7 @@ class TestSaleTimesheetReport(TestCommonSaleTimesheet):
         task = self.env['project.task'].search([('sale_line_id', '=', so_line.id)])
 
         # Register a timesheet entry of 24 hours
-        self.env['account.analytic.line'].create({
+        timesheet = self.env['account.analytic.line'].create({
             'name': 'Test Line',
             'project_id': task.project_id.id,
             'task_id': task.id,
@@ -44,9 +44,6 @@ class TestSaleTimesheetReport(TestCommonSaleTimesheet):
             'so_line': so_line.id,
             'order_id': sale_order.id,
         })
-        self.env.flush_all()
-
-        report = self.env['timesheets.analysis.report'].search([('so_line', '=', so_line.id)])
-        self.assertEqual(report.unit_amount, 24)
-        self.assertEqual(report.timesheet_revenues, 30)
-        self.assertEqual(report.billable_time, 24)
+        self.assertEqual(timesheet.unit_amount, 24)
+        self.assertEqual(timesheet.timesheet_revenues, 30)
+        self.assertEqual(timesheet.billable_time, 24)
