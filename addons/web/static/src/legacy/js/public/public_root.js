@@ -59,7 +59,8 @@ export const PublicRoot = publicWidget.Widget.extend({
                 startInteractions(el) {
                     super.startInteractions(el);
                     if (!this.startFromEventHandler) {
-                        publicRoot._startWidgets($(el || this.el), { fromInteractionPatch: true })
+                        // this.editMode is assigned by website_edit_service
+                        publicRoot._startWidgets($(el || this.el), { fromInteractionPatch: true, editableMode: this.editMode })
                     }
                 },
                 stopInteractions(el) {

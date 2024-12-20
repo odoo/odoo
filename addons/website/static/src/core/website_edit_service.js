@@ -68,6 +68,7 @@ registry.category("services").add("website_edit", {
                         editableInteractions = buildEditableInteractions(builders);
                     }
                     editMode = true;
+                    publicInteractions.editMode = true;
                     publicInteractions.activate(editableInteractions);
                 } else {
                     publicInteractions.startInteractions(target);
