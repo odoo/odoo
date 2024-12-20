@@ -10,7 +10,11 @@ class KanbanColorPickerField extends Component {
     static props = standardFieldProps;
 
     get colors() {
-        return ColorList.COLORS;
+        return ColorList.COLORS.slice(1);
+    }
+
+    get selectedColor() {
+        return this.props.record.data.color;
     }
 
     selectColor(colorIndex) {
