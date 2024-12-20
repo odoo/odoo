@@ -10,3 +10,12 @@ class ProductAttribute(models.Model):
         selection=[('visible', "Visible"), ('hidden', "Hidden")],
         default='visible',
     )
+    show_variants = fields.Selection(
+        selection=[
+            ('visible', "Visible"),
+            ('hidden', "Hidden"),
+            ('hover', "Hover"),
+        ],
+        default='hidden',
+        help="Variants are available for selection from your /shop page",
+    )

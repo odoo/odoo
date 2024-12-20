@@ -47,6 +47,12 @@ class ProductAttributeValue(models.Model):
         max_width=70,
         max_height=70,
     )
+    attribute_image = fields.Image(
+        string="Color Image",
+        help="You can upload an image that will be used as the color of the attribute value.",
+        max_width=70,
+        max_height=70,
+    )
     active = fields.Boolean(default=True)
 
     is_used_on_products = fields.Boolean(

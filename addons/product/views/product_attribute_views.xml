@@ -61,13 +61,17 @@
                                        column_invisible="parent.display_type == 'multi'"/>
                                 <field name="html_color"
                                        widget="color"
-                                       column_invisible="parent.display_type != 'color'"
-                                       invisible="image"/>
+                                       column_invisible="parent.display_type != 'color'"/>
                                 <field name="image"
                                        widget="image"
                                        options="{'size': [70, 70]}"
                                        class="oe_avatar text-start float-none"
                                        column_invisible="parent.display_type != 'color'"/>
+                                <field name="attribute_image"
+                                        widget="image"
+                                        options="{'size': [70, 70]}"
+                                        class="oe_avatar text-start float-none"
+                                        column_invisible="parent.display_type != 'image'"/>
                                 <field name="default_extra_price" width="160px"/>
                                 <button
                                     name="action_add_to_products"

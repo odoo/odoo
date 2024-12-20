@@ -105,9 +105,9 @@
                     <t t-elif="attribute.display_type == 'color'">
                         <ul t-att-data-attribute_id="attribute.id" t-attf-class="list-inline o_wsale_product_attribute #{'d-none' if single_and_custom else ''}">
                             <li t-foreach="ptavs" t-as="ptav" class="list-inline-item me-1">
-                                <t t-set="img_style"
+                                <!-- <t t-set="img_style"
                                    t-value="'background:url(/web/image/product.template.attribute.value/%s/image); background-size:cover;' % ptav.id if ptav.image else ''"
-                                />
+                                /> -->
                                 <t t-set="color_style"
                                    t-value="'background:' + str(ptav.html_color or ptav.name if not ptav.is_custom else '')"
                                 />
@@ -129,6 +129,43 @@
                                         t-att-data-is_single_and_custom="single_and_custom"/>
                                 </label>
                             </li>
+                        </ul>
+                    </t>
+                    <t t-elif="attribute.display_type == 'image'">
+                        <ul
+                            t-att-data-attribute_id="attribute.id"
+                            t-attf-class="list-inline o_wsale_product_attribute #{'d-none' if single_and_custom else ''}"
+                        >
+                            <div
+                                t-foreach="ptavs"
+                                t-as="ptav"
+                                class="list-inline-item me-1"
+                            >
+                                <t
+                                    t-set="img_style"
+                                    t-value="'background:url(/web/image/product.template.attribute.value/%s/attribute_image); background-size:cover;' % ptav.id if ptav.attribute_image else ''"
+                                />
+                                <label
+                                    t-attf-style="#{img_style}"
+                                    t-attf-class="css_attribute_image #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''}"
+                                    t-att-data-value_name="ptav.name"
+                                >
+                                    <input
+                                        type="radio"
+                                        t-attf-class="js_variant_change #{attribute.create_variant}"
+                                        t-att-checked="ptav in combination"
+                                        t-att-name="'ptal-%s' % ptal.id"
+                                        t-att-value="ptav.id"
+                                        t-att-title="ptav.name"
+                                        t-att-data-attribute-value-id="ptav.product_attribute_value_id.id"
+                                        t-att-data-value_id="ptav.id"
+                                        t-att-data-attribute_name="attribute.name"
+                                        t-att-data-is_custom="ptav.is_custom"
+                                        t-att-data-is_single="single"
+                                        t-att-data-is_single_and_custom="single_and_custom"
+                                    />
+                                </label>
+                            </div>
                         </ul>
                     </t>
                 </li>
