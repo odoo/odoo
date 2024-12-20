@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api, _
+from odoo.exceptions import UserError
 from odoo.tools import float_compare
 
 class HrExpenseSplitWizard(models.TransientModel):
@@ -33,6 +34,8 @@ class HrExpenseSplitWizard(models.TransientModel):
 
     def action_split_expense(self):
         self.ensure_one()
+        if not self.expense_split_line_ids:
+            raise UserError(_("Unable to split as there are no expenses available."))
         expense_split = self.expense_split_line_ids[0]
         copied_expenses = self.env["hr.expense"]
         if expense_split:
