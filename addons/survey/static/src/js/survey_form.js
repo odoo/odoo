@@ -46,7 +46,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         var self = this;
         this.fadeInOutDelay = 400;
         return this._super.apply(this, arguments).then(function () {
-            self.options = self.$('form').data();
+            self.options = self.$("form.o_survey-fill-form").data();
             self.readonly = self.options.readonly;
             self.selectedAnswers = self.options.selectedAnswers;
             self.imgZoomer = false;
@@ -343,6 +343,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
      */
     _goToNextPage: function ({ isFinish = false } = {}) {
         this.$(".o_survey_main_title:visible").fadeOut(400);
+        this.$(".o_lang_selector:visible").fadeOut(400);
         this.preventEnterSubmit = false;
         this.readonly = false;
         this._nextScreen(
@@ -388,8 +389,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             if (this.options.questionsLayout === 'page_per_question') {
                 this.$('.o_survey_main_title').fadeOut(400);
             }
+            this.$(".o_lang_selector").fadeOut(400);
         } else {
-            var $form = this.$('form');
+            var $form = this.$("form.o_survey-fill-form");
             var formData = new FormData($form[0]);
 
             if (!options.skipValidation) {
