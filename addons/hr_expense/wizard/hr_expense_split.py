@@ -28,7 +28,7 @@ class HrExpenseSplit(models.TransientModel):
     name = fields.Char('Description', required=True)
     wizard_id = fields.Many2one('hr.expense.split.wizard')
     expense_id = fields.Many2one('hr.expense', string='Expense')
-    product_id = fields.Many2one('product.product', string='Product', required=True)
+    product_id = fields.Many2one('product.product', string='Product', required=True, domain="[('can_be_expensed', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     tax_ids = fields.Many2many('account.tax', domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase')]")
     total_amount = fields.Monetary("Total In Currency", required=True, compute='_compute_from_product_id', store=True, readonly=False)
     amount_tax = fields.Monetary(string='Tax amount in Currency', compute='_compute_amount_tax')
