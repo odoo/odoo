@@ -155,3 +155,21 @@ class TestControllerRedirect(TestLangUrl):
         # website.page
         assertUrlRedirect('/fr/page_1/', '/fr/page_1', "Check for website.page with language in URL.")
         assertUrlRedirect('/fr/page_1/?a=b', '/fr/page_1?a=b', "Check for website.page with language in URL + URL params.")
+
+    def test_04_sitemap_language(self):
+        """Ensure sitemap is in English even when navigating to the French version of the website."""
+
+        # Set up a website in English and French
+        website = self.website
+        website.write({
+            "language_ids": [(4, self.env.ref("base.lang_en").id), (4, self.env.ref("base.lang_fr").id)]
+        })
+        # Navigate to the French version of the website
+        response = self.url_open("/fr")
+        self.assertIn('/fr/contactus', response.text)
+
+        # Access the sitemap
+        response = self.url_open("/sitemap.xml")
+
+        # Ensure the sitemap content is still in English
+        self.assertNotIn("/fr/contactus", response.text)
