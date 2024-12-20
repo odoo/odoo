@@ -80,21 +80,21 @@ class AccountJournal(models.Model):
 
         (self - bank_cash_journals - sale_purchase_journals).kanban_dashboard_graph = False
 
+    def _get_json_activity_fields(self):
+        return ['id', 'res_id', 'res_model', 'summary', 'date_deadline']
+
     def _get_json_activity_data(self):
         today = fields.Date.context_today(self)
         activities = defaultdict(list)
         # search activity on move on the journal
         act_type_name = self.env['mail.activity.type']._field_to_sql('act_type', 'name')
+        act_fields = self._get_json_activity_fields()
         sql_query = SQL(
             """
-         SELECT activity.id,
-                activity.res_id,
-                activity.res_model,
-                activity.summary,
+         SELECT %(act_fields_select_query)s
       CASE WHEN activity.date_deadline < %(today)s THEN 'late' ELSE 'future' END as status,
                 %(act_type_name)s as act_type_name,
                 act_type.category as activity_category,
-                activity.date_deadline,
                 move.journal_id
            FROM account_move move
            JOIN mail_activity activity ON activity.res_id = move.id AND activity.res_model = 'account.move'
@@ -104,14 +104,10 @@ class AccountJournal(models.Model):
 
       UNION ALL
 
-         SELECT activity.id,
-                activity.res_id,
-                activity.res_model,
-                activity.summary,
+         SELECT %(act_fields_select_query)s
       CASE WHEN activity.date_deadline < %(today)s THEN 'late' ELSE 'future' END as status,
                 %(act_type_name)s as act_type_name,
                 act_type.category as activity_category,
-                activity.date_deadline,
                 journal.id as journal_id
            FROM account_journal journal
            JOIN mail_activity activity ON activity.res_id = journal.id AND activity.res_model = 'account.journal'
@@ -123,17 +119,16 @@ class AccountJournal(models.Model):
             act_type_name=act_type_name,
             ids=self.ids,
             company_ids=self.env.companies.ids,
+            act_fields_select_query=SQL(' '.join(f'activity.{field},' for field in act_fields)),
         )
         self.env.cr.execute(sql_query)
         for activity in self.env.cr.dictfetchall():
+            date_deadline = odoo_format_date(self.env, activity['date_deadline'])
             act = {
-                'id': activity['id'],
-                'res_id': activity['res_id'],
-                'res_model': activity['res_model'],
-                'status': activity['status'],
+                **activity,
                 'name': activity['summary'] or activity['act_type_name'],
-                'activity_category': activity['activity_category'],
-                'date': odoo_format_date(self.env, activity['date_deadline'])
+                'date': date_deadline,
+                'date_deadline': date_deadline,
             }
 
             activities[activity['journal_id']].append(act)
