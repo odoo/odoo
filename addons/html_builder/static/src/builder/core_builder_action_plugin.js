@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 class CoreBuilderActionPlugin extends Plugin {
     static id = "CoreBuilderAction";
     resources = {
-        builder_actions: actions,
+        builder_actions: coreBuilderActions,
     };
 }
 registry.category("website-plugins").add(CoreBuilderActionPlugin.id, CoreBuilderActionPlugin);
@@ -42,7 +42,7 @@ const styleMap = {
     padding: getNumericStyle("padding"),
 };
 
-const actions = {
+export const coreBuilderActions = {
     classAction: {
         getPriority: ({ param: classNames = "" }) =>
             classNames?.trim().split(/\s+/).filter(Boolean).length || 0,

@@ -12,19 +12,11 @@
 
     <BuilderRow label.translate="Size">
         <BuilderButtonGroup>
-            <BuilderButton classAction="''" title="'Size 1x'">1x</BuilderButton>
-            <BuilderButton classAction="'fa-2x'" title="'Size 2x'">2x</BuilderButton>
-            <BuilderButton classAction="'fa-3x'" title="'Size 3x'">3x</BuilderButton>
-            <BuilderButton classAction="'fa-4x'" title="'Size 4x'">4x</BuilderButton>
-            <BuilderButton classAction="'fa-5x'" title="'Size 5x'">5x</BuilderButton>
-
-            <!-- TODO: nothing use it ??? Hidden buttons which allows to automatically remove other fa
-                sizing class we do not suggest.
-                TODO: implement a param to add those extra classes to remove
-                via selectClass (also fixes the fact that nothing is selected
-                if fa-1x is actually used on the icon in this case) -->
-            <!-- <BuilderButton classAction="'fa-1x'" dependencies="'fake'"/>
-            <BuilderButton classAction="'fa-lg'" dependencies="'fake'"/> -->
+            <BuilderButton action="'faResize'" actionParam="''" title="'Size 1x'">1x</BuilderButton>
+            <BuilderButton action="'faResize'" actionParam="'fa-2x'" title="'Size 2x'">2x</BuilderButton>
+            <BuilderButton action="'faResize'" actionParam="'fa-3x'" title="'Size 3x'">3x</BuilderButton>
+            <BuilderButton action="'faResize'" actionParam="'fa-4x'" title="'Size 4x'">4x</BuilderButton>
+            <BuilderButton action="'faResize'" actionParam="'fa-5x'" title="'Size 5x'">5x</BuilderButton>
         </BuilderButtonGroup>
     </BuilderRow>
 </t>

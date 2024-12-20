@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, click } from "@odoo/hoot-dom";
+import { click } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../../helpers";
@@ -14,8 +14,7 @@ test("should apply backgroundColor to the editing element", async () => {
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
-    await click(".we-bg-options-container .dropdown");
-    await animationFrame();
+    await contains(".we-bg-options-container .dropdown").click();
     await click(".o-overlay-item [data-color='o-color-1']");
     expect(":iframe .test-options-target").toHaveClass("test-options-target bg-o-color-1");
 });
@@ -28,8 +27,7 @@ test("should apply color to the editing element", async () => {
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
-    await click(".we-bg-options-container .dropdown");
-    await animationFrame();
+    await contains(".we-bg-options-container .dropdown").click();
     await click(".o-overlay-item [data-color='o-color-1']");
     expect(":iframe .test-options-target").toHaveClass("test-options-target text-o-color-1");
 });
