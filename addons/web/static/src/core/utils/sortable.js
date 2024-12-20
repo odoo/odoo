@@ -280,6 +280,7 @@ const hookParams = {
     },
     onDrag({ ctx }) {
         ctx.haveAlreadyChanged = false;
+        return pick(ctx.current, "element", "group");
     },
     onDragEnd({ ctx }) {
         return pick(ctx.current, "element", "group");
