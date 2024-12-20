@@ -147,6 +147,9 @@
                     <button name="button_unlock" type="object" string="Unlock" invisible="not locked" groups="purchase.group_purchase_manager" data-hotkey="l"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase" readonly="1"/>
                 </header>
+                <div class="alert alert-warning" role="alert" invisible="not purchase_warning_text">
+                    <field name="purchase_warning_text" class="fw-bold"/>
+                </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button"
@@ -229,7 +232,8 @@
                                 mode="list,kanban"
                                 context="{'default_state': 'draft'}"
                                 readonly="state == 'cancel' or locked">
-                                <list string="Purchase Order Lines" editable="bottom" limit="200">
+                                <list string="Purchase Order Lines" editable="bottom" limit="200"
+                                      decoration-warning="purchase_line_warn_msg">
                                     <control>
                                         <create name="add_product_control" string="Add a product"/>
                                         <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>

@@ -588,6 +588,37 @@ class TestSaleOrder(SaleCommon):
         })
         self.assertEqual(new_order.order_line.price_unit, 22.0)
 
+    def test_sale_warnings(self):
+        """Test warnings when partner/products with sale warnings are used."""
+        partner_with_warning = self.env['res.partner'].create({
+            'name': 'Test Partner', 'sale_warn_msg': 'Highly infectious disease'})
+        sale_order = self.env['sale.order'].create({'partner_id': partner_with_warning.id})
+
+        product_with_warning1 = self.env['product.product'].create({
+            'name': 'Test Product 1', 'sale_line_warn_msg': 'Highly corrosive'})
+        product_with_warning2 = self.env['product.product'].create({
+            'name': 'Test Product 2', 'sale_line_warn_msg': 'Toxic pollutant'})
+        self.env['sale.order.line'].create([
+            {
+                'order_id': sale_order.id,
+                'product_id': product_with_warning1.id,
+            },
+            {
+                'order_id': sale_order.id,
+                'product_id': product_with_warning2.id,
+            },
+            # Warnings for duplicate products should not appear.
+            {
+                'order_id': sale_order.id,
+                'product_id': product_with_warning1.id,
+            },
+        ])
+
+        expected_warnings = ('Test Partner - Highly infectious disease',
+                             'Test Product 1 - Highly corrosive',
+                             'Test Product 2 - Toxic pollutant')
+        self.assertEqual(sale_order.sale_warning_text, '\n'.join(expected_warnings))
+
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):

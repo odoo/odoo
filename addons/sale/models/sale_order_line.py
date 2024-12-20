@@ -304,6 +304,7 @@ class SaleOrderLine(models.Model):
         related='company_id.tax_calculation_rounding_method',
         string='Tax calculation rounding method', readonly=True)
     company_price_include = fields.Selection(related="company_id.account_price_include")
+    sale_line_warn_msg = fields.Text(related='product_id.sale_line_warn_msg')
 
     #=== COMPUTE METHODS ===#
 
