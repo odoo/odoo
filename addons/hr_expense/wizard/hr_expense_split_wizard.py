@@ -49,7 +49,7 @@ class HrExpenseSplitWizard(models.TransientModel):
             self.expense_split_line_ids -= expense_split
             if self.expense_split_line_ids:
                 for split in self.expense_split_line_ids:
-                    copied_expenses |= self.expense_id.copy(split._get_values())
+                    copied_expenses |= self.expense_id.with_context({'from_split_wizard': True}).copy(split._get_values())
 
                 attachment_ids = self.env['ir.attachment'].search([
                     ('res_model', '=', 'hr.expense'),
@@ -60,11 +60,10 @@ class HrExpenseSplitWizard(models.TransientModel):
                     for attachment in attachment_ids:
                         attachment.copy({'res_model': 'hr.expense', 'res_id': copied_expense.id})
 
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'hr.expense',
-            'name': _('Split Expenses'),
-            'view_mode': 'list,form',
-            'target': 'current',
-            'domain': [('id', 'in', (copied_expenses | self.expense_split_line_ids.expense_id).ids)],
-        }
+        split_expense_ids = self.env['hr.expense']
+        if self.expense_id.split_expense_origin_id:
+            split_expense_ids = self.env['hr.expense'].search([('split_expense_origin_id', '=', self.expense_id.split_expense_origin_id.id)])
+        (self.expense_id | copied_expenses).split_expense_origin_id = self.expense_id.split_expense_origin_id or self.expense_id
+        all_related_expenses = copied_expenses | self.expense_id | split_expense_ids
+
+        return all_related_expenses._get_records_action(name=_("Split Expenses"))
