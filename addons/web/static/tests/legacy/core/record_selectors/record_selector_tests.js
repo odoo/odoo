@@ -18,7 +18,26 @@ QUnit.module("Web Components", (hooks) => {
 
     let target;
     let serverData;
+<<<<<<< saas-17.2:addons/web/static/tests/legacy/core/record_selectors/record_selector_tests.js
 
+||||||| f89745919b9d2ea8b68e5e50832171d2e2e32047:addons/web/static/tests/core/record_selectors/record_selector_tests.js
+    const serverData = {
+        models: {
+            partner: {
+                fields: {
+                    display_name: { string: "Display name", type: "char" },
+                },
+                records: [
+                    { id: 1, display_name: "Alice" },
+                    { id: 2, display_name: "Bob" },
+                    { id: 3, display_name: "Charlie" },
+                ],
+            },
+        },
+    };
+
+=======
+>>>>>>> f57c4f42fd400ed2dca00dd71d2931f43fb0962f:addons/web/static/tests/core/record_selectors/record_selector_tests.js
     async function makeRecordSelector(props, { mockRPC } = {}) {
         class Parent extends Component {
             static components = { RecordSelector, MainComponentsContainer };
@@ -63,6 +82,20 @@ QUnit.module("Web Components", (hooks) => {
             },
         };
         target = getFixture();
+        serverData = {
+            models: {
+                partner: {
+                    fields: {
+                        display_name: { string: "Display name", type: "char" },
+                    },
+                    records: [
+                        { id: 1, display_name: "Alice" },
+                        { id: 2, display_name: "Bob" },
+                        { id: 3, display_name: "Charlie" },
+                    ],
+                },
+            },
+        };
         registry.category("services").add("hotkey", hotkeyService);
         registry.category("services").add("dialog", dialogService);
         registry.category("services").add("name", nameService);
