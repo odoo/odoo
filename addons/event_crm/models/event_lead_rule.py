@@ -185,6 +185,32 @@ class EventLeadRule(models.Model):
 
         return self.env['crm.lead'].create(lead_vals_list)
 
+    def action_execute_rule(self):
+        events = self.event_id or self.env['event.event'].search([('is_finished', '!=', True)])
+        leads_created = self._run_on_registrations(events.registration_ids)
+        if self.event_id:
+            event_name = self.event_id.name
+            if leads_created:
+                message = _("Yee-ha, %(leads_count)s Leads have been created for the %(name)s event.", leads_count=len(leads_created), name=event_name)
+            else:
+                message = _("Aww! No Lead is matching your rule for the %(name)s event.", name=event_name)
+        else:
+            if leads_created:
+                message = _("Yee-ha, %(leads_count)s Leads have been created for ongoing and future events."
+                            "You can execute it directly from any desired event.", leads_count=len(leads_created))
+            else:
+                message = _("Aww! No Lead is matching your rule for ongoing and future events."
+                            "You can execute it directly from any desired event.")
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'info',
+                'sticky': False,
+                'message': message,
+            }
+        }
+
     def _filter_registrations(self, registrations):
         """ Keep registrations matching rule conditions. Those are
 
