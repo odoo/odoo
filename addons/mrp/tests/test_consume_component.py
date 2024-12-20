@@ -228,8 +228,10 @@ class TestConsumeComponentCommon(common.TransactionCase):
 class TestConsumeComponent(TestConsumeComponentCommon):
     def test_option_enabled_and_qty_available(self):
         """Option enabled, qty available
-        -> Not Tracked components are fully consumed
-        -> Tracked components are fully consumed
+        if the production is done, then
+            -> Not Tracked components are consumed
+            -> Tracked components are consumed
+        otherwise, the components should not be consumed.
         """
 
         mo_none = self.create_mo(self.mo_none_tmpl, self.DEFAULT_AVAILABLE_TRIGGERS_COUNT)
@@ -255,12 +257,17 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         self.executeConsumptionTriggers(mo_none)
         self.executeConsumptionTriggers(mo_lot)
         for mov in mo_all.move_raw_ids:
-            self.assertTrue(mov.picked, "All components should be picked")
+            if mov.raw_material_production_id.state == 'done':
+                self.assertTrue(mov.picked, "All done productions should to consume components")
+            else:
+                self.assertFalse(mov.picked, "All productions with state different than done, should not to consume components")
 
     def test_option_enabled_and_qty_not_available(self):
         """Option enabled, qty not available
-        -> Not Tracked components are fully consumed
-        -> Tracked components are not consumed
+        if the production is done and are Not Tracked:
+            -> components are consumed
+        otherwise, if the production isn't done and or they are Tracked components
+            -> components are not consumed
         """
 
         mo_none = self.create_mo(self.mo_none_tmpl, self.DEFAULT_TRIGGERS_COUNT)
@@ -281,14 +288,19 @@ class TestConsumeComponent(TestConsumeComponentCommon):
 
         for mov in mo_all.move_raw_ids:
             if mov.has_tracking == 'none':
-                self.assertTrue(mov.picked, "components should be picked even without no quantity reserved")
+                if mov.raw_material_production_id.state == 'done':
+                    self.assertTrue(mov.picked, "components should be picked even without no quantity reserved")
+                else:
+                    self.assertFalse(mov.picked, "components should be not picked even without no quantity reserved")
             else:
                 self.assertEqual(mov.product_qty, mov.quantity, "Done quantity shall be equal to To Consume quantity.")
 
     def test_option_enabled_and_qty_partially_available(self):
         """Option enabled, qty partially available
-        -> Not Tracked components are fully consumed
-        -> Tracked components are partially consumed
+        if the production is done, then
+            -> Not Tracked components are fully consumed
+            -> Tracked components are partially consumed
+        otherwise, all components should not be consumed
         """
 
         # Update BoM serial component qty
@@ -328,7 +340,10 @@ class TestConsumeComponent(TestConsumeComponentCommon):
 
             for mov in mo.move_raw_ids:
                 if mov.has_tracking == "none":
-                    self.assertTrue(mov.picked, "non tracked components should be picked")
+                    if mov.raw_material_production_id.state == 'done':
+                        self.assertTrue(mov.picked, "non tracked components should be picked")
+                    else:
+                        self.assertFalse(mov.picked, "non tracked components should not be picked")
                 else:
                     self.assertEqual(mov.product_qty, mov.quantity, "Done quantity shall be equal to To Consume quantity.")
             mo.action_cancel()
@@ -376,20 +391,20 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         with Form(mo) as mo_form:
             mo_form.qty_producing = 1.0
         self.assertRecordValues(mo.move_raw_ids, [
-            {'should_consume_qty': 3.0, 'quantity': 3.0, 'picked': True, 'lot_ids': []},
+            {'should_consume_qty': 3.0, 'quantity': 3.0, 'picked': False, 'lot_ids': []},
             {'should_consume_qty': 2.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
             {'should_consume_qty': 1.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
         ])
         mo.action_generate_serial()
         self.assertRecordValues(mo.move_raw_ids, [
-            {'should_consume_qty': 3.0, 'quantity': 3.0, 'picked': True, 'lot_ids': []},
+            {'should_consume_qty': 3.0, 'quantity': 3.0, 'picked': False, 'lot_ids': []},
             {'should_consume_qty': 2.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
             {'should_consume_qty': 1.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
         ])
         self.assertTrue(mo.lot_producing_id)
         mo.picking_ids.button_validate()
         self.assertRecordValues(mo.move_raw_ids, [
-            {'quantity': 3.0, 'picked': True, 'lot_ids': []},
+            {'quantity': 3.0, 'picked': False, 'lot_ids': []},
             {'quantity': 2.0, 'picked': False, 'lot_ids': lot_1.ids},
             {'quantity': 1.0, 'picked': False, 'lot_ids': lot_2.ids},
         ])

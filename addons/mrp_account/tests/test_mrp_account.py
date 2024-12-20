@@ -186,7 +186,7 @@ class TestMrpAccount(TestMrpCommon):
         mo_form = Form(production_table)
         mo_form.qty_producing = 1
         production_table = mo_form.save()
-        production_table._post_inventory()
+        production_table.button_mark_done()
         move_value = production_table.move_finished_ids.filtered(lambda x: x.state == "done").stock_valuation_layer_ids.value
 
         # 1 table head at 20 + 4 table leg at 15 + 4 bolt at 10 + 10 screw at 10 + 1*20 (extra cost)
@@ -266,7 +266,6 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         mo_form = Form(production)
         mo_form.qty_producing = 1
         production = mo_form.save()
-        production._post_inventory()
         production.button_mark_done()
 
         # finished product move
