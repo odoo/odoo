@@ -16,7 +16,7 @@ import {
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { isColorGradient, isCSSColor, RGBA_REGEX, rgbToHex } from "@web/core/utils/colors";
+import { isColorGradient, isCSSColor, RGBA_REGEX, rgbaToHex } from "@web/core/utils/colors";
 import { ColorSelector } from "./color_selector";
 
 const RGBA_OPACITY = 0.6;
@@ -112,7 +112,7 @@ export class ColorPlugin extends Plugin {
         const activeTab = document
             .querySelector(".o_font_color_selector button.active")
             ?.innerHTML.trim();
-        if (backgroundColor.startsWith("rgba") && activeTab === "Solid") {
+        if (backgroundColor.startsWith("rgba") && (!activeTab || activeTab === "Solid")) {
             // Buttons in the solid tab of color selector have no
             // opacity, hence to match selected color correctly,
             // we need to remove applied 0.6 opacity.
@@ -124,9 +124,9 @@ export class ColorPlugin extends Plugin {
         }
 
         this.selectedColors.color =
-            hasGradient && hasTextGradientClass ? backgroundImage : rgbToHex(elStyle.color);
+            hasGradient && hasTextGradientClass ? backgroundImage : rgbaToHex(elStyle.color);
         this.selectedColors.backgroundColor =
-            hasGradient && !hasTextGradientClass ? backgroundImage : rgbToHex(backgroundColor);
+            hasGradient && !hasTextGradientClass ? backgroundImage : rgbaToHex(backgroundColor);
     }
 
     /**
@@ -238,14 +238,14 @@ export class ColorPlugin extends Plugin {
             }
         }
 
-        const hexColor = rgbToHex(color).toLowerCase();
+        const hexColor = rgbaToHex(color).toLowerCase();
         const selectedNodes = selectionNodes.filter((node) => {
             if (mode === "backgroundColor" && color) {
                 return !closestElement(node, "table.o_selected_table");
             }
             const li = closestElement(node, "li");
             if (li && color && this.dependencies.selection.isNodeContentsFullySelected(li)) {
-                return rgbToHex(li.style.color).toLowerCase() !== hexColor;
+                return rgbaToHex(li.style.color).toLowerCase() !== hexColor;
             }
             return true;
         });
@@ -399,7 +399,7 @@ export class ColorPlugin extends Plugin {
         const usedCustomColors = new Set();
         for (const font of allFont) {
             if (isCSSColor(font.style[mode])) {
-                usedCustomColors.add(rgbToHex(font.style[mode]));
+                usedCustomColors.add(rgbaToHex(font.style[mode]));
             }
         }
         return usedCustomColors;
