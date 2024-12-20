@@ -15,7 +15,7 @@ import operator
 import pytz
 
 from odoo import exceptions, http, fields, tools, _
-from odoo.http import request
+from odoo.http import content_disposition, request
 from odoo.osv import expression
 from odoo.tools import is_html_empty, plaintext2html
 from odoo.tools.misc import babel_locale_parse
@@ -532,3 +532,46 @@ class EventTrackController(http.Controller):
             utc.localize(dt, is_dst=False).astimezone(timezone(tz_name))
             for dt in datetimes
         ]
+
+    def _get_email_reminder(self):
+        return request.env.user.email if request.env.user.email else request.session.get('event_track_email_reminder')
+
+    @http.route('/event/has_email_reminder', type="jsonrpc", auth="public", website=True)
+    def has_email_reminder(self):
+        return {'hasEmailReminder': bool(self._get_email_reminder())}
+
+    @http.route('/event/send_email_reminder', type="jsonrpc", auth="public", website=True)
+    def send_email_reminder(self, track_id):
+        email_to = self._get_email_reminder()
+        track = request.env['event.track'].browse(track_id)
+
+        agenda_urls = track._get_event_track_resource_urls()
+        context = {
+            'google_url': agenda_urls.get('google_url'),
+            'iCal_url': agenda_urls.get('iCal_url'),
+            'yahoo_url': agenda_urls.get('yahoo_url'),
+            'lang': request.cookies.get('frontend_lang') if request.cookies.get('frontend_lang') else request.env.user._is_public()
+        }
+        template = self.env.ref("website_event_track.email_reminder").sudo().with_context(context)
+        template.send_mail(track.id, email_values={"email_to": email_to})
+
+    @http.route('/event/add_session_email_reminder', type='jsonrpc', methods=['POST'], auth="public", website=True, sitemap=False)
+    def add_session_email_reminder(self, **kwargs):
+        request.session.update(event_track_email_reminder=kwargs.get('email'))
+        self.send_email_reminder(kwargs.get('track_id'))
+
+    @http.route(['''/event/<model("event.event"):event>/track/<model("event.track"):track>/ics'''], type='http', auth="public")
+    def event_track_ics_file(self, event, track, **kwargs):
+        lang = request.context.get('lang', request.env.user.lang)
+        if request.env.user._is_public():
+            lang = request.cookies.get('frontend_lang')
+        track = track.with_context(lang=lang)
+        files = track._get_ics_file()
+        if not track.id in files:
+            return NotFound()
+        content = files[track.id]
+        return request.make_response(content, [
+            ('Content-Type', 'application/octet-stream'),
+            ('Content-Length', len(content)),
+            ('Content-Disposition', content_disposition(f'{event.name}-{track.name}.ics'))
+        ])
