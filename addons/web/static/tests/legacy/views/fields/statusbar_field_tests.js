@@ -464,7 +464,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector("[aria-label='Current state']").textContent,
+            target.querySelector("[aria-checked='true']").textContent,
             "aaa",
             "default status is 'aaa'"
         );
@@ -479,7 +479,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_statusbar_status .dropdown-toggle:not(.d-none)");
         await click(target, ".o-dropdown--menu .dropdown-item");
         assert.strictEqual(
-            target.querySelector("[aria-label='Current state']").textContent,
+            target.querySelector("[aria-checked='true']").textContent,
             "second record",
             "status has changed to the selected dropdown item"
         );
