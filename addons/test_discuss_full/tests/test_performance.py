@@ -585,6 +585,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_account_name": False,
                 "whatsapp_channel_valid_until": False,
                 "whatsapp_partner_id": False,
             }
@@ -620,6 +621,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_account_name": False,
                 "whatsapp_channel_valid_until": False,
                 "whatsapp_partner_id": False,
             }
@@ -655,6 +657,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_account_name": False,
                 "whatsapp_channel_valid_until": False,
                 "whatsapp_partner_id": False,
             }
@@ -693,6 +696,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", [member_2.sudo().rtc_session_ids.id]]],
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_account_name": False,
                 "whatsapp_channel_valid_until": False,
                 "whatsapp_partner_id": False,
             }
@@ -728,6 +732,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_account_name": False,
                 "whatsapp_channel_valid_until": False,
                 "whatsapp_partner_id": False,
             }
@@ -763,6 +768,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_account_name": False,
                 "whatsapp_channel_valid_until": False,
                 "whatsapp_partner_id": False,
             }
@@ -798,6 +804,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "open",
                 "uuid": channel.uuid,
+                "whatsapp_account_name": False,
                 "whatsapp_channel_valid_until": False,
                 "whatsapp_partner_id": False,
             }
@@ -833,6 +840,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_account_name": False,
                 "whatsapp_channel_valid_until": False,
                 "whatsapp_partner_id": False,
             }
@@ -868,6 +876,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_account_name": False,
                 "whatsapp_channel_valid_until": False,
                 "whatsapp_partner_id": False,
             }
@@ -903,6 +912,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_account_name": False,
                 "whatsapp_channel_valid_until": False,
                 "whatsapp_partner_id": False,
             }
@@ -938,6 +948,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_account_name": False,
                 "whatsapp_channel_valid_until": False,
                 "whatsapp_partner_id": False,
             }
@@ -973,6 +984,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_account_name": False,
                 "whatsapp_channel_valid_until": False,
                 "whatsapp_partner_id": False,
             }
