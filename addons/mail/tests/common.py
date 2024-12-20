@@ -739,6 +739,13 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                         sorted(tools.mail.email_split_and_format_normalize(fvalue)),
                         f'Message: expected {fvalue} for {fname}, got {message[fname]}',
                     )
+                # improve log, easier in test with multiple partners
+                elif fname in ('notified_partner_ids', 'partner_ids'):
+                    self.assertEqual(
+                        message[fname], fvalue,
+                        f'Message: expected {fvalue} for {fname}, got {message[fname]}\n'
+                        f'Names: expected {sorted(fvalue.mapped("name"))}, got {sorted(message[fname].mapped("name"))}',
+                    )
                 else:
                     self.assertEqual(
                         message[fname], fvalue,

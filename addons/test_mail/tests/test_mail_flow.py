@@ -152,7 +152,9 @@ class TestMailFlow(MailCommon, TestRecipients):
         self.assertEqual(lead_as_emp.message_partner_ids, self.partner_employee)
         # adds other employee and a portal customer as followers
         lead_as_emp.message_subscribe(partner_ids=(self.partner_employee_2 + self.partner_portal).ids)
-        self.assertEqual(lead_as_emp.message_partner_ids, self.partner_employee + self.partner_employee_2 + self.partner_portal)
+        self.assertEqual(
+            lead_as_emp.message_partner_ids, self.partner_employee + self.partner_employee_2 + self.partner_portal,
+            'Should have added people subscribed above')
         # updates some customer information
         lead_as_emp.write({
             'customer_name': 'Sylvie Lelitre (Zboing)',
@@ -273,6 +275,10 @@ class TestMailFlow(MailCommon, TestRecipients):
             MAIL_TEMPLATE, [partner_sylvie.email_normalized], reply_all=True,
             cc=f'{self.test_emails[3]}, {self.test_emails[4]}',  # used mainly for existing partners currently
         )
+        self.assertEqual(
+            lead_as_emp.message_partner_ids,
+            partner_sylvie + self.partner_employee + self.partner_employee_2 + self.partner_portal,
+            'Should have added Sylvie, author of incoming email, as valid authors are automatically added')
         self.assertEqual(len(lead.message_ids), 3, 'Incoming email + chatter reply + customer reply')
         self.assertMailNotifications(
             lead.message_ids[0],
