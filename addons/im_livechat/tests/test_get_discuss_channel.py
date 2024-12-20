@@ -36,7 +36,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     'anonymous_name': 'Visitor 22',
                     'previous_operator_id': operator.partner_id.id,
                     'channel_id': self.livechat_channel.id,
-                    'country_id': belgium.id,
                 },
             )
         channel_info = data["discuss.channel"][0]
@@ -88,7 +87,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         data = self.make_jsonrpc_request('/im_livechat/get_session', {
             'anonymous_name': 'whatever',
             'previous_operator_id': operator.partner_id.id,
-            'user_id': test_user.id,
             'channel_id': self.livechat_channel.id,
         })
         channel_info = data["discuss.channel"][0]
@@ -180,7 +178,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         data = self.make_jsonrpc_request('/im_livechat/get_session', {
             'anonymous_name': 'whatever',
             'previous_operator_id': operator.partner_id.id,
-            'user_id': operator.id,
             'channel_id': self.livechat_channel.id,
         })
         channel_info = data["discuss.channel"][0]

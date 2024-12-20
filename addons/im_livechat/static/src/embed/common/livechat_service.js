@@ -216,7 +216,6 @@ export class LivechatService {
                     ? this.thread.chatbot?.script.id
                     : this.rule.chatbotScript?.id,
                 previous_operator_id: expirableStorage.getItem(OPERATOR_STORAGE_KEY),
-                temporary_id: this.thread?.id,
                 persisted: persist,
             },
             { shadow: true }

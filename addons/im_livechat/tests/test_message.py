@@ -65,7 +65,6 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                 {
                     "anonymous_name": "anon 1",
                     "previous_operator_id": self.users[0].partner_id.id,
-                    "country_id": self.env.ref("base.in").id,
                     "channel_id": im_livechat_channel.id,
                 },
             )["discuss.channel"][0]["id"]
@@ -168,7 +167,6 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                 {
                     "anonymous_name": "anon 1",
                     "previous_operator_id": self.users[0].partner_id.id,
-                    "country_id": self.env.ref("base.in").id,
                     "channel_id": im_livechat_channel.id,
                 },
             )["discuss.channel"][0]["id"]
