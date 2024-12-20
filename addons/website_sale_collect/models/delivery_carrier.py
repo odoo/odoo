@@ -51,7 +51,7 @@ class DeliveryCarrier(models.Model):
 
     # === BUSINESS METHODS ===#
 
-    def _in_store_get_close_locations(self, partner_address, product_id=None):
+    def _in_store_get_close_locations(self, partner_address, product_id=None, selected_country=None):
         """ Get the formatted close pickup locations sorted by distance to the partner address.
 
         :param res.partner partner_address: The address to use to sort the pickup locations.
@@ -71,7 +71,10 @@ class DeliveryCarrier(models.Model):
 
         pickup_locations = []
         order_sudo = request.website.sale_get_order()
-        for wh in self.warehouse_ids:
+        warehouses = self.warehouse_ids
+        if selected_country:
+            warehouses = warehouses.filtered(lambda wh: wh.partner_id.country_code == selected_country)
+        for wh in warehouses:
             # Prepare the stock data based on either the product or the order.
             if product:  # Called from the product page.
                 in_store_stock_data = utils.format_product_stock_values(product, wh.id)
