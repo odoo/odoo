@@ -2280,6 +2280,9 @@ const ListUserValueWidget = UserValueWidget.extend({
             if (typeof value === 'object') {
                 const recordData = value;
                 const { id, display_name } = recordData;
+                // This ensures that both the toggler and delete icons are displayed
+                recordData.notToggleable = false;
+                recordData.undeletable = false;
                 delete recordData.id;
                 delete recordData.display_name;
                 this._addItemToTable(id, display_name, recordData);

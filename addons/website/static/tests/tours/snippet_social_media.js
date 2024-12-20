@@ -96,7 +96,7 @@ registerWebsitePreviewTour('snippet_social_media', {
     },
     {
         content: "Ensure twitter became first",
-        trigger: ':iframe .s_social_media:has(a:eq(0)[href="/website/social/twitter"])',
+        trigger: ':iframe .s_social_media:has(a:eq(0)[href="https://twitter.com/Odoo"])',
     },
     {
         content: 'Drag the facebook link at the end of the list',
@@ -116,13 +116,13 @@ registerWebsitePreviewTour('snippet_social_media', {
     {
         content: "Check if the result is correct before removing",
         trigger: ":iframe .s_social_media" +
-                 ":has(a:eq(0)[href='/website/social/twitter'])" +
-                 ":has(a:eq(1)[href='/website/social/linkedin'])" +
-                 ":has(a:eq(2)[href='/website/social/youtube'])" +
-                 ":has(a:eq(3)[href='/website/social/instagram'])" +
-                 ":has(a:eq(4)[href='/website/social/github'])" +
-                 ":has(a:eq(5)[href='/website/social/tiktok'])" +
-                 ":has(a:eq(6)[href='https://www.youtu.be/y7TlnAv6cto']:has(i.fa-youtube))" +
+                 ":has(a:eq(0)[href='https://twitter.com/Odoo'])" +
+                 ":has(a:eq(1)[href='https://www.linkedin.com/company/odoo'])" +
+                 ":has(a:eq(2)[href='https://www.youtube.com/user/OpenERPonline'])" +
+                 ":has(a:eq(3)[href='https://www.instagram.com/explore/tags/odoo/'])" +
+                 ":has(a:eq(4)[href='https://github.com/odoo'])" +
+                 ":has(a:eq(5)[href='https://www.tiktok.com/@odoo'])" +
+                 ":has(a:eq(6)[href='https://www.youtu.be/y7TlnAv6cto']:has(i.fa-youtube-play))" +
                  ":has(a:eq(7)[href='https://whatever.it/1EdSw9X']:has(i.fa-pencil))" +
                  ":has(a:eq(8)[href='https://instagr.am/odoo.official/']:has(i.fa-instagram))",
     },
@@ -140,7 +140,7 @@ registerWebsitePreviewTour('snippet_social_media', {
     ...preventRaceConditionStep,
     {
         content: 'Delete the custom link',
-        trigger: 'we-list we-button.o_we_select_remove_option',
+        trigger: 'we-list we-button.fa-minus',
         run: 'click',
     },
     {
@@ -155,13 +155,13 @@ registerWebsitePreviewTour('snippet_social_media', {
     {
         content: "Check if the result is correct after removing",
         trigger: ":iframe .s_social_media" +
-                 ":has(a:eq(0)[href='/website/social/twitter'])" +
-                 ":has(a:eq(1)[href='/website/social/linkedin'])" +
-                 ":has(a:eq(2)[href='/website/social/youtube'])" +
-                 ":has(a:eq(3)[href='/website/social/instagram'])" +
-                 ":has(a:eq(4)[href='/website/social/github'])" +
-                 ":has(a:eq(5)[href='/website/social/tiktok'])" +
-                 ":has(a:eq(6)[href='/website/social/facebook'])" +
+                 ":has(a:eq(0)[href='https://www.linkedin.com/company/odoo'])" +
+                 ":has(a:eq(1)[href='https://www.youtube.com/user/OpenERPonline'])" +
+                 ":has(a:eq(2)[href='https://www.instagram.com/explore/tags/odoo/'])" +
+                 ":has(a:eq(3)[href='https://github.com/odoo'])" +
+                 ":has(a:eq(4)[href='https://www.tiktok.com/@odoo'])" +
+                 ":has(a:eq(5)[href='https://www.paypal.com/abc']:has(i.fa-paypal))" +
+                 ":has(a:eq(6)[href='https://www.facebook.com/Odoo'])" +
                  ":has(a:eq(7)[href='https://whatever.it/1EdSw9X']:has(i.fa-pencil))" +
                  ":has(a:eq(8)[href='https://instagr.am/odoo.official/']:has(i.fa-instagram))",
     },
@@ -190,28 +190,59 @@ registerWebsitePreviewTour('snippet_social_media', {
     {
         content: "Check if the result is correct after setting the icon",
         trigger: ":iframe .s_social_media" +
-                 ":has(a:eq(0)[href='/website/social/twitter'])" +
-                 ":has(a:eq(1)[href='/website/social/linkedin'])" +
-                 ":has(a:eq(2)[href='/website/social/youtube'])" +
-                 ":has(a:eq(3)[href='/website/social/instagram'])" +
-                 ":has(a:eq(4)[href='/website/social/github'])" +
-                 ":has(a:eq(5)[href='/website/social/tiktok'])" +
-                 ":has(a:eq(6)[href='/website/social/facebook'])" +
+                 ":has(a:eq(0)[href='https://www.linkedin.com/company/odoo'])" +
+                 ":has(a:eq(1)[href='https://www.youtube.com/user/OpenERPonline'])" +
+                 ":has(a:eq(2)[href='https://www.instagram.com/explore/tags/odoo/'])" +
+                 ":has(a:eq(3)[href='https://instagram.com/odoo.official/])" +
+                 ":has(a:eq(4)[href='https://www.tiktok.com/@odoo'])" +
+                 ":has(a:eq(5)[href='https://www.paypal.com/abc']:has(i.fa-paypal))" +
+                 ":has(a:eq(6)[href='https://www.facebook.com/Odoo'])" +
                  ":has(a:eq(7)[href='https://whatever.it/1EdSw9X']:has(i.fa-heart))" +
                  ":has(a:eq(8)[href='https://instagr.am/odoo.official/']:has(i.fa-instagram))",
     },
     // Create a social network but replace its icon by an image before setting
     // the link (`replaceIcon` parameter set to `true`).
-    ...addNewSocialNetwork(9, 9, "https://google.com", true),
+    ...addNewSocialNetwork(10, 9, "https://google.com", true),
     // Create a social network after replacing the first icon by an image.
-    ...replaceIconByImage("/website/social/twitter"),
-    ...addNewSocialNetwork(10, 10, "https://facebook.com"),
+    ...replaceIconByImage("https://twitter.com/Odoo"),
+    ...addNewSocialNetwork(11, 10, "https://facebook.com"),
     {
         content: "Check if the result is correct after adding images",
         trigger: ":iframe .s_social_media" +
-                 ":has(a:eq(0)[href='/website/social/twitter']:has(img))" +
+                 ":has(a:eq(0)[href='https://twitter.com/Odoo']:has(img))" +
                  ":has(a:eq(9)[href='https://google.com']:has(img))" +
                  ":has(a:eq(10)[href='https://facebook.com']:has(img))",
+    },
+    // Additional test steps to check URL change and icon update
+    {
+        content: "Change Twitter URL to a different one",
+        trigger: "we-list table input:eq(0)",
+        run: "edit https://www.linkedin.com/company/odoo && click body",
+    },
+    {
+        content: "Ensure LinkedIn icon is found",
+        trigger: ":iframe .s_social_media" +
+                 ":has(a:eq(0)[href='https://www.linkedin.com/company/odoo']:has(i.fa-linkedin))",
+    },
+    {
+        content: "Change LinkedIn URL to a different one",
+        trigger: "we-list table input:eq(1)",
+        run: "edit https://www.instagram.com/explore/tags/odoo/ && click body",
+    },
+    {
+        content: "Ensure Instagram icon is found",
+        trigger: ":iframe .s_social_media" +
+                 ":has(a:eq(1)[href='https://www.instagram.com/explore/tags/odoo/']:has(i.fa-instagram))",
+    },
+    {
+        content: "Change Instagram URL to a different one",
+        trigger: "we-list table input:eq(2)",
+        run: "edit https://github.com/odoo && click body",
+    },
+    {
+        content: "Ensure GitHub icon is found",
+        trigger: ":iframe .s_social_media" +
+                 ":has(a:eq(2)[href='https://github.com/odoo']:has(i.fa-github))",
     },
     ...clickOnSave(),
 ]);
