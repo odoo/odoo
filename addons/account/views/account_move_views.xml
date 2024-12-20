@@ -1128,7 +1128,7 @@
                                            'default_display_type': 'product',
                                            'quick_encoding_vals': quick_encoding_vals,
                                        }" readonly="state != 'draft'">
-                                    <list editable="bottom" string="Journal Items" default_order="sequence, id">
+                                    <list name="journal_items" editable="bottom" string="Journal Items" default_order="sequence, id">
                                         <control>
                                             <create name="add_line_control" string="Add a line"/>
                                             <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>

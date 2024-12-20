@@ -6,6 +6,7 @@ import time
 from markupsafe import Markup
 
 from odoo import api, fields, models, Command, _
+from odoo.tools import OrderedSet
 
 _logger = logging.getLogger(__name__)
 
@@ -24,6 +25,10 @@ class AccountMove(models.Model):
     purchase_order_count = fields.Integer(compute="_compute_origin_po_count", string='Purchase Order Count')
     purchase_order_name = fields.Char(compute='_compute_purchase_order_name')
     is_purchase_matched = fields.Boolean(compute='_compute_is_purchase_matched')  # 0: PO not required or partially linked. 1: All lines linked
+    purchase_warning_text = fields.Text(
+        "Purchase Warning",
+        help="Internal warning for the partner or the products as set by the user.",
+        compute='_compute_purchase_warning_text')
 
     def _get_invoice_reference(self):
         self.ensure_one()
@@ -133,6 +138,20 @@ class AccountMove(models.Model):
                 move.purchase_order_name = move.invoice_line_ids.purchase_order_id.display_name
             else:
                 move.purchase_order_name = False
+
+    @api.depends('partner_id.name', 'partner_id.purchase_warn_msg', 'invoice_line_ids.product_id.purchase_line_warn_msg', 'invoice_line_ids.product_id.display_name')
+    def _compute_purchase_warning_text(self):
+        for move in self:
+            if move.move_type != 'in_invoice':
+                move.purchase_warning_text = ''
+                continue
+            warnings = OrderedSet()
+            if partner_msg := move.partner_id.purchase_warn_msg:
+                warnings.add(move.partner_id.name + ' - ' + partner_msg)
+            for product in move.invoice_line_ids.product_id:
+                if product_msg := product.purchase_line_warn_msg:
+                    warnings.add(product.display_name + ' - ' + product_msg)
+            move.purchase_warning_text = '\n'.join(warnings)
 
     def action_purchase_matching(self):
         self.ensure_one()
@@ -515,6 +534,7 @@ class AccountMoveLine(models.Model):
     is_downpayment = fields.Boolean()
     purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index='btree_not_null', copy=False)
     purchase_order_id = fields.Many2one('purchase.order', 'Purchase Order', related='purchase_line_id.order_id', readonly=True)
+    purchase_line_warn_msg = fields.Text(related='product_id.purchase_line_warn_msg')
 
     def _copy_data_extend_business_fields(self, values):
         # OVERRIDE to copy the 'purchase_line_id' field as well.

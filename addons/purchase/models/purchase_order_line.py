@@ -84,6 +84,7 @@ class PurchaseOrderLine(models.Model):
     )
     product_template_attribute_value_ids = fields.Many2many(related='product_id.product_template_attribute_value_ids', readonly=True)
     product_no_variant_attribute_value_ids = fields.Many2many('product.template.attribute.value', string='Product attribute values that do not create variants', ondelete='restrict')
+    purchase_line_warn_msg = fields.Text(related='product_id.purchase_line_warn_msg')
 
     @api.depends('product_qty', 'price_unit', 'tax_ids', 'discount')
     def _compute_amount(self):
