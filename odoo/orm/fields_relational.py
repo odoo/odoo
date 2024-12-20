@@ -539,6 +539,7 @@ class _RelationalMulti(_Relational):
             for record in records:
                 ids = field_patches.pop(record.id, ())
                 if ids:
+                    # TODO: filtered out depending of self.domain
                     value = tuple(unique(itertools.chain(cache_value, ids)))
                 else:
                     value = cache_value
