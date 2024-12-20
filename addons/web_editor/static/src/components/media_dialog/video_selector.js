@@ -97,6 +97,7 @@ export class VideoSelector extends Component {
             platform: null,
             vimeoPreviews: [],
             errorMessage: '',
+            timestamp: {isActive: false, startAt: "0"},
         });
         this.urlInputRef = useRef('url-input');
 
@@ -111,6 +112,34 @@ export class VideoSelector extends Component {
                         const { urlParameter } = this.OPTIONS[option.id];
                         return { ...option, value: src.indexOf(urlParameter) >= 0 };
                     });
+
+                    if(this.state.platform === this.PLATFORMS.youtube){
+                        if(URL.canParse(this.state.urlInput)){
+                            const url = new URL(this.state.urlInput);
+                            const params = new URLSearchParams(url.search);
+                            if (params.has("t")) {
+                                this.state.timestamp.isActive = true;
+                                this.state.timestamp.startAt = params.get("t");
+                            }
+                            else if (params.has("start")) { // Legacy support
+                                this.state.timestamp.isActive = true;
+                                this.state.timestamp.startAt = params.get("start");
+                            }else {
+                                this.state.timestamp.isActive = false;
+                                this.state.timestamp.startAt = "0";
+                            }
+                        }
+                    }
+                    else if(this.state.platform === this.PLATFORMS.vimeo){
+                        const isParam_t = this.state.urlInput.indexOf("#t=")
+                        if(isParam_t >= 0){
+                            this.state.timestamp.isActive = true;
+                            this.state.timestamp.startAt = this.state.urlInput.substring(isParam_t + 3).split("&")[0];
+                        }else{
+                            this.state.timestamp.isActive = false;
+                            this.state.timestamp.startAt = "0";
+                        }
+                    }
                 }
             }
         });
@@ -119,7 +148,53 @@ export class VideoSelector extends Component {
 
         useAutofocus();
 
-        this.onChangeUrl = debounce((ev) => this.updateVideo(ev.target.value), 500);
+        this.onChangeUrl = debounce((ev) => {
+            this.state.options = this.state.options.map((option) => {
+                const { urlParameter } = this.OPTIONS[option.id];
+                return { ...option, value: this.state.urlInput.indexOf(urlParameter) >= 0 };
+            });
+            if(this.state.platform === this.PLATFORMS.youtube){
+                if(URL.canParse(this.state.urlInput)){
+                    const url = new URL(this.state.urlInput);
+                    const params = new URLSearchParams(url.search);
+                    if (params.has("t")) {
+                        this.state.timestamp.isActive = true;
+                        this.state.timestamp.startAt = params.get("t");
+                    }
+                    else if (params.has("start")) { // Legacy support
+                        this.state.timestamp.isActive = true;
+                        this.state.timestamp.startAt = params.get("start");
+                    }else {
+                        this.state.timestamp.isActive = false;
+                        this.state.timestamp.startAt = "0";
+                    }
+                }
+            }
+            else if(this.state.platform === this.PLATFORMS.vimeo){
+                const isParam_t = this.state.urlInput.indexOf("#t=")
+                if(isParam_t >= 0){
+                    this.state.timestamp.isActive = true;
+                    this.state.timestamp.startAt = this.state.urlInput.substring(isParam_t + 3).split("&")[0];
+                }else{
+                    this.state.timestamp.isActive = false;
+                    this.state.timestamp.startAt = "0";
+                }
+            }
+            this.updateVideo(ev.target.value);
+        }, 500);
+
+        this.onChangeStartAt = debounce(async (ev) => {
+            await this.updateVideo(ev.target.value);
+            this.state.urlInput = this.state.src
+        }, 500);
+
+        this.onChangeIsActive = debounce(async (ev) => {
+            if(!this.state.timestamp.isActive){
+                this.state.timestamp.startAt = "0";
+            }
+            await this.updateVideo(ev.target.value);
+            this.state.urlInput = this.state.src
+        }, 500);
     }
 
     get shownOptions() {
@@ -137,6 +212,7 @@ export class VideoSelector extends Component {
             return option;
         });
         await this.updateVideo();
+        this.state.urlInput = this.state.src
     }
 
     async onClickSuggestion(src) {
@@ -148,6 +224,7 @@ export class VideoSelector extends Component {
         if (!this.state.urlInput) {
             this.state.src = '';
             this.state.urlInput = '';
+            this.state.timestamp = {isActive: false, startAt: "0"},
             this.state.options = [];
             this.state.platform = null;
             this.state.errorMessage = '';
@@ -183,7 +260,7 @@ export class VideoSelector extends Component {
             video_id: videoId,
             params,
             platform
-        } = await this._getVideoURLData(url, options);
+        } = await this._getVideoURLData(url, options, this.state.timestamp);
 
         if (!src) {
             this.state.errorMessage = _t("The provided url is not valid");
@@ -222,10 +299,12 @@ export class VideoSelector extends Component {
     /**
      * Keep rpc call in distinct method make it patchable by test.
      */
-    async _getVideoURLData(url, options) {
+    async _getVideoURLData(url, options, timestamp) {
         return await rpc('/web_editor/video_url/data', {
             video_url: url,
             ...options,
+            timestamp: timestamp.isActive,
+            startAt: timestamp.startAt,
         });
     }
 
