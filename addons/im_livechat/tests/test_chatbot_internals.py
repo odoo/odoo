@@ -2,8 +2,9 @@
 
 from odoo import Command
 from odoo.addons.im_livechat.tests import chatbot_common
-from odoo.exceptions import ValidationError
-from odoo.tests.common import tagged, new_test_user
+from odoo.tests.common import JsonRpcException, new_test_user, tagged
+from odoo.tools.misc import mute_logger
+
 
 @tagged("post_install", "-at_install")
 class ChatbotCase(chatbot_common.ChatbotCase):
@@ -55,16 +56,14 @@ class ChatbotCase(chatbot_common.ChatbotCase):
         self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_dispatch)
 
         self._post_answer_and_trigger_next_step(
-            discuss_channel,
-            self.step_dispatch_buy_software.name,
-            chatbot_script_answer=self.step_dispatch_buy_software
+            discuss_channel, chatbot_script_answer=self.step_dispatch_buy_software
         )
         self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_email)
 
-        with self.assertRaises(ValidationError, msg="Should raise an error since it's not a valid email"):
-            self._post_answer_and_trigger_next_step(discuss_channel, 'test')
+        with self.assertRaises(JsonRpcException, msg='odoo.exceptions.ValidationError'), mute_logger("odoo.http"):
+            self._post_answer_and_trigger_next_step(discuss_channel, email="test")
 
-        self._post_answer_and_trigger_next_step(discuss_channel, 'test@example.com')
+        self._post_answer_and_trigger_next_step(discuss_channel, email="test@example.com")
         self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_email_validated)
 
     def test_chatbot_steps_sequence(self):
