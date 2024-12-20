@@ -1525,11 +1525,11 @@ class TestPacking(TestPackingCommon):
         # Check that the quants have their expected location/package/quantities
         quantA = self.env['stock.quant'].search([('product_id', '=', self.productA.id), ('location_id', '=', loc_2.id)])
         quantB = self.env['stock.quant'].search([('product_id', '=', self.productB.id), ('location_id', '=', loc_2.id)])
-        self.assertEqual(pack.location_id.id, loc_2.id, "Package should have been moved to Location B.")
+        self.assertEqual(pack.location_id.id, False, "There should be no location, as there are no quants associated with the package")
         self.assertEqual(quantA.quantity, 5, "All 5 units of product A should be in location B")
         self.assertEqual(quantA.package_id.id, False, "There should be no package for product A as it was removed in the move.")
         self.assertEqual(quantB.quantity, 4, "All 4 units of product B should be in location B")
-        self.assertEqual(quantB.package_id.id, pack.id, "Product B should still be in the initial package.")
+        self.assertEqual(quantB.package_id.id, False, "There should be no package for product B as it was removed in the move.")
 
     def test_expected_to_pack(self):
         """ Test direct calling of `_to_pack` since it doesn't handle all multi-record cases
@@ -1918,3 +1918,70 @@ class TestPackagePropagation(TestPackingCommon):
         self.assertEqual(len(pack_lines), 2, 'Should have only 2 stock move line')
         self.assertFalse(pack_lines[0].result_package_id, 'Should not have the reusable package')
         self.assertEqual(pack_lines[1].result_package_id, disposable_package, 'Should have only the disposable package')
+
+    def test_partial_package_propagation(self):
+        """ The test partial package should not be carried forward to the subsequent picking process.
+            Only the specified quantity should be transferred to the next picking stage leaving the package behind
+        """
+        package = self.env['stock.quant.package'].create([{'name': 'package'}])
+        self.productA = self.env['product.product'].create({
+            'name': 'productA',
+            'is_storable': True,
+            'tracking': 'none',
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5, package_id=package)
+
+        # Enable move entire package for the delivery picking type
+        self.warehouse.out_type_id.show_entire_packs = True
+
+        # Create a delivery
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+        })
+        self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+        })
+
+        delivery.action_confirm()
+        delivery.action_assign()
+        self.assertEqual(len(delivery.move_ids), 1,
+                        'There should be a single move_id when the picking is assigned')
+        self.assertEqual(len(delivery.move_ids.move_line_ids), 1,
+                        'There should be a single move_line_id when the picking is assigned')
+        self.assertEqual(delivery.move_line_ids.package_id.id, package.id,
+                        'The move line must be reserved with the package')
+        self.assertEqual(delivery.move_line_ids.result_package_id.id, package.id,
+                        'The package in the move line result must match the source package')
+        self.assertEqual(delivery.move_line_ids.quantity, 5,
+                        'The entire packaging quantity should be reserved')
+
+        # Updating the move line quantities
+        delivery.move_ids.move_line_ids.quantity = 4
+        self.assertEqual(delivery.move_line_ids.package_id.id, package.id,
+                        'Updating the move line quantity should not remove the package_id')
+        self.assertEqual(delivery.move_line_ids.result_package_id.id, package.id,
+                        'Updating the move line quantity should not remove the result_package_id')
+
+        action_data = delivery.button_validate()
+        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(action_data['context'])).save()
+        backorder_wizard.process()
+
+        self.assertEqual(delivery.state, 'done')
+        self.assertEqual(delivery.move_line_ids.picked, True,
+                        'The move line must be marked as picked')
+        self.assertEqual(delivery.move_line_ids.package_id.id, package.id,
+                        'The move line must be reserved with the package')
+        self.assertEqual(delivery.move_line_ids.result_package_id.id, False,
+                        'The move line should not include a result_package_id')
+
+        quant = self.env['stock.quant'].search([('product_id', '=', self.productA.id), ('location_id', '=', self.stock_location.id)])
+        self.assertEqual(quant.quantity, 1.0, 'quant.quantity should = 1')
+        self.assertEqual(quant.package_id, package)
