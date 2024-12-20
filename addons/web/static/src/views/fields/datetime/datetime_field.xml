@@ -56,7 +56,7 @@
                         t-att-id="props.startDateField and props.id"
                         t-att-class="'o_input cursor-pointer ' + (props.warnFuture and isDateInTheFuture(1) ? 'text-danger' : '')"
                         autocomplete="off"
-                        t-att-placeholder="props.placeholder"
+                        t-att-placeholder="props.endDatePlaceholder or props.placeholder"
                         t-att-data-field="endDateField"
                         t-on-input="onInput"
                         t-att-title="props.warnFuture and isDateInTheFuture(1) ? futureWarningMsg : ''"

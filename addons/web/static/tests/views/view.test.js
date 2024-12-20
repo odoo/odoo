@@ -1149,3 +1149,39 @@ test("react to prop 'domain' changes", async function () {
     parent.state.domain = [["type", "=", "herbivorous"]];
     await animationFrame();
 });
+
+test("non empty prop 'endDatePlaceholder'", async function () {
+    expect.assertions(1);
+    class ToyController extends Component {
+        static props = ["*"];
+        static template = xml`<div/>`;
+        setup() {
+            expect(this.props.endDatePlaceholder).toBe("Enter the end date");
+        }
+    }
+    viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
+    const props = {
+        resModel: "animal",
+        type: "toy",
+        endDatePlaceholder: "Enter the end date",
+    };
+    await mountWithCleanup(View, { props });
+});
+
+test("fallback to 'placeholder' when 'endDatePlaceholder' is not passed", async function () {
+    expect.assertions(1);
+    class ToyController extends Component {
+        static props = ["*"];
+        static template = xml`<div/>`;
+        setup() {
+            expect(this.props.placeholder).toBe("Select the end date");
+        }
+    }
+    viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
+    const props = {
+        resModel: "animal",
+        type: "toy",
+        placeholder: "Select the end date",
+    };
+    await mountWithCleanup(View, { props });
+});
