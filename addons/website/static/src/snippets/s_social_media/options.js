@@ -138,7 +138,7 @@ options.registry.SocialMedia = options.Class.extend({
 
             let anchorEl = anchorEls[entry.domPosition];
             // new socal media
-            if(!entry.selected) {
+            if (!entry.selected) {
                 if (anchorEl) {
                     delete entry.domPosition;
                     anchorEl.remove();
@@ -150,14 +150,14 @@ options.registry.SocialMedia = options.Class.extend({
             if (!anchorEl) {
                 if (anchorEls.length === 0) {
                     // Create a HTML element if no one already exist.
-                    anchorEl = document.createElement('a');
-                    anchorEl.setAttribute('target', '_blank');
-                    const iEl = document.createElement('i');
-                    iEl.classList.add('fa', 'rounded-circle', 'shadow-sm', 'o_editable_media');
+                    anchorEl = document.createElement("a");
+                    anchorEl.setAttribute("target", "_blank");
+                    const iEl = document.createElement("i");
+                    iEl.classList.add("fa", "rounded-circle", "shadow-sm", "o_editable_media");
                     anchorEl.appendChild(iEl);
                 } else {
                     // Copy existing style if there is already another link.
-                    anchorEl = this.$target[0].querySelector(':scope > a').cloneNode(true);
+                    anchorEl = this.$target[0].querySelector(":scope > a").cloneNode(true);
                     this._removeSocialMediaClasses(anchorEl);
                 }
                 if (isDbField) {
@@ -176,23 +176,24 @@ options.registry.SocialMedia = options.Class.extend({
                 iEl.classList.add(faIcon);
             }
             // sets the icon for each social medias.
-            const href = anchorEl.getAttribute('href');
+            const href = anchorEl.getAttribute("href");
             if (href !== entry.display_name) {
                 let socialMedia = null;
                 if (this._isValidURL(entry.display_name)) {
                     // Propose an icon only for valid URLs (no mailto).
                     socialMedia = this._findRelevantSocialMedia(entry.display_name);
                     if (socialMedia) {
-                        const iEl = anchorEl.querySelector(ICON_SELECTOR);
                         this._removeSocialMediaClasses(anchorEl);
                         anchorEl.classList.add(`s_social_media_${socialMedia}`);
                         if (iEl) {
-                            socialMedia === "youtube" ? socialMedia = "youtube-play" : socialMedia;
+                            socialMedia === "youtube"
+                                ? (socialMedia = "youtube-play")
+                                : socialMedia;
                             iEl.classList.add(`fa-${socialMedia}`);
                         }
                     }
                 }
-                anchorEl.setAttribute('href', entry.display_name);
+                anchorEl.setAttribute("href", entry.display_name);
                 setAriaLabelOfSocialNetwork(anchorEl, socialMedia, entry.display_name);
             }
             // Place the link at the correct position
@@ -227,18 +228,18 @@ options.registry.SocialMedia = options.Class.extend({
         let listPosition = 0;
         let domPosition = 0;
         // Check the DOM to compute the state of the ListUserValueWidget.
-        const targetAs = [...this.$target[0].querySelectorAll(':scope > a')];
-        let entries = targetAs.map(el => {
-            const media = dbSocialValues[`social_${this._findRelevantSocialMedia(el.href)}`] ?
-                this._findRelevantSocialMedia(el.href) :
-                undefined;
+        const targetAs = [...this.$target[0].querySelectorAll(":scope > a")];
+        let entries = targetAs.map((el) => {
+            const media = dbSocialValues[`social_${this._findRelevantSocialMedia(el.href)}`]
+                ? this._findRelevantSocialMedia(el.href)
+                : undefined;
             // Avoid a DOM entry and a non-dom entry having the same position.
             while (this.entriesNotInDom.find(entry => entry.listPosition === listPosition)) {
                 listPosition++;
             }
             return {
                 id: weUtils.generateHTMLId(),
-                display_name: el.getAttribute('href'),
+                display_name: el.getAttribute("href"),
                 placeholder: `https://${encodeURIComponent(media) || 'example'}.com/yourPage`,
                 undeletable: false,
                 notToggleable: false,
@@ -277,9 +278,11 @@ options.registry.SocialMedia = options.Class.extend({
         // and remove the extra entry from this.entriesNotInDom such that when we delete the entry from the editor it should not be added again.
         if (params.activeValue) {
             const activeValues = JSON.parse(params.activeValue);
-            const activeIds = activeValues.map(entry => entry.id);
+            const activeIds = activeValues.map((entry) => entry.id);
             // Filter entriesNotInDom to exclude those not in activeValues
-            this.entriesNotInDom = this.entriesNotInDom.filter(entry => activeIds.includes(entry.id));
+            this.entriesNotInDom = this.entriesNotInDom.filter((entry) =>
+                activeIds.includes(entry.id)
+            );
         }
         entries = entries.concat(this.entriesNotInDom);
         entries.sort((a, b) => {

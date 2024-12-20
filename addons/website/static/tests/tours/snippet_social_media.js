@@ -215,8 +215,8 @@ registerWebsitePreviewTour('snippet_social_media', {
     },
     // Additional test steps to check URL change and icon update
     {
-        content: 'Change Twitter URL to a different one',
-        trigger: 'we-list table input:eq(0)',
+        content: "Change Twitter URL to a different one",
+        trigger: "we-list table input:eq(0)",
         run: "edit https://www.linkedin.com/company/odoo && click body",
     },
     {
@@ -225,8 +225,8 @@ registerWebsitePreviewTour('snippet_social_media', {
                  ":has(a:eq(0)[href='https://www.linkedin.com/company/odoo']:has(i.fa-linkedin))",
     },
     {
-        content: 'Change LinkedIn URL to a different one',
-        trigger: 'we-list table input:eq(1)',
+        content: "Change LinkedIn URL to a different one",
+        trigger: "we-list table input:eq(1)",
         run: "edit https://www.instagram.com/explore/tags/odoo/ && click body",
     },
     {
@@ -235,8 +235,8 @@ registerWebsitePreviewTour('snippet_social_media', {
                  ":has(a:eq(1)[href='https://www.instagram.com/explore/tags/odoo/']:has(i.fa-instagram))",
     },
     {
-        content: 'Change Instagram URL to a different one',
-        trigger: 'we-list table input:eq(2)',
+        content: "Change Instagram URL to a different one",
+        trigger: "we-list table input:eq(2)",
         run: "edit https://github.com/odoo && click body",
     },
     {
