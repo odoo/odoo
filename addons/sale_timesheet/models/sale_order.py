@@ -71,6 +71,12 @@ class SaleOrder(models.Model):
         for order in self:
             order.show_hours_recorded_button = order.timesheet_count or order.project_count and order.id in show_button_ids
 
+    def _has_timesheet_portal(self):
+        Timesheet = self.env['account.analytic.line']
+        initial_domain = Timesheet._timesheet_get_portal_domain()
+        domain = expression.AND([initial_domain, [('order_id', '=', self.id)]])
+        return Timesheet.sudo().search(domain, limit=1)
+
     def _get_order_with_valid_service_product(self):
         SaleOrderLine = self.env['sale.order.line']
         return SaleOrderLine._read_group(expression.AND([
