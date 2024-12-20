@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_print_ecpay_invoice" model="ir.actions.report">
+            <field name="name">Print Ecpay Invoice</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_tw_edi_ecpay.invoice</field>
+            <field name="report_file">l10n_tw_edi_ecpay.invoice</field>
+            <field name="print_report_name">'%s' % (object.name)</field>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <template id="invoice">
+            <t t-call="web.basic_layout">
+                <t t-foreach="data" t-as="rec_dict">
+                    <div class="page">
+                        <div class="invoiceContainer">
+                            <div class="invoice_inner">
+                                <div class="invoice">
+                                    <h1 t-out="user.company_id.name"/>
+                                    <h2>電子發票證明聯</h2>
+                                    <h3 t-out="rec_dict.get('l10n_tw_edi_invoice_month')"/>
+                                    <h3 t-out="rec_dict.get('l10n_tw_edi_invoice_number')"/>
+                                    <div class="row">
+                                        <div class="col-8 text-start">
+                                            <t t-out="rec_dict.get('l10n_tw_edi_invoice_create_date')" t-options="{'widget': 'datetime'}"/>
+                                        </div>
+                                        <div class="col-4 text-end">
+                                            <span t-if="rec_dict.get('l10n_tw_edi_invoice_category') == 'B2B'">格式 25</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6 text-start">
+                                            <span>隨機碼:</span>
+                                            <t t-out="rec_dict.get('l10n_tw_edi_invoice_random_number')"/>
+                                        </div>
+                                        <div class="col-6 text-end">
+                                            <span>總計:</span>
+                                            <t t-out="rec_dict.get('l10n_tw_edi_invoice_amount')"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6 text-start">
+                                            <span t-if="rec_dict.get('l10n_tw_edi_invoice_seller_identifier')" >
+                                                賣方:
+                                                <t t-out="rec_dict.get('l10n_tw_edi_invoice_seller_identifier')"/>
+                                            </span>
+                                        </div>
+                                        <div class="col-6 text-end">
+                                            <span t-if="rec_dict.get('l10n_tw_edi_invoice_category') == 'B2B'" >
+                                                買方:
+                                                <t t-out="rec_dict.get('l10n_tw_edi_invoice_idenfifier')"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <img t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s'%('Standard39', rec_dict.get('l10n_tw_edi_invoice_pos_barcode'))" class="img_barcode"/>
+                                    </div>
+                                    <div>
+                                        <img t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', rec_dict.get('l10n_tw_edi_invoice_qr_code_left'), 80, 80)" class="img_lqrcode"/>
+                                        <img t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', rec_dict.get('l10n_tw_edi_invoice_qr_code_right'), 80, 80)" class="img_rqrcode"/>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="invoice_details">
+                                    <h2><span>交易明細</span></h2>
+                                    <div class="invoice_details_head">
+                                        <span>發票號碼:</span>
+                                        <t t-out="rec_dict.get('l10n_tw_edi_invoice_number')"/>
+                                    </div>
+                                    <div class="invoice_details_head">
+                                        <span t-if="rec_dict.get('l10n_tw_edi_invoice_carrier_number') != '' and (rec_dict.get('l10n_tw_edi_invoice_carrier_type') == '' or rec_dict.get('l10n_tw_edi_invoice_carrier_type') == '1')">共通載具:</span>
+                                        <span t-if="rec_dict.get('l10n_tw_edi_invoice_carrier_type') == '2'">自然人憑證:</span>
+                                        <span t-if="rec_dict.get('l10n_tw_edi_invoice_carrier_type') == '3'">手機載具:</span>
+                                        <t t-out="rec_dict.get('l10n_tw_edi_invoice_carrier_number')"/>
+                                    </div>
+                                    <div t-if="rec_dict.get('l10n_tw_edi_invoice_category') == 'B2B'" class="invoice_details_head">
+                                        <span>受買人統編:</span>
+                                        <t t-out="rec_dict.get('l10n_tw_edi_invoice_idenfifier')"/>
+                                    </div>
+                                    <br/>
+                                    <table width="100%" class="table table-borderless">
+                                        <tbody>
+                                            <tr>
+                                                <th width="40%"><span>項目</span></th>
+                                                <th width="30%"><span>單價*數量</span></th>
+                                                <th width="30%"><span>⾦額</span></th>
+                                            </tr>
+                                            <t t-set="total_quantity" t-value="0"/>
+                                            <t t-foreach="rec_dict.get('l10n_tw_edi_invoice_items')" t-as="item">
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <t t-out="item.get('l10n_tw_edi_invoice_item_name')"/>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <t t-out="int(item.get('l10n_tw_edi_invoice_item_price'))"/>
+                                                        <span>*</span>
+                                                        <t t-out="int(item.get('l10n_tw_edi_invoice_item_count'))"/>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <t t-out="int(item.get('l10n_tw_edi_invoice_item_amount'))"/>
+                                                        <span>TX</span>
+                                                    </td>
+                                                </tr>
+                                                <t t-set="total_quantity" t-value="total_quantity + int(item.get('l10n_tw_edi_invoice_item_count'))"/>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                    <h5>
+                                        <span>小計</span>
+                                        <t t-out="int(rec_dict.get('l10n_tw_edi_invoice_amount'))" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                    </h5>
+                                    <h4 t-if="rec_dict.get('l10n_tw_edi_invoice_category') == 'B2B'">
+                                        <span>稅額</span>
+                                        <t t-out="int(rec_dict.get('l10n_tw_edi_invoice_tax_amount'))" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                    </h4>
+                                    <h4>
+                                        <span>總計</span>
+                                        <span>(共</span>
+                                        <t t-out="total_quantity"/>
+                                        <span>項)</span>
+                                        <t t-out="int(rec_dict.get('l10n_tw_edi_invoice_amount'))" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                    </h4>
+                                    <h4>
+                                        <span>發票金額</span>
+                                        <t t-out="int(rec_dict.get('l10n_tw_edi_invoice_amount'))" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

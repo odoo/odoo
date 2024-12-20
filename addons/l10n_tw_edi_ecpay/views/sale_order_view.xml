@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="ec_sale_order_form_inherit" model="ir.ui.view">
+            <field name="name">ec_sale_order_form_inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='sale_info']" position="after">
+                    <group string="ECpay invoice Information" name="ec_data">
+                        <field name="l10n_tw_edi_is_print"/>
+                        <field name="l10n_tw_edi_is_donate"/>
+                        <field name="l10n_tw_edi_love_code" invisible="not l10n_tw_edi_is_donate"/>
+                        <field name="l10n_tw_edi_customer_name"/>
+                        <field name="l10n_tw_edi_customer_email"/>
+                        <field name="l10n_tw_edi_customer_phone"/>
+                        <field name="l10n_tw_edi_customer_identifier"/>
+                        <field name="l10n_tw_edi_customer_address"/>
+                        <field name="l10n_tw_edi_carrier_type"/>
+                        <field name="l10n_tw_edi_carrier_number" invisible="l10n_tw_edi_carrier_type not in ['2', '3']" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
