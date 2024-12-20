@@ -90,6 +90,8 @@ export class PartnerList extends Component {
                   .toSorted((a, b) =>
                       this.props.partner?.id === a.id
                           ? -1
+                          : this.props.partner?.id === b.id
+                          ? 1
                           : (a.name || "").localeCompare(b.name || "")
                   );
 
