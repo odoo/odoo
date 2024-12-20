@@ -25,6 +25,20 @@ class IrActionsServer(models.Model):
         compute='_compute_sms_method',
         readonly=False, store=True)
 
+    def _name_depends(self):
+        return super()._name_depends() + ["sms_template_id"]
+
+    def _generate_action_name(self):
+        self.ensure_one()
+        match self.state:
+            case 'sms':
+                return _(
+                    'Send SMS: %(template_name)s',
+                    template_name=self.sms_template_id.name
+                )
+            case _:
+                return super()._generate_action_name()
+
     @api.depends('state')
     def _compute_available_model_ids(self):
         mail_thread_based = self.filtered(lambda action: action.state == 'sms')
