@@ -793,7 +793,7 @@ class SlideSlide(models.Model):
             reply_to = publish_template._render_field('reply_to', slide.ids)[slide.id]
             if reply_to:
                 kwargs['reply_to'] = reply_to
-            slide.channel_id.with_context(mail_create_nosubscribe=True).message_post(
+            slide.channel_id.with_context(mail_post_autofollow_author_skip=True).message_post(
                 subject=subject,
                 body=html_body,
                 subtype_xmlid='website_slides.mt_channel_slide_published',
