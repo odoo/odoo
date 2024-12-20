@@ -313,6 +313,7 @@ class HrEmployee(models.Model):
                 # display current resource_calendar_id as the default one if it exists (if False, fully flexible calendar)
                 'default_resource_calendar_id': self.resource_calendar_id.id or False,
                 'from_action_open_contract': True,
+                'default_hr_responsible_id': self.env.uid,
             }
             action['target'] = 'current'
             return action
