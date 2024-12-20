@@ -2,6 +2,7 @@ import { registry } from "@web/core/registry";
 import {
     Many2ManyTagsAvatarUserField,
     KanbanMany2ManyTagsAvatarUserField,
+    ListMany2ManyTagsAvatarUserField,
     many2ManyTagsAvatarUserField,
     kanbanMany2ManyTagsAvatarUserField,
     listMany2ManyTagsAvatarUserField,
@@ -48,13 +49,25 @@ export const kanbanMany2ManyTagsAvatarEmployeeField = {
 registry
     .category("fields")
     .add("kanban.many2many_avatar_employee", kanbanMany2ManyTagsAvatarEmployeeField);
+
+
+export class ListMany2ManyTagsAvatarEmployeeField extends EmployeeFieldRelationMixin(
+    ListMany2ManyTagsAvatarUserField
+) {}
+
 export const listMany2ManyTagsAvatarEmployeeField = {
     ...listMany2ManyTagsAvatarUserField,
+    component: ListMany2ManyTagsAvatarEmployeeField,
     additionalClasses: [
         ...listMany2ManyTagsAvatarUserField.additionalClasses,
         "o_field_many2many_avatar_user",
     ],
+    extractProps: (fieldInfo, dynamicInfo) => ({
+        ...listMany2ManyTagsAvatarUserField.extractProps(fieldInfo, dynamicInfo),
+        relation: fieldInfo.options?.relation,
+    }),
 };
+
 registry
     .category("fields")
     .add("list.many2many_avatar_employee", listMany2ManyTagsAvatarEmployeeField);
