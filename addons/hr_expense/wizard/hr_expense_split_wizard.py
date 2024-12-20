@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api, _
+from odoo import Command, fields, models, api, _
 
 
 class HrExpenseSplitWizard(models.TransientModel):
@@ -60,11 +60,12 @@ class HrExpenseSplitWizard(models.TransientModel):
                     for attachment in attachment_ids:
                         attachment.copy({'res_model': 'hr.expense', 'res_id': copied_expense.id})
 
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'hr.expense',
-            'name': _('Split Expenses'),
-            'view_mode': 'list,form',
-            'target': 'current',
-            'domain': [('id', 'in', (copied_expenses | self.expense_split_line_ids.expense_id).ids)],
-        }
+        all_related_expenses = copied_expenses | self.expense_id
+        self.expense_id.split_expense_ids = [Command.set(all_related_expenses.ids)]
+        copied_expenses.split_expense_ids = [Command.set(all_related_expenses.ids)]
+
+        self.expense_id.message_post(body=_("This expense has been split."))
+        for copied_expense in copied_expenses:
+            copied_expense.message_post(body=_("This expense has been created from a split expense."))
+
+        return all_related_expenses._get_records_action(name=_("Split Expenses"))
