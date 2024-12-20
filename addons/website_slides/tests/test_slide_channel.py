@@ -405,6 +405,15 @@ class TestSequencing(slides_common.SlidesCase):
         self.assertEqual(copied_channel.enroll, 'invite', "Copied channel should have the same enroll field value")
 
     @users('user_officer')
+    def test_duplicate_channel_preserves_sequence(self):
+        self.slide_3.write({'sequence': 1})
+        self.slide.write({'sequence': 4})
+        self.channel.invalidate_recordset()
+        copied_channel = self.channel.copy()
+
+        self.assertEqual(copied_channel.slide_ids.sorted('sequence')[0].name, self.slide_3.name)
+
+    @users('user_officer')
     def test_duplicate_courses(self):
         channel1 = self.env['slide.channel'].create({
             'name': 'Test Course 1',
