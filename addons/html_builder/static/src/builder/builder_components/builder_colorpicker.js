@@ -7,8 +7,8 @@ import {
     BuilderComponent,
 } from "./utils";
 
-export class BuilderColorpicker extends Component {
-    static template = "html_builder.BuilderColorpicker";
+export class BuilderColorPicker extends Component {
+    static template = "html_builder.BuilderColorPicker";
     static props = {
         ...basicContainerBuilderComponentProps,
         unit: { type: String, optional: true },

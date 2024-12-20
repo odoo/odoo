@@ -9,7 +9,7 @@ defineWebsiteModels();
 test("should apply color to the editing element", async () => {
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderColorpicker/>`,
+        template: xml`<BuilderColorPicker/>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
@@ -26,7 +26,7 @@ test("hide/display base on applyTo", async () => {
     });
     addOption({
         selector: ".parent-target",
-        template: xml`<BuilderColorpicker applyTo="'.my-custom-class'"/>`,
+        template: xml`<BuilderColorPicker applyTo="'.my-custom-class'"/>`,
     });
     const { getEditor } = await setupWebsiteBuilder(
         `<div class="parent-target"><div class="child-target b">b</div></div>`

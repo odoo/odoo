@@ -6,7 +6,7 @@ import { BuilderButton } from "./builder_button";
 import { BuilderNumberInput } from "./builder_number_input";
 import { BuilderSelect } from "./builder_select";
 import { BuilderSelectItem } from "./builder_select_item";
-import { BuilderColorpicker } from "./builder_colorpicker";
+import { BuilderColorPicker } from "./builder_colorpicker";
 import { BuilderTextInput } from "./builder_text_input";
 import { BuilderCheckbox } from "./builder_checkbox";
 
@@ -18,7 +18,7 @@ export const defaultBuilderComponents = {
     BuilderButton,
     BuilderTextInput,
     BuilderNumberInput,
-    BuilderColorpicker,
+    BuilderColorPicker,
     BuilderSelect,
     BuilderSelectItem,
     BuilderCheckbox,
