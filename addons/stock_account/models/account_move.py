@@ -266,9 +266,8 @@ class AccountMoveLine(models.Model):
             and line.move_id.is_purchase_document()
         ))
         for line in input_lines:
-            line = line.with_company(line.move_id.journal_id.company_id)
             fiscal_position = line.move_id.fiscal_position_id
-            accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
+            accounts = line.with_company(line.company_id).product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
             if accounts['stock_input']:
                 line.account_id = accounts['stock_input']
 
