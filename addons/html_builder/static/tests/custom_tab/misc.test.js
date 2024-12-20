@@ -106,7 +106,10 @@ test("option that matches several elements", async () => {
     await setupWebsiteBuilder(`<div class="a"><div class="a test-target">b</div></div>`);
     await contains(":iframe .test-target").click();
     expect(".options-container:not(.d-none)").toHaveCount(2);
-    expect(queryAllTexts(".options-container:not(.d-none)")).toEqual(["Row\nTest", "Row\nTest"]);
+    expect(queryAllTexts(".options-container:not(.d-none)")).toEqual([
+        "Block\nRow\nTest",
+        "Block\nRow\nTest",
+    ]);
 });
 
 test("Snippets options respect sequencing", async () => {
@@ -197,7 +200,7 @@ test("hide empty OptionContainer and display OptionContainer with content (with 
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(".options-container:not(.d-none)").toHaveCount(2);
-    expect(".options-container:not(.d-none):nth-child(2)").toHaveText("Row 2\nTest");
+    expect(".options-container:not(.d-none):nth-child(2)").toHaveText("Block\nRow 2\nTest");
 });
 
 test("hide empty OptionContainer and display OptionContainer with content (with BuilderButtonGroup) - 2", async () => {
@@ -226,7 +229,7 @@ test("hide empty OptionContainer and display OptionContainer with content (with 
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(".options-container:not(.d-none)").toHaveCount(2);
-    expect(".options-container:not(.d-none):nth-child(2)").toHaveText("Row 2\nTest");
+    expect(".options-container:not(.d-none):nth-child(2)").toHaveText("Block\nRow 2\nTest");
 });
 
 test("fallback on the 'Blocks' tab if no option match the selected element", async () => {
