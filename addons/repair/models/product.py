@@ -54,5 +54,5 @@ class ProductProduct(models.Model):
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    service_tracking = fields.Selection(selection_add=[('repair', 'Repair')],
+    service_tracking = fields.Selection(selection_add=[('repair', 'Repair Order')],
                                         ondelete={'repair': 'set default'})
