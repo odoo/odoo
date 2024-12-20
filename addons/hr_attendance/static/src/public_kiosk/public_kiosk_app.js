@@ -13,7 +13,7 @@ import {KioskGreetings} from "@hr_attendance/components/greetings/greetings";
 import {KioskPinCode} from "@hr_attendance/components/pin_code/pin_code";
 import {KioskBarcodeScanner} from "@hr_attendance/components/kiosk_barcode/kiosk_barcode";
 
-class kioskAttendanceApp extends Component{
+export class kioskAttendanceApp extends Component{
     static props = [];
     static components = {
         KioskBarcodeScanner,
