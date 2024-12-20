@@ -159,17 +159,14 @@
                                 class="oe_stat_button"
                                 icon="fa-book"
                                 type="object"
-                                invisible="contracts_count == 0"
+                                invisible="contracts_count &lt;= 1"
                                 groups="hr_contract.group_hr_contract_employee_manager">
                                 <div class="o_stat_info">
                                     <span class="o_stat_value">
                                         <field name="contracts_count"/>
                                     </span>
-                                    <span invisible="contracts_count == 1" class="o_stat_text" >
+                                    <span class="o_stat_text" >
                                         Contracts
-                                    </span>
-                                    <span invisible="contracts_count &gt; 1" class="o_stat_text">
-                                        Contract
                                     </span>
                                 </div>
                             </button>
@@ -189,8 +186,8 @@
                                         widget="state_selection" readonly="0"/>
                                 </div>
                             </h1>
-                            <h2>
-                                <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                            <h2 invisible="1">
+                                <field name="company_id" groups="base.group_multi_company"/>
                             </h2>
                         </div>
                         <div id="template_warning" class="alert alert-warning" role="alert" invisible="employee_id">
@@ -204,7 +201,7 @@
                                 <field name="employee_id" widget="many2one_avatar_employee"/>
                                 <field name="active_employee" invisible="1"/>
                                 <field name="date_start" string="Contract Start Date"/>
-                                <field name="date_end" string="Contract End Date"/>
+                                <field name="date_end" string="Contract End Date" placeholder="No limit"/>
                                 <field name="company_country_id" invisible="1"/>
                                 <field name="country_code" invisible="1"/>
                                 <field name="calendar_mismatch" invisible="1"/>
@@ -224,14 +221,19 @@
                             </group>
                             <group name="top_info_right">
                                 <field name="default_contract_id" context="{'form_view_ref': 'hr_contract.hr_contract_view_form_contract_templates'}"/>
-                                <field name="structure_type_id" groups="!hr_contract.group_hr_contract_manager" domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]" options="{'no_open': True, 'no_create': True}"/>
-                                <field name="structure_type_id" groups="hr_contract.group_hr_contract_manager" domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
-                                <field name="department_id" groups="!hr_contract.group_hr_contract_manager" options="{'no_open': True, 'no_create': True}"/>
-                                <field name="department_id" groups="hr_contract.group_hr_contract_manager"/>
                                 <field name="job_id" groups="!hr_contract.group_hr_contract_manager" options="{'no_open': True, 'no_create': True}"/>
                                 <field name="job_id" groups="hr_contract.group_hr_contract_manager"/>
+                                <field name="department_id" groups="!hr_contract.group_hr_contract_manager" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="department_id" groups="hr_contract.group_hr_contract_manager"/>
                                 <field name="contract_type_id" groups="!hr_contract.group_hr_contract_manager" options="{'no_open': True, 'no_create': True}"/>
                                 <field name="contract_type_id" groups="hr_contract.group_hr_contract_manager"/>
+                                <field name="structure_type_id" 
+                                    groups="!hr_contract.group_hr_contract_manager"
+                                    domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"
+                                    options="{'no_open': True, 'no_create': True}"/>
+                                <field name="structure_type_id"
+                                    groups="hr_contract.group_hr_contract_manager"
+                                    domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
                                 <field name="hr_responsible_id" widget="many2one_avatar_user" invisible="1"/>
                             </group>
                         </group>
@@ -342,17 +344,28 @@
             </field>
         </record>
 
+        <record id="action_hr_contract_new" model="ir.actions.act_window">
+            <field name="name">Contracts</field>
+            <field name="res_model">hr.contract</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'default_hr_responsible_id': uid}</field>
+        </record>
+
         <record id="action_hr_contract" model="ir.actions.act_window">
             <field name="name">Contracts</field>
             <field name="res_model">hr.contract</field>
             <field name="path">employee-contracts</field>
             <field name="view_mode">list,kanban,form,activity</field>
             <field name="domain">[('employee_id', '!=', False)]</field>
-            <field name="context">{'search_default_group_by_state': 1}</field>
+            <field name="context">{'search_default_group_by_state': 1, 'default_hr_responsible_id': uid}</field>
             <field name="search_view_id" ref="hr_contract_view_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a new contract
+                No contracts ?
+              </p><p>
+                Contracts are the link between an employee and his company.<br/>
+                It contains all the information about his salary package.<br/><br/>
+                <a name="hr_contract.action_hr_contract_new" type="action" class="btn btn-secondary">Create a Contract</a>
               </p>
             </field>
         </record>
