@@ -100,14 +100,14 @@
                         <field string="Purchases" name="purchase_order_count" widget="statinfo"/>
                     </button>
                 </div>
-                <page name="internal_notes" position="inside">
-                    <group groups="purchase.group_purchase_user">
-                        <group groups="purchase.group_warning_purchase" col="2">
-                            <separator string="Warning on Purchase Orders and Bills" colspan="2"/>
-                            <field name="purchase_warn_msg" colspan="2" placeholder="Type a message..." nolabel="1"/>
-                        </group>
+                <group name="warnings" position="inside">
+                    <group groups="purchase.group_warning_purchase" col="2">
+                        <separator string="Warning on Purchase Orders and Bills" colspan="2"/>
+                        <field name="purchase_warn_msg"
+                               placeholder="e.g. This vendor is on vacation until the end of August."
+                               nolabel="1" colspan="2"/>
                     </group>
-                </page>
+                </group>
             </field>
         </record>
 </odoo>
