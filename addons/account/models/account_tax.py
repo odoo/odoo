@@ -1429,7 +1429,8 @@ class AccountTax(models.Model):
             'raw_tax_amount': 0.0,
             'base_lines': [],
         })
-
+        if not company:
+            company = self.env.company
         for base_line in base_lines:
             currency = base_line['currency_id'] or company.currency_id
             tax_details = base_line['tax_details']
