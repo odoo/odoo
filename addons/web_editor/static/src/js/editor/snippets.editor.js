@@ -4565,10 +4565,15 @@ var SnippetsMenu = Widget.extend({
             // TODO In future version use tool method to determine isMobilePreview.
             const mobileViewThreshold = MEDIAS_BREAKPOINTS[SIZES.LG].minWidth;
             const isMobilePreview = this.$body[0].ownerDocument.defaultView.frameElement.clientWidth < mobileViewThreshold;
+            const withOverlayEl = this.options.wysiwyg.lastElement.closest('.o_snippet_mobile_invisible, .o_snippet_desktop_invisible');
             for (const invisibleOverrideEl of this.getEditableArea().find('.o_snippet_mobile_invisible, .o_snippet_desktop_invisible')) {
                 const isMobileHidden = invisibleOverrideEl.classList.contains("o_snippet_mobile_invisible");
                 invisibleOverrideEl.classList.remove('o_snippet_override_invisible');
                 if (isMobilePreview === isMobileHidden) {
+                    // Updating options upon changing preview mode to avoid ghost overlay
+                    if (invisibleOverrideEl === withOverlayEl) {
+                        this.trigger_up("snippet_option_visibility_update", {show: false});
+                    }
                     invisibleOverrideEl.dataset.invisible = '1';
                 } else {
                     delete invisibleOverrideEl.dataset.invisible;
