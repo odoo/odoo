@@ -2195,6 +2195,7 @@ const ListUserValueWidget = UserValueWidget.extend({
      */
     start() {
         this.addItemTitle = this.el.dataset.addItemTitle || _t("Add");
+        this.hasAddButton = !this.el.dataset.noAddItemOption;
         if (this.el.dataset.availableRecords) {
             this.records = JSON.parse(this.el.dataset.availableRecords);
         } else {
@@ -2257,7 +2258,7 @@ const ListUserValueWidget = UserValueWidget.extend({
             this.createWidget.setValue('');
             this.createWidget.inputEl.value = '';
             $(this.createWidget.inputEl).trigger('input');
-        } else {
+        } else if (this.hasAddButton) {
             if (this.isCustom) {
                 this.addItemButton = document.createElement('we-button');
                 this.addItemButton.textContent = this.addItemTitle;
@@ -2287,7 +2288,7 @@ const ListUserValueWidget = UserValueWidget.extend({
                 this._addItemToTable(value, value);
             }
         });
-        if (!this.createWidget && !this.isCustom) {
+        if (!this.createWidget && this.hasAddButton && !this.isCustom) {
             this._reloadSelectDropdown(currentValues);
         }
         this._makeListItemsSortable();
@@ -2434,7 +2435,7 @@ const ListUserValueWidget = UserValueWidget.extend({
         } else {
             this._onUserValueChange();
         }
-        if (!this.createWidget && !this.isCustom) {
+        if (!this.createWidget && this.hasAddButton && !this.isCustom) {
             this._reloadSelectDropdown(values);
         }
     },

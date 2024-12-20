@@ -658,9 +658,9 @@ import wUtils from '@website/js/utils';
 
             switch (comparator) {
                 case 'contains':
-                    return value.includes(comparable);
+                    return value && (comparable.includes(value) || value.includes(comparable));
                 case '!contains':
-                    return !value.includes(comparable);
+                    return value && (!comparable.includes(value) || !value.includes(comparable));
                 case 'equal':
                 case 'selected':
                     return value === comparable;
