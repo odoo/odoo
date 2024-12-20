@@ -8,7 +8,6 @@
         <field name="arch" type="xml">
             <list editable="bottom">
                 <field name="company_id" column_invisible="True"/>
-                <field name="product_uom_category_id" column_invisible="True"/>
                 <field name="owner_id" column_invisible="True"/>
                 <field name="tracking" column_invisible="True"/>
                 <field name="package_id" column_invisible="True"/>
@@ -78,7 +77,6 @@
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
-                    <field name="product_uom_category_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="product_id" invisible="1" readonly="state == 'done'"/>
                     <field name="sequence" invisible="1"/>
@@ -101,7 +99,6 @@
                             <field name="state" column_invisible="True"/>
                             <field name="tracking" column_invisible="True"/>
                             <field name="product_uom_id" column_invisible="True"/>
-                            <field name="product_uom_category_id" column_invisible="True"/>
                             <field name="picking_id" column_invisible="True"/>
                             <field name="move_id" column_invisible="True"/>
                             <field name="location_id" column_invisible="True"/>
@@ -141,7 +138,6 @@
             <list delete="0" create="0" decoration-muted="is_done" decoration-warning="quantity - product_uom_qty &gt; 0.0001" decoration-success="not is_done and quantity - product_uom_qty &lt; 0.0001" js_class="subcontracting_portal_move_list_view">
                 <field name="company_id" column_invisible="True"/>
                 <field name="sequence" column_invisible="True"/>
-                <field name="product_uom_category_id" column_invisible="True"/>
                 <field name="name" column_invisible="True"/>
                 <field name="unit_factor" column_invisible="True"/>
                 <field name="date" column_invisible="True"/>

@@ -227,11 +227,12 @@ class StockPickingBatch(models.Model):
         return self.env.ref('stock_picking_batch.action_report_picking_batch').report_action(self)
 
     def action_done(self):
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         def has_no_quantity(picking):
-            return all(not m.picked or float_is_zero(m.quantity, precision_rounding=m.product_uom.rounding) for m in picking.move_ids if m.state not in ('done', 'cancel'))
+            return all(not m.picked or float_is_zero(m.quantity, precision_digits=precision_digits) for m in picking.move_ids if m.state not in ('done', 'cancel'))
 
         def is_empty(picking):
-            return all(float_is_zero(m.quantity, precision_rounding=m.product_uom.rounding) for m in picking.move_ids if m.state not in ('done', 'cancel'))
+            return all(float_is_zero(m.quantity, precision_digits=precision_digits) for m in picking.move_ids if m.state not in ('done', 'cancel'))
 
         self.ensure_one()
         self._check_company()

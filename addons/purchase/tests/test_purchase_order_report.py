@@ -15,7 +15,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         cls.other_currency = cls.setup_other_currency('EUR')
 
     def test_00_purchase_order_report(self):
-        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        uom_pack_of_6 = self.env.ref('uom.product_uom_pack_6')
 
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
@@ -25,7 +25,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
                     'name': self.product_a.name,
                     'product_id': self.product_a.id,
                     'product_qty': 1.0,
-                    'product_uom_id': uom_dozen.id,
+                    'product_uom_id': uom_pack_of_6.id,
                     'price_unit': 100.0,
                     'date_planned': datetime.today(),
                     'taxes_id': False,
@@ -34,7 +34,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
                     'name': self.product_b.name,
                     'product_id': self.product_b.id,
                     'product_qty': 1.0,
-                    'product_uom_id': uom_dozen.id,
+                    'product_uom_id': uom_pack_of_6.id,
                     'price_unit': 200.0,
                     'date_planned': datetime.today(),
                     'taxes_id': False,
@@ -89,8 +89,8 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
             ('company_id', '=', self.company_data['company'].id),
         ])
 
-        # check that report will convert dozen to unit or not
-        self.assertEqual(res_product1.qty_ordered, 12.0, 'UoM conversion is not working')
+        # check that report will convert pack_of_6 to unit or not
+        self.assertEqual(res_product1.qty_ordered, 6.0, 'UoM conversion is not working')
         # report should show in company currency (amount/rate) = (100/2)
         self.assertEqual(res_product1.price_total, 50.0, 'Currency conversion is not working')
 
@@ -100,7 +100,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
             ('company_id', '=', self.company_data['company'].id),
         ])
 
-        self.assertEqual(res_product2.qty_ordered, 1.0, 'No conversion needed since product_b is already a dozen')
+        self.assertEqual(res_product2.qty_ordered, 1.0, 'No conversion needed since product_b is already a pack_of_6')
         # report should show in company currency (amount/rate) = (200/2)
         self.assertEqual(res_product2.price_total, 100.0, 'Currency conversion is not working')
 

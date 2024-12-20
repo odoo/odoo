@@ -26,6 +26,7 @@ class StockPackageType(models.Model):
     length_uom_name = fields.Char(string='Length unit of measure label', compute='_compute_length_uom_name', default=_get_default_length_uom)
     company_id = fields.Many2one('res.company', 'Company', index=True)
     storage_category_capacity_ids = fields.One2many('stock.storage.category.capacity', 'package_type_id', 'Storage Category Capacity', copy=True)
+    route_ids = fields.Many2many('stock.route', string='Routes', domain="[('package_type_selectable', '=', True)]")
 
     _barcode_uniq = models.Constraint(
         'unique(barcode)',

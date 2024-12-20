@@ -6,7 +6,6 @@
         <field name="arch" type="xml">
             <list string="Analytic Items" multi_edit="1">
                 <field name="company_id" column_invisible="True"/>
-                <field name="product_uom_category_id" column_invisible="True"/>
                 <field name="date" optional="show"/>
                 <field name="name"/>
                 <field name="account_id"/>
@@ -82,7 +81,6 @@
                     <group name="amount" string="Amount">
                         <field name="amount"/>
                         <field name="unit_amount"/>
-                        <field name="product_uom_category_id" invisible="1"/>
                         <field name="product_uom_id" class="oe_inline"/>
                         <field name="currency_id" invisible="1"/>
                     </group>

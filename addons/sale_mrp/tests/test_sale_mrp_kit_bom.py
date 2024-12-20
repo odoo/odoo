@@ -91,9 +91,9 @@ class TestSaleMrpKitBom(TransactionCase):
                 # - BoM Type: Kit
                 # - Quantity: 1
                 # - Components:
-                # * 1 x Component A (Cost: $ 6, QTY: 1, UOM: Dozens)
+                # * 1 x Component A (Cost: $ 12, QTY: 1, UOM: Pack of 6)
                 # * 1 x Component B (Cost: $ 10, QTY: 2, UOM: Unit)
-            # cost of Kit A = (6 * 1 * 12) + (10 * 2) = $ 92
+            # cost of Kit A = (12 * 1 * 6) + (10 * 2) = $ 92
         """
         self.customer = self.env['res.partner'].create({
             'name': 'customer'
@@ -102,7 +102,7 @@ class TestSaleMrpKitBom(TransactionCase):
         self.kit_product = self._create_product('Kit Product', True, 1.00)
         # Creating components
         self.component_a = self._create_product('Component A', True, 1.00)
-        self.component_a.product_tmpl_id.standard_price = 6
+        self.component_a.product_tmpl_id.standard_price = 12
         self.component_b = self._create_product('Component B', True, 1.00)
         self.component_b.product_tmpl_id.standard_price = 10
 
@@ -124,7 +124,7 @@ class TestSaleMrpKitBom(TransactionCase):
                 'product_id': self.component_a.id,
                 'product_qty': 1.0,
                 'bom_id': self.bom.id,
-                'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+                'product_uom_id': self.env.ref('uom.product_uom_pack_6').id,
         })
         self.env['mrp.bom.line'].create({
                 'product_id': self.component_b.id,
@@ -151,7 +151,7 @@ class TestSaleMrpKitBom(TransactionCase):
     def test_qty_delivered_with_bom(self):
         """Check the quantity delivered, when a bom line has a non integer quantity"""
 
-        self.env.ref('product.decimal_product_uom').digits = 5
+        self.env.ref('uom.decimal_product_uom').digits = 5
 
         self.kit = self._create_product('Kit', True, 0.00)
         self.comp = self._create_product('Component', True, 0.00)
@@ -536,7 +536,7 @@ class TestSaleMrpKitBom(TransactionCase):
         kit_prod = self._create_product('kit_prod', 'product', 0.00)
         sub_kit = self._create_product('sub_kit', 'product', 0.00)
         component = self._create_product('component', 'product', 0.00)
-        component.uom_id = self.env.ref('uom.product_uom_dozen')
+        component.uom_id = self.env.ref('uom.product_uom_pack_6')
         self.env['stock.quant']._update_available_quantity(component, warehouse.lot_stock_id, 30)
         # 6 kit_prod == 5 component
         self.env['mrp.bom'].create([{  # 2 kit_prod == 5 sub_kit

@@ -91,7 +91,7 @@ class StockWarehouseOrderpoint(models.Model):
             ratios_total = []
             for bom_line, bom_line_data in bom_sub_lines:
                 component = bom_line.product_id
-                if not component.is_storable or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
+                if not component.is_storable or float_is_zero(bom_line_data['qty'], precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
                     continue
                 uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
                 qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, raise_if_failure=False)
@@ -138,16 +138,6 @@ class StockWarehouseOrderpoint(models.Model):
                 res[orderpoint.id] += prod.product_uom_id._compute_quantity(
                         prod.product_qty, orderpoint.product_uom, round=False)
         return res
-
-    def _get_qty_multiple_to_order(self):
-        """ Calculates the minimum quantity that can be ordered according to the qty and UoM of the BoM
-        """
-        self.ensure_one()
-        qty_multiple_to_order = super()._get_qty_multiple_to_order()
-        if 'manufacture' in self.rule_ids.mapped('action'):
-            bom = self.env['mrp.bom']._bom_find(self.product_id, bom_type='normal')[self.product_id]
-            return bom.product_uom_id._compute_quantity(bom.product_qty, self.product_uom)
-        return qty_multiple_to_order
 
     def _set_default_route_id(self):
         route_ids = self.env['stock.rule'].search([

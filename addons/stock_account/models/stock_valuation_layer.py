@@ -143,29 +143,29 @@ class StockValuationLayer(models.Model):
         if not self:
             return 0, 0
 
-        rounding = self.product_id.uom_id.rounding
+        rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         qty_to_take_on_candidates = qty_to_value
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in self:
-            if float_is_zero(candidate.quantity, precision_rounding=rounding):
+            if float_is_zero(candidate.quantity, precision_digits=rounding):
                 continue
             candidate_quantity = abs(candidate.quantity)
             returned_qty = sum([sm.product_uom._compute_quantity(sm.quantity, self.uom_id)
                                 for sm in candidate.stock_move_id.returned_move_ids if sm.state == 'done'])
             candidate_quantity -= returned_qty
-            if float_is_zero(candidate_quantity, precision_rounding=rounding):
+            if float_is_zero(candidate_quantity, precision_digits=rounding):
                 continue
-            if not float_is_zero(qty_valued, precision_rounding=rounding):
+            if not float_is_zero(qty_valued, precision_digits=rounding):
                 qty_ignored = min(qty_valued, candidate_quantity)
                 qty_valued -= qty_ignored
                 candidate_quantity -= qty_ignored
-                if float_is_zero(candidate_quantity, precision_rounding=rounding):
+                if float_is_zero(candidate_quantity, precision_digits=rounding):
                     continue
             qty_taken_on_candidate = min(qty_to_take_on_candidates, candidate_quantity)
 
             qty_to_take_on_candidates -= qty_taken_on_candidate
             tmp_value += qty_taken_on_candidate * ((candidate.value + sum(candidate.stock_valuation_layer_ids.mapped('value'))) / candidate.quantity)
-            if float_is_zero(qty_to_take_on_candidates, precision_rounding=rounding):
+            if float_is_zero(qty_to_take_on_candidates, precision_digits=rounding):
                 break
 
         return qty_to_value - qty_to_take_on_candidates, tmp_value
@@ -179,25 +179,25 @@ class StockValuationLayer(models.Model):
         if not self:
             return 0, 0
 
-        rounding = self.product_id.uom_id.rounding
+        rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         qty_total = -qty_valued
         value_total = -valued
         new_valued_qty = 0
         new_valuation = 0
 
         for svl in self:
-            if float_is_zero(svl.quantity, precision_rounding=rounding):
+            if float_is_zero(svl.quantity, precision_digits=rounding):
                 continue
             relevant_qty = abs(svl.quantity)
-            returned_qty = sum([sm.product_uom._compute_quantity(sm.quantity, self.uom_id)
-                                for sm in svl.stock_move_id.returned_move_ids if sm.state == 'done'])
+            returned_qty = sum(sm.product_uom._compute_quantity(sm.quantity, self.uom_id)
+                                for sm in svl.stock_move_id.returned_move_ids if sm.state == 'done')
             relevant_qty -= returned_qty
-            if float_is_zero(relevant_qty, precision_rounding=rounding):
+            if float_is_zero(relevant_qty, precision_digits=rounding):
                 continue
             qty_total += relevant_qty
             value_total += relevant_qty * ((svl.value + sum(svl.stock_valuation_layer_ids.mapped('value'))) / svl.quantity)
 
-        if float_compare(qty_total, 0, precision_rounding=rounding) > 0:
+        if float_compare(qty_total, 0, precision_digits=rounding) > 0:
             unit_cost = value_total / qty_total
             new_valued_qty = min(qty_total, qty_to_value)
             new_valuation = unit_cost * new_valued_qty

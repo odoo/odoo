@@ -14,7 +14,7 @@ class AccountMoveLine(models.Model):
             subcontract_production = self.purchase_line_id.move_ids._get_subcontract_production()
             components_cost -= sum(subcontract_production.move_raw_ids.stock_valuation_layer_ids.mapped('value'))
             qty = sum(mo.product_uom_id._compute_quantity(mo.qty_producing, self.product_uom_id) for mo in subcontract_production if mo.state == 'done')
-            if not float_is_zero(qty, precision_rounding=self.product_uom_id.rounding):
+            if not float_is_zero(qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
                 price_unit_val_dif = price_unit_val_dif + components_cost / qty
         return price_unit_val_dif, relevant_qty
 

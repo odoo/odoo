@@ -24,8 +24,7 @@ class StockScrap(models.Model):
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         compute="_compute_product_uom_id", store=True, readonly=False, precompute=True,
-        required=True, domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+        required=True)
     tracking = fields.Selection(string='Product Tracking', readonly=True, related="product_id.tracking")
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial',
@@ -202,8 +201,10 @@ class StockScrap(models.Model):
 
     def action_validate(self):
         self.ensure_one()
-        if float_is_zero(self.scrap_qty,
-                         precision_rounding=self.product_uom_id.rounding):
+        if float_is_zero(
+            self.scrap_qty,
+            precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure'),
+        ):
             raise UserError(_('You can only enter positive quantities.'))
         if self.check_available_qty():
             return self.do_scrap()

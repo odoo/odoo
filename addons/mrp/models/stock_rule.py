@@ -42,8 +42,9 @@ class StockRule(models.Model):
     @api.model
     def _run_manufacture(self, procurements):
         new_productions_values_by_company = defaultdict(lambda: defaultdict(list))
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for procurement, rule in procurements:
-            if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) <= 0:
+            if float_compare(procurement.product_qty, 0, precision_digits=precision_digits) <= 0:
                 # If procurement contains negative quantity, don't create a MO that would be for a negative value.
                 continue
             bom = rule._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
@@ -79,7 +80,7 @@ class StockRule(models.Model):
                 if batch_size <= 0:
                     batch_size = procurement_qty
                 vals = rule._prepare_mo_vals(*procurement, bom)
-                while float_compare(procurement_qty, 0, precision_rounding=procurement.product_uom.rounding) > 0:
+                while float_compare(procurement_qty, 0, precision_digits=precision_digits) > 0:
                     current_qty = min(procurement_qty, batch_size)
                     new_productions_values_by_company[procurement.company_id.id]['values'].append({
                         **vals,
@@ -105,6 +106,7 @@ class StockRule(models.Model):
     def _run_pull(self, procurements):
         # Override to correctly assign the move generated from the pull
         # in its production order (pbm_sam only)
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for procurement, rule in procurements:
             warehouse_id = rule.warehouse_id
             if not warehouse_id:
@@ -115,7 +117,7 @@ class StockRule(models.Model):
             if rule.picking_type_id == warehouse_id.sam_type_id or (
                 warehouse_id.sam_loc_id and warehouse_id.sam_loc_id.parent_path in rule.location_src_id.parent_path
             ):
-                if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) < 0:
+                if float_compare(procurement.product_qty, 0, precision_digits=precision_digits) < 0:
                     procurement.values['group_id'] = procurement.values['group_id'].stock_move_ids.filtered(
                         lambda m: m.state not in ['done', 'cancel']).move_orig_ids.group_id[:1]
                     continue

@@ -35,16 +35,16 @@ class TestBomPriceCommon(common.TransactionCase):
 
         # Unit of Measure.
         cls.unit = cls.env.ref("uom.product_uom_unit")
-        cls.dozen = cls.env.ref("uom.product_uom_dozen")
+        cls.pack_of_6 = cls.env.ref("uom.product_uom_pack_6")
 
         # Bills Of Materials.
         # -------------------------------------------------------------------------------
         # Cost of BoM (Dining Table 1 Unit)
-        # Component Cost =  Table Head   1 Unit * 300 = 300 (468.75 from it's components)
+        # Component Cost =  Table Head   1 Unit * 300 = 300 (937.5 from it's components)
         #                   Screw        5 Unit *  10 =  50
         #                   Leg          4 Unit *  25 = 100
         #                   Glass        1 Unit * 100 = 100
-        # Total = 550 [718.75 if components of Table Head considered] (for 1 Unit)
+        # Total = 550 [1187.5 if components of Table Head considered] (for 1 Unit)
         # -------------------------------------------------------------------------------
 
         bom_form = Form(cls.Bom)
@@ -74,20 +74,20 @@ class TestBomPriceCommon(common.TransactionCase):
         cls.corner_slide = cls._create_product('Corner Slide', 25)
 
         # -----------------------------------------------------------------
-        # Cost of BoM (Table Head 1 Dozen)
+        # Cost of BoM (Table Head 1 Pack of 6)
         # Component Cost =  Plywood Sheet   12 Unit * 200 = 2400
         #                   Bolt            60 Unit *  10 =  600
         #                   Colour          12 Unit * 100 = 1200
-        #                   Corner Slide    57 Unit * 25  = 1425
+        #                   Corner Slide    57 Unit *  25 = 1425
         #                                           Total = 5625
-        #                          1 Unit price (5625/12) =  468.75
+        #                           1 Unit price (5625/6) =  937.5
         # -----------------------------------------------------------------
 
         bom_form2 = Form(cls.Bom)
         bom_form2.product_id = cls.table_head
         bom_form2.product_tmpl_id = cls.table_head.product_tmpl_id
         bom_form2.product_qty = 1.0
-        bom_form2.product_uom_id = cls.dozen
+        bom_form2.product_uom_id = cls.pack_of_6
         bom_form2.type = 'phantom'
         with bom_form2.bom_line_ids.new() as line:
             line.product_id = cls.plywood_sheet
@@ -154,7 +154,7 @@ class TestBomPrice(TestBomPriceCommon):
                     'sequence': 3,
                 }),
             ],
-        }),
+        })
         self.bom_2.write({
             'operation_ids': [
                 (0, 0, {
@@ -179,8 +179,7 @@ class TestBomPrice(TestBomPriceCommon):
                     'sequence': 3,
                 }),
             ],
-        }),
-
+        })
 
         # -----------------------------------------------------------------
         # Dinning Table Operation Cost(1 Unit)
@@ -194,27 +193,25 @@ class TestBomPrice(TestBomPriceCommon):
         # Operation Cost  1 unit = 321.25
         # -----------------------------------------------------------------
 
-
         # --------------------------------------------------------------------------
-        # Table Head Operation Cost (1 Dozen)
+        # Table Head Operation Cost (1 Pack of 6)
         # --------------------------------------------------------------------------
-        # Operation cost calculate for 1 dozens
+        # Operation cost calculate for 1 pack of 6
         # Cutting        (15 + 15 + (20 * 1 * 100/80) / 60) * 100 =   91.67
         # Drilling       (15 + 15 + (25 * 1 * 100/80) / 60) * 100 =  102.08
         # Fitting        (15 + 15 + (30 * 1 * 100/80) / 60) * 100 =  112.50
         # Table Capacity (3 operations * (2 + 1)      / 60) * 100 =   15.00
         # ----------------------------------------
-        # Operation Cost 1 dozen (306.25 + 15 = 321.25 per dozen) and 25.52 for 1 Unit
+        # Operation Cost 1 pack of 6 (306.25 + 15 = 321.25 per pack of 6) and 51.04 for 1 Unit
         # --------------------------------------------------------------------------
-
 
         self.assertEqual(self.dining_table.standard_price, 1000, "Initial price of the Product should be 1000")
         self.dining_table.button_bom_cost()
         # Total cost of Dining Table = (550) + Total cost of operations (321.25) = 871.25
         self.assertEqual(float_round(self.dining_table.standard_price, precision_digits=2), 871.25, "After computing price from BoM price should be 871.25")
         self.Product.browse([self.dining_table.id, self.table_head.id]).action_bom_cost()
-        # Total cost of Dining Table = (718.75) + Total cost of all operations (321.25 + 25.52) = 1065.52
-        self.assertEqual(float_compare(self.dining_table.standard_price, 1065.52, precision_digits=2), 0, "After computing price from BoM price should be 1065.52")
+        # Total cost of Dining Table = (1187.5) + Total cost of all operations (321.25 + 51.04) = 1559.79
+        self.assertEqual(float_compare(self.dining_table.standard_price, 1559.79, precision_digits=2), 0, "After computing price from BoM price should be 1065.52")
 
     def test_02_compute_byproduct_price(self):
         """Test BoM cost when byproducts with cost share"""
@@ -233,19 +230,19 @@ class TestBomPrice(TestBomPriceCommon):
                 }),
                 (0, 0, {
                     'product_id': scrap_wood.id,
-                    'product_uom_id': self.dozen.id,
+                    'product_uom_id': self.pack_of_6.id,
                     'product_qty': 1,
                     'bom_id': self.bom_1.id,
                     'cost_share': 50,
                 }),
             ],
-        }),
+        })
 
         # Cost Breakdown.
         # -------------------------------------------------------------------------------
-        # Total Cost of BoM = 550 [718.75 if components of Table Head considered] (for 1 Unit)
+        # Total Cost of BoM = 550 [1187.5 if components of Table Head considered] (for 1 Unit)
         # Dining Table 1 Unit = 1 - (25 + 50) / 100 * 550 = 0.25 * 550 = 137.5
-        # Scrap Wood 1 Unit = (25 + 50) / 100 * 550 / (8 units + 12 units) = 20.625
+        # Scrap Wood 1 Unit = (25 + 50) / 100 * 550 / (8 units + 6 units) = 29.464
         # -------------------------------------------------------------------------------
 
         self.assertEqual(self.dining_table.standard_price, 1000, "Initial price of the Product should be 1000")
@@ -253,4 +250,4 @@ class TestBomPrice(TestBomPriceCommon):
         self.dining_table.button_bom_cost()
         self.assertEqual(self.dining_table.standard_price, 137.5, "After computing price from BoM price should be 137.5")
         scrap_wood.button_bom_cost()
-        self.assertEqual(scrap_wood.standard_price, 20.63, "After computing price from BoM price should be 20.63")
+        self.assertEqual(scrap_wood.standard_price, 29.46, "After computing price from BoM price should be 20.63")

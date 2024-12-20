@@ -46,7 +46,7 @@ class TestSalePrices(SaleCommon):
             min_quantity=4.0,
         )
         product_price = self.product.lst_price
-        product_dozen_price = product_price * 12
+        product_pack_of_6_price = product_price * 6
 
         self.empty_order.order_line = [
             Command.create({
@@ -64,17 +64,17 @@ class TestSalePrices(SaleCommon):
             Command.create({
                 'product_id': self.product.id,
                 'product_uom_qty': 1.0,
-                'product_uom_id': self.uom_dozen.id,
+                'product_uom_id': self.uom_pack_of_6.id,
             }),
             Command.create({
                 'product_id': self.product.id,
-                'product_uom_qty': 0.4,
-                'product_uom_id': self.uom_dozen.id,
+                'product_uom_qty': 0.8,
+                'product_uom_id': self.uom_pack_of_6.id,
             }),
             Command.create({
                 'product_id': self.product.id,
-                'product_uom_qty': 0.3,
-                'product_uom_id': self.uom_dozen.id,
+                'product_uom_qty': 0.6,
+                'product_uom_id': self.uom_pack_of_6.id,
             })
         ]
 
@@ -84,7 +84,7 @@ class TestSalePrices(SaleCommon):
         self.assertTrue(all(not line.discount for line in self.empty_order.order_line - discounted_lines))
         self.assertEqual(
             discounted_lines.mapped('price_unit'),
-            [product_price, product_price, product_dozen_price, product_dozen_price])
+            [product_price, product_price, product_pack_of_6_price, product_pack_of_6_price])
         self.assertEqual(discounted_lines.mapped('discount'), [self.discount]*len(discounted_lines))
 
         discounted_lines[0].product_uom_qty = 3.0
@@ -199,15 +199,15 @@ class TestSalePrices(SaleCommon):
     def test_no_pricelist_rules(self):
         """Check currencies and uom conversions when no pricelist rule is available"""
         # UoM Conversion
-        # Selling dozens => price_unit = 12*price by unit
+        # Selling pack_of_6 => price_unit = 12*price by unit
         self.empty_order.order_line = [
             Command.create({
                 'product_id': self.product.id,
-                'product_uom_id': self.uom_dozen.id,
+                'product_uom_id': self.uom_pack_of_6.id,
                 'product_uom_qty': 2.0,
             }),
         ]
-        self.assertEqual(self.empty_order.order_line.price_unit, 240.0)
+        self.assertEqual(self.empty_order.order_line.price_unit, 120.0)
 
         other_currency = self._enable_currency('EUR')
         pricelist_in_other_curr = self.env['product.pricelist'].create({
@@ -227,13 +227,13 @@ class TestSalePrices(SaleCommon):
                 'order_line': [
                     Command.create({
                         'product_id': self.product.id,
-                        'product_uom_id': self.uom_dozen.id,
+                        'product_uom_id': self.uom_pack_of_6.id,
                         'product_uom_qty': 2.0,
                     }),
                 ]
             })
-            # 20.0 (product price) * 24.0 (2 dozens) * 2.0 (price rate USD -> EUR)
-            self.assertEqual(order_in_other_currency.amount_total, 960.0)
+            # 20.0 (product price) * 12.0 (2 pack_of_6) * 2.0 (price rate USD -> EUR)
+            self.assertEqual(order_in_other_currency.amount_total, 480.0)
 
     def test_negative_discounts(self):
         """aka surcharges"""
@@ -313,10 +313,7 @@ class TestSalePrices(SaleCommon):
             ).unlink()
         new_uom = self.env['uom.uom'].create({
             'name': '10 units',
-            'factor_inv': 10,
-            'uom_type': 'bigger',
-            'rounding': 1.0,
-            'category_id': self.uom_unit.category_id.id,
+            'relative_factor': 10,
         })
 
         # This pricelist doesn't show the discount
