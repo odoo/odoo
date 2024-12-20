@@ -1564,11 +1564,17 @@ export class PosStore extends Reactive {
             );
             const diningModeUpdate = orderChange.modeUpdate;
             if (diningModeUpdate || !Object.keys(lastChangedLines).length) {
+                // Prepare orderlines as per the format of the receipt
+                const lines =
+                    diningModeUpdate && Object.keys(lastChangedLines).length
+                        ? Object.values(lastChangedLines)
+                        : changes.new;
+
                 const printed = await this.printReceipts(
                     order,
                     printer,
                     "New",
-                    changes.new,
+                    lines,
                     true,
                     diningModeUpdate
                 );
@@ -1579,7 +1585,7 @@ export class PosStore extends Reactive {
                 // Print all receipts related to line changes
                 const toPrintArray = this.preparePrintingData(order, changes);
                 for (const [key, value] of Object.entries(toPrintArray)) {
-                    const printed = await this.printReceipts(order, printer, key, value, false);
+                    const printed = await this.printReceipts(order, printer, key, value);
                     if (!printed) {
                         unsuccedPrints.push(key);
                     }
