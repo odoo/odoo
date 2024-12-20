@@ -257,13 +257,23 @@
                     </t>
                 </cac:Address>
             </cac:DeliveryLocation>
+            <cac:DeliveryParty>
+                <cac:Party>
+                    <t t-call="{{PartyType_template}}">
+                        <t t-set="vals" t-value="vals.get('delivery_party_vals', {}).get('party_vals', {})"/>
+                    </t>
+                </cac:Party>
+            </cac:DeliveryParty>
         </t>
     </template>
 
     <template id="ubl_20_InvoicePeriodType">
         <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
             <cbc:StartDate t-out="vals.get('start_date')"/>
+            <cbc:StartTime t-out="vals.get('start_time')"/>
             <cbc:EndDate t-out="vals.get('end_date')"/>
+            <cbc:EndTime t-out="vals.get('end_time')"/>
+            <cbc:DurationMeasure t-out="vals.get('duration_measure')"/>
             <cbc:DescriptionCode t-out="vals.get('description_code')"/>
             <cbc:Description t-out="vals.get('description')"/>
         </t>
