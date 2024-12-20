@@ -1270,6 +1270,9 @@ class GeoIP(collections.abc.Mapping):
         if item == 'longitude':
             return self.location.longitude
 
+        if item == 'accuracy_radius':
+            return self.location.accuracy_radius
+
         if item == 'region':
             return self.subdivisions[0].iso_code if self.subdivisions else None
 
