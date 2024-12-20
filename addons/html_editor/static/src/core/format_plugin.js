@@ -1,5 +1,5 @@
 import { Plugin } from "../plugin";
-import { isBlock } from "../utils/blocks";
+import { closestBlock, isBlock } from "../utils/blocks";
 import { hasAnyNodesColor } from "@html_editor/utils/color";
 import { cleanTextNode, splitTextNode, unwrapContents } from "../utils/dom";
 import {
@@ -11,6 +11,7 @@ import {
     isVisibleTextNode,
     isZwnbsp,
     isZWS,
+    previousLeaf,
 } from "../utils/dom_info";
 import { childNodes, closestElement, descendants, selectElements } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, formatsSpecs } from "../utils/formatting";
@@ -19,6 +20,7 @@ import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { _t } from "@web/core/l10n/translation";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { withSequence } from "@html_editor/utils/resource";
+import { isFakeLineBreak } from "../utils/dom_state";
 
 const allWhitespaceRegex = /^[\s\u200b]*$/;
 
@@ -246,7 +248,9 @@ export class FormatPlugin extends Plugin {
                 .filter(
                     (n) =>
                         ((isTextNode(n) && (isVisibleTextNode(n) || isZWS(n))) ||
-                            n.nodeName === "BR") &&
+                            (n.nodeName === "BR" &&
+                                (isFakeLineBreak(n) ||
+                                    previousLeaf(n, closestBlock(n))?.nodeName === "BR"))) &&
                         isContentEditable(n)
                 )
         );
