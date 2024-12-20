@@ -2,7 +2,7 @@
 
 import json
 import logging
-from collections import defaultdict
+from collections import OrderedDict, defaultdict
 from datetime import timedelta
 from itertools import groupby
 
@@ -245,6 +245,11 @@ class SaleOrder(models.Model):
         string="Invoice Status",
         compute='_compute_invoice_status',
         store=True)
+
+    sale_warning_text = fields.Text(
+        "Sale Warning",
+        help="Internal warning for the partner or the products as set by the user.",
+        compute='_compute_sale_warning_text')
 
     # Payment fields
     transaction_ids = fields.Many2many(
@@ -757,6 +762,18 @@ class SaleOrder(models.Model):
         super()._compute_access_url()
         for order in self:
             order.access_url = f'/my/orders/{order.id}'
+
+    @api.depends('partner_id.name', 'partner_id.sale_warn_msg', 'order_line.sale_line_warn_msg')
+    def _compute_sale_warning_text(self):
+        for order in self:
+            warnings = []
+            if partner_msg := order.partner_id.sale_warn_msg:
+                warnings.append(order.partner_id.name + ' - ' + partner_msg)
+            for line in order.order_line:
+                if product_msg := line.sale_line_warn_msg:
+                    warnings.append(line.product_id.display_name + ' - ' + product_msg)
+            # Remove duplicate warnings before merging
+            order.sale_warning_text = '\n'.join(OrderedDict().fromkeys(warnings))
 
     #=== CONSTRAINT METHODS ===#
 

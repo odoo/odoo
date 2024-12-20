@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from collections import defaultdict
+from collections import OrderedDict, defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from pytz import timezone
@@ -155,6 +155,11 @@ class PurchaseOrder(models.Model):
     mail_reception_confirmed = fields.Boolean("Reception Confirmed", default=False, readonly=True, copy=False, help="True if PO reception is confirmed by the vendor.")
     mail_reception_declined = fields.Boolean("Reception Declined", readonly=True, copy=False, help="True if PO reception is declined by the vendor.")
 
+    purchase_warning_text = fields.Text(
+        "Purchase Warning",
+        help="Internal warning for the partner or the products as set by the user.",
+        compute='_compute_purchase_warning_text')
+
     receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email')
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email')
 
@@ -252,6 +257,18 @@ class PurchaseOrder(models.Model):
                 record.tax_country_id = record.fiscal_position_id.country_id
             else:
                 record.tax_country_id = record.company_id.account_fiscal_country_id
+
+    @api.depends('partner_id.name', 'partner_id.purchase_warn_msg', 'order_line.purchase_line_warn_msg')
+    def _compute_purchase_warning_text(self):
+        for order in self:
+            warnings = []
+            if partner_msg := order.partner_id.purchase_warn_msg:
+                warnings.append(order.partner_id.name + ' - ' + partner_msg)
+            for line in order.order_line:
+                if product_msg := line.purchase_line_warn_msg:
+                    warnings.append(line.product_id.display_name + ' - ' + product_msg)
+            # Remove duplicate warnings before merging
+            order.purchase_warning_text = '\n'.join(OrderedDict().fromkeys(warnings))
 
     @api.onchange('date_planned')
     def onchange_date_planned(self):
