@@ -1,6 +1,6 @@
 import { isBlock } from "@html_editor/utils/blocks";
 import { getAdjacentPreviousSiblings } from "@html_editor/utils/dom_traversal";
-import { rgbToHex } from "@web/core/utils/colors";
+import { blendColors } from "@web/core/utils/colors";
 
 function parentsGet(node, root = undefined) {
     const parents = [];
@@ -576,7 +576,7 @@ export function classToStyle(element, cssRules) {
                                     .replace(RE_PADDING_MATCH, "")
                                     .replaceAll('"', "&quot;")}" ${
                         node.parentElement.style.textAlign === "center" ? 'align="center" ' : ""
-                    }bgcolor="${rgbToHex(node.style.backgroundColor)}">
+                    }bgcolor="${blendColors(node.style.backgroundColor)}">
                     `)
                 );
                 node.after(
@@ -1329,7 +1329,7 @@ export function normalizeColors(element) {
         for (const rgb of rgbaMatch || []) {
             node.setAttribute(
                 "style",
-                node.getAttribute("style").replace(rgb, rgbToHex(rgb, node))
+                node.getAttribute("style").replace(rgb, blendColors(rgb, node))
             );
         }
     }
