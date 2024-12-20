@@ -235,6 +235,7 @@ export class ClosePosPopup extends Component {
             if (!response.successful) {
                 return this.handleClosingError(response);
             }
+            localStorage.removeItem(`pos.session.${odoo.pos_config_id}`);
             location.reload();
         } catch (error) {
             if (error instanceof ConnectionLostError) {

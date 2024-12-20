@@ -6872,11 +6872,14 @@ class StockMove(TransactionCase):
             'product_id': self.product_serial.id,
         } for name in ['sn01', 'sn02', 'sn03']])
 
+        pack = self.env['stock.quant.package'].create({
+            'name': 'Pack A',
+        })
+
         self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1, lot_id=lots[0])
-        self.env['stock.quant']._update_available_quantity(self.product_serial, subloc, 1, lot_id=lots[1])
+        self.env['stock.quant']._update_available_quantity(self.product_serial, subloc, 1, lot_id=lots[1], package_id=pack)
         # Third SN is at a wrong location -> we will fallback on SM loc
         self.env['stock.quant']._update_available_quantity(self.product_serial, self.pack_location, 1, lot_id=lots[2])
-
         sm = self.env['stock.move'].create({
             'name': self.product_serial.name,
             'location_id': self.stock_location.id,
@@ -6890,7 +6893,7 @@ class StockMove(TransactionCase):
         sm.lot_ids = [(6, 0, lots.ids)]
 
         self.assertRecordValues(sm.move_line_ids, [
-            {'location_id': self.stock_location.id, 'lot_id': lots[0].id},
-            {'location_id': subloc.id, 'lot_id': lots[1].id},
-            {'location_id': self.stock_location.id, 'lot_id': lots[2].id},
+            {'location_id': self.stock_location.id, 'lot_id': lots[0].id, 'package_id': False},
+            {'location_id': subloc.id, 'lot_id': lots[1].id, 'package_id': pack.id},
+            {'location_id': self.stock_location.id, 'lot_id': lots[2].id, 'package_id': False},
         ])

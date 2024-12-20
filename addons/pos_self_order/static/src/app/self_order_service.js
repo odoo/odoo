@@ -600,6 +600,11 @@ export class SelfOrder extends Reactive {
         });
     }
 
+    resetTableIdentifier() {
+        this.router.deleteTableIdentifier();
+        this.currentTable = null;
+    }
+
     async initMobileData() {
         if (this.config.self_ordering_mode !== "qr_code") {
             if (
@@ -780,6 +785,9 @@ export class SelfOrder extends Reactive {
             } else if (error.data.name === "werkzeug.exceptions.NotFound") {
                 message = _t("Orders not found on server");
                 cleanOrders = true;
+            } else if (error?.data?.name === "odoo.exceptions.UserError") {
+                message = error.data.message;
+                this.resetTableIdentifier();
             }
         } else if (error instanceof ConnectionLostError) {
             message = _t("Connection lost, please try again later");
