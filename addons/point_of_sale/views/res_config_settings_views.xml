@@ -110,7 +110,7 @@
                                 </div>
                             </setting>
                             <setting id="iface_tipproduct" title="This product is used as reference on customer receipts." string="Tips" help="Accept customer tips or convert their change to a tip" documentation="/applications/sales/point_of_sale/restaurant/tips.html">
-                                <field name="pos_iface_tipproduct" readonly="pos_has_active_session"/>
+                                <field name="pos_iface_tipproduct"/>
                                 <div class="content-group" invisible="not pos_iface_tipproduct">
                                     <div class="row mt16" id="tip_product">
                                         <label string="Tip Product" for="pos_tip_product_id" class="col-lg-3 o_light_label "/>
@@ -124,7 +124,7 @@
                                 There is no Chart of Accounts configured on the company. Please go to the invoicing settings to install a Chart of Accounts.
                             </div>
                             <setting id="multiple_employee_session" title="Employees can scan their badge or enter a PIN to log in to a PoS session. These credentials are configurable in the *HR Settings* tab of the employee form." string="Log in with Employees" help="Allow to log and switch between selected Employees" documentation="/applications/sales/point_of_sale/employee_login.html">
-                                <field name="pos_module_pos_hr" readonly="pos_has_active_session"/>
+                                <field name="pos_module_pos_hr"/>
                                 <div class="content-group mt16" invisible="not pos_module_pos_hr">
                                     <div class="text-warning" id="warning_text_employees">
                                         Save this page and come back here to set up the feature.
@@ -160,9 +160,9 @@
                         </block>
                         <block id="product_and_category_block" title="Product &amp; PoS categories">
                             <setting help="Pick which product PoS categories are available">
-                                <field name="pos_limit_categories" readonly="pos_has_active_session"/>
+                                <field name="pos_limit_categories"/>
                                 <div class="content-group mt16" invisible="not pos_limit_categories">
-                                    <field name="pos_iface_available_categ_ids" widget="many2many_tags" readonly="pos_has_active_session"/>
+                                    <field name="pos_iface_available_categ_ids" widget="many2many_tags"/>
                                 </div>
                                 <div class="content-group mt16" invisible="not pos_limit_categories">
                                     <button name="%(product_pos_category_action)d" icon="oi-arrow-right" type="action" string="PoS Product Categories" class="btn-link"/>
@@ -241,11 +241,11 @@
 
                         <block title="Pricing" id="pos_pricing_section">
                             <setting id="multiple_prices_setting" string="Flexible Pricelists" help="Set multiple prices per product, automated discounts, etc." documentation="/applications/sales/point_of_sale/pricing/pricelists.html">
-                                <field name="pos_use_pricelist" readonly="pos_has_active_session"/>
+                                <field name="pos_use_pricelist"/>
                                 <div class="content-group" invisible="not pos_use_pricelist">
                                     <div class="row mt16">
                                         <label string="Available" for="pos_available_pricelist_ids" class="col-lg-3 o_light_label"/>
-                                        <field name="pos_available_pricelist_ids" widget="many2many_tags" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]" readonly="pos_has_active_session"/>
+                                        <field name="pos_available_pricelist_ids" widget="many2many_tags" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]"/>
                                     </div>
                                     <div class="row mt16">
                                         <label string="Default" for="pos_pricelist_id" class="col-lg-3 o_light_label"/>
@@ -269,7 +269,7 @@
                                 <field name="pos_manual_discount"/>
                             </setting>
                             <setting help="Adds a button to set a global discount" documentation="/applications/sales/point_of_sale/pricing/discounts.html">
-                                <field name="pos_module_pos_discount" readonly="pos_has_active_session"/>
+                                <field name="pos_module_pos_discount"/>
                                 <div class="content-group mt16" invisible="not pos_module_pos_discount">
                                     <div class="text-warning mb4" id="warning_text_pos_discount" >
                                         Save this page and come back here to set up the feature.
