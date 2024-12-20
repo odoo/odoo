@@ -14,7 +14,7 @@ from textwrap import dedent
 
 from odoo.tests.common import TransactionCase
 from odoo.addons.base.models.ir_qweb import QWebException, render
-from odoo.tools import misc, mute_logger
+from odoo.tools import file_open, misc, mute_logger
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.exceptions import UserError, ValidationError, MissingError
 
@@ -1704,6 +1704,17 @@ class TestQWebBasic(TransactionCase):
             """
         })
         self.env['ir.qweb'].with_context(lang='pt_BR')._render(view1.id, {})  # should not crash
+
+    def test_render_template_from_file(self):
+        expected_result = etree.fromstring(file_open('base/tests/file_template/file_expected_render.xml').read())
+        rendered_result = self.env['ir.qweb']._render('base/tests/file_template/file_template.xml', values={
+            'document_name': 'Test Document',
+            'partner': {
+                'name': 'Jerry',
+                'forename': 'Khan',
+            },
+        })
+        self.assertEqual(etree.fromstring(rendered_result), expected_result)
 
     def test_void_element(self):
         view = self.env['ir.ui.view'].create({
