@@ -212,17 +212,25 @@ test("suggested recipients list display 3 suggested recipient and 'show more' bu
 
 test("suggest recipient on 'Send message' composer (all checked by default)", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({
-        name: "John Jane",
-        email: "john@jane.be",
-    });
+    const [partnerId, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "John Jane", email: "john@jane.be" },
+        { name: "Peter Johnson", email: "peter@johnson.be" },
+    ]);
     const fakeId = pyEnv["res.fake"].create({
         email_cc: "john@test.be",
         partner_ids: [partnerId],
     });
+    pyEnv["mail.followers"].create({
+        partner_id: partnerId_2,
+        email: "peter@johnson.be",
+        is_active: true,
+        res_id: fakeId,
+        res_model: "res.fake",
+    });
     registerArchs(archs);
     await start();
     await openFormView("res.fake", fakeId);
+    await contains(".o-mail-Followers-counter", { text: "1" });
     await click("button", { text: "Send message" });
     await contains(".o-mail-SuggestedRecipient input:checked", { count: 2 });
     expect(
@@ -236,17 +244,24 @@ test("suggest recipient on 'Send message' composer (all checked by default)", as
     expect(partners).toHaveLength(0);
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await click(".o-mail-Composer-send");
-    await contains(".o-mail-Followers-counter", { text: "2" });
-    partners = pyEnv["res.partner"].search_read([["email", "=", "john@test.be"]]);
-    expect(partners).toHaveLength(1);
+    await contains(".o-mail-Followers-counter", { text: "1" });
 });
 
 test("suggest recipient on 'Send message' composer (recipient checked/unchecked)", async () => {
     const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Peter Johnson", email: "peter@johnson.be" });
     const fakeId = pyEnv["res.fake"].create({ email_cc: "john@test.be" });
+    pyEnv["mail.followers"].create({
+        partner_id: partnerId,
+        email: "peter@johnson.be",
+        is_active: true,
+        res_id: fakeId,
+        res_model: "res.fake",
+    });
     registerArchs(archs);
     await start();
     await openFormView("res.fake", fakeId);
+    await contains(".o-mail-Followers-counter", { text: "1" });
     await click("button", { text: "Send message" });
     await contains(".o-mail-SuggestedRecipient input:checked", { count: 1 });
     expect(
@@ -301,7 +316,7 @@ test("suggested recipients should not be notified when posting an internal note"
     await waitForSteps(["message_post"]);
 });
 
-test("suggested recipients should be added as follower when posting a message", async () => {
+test("suggested recipients should not be added as follower when posting a message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         display_name: "John Jane",
@@ -311,9 +326,10 @@ test("suggested recipients should be added as follower when posting a message", 
     registerArchs(archs);
     await start();
     await openFormView("res.fake", fakeId);
+    await contains(".o-mail-Followers-counter", { text: "0" });
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message");
-    await contains(".o-mail-Followers-counter", { text: "1" });
+    await contains(".o-mail-Followers-counter", { text: "0" });
 });

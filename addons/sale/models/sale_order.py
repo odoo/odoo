@@ -44,6 +44,7 @@ class SaleOrder(models.Model):
     _name = 'sale.order'
     _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _description = "Sales Order"
+    _mail_thread_customer = True
     _order = 'date_order desc, id desc'
     _check_company_auto = True
 
@@ -1678,10 +1679,9 @@ class SaleOrder(models.Model):
     def message_post(self, **kwargs):
         if self.env.context.get('mark_so_as_sent'):
             self.filtered(lambda o: o.state == 'draft').with_context(tracking_disable=True).write({'state': 'sent'})
-        so_ctx = {'mail_post_autofollow': self.env.context.get('mail_post_autofollow', True)}
         if self.env.context.get('mark_so_as_sent') and 'mail_notify_author' not in kwargs:
             kwargs['notify_author'] = self.env.user.partner_id.id in (kwargs.get('partner_ids') or [])
-        return super(SaleOrder, self.with_context(**so_ctx)).message_post(**kwargs)
+        return super().message_post(**kwargs)
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
         # Give access button to users and portal customer as portal is integrated
