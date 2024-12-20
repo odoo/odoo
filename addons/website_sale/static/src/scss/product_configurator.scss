@@ -37,7 +37,45 @@
     }
 }
 
-.attribute_variant_color{
+.css_attribute_image {
+    position: relative;
+    display: inline-block;
+    border: 5px solid $input-border-color;
+    text-align: center;
+    transition: $input-transition;
+    height: 3rem;
+    width: 3rem;
+
+    @include o-field-pointer();
+
+    &:before {
+        content: "";
+        display: block;
+        @include o-position-absolute(-3px, -3px, -3px, -3px);
+        border: 4px solid white;
+    }
+
+    input {
+        margin: 8px;
+        height: 13px;
+        width: 13px;
+        opacity: 0;
+    }
+
+    &.active {
+        border: 5px solid map-get($theme-colors, 'primary');
+    }
+
+    &.custom_value {
+        background-image: linear-gradient(to bottom right, #FF0000, #FFF200, #1E9600);
+    }
+
+    &.transparent {
+        background-image: url(/web/static/img/transparent.png);
+    }
+}
+
+.attribute_variant_color {
     position: relative;
     display: inline-block;
     border: 1px solid $input-border-color;

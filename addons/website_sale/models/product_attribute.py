@@ -15,7 +15,6 @@ class ProductAttribute(models.Model):
             ('visible', "Visible"),
             ('hidden', "Hidden"),
             ('hover', "Hover"),
-            ('image', "Image"),
         ],
         default='hidden',
         help="Variants are available for selection from your /shop page",

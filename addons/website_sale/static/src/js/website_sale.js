@@ -799,10 +799,11 @@ publicWidget.registry.webisteProductImageChanger = publicWidget.Widget.extend({
                 "data-attribute_product_ids"
             );
             if (attributeProductIds) {
-            const recordId = JSON.parse(attributeProductIds)[0];
-            this._onImageChange(recordId);
-            } else {
-            this._onImageRestore();
+                const recordId = JSON.parse(attributeProductIds)[0];
+                this._onImageChange(recordId);
+            }
+            else {
+                this._onImageRestore();
             }
         },
 
