@@ -51,6 +51,7 @@ class HrApplicant(models.Model):
         local_context = dict(
             default_applicant_id=self.id,
             default_partner_ids=self.partner_id.ids,
+            default_emails=self.email_from,
             default_survey_id=self.survey_id.id,
             default_use_template=bool(template),
             default_template_id=template and template.id or False,

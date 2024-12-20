@@ -110,6 +110,7 @@ class HrCandidate(models.Model):
                 if not candidate.partner_name:
                     raise UserError(_('You must define a Contact Name for this candidate.'))
                 candidate.partner_id = self.env['res.partner'].with_context(default_lang=self.env.lang).find_or_create(candidate.email_from)
+                candidate.partner_id.write({'active': False})
             if candidate.partner_name and not candidate.partner_id.name:
                 candidate.partner_id.name = candidate.partner_name
             if tools.email_normalize(candidate.email_from) != tools.email_normalize(candidate.partner_id.email):
@@ -330,6 +331,11 @@ class HrCandidate(models.Model):
                 'is_company': False,
                 'name': self.partner_name,
                 'email': self.email_from,
+            })
+        else:
+            self.partner_id.write({
+                'name': self.partner_name,
+                'active': True,
             })
 
         action = self.env['ir.actions.act_window']._for_xml_id('hr.open_view_employee_list')
