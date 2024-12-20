@@ -91,7 +91,9 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
 
         # The following fields are not part of the hash so they can be modified
         move.ref = "bla"
-        move.line_ids[0].date_maturity = fields.Date.from_string('2023-01-02')
+        move.line_ids[0].with_context(skip_readonly_check=True).write({
+            'date_maturity': fields.Date.from_string('2023-01-02'),
+        })
 
     def test_account_move_hash_integrity_report(self):
         """Test the hash integrity report"""
