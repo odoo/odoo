@@ -5,7 +5,7 @@ import { debounce } from "@web/core/utils/timing";
 import publicWidget from '@web/legacy/js/public/public_widget';
 
 publicWidget.registry.AddressForm = publicWidget.Widget.extend({
-    selector: '.oe_cart .checkout_autoformat',
+    selector: '.oe_cart .address_autoformat',
     selectorHas: 'input[name="street"][data-autocomplete-enabled="1"]',
     events: {
         'input input[name="street"]': '_onChangeStreet',

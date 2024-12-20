@@ -2,9 +2,9 @@ import { rpc } from "@web/core/network/rpc";
 import { debounce } from "@web/core/utils/timing";
 import publicWidget from "@web/legacy/js/public/public_widget";
 
-publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
-    // /shop/address
-    selector: '.o_wsale_address_fill',
+publicWidget.registry.portalAddress = publicWidget.Widget.extend({
+    // /portal/address
+    selector: '.o_portal_address_fill',
     events: {
         'change select[name="country_id"]': '_onChangeCountry',
         'click #save_address': '_onSaveAddress',
@@ -20,7 +20,7 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
         this.http = this.bindService('http');
 
         this._changeCountry = debounce(this._changeCountry.bind(this), 500);
-        this.addressForm = document.querySelector('form.checkout_autoformat');
+        this.addressForm = document.querySelector('form.address_autoformat');
         this.errorsDiv = document.getElementById('errors');
         this.addressType = this.addressForm['address_type'].value;
         this.countryCode = this.addressForm.dataset.companyCountryCode;
@@ -71,7 +71,7 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
         }
 
         const data = await rpc(
-            `/shop/country_info/${parseInt(countryId)}`,
+            `/portal/country_info/${parseInt(countryId)}`,
             {address_type: this.addressType},
         );
 
@@ -183,7 +183,7 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
             submitButton.appendChild(spinner);
 
             const result = await this.http.post(
-                '/shop/address/submit',
+                this.addressForm.dataset.submitUrl,
                 new FormData(this.addressForm),
             )
             if (result.successUrl) {
@@ -222,4 +222,4 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
 
 });
 
-export default publicWidget.registry.websiteSaleAddress;
+export default publicWidget.registry.portalAddress;
