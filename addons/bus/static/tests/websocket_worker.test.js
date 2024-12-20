@@ -8,7 +8,7 @@ describe.current.tags("desktop");
 test("connect event is broadcasted after calling start", async () => {
     const worker = patchWebsocketWorkerWithCleanup({
         broadcast(type) {
-            if (type != "update_state") {
+            if (type != "worker_state_updated") {
                 asyncStep(`broadcast ${type}`);
             }
         },
@@ -20,7 +20,7 @@ test("connect event is broadcasted after calling start", async () => {
 test("disconnect event is broadcasted", async () => {
     const worker = patchWebsocketWorkerWithCleanup({
         broadcast(type) {
-            if (type != "update_state") {
+            if (type != "worker_state_updated") {
                 asyncStep(`broadcast ${type}`);
             }
         },
@@ -34,7 +34,7 @@ test("disconnect event is broadcasted", async () => {
 test("reconnecting/reconnect event is broadcasted", async () => {
     const worker = patchWebsocketWorkerWithCleanup({
         broadcast(type) {
-            if (type != "update_state") {
+            if (type != "worker_state_updated") {
                 asyncStep(`broadcast ${type}`);
             }
         },

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="bus.BusConnectionAlert">
+        <div t-if="busMonitoring.isConnectionLost" class="o-bus-ConnectionAlert position-absolute top-0 bottom-0 end-0 start-0 pe-none" t-att-class="{'o-bus-ConnectionAlert-border': showBorderOnFailure}">
+            <div class="o-bus-ConnectionAlert-failure small d-flex align-items-baseline m-0 position-absolute bottom-0 end-0 rounded-3 rounded-bottom-0 rounded-end-0 z-1" role="alert">
+                <i class="o-bus-ConnectionAlert-icon fa fa-warning me-1 text-warning"/>
+                <span class="o-bus-ConnectionAlert-label ms-1 lh-1 fw-bold">Real-time connection lost...</span>
+            </div>
+        </div>
+    </t>
+</templates>
