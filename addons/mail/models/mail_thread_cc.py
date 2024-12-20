@@ -31,7 +31,7 @@ class MailThreadCc(models.AbstractModel):
         return super().message_new(msg_dict, cc_values)
 
     def message_update(self, msg_dict, update_vals=None):
-        '''Adds cc email to self.email_cc while trying to keep email as raw as possible but unique'''
+        # Adds cc email to self.email_cc while trying to keep email as raw as possible but unique
         if update_vals is None:
             update_vals = {}
         cc_values = {}
