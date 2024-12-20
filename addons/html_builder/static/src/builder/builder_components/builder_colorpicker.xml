@@ -5,7 +5,7 @@
     <BuilderComponent dependencies="props.dependencies">
         <div>
             <ColorSelector
-                type="'background'"
+                type="this.colorType"
                 getSelectedColors='() => this.currentColors'
                 getUsedCustomColors='() => []'
                 applyColor='this.applyColor.commit'

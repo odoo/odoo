@@ -21,8 +21,8 @@ export class BuilderColorPicker extends Component {
     setup() {
         useBuilderComponent();
         this.currentColors = useDomState((editingElement) => ({
-            backgroundColor: editingElement
-                ? getComputedStyle(editingElement).backgroundColor
+            [this.props.styleAction]: editingElement
+                ? getComputedStyle(editingElement)[this.props.styleAction]
                 : undefined,
         }));
         this.colorButton = useRef("colorButton");
@@ -30,20 +30,29 @@ export class BuilderColorPicker extends Component {
         this.applyColor = this.env.editor.shared.history.makePreviewableOperation(
             ({ color, mode }) => {
                 for (const element of this.env.getEditingElements()) {
-                    this.env.editor.shared.color.colorElement(element, color, "backgroundColor");
+                    this.env.editor.shared.color.colorElement(
+                        element,
+                        color,
+                        this.props.styleAction
+                    );
                 }
 
                 this.updateColorButton();
             }
         );
     }
+
+    get colorType() {
+        return this.props.styleAction === "color" ? "foreground" : "background";
+    }
+
     updateColorButton() {
         const editingElement = this.env.getEditingElement();
         if (!this.colorButton.el || !editingElement) {
             return;
         }
         const color =
-            this.env.editor.shared.color.getElementColors(editingElement)["backgroundColor"];
+            this.env.editor.shared.color.getElementColors(editingElement)[this.props.styleAction];
         this.env.editor.shared.color.colorElement(this.colorButton.el, color, "backgroundColor");
     }
 }

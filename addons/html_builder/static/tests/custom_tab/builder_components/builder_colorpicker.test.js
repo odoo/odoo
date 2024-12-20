@@ -6,10 +6,10 @@ import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../../helpe
 
 defineWebsiteModels();
 
-test("should apply color to the editing element", async () => {
+test("should apply backgroundColor to the editing element", async () => {
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderColorPicker/>`,
+        template: xml`<BuilderColorPicker styleAction="'backgroundColor'"/>`,
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
@@ -19,6 +19,21 @@ test("should apply color to the editing element", async () => {
     await click(".o-overlay-item [data-color='o-color-1']");
     expect(":iframe .test-options-target").toHaveClass("test-options-target bg-o-color-1");
 });
+
+test("should apply color to the editing element", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker styleAction="'color'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(".options-container").toBeDisplayed();
+    await click(".we-bg-options-container .dropdown");
+    await animationFrame();
+    await click(".o-overlay-item [data-color='o-color-1']");
+    expect(":iframe .test-options-target").toHaveClass("test-options-target text-o-color-1");
+});
+
 test("hide/display base on applyTo", async () => {
     addOption({
         selector: ".parent-target",
