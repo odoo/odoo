@@ -6,7 +6,6 @@ from urllib3.contrib.pyopenssl import inject_into_urllib3
 from OpenSSL.crypto import load_certificate, load_privatekey, FILETYPE_PEM
 
 from odoo import fields, models, _
-from odoo.exceptions import UserError
 from odoo.tools import html_escape, zeep
 from odoo.tools.float_utils import float_round
 
@@ -125,6 +124,8 @@ class AccountEdiFormat(models.Model):
         tax_amount_retention = 0.0
         base_amount_not_subject = 0.0
         base_amount_not_subject_loc = 0.0
+        has_not_subject = False
+        has_not_subject_loc = False
         tax_subject_info_list = []
         tax_subject_isp_info_list = []
         for tax_values in tax_details['tax_details'].values():
@@ -160,8 +161,10 @@ class AccountEdiFormat(models.Model):
                 elif tax_values['l10n_es_type'] == 'retencion':
                     tax_amount_retention += tax_values['tax_amount']
                 elif tax_values['l10n_es_type'] == 'no_sujeto':
+                    has_not_subject = True
                     base_amount_not_subject += tax_values['base_amount']
                 elif tax_values['l10n_es_type'] == 'no_sujeto_loc':
+                    has_not_subject_loc = True
                     base_amount_not_subject_loc += tax_values['base_amount']
                 elif tax_values['l10n_es_type'] == 'ignore':
                     continue
@@ -173,8 +176,10 @@ class AccountEdiFormat(models.Model):
                 elif tax_values['l10n_es_type'] == 'retencion':
                     tax_amount_retention += tax_values['tax_amount']
                 elif tax_values['l10n_es_type'] == 'no_sujeto':
+                    has_not_subject = True
                     base_amount_not_subject += tax_values['base_amount']
                 elif tax_values['l10n_es_type'] == 'no_sujeto_loc':
+                    has_not_subject_loc = True
                     base_amount_not_subject_loc += tax_values['base_amount']
                 elif tax_values['l10n_es_type'] == 'ignore':
                     continue
@@ -213,15 +218,10 @@ class AccountEdiFormat(models.Model):
             tax_details_info['Sujeta']['NoExenta']['DesgloseIVA'].setdefault('DetalleIVA', [])
             tax_details_info['Sujeta']['NoExenta']['DesgloseIVA']['DetalleIVA'] += tax_subject_isp_info_list
 
-        if not invoice.company_id.currency_id.is_zero(base_amount_not_subject) and invoice.is_sale_document():
-            tax_details_info['NoSujeta']['ImportePorArticulos7_14_Otros'] = float_round(sign * base_amount_not_subject, 2)
-        if not invoice.company_id.currency_id.is_zero(base_amount_not_subject_loc) and invoice.is_sale_document():
-            tax_details_info['NoSujeta']['ImporteTAIReglasLocalizacion'] = float_round(sign * base_amount_not_subject_loc, 2)
-        if not tax_details_info and invoice.is_sale_document():
-            if any(t['l10n_es_type'] == 'no_sujeto' for t in tax_details['tax_details'].values()):
-                tax_details_info['NoSujeta']['ImportePorArticulos7_14_Otros'] = 0
-            if any(t['l10n_es_type'] == 'no_sujeto_loc' for t in tax_details['tax_details'].values()):
-                tax_details_info['NoSujeta']['ImporteTAIReglasLocalizacion'] = 0
+        if has_not_subject and invoice.is_sale_document():
+            tax_details_info['NoSujeta']['ImportePorArticulos7_14_Otros'] = round(sign * base_amount_not_subject, 2)
+        if has_not_subject_loc and invoice.is_sale_document():
+            tax_details_info['NoSujeta']['ImporteTAIReglasLocalizacion'] = round(sign * base_amount_not_subject_loc, 2)
 
         return {
             'tax_details_info': tax_details_info,
@@ -367,11 +367,6 @@ class AccountEdiFormat(models.Model):
                         invoice_node.setdefault('TipoDesglose', {})
                         invoice_node['TipoDesglose'].setdefault('DesgloseTipoOperacion', {})
                         invoice_node['TipoDesglose']['DesgloseTipoOperacion']['Entrega'] = tax_details_info_consu_vals['tax_details_info']
-                    if not invoice_node.get('TipoDesglose'):
-                        raise UserError(_(
-                            "In case of a foreign customer, you need to configure the tax scope on taxes:\n%s",
-                            "\n".join(invoice.line_ids.tax_ids.mapped('name'))
-                        ))
 
                     invoice_node['ImporteTotal'] = float_round(sign * (
                         tax_details_info_service_vals['tax_details']['base_amount']
