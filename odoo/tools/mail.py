@@ -74,6 +74,7 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-publish', 'data-id', 'data-res_id', 'data-interval', 'data-member_id', 'data-scroll-background-ratio', 'data-view-id',
      'data-class', 'data-mimetype', 'data-original-src', 'data-original-id', 'data-gl-filter', 'data-quality', 'data-resize-width',
      'data-shape', 'data-shape-colors', 'data-file-name', 'data-original-mimetype',
+     'data-heading-link-id', 'data-heading-link-to',
      'data-mimetype-before-conversion',
      ])
 SANITIZE_TAGS = {
