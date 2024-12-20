@@ -790,6 +790,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             values['suggested_products'] = order._cart_accessories()
             values.update(self._get_express_shop_payment_values(order))
 
+        values.update(self._get_checkout_step_values('/shop/cart'))
         values.update(self._cart_values(**post))
         return request.render("website_sale.cart", values)
 
@@ -1018,6 +1019,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if try_skip_step and can_skip_delivery:
             return request.redirect('/shop/confirm_order')
 
+        checkout_page_values.update(self._get_checkout_step_values('/shop/checkout'))
+
         return request.render('website_sale.checkout', checkout_page_values)
 
     def _prepare_checkout_page_values(self, order_sudo, **_kwargs):
@@ -1111,6 +1114,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             use_delivery_as_billing=use_delivery_as_billing,
             **query_params
         )
+
+        address_form_values.update(self._get_checkout_step_values('/shop/address'))
+
         return request.render('website_sale.address', address_form_values)
 
     def _prepare_address_form_values(
@@ -1772,6 +1778,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'partner': order.partner_id.id,
             'order': order,
         }
+
+        values.update(self._get_checkout_step_values('/shop/extra_info'))
+
         return request.render("website_sale.extra_info", values)
 
     # === CHECKOUT FLOW - PAYMENT/CONFIRMATION METHODS === #
@@ -1836,6 +1845,25 @@ class WebsiteSale(payment_portal.PaymentPortal):
             ))
         return errors
 
+    def _get_checkout_step_values(self, href):
+
+        current_step = request.env['website.checkout.step'].sudo().search(
+            [('step_href', '=', href)], limit=1
+        )
+        allowed_steps_domain = request.website._get_allowed_steps_domain()
+        next_step = current_step._get_next_checkout_step(allowed_steps_domain)
+        previous_step = current_step._get_previous_checkout_step(allowed_steps_domain)
+
+        # /shop/address is associated to the delivery step
+        if href == '/shop/address':
+            href = '/shop/checkout'
+
+        return {
+            'current_website_checkout_step': href,
+            'next_website_checkout_step': next_step,
+            'previous_website_checkout_step': previous_step,
+        }
+
     @route('/shop/payment', type='http', auth='public', website=True, sitemap=False)
     def shop_payment(self, **post):
         """ Payment step. This page proposes several payment means based on available
@@ -1858,6 +1886,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if render_values['errors']:
             render_values.pop('payment_methods_sudo', '')
             render_values.pop('tokens_sudo', '')
+
+        # As the initial page sending us to payment is /shop/confirm_order
+        render_values.update(self._get_checkout_step_values('/shop/confirm_order'))
 
         return request.render("website_sale.payment", render_values)
 
@@ -1919,6 +1950,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if sale_order_id:
             order = request.env['sale.order'].sudo().browse(sale_order_id)
             values = self._prepare_shop_payment_confirmation_values(order)
+            values.update(self._get_checkout_step_values('/shop/confirmation'))
             return request.render("website_sale.confirmation", values)
         return request.redirect('/shop')
 
