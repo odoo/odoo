@@ -734,8 +734,7 @@ class SlideSlide(models.Model):
             }
         return super()._get_access_action(access_uid=access_uid, force_website=force_website)
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
-        """ Add access button to everyone if the document is active. """
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
         groups = super()._notify_get_recipients_groups(
             message, model_description, msg_vals=msg_vals
         )

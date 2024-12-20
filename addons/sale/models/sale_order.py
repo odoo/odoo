@@ -1675,10 +1675,10 @@ class SaleOrder(models.Model):
             kwargs['notify_author'] = self.env.user.partner_id.id in (kwargs.get('partner_ids') or [])
         return super(SaleOrder, self.with_context(**so_ctx)).message_post(**kwargs)
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
-        """ Give access button to users and portal customer as portal is integrated
-        in sale. Customer and portal group have probably no right to see
-        the document so they don't have the access button. """
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
+        # Give access button to users and portal customer as portal is integrated
+        # in sale. Customer and portal group have probably no right to see
+        # the document so they don't have the access button.
         groups = super()._notify_get_recipients_groups(
             message, model_description, msg_vals=msg_vals
         )
@@ -1726,7 +1726,7 @@ class SaleOrder(models.Model):
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False):
         render_context = super()._notify_by_email_prepare_rendering_context(
-            message, msg_vals, model_description=model_description,
+            message, msg_vals=msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
         lang_code = render_context.get('lang')
