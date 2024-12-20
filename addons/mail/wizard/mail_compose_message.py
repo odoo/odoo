@@ -731,7 +731,7 @@ class MailComposeMessage(models.TransientModel):
         if self.composition_batch:
             # add context key to avoid subscribing the author
             ActiveModel = ActiveModel.with_context(
-                mail_create_nosubscribe=True,
+                mail_post_autofollow_author_skip=True,
             )
 
         messages = self.env['mail.message']

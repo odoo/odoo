@@ -68,24 +68,45 @@ class MailThread(models.AbstractModel):
         methods (calling ``super``) to add model-specific behavior at
         creation and update of a thread when processing incoming emails.
 
-        Options:
-            - _mail_flat_thread: if set to True, all messages without parent_id
-                are automatically attached to the first message posted on the
-                resource. If set to False, the display of Chatter is done using
-                threads, and no parent_id is automatically set.
+    MailThread class options:
+
+     - _mail_flat_thread: if set to True, all messages without parent_id
+       are automatically attached to the first message posted on the
+       resource. If set to False, the display of Chatter is done using
+       threads, and no parent_id is automatically set.
+     - _mail_post_access: required document access when posting on the document.
+       Equivalent to: 'create' rights on mail.message depends notably on
+       document rights, which can be controller using this attribute. Defaults
+       to 'write' as writing is considered as editing. A common customization
+       is to set it to 'read', allowing people with read access to discuss.
 
     MailThread features can be somewhat controlled through context keys :
 
-     - ``mail_create_nosubscribe``: at create or message_post, do not subscribe
-       uid to the record thread
+    # Tracking and logging
+     - ``mail_create_nosubscribe``: at create, do not subscribe uid to the
+       record thread. False by default, as creating = following;
      - ``mail_create_nolog``: at create, do not log the automatic '<Document>
        created' message
      - ``mail_notrack``: at create and write, do not perform the value tracking
-       creating messages
+       creating messages;
      - ``tracking_disable``: at create and write, perform no MailThread features
-       (auto subscription, tracking, post, ...)
+       (auto subscription, tracking, post, ...);
+    # Posting process
      - ``mail_notify_force_send``: if less than 50 email notifications to send,
-       send them directly instead of using the queue; True by default
+       send them directly instead of using the queue i.e. controls 'force_send'
+       parameter of '_notify_thread_by_email'. True by default as it is
+       the desired behavior;
+     - ``mail_notify_author``: notify author if they are in potential notified
+       partners (e.g. following a document on which they post) i.e. controls
+       'notify_author' parameter of '_notify_get_recipients'. False by default
+       as people should not be notified of what they typed;
+    # Post side effects
+     - ``mail_auto_subscribe_no_notify``: skip notifications linked to auto
+       subscription. False by default, notifications are intended;
+     - ``mail_post_autofollow``: subscribe specific recipients ('partner_ids') during
+        message_post. False by default;
+     - ``mail_post_autofollow_author_skip``: do not subscribe author of a message
+        post. False by default, as we consider authors should receive answers;
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
@@ -262,6 +283,11 @@ class MailThread(models.AbstractModel):
             - subscribe followers of parent
             - log a creation message
         """
+        # when being in 'nosubscribe' mode, also propagate to any message posted
+        # during the process, unless specifically asked
+        if self.env.context.get('mail_create_nosubscribe') and 'mail_post_autofollow_author_skip' not in self.env.context:
+            self = self.with_context(mail_post_autofollow_author_skip=True)
+
         if self._context.get('tracking_disable'):
             threads = super(MailThread, self).create(vals_list)
             threads._track_discard()
@@ -1363,7 +1389,7 @@ class MailThread(models.AbstractModel):
             else:
                 # if no author, skip any author subscribe check; otherwise message_post
                 # checks anyway for real author and filters inactive (like odoobot)
-                thread_root = thread_root.with_context(from_alias=True, mail_create_nosubscribe=not message_dict.get('author_id'))
+                thread_root = thread_root.with_context(from_alias=True, mail_post_autofollow_author_skip=not message_dict.get('author_id'))
                 new_msg = thread_root.message_post(**post_params)
 
             if new_msg and original_partner_ids:
@@ -2337,8 +2363,7 @@ class MailThread(models.AbstractModel):
         # subscribe author(s) so that they receive answers; do it only when it is
         # a manual post by the author (aka not a system notification, not a message
         # posted 'in behalf of', and if still active).
-        author_subscribe = (not self._context.get('mail_create_nosubscribe') and
-                             msg_values['message_type'] != 'notification')
+        author_subscribe = not self._context.get('mail_post_autofollow_author_skip') and msg_values['message_type'] != 'notification'
         if author_subscribe:
             real_author_id = False
             # if current user is active, they are the one doing the action and should

@@ -441,7 +441,7 @@ class WebsiteForum(WebsiteProfile):
         if kwargs.get('comment') and post.forum_id.id == forum.id:
             # TDE FIXME: check that post_id is the question or one of its answers
             body = tools.mail.plaintext2html(kwargs['comment'])
-            post.with_context(mail_create_nosubscribe=True).message_post(
+            post.with_context(mail_post_autofollow_author_skip=True).message_post(
                 body=body,
                 message_type='comment',
                 subtype_xmlid='mail.mt_comment')
