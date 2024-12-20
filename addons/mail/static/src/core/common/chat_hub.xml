@@ -8,7 +8,7 @@
                 <ChatWindow chatWindow="cw" right="env.embedLivechat ? chatHub.WINDOW_GAP : (chatHub.BUBBLE_START + chatHub.BUBBLE + (chatHub.BUBBLE_OUTER*2) + (chatHub.opened.length - cw_index - 1) * (chatHub.WINDOW + chatHub.WINDOW_INBETWEEN * 2))"/>
             </t>
         </t>
-        <div t-if="isShown" class="o-mail-ChatHub-bubbles position-fixed end-0 d-flex flex-column align-content-start justify-content-end align-items-center" t-att-class="{ 'bottom-0': !store.chatHub.compact or compactPosition.top === 'auto' }" t-ref="bubbles" t-att-style="store.chatHub.compact ? `top: ${ compactPosition.top }; left: ${ compactPosition.left };` : ''">
+        <div t-if="isShown" class="o-mail-ChatHub-bubbles position-fixed end-0 d-flex flex-column align-content-start justify-content-end align-items-center" t-att-class="{ 'bottom-0': !store.chatHub.compact or compactPosition.top === 'auto', 'o-liftUp': busMonitoring.hasConnectionIssues }" t-ref="bubbles" t-att-style="store.chatHub.compact ? `top: ${ compactPosition.top }; left: ${ compactPosition.left };` : ''">
             <div class="d-flex flex-column align-content-start justify-content-end align-items-center gap-1">
                 <t t-if="store.chatHub.compact">
                     <t t-call="mail.ChatHub.compactButton"/>
