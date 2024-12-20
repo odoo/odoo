@@ -44,7 +44,6 @@ class FullBaseMailPerformance(BaseMailPerformance):
                 'country_id': cls.env.ref('base.be').id,
                 'email': f'customer.full.test.{idx}@example.com',
                 'name': f'Test Full Customer {idx}',
-                'mobile': f'045600000{idx}',
                 'phone': f'045611111{idx}',
             } for idx in range(5)
         ])
