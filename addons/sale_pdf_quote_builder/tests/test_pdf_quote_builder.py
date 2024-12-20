@@ -7,13 +7,12 @@ from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tools.misc import file_open
 
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.sale.tests.common import SaleCommon
 from .files import forms_pdf, plain_pdf
 
 
 @tagged('-at_install', 'post_install')
-class TestPDFQuoteBuilder(HttpCaseWithUserDemo, SaleCommon):
+class TestPDFQuoteBuilder(SaleCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -56,6 +55,7 @@ class TestPDFQuoteBuilder(HttpCaseWithUserDemo, SaleCommon):
             'res_model': 'product.product',
             'res_id': cls.product.id,
         })
+        cls.internal_user = cls._create_new_internal_user(login='internal.user@test.odoo.com')
 
     def test_compute_customizable_pdf_form_fields_when_no_file(self):
         self.env['quotation.document'].search([]).action_archive()
@@ -146,19 +146,11 @@ class TestPDFQuoteBuilder(HttpCaseWithUserDemo, SaleCommon):
             self.assertEqual(' '.join(result.split()), ' '.join(expected[form_field.name].split()))
 
     def test_product_document_dialog_params_access(self):
-        sale_order_user_demo = self.sale_order.copy({'user_id': self.user_demo.id})
-        dialog_param = sale_order_user_demo.with_user(
-            self.user_demo.id
+        sale_order_internal_user = self.sale_order.copy({'user_id': self.internal_user.id})
+        dialog_param = sale_order_internal_user.with_user(
+            self.internal_user.id
         ).get_update_included_pdf_params()
-        self.assertEqual('Header', dialog_param['headers']['files'][0]['name'])
-        # Line product document should only be accessible by sales user
-        self.assertFalse(dialog_param['lines'])
-
-        self.user_demo.groups_id += self.env.ref('sales_team.group_sale_salesman')
-        dialog_param = sale_order_user_demo.with_user(
-            self.user_demo.id
-        ).get_update_included_pdf_params()
-        # should return all document data for sale own document user
+        # should return all document data regardless of access
         self.assertEqual('Header', dialog_param['headers']['files'][0]['name'])
         self.assertEqual('Product > Test Product', dialog_param['lines'][0]['name'])
 
