@@ -87,10 +87,6 @@ class AnalyticMixin(models.AbstractModel):
             # not ids found, just call super with an empty list
             return super()._condition_to_sql(alias, field_expr, operator, ids, query)
 
-        if isinstance(value, int) and operator in ('=', '!='):
-            value = [value]
-            operator = 'in' if operator == '=' else 'not in'
-
         # keys can be comma-separated ids, we will split those into an array and then make an array comparison with the list of ids to check
         analytic_accounts_query = self._query_analytic_accounts()
         ids = [str(id_) for id_ in ids if id_]  # list of ids -> list of string

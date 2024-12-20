@@ -685,7 +685,7 @@ class AccountAccount(models.Model):
             raise UserError(_('Operation not supported'))
         domain = expression.OR([[('account_type', '=like', group)] for group in {
             self._get_internal_group(v) + '%'
-            for v in (value if isinstance(value, (list, tuple)) else [value])
+            for v in (value if operator in ('in', 'not in') else [value])
         }])
         if operator in ('!=', 'not in'):
             return ['!'] + expression.normalize_domain(domain)
