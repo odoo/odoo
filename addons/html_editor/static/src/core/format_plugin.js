@@ -17,6 +17,7 @@ import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { _t } from "@web/core/l10n/translation";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { withSequence } from "@html_editor/utils/resource";
+import { isFakeLineBreak } from "../utils/dom_state";
 
 const allWhitespaceRegex = /^[\s\u200b]*$/;
 
@@ -236,7 +237,8 @@ export class FormatPlugin extends Plugin {
                 .filter(
                     (n) =>
                         ((isTextNode(n) && (isVisibleTextNode(n) || isZWS(n))) ||
-                            n.nodeName === "BR") &&
+                            (n.nodeName === "BR" &&
+                                (isFakeLineBreak(n) || n.previousSibling?.nodeName === "BR"))) &&
                         isContentEditable(n)
                 )
         );
