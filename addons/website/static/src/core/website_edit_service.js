@@ -97,7 +97,7 @@ patch(Colibri.prototype, {
     addListener(target, event, fn, options) {
         fn = fn.bind(this.interaction);
         // TODO No jQuery ?
-        const wysiwyg = $("#wrapwrap").data("wysiwyg");
+        const wysiwyg = window.$?.("#wrapwrap").data("wysiwyg");
         let stealthFn = fn;
         if (wysiwyg?.odooEditor && !fn.isHandler) {
             const name = `${this.interaction.constructor.name}/${event}`;
