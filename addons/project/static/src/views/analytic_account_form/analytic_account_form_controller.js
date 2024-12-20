@@ -28,4 +28,34 @@ export class AnalyticAccountFormController extends FormController {
         }
         return menuItems;
     }
+
+    async saveButtonClicked(params = {}) {
+        if (this.model.root._changes['plan_id'] === undefined) {
+            return super.saveButtonClicked(params);
+        }
+        const projects = await this.orm.call("project.project", "get_project_from_account", [[this.props.resId]]);
+        if (!projects){
+            return super.saveButtonClicked(params);
+        }
+        let body = "Changing the plan for this analytic account will unlink it from its associated projects.\n";
+        if (projects['account_id'].length > 0) {
+            const projectList = projects['account_id'].map((project) => '\t- ' + project).join('\n');
+            body = body.concat("This will disable timesheets and make profitability details for the projects unavailable.\n" + projectList  + "\n");
+        } else {
+            const projectList = projects['other_plan'].map((project) => '\t- ' + project).join('\n');
+            body = body.concat(projectList + "\n");
+        }
+        body = body.concat("Are you sure you want to proceed ?");
+        this.dialogService.add(ConfirmationDialog, {
+            body: _t(body),
+            confirmLabel: _t("confirm"),
+            confirm: async () => {
+                await this.orm.call("project.project", "remove_account_from_projects", [[this.props.resId]]);
+                super.saveButtonClicked(params);
+            },
+            cancelLabel: _t("Discard"),
+            cancel: () => { },
+        });
+    }
+
 }

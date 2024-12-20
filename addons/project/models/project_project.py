@@ -8,7 +8,7 @@ from odoo import api, Command, fields, models
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.rating.models import rating_data
 from odoo.exceptions import UserError
-from odoo.osv.expression import AND
+from odoo.osv.expression import AND, OR
 from odoo.tools import get_lang, SQL
 from odoo.tools.misc import unquote
 from odoo.tools.translate import _
@@ -632,6 +632,34 @@ class Project(models.Model):
                     'There are a couple of options to consider: either change the project\'s company '
                     'to align with the stage\'s company or remove the company designation from the stage', project.stage_id.company_id.name)
                 )
+
+    @api.model
+    def remove_account_from_projects(self, account_ids):
+        fnames = self.env['project.project']._get_plan_fnames()
+        domain = OR([[(fname, 'in', account_ids)] for fname in fnames])
+        projects = self.env['project.project'].search(domain)
+        for project in projects:
+            for fname in fnames:
+                if project[fname] and project[fname].id in account_ids:
+                    project[fname] = False
+
+    @api.model
+    def get_project_from_account(self, account_ids):
+        fnames = self.env['project.project']._get_plan_fnames()
+        domain = OR([[(fname, 'in', account_ids)] for fname in fnames])
+        projects = self.env['project.project'].search(domain)
+        projects_per_account = {'account_id': [], 'other_plan': []}
+        if not projects:
+            return False
+        for project in projects:
+            for fname in fnames:
+                if project[fname] and project[fname].id in account_ids:
+                    if fname == "account_id":
+                        projects_per_account['account_id'].append(project.name)
+                    else:
+                        projects_per_account['other_plan'].append(project.name)
+                    break
+        return projects_per_account
 
     # ---------------------------------------------------
     # Mail gateway
