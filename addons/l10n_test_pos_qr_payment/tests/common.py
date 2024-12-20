@@ -10,6 +10,9 @@ class TestPosQrCommon(AccountTestInvoicingHttpCommon):
         super().setUpClass()
         cls.company_data['company'].qr_code = True
 
+        cls.env['product.combo.item'].search([]).unlink()
+        cls.env['product.product'].search([]).write({'available_in_pos': False})
+
         cls.product_1 = cls.env['product.product'].create({
             'name': 'Hand Bag',
             'available_in_pos': True,
