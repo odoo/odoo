@@ -318,7 +318,7 @@ class BaseString(Field[str | typing.Literal[False]]):
         if (
             self.translate
             and value
-            and operator in ('=', 'in', 'like', 'ilike', '=like', '=ilike')
+            and operator in ('in', 'like', 'ilike', '=like', '=ilike')
             and self.index == 'trigram'
             and model.pool.has_trigram
             and (
@@ -328,9 +328,6 @@ class BaseString(Field[str | typing.Literal[False]]):
         ):
             # a prefilter using trigram index to speed up '=', 'like', 'ilike'
             # '!=', '<=', '<', '>', '>=', 'in', 'not in', 'not like', 'not ilike' cannot use this trick
-            if operator == '=':
-                operator = 'in'
-                value = [value]
             if operator == 'in' and len(value) == 1:
                 value = value_to_translated_trigram_pattern(next(iter(value)))
             elif operator != 'in':

@@ -538,7 +538,7 @@ class TestDomainOptimize(TransactionCase):
         model = self.env['test_new_api.message']
         self.assertEqual(
             Domain('discussion', 'like', '').optimize(model),
-            Domain('discussion', '!=', False),
+            Domain('discussion', 'not in', OrderedSet([False])),
             "Matching anything in relation",
         )
         query = model.discussion._search([('display_name', 'like', 'ok')])
@@ -561,7 +561,7 @@ class TestDomainOptimize(TransactionCase):
         )
         self.assertEqual(
             Domain('important', '=', True).optimize(model),
-            Domain('important', '=', True),
+            Domain('important', 'in', OrderedSet([True])),
         )
         self.assertEqual(
             list(Domain('important', 'not in', [True, False]).optimize(model)),
@@ -598,15 +598,15 @@ class TestDomainOptimize(TransactionCase):
         model = self.env['test_new_api.mixed']
         self.assertEqual(
             Domain('date', '=', date(2024, 1, 5)).optimize(model),
-            Domain('date', '=', date(2024, 1, 5)),
+            Domain('date', 'in', OrderedSet([date(2024, 1, 5)])),
         )
         self.assertEqual(
             Domain('date', '=', datetime(2024, 1, 5, 12, 0, 0)).optimize(model),
-            Domain('date', '=', date(2024, 1, 5)),
+            Domain('date', 'in', OrderedSet([date(2024, 1, 5)])),
         )
         self.assertEqual(
             Domain('date', '=', '2024-01-05').optimize(model),
-            Domain('date', '=', date(2024, 1, 5)),
+            Domain('date', 'in', OrderedSet([date(2024, 1, 5)])),
         )
         self.assertEqual(
             Domain('date', '=like', '2024%').optimize(model),
@@ -631,12 +631,12 @@ class TestDomainOptimize(TransactionCase):
     def test_condition_optimize_datetime(self):
         model = self.env['test_new_api.mixed']
         self.assertEqual(
-            Domain('moment', '=', datetime(2024, 1, 5)).optimize(model),
-            Domain('moment', '=', datetime(2024, 1, 5)),
+            Domain('moment', '=', date(2024, 1, 5)).optimize(model),
+            Domain('moment', 'in', OrderedSet([datetime(2024, 1, 5)])),
         )
         self.assertEqual(
             Domain('moment', '=', '2024-01-05').optimize(model),
-            Domain('moment', '=', datetime(2024, 1, 5)),
+            Domain('moment', 'in', OrderedSet([datetime(2024, 1, 5)])),
         )
         self.assertEqual(
             Domain('moment', '=like', '2024%').optimize(model),
@@ -723,9 +723,9 @@ class TestDomainOptimize(TransactionCase):
             ]).optimize(model),
             Domain.AND([
                 Domain('comment1', 'like', 'ok'),
-                Domain('date', '!=', False),
+                Domain('date', 'not in', OrderedSet([False])),
                 Domain('date', 'like', "2024"),
-                Domain('number', '=', 5),
+                Domain('number', 'in', OrderedSet([5])),
                 Domain('number', '<', 99),
             ]),
             "Optimization sorts by field and operator",
