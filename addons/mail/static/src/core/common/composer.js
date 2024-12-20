@@ -497,14 +497,13 @@ export class Composer extends Component {
             );
             if (newPartners.length !== 0) {
                 const recipientEmails = [];
-                const recipientAdditionalValues = {};
                 newPartners.forEach((recipient) => {
                     recipientEmails.push(recipient.email);
-                    recipientAdditionalValues[recipient.email] = recipient.create_values || {};
                 });
                 const partners = await rpc("/mail/partner/from_email", {
+                    thread_model: this.thread.model,
+                    thread_id: this.thread.id,
                     emails: recipientEmails,
-                    additional_values: recipientAdditionalValues,
                 });
                 for (const index in partners) {
                     const partnerData = partners[index];
@@ -539,7 +538,8 @@ export class Composer extends Component {
                           .map((recipient) => recipient.persona.id),
             default_res_ids: [this.thread.id],
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
-            mail_post_autofollow: this.thread.hasWriteAccess,
+            // Changed in 18.2+: finally get rid of autofollow, following should be done manually
+            mail_post_autofollow: false,
         };
         const action = {
             name: this.props.type === "note" ? _t("Log note") : _t("Compose Email"),

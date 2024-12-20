@@ -1656,7 +1656,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                         default_model=test_records._name,
                         default_res_ids=test_records.ids,
                         # avoid successive tests issues with followers
-                        mail_create_nosubscribe=True,
+                        mail_post_autofollow_author_skip=True,
                     ))
                     composer.body = 'Hello {{ object.name }}'
                     composer.subject = 'My Subject'
@@ -1763,7 +1763,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                     'default_composition_mode': 'comment',
                     'default_template_id': self.template.id,
                     # avoid successive tests issues with followers
-                    'mail_create_nosubscribe': True,
+                    'mail_post_autofollow_author_skip': True,
                 }
                 if batch_mode == 'domain':
                     ctx['default_res_domain'] = [('id', 'in', test_records.ids)]
@@ -2056,7 +2056,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                     default_res_ids=test_records.ids,
                     default_template_id=self.template.id,
                     # avoid successive tests issues with followers
-                    mail_create_nosubscribe=True,
+                    mail_post_autofollow_author_skip=True,
                 )).save()
                 with self.mock_mail_gateway(mail_unlink_sent=False), \
                      self.mock_mail_app():
@@ -2070,6 +2070,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                 ):
                     message = record.message_ids[0]
                     for recipient in [self.partner_employee_2, new_partner, record.customer_id]:
+                        headers_recipients = f'{new_partner.email_formatted},{record.customer_id.email_formatted}'
                         self.assertMailMail(
                             recipient,
                             'sent',
@@ -2079,6 +2080,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                                 'headers': {
                                     'Return-Path': f'{exp_alias_domain.bounce_email}',
                                     'X-Odoo-Objects': f'{record._name}-{record.id}',
+                                    'X-Msg-To-Add': headers_recipients,
                                 },
                                 'subject': f'TemplateSubject {record.name}',
                             },
@@ -2086,6 +2088,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                                 'headers': {
                                     'Return-Path': f'{exp_alias_domain.bounce_email}',
                                     'X-Odoo-Objects': f'{record._name}-{record.id}',
+                                    'X-Msg-To-Add': headers_recipients,
                                 },
                                 'mail_server_id': self.env['ir.mail_server'],
                                 'record_alias_domain_id': exp_alias_domain,
@@ -2951,7 +2954,7 @@ class TestComposerResultsMass(TestMailComposer):
                     default_res_ids=test_records.ids,
                     default_template_id=self.template.id,
                     # avoid successive tests issues with followers
-                    mail_create_nosubscribe=True,
+                    mail_post_autofollow_author_skip=True,
                 )).save()
                 with self.mock_mail_gateway(mail_unlink_sent=False), \
                      self.mock_mail_app():
