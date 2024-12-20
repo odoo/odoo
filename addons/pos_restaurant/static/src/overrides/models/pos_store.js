@@ -1,21 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/store/pos_store";
-import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
-import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
-
-const NON_IDLE_EVENTS = [
-    "mousemove",
-    "mousedown",
-    "touchstart",
-    "touchend",
-    "touchmove",
-    "click",
-    "scroll",
-    "keypress",
-];
-let IDLE_TIMER_SETTER;
 
 patch(PosStore.prototype, {
     /**
@@ -219,30 +205,6 @@ patch(PosStore.prototype, {
 
         return order;
     },
-    setActivityListeners() {
-        IDLE_TIMER_SETTER = this.setIdleTimer.bind(this);
-        for (const event of NON_IDLE_EVENTS) {
-            window.addEventListener(event, IDLE_TIMER_SETTER);
-        }
-    },
-    setIdleTimer() {
-        clearTimeout(this.idleTimer);
-        if (this.shouldResetIdleTimer()) {
-            this.idleTimer = setTimeout(() => this.actionAfterIdle(), 180000);
-        }
-    },
-    async actionAfterIdle() {
-        if (!document.querySelector(".modal-open")) {
-            const table = this.selectedTable;
-            const order = this.get_order();
-            if (order && order.get_screen_data().name === "ReceiptScreen") {
-                // When the order is finalized, we can safely remove it from the memory
-                // We check that it's in ReceiptScreen because we want to keep the order if it's in a tipping state
-                this.removeOrder(order);
-            }
-            this.showScreen("FloorScreen", { floor: table?.floor });
-        }
-    },
     getReceiptHeaderData(order) {
         const json = super.getReceiptHeaderData(...arguments);
         if (this.config.module_pos_restaurant && order) {
@@ -252,19 +214,6 @@ patch(PosStore.prototype, {
             json.customer_count = order.getCustomerCount();
         }
         return json;
-    },
-    shouldResetIdleTimer() {
-        const stayPaymentScreen =
-            this.mainScreen.component === PaymentScreen && this.get_order().payment_ids.length > 0;
-        return (
-            this.config.module_pos_restaurant &&
-            !stayPaymentScreen &&
-            this.mainScreen.component !== FloorScreen
-        );
-    },
-    showScreen(screenName) {
-        super.showScreen(...arguments);
-        this.setIdleTimer();
     },
     closeScreen() {
         if (this.config.module_pos_restaurant && !this.get_order()) {
@@ -276,19 +225,6 @@ patch(PosStore.prototype, {
         if (!this.config.module_pos_restaurant) {
             return super.addOrderIfEmpty(...arguments);
         }
-    },
-    /**
-     * @override
-     * Before closing pos, we remove the event listeners set on window
-     * for detecting activities outside FloorScreen.
-     */
-    async closePos() {
-        if (IDLE_TIMER_SETTER) {
-            for (const event of NON_IDLE_EVENTS) {
-                window.removeEventListener(event, IDLE_TIMER_SETTER);
-            }
-        }
-        return super.closePos(...arguments);
     },
     //@override
     async afterProcessServerData() {
