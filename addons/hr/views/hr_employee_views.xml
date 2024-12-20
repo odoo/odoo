@@ -107,7 +107,7 @@
                                 <field name="mobile_phone" widget="phone"/>
                                 <field name="category_ids" widget="many2many_tags"
                                     options="{'color_field': 'color', 'no_create_edit': True}"
-                                    placeholder="Tags" groups="hr.group_hr_user"/>
+                                    placeholder="e.g. Founder, Motorized, Building B, ..." groups="hr.group_hr_user"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="company_country_id" invisible="1"/>
                                 <field name="company_country_code" invisible="1"/>
@@ -224,6 +224,7 @@
                                                 class="btn btn-link"
                                                 type="object"
                                                 name="action_create_user"
+                                                context="{'default_create_employee': True}"
                                                 invisible="user_id"/>
                                         </div>
                                     </group>
@@ -439,9 +440,9 @@
             <field name="search_view_id" ref="view_employee_filter"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Add a new employee
+                    Create an employee.
                 </p><p>
-                    Quickly find all the information you need for your employees such as contact data, job position, availability, etc.
+                    Find all the information on employees.
                 </p>
             </field>
         </record>
