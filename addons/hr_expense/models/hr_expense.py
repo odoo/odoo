@@ -144,6 +144,11 @@ class HrExpense(models.Model):
     duplicate_expense_ids = fields.Many2many(comodel_name='hr.expense', compute='_compute_duplicate_expense_ids')  # Used to trigger warnings
     same_receipt_expense_ids = fields.Many2many(comodel_name='hr.expense', compute='_compute_same_receipt_expense_ids')  # Used to trigger warnings
 
+    split_expense_id = fields.Many2one(
+        comodel_name='hr.expense',
+        string="Related Split Expenses",
+        help="All expenses related to this split, including the original and the other splits.",
+    )
     # Amount fields
     tax_amount_currency = fields.Monetary(
         string="Tax amount in Currency",
@@ -1089,6 +1094,11 @@ class HrExpense(models.Model):
     # Actions
     # ----------------------------------------
 
+    def action_open_split_expense(self):
+        self.ensure_one()
+        split_expense_ids = self.search([('split_expense_id', '=', self.split_expense_id.id)])
+        return split_expense_ids._get_records_action(name=_("Split Expenses"))
+
     def action_submit(self):
         """ Submit a draft expense to an approve, may skip to the approval step if no approver on the employee nor the expense """
         user = self.env.user
@@ -1768,3 +1778,8 @@ class HrExpense(models.Model):
             partner = self.employee_id.sudo().work_contact_id.with_company(self.company_id)
             account_dest = partner.property_account_payable_id or partner.parent_id.property_account_payable_id
         return account_dest.id
+
+    def _creation_message(self):
+        if self.env.context.get('from_split_wizard'):
+            return _("Expense created from a split.")
+        return super()._creation_message()
