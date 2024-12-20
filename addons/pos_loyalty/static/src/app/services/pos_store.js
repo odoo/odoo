@@ -40,7 +40,7 @@ patch(PosStore.prototype, {
                     this.updateOrder(order);
                 }
             }),
-            [this.data.models["pos.order"].ownRecords]
+            [this.data.models.records["pos.order"]]
         );
     },
     async updateOrder(order) {
@@ -537,7 +537,7 @@ patch(PosStore.prototype, {
 
         this.computeDiscountProductIdsForAllRewards({
             model: "product.product",
-            ids: Array.from(this.data.models["product.product"].ownRecords.keys()),
+            ids: Array.from(this.data.models.records["product.product"].keys()),
         });
 
         this.models["product.product"].addEventListener(

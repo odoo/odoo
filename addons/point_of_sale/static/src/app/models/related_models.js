@@ -484,9 +484,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         get fields() {
             return getFields(this.name);
         }
-        get ownRecords() {
-            return this.records[this.name];
-        }
         get orderedRecords() {
             return Array.from(this.records[this.name].values());
         }
