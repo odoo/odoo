@@ -34,6 +34,8 @@ import { useSetupAction } from "@web/search/action_hook";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { BuilderActionsPlugin } from "../plugins/builder_actions_plugin";
 import { OperationPlugin } from "../plugins/operation_plugin";
+import { SnippetLifecyclePlugin } from "../plugins/snippet_lifecycle_plugin";
+import { VisibilityPlugin } from "../plugins/visibility_plugin";
 
 const BUILDER_PLUGIN = [
     BuilderOptionsPlugin,
@@ -47,6 +49,8 @@ const BUILDER_PLUGIN = [
     MediaWebsitePlugin,
     SetupEditorPlugin,
     HandleDirtyElementPlugin,
+    SnippetLifecyclePlugin,
+    VisibilityPlugin,
 ];
 
 export class BuilderSidebar extends Component {
@@ -100,6 +104,11 @@ export class BuilderSidebar extends Component {
                 resources: {
                     change_current_options_containers_listeners: (currentOptionsContainers) => {
                         this.state.currentOptionsContainers = currentOptionsContainers;
+                        if (!currentOptionsContainers.length) {
+                            // There is no options, fallback on the blocks tab
+                            this.setTab("blocks");
+                            return;
+                        }
                         this.setTab("customize");
                     },
                     unsplittable_node_predicates: (node) =>

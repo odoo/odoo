@@ -181,6 +181,7 @@ export class WebsiteBuilder extends Component {
         // Adding the mobile class directly, to not wait for the component
         // re-rendering.
         this.websitePreviewRef.el.classList.toggle("o_is_mobile", this.state.isMobile);
+        this.websiteService.context.isMobile = this.state.isMobile;
     }
 }
 

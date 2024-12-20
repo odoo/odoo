@@ -10,22 +10,19 @@ class ProgressBarOptionPlugin extends Plugin {
             selector: this.selector,
         },
         builder_actions: this.getActions(),
-        clean_for_save_handlers: this.cleanForSave.bind(this),
+        clean_for_save_handlers_options: this.cleanForSave,
     };
 
-    cleanForSave({ root }) {
-        const editingEls = root.querySelectorAll(this.selector);
-        for (const editingEl of editingEls) {
-            const progressBar = editingEl.querySelector(".progress-bar");
-            const progressLabel = editingEl.querySelector(".s_progress_bar_text");
+    cleanForSave(editingEl) {
+        const progressBar = editingEl.querySelector(".progress-bar");
+        const progressLabel = editingEl.querySelector(".s_progress_bar_text");
 
-            if (!progressBar.classList.contains("progress-bar-striped")) {
-                progressBar.classList.remove("progress-bar-animated");
-            }
+        if (!progressBar.classList.contains("progress-bar-striped")) {
+            progressBar.classList.remove("progress-bar-animated");
+        }
 
-            if (progressLabel && progressLabel.classList.contains("d-none")) {
-                progressLabel.remove();
-            }
+        if (progressLabel && progressLabel.classList.contains("d-none")) {
+            progressLabel.remove();
         }
     }
     getActions() {

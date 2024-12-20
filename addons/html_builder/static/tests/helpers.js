@@ -36,8 +36,8 @@ class IrUiView extends models.Model {
 
 export const exampleWebsiteContent = '<h1 class="title">Hello</h1>';
 
-export const invisiblePopup =
-    '<div class="s_popup o_snippet_invisible" data-snippet="s_popup" data-name="Popup" id="sPopup1732546784762" data-invisible="1"></div>';
+export const invisibleEl =
+    '<div class="s_invisible_el o_snippet_invisible" data-name="Invisible Element" data-invisible="1"></div>';
 
 export const wrapExample = `<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${exampleWebsiteContent}</div>`;
 
@@ -133,7 +133,14 @@ export function getEditable(inWrap) {
     return `<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${inWrap}</div>`;
 }
 
-export function addOption({ selector, exclude, template, Component, sequence }) {
+export function addOption({
+    selector,
+    exclude,
+    template,
+    Component,
+    sequence,
+    clean_for_save_handlers_options,
+}) {
     const pluginId = uniqueId("test-option");
     const Class = makeOptionPlugin({
         pluginId,
@@ -142,18 +149,28 @@ export function addOption({ selector, exclude, template, Component, sequence }) 
         selector,
         exclude,
         sequence,
+        clean_for_save_handlers_options,
     });
     registry.category("website-plugins").add(pluginId, Class);
     after(() => {
         registry.category("website-plugins").remove(pluginId);
     });
 }
-function makeOptionPlugin({ pluginId, template, selector, exclude, sequence, OptionComponent }) {
+function makeOptionPlugin({
+    pluginId,
+    template,
+    selector,
+    exclude,
+    sequence,
+    OptionComponent,
+    clean_for_save_handlers_options,
+}) {
     const option = {
         OptionComponent,
         template,
         selector,
         exclude,
+        clean_for_save_handlers_options,
     };
 
     const Class = {

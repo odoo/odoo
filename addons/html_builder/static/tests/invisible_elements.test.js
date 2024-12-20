@@ -1,20 +1,24 @@
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, queryFirst, queryOne, waitFor } from "@odoo/hoot-dom";
+import { xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { InvisibleElementsPanel } from "@html_builder/builder/builder_sidebar/invisible_elements_panel";
 import { unformat } from "@html_editor/../tests/_helpers/format";
 import {
+    addOption,
     defineWebsiteModels,
     getSnippetStructure,
-    invisiblePopup,
+    invisibleEl,
     setupWebsiteBuilder,
 } from "./helpers";
 
 defineWebsiteModels();
 
-test("click on invisible elements in the invisible elements tab", async () => {
-    await setupWebsiteBuilder(`${invisiblePopup}`);
-    expect(queryOne(".o_we_invisible_el_panel .o_we_invisible_entry")).toHaveText("Popup");
+test("click on invisible elements in the invisible elements tab (check eye icon)", async () => {
+    await setupWebsiteBuilder(`${invisibleEl}`);
+    expect(queryOne(".o_we_invisible_el_panel .o_we_invisible_entry")).toHaveText(
+        "Invisible Element"
+    );
     expect(queryOne(".o_we_invisible_el_panel .o_we_invisible_entry i")).toHaveClass(
         "fa-eye-slash"
     );
@@ -26,20 +30,34 @@ test("click on invisible elements in the invisible elements tab", async () => {
     );
 });
 
+test("click on invisible elements in the invisible elements tab (check sidebar tab)", async () => {
+    addOption({
+        selector: ".s_test",
+        template: xml`<BuilderButton classAction="'my-custom-class'"/>`,
+    });
+    await setupWebsiteBuilder(
+        '<div class="s_test d-lg-none o_snippet_desktop_invisible" data-invisible="1">a</div>'
+    );
+    await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
+    expect("button:contains('CUSTOMIZE')").toHaveClass("active");
+    await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
+    expect("button:contains('BLOCKS')").toHaveClass("active");
+});
+
 test("Add an element on the invisible elements tab", async () => {
     const snippetsDescription = [
         {
             name: "Test",
             groupName: "a",
             content: unformat(
-                `<div class="s_popup o_snippet_invisible" data-snippet="s_popup" data-name="Popup">
+                `<div class="s_popup_test o_snippet_invisible" data-snippet="s_popup_test" data-name="Popup">
                     <div class="test_a">Hello</div>
                 </div>`
             ),
         },
     ];
 
-    await setupWebsiteBuilder(`${invisiblePopup} <section><p>Text</p></section>`, {
+    await setupWebsiteBuilder(`${invisibleEl} <section><p>Text</p></section>`, {
         snippets: {
             snippet_groups: [
                 '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
@@ -58,7 +76,7 @@ test("Add an element on the invisible elements tab", async () => {
         1
     );
     expect(
-        ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup') .fa-eye-slash"
+        ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Invisible Element') .fa-eye-slash"
     ).toHaveCount(1);
 });
 

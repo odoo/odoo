@@ -229,14 +229,13 @@ test("hide empty OptionContainer and display OptionContainer with content (with 
     expect(".options-container:not(.d-none):nth-child(2)").toHaveText("Row 2\nTest");
 });
 
-test("display empty message if any option match the selected element", async () => {
+test("fallback on the 'Blocks' tab if no option match the selected element", async () => {
     await setupWebsiteBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
     await contains(":iframe .parent-target > div").click();
-    await animationFrame();
-    expect(".o_customize_tab").toHaveText("Select a block on your page to style it.");
+    expect(".o-snippets-tabs button:contains('BLOCKS')").toHaveClass("active");
 });
 
-test("display empty message if any option container is visible", async () => {
+test("display empty message if no option container is visible", async () => {
     addOption({
         selector: ".parent-target",
         template: xml`<BuilderRow label="'Row 1'">

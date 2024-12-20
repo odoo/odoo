@@ -6,7 +6,7 @@ import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
 import { contains, mockService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, invisiblePopup, setupWebsiteBuilder } from "./helpers";
+import { defineWebsiteModels, invisibleEl, setupWebsiteBuilder } from "./helpers";
 
 defineWebsiteModels();
 
@@ -49,8 +49,10 @@ test("snippets menu in translate mode", async () => {
 });
 
 test("invisible elements in translate mode", async () => {
-    await setupbuilder_sidebarForTranslation({ websiteContent: invisiblePopup });
-    expect(".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Popup')").toHaveCount(1);
+    await setupbuilder_sidebarForTranslation({ websiteContent: invisibleEl });
+    expect(
+        ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element')"
+    ).toHaveCount(1);
 });
 
 test("translate text", async () => {

@@ -7,6 +7,7 @@ export class BuilderOptionsPlugin extends Plugin {
     resources = {
         selectionchange_handlers: this.onSelectionChange.bind(this),
         step_added_handlers: () => this.updateContainers(),
+        update_containers: this.updateContainers.bind(this),
     };
 
     setup() {
@@ -45,6 +46,13 @@ export class BuilderOptionsPlugin extends Plugin {
             this.target = target;
         }
         if (!this.target || !this.target.isConnected) {
+            this.lastContainers = [];
+            this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
+            return;
+        }
+        if (this.target.dataset.invisible === "1") {
+            delete this.target;
+            // The element is present on a page but is not visible
             this.lastContainers = [];
             this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
             return;

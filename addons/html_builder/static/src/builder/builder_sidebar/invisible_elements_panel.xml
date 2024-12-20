@@ -8,7 +8,7 @@
             Invisible Elements
         </div>
         <t t-foreach="state.invisibleEntries" t-as="invisibleEntry" t-key="invisibleEntry_index">
-            <t t-call="html_builder.invisibleSnippetEntry" t-call-context="{'entry': invisibleEntry, 'toggleElementVisibility': toggleElementVisibility}"/>
+            <t t-call="html_builder.invisibleSnippetEntry" t-call-context="{'entry': invisibleEntry, 'toggleElementVisibility': toggleElementVisibility.bind(this)}"/>
         </t>
     </div>
 </t>

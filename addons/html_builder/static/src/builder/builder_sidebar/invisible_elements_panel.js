@@ -72,24 +72,26 @@ export class InvisibleElementsPanel extends Component {
     }
 
     toggleElementVisibility(invisibleEntry) {
-        const snippetEl = invisibleEntry.snippetEl;
-        const isVisibleEl = isSnippetVisible(snippetEl);
-        setSnippetVisibility(invisibleEntry, !isVisibleEl);
-    }
-}
+        const toggleVisibility = (snippetEl) => {
+            const show = this.env.editor.shared.visibilityPlugin.toggleTargetVisibility(snippetEl);
+            invisibleEntry.isVisible = show;
+            this.env.editor.resources["update_containers"].forEach((cb) => cb(snippetEl));
+            // TODO _disableUndroppableSnippets
+        };
 
-function isSnippetVisible(snippetEl) {
-    return snippetEl.dataset.invisible !== "1";
-}
-
-function setSnippetVisibility(invisibleEntry, show) {
-    const snippetEl = invisibleEntry.snippetEl;
-    invisibleEntry.isVisible = show;
-    if (show) {
-        delete snippetEl.dataset.invisible;
-        return;
+        // When toggling the visibility of an element to "Hide", also toggle all
+        // its descendants.
+        if (invisibleEntry.isVisible) {
+            invisibleEntry.children.forEach((child) => {
+                if (child.isVisible) {
+                    this.toggleElementVisibility(child);
+                }
+            });
+        } else if (invisibleEntry.parents && !invisibleEntry.parents.isVisible) {
+            // When toggling the visibility of an element to "Show", also toggle
+            // all its parents.
+            this.toggleElementVisibility(invisibleEntry.parents);
+        }
+        toggleVisibility(invisibleEntry.snippetEl);
     }
-    snippetEl.dataset.invisible = "1";
-    // TODO call the options linked to the snippet to display or hide the
-    // snippet.
 }

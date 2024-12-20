@@ -41,14 +41,17 @@ export class BuilderButton extends Component {
     }
 
     get className() {
+        let className = this.state.isActive ? "active" : "";
+        const widthClass = this.env.actionBus ? " w-auto" : " w-25";
+        className += widthClass;
         if (!this.props.icon) {
-            return "";
+            return className;
         }
         if (this.props.icon.startsWith("fa-")) {
-            return `fa fa-fw ${this.props.icon}`;
+            return className + ` fa fa-fw ${this.props.icon}`;
         } else if (this.props.icon.startsWith("oi-")) {
-            return `oi oi-fw ${this.props.icon}`;
+            return className + ` oi oi-fw ${this.props.icon}`;
         }
-        return "";
+        return className;
     }
 }
