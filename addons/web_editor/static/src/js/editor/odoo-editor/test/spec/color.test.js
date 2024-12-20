@@ -174,6 +174,52 @@ describe('applyColor', () => {
             `),
         });
     });
+    it("should apply text color whithout interrupting gradient background color on selected text", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab[ca]bc</font></p>',
+            stepFunction: setColor("rgb(255, 0, 0)", "color"),
+            contentAfter: '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab<font style="color: rgb(255, 0, 0);">[ca]</font>bc</font></p>',
+        });
+    });
+    it("should apply background color whithout interrupting gradient text color on selected text", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab[ca]bc</font></p>',
+            stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
+            contentAfter: '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab<font style="background-color: rgb(255, 0, 0);">[ca]</font>bc</font></p>',
+        });
+    });
+    it("should not overwrite gradient background color when applying background color", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcabc]</font></p>',
+            stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
+            contentAfter: '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcabc]</font></p>',
+        });
+    });
+    it("should not overwrite gradient text color when applying text color", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcabc]</font></p>',
+            stepFunction: setColor("rgb(255, 0, 0)", "color"),
+            contentAfter: '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcabc]</font></p>',
+        });
+    });
+    it("should break gradient background color when background color is applied", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab[ca]bc</font></p>',
+            stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
+            contentAfter: '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab</font>' +
+                          '<font style="background-color: rgb(255, 0, 0);">[ca]</font>' +
+                          '<font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">bc</font></p>',
+        });
+    });
+    it("should break gradient text color when text color is applied", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font class="text-gradient" class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab[ca]bc</font></p>',
+            stepFunction: setColor("rgb(255, 0, 0)", "color"),
+            contentAfter:  '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab</font>' +
+                          '<font style="color: rgb(255, 0, 0);">[ca]</font>' +
+                          '<font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">bc</font></p>',
+        });
+    });
 });
 describe('rgbToHex', () => {
     it('should convert an rgb color to hexadecimal', async () => {
