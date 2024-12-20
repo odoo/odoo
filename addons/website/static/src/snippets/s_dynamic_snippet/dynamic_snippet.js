@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
 import { rpc } from "@web/core/network/rpc";
 import { uniqueId } from "@web/core/utils/functions";
-import { renderToElement } from "@web/core/utils/render";
+import { renderToFragment } from "@web/core/utils/render";
 import { listenSizeChange, utils as uiUtils } from "@web/core/ui/ui_service";
 
 import { markup } from "@odoo/owl";
@@ -27,7 +27,7 @@ export class DynamicSnippet extends Interaction {
          * @type {*|jQuery.fn.init|jQuery|HTMLElement}
          */
         this.data = [];
-        this.renderedContentEl = document.createTextNode("");
+        this.renderedContentNode = document.createDocumentFragment();
         this.uniqueId = uniqueId("s_dynamic_snippet_");
         this.templateKey = "website.s_dynamic_snippet.grid";
     }
@@ -102,7 +102,7 @@ export class DynamicSnippet extends Interaction {
      * before rendering.
      */
     prepareContent() {
-        this.renderedContentEl = renderToElement(
+        this.renderedContentNode = renderToFragment(
             this.templateKey,
             this.getQWebRenderOptions()
         );
@@ -135,7 +135,7 @@ export class DynamicSnippet extends Interaction {
             this.prepareContent();
         } else {
             this.el.classList.add("o_dynamic_snippet_empty");
-            this.renderedContentEl = document.createTextNode("");
+            this.renderedContentNode = document.createDocumentFragment();
         }
         this.renderContent();
         // TODO What was this about ? Rendered content is already started.
@@ -152,7 +152,7 @@ export class DynamicSnippet extends Interaction {
             allContentLink.href = mainPageUrl;
             allContentLink.classList.remove("d-none");
         }
-        templateAreaEl.replaceChildren(this.renderedContentEl);
+        templateAreaEl.replaceChildren(this.renderedContentNode);
         // TODO this is probably not the only public widget which creates DOM
         // which should be attached to another public widget. Maybe a generic
         // method could be added to properly do this operation of DOM addition.
