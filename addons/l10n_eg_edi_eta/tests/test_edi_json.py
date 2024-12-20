@@ -116,7 +116,7 @@ class TestEdiJson(TestEGEdiCommon):
                             },
                             'name': 'partner_a',
                             'type': 'B',
-                            'id': 'BE0477472701',
+                            'id': '123456789012345',
                         },
                         'invoiceLines': [
                             {
@@ -211,7 +211,7 @@ class TestEdiJson(TestEGEdiCommon):
                             },
                             'name': 'partner_a',
                             'type': 'B',
-                            'id': 'BE0477472701',
+                            'id': '123456789012345',
                         },
                         'invoiceLines': [
                             {
@@ -309,7 +309,7 @@ class TestEdiJson(TestEGEdiCommon):
                             },
                             'name': 'partner_a',
                             'type': 'B',
-                            'id': 'BE0477472701',
+                            'id': '123456789012345',
                         },
                         'internalID': 'RINV/2022/00001',
                         'documentType': 'c',
@@ -409,7 +409,7 @@ class TestEdiJson(TestEGEdiCommon):
                             },
                             'name': 'partner_a',
                             'type': 'B',
-                            'id': 'BE0477472701',
+                            'id': '123456789012345',
                         },
                         'documentType': 'i',
                         'invoiceLines': [
