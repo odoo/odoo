@@ -387,9 +387,8 @@ class PurchaseOrder(models.Model):
             kwargs['notify_author'] = self.env.user.partner_id.id in (kwargs.get('partner_ids') or [])
         return super(PurchaseOrder, self.with_context(**po_ctx)).message_post(**kwargs)
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
-        """ Tweak 'view document' button for portal customers, calling directly
-        routes for confirm specific to PO model. """
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
+        # Tweak 'view document' button for portal customers, calling directly routes for confirm specific to PO model.
         groups = super()._notify_get_recipients_groups(
             message, model_description, msg_vals=msg_vals
         )
@@ -414,7 +413,7 @@ class PurchaseOrder(models.Model):
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False):
         render_context = super()._notify_by_email_prepare_rendering_context(
-            message, msg_vals, model_description=model_description,
+            message, msg_vals=msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
         subtitles = [render_context['record'].name]

@@ -947,7 +947,7 @@ class MailMessage(models.Model):
             )
         return field_names
 
-    def _to_store(self, store: Store, fields, *, format_reply=True, msg_vals=None,
+    def _to_store(self, store: Store, fields, *, format_reply=True, msg_vals=False,
                   for_current_user=False, add_followers=False, followers=None):
         """Add the messages to the given store.
 
@@ -1229,15 +1229,14 @@ class MailMessage(models.Model):
             message_id = tools.mail.generate_tracking_message_id('private')
         return message_id
 
-    def _is_thread_message(self, vals=None, thread=None):
+    def _is_thread_message(self, vals=False, thread=None):
         """ Tool method to compute thread validity in notification methods. """
-        if vals is None:
-            vals = {}
+        vals = vals or {}
         res_model = vals['model'] if 'model' in vals else thread._name if thread else self.model
         res_id = vals['res_id'] if 'res_id' in vals else thread.ids[0] if thread and thread.ids else self.res_id
         return bool(res_id) if (res_model and res_model != 'mail.thread') else False
 
-    def _is_thread_message_visible(self, vals=None, thread=None):
+    def _is_thread_message_visible(self, vals=False, thread=None):
         """ In addition to being a thread message, it should not be a user specific
         notification that is recipient-specific. Used mainly for ACL purpose. """
         is_thread = self._is_thread_message(vals=vals, thread=thread)
