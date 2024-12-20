@@ -55,6 +55,9 @@
                     <field name="assignment_domain" string="Domain" widget="domain"
                         options="{'model': 'crm.lead'}"
                         invisible="assignment_max == 0 or assignment_optout"/>
+                    <field name="assignment_preferred_domain" string="Domain" widget="domain"
+                        options="{'model': 'crm.lead'}"
+                        invisible="assignment_max == 0 or assignment_optout"/>
                 </group>
             </xpath>
         </field>

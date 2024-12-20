@@ -533,3 +533,56 @@ class TestLeadAssign(TestLeadAssignCommon):
         members_data = sales_team_4._assign_and_convert_leads()
         self.assertFalse(members_data,
             "If team member has lead count greater than max assign,then do not assign any more")
+
+    def test_assign_preferred_domain(self):
+        """ Test preferred domain use """
+
+        random.seed(1914)
+
+        preferred_tag = self.env['crm.tag'].create({'name': 'preferred'})
+
+        leads = self._create_leads_batch(
+            lead_type='lead',
+            user_ids=[False],
+            count=11,
+        )
+        leads[:8].write({'tag_ids': [(6, 0, preferred_tag.ids)]})
+        # commit probability and related fields
+        leads.flush_recordset()
+        self.assertInitialData()
+        sales_team_5 = self.env['crm.team'].create({
+            'name': 'Sales Team 5',
+            'sequence': 15,
+            'alias_name': False,
+            'use_leads': True,
+            'use_opportunities': True,
+            'company_id': False,
+            'user_id': False,
+        })
+        sales_team_5_m1 = self.env['crm.team.member'].create({
+            'user_id': self.user_sales_manager.id,
+            'crm_team_id': sales_team_5.id,
+            'assignment_max': 150,
+            'assignment_domain': False,
+            'assignment_preferred_domain': "[('tag_ids', 'in', %s)]" % preferred_tag.ids,
+        })
+        sales_team_5_m2 = self.env['crm.team.member'].create({
+            'user_id': self.user_sales_leads.id,
+            'crm_team_id': sales_team_5.id,
+            'assignment_max': 150,
+            'assignment_domain': False,
+            'assignment_preferred_domain': False,
+        })
+        sales_team_5_m3 = self.env['crm.team.member'].create({
+            'user_id': self.user_sales_salesman.id,
+            'crm_team_id': sales_team_5.id,
+            'assignment_max': 150,
+            'assignment_domain': False,
+            'assignment_preferred_domain': False,
+        })
+
+        sales_team_5._action_assign_leads()
+
+        self.assertMemberAssign(sales_team_5_m1, 5)
+        self.assertMemberAssign(sales_team_5_m2, 3)
+        self.assertMemberAssign(sales_team_5_m3, 3)
