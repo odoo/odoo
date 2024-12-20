@@ -170,16 +170,18 @@ export class TablePlugin extends Plugin {
         );
         let totalWidth = 0;
         for (const cell of firstRowCells) {
-            const width = cell.style.width ? parseFloat(cell.style.width) : cell.clientWidth;
-            cell.style.width = width + "px";
-            // Spread the widths to preserve proportions.
-            // -1 for the width of the border of the new column.
-            const newWidth = Math.max(
-                Math.round((width * tableWidth) / (tableWidth + referenceCellWidth - 1)),
-                13
-            );
-            cell.style.width = newWidth + "px";
-            totalWidth += newWidth;
+            if (cell.style.width) {
+                const width = parseFloat(cell.style.width);
+                cell.style.width = width + "px";
+                // Spread the widths to preserve proportions.
+                // -1 for the width of the border of the new column.
+                const newWidth = Math.max(
+                    Math.round((width * tableWidth) / (tableWidth + referenceCellWidth - 1)),
+                    13
+                );
+                cell.style.width = newWidth + "px";
+                totalWidth += newWidth;
+            }
         }
         referenceColumn.forEach((cell, rowIndex) => {
             const newCell = this.document.createElement("td");
@@ -187,20 +189,21 @@ export class TablePlugin extends Plugin {
             p.append(this.document.createElement("br"));
             newCell.append(p);
             cell[position](newCell);
-            if (rowIndex === 0) {
+            if (rowIndex === 0 && cell.style.width) {
                 newCell.style.width = cell.style.width;
                 totalWidth += parseFloat(cell.style.width);
             }
         });
-        if (totalWidth !== tableWidth - 1) {
+        const firstRowLastCell = firstRowCells[firstRowCells.length - 1];
+        if (firstRowLastCell.style.width && totalWidth !== tableWidth - 1) {
             // -1 for the width of the border of the new column.
-            firstRowCells[firstRowCells.length - 1].style.width =
-                parseFloat(firstRowCells[firstRowCells.length - 1].style.width) +
-                (tableWidth - totalWidth - 1) +
-                "px";
+            firstRowLastCell.style.width =
+                parseFloat(firstRowLastCell.style.width) + (tableWidth - totalWidth - 1) + "px";
         }
-        // Fix the table and row's width so it doesn't change.
-        table.style.width = tableWidth + "px";
+        if (table.style.width) {
+            // Fix the table and row's width so it doesn't change.
+            table.style.width = tableWidth + "px";
+        }
     }
     /**
      * @param {'before'|'after'} position
@@ -213,9 +216,7 @@ export class TablePlugin extends Plugin {
         const newRow = this.document.createElement("tr");
         newRow.style.height = referenceRowHeight + "px";
         const cells = reference.querySelectorAll("td");
-        const referenceRowWidths = [...cells].map(
-            (cell) => cell.style.width || cell.clientWidth + "px"
-        );
+        const referenceRowWidths = [...cells].map((cell) => cell.style.width);
         newRow.append(
             ...Array.from(Array(cells.length)).map(() => {
                 const td = this.document.createElement("td");
@@ -231,8 +232,10 @@ export class TablePlugin extends Plugin {
         if (getRowIndex(newRow) === 0) {
             let columnIndex = 0;
             for (const column of newRow.children) {
-                column.style.width = referenceRowWidths[columnIndex];
-                cells[columnIndex].style.width = "";
+                if (referenceRowWidths[columnIndex]) {
+                    column.style.width = referenceRowWidths[columnIndex];
+                    cells[columnIndex].style.width = "";
+                }
                 columnIndex++;
             }
         }
