@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class SaleOrderLine(models.Model):
@@ -11,6 +11,7 @@ class SaleOrderLine(models.Model):
         comodel_name='product.document',
         relation='available_sale_order_line_product_document_rel',
         compute='_compute_available_product_document_ids',
+        compute_sudo=True, # To access attached_on_sale
     )
     product_document_ids = fields.Many2many(
         string="Product Documents",
@@ -23,6 +24,7 @@ class SaleOrderLine(models.Model):
 
     # === COMPUTE METHODS === #
 
+    @api.depends('product_id', 'product_template_id')
     def _compute_available_product_document_ids(self):
         for line in self:
             line.available_product_document_ids = self.env['product.document'].search([
