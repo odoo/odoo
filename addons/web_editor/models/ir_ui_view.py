@@ -224,6 +224,13 @@ class IrUiView(models.Model):
         if not section_xpath:
             root = arch
         else:
+            if 'inherit_id' in arch.attrib:
+                inherit_view_ref = arch.attrib['inherit_id']
+                inherited_view = self.env.ref(inherit_view_ref)
+                inherited_arch = etree.fromstring(inherited_view.arch.encode('utf-8'))
+                for loc in arch.xpath(".//*[text()='$0']"):
+                    loc.text = ''
+                    loc.append(copy.deepcopy(inherited_arch[0]))
             # ensure there's only one match
             [root] = arch.xpath(section_xpath)
 
