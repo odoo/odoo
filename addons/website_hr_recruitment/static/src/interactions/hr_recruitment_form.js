@@ -17,8 +17,9 @@ export class HrRecruitmentForm extends Interaction {
     /**
     * @param {HTMLElement} targetEl
     * @param {string} messageContainerId
+    * @param {string} message
     */
-    showWarningMessage(targetEl, messageContainerId) {
+    showWarningMessage(targetEl, messageContainerId, message) {
         targetEl.classList.add("border-warning");
         document.querySelector(messageContainerId).textContent = message;
         document.querySelector(messageContainerId).classList.remove("d-none");
