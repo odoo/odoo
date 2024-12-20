@@ -73,7 +73,6 @@ _logger = logging.getLogger('odoo.domains')
 STANDARD_CONDITION_OPERATORS = frozenset([
     'any', 'not any',
     'in', 'not in',
-    '=', '!=',  # TODO translate them into 'in'
     '<', '>', '<=', '>=',
     'like', 'not like',
     'ilike', 'not ilike',
@@ -894,8 +893,17 @@ class DomainCondition(Domain):
             if not field.search:
                 _logger.error("Non-stored field %s cannot be searched.", field, stack_info=_logger.isEnabledFor(logging.DEBUG))
                 return _TRUE_DOMAIN
-            computed_domain = field.determine_domain(model, self.operator, self.value)
-            return Domain(computed_domain)._optimize_for_sql(model)
+            # XXX temporary fix until next commit that fixes search for '=' operators
+            operator = self.operator
+            value = self.value
+            if operator in ('in', 'not in'):
+                if len(value) == 1:
+                    operator = '=' if operator == 'in' else '!='
+                    value = next(iter(value))
+                elif not isinstance(value, list):
+                    value = list(value)
+            computed_domain = Domain(field.determine_domain(model, operator, value))
+            return computed_domain._optimize_for_sql(model)
 
         # optimizations based on operator
         for opt in _CONDITION_OPTIMIZATIONS_FOR_SQL_BY_OPERATOR[self.operator]:
@@ -953,8 +961,6 @@ def _optimize_nary_sort_key(domain: Domain) -> tuple[str, str, str]:
         positive_op = NEGATIVE_CONDITION_OPERATORS.get(operator, operator)
         if positive_op == 'in':
             order = "0in"
-        elif positive_op == '=':
-            order = "0eq"
         elif positive_op == 'any':
             order = "1any"
         elif positive_op.endswith('like'):
@@ -1097,7 +1103,7 @@ def _operator_equal_if_value(condition, _):
     """a =? b  <=>  not b or a = b"""
     if not condition.value:
         return _TRUE_DOMAIN
-    return DomainCondition(condition.field_expr, '=', condition.value)
+    return DomainCondition(condition.field_expr, 'in', OrderedSet((condition.value,)))
 
 
 @operator_optimization(['<>'])
@@ -1133,7 +1139,7 @@ def _operator_equal_as_in(condition, _):
             _logger.debug("The domain condition %r should use the 'in' or 'not in' operator.", condition)
             value = OrderedSet(value)
     else:
-        return condition
+        value = OrderedSet((value,))
     return DomainCondition(condition.field_expr, operator, value)
 
 
@@ -1243,10 +1249,6 @@ def _optimize_relational_name_search(condition, model):
             and isinstance(value, COLLECTION_TYPES)
             and any(isinstance(v, str) for v in value)
         )
-        or (
-            operator in ('=', '!=')
-            and isinstance(value, str)
-        )
     ):
         return condition
     # operator
@@ -1277,11 +1279,6 @@ def _optimize_boolean_in(condition, model):
     """b in boolean_values"""
     value = condition.value
     operator = condition.operator
-    if operator in ('=', '!='):
-        if isinstance(value, bool):
-            return condition
-        operator = 'in' if operator == '=' else 'not in'
-        value = [value]
     if operator not in ('in', 'not in') or not isinstance(value, COLLECTION_TYPES):
         return condition
     if not all(isinstance(v, bool) for v in value):
@@ -1403,9 +1400,6 @@ def _optimize_type_binary_attachment(condition, model):
     field = condition._field(model)
     operator = condition.operator
     value = condition.value
-    if operator in ('=', '!='):
-        operator = 'in' if operator == '=' else 'not in'
-        value = [value]
     if field.attachment and not (operator in ('in', 'not in') and set(value) == {False}):
         try:
             condition._raise('Binary field stored in attachment, accepts only existence check; skipping domain')

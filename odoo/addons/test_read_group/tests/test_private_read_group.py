@@ -1153,7 +1153,7 @@ class TestPrivateReadGroup(common.TransactionCase):
                     AND "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id" IN (
                         SELECT "test_read_group_related_base"."id"
                         FROM "test_read_group_related_base"
-                        WHERE "test_read_group_related_base"."id" = %s
+                        WHERE "test_read_group_related_base"."id" IN %s
                     )
                 )
             GROUP BY "test_read_group_related_foo__bar_id__base_ids"."test_read_group_related_base_id"

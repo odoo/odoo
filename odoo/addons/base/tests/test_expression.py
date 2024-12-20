@@ -1638,13 +1638,13 @@ class TestQueries(TransactionCase):
                 "res_partner"."active" IS TRUE
                 AND "res_partner"."name" LIKE %s
                 AND (
-                    "res_partner"."country_id" = %s OR (
-                        "res_partner"."ref" != %s OR
+                    "res_partner"."country_id" IN %s OR (
+                        "res_partner"."ref" NOT IN %s OR
                         "res_partner"."ref" IS NULL
                     )
                 )
             )
-            ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
+            ORDER BY "res_partner"."complete_name" ASC, "res_partner"."id" DESC
         ''']):
             Model.search(domain)
 
@@ -1727,7 +1727,7 @@ class TestQueries(TransactionCase):
         with self.assertQueries(['''
             SELECT COUNT(*)
             FROM "res_country"
-            WHERE "res_country"."id" = %s
+            WHERE "res_country"."id" IN %s
         ''']):
             Model.search_count([('id', '=', 1)])
 
@@ -1752,7 +1752,7 @@ class TestQueries(TransactionCase):
             LEFT JOIN "res_partner" AS "res_users__partner_id" ON
                 ("res_users"."partner_id" = "res_users__partner_id"."id")
             WHERE "res_users"."active" IS TRUE
-            AND ("res_users"."id" = %s AND "res_users__partner_id"."id" = %s)
+            AND ("res_users"."id" IN %s AND "res_users__partner_id"."id" IN %s)
             ORDER BY "res_users__partner_id"."name", "res_users"."login"
         ''']):
             Model.search([])
@@ -1825,7 +1825,7 @@ class TestMany2one(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner"."id"
             FROM "res_partner"
-            WHERE "res_partner"."company_id" = %s
+            WHERE "res_partner"."company_id" IN %s
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
             self.Partner.search([('company_id', '=', self.company.id)])
@@ -2259,7 +2259,7 @@ class TestOne2many(TransactionCase):
                             AND "res_partner_bank"."sanitized_acc_number" LIKE %s
                         )
                     )
-                    AND ("res_partner"."name" != %s OR "res_partner"."name" IS NULL)
+                    AND ("res_partner"."name" NOT IN %s OR "res_partner"."name" IS NULL)
                     AND "res_partner"."parent_id" IS NOT NULL
                 )
             )
@@ -2383,7 +2383,7 @@ class TestMany2many(TransactionCase):
                 AND "res_users__groups_id"."gid" IN (
                     SELECT "res_groups"."id"
                     FROM "res_groups"
-                    WHERE "res_groups"."color" = %s
+                    WHERE "res_groups"."color" IN %s
                 )
             )
             ORDER BY "res_users"."id"
