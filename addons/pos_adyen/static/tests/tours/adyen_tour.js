@@ -106,11 +106,6 @@ registry.category("web_tour.tours").add("PosAdyenTour", {
                     if (!resp.ok) {
                         throw new Error("Failed to notify Adyen webhook");
                     }
-                    // Normally, when the pos webhook controllers receives the notification from adyen,
-                    // the controller will notify the pos client via the bus, but
-                    // the bus is not working in tours, so we manually call the method that
-                    // would be called in the callback of the bus event
-                    payment_terminal.handleAdyenStatusResponse();
                 },
             },
 
