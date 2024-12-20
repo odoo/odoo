@@ -509,9 +509,7 @@ export class Store extends BaseStore {
             postData.special_mentions = validMentions.specialMentions;
         }
         const params = {
-            context: {
-                mail_post_autofollow: !isNote && thread.hasWriteAccess,
-            },
+            // Changed in 18.2+: finally get rid of autofollow, following should be done manually
             post_data: postData,
             thread_id: thread.id,
             thread_model: thread.model,

@@ -1474,6 +1474,7 @@ class ProjectTask(models.Model):
         return render_context
 
     def _send_email_notify_to_cc(self, partners_to_notify):
+        # TDE TODO: this should be removed with email-like recipients management
         self.ensure_one()
         template_id = self.env['ir.model.data']._xmlid_to_res_id('project.task_invitation_follower', raise_if_not_found=False)
         if not template_id:
