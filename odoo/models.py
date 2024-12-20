@@ -6372,6 +6372,16 @@ class BaseModel(metaclass=MetaModel):
                 # x2many fields should add self, while many2one fields should replace with self
                 for invf in self.pool.field_inverses[field]:
                     invf._update(inv_recs, self)
+                    # If multiple X2many target the same field, we need to patch
+                    # the values of the sibling ones
+                    if invf.type == 'one2many':
+                        continue
+                    for invf_invf in self.pool.field_inverses[invf]:
+                        if invf_invf == field:
+                            continue
+                        # TODO: the patch_and_set should filterout with the domain of the field
+                        for inv_rec in inv_recs:
+                            self.env.cache.patch(self, invf_invf, inv_rec.id)
 
     def _convert_to_record(self, values):
         """ Convert the ``values`` dictionary from the cache format to the
