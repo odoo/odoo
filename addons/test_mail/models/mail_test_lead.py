@@ -46,10 +46,10 @@ class MailTestTLead(models.Model):
         lang_code = self.env['res.lang']._get_data(code=self.lang_code).code or None
         if self.partner_id:
             self._message_add_suggested_recipient(
-                recipients, partner=self.partner_id, lang=lang_code, reason=_('Customer'))
+                recipients, partner=self.partner_id, reason=_('Customer'))
         elif self.email_from:
             self._message_add_suggested_recipient(
-                recipients, email=self.email_from, lang=lang_code, reason=_('Customer Email'))
+                recipients, email=self.email_from, reason=_('Customer Email'))
         return recipients
 
     def _message_post_after_hook(self, message, msg_vals):
