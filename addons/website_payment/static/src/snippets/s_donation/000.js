@@ -77,7 +77,7 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
         }).replaceWith(val);
 
         // Sorta magic numbers based on size of the native UI thumb (source: https://css-tricks.com/value-bubbles-for-range-inputs/)
-        $bubble[0].style.left = `calc(${newVal}% + (${tipOffsetLow}px))`;
+        $bubble[0].style.insetInlineStart = `calc(${newVal}% + (${tipOffsetLow}px))`;
     },
     /**
      * @private
