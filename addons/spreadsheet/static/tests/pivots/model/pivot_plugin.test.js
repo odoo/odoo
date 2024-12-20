@@ -895,14 +895,14 @@ test("Adding a measure should trigger a reload", async () => {
         spreadsheetData,
         mockRPC: function (route, args) {
             if (args.method === "web_read_group") {
-                expect.step(args.kwargs.fields);
+                expect.step(args.kwargs.aggregates);
                 expect.step("web_read_group");
             }
         },
     });
     setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability:sum")');
     await animationFrame();
-    expect.verifySteps([["probability_sum_id:sum(probability)"], "web_read_group"]);
+    expect.verifySteps([["probability:sum", "__count"], "web_read_group"]);
     updatePivot(model, 1, {
         measures: [
             { id: "probability:sum", fieldName: "probability", aggregator: "sum" },
@@ -911,7 +911,7 @@ test("Adding a measure should trigger a reload", async () => {
     });
     await animationFrame();
     expect.verifySteps([
-        ["probability_sum_id:sum(probability)", "probability_avg_id:avg(probability)"],
+        ["probability:sum", "probability:avg", "__count"],
         "web_read_group",
     ]);
     updatePivot(model, 1, {
@@ -923,7 +923,7 @@ test("Adding a measure should trigger a reload", async () => {
     });
     await animationFrame();
     expect.verifySteps([
-        ["probability_sum_id:sum(probability)", "probability_avg_id:avg(probability)", "__count"],
+        ["probability:sum", "probability:avg", "__count"],
         "web_read_group",
     ]);
 });
@@ -1429,7 +1429,7 @@ test("can add a calculated measure", async function () {
         mockRPC: async function (route, { model, method, kwargs }) {
             if (model === "partner" && method === "web_read_group") {
                 expect.step("web_read_group");
-                expect(kwargs.fields).toEqual(["probability_avg_id:avg(probability)"]);
+                expect(kwargs.aggregates).toEqual(["probability:avg", "__count"]);
             }
         },
     });
@@ -1543,7 +1543,7 @@ test("can import a pivot with a calculated field", async function () {
         mockRPC: function (route, { model, method, kwargs }) {
             if (model === "partner" && method === "web_read_group") {
                 expect.step("web_read_group");
-                expect(kwargs.fields).toEqual(["probability_avg_id:avg(probability)"]);
+                expect(kwargs.aggregates).toEqual(["probability:avg", "__count"]);
             }
         },
     });
@@ -1640,7 +1640,7 @@ test("Data are fetched with the correct aggregator", async () => {
                 </pivot>`,
         mockRPC: async function (route, args) {
             if (args.method === "web_read_group") {
-                expect(args.kwargs.fields).toEqual(["probability_avg_id:avg(probability)"]);
+                expect(args.kwargs.aggregates).toEqual(["probability:avg", "__count"]);
                 expect.step("web_read_group");
             }
         },
@@ -1656,11 +1656,11 @@ test("changing measure aggregates", async () => {
                 </pivot>`,
         mockRPC: async function (route, args) {
             if (args.method === "web_read_group") {
-                expect.step(args.kwargs.fields.join());
+                expect.step(args.kwargs.aggregates.join());
             }
         },
     });
-    expect.verifySteps(["probability_avg_id:avg(probability)"]);
+    expect.verifySteps(["probability:avg", "__count"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -1669,7 +1669,7 @@ test("changing measure aggregates", async () => {
         },
     });
     await animationFrame();
-    expect.verifySteps(["probability_sum_id:sum(probability)"]);
+    expect.verifySteps(["probability:sum", "__count"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -1678,7 +1678,7 @@ test("changing measure aggregates", async () => {
         },
     });
     await animationFrame();
-    expect.verifySteps(["foo_sum_id:sum(foo)"]);
+    expect.verifySteps(["foo:sum"]);
 });
 
 test("Manipulating a computed measure does not trigger a RPC", async () => {
@@ -1688,13 +1688,13 @@ test("Manipulating a computed measure does not trigger a RPC", async () => {
                     <field name="probability" type="measure"/>
                 </pivot>`,
         mockRPC: async function (route, args) {
-            if (args.method === "read_group") {
-                expect.step(args.kwargs.fields.join());
+            if (args.method === "web_read_group") {
+                expect.step(args.kwargs.aggregates.join());
             }
         },
     });
     const sheetId = model.getters.getActiveSheetId();
-    expect.verifySteps(["probability_avg_id:avg(probability)"]);
+    expect.verifySteps(["probability:avg", "__count"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -1731,11 +1731,11 @@ test("many2one measures are aggregated with count_distinct by default", async ()
                 </pivot>`,
         mockRPC: async function (route, args) {
             if (args.method === "web_read_group") {
-                expect.step(args.kwargs.fields.join());
+                expect.step(args.kwargs.aggregates.join());
             }
         },
     });
-    expect.verifySteps(["probability_avg_id:avg(probability)"]);
+    expect.verifySteps(["probability:avg", "__count"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -1784,7 +1784,7 @@ test("changing order of group by", async () => {
                 </pivot>`,
         mockRPC: async function (route, args) {
             if (args.method === "web_read_group") {
-                expect.step(args.kwargs.orderby || "NO_ORDER");
+                expect.step(args.kwargs.order || "NO_ORDER");
             }
         },
     });
@@ -1820,7 +1820,7 @@ test("change date order", async () => {
                 </pivot>`,
         mockRPC: async function (route, args) {
             if (args.method === "web_read_group") {
-                expect.step(args.kwargs.orderby || "NO_ORDER");
+                expect.step(args.kwargs.order || "NO_ORDER");
             }
         },
     });

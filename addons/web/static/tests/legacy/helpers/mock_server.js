@@ -1030,13 +1030,16 @@ export class MockServer {
         const fields = this.models[modelName].fields
         const aggregateFields = (group, records) => {
             for (const { fieldName, func, name } of aggregatedFields) {
-                if (func === "sum") {
+                if (["sum", "avg"].includes(func)) {
                     if (!records.length) {
                         group[name] = false;
                     } else {
                         group[name] = 0;
-                        for (const r of records) {
-                            group[name] += r[fieldName];
+                        for (const record of records) {
+                            group[name] += record[fieldName];
+                        }
+                        if (func === "avg") {
+                            group[name] = group[name] / records.length
                         }
                     }
                 } else if (func === "array_agg") {
