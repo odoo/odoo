@@ -123,6 +123,9 @@ export class ChatWindow extends Component {
                 }
                 this.close({ escape: true });
                 break;
+            case "Enter":
+                debugger
+                break;
             case "Tab": {
                 const index = this.store.chatHub.opened.findIndex((cw) => cw.eq(chatWindow));
                 if (index === this.store.chatHub.opened.length - 1) {
