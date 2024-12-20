@@ -177,7 +177,7 @@
                 </xpath>
                 <xpath expr="//field[@name='product_properties']" position="before">
                     <div groups="stock.group_stock_user" t-if="record.show_on_hand_qty_status_button.raw_value">
-                        On hand: <field name="qty_available"/> <field name="uom_id"/>
+                        On hand: <field name="qty_available"/> <field name="uom_id" groups="uom.group_uom"/>
                     </div>
                 </xpath>
             </field>
@@ -303,7 +303,7 @@
                                 <div class="o_field_widget o_stat_info">
                                         <span class="o_stat_value d-flex gap-1">
                                             <field name="qty_available" nolabel="1" class="oe_inline"/>
-                                            <field name="uom_name" class="oe_inline"/>
+                                            <field name="uom_name" class="oe_inline" groups="uom.group_uom"/>
                                         </span>
                                         <span class="o_stat_text">On Hand</span>
                                 </div>
@@ -316,7 +316,7 @@
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value d-flex gap-1">
                                         <field name="virtual_available" class="oe_inline"/>
-                                        <field name="uom_name" class="oe_inline"/>
+                                        <field name="uom_name" class="oe_inline" groups="uom.group_uom"/>
                                     </span>
                                     <span class="o_stat_text">Forecasted</span>
                                 </div>
@@ -424,7 +424,7 @@
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value d-flex gap-1">
                                         <field name="qty_available" nolabel="1" class="oe_inline"/>
-                                        <field name="uom_name" class="oe_inline"/>
+                                        <field name="uom_name" class="oe_inline" groups="uom.group_uom"/>
                                     </span>
                                     <span class="o_stat_text">On Hand</span>
                                 </div>
@@ -437,7 +437,7 @@
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value d-flex gap-1">
                                         <field name="virtual_available" nolabel="1" class="oe_inline"/>
-                                        <field name="uom_name" class="oe_inline"/>
+                                        <field name="uom_name" class="oe_inline" groups="uom.group_uom"/>
                                     </span>
                                     <span class="o_stat_text">Forecasted</span>
                                 </div>
