@@ -227,9 +227,14 @@ class SaleOrder(models.Model):
                 product=line.product_id,
                 partner=line.order_partner_id,
             )
-            # To compute the discountable amount we get the subtotal and add
-            # non-fixed tax totals. This way fixed taxes will not be discounted
-            taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
+            if reward.program_id.is_payment_program:
+                # In case of payment programs (Gift Card, e-Wallet) the order can be totally
+                # paid with the card balance
+                taxes = line.tax_id
+            else:
+                # To compute the discountable amount we get the subtotal and add
+                # non-fixed tax totals. This way fixed taxes will not be discounted
+                taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
             discountable += tax_data['total_excluded'] + sum(
                 tax['amount'] for tax in tax_data['taxes']
                 if (
