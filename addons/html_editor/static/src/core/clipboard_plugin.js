@@ -45,7 +45,7 @@ export const CLIPBOARD_WHITELISTS = {
         "TR",
         "TD",
         // Miscellaneous
-        "IMG",
+        // "IMG",
         "BR",
         "A",
         ".fa",
@@ -232,7 +232,7 @@ export class ClipboardPlugin extends Plugin {
 
         this.dependencies.history.stageSelection();
 
-        this.dispatchTo("before_paste_handlers", selection);
+        this.dispatchTo("before_paste_handlers", selection, ev);
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.dependencies.selection.getEditableSelection();
 
