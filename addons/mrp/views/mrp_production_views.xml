@@ -550,7 +550,7 @@
                                         decoration-danger="is_delayed"
                                         decoration-bf="is_delayed"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="state != 'draft'" force_save="1"/>
-
+                                    <field name="log_note" readonly="False" help="These notes will be available in both MO form and Shop Floor views"/>
                                 </group>
                             </group>
                         </page>
