@@ -57,11 +57,11 @@ class TestSaleCommonBase(TransactionCase):
 
     @classmethod
     def setup_sale_configuration_for_company(cls, company):
-        Users = cls.env['res.users'].with_context(no_reset_password=True)
+        Users = cls.env['res.users'].with_context(no_reset_password=True).sudo()
 
         company_data = {
             # Sales Team
-            'default_sale_team': cls.env['crm.team'].with_context(tracking_disable=True).create({
+            'default_sale_team': cls.env['crm.team'].with_context(tracking_disable=True).sudo().create({
                 'name': 'Test Channel',
                 'company_id': company.id,
             }),
@@ -237,6 +237,15 @@ class TestSaleCommonBase(TransactionCase):
         })
 
         return company_data
+
+    @classmethod
+    def _enable_sale_salesman(cls):
+        """ Required to confirm a sale order """
+        cls.user_stock_user.groups_id += cls.env.ref('sales_team.group_sale_salesman')
+
+    @classmethod
+    def _enable_sale_manager(cls):
+        cls.user_stock_user.groups_id += cls.env.ref('sales_team.group_sale_manager')
 
 
 class TestSaleCommon(AccountTestInvoicingCommon, TestSaleCommonBase):

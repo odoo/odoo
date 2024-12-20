@@ -11,7 +11,7 @@ class TestMrpRepairFlow(TestMrpCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
+        cls.user.groups_id += cls.env.ref('stock.group_production_lot')
 
     def test_repair_with_manufacture_mto_link(self):
         """

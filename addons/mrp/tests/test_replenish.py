@@ -26,14 +26,15 @@ class TestMrpReplenish(TestMrpCommon):
         route = self.env.ref('mrp.route_warehouse0_manufacture')
         product = self.product_4
         product.route_ids = route
-        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
-        self.env.company.manufacturing_lead = 0
+        wh = self.warehouse_1
+        self.env.company.sudo().manufacturing_lead = 0
         self.env['ir.config_parameter'].sudo().set_param('mrp.use_manufacturing_lead', True)
 
         with freeze_time("2023-01-01"):
             wizard = self._create_wizard(product, wh)
             self.assertEqual(fields.Datetime.from_string('2023-01-01 00:00:00'), wizard.date_planned)
-            self.env.company.manufacturing_lead = 3
+            self.env.company.sudo().manufacturing_lead = 3
+
             wizard2 = self._create_wizard(product, wh)
             self.assertEqual(fields.Datetime.from_string('2023-01-04 00:00:00'), wizard2.date_planned)
             route.rule_ids[0].delay = 2
@@ -41,7 +42,7 @@ class TestMrpReplenish(TestMrpCommon):
             self.assertEqual(fields.Datetime.from_string('2023-01-06 00:00:00'), wizard3.date_planned)
 
     def test_mrp_orderpoint_leadtime(self):
-        self.warehouse = self.env.ref('stock.warehouse0')
+        self.warehouse = self.warehouse_1
         route_manufacture = self.warehouse.manufacture_pull_id.route_id
         route_manufacture.supplied_wh_id = self.warehouse
         route_manufacture.supplier_wh_id = self.warehouse
@@ -99,8 +100,9 @@ class TestMrpReplenish(TestMrpCommon):
         product = self.product_4
         bom = product.bom_ids
         product.route_ids = route
-        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
-        self.env.company.manufacturing_lead = 0
+        wh = self.warehouse_1
+        with self.with_user('admin'):
+            self.env.company.manufacturing_lead = 0
         with freeze_time("2023-01-01"):
             wizard = self._create_wizard(product, wh)
             self.assertEqual(fields.Datetime.from_string('2023-01-01 00:00:00'), wizard.date_planned)
@@ -115,16 +117,15 @@ class TestMrpReplenish(TestMrpCommon):
         """ Test that when ticking replenish on the scrap wizard of a MO, the new move
         is linked to the MO and validating it will automatically reserve the quantity
         on the MO. """
-        warehouse = self.env.ref('stock.warehouse0')
-        warehouse.manufacture_steps = 'pbm'
+        self.warehouse_1.manufacture_steps = 'pbm'
         basic_mo, dummy1, dummy2, product_to_scrap, other_product = self.generate_mo(qty_final=1, qty_base_1=1, qty_base_2=1)
         for product in (product_to_scrap, other_product):
             self.env['stock.quant'].create({
                 'product_id': product.id,
-                'location_id': warehouse.lot_stock_id.id,
+                'location_id': self.stock_location.id,
                 'quantity': 2
             })
-        self.assertEqual(basic_mo.move_raw_ids.location_id, warehouse.pbm_loc_id)
+        self.assertEqual(basic_mo.move_raw_ids.location_id, self.pbm_location)
         basic_mo.action_confirm()
         self.assertEqual(len(basic_mo.picking_ids), 1)
         basic_mo.picking_ids.action_assign()
@@ -134,7 +135,7 @@ class TestMrpReplenish(TestMrpCommon):
         scrap_form = Form.from_action(self.env, basic_mo.button_scrap())
         scrap_form.product_id = product_to_scrap
         scrap_form.should_replenish = True
-        self.assertEqual(scrap_form.location_id, warehouse.pbm_loc_id)
+        self.assertEqual(scrap_form.location_id, self.pbm_location)
         scrap_form.save().action_validate()
         self.assertNotEqual(basic_mo.move_raw_ids.mapped('state'), ['assigned', 'assigned'])
         self.assertEqual(len(basic_mo.picking_ids), 2)

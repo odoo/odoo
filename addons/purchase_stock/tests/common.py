@@ -24,6 +24,7 @@ class PurchaseTestCommon(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super(PurchaseTestCommon, cls).setUpClass()
+        cls.user.groups_id += cls.env.ref('purchase.group_purchase_user')
         cls.env.ref('stock.route_warehouse0_mto').active = True
 
         cls.route_buy = cls.warehouse_1.buy_pull_id.route_id.id
@@ -53,8 +54,8 @@ class PurchaseTestCommon(TestStockCommon):
             'categ_id': cls.categ_id,
         })
 
-        cls.res_users_purchase_user = cls.env['res.users'].create({
-            'company_id': cls.env.ref('base.main_company').id,
+        cls.res_users_purchase_user = cls.env['res.users'].sudo().create({
+            'company_id': cls.company.id,
             'name': "Purchase User",
             'login': "pu",
             'email': "purchaseuser@yourcompany.com",
