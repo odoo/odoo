@@ -16,21 +16,7 @@ QUnit.module("Web Components", (hooks) => {
     QUnit.module("RecordSelector");
 
     let target;
-    const serverData = {
-        models: {
-            partner: {
-                fields: {
-                    display_name: { string: "Display name", type: "char" },
-                },
-                records: [
-                    { id: 1, display_name: "Alice" },
-                    { id: 2, display_name: "Bob" },
-                    { id: 3, display_name: "Charlie" },
-                ],
-            },
-        },
-    };
-
+    let serverData;
     async function makeRecordSelector(props, { mockRPC } = {}) {
         class Parent extends Component {
             setup() {
@@ -60,6 +46,20 @@ QUnit.module("Web Components", (hooks) => {
 
     hooks.beforeEach(async () => {
         target = getFixture();
+        serverData = {
+            models: {
+                partner: {
+                    fields: {
+                        display_name: { string: "Display name", type: "char" },
+                    },
+                    records: [
+                        { id: 1, display_name: "Alice" },
+                        { id: 2, display_name: "Bob" },
+                        { id: 3, display_name: "Charlie" },
+                    ],
+                },
+            },
+        };
         registry.category("services").add("hotkey", hotkeyService);
         registry.category("services").add("dialog", dialogService);
         registry.category("services").add("name", nameService);
@@ -199,6 +199,9 @@ QUnit.module("Web Components", (hooks) => {
             },
             {
                 mockRPC: (route, args) => {
+                    if (args.method === "has_group") {
+                        return true;
+                    }
                     if (args.method === "web_search_read") {
                         assert.step("web_search_read");
                         assert.deepEqual(args.kwargs.domain, [
