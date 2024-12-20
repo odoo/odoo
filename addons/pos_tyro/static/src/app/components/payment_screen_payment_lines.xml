@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.PaymentScreenPaymentLines" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('electronic_payment')]" position="inside">
+            <t t-if="line.payment_status == 'waitingTyro'">
+                <div class="electronic_status" t-out="line.tyro_status"/>
+                <div class="button send_payment_cancel" title="Cancel Payment Request" t-on-click="() => this.props.sendPaymentCancel(line)">
+                    Cancel
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>
