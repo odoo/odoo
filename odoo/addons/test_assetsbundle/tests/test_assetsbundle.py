@@ -1441,12 +1441,19 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.irasset2')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
+        print("=" * 78) # DEBUG
+        print(content)  # DEBUG
+        print("=" * 78) # DEBUG
         self.assertRegex(content, '.appearance-none{-webkit-appearance: none; -moz-appearance: none; appearance: none;}')
         self.assertRegex(content, '.appearance-auto{-webkit-appearance: auto; -moz-appearance: auto; appearance: auto;}')
+        self.assertRegex(content, '.appearance-none-prefixed{-webkit-appearance: none;}')
 
         self.assertRegex(content, '.display-flex{display: -webkit-box; display: -webkit-flex; display: flex;}')
         self.assertRegex(content, '.display-inline-flex{display: -webkit-inline-box; display: -webkit-inline-flex; display: inline-flex;}')
         self.assertRegex(content, '.display-inline{display: inline;}')        
+        self.assertRegex(content, '.display-var-flex{--dummy-display: flex;}')
+        self.assertRegex(content, '.display-var-inline-flex{--dummy-display: inline-flex;}')
+        self.assertRegex(content, '.display-var-inline{--dummy-display: inline;}')
 
         self.assertRegex(content, '.flex-flow-row-nowrap{-webkit-flex-flow: row nowrap; flex-flow: row nowrap;}')
         self.assertRegex(content, '.flex-flow-column-wrap{-webkit-flex-flow: column wrap; flex-flow: column wrap;}')
