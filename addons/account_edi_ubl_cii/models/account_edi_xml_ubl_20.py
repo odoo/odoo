@@ -116,10 +116,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _get_delivery_vals_list(self, invoice):
         # the data is optional, except for ubl bis3 (see the override, where we need to set a default delivery address)
         return [{
-            'actual_delivery_date': None,
+            'actual_delivery_date': invoice.delivery_date,
             'delivery_location_vals': {
                 'delivery_address_vals': self._get_partner_address_vals(invoice.partner_shipping_id),
             },
+            'delivery_party_vals': self._get_partner_party_vals(invoice.partner_shipping_id, 'delivery') if invoice.partner_shipping_id else {},
         }]
 
     def _get_bank_address_vals(self, bank):
@@ -419,6 +420,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             for vals in allowance_charge_vals_list
             if vals.get('charge_indicator') == 'true'
         )
+        period_vals = {}
+        # deferred_start_date & deferred_end_date are enterprise-only fields
+        if line._fields.get('deferred_start_date') and (line.deferred_start_date or line.deferred_end_date):
+            period_vals.update({'start_date': line.deferred_start_date})
+            period_vals.update({'end_date': line.deferred_end_date})
         return {
             'currency': line.currency_id,
             'currency_dp': self._get_currency_decimal_places(line.currency_id),
@@ -430,6 +436,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'tax_total_vals': self._get_invoice_line_tax_totals_vals_list(line, taxes_vals),
             'item_vals': self._get_invoice_line_item_vals(line, taxes_vals),
             'price_vals': self._get_invoice_line_price_vals(line),
+            'invoice_period_vals_list': [period_vals] if period_vals else []
         }
 
     def _get_invoice_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount):
@@ -705,6 +712,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         if bank_details:
             self._import_retrieve_and_fill_partner_bank_details(invoice, bank_details=bank_details)
 
+        # ==== Delivery ====
+        delivery_date = tree.find('.//{*}Delivery/{*}ActualDeliveryDate')
+        invoice.delivery_date = delivery_date is not None and delivery_date.text
+
         # ==== Reference ====
 
         ref_node = tree.find('./{*}ID')
@@ -783,6 +794,15 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         elif name_node is not None:
             invoice_line.name = name_node.text  # Fallback on Name if Description is not found.
 
+        # Start and End date (enterprise fields)
+        if invoice_line._fields.get('deferred_start_date'):
+            start_date = tree.find('./{*}InvoicePeriod/{*}StartDate')
+            end_date = tree.find('./{*}InvoicePeriod/{*}EndDate')
+            if start_date is not None and end_date is not None:  # there is a constraint forcing none or the two to be set
+                invoice_line.write({
+                    'deferred_start_date': start_date.text,
+                    'deferred_end_date': end_date.text,
+                })
         xpath_dict = {
             'basis_qty': [
                 './{*}Price/{*}BaseQuantity',
