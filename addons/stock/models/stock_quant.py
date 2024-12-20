@@ -119,7 +119,7 @@ class StockQuant(models.Model):
         'Scheduled Date', compute='_compute_inventory_date', store=True, readonly=False,
         help="Next date the On Hand Quantity should be counted.")
     last_count_date = fields.Date(compute='_compute_last_count_date', help='Last time the Quantity was Updated')
-    inventory_quantity_set = fields.Boolean(store=True, compute='_compute_inventory_quantity_set', readonly=False, default=False)
+    inventory_quantity_set = fields.Boolean(store=True, compute='_compute_inventory_quantity_set', readonly=False)
     is_outdated = fields.Boolean('Quantity has been moved since last count', compute='_compute_is_outdated')
     user_id = fields.Many2one(
         'res.users', 'Assigned To', help="User assigned to do product count.",
@@ -187,10 +187,11 @@ class StockQuant(models.Model):
         for quant in self:
             quant.last_count_date = date_by_quant.get((quant.location_id.id, quant.package_id.id, quant.product_id.id, quant.lot_id.id, quant.owner_id.id))
 
-    @api.depends('inventory_quantity')
+    @api.depends('inventory_quantity', 'inventory_quantity_set')
     def _compute_inventory_diff_quantity(self):
         for quant in self:
-            quant.inventory_diff_quantity = quant.inventory_quantity - quant.quantity
+            if quant.inventory_quantity_set:
+                quant.inventory_diff_quantity = quant.inventory_quantity - quant.quantity
 
     @api.depends('inventory_quantity')
     def _compute_inventory_quantity_set(self):
@@ -283,6 +284,8 @@ class StockQuant(models.Model):
                     quant.inventory_date = fields.Date.today()
                 quants |= quant
             else:
+                if 'inventory_quantity' not in vals:
+                    vals['inventory_quantity_set'] = vals.get('inventory_quantity_set', False)
                 quant = super().create(vals)
                 if 'quants_cache' in self.env.context:
                     self.env.context['quants_cache'][
@@ -755,6 +758,7 @@ class StockQuant(models.Model):
                 [('company_id', '=', company_id)], limit=1).in_type_id.default_location_dest_id
 
     def _apply_inventory(self):
+        self.inventory_quantity_set = True
         move_vals = []
         if not self.user_has_groups('stock.group_stock_manager'):
             raise UserError(_('Only a stock manager can validate an inventory adjustment.'))
