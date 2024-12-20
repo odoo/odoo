@@ -780,7 +780,7 @@ class DiscussChannel(models.Model):
         # The current client code might be setting the key to True on sending
         # message but it is only useful when targeting customers in chatter.
         # This value should simply be set to False in channels no matter what.
-        return super(DiscussChannel, self.with_context(mail_create_nosubscribe=True, mail_post_autofollow=False)).message_post(message_type=message_type, **kwargs)
+        return super(DiscussChannel, self.with_context(mail_post_autofollow_author_skip=True, mail_post_autofollow=False)).message_post(message_type=message_type, **kwargs)
 
     def _message_post_after_hook(self, message, msg_vals):
         # Automatically set the message posted by the current user as seen for themselves.

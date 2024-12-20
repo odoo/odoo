@@ -18,7 +18,7 @@ class MessagePostSubTestData:
         self.guest = user if user._name == "mail.guest" else user.env["mail.guest"]
         self.allowed = allowed
         self.route_kw = {
-            "context": {"mail_create_nosubscribe": True, "mail_post_autofollow": False},
+            "context": {"mail_post_autofollow_author_skip": True, "mail_post_autofollow": False},
             **(route_kw or {}),
         }
         if partner_emails is not None:

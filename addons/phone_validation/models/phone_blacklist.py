@@ -99,7 +99,7 @@ class PhoneBlacklist(models.Model):
         new = records - existing
         if new and message:
             for record in new:
-                record.with_context(mail_create_nosubscribe=True).message_post(
+                record.with_context(mail_post_autofollow_author_skip=True).message_post(
                     body=message,
                     subtype_xmlid='mail.mt_note',
                 )
@@ -123,7 +123,7 @@ class PhoneBlacklist(models.Model):
             new_records = self.create([{'number': n, 'active': False} for n in todo])
             if message:
                 for record in new_records:
-                    record.with_context(mail_create_nosubscribe=True).message_post(
+                    record.with_context(mail_post_autofollow_author_skip=True).message_post(
                         body=message,
                         subtype_xmlid='mail.mt_note',
                     )

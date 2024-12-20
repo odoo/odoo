@@ -72,7 +72,7 @@ class TestLivechatCommon(TransactionCaseWithUserDemo):
     def _send_message(self, channel, email_from, body, author_id=False):
         # As bus is unavailable in test mode, we cannot call /mail/message/post route to post a message.
         # Instead, we post directly the message on the given channel.
-        channel.with_context(mail_create_nosubscribe=True) \
+        channel.with_context(mail_post_autofollow_author_skip=True) \
             .message_post(author_id=author_id, email_from=email_from, body=body,
                           message_type='comment', subtype_id=self.env.ref('mail.mt_comment').id)
 
