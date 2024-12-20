@@ -45,8 +45,11 @@ class DisplayInterface(Interface):
 
         try:
             os.environ['DISPLAY'] = ':0'
-            for x_screen, monitor in enumerate(screeninfo.get_monitors()):
-                display_devices[monitor.name] = self._add_device(monitor.name, x_screen)
+            display_devices = {
+                monitor.name: self._add_device(monitor.name, x_screen)
+                for x_screen, monitor in enumerate(screeninfo.get_monitors())
+                if "DUMMY" not in monitor.name
+            }
             return display_devices or dummy_display
         except screeninfo.common.ScreenInfoError:
             # If no display is connected, screeninfo raises an error, we return the distant display
