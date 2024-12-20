@@ -19,6 +19,11 @@ Badge received are displayed on the user profile.
         'views/hr_employee_views.xml',
         ],
     'auto_install': True,
+    'assets': {
+        'web.assets_backend': [
+            'hr_gamification/static/src/**/*',
+        ],
+    },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
