@@ -389,7 +389,7 @@ class HrLeave(models.Model):
             days = durations[leave.id][0]
             leave.leave_type_increases_duration = leave.leave_type_request_unit == 'day' and days < leave.number_of_days
 
-    def _get_durations(self, check_leave_type=True, resource_calendar=None):
+    def _get_durations(self, check_leave_type=True, resource_calendar=None, additional_domain=[]):
         """
         This method is factored out into a separate method from
         _compute_duration so it can be hooked and called without necessarily
@@ -409,6 +409,7 @@ class HrLeave(models.Model):
                   # When searching for resource leave intervals, we exclude the one that
                   # is related to the leave we're currently trying to compute for.
                   '|', ('holiday_id', '=', False), ('holiday_id', 'not in', employee_leaves.ids)]
+        domain = domain + additional_domain
         # Precompute values in batch for performance purposes
         work_time_per_day_mapped = {
             (date_from, date_to, calendar): employees.with_context(
