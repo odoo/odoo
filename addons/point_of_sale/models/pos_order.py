@@ -643,7 +643,7 @@ class PosOrder(models.Model):
         self.ensure_one()
         invoice = self.env['account.move'].sudo()\
             .with_company(self.company_id)\
-            .with_context(default_move_type=move_vals['move_type'], linked_to_pos=True)\
+            .with_context(default_move_type=move_vals['move_type'], pos_order_id=self.id)\
             .create(move_vals)
 
         if self.config_id.cash_rounding:
@@ -739,6 +739,7 @@ class PosOrder(models.Model):
             'invoice_line_ids': self._prepare_invoice_lines(),
             'invoice_payment_term_id': self.partner_id.property_payment_term_id.id or False,
             'invoice_cash_rounding_id': self.config_id.rounding_method.id,
+            'pos_order_ids': [Command.link(self.id)],
         }
         if self.refunded_order_id.account_move:
             vals['ref'] = _('Reversal of: %s', self.refunded_order_id.account_move.name)
@@ -944,7 +945,7 @@ class PosOrder(models.Model):
             move_vals = order._prepare_invoice_vals()
             new_move = order._create_invoice(move_vals)
 
-            order.write({'account_move': new_move.id, 'state': 'invoiced'})
+            order.write({'state': 'invoiced'})
             new_move.sudo().with_company(order.company_id).with_context(skip_invoice_sync=True)._post()
 
             moves += new_move
@@ -1567,49 +1568,47 @@ class PosOrderLine(models.Model):
         :param sign: An optional parameter to force the sign of amounts.
         :return: A list of python dictionaries (see '_prepare_base_line_for_taxes_computation' in account.tax).
         """
-        base_line_vals_list = []
-        for line in self:
-            commercial_partner = self.order_id.partner_id.commercial_partner_id
-            fiscal_position = self.order_id.fiscal_position_id
-            line = line.with_company(self.order_id.company_id)
-            account = line.product_id._get_product_accounts()['income'] or self.order_id.config_id.journal_id.default_account_id
-            if not account:
-                raise UserError(_(
-                    "Please define income account for this product: '%(product)s' (id:%(id)d).",
-                    product=line.product_id.name, id=line.product_id.id,
-                ))
+        return [line._tax_base_line_values() for line in self]
 
-            if fiscal_position:
-                account = fiscal_position.map_account(account)
+    def _tax_base_line_values(line):
+        commercial_partner = line.order_id.partner_id.commercial_partner_id
+        fiscal_position = line.order_id.fiscal_position_id
+        line = line.with_company(line.order_id.company_id)
+        account = line.product_id._get_product_accounts()['income'] or line.order_id.config_id.journal_id.default_account_id
+        if not account:
+            raise UserError(_(
+                "Please define income account for this product: '%(product)s' (id:%(id)d).",
+                product=line.product_id.name, id=line.product_id.id,
+            ))
 
-            is_refund_order = line.order_id.amount_total < 0.0
-            is_refund_line = line.qty * line.price_unit < 0
+        if fiscal_position:
+            account = fiscal_position.map_account(account)
 
-            product_name = line.product_id\
-                .with_context(lang=line.order_id.partner_id.lang or self.env.user.lang)\
-                .get_product_multiline_description_sale()
+        is_refund_order = line.order_id.amount_total < 0.0
+        is_refund_line = line.qty * line.price_unit < 0
 
-            base_line_vals_list.append(
-                {
-                    **self.env['account.tax']._prepare_base_line_for_taxes_computation(
-                        line,
-                        partner_id=commercial_partner,
-                        currency_id=self.order_id.currency_id,
-                        rate=self.order_id.currency_rate,
-                        product_id=line.product_id,
-                        tax_ids=line.tax_ids_after_fiscal_position,
-                        price_unit=line.price_unit,
-                        quantity=line.qty * (-1 if is_refund_order else 1),
-                        discount=line.discount,
-                        account_id=account,
-                        is_refund=is_refund_line,
-                        sign=1 if is_refund_order else -1,
-                    ),
-                    'uom_id': line.product_uom_id,
-                    'name': product_name,
-                }
-            )
-        return base_line_vals_list
+        product_name = line.product_id\
+            .with_context(lang=line.order_id.partner_id.lang or line.env.user.lang)\
+            .get_product_multiline_description_sale()
+
+        return {
+            **line.env['account.tax']._prepare_base_line_for_taxes_computation(
+                line,
+                partner_id=commercial_partner,
+                currency_id=line.order_id.currency_id,
+                rate=line.order_id.currency_rate,
+                product_id=line.product_id,
+                tax_ids=line.tax_ids_after_fiscal_position,
+                price_unit=line.price_unit,
+                quantity=line.qty * (-1 if is_refund_order else 1),
+                discount=line.discount,
+                account_id=account,
+                is_refund=is_refund_line,
+                sign=1 if is_refund_order else -1,
+            ),
+            'uom_id': line.product_uom_id,
+            'name': product_name,
+        }
 
     def unlink(self):
         for line in self:

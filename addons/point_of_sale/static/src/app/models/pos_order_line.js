@@ -9,6 +9,7 @@ import {
     getTaxesAfterFiscalPosition,
     getTaxesValues,
 } from "@point_of_sale/app/models/utils/tax_utils";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 export class PosOrderline extends Base {
     static pythonModel = "pos.order.line";
@@ -195,13 +196,8 @@ export class PosOrderline extends Base {
     }
 
     setLinePrice() {
-        const prices = this.get_all_prices();
-        if (this.price_subtotal !== prices.priceWithoutTax) {
-            this.price_subtotal = prices.priceWithoutTax;
-        }
-        if (this.price_subtotal_incl !== prices.priceWithTax) {
-            this.price_subtotal_incl = prices.priceWithTax;
-        }
+        this.price_subtotal = this.get_price_without_tax();
+        this.price_subtotal_incl = this.get_price_with_tax();
     }
 
     // sets the qty of the product. The qty will be rounded according to the
@@ -490,8 +486,12 @@ export class PosOrderline extends Base {
     }
 
     get_all_prices(qty = this.get_quantity()) {
-        const product = this.get_product();
         const priceUnit = this.get_unit_price();
+        return this._get_all_prices({ qty, priceUnit });
+    }
+
+    _get_all_prices({ qty, priceUnit, special_mode = false }) {
+        const product = this.get_product();
         const discount = this.get_discount();
         const priceUnitAfterDiscount = priceUnit * (1.0 - discount / 100.0);
 
@@ -510,7 +510,8 @@ export class PosOrderline extends Base {
             product,
             this.config._product_default_values,
             this.company,
-            this.currency
+            this.currency,
+            special_mode
         );
         const taxesDataBeforeDiscount = getTaxesValues(
             taxes,
@@ -519,7 +520,8 @@ export class PosOrderline extends Base {
             product,
             this.config._product_default_values,
             this.company,
-            this.currency
+            this.currency,
+            special_mode
         );
 
         // Tax details.
@@ -722,6 +724,20 @@ export class PosOrderline extends Base {
     }
     isSelected() {
         return this.order_id?.uiState?.selected_orderline_uuid === this.uuid;
+    }
+    _tax_base_line_values({ documentSign }) {
+        const order = this.order_id;
+        let taxes = this.tax_ids;
+        if (order.fiscal_position_id) {
+            taxes = getTaxesAfterFiscalPosition(taxes, order.fiscal_position_id, order.models);
+        }
+        const currency = order.config.currency_id;
+        const extraValues = { currency_id: currency };
+        return accountTaxHelpers.prepare_base_line_for_taxes_computation(this, {
+            ...extraValues,
+            quantity: documentSign * this.qty,
+            tax_ids: taxes,
+        });
     }
 }
 
