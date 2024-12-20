@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.PollResult">
+        <div class="card border-light shadow-sm my-2" style="max-width: 500px;">
+            <div class="card-body text-muted p-2 d-flex gap-2 align-items-center">
+                <div class="d-flex align-items-center flex-grow-1 gap-2">
+                    <t t-if="!props.poll.winning_answer_id">
+                        <i class="fa fa-2x fa-meh-o"/>
+                        <p class="card-title text-start fw-bold fs-5 mb-0">There was no winner</p>
+                    </t>
+                    <t t-else="">
+                        <div class="d-flex flex-column">
+                            <div class="d-flex align-items-center">
+                                <p class="card-title text-start fw-bold fs-5 mb-0" t-esc="props.poll.winning_answer_id.text"/>
+                                <i class="ms-1 fa fa-check-circle-o text-success"/>
+                            </div>
+                            <p class="card-subtitle mb-0 text-muted">Winning answer &#8729; <t t-esc="props.poll.winning_answer_id.percentage"/> %</p>
+                        </div>
+                    </t>
+                </div>
+                <button class="btn btn-secondary" t-on-click="onClickViewPoll">View Poll</button>
+            </div>
+        </div>
+    </t>
+</templates>
