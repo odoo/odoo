@@ -58,7 +58,7 @@ export function initElementForEdition(element, options = {}) {
     }
 }
 
-export function fixInvalidHTML(content) {
+export function convertSelfClosingTagsToOpenClosed(content) {
     const regex = /<\s*(a|strong|t)[^<]*?\/\s*>/g;
-    return content.replace(regex, (match, g0) => match.replace(/\/\s*>/, `></${g0}>`));
+    return content.replace(regex, (match, tag) => match.replace(/\/\s*>/, `></${tag}>`));
 }
