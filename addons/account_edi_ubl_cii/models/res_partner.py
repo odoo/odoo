@@ -127,6 +127,7 @@ class ResPartner(models.Model):
             ('9959', "9959 - Employer Identification Number (EIN, USA)"),
         ]
     )
+    hide_peppol_fields = fields.Boolean(compute='_compute_hide_peppol_fields')
 
     @api.constrains('peppol_eas')
     def _check_peppol_eas(self):
@@ -208,6 +209,12 @@ class ResPartner(models.Model):
                                 new_eas = eas
                                 break
                     partner.peppol_eas = new_eas
+
+    @api.depends('ubl_cii_format')
+    def _compute_hide_peppol_fields(self):
+        """ Hides the people fields depending on the UBL format. Can be extended to add different hiding conditions. """
+        for partner in self:
+            partner.hide_peppol_fields = not partner.ubl_cii_format or partner.ubl_cii_format == 'facturx'
 
     def _build_error_peppol_endpoint(self, eas, endpoint):
         """ This function contains all the rules regarding the peppol_endpoint."""
