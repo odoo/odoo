@@ -1,11 +1,14 @@
 import {
+    markRaw,
     onMounted,
     onPatched,
     onWillUnmount,
+    status,
     useComponent,
     useEffect,
     useRef,
     useState,
+    useSubEnv,
 } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
@@ -483,3 +486,79 @@ export const useMovable = makeDraggableHook({
         return { top, left };
     },
 });
+
+export function useMessageShrinkWrap() {
+    const component = useComponent();
+    const store = useService("mail.store");
+    const messageBodyResizeObserver = new ResizeObserver(() => requestShrinkWrap());
+    useSubEnv({ messageComposerResize: {} }); // sub-composer expected to register its resize function as `invoke`
+    useEffect(
+        (el) => {
+            messageBodyResizeObserver.observe(el);
+            return () => {
+                messageBodyResizeObserver.unobserve(el);
+            };
+        },
+        () => [component.root.el]
+    );
+
+    async function requestShrinkWrap() {
+        const element = component.messageBody.el;
+        if (!element || ["destroyed", "cancelled"].includes(status(component))) {
+            return;
+        }
+        if (!store.toShrinkWrapElements) {
+            store.toShrinkWrapElements = markRaw([]);
+            store.shrinkWrapSequential = useSequential();
+        }
+        store.toShrinkWrapElements.push([
+            element,
+            () => {
+                if (
+                    ["destroyed", "cancelled"].includes(status(component)) ||
+                    component.messageBody.el !== element
+                ) {
+                    return;
+                }
+                if (component.state.isEditing) {
+                    element.style.width = "auto";
+                    element.style.boxSizing = "auto";
+                    // Composer resize happens before message resize, so need to resize composer again
+                    component.env.messageComposerResize?.invoke();
+                }
+            },
+        ]);
+        await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve))); // batch shrink wrap so sequential getBoudingRect() trigger a single painting
+        store.shrinkWrapSequential(() => {
+            const toHandle = store.toShrinkWrapElements;
+            store.toShrinkWrapElements = markRaw([]);
+            const toChange = [];
+            for (const [element] of toHandle) {
+                shrinkWrap(element, toChange);
+            }
+            for (const [element, width] of toChange) {
+                element.style.width = width + "px";
+                element.style.boxSizing = "content-box";
+            }
+            for (const [element, toShrinkWrapElements] of toHandle) {
+                toShrinkWrapElements?.(element);
+            }
+        });
+    }
+
+    /** Courtesy of https://stackoverflow.com/a/78307608 */
+    function shrinkWrap(element, toChange) {
+        const { firstChild, lastChild } = element;
+        if (!element || !firstChild || !lastChild) {
+            return;
+        }
+        element.querySelectorAll("p").forEach((p) => shrinkWrap(p, toChange));
+        element.style.width = "auto";
+        element.style.boxSizing = "auto";
+        const range = document.createRange();
+        range.setStartBefore(firstChild);
+        range.setEndAfter(lastChild);
+        const { width } = range.getBoundingClientRect();
+        toChange.push([element, width]);
+    }
+}
