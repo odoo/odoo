@@ -2372,21 +2372,13 @@ class MailThread(models.AbstractModel):
         # subscribe author(s) so that they receive answers; do it only when it is
         # a manual post by the author (aka not a system notification, not a message
         # posted 'in behalf of', and if still active).
-        author_subscribe = not self._context.get('mail_post_autofollow_author_skip') and msg_values['message_type'] != 'notification'
+        author_subscribe = (
+            not self._context.get('mail_post_autofollow_author_skip')
+            and msg_values['message_type'] not in ('notification', 'user_notification', 'auto_comment')
+        )
         if author_subscribe:
-            real_author_id = False
-            # if current user is active, they are the one doing the action and should
-            # be notified of answers. If they are inactive they are posting on behalf
-            # of someone else (a custom, mailgateway, ...) and the real author is the
-            # message author. In any case avoid odoobot.
-            if self.env.user.active:  # note that odoobot is always inactive, there is a python check
-                real_author_id = self.env.user.partner_id.id
-            elif msg_values['author_id']:
-                author = self.env['res.partner'].browse(msg_values['author_id'])
-                if author.active and author != self.env.ref('base.partner_root'):  # that happened :(
-                    real_author_id = author.id
-            if real_author_id:
-                self._message_subscribe(partner_ids=[real_author_id])
+            if real_author := self._message_compute_real_author(msg_values['author_id']):
+                self._message_subscribe(partner_ids=[real_author.id])
 
         self._message_post_after_hook(new_message, msg_values)
         self._notify_thread(new_message, msg_values, **notif_kwargs)
@@ -2992,6 +2984,20 @@ class MailThread(models.AbstractModel):
             raise exceptions.UserError(_("Unable to send message, please configure the sender's email address."))
 
         return author_id, email_from
+
+    def _message_compute_real_author(self, author_id):
+        real_author = self.env['res.partner']
+        # if current user is active, they are the one doing the action and should
+        # be notified of answers. If they are inactive they are posting on behalf
+        # of someone else (a customer, mailgateway, ...) and the real author is the
+        # message author. In any case avoid odoobot.
+        if self.env.user.active:  # note that odoobot is always inactive, there is a python check
+            real_author = self.env.user.partner_id
+        elif author_id:
+            author = self.env['res.partner'].browse(author_id)
+            if author.active and author != self.env.ref('base.partner_root'):  # that happened :(
+                real_author = author
+        return real_author
 
     def _message_compute_parent_id(self, parent_id):
         # parent management, depending on ``_mail_flat_thread``
@@ -3966,12 +3972,8 @@ class MailThread(models.AbstractModel):
         notify_author = kwargs.get('notify_author') or self.env.context.get('mail_notify_author')
         real_author_id = False
         if not notify_author:
-            if self.env.user.active:
-                real_author_id = self.env.user.partner_id.id
-            elif msg_vals.get('author_id'):
-                real_author_id = msg_vals['author_id']
-            else:
-                real_author_id = message.author_id.id
+            author_id = msg_vals.get('author_id') or message.author_id.id
+            real_author_id = self._message_compute_real_author(author_id).id
 
         for pid, pdata in res.items():
             if pid and pid == real_author_id:
