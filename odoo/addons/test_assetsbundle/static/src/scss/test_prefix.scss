@@ -4,6 +4,9 @@
 .appearance-auto {
     appearance: auto;
 }
+.appearance-none-prefixed {
+    -webkit-appearance: none;
+}
 
 .display-flex {
     display: flex;
@@ -13,6 +16,15 @@
 }
 .display-inline {
     display: inline;
+}
+.display-var-flex {
+    --dummy-display: flex;
+}
+.display-var-inline-flex {
+    --dummy-display: inline-flex;
+}
+.display-var-inline {
+    --dummy-display: inline;
 }
 
 .justify-content-flex-start {
