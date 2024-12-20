@@ -4,8 +4,9 @@
 from contextlib import contextmanager
 from unittest.mock import patch, Mock
 
+from odoo import Command, modules
 from odoo.tests.common import new_test_user, TransactionCase, HttpCase
-from odoo import Command, modules, tools
+from odoo.tools.mail import email_split_and_format
 
 DISABLED_MAIL_CONTEXT = {
     'tracking_disable': True,
@@ -403,7 +404,7 @@ class MockSmtplibCase:
                     'message': message.as_string(),
                     'msg_cc': message['Cc'],
                     'msg_from': message['From'],
-                    'msg_from_fmt': tools.mail.email_split_and_format(message['From'])[0],
+                    'msg_from_fmt': email_split_and_format(message['From'])[0],
                     'msg_to': message['To'],
                     # smtp
                     'smtp_from': smtp_from,
@@ -471,7 +472,7 @@ class MockSmtplibCase:
                              message_from=None, msg_from=None,
                              mail_server=None, from_filter=None,
                              emails_count=1,
-                             msg_cc=None, msg_to=None):
+                             msg_cc_lst=None, msg_to_lst=None):
         """Check that the given email has been sent. If one of the parameter is
         None it is just ignored and not used to retrieve the email.
 
@@ -498,7 +499,8 @@ class MockSmtplibCase:
                 (smtp_from is None or smtp_from == email['smtp_from'])
                 and (smtp_to_list is None or smtp_to_list == email['smtp_to_list'])
                 and (message_from is None or 'From: %s' % message_from in email['message'])
-                and (msg_from is None or msg_from == email['msg_from'])
+                # might have header being name <email> instead of "name" <email>, to check
+                and (msg_from is None or (msg_from == email['msg_from'] or msg_from == email['msg_from_fmt']))
                 and (from_filter is None or from_filter == email['from_filter']),
             self.emails,
         ))
@@ -509,26 +511,20 @@ class MockSmtplibCase:
             debug_info = '\n'.join(
                 f"SMTP-From: {email['smtp_from']}, SMTP-To: {email['smtp_to_list']}, "
                 f"Msg-From: {email['msg_from']}, From_filter: {email['from_filter']})"
-                for email in zip(self.emails)
+                for email in self.emails
             )
         self.assertEqual(
             matching_emails_count, emails_count,
             msg=f'Incorrect emails sent: {matching_emails_count} found, {emails_count} expected'
-                f'\nConditions\nSMTP-From: {smtp_from}, SMTP-To: {smtp_to_list}, Msg-From: {message_from}, From_filter: {from_filter}'
+                f'\nConditions\nSMTP-From: {smtp_from}, SMTP-To: {smtp_to_list}, Msg-From: {message_from or msg_from}, From_filter: {from_filter}'
                 f'\nNot found in\n{debug_info}'
         )
-        if msg_to is not None:
+        if msg_to_lst is not None:
             for email in matching_emails:
-                self.assertEqual(
-                    sorted(tools.mail.email_split_and_format(email['msg_to'])),
-                    sorted(tools.mail.email_split_and_format(msg_to or []))
-                )
-        if msg_cc is not None:
+                self.assertListEqual(sorted(email_split_and_format(email['msg_to'])), sorted(msg_to_lst))
+        if msg_cc_lst is not None:
             for email in matching_emails:
-                self.assertEqual(
-                    sorted(tools.mail.email_split_and_format(email['msg_cc'])),
-                    sorted(tools.mail.email_split_and_format(msg_cc or []))
-                )
+                self.assertListEqual(sorted(email_split_and_format(email['msg_cc'])), sorted(msg_cc_lst))
 
     @classmethod
     def _init_mail_gateway(cls):
