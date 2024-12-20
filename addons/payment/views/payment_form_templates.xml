@@ -127,6 +127,11 @@
                 <!-- === Submit button === -->
                 <t t-if="display_submit_button" t-call="payment.submit_button"/>
             </div>
+            <div t-attf-class="d-none d-lg-block">
+                <t t-call="payment.submit_button" >
+                    <t t-set="submit_button_label">Pay now</t>
+                </t>
+            </div>
             <!-- === Availability report === -->
             <t t-call="payment.availability_report"/>
         </form>
