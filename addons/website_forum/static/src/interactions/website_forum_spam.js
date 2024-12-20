@@ -1,7 +1,7 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { renderToElement } from "@web/core/utils/render";
+import { renderToFragment } from "@web/core/utils/render";
 import { Interaction } from "@web/public/interaction";
 import { cloneContentEls } from "@website/js/utils";
 
@@ -51,7 +51,8 @@ class WebsiteForumSpam extends Interaction {
             const childEl = cloneContentEls(post.content).firstElementChild;
             post.content = childEl.textContent.substring(0, 250);
         });
-        this.insert(renderToElement("website_forum.spam_search_name", { posts }), postSpamEl);
+        // No need for cleanup, it's already done above.
+        postSpamEl.append(renderToFragment("website_forum.spam_search_name", { posts }));
     }
 
     async onMarkSpamClick() {
