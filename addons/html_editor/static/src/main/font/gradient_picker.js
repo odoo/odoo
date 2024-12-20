@@ -1,6 +1,6 @@
 import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 import { ColorPicker } from "@web/core/color_picker/color_picker";
-import { isColorGradient, rgbToHex } from "@html_editor/utils/color";
+import { isColorGradient, rgbaToHex } from "@html_editor/utils/color";
 
 export class GradientPicker extends Component {
     static components = { ColorPicker };
@@ -39,14 +39,20 @@ export class GradientPicker extends Component {
             ...gradient.matchAll(
                 /(#[0-9a-f]{6}|rgba?\(\s*[0-9]+\s*,\s*[0-9]+\s*,\s*[0-9]+\s*[,\s*[0-9.]*]?\s*\)|[a-z]+)\s*([[0-9]+%]?)/g
             ),
-        ].filter((color) => rgbToHex(color[1]) !== "#");
+        ].filter((color) => rgbaToHex(color[1]) !== "#");
 
         if (colors.length !== 2) {
             return;
         }
 
-        this.colors[0] = { hex: rgbToHex(colors[0][1]), percentage: colors[0][2].replace("%", "") };
-        this.colors[1] = { hex: rgbToHex(colors[1][1]), percentage: colors[1][2].replace("%", "") };
+        this.colors[0] = {
+            hex: rgbaToHex(colors[0][1]),
+            percentage: colors[0][2].replace("%", ""),
+        };
+        this.colors[1] = {
+            hex: rgbaToHex(colors[1][1]),
+            percentage: colors[1][2].replace("%", ""),
+        };
 
         const isLinear = gradient.startsWith("linear-gradient(");
         if (isLinear) {
@@ -82,7 +88,8 @@ export class GradientPicker extends Component {
     }
 
     onColorChange(color) {
-        this.colors[this.state.currentColorIndex].hex = color.hex;
+        const hex = rgbaToHex(color.cssColor);
+        this.colors[this.state.currentColorIndex].hex = hex;
         this.onColorGradientChange();
     }
 
