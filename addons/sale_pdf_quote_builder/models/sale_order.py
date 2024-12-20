@@ -81,7 +81,8 @@ class SaleOrder(models.Model):
                     'files': [{
                         'name': doc.name.rstrip('.pdf'),
                         'id': doc.id,
-                        'is_selected': doc in line.product_document_ids,
+                        'is_selected': doc in line.sudo().product_document_ids, # User should be
+                        # able to access all product documents even without sales access
                         'custom_form_fields': [{
                             'name': custom_form_field.name,
                             'value': existing_mapping.get('line', {}).get(str(line.id), {}).get(
