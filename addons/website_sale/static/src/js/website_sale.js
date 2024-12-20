@@ -15,7 +15,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         'click .a-submit': '_onClickSubmit',
         'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute',
         'submit .o_wsale_products_searchbar_form': '_onSubmitSaleSearch',
-        'click #add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit': '_onClickAdd',
+//        'click #add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit': '_onClickAdd',
         'click input.js_product_change': 'onChangeVariant',
         'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
         'click .o_product_page_reviews_link': '_onClickReviewsLink',
@@ -301,28 +301,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         $images.toggleClass('css_not_available', !isCombinationPossible);
     },
     /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickAdd: async function (ev) {
-        ev.preventDefault();
-        var def = () => {
-            this._updateRootProduct((ev.currentTarget).closest('form'));
-            const isBuyNow = ev.currentTarget.classList.contains('o_we_buy_now');
-            const isConfigured = ev.currentTarget.parentElement.id === 'add_to_cart_wrap';
-            return this.call('websiteSale', 'addToCart', this.rootProduct, {
-                isBuyNow: isBuyNow,
-                isConfigured: isConfigured,
-            });
-        };
-        if ($('.js_add_cart_variants').children().length) {
-            return this._getCombinationInfo(ev).then(() => {
-                return !(ev.target).closest('.js_product').classList.contains('.css_not_available') ? def() : Promise.resolve();
-            });
-        }
-        return def();
-    },
-    /**
      * Event handler to increase or decrease quantity from the product page.
      *
      * @private
@@ -473,113 +451,6 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         const submitFormButton = $('form[name="o_wsale_confirm_order"]').find('button[type="submit"]');
         submitFormButton.attr('disabled', true);
         setTimeout(() => submitFormButton.attr('disabled', false), 5000);
-    },
-
-    // -------------------------------------
-    // Utils
-    // -------------------------------------
-
-    /**
-     * Update the root product during based on the form elements.
-     *
-     * @private
-     * @param {HTMLFormElement} form - The form in which the product is.
-     *
-     * @returns {void}
-     */
-    _updateRootProduct(form) {
-        const productId = parseInt(form.querySelector([
-            'input[type="hidden"][name="product_id"]',
-            // Variants list view
-            'input[type="radio"][name="product_id"]:checked',
-        ].join(','))?.value);
-        const quantity = parseFloat(form.querySelector('input[name="add_qty"]')?.value);
-        const isCombo = form.querySelector(
-            'input[type="hidden"][name="product_type"]'
-        )?.value === 'combo';
-        this.rootProduct = {
-            ...(productId ? {productId: productId} : {}),
-            productTemplateId: parseInt(form.querySelector(
-                'input[type="hidden"][name="product_template_id"]',
-            ).value),
-            ...(quantity ? {quantity: quantity} : {}),
-            ptavs: this._getSelectedPTAV(form),
-            productCustomAttributeValues: this._getCustomPTAVValues(form),
-            noVariantAttributeValues: this._getSelectedNoVariantPTAV(form),
-            ...(isCombo ? {isCombo: isCombo} : {}),
-        };
-    },
-
-    /**
-     * Return the selected stored PTAV(s) of in the provided form.
-     *
-     * @private
-     * @param {HTMLFormElement} form - The form in which the product is.
-     *
-     * @returns {Number[]} - The selected stored attribute(s), as a list of
-     *      `product.template.attribute.value` ids.
-     */
-    _getSelectedPTAV(form) {
-        // Variants list view
-        let combination = form.querySelector('input.js_product_change:checked')?.dataset.combination;
-        if (combination) {
-            return JSON.parse(combination);
-        }
-
-        const selectedPTAVElements = form.querySelectorAll([
-            '.js_product input.js_variant_change:not(.no_variant):checked',
-            '.js_product select.js_variant_change:not(.no_variant)'
-        ].join(','));
-        let selectedPTAV = [];
-        for(const el of selectedPTAVElements) {
-            selectedPTAV.push(parseInt(el.value));
-        }
-        return selectedPTAV;
-    },
-
-    /**
-     * Return the custom PTAV(s) values in the provided form.
-     *
-     * @private
-     * @param {HTMLFormElement} form - The form in which the product is.
-     *
-     * @returns {{id: number, value: string}[]} An array of objects where each object contains:
-     *      - `custom_product_template_attribute_value_id`: The ID of the custom attribute.
-     *      - `custom_value`: The value assigned to the custom attribute.
-     */
-    _getCustomPTAVValues(form) {
-        const customPTAVsValuesElements = form.querySelectorAll('.variant_custom_value');
-        let customPTAVsValues = [];
-        for(const el of customPTAVsValuesElements) {
-            customPTAVsValues.push({
-                'custom_product_template_attribute_value_id': parseInt(
-                    el.dataset.custom_product_template_attribute_value_id
-                ),
-                'custom_value': el.value,
-            });
-        }
-        return customPTAVsValues;
-    },
-
-    /**
-     * Return the selected non-stored PTAV(s) of the product in the provided form.
-     *
-     * @private
-     * @param {HTMLFormElement} form - The form in which the product is.
-     *
-     * @returns {Number[]} - The selected non-stored attribute(s), as a list of
-     *      `product.template.attribute.value` ids.
-     */
-    _getSelectedNoVariantPTAV(form) {
-        const selectedNoVariantPTAVElements = form.querySelectorAll([
-            'input.no_variant.js_variant_change:checked',
-            'select.no_variant.js_variant_change',
-        ].join(','));
-        let selectedNoVariantPTAV = [];
-        for(const el of selectedNoVariantPTAVElements) {
-            selectedNoVariantPTAV.push(parseInt(el.value));
-        }
-        return selectedNoVariantPTAV;
     },
 });
 

@@ -1376,7 +1376,15 @@
                                     </p>
                                     <div id="o_wsale_cta_wrapper" class="d-flex flex-wrap align-items-center">
                                         <div id="add_to_cart_wrap" t-attf-class="{{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}} align-items-center mb-2 me-auto">
-                                            <a data-animation-selector=".o_wsale_product_images" role="button" id="add_to_cart" t-attf-class="btn btn-primary js_check_product a-submit flex-grow-1" href="#">
+                                            <a
+                                                data-animation-selector=".o_wsale_product_images"
+                                                role="button"
+                                                id="add_to_cart"
+                                                t-attf-class="btn btn-primary js_check_product a-submit flex-grow-1"
+                                                href="#"
+                                                t-att-data-product-template-id="product.id"
+                                                t-att-data-product-type="product.type"
+                                            >
                                                 <i class="fa fa-shopping-cart me-2"/>
                                                 Add to cart
                                             </a>
@@ -1691,7 +1699,13 @@
 
     <template id="product_buy_now" inherit_id="website_sale.product" active="False" name="Buy Now Button">
         <xpath expr="//a[@id='add_to_cart']" position="after">
-            <a role="button" class="btn btn-outline-primary o_we_buy_now ms-1" href="#">
+            <a
+                role="button"
+                class="btn btn-outline-primary o_we_buy_now ms-1"
+                href="#"
+                t-att-data-product-template-id="product.id"
+                t-att-data-product-type="product.type"
+            >
                 <i class="fa fa-bolt me-2"/>
                 Buy now
             </a>

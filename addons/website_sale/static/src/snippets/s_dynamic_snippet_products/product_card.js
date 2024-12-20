@@ -1,5 +1,5 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
 import { rpc } from "@web/core/network/rpc";
+import publicWidget from "@web/legacy/js/public/public_widget";
 
 const DynamicSnippetProductsCard = publicWidget.Widget.extend({
     selector: '.o_carousel_product_card',
