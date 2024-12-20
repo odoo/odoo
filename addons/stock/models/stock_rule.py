@@ -687,12 +687,17 @@ class ProcurementGroup(models.Model):
 
     @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
+        task_done = 0
+
         # Minimum stock rules
         domain = self._get_orderpoint_domain(company_id=company_id)
         orderpoints = self.env['stock.warehouse.orderpoint'].search(domain)
-        if use_new_cursor:
-            self._cr.commit()
         orderpoints.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id, raise_user_error=False)
+        task_done += 1
+
+        if use_new_cursor:
+            self.env['ir.cron']._notify_progress(done=task_done, remaining=self._get_scheduler_tasks_to_do() - task_done)
+            self._cr.commit()
 
         # Search all confirmed stock_moves and try to assign them
         domain = self._get_moves_to_assign_domain(company_id)
@@ -703,13 +708,26 @@ class ProcurementGroup(models.Model):
             if use_new_cursor:
                 self._cr.commit()
                 _logger.info("A batch of %d moves are assigned and committed", len(moves_chunk))
+        task_done += 1
+
+        if use_new_cursor:
+            self.env['ir.cron']._notify_progress(done=task_done, remaining=self._get_scheduler_tasks_to_do() - task_done)
+            self._cr.commit()
 
         # Merge duplicated quants
         self.env['stock.quant']._quant_tasks()
 
+        task_done += 1
         if use_new_cursor:
+            self.env['ir.cron']._notify_progress(done=task_done, remaining=self._get_scheduler_tasks_to_do() - task_done)
             self._cr.commit()
-            _logger.info("_run_scheduler_tasks is finished and committed")
+        self._context.get('scheduler_task_done', {})['task_done'] = task_done
+
+    @api.model
+    def _get_scheduler_tasks_to_do(self):
+        """ Number of task to be executed by the stock scheduler. This number will be given in log
+        message to know how many tasks succeeded."""
+        return 3
 
     @api.model
     def run_scheduler(self, use_new_cursor=False, company_id=False):
@@ -717,21 +735,10 @@ class ProcurementGroup(models.Model):
         and the availability of moves. This function is intended to be run for all the companies at the same time, so
         we run functions as SUPERUSER to avoid intercompanies and access rights issues. """
         try:
-            if use_new_cursor:
-                assert isinstance(self._cr, BaseCursor)
-                cr = Registry(self._cr.dbname).cursor()
-                self = self.with_env(self.env(cr=cr))  # TDE FIXME
-
             self._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
         except Exception:
             _logger.error("Error during stock scheduler", exc_info=True)
             raise
-        finally:
-            if use_new_cursor:
-                try:
-                    self._cr.close()
-                except Exception:
-                    pass
         return {}
 
     @api.model
