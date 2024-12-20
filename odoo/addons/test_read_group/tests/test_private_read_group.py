@@ -843,7 +843,7 @@ class TestPrivateReadGroup(common.TransactionCase):
             FROM "test_read_group_task"
                 LEFT JOIN "test_read_group_task_user_rel" AS "test_read_group_task__user_ids"
                     ON ("test_read_group_task"."id" = "test_read_group_task__user_ids"."task_id")
-            WHERE ("test_read_group_task"."id" IN %s)
+            WHERE "test_read_group_task"."id" IN %s
             GROUP BY "test_read_group_task__user_ids"."user_id"
             ORDER BY "test_read_group_task__user_ids"."user_id" ASC
         """

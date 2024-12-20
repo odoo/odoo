@@ -2699,7 +2699,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             [
                 '|',
                 ('attributes.mypartner', '=', False),
-                ('attributes.mypartner', 'not in', [self.partner.id, self.partner_2.id]),
+                ('attributes.mypartner', 'not in', (self.partner.id, self.partner_2.id)),
             ],
         )
 
@@ -2716,7 +2716,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             [
                 '|',
                 ('attributes.mypartner', '=', False),
-                ('attributes.mypartner', 'not in', [self.partner.id, self.partner_2.id]),
+                ('attributes.mypartner', 'not in', (self.partner.id, self.partner_2.id)),
             ],
         )
 

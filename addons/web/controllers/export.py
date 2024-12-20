@@ -61,12 +61,11 @@ class GroupsTreeNode:
     build a leaf. The entire tree is built by inserting all leaves.
     """
 
-    def __init__(self, model, fields, groupby, groupby_type, read_context):
+    def __init__(self, model, fields, groupby, groupby_type):
         self._model = model
         self._export_field_names = fields  # exported field names (e.g. 'journal_id', 'account_id/name', ...)
         self._groupby = groupby
         self._groupby_type = groupby_type
-        self._read_context = read_context
 
         self.count = 0  # Total number of records in the subtree
         self.children = OrderedDict()
@@ -138,7 +137,7 @@ class GroupsTreeNode:
         :return: the child node
         """
         if key not in self.children:
-            self.children[key] = GroupsTreeNode(self._model, self._export_field_names, self._groupby, self._groupby_type, self._read_context)
+            self.children[key] = GroupsTreeNode(self._model, self._export_field_names, self._groupby, self._groupby_type)
         return self.children[key]
 
     def insert_leaf(self, group):
@@ -150,7 +149,7 @@ class GroupsTreeNode:
         count = group.pop('__count')
 
         # reorder the record with the default order (it doesn't respect order from the view/user)
-        records = self._model.search([('id', 'in', group.pop('id:array_agg'))])
+        records = self._model.with_context(active_test=False).search([('id', 'in', group.pop('id:array_agg'))])
 
         # Follow the path from the top level group to the deepest
         # group which actually contains the records' data.
@@ -162,8 +161,7 @@ class GroupsTreeNode:
             # Update count value and aggregated value.
             node.count += count
 
-        records = records.with_context(self._read_context)
-        node.data = records.export_data(self._export_field_names).get('datas', [])
+        node.data = records.with_env(self._model.env).export_data(self._export_field_names).get('datas', [])
 
 
 class ExportXlsxWriter:
@@ -561,14 +559,14 @@ class ExportFormat(object):
         if not import_compat and groupby:
             groupby_type = [Model._fields[x.split(':')[0]].type for x in groupby]
             domain = [('id', 'in', ids)] if ids else domain
-            read_context = Model.env.context
+            SearchModel = Model
             if ids:
-                Model = Model.with_context(active_test=False)
-            groups_data = Model.web_read_group(domain, groupby, ['__count', 'id:array_agg'])['groups']
+                SearchModel = Model.with_context(active_test=False)
+            groups_data = SearchModel.web_read_group(domain, groupby, ['__count', 'id:array_agg'])['groups']
 
             # read_group returns a dict only for final groups (with actual data),
             # not for intermediary groups. The full group tree must be re-constructed.
-            tree = GroupsTreeNode(Model, field_names, groupby, groupby_type, read_context)
+            tree = GroupsTreeNode(Model, field_names, groupby, groupby_type)
             for leaf in groups_data:
                 tree.insert_leaf(leaf)
 

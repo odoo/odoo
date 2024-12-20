@@ -59,7 +59,6 @@ class TestReadProgressBar(common.TransactionCase):
         self.assertEqual(groups[0][groupby][0], pg_groups["testWeekGrouping_first"])
         self.assertEqual(groups[1][groupby][0], pg_groups["testWeekGrouping_second"])
 
-    @mute_logger('odoo.osv.expression')
     def test_simple(self):
         model = self.env['ir.model'].create({
             'model': 'x_progressbar',
@@ -146,5 +145,5 @@ class TestReadProgressBar(common.TransactionCase):
             'colors': {'foo': 'success', 'bar': 'warning', 'baz': 'danger'},
         }
         # It is not possible to read_progress_bar with ungroupable fields
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValueError), mute_logger('odoo.domains'):
             self.env['x_progressbar'].read_progress_bar([], 'x_country_id', progress_bar)
