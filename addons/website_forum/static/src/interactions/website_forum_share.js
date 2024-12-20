@@ -16,7 +16,7 @@ class WebsiteForumShare extends Interaction {
                     target_type: socialData.targetType,
                     state: questionEl.dataset.state,
                 });
-                this.addListener(modalEl, "hidden.bs.modal", modalEl.remove);
+                this.addListener(modalEl, "hidden.bs.modal", () => modalEl.remove());
                 this.insert(modalEl, document.body);
 
                 if (modalEl.querySelector(".s_share")) {
