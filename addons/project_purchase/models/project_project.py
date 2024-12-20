@@ -75,20 +75,24 @@ class ProjectProject(models.Model):
         return action_window
 
     def action_profitability_items(self, section_name, domain=None, res_id=False):
+        purchase_orders = self.env['purchase.order'].search([
+            ('order_line.analytic_distribution', 'in', self.account_id.ids),
+            ('invoice_status', '=', 'invoiced'),
+        ])
         if section_name == 'purchase_order':
             action = {
-                'name': self.env._('Purchase Order Items'),
+                'name': self.env._('Purchase Orders'),
                 'type': 'ir.actions.act_window',
-                'res_model': 'purchase.order.line',
+                'res_model': 'purchase.order',
                 'views': [[False, 'list'], [False, 'form']],
-                'domain': domain,
+                'domain': [('id', 'in', purchase_orders.ids)],
                 'context': {
                     'create': False,
                     'edit': False,
                 },
             }
             if res_id:
-                action['res_id'] = res_id
+                action['res_id'] = purchase_orders.id
                 if 'views' in action:
                     action['views'] = [
                         (view_id, view_type)
