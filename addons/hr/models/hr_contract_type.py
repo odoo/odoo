@@ -12,7 +12,7 @@ class HrContractType(models.Model):
     name = fields.Char(required=True, translate=True)
     code = fields.Char(compute='_compute_code', store=True, readonly=False)
     sequence = fields.Integer()
-    country_id = fields.Many2one('res.country')
+    country_id = fields.Many2one('res.country', domain=lambda self: [('id', 'in', self.env.companies.country_id.ids)])
 
     @api.depends('name')
     def _compute_code(self):
