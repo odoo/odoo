@@ -61,7 +61,7 @@ class TagsSelector(object):
             (tag, module, klass, method, file_path) = test_filter
             if tag and tag not in test_tags:
                 return False
-            elif file_path and not file_path.endswith(test_module_path):
+            elif file_path and not test_module_path.endswith(file_path):
                 return False
             elif not file_path and module and module != test_module:
                 return False
