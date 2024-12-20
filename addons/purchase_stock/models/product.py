@@ -146,3 +146,20 @@ class ProductSupplierinfo(models.Model):
                 'target': 'new',
                 'view_mode': 'form',
             }
+
+    @api.model
+    def name_create(self, name):
+        partner_id, partner_name = self.env['res.partner'].name_create(name)
+
+        active_id = self.env.context.get('active_id', False)
+        is_product_template = self.env.context.get('active_model') == 'product.template'
+
+        if not is_product_template or not active_id:
+            return partner_id, partner_name
+
+        supplier_info = self.create({
+            'partner_id': partner_id,
+            'product_tmpl_id': active_id,
+        })
+
+        return supplier_info.id, supplier_info.display_name
