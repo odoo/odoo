@@ -281,6 +281,7 @@ class TestExpenses(TestExpenseCommon):
                 'tax_amount_currency': 0.00,
                 'untaxed_amount_currency': 200.00,
                 'analytic_distribution': False,
+                'split_expense_origin_id': expense.id,
             }, {
                 'name': expense.name,
                 'employee_id': expense.employee_id.id,
@@ -290,6 +291,7 @@ class TestExpenses(TestExpenseCommon):
                 'tax_amount_currency': 39.13,
                 'untaxed_amount_currency': 260.87,
                 'analytic_distribution': {str(self.analytic_account_1.id): 100},
+                'split_expense_origin_id': expense.id,
             }, {
                 'name': expense.name,
                 'employee_id': expense.employee_id.id,
@@ -299,6 +301,7 @@ class TestExpenses(TestExpenseCommon):
                 'tax_amount_currency': 115.38,
                 'untaxed_amount_currency': 384.62,
                 'analytic_distribution': {str(self.analytic_account_2.id): 100},
+                'split_expense_origin_id': expense.id,
             }
         ])
 
