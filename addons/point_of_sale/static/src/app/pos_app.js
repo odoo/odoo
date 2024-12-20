@@ -7,6 +7,7 @@ import { effect } from "@web/core/utils/reactive";
 import { batched } from "@web/core/utils/timing";
 import { deduceUrl } from "@point_of_sale/utils";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
+import { useIdleTimer } from "./utils/use_idle_timer";
 
 /**
  * Chrome is the root component of the PoS App.
@@ -17,6 +18,7 @@ export class Chrome extends Component {
     static props = { disableLoader: Function };
     setup() {
         this.pos = usePos();
+        useIdleTimer(this.pos.idleTimeout, () => this.pos.showScreen(this.pos.firstScreen));
         const reactivePos = reactive(this.pos);
         // TODO: Should we continue on exposing posmodel as global variable?
         window.posmodel = reactivePos;
