@@ -1215,12 +1215,6 @@ class Field(typing.Generic[T]):
         can_be_null = self not in model.env.registry.not_null_fields
 
         # operator: in (equality)
-        equal_operator = None
-        if operator in ('=', '!='):
-            equal_operator = operator
-            operator = 'in' if operator == '=' else 'not in'
-            value = [value]
-
         if operator in ('in', 'not in'):
             assert isinstance(value, COLLECTION_TYPES), \
                 f"condition_to_sql() 'in' operator expects a collection, not a {value!r}"
@@ -1236,11 +1230,7 @@ class Field(typing.Generic[T]):
 
             sql = None
             if params:
-                if equal_operator:
-                    assert len(params) == 1
-                    sql = SQL("%s%s%s", sql_field, SQL_OPERATORS[equal_operator], params[0])
-                else:
-                    sql = SQL("%s%s%s", sql_field, SQL_OPERATORS[operator], params)
+                sql = SQL("%s%s%s", sql_field, SQL_OPERATORS[operator], params)
 
             if (operator == 'in') == null_in_condition:
                 # field in {val, False} => field IN vals OR field IS NULL

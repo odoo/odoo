@@ -298,7 +298,7 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
     def _search_website_published(self, operator, value):
         if not isinstance(value, bool) or operator not in ('=', '!='):
             logger.warning('unsupported search on website_published: %s, %s', operator, value)
-            return [()]
+            return [(0, '=', 1)]
 
         if operator in expression.NEGATIVE_TERM_OPERATORS:
             value = not value
