@@ -41,7 +41,7 @@ def _get_notification_message(proxy_state):
 # MOCKED FUNCTIONS
 # -------------------------------------------------------------------------
 
-def _mock_make_request(func, self, *args, **kwargs):
+def _mock_make_request_peppol(func, self, *args, **kwargs):
 
     def _mock_get_all_documents(user, args, kwargs):
         if not user.env['account.move'].search_count([
@@ -123,7 +123,7 @@ def _mock_register_proxy_user(func, self, *args, **kwargs):
 
 
 _demo_behaviour = {
-    '_make_request': _mock_make_request,  # account_edi_proxy_client.user
+    '_make_request_peppol': _mock_make_request_peppol,  # account_edi_proxy_client.user
     '_get_peppol_verification_state': _mock_get_peppol_verification_state,  # res.partner
     '_check_peppol_participant_exists': _mock_check_peppol_participant_exists,  # res.partner
     '_register_proxy_user': _mock_register_proxy_user,  # account_edi_proxy_client.user
