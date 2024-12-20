@@ -1,6 +1,4 @@
 import { expect, test } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./helpers";
 import { contains } from "@web/../tests/web_test_helpers";
 
@@ -19,13 +17,11 @@ test("Toggle the overlays when clicking on an option element", async () => {
             </div>
         </section>
     `);
-    await click(":iframe section");
-    await animationFrame();
+    await contains(":iframe section").click();
     expect(".oe_overlay").toHaveCount(1);
     expect(".oe_overlay").toHaveRect(":iframe section");
 
-    await click(":iframe .col-lg-3");
-    await animationFrame();
+    await contains(":iframe .col-lg-3").click();
     expect(".oe_overlay").toHaveCount(2);
     expect(".oe_overlay.oe_active").toHaveCount(1);
     expect(".oe_overlay.oe_active").toHaveRect(":iframe .col-lg-3");
@@ -46,15 +42,13 @@ test("Resize vertically (sizingY)", async () => {
         `,
         { loadIframeBundles: true }
     );
-    await click(":iframe section");
-    await animationFrame();
+    await contains(":iframe section").click();
     expect(".oe_overlay.oe_active").toHaveCount(1);
 
     const nHandleSelector = ".oe_overlay .o_handle.n:not(.o_grid_handle)";
     let dragActions = await contains(nHandleSelector).drag({ position: { x: 0, y: 0 } });
     await dragActions.moveTo(nHandleSelector, { position: { x: 0, y: 80 } });
     await dragActions.drop();
-    await animationFrame();
     expect(":iframe section").toHaveClass("pt80");
     expect(".oe_overlay").toHaveRect(":iframe section");
 
@@ -62,7 +56,6 @@ test("Resize vertically (sizingY)", async () => {
     dragActions = await contains(sHandleSelector).drag({ position: { x: 0, y: 120 } });
     await dragActions.moveTo(sHandleSelector, { position: { x: 0, y: 160 } });
     await dragActions.drop();
-    await animationFrame();
     expect(":iframe section").toHaveClass("pt80 pb40");
     expect(".oe_overlay").toHaveRect(":iframe section");
 });
@@ -82,15 +75,13 @@ test("Resize horizontally (sizingX)", async () => {
         `,
         { loadIframeBundles: true }
     );
-    await click(":iframe .col-lg-6");
-    await animationFrame();
+    await contains(":iframe .col-lg-6").click();
     expect(".oe_overlay.oe_active").toHaveCount(1);
 
     const eHandleSelector = ".oe_overlay.oe_active .o_handle.e:not(.o_grid_handle)";
     let dragActions = await contains(eHandleSelector).drag({ position: { x: 300, y: 0 } });
     await dragActions.moveTo(eHandleSelector, { position: { x: 600, y: 0 } });
     await dragActions.drop();
-    await animationFrame();
     expect(":iframe .row > div").toHaveClass("col-lg-12");
     expect(".oe_overlay.oe_active").toHaveRect(":iframe .row > div");
 
@@ -98,7 +89,6 @@ test("Resize horizontally (sizingX)", async () => {
     dragActions = await contains(wHandleSelector).drag({ position: { x: 0, y: 0 } });
     await dragActions.moveTo(wHandleSelector, { position: { x: 600, y: 0 } });
     await dragActions.drop();
-    await animationFrame();
     expect(":iframe .row > div").toHaveClass("col-lg-1 offset-lg-11");
     expect(".oe_overlay.oe_active").toHaveRect(":iframe .row > div");
 });
@@ -118,15 +108,13 @@ test("Resize in grid mode (sizingGrid)", async () => {
         `,
         { loadIframeBundles: true }
     );
-    await click(":iframe .col-lg-6");
-    await animationFrame();
+    await contains(":iframe .col-lg-6").click();
     expect(".oe_overlay.oe_active").toHaveCount(1);
 
     const eHandleSelector = ".oe_overlay.oe_active .o_grid_handle.e";
     let dragActions = await contains(eHandleSelector).drag({ position: { x: 300, y: 100 } });
     await dragActions.moveTo(eHandleSelector, { position: { x: 600, y: 100 } });
     await dragActions.drop();
-    await animationFrame();
     expect(":iframe .o_grid_item").toHaveClass("g-col-lg-12 col-lg-12");
     expect(":iframe .o_grid_item").toHaveStyle({ gridArea: "1 / 1 / 5 / 13" });
     expect(".oe_overlay.oe_active").toHaveRect(":iframe .o_grid_item");
@@ -135,7 +123,6 @@ test("Resize in grid mode (sizingGrid)", async () => {
     dragActions = await contains(wHandleSelector).drag({ position: { x: 0, y: 100 } });
     await dragActions.moveTo(eHandleSelector, { position: { x: 600, y: 100 } });
     await dragActions.drop();
-    await animationFrame();
     expect(":iframe .o_grid_item").toHaveClass("g-col-lg-1 col-lg-1");
     expect(":iframe .o_grid_item").toHaveStyle({ gridArea: "1 / 12 / 5 / 13" });
     expect(".oe_overlay.oe_active").toHaveRect(":iframe .o_grid_item");
@@ -144,7 +131,6 @@ test("Resize in grid mode (sizingGrid)", async () => {
     dragActions = await contains(nHandleSelector).drag({ position: { x: 575, y: 0 } });
     await dragActions.moveTo(nHandleSelector, { position: { x: 0, y: 300 } });
     await dragActions.drop();
-    await animationFrame();
     expect(":iframe .o_grid_item").toHaveClass("g-col-lg-1 col-lg-1 g-height-1");
     expect(":iframe .o_grid_item").toHaveStyle({ gridArea: "4 / 12 / 5 / 13" });
     expect(".oe_overlay.oe_active").toHaveRect(":iframe .o_grid_item");
@@ -153,7 +139,6 @@ test("Resize in grid mode (sizingGrid)", async () => {
     dragActions = await contains(sHandleSelector).drag({ position: { x: 575, y: 200 } });
     await dragActions.moveTo(sHandleSelector, { position: { x: 0, y: 300 } });
     await dragActions.drop();
-    await animationFrame();
     expect(":iframe .o_grid_item").toHaveClass("g-col-lg-1 col-lg-1 g-height-3");
     expect(":iframe .o_grid_item").toHaveStyle({ gridArea: "4 / 12 / 7 / 13" });
     expect(":iframe .row").toHaveAttribute("data-row-count", "6");
