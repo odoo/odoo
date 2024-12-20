@@ -95,8 +95,13 @@ class ResConfigSettings(models.TransientModel):
                                                  compute='_compute_checkout_process_steps', readonly=False, store=True)
     enabled_buy_now_button = fields.Boolean(string="Buy Now",
                                             compute='_compute_checkout_process_steps', readonly=False, store=True)
+    enabled_gmc_src = fields.Boolean(
+        string="Google Merchant Center Data Source",
+        related='website_id.enabled_gmc_src',
+        readonly=False,
+    )
 
-    #=== COMPUTE METHODS ===#
+    # === COMPUTE METHODS ===#
 
     @api.depends('website_id.account_on_checkout')
     def _compute_account_on_checkout(self):
@@ -130,7 +135,7 @@ class ResConfigSettings(models.TransientModel):
             else:
                 record.website_id.auth_signup_uninvited = 'b2b'
 
-    #=== CRUD METHODS ===#
+    # === CRUD METHODS ===#
 
     def set_values(self):
         super().set_values()
@@ -144,7 +149,7 @@ class ResConfigSettings(models.TransientModel):
             if buy_now_view.active != self.enabled_buy_now_button:
                 buy_now_view.active = self.enabled_buy_now_button
 
-    #=== ACTION METHODS ===#
+    # === ACTION METHODS ===#
 
     @api.readonly
     def action_open_abandoned_cart_mail_template(self):

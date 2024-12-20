@@ -12,7 +12,7 @@ _lt = LazyTranslate(__name__)
 class Website(models.Model):
     _inherit = 'website'
 
-    #=== DEFAULT METHODS ===#
+    # === DEFAULT METHODS ===#
 
     def _default_salesteam_id(self):
         team = self.env.ref('sales_team.salesteam_website_sales', raise_if_not_found=False)
@@ -26,7 +26,7 @@ class Website(models.Model):
         except ValueError:
             return False
 
-    #=== FIELDS ===#
+    # === FIELDS ===#
 
     enabled_portal_reorder_button = fields.Boolean(string="Re-order From Portal")
     salesperson_id = fields.Many2one(
@@ -140,6 +140,11 @@ class Website(models.Model):
         default="Not Available For Sale",
     )
 
+    enabled_gmc_src = fields.Boolean(
+        string="Google Merchant Center Data Feed",
+        default=False,
+    )
+
     # Computed fields
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position',
@@ -167,7 +172,7 @@ class Website(models.Model):
         inverse_name='website_id',
     )
 
-    #=== COMPUTE METHODS ===#
+    # === COMPUTE METHODS ===#
 
     @api.depends('all_pricelist_ids')
     def _compute_pricelist_ids(self):
@@ -191,7 +196,7 @@ class Website(models.Model):
         for website in self:
             website.currency_id = website.pricelist_id.currency_id or website.company_id.currency_id
 
-    #=== SELECTION METHODS ===#
+    # === SELECTION METHODS ===#
 
     @staticmethod
     def _get_product_sort_mapping():
@@ -203,7 +208,7 @@ class Website(models.Model):
             ('list_price desc', _("Price - High to Low")),
         ]
 
-    #=== BUSINESS METHODS ===#
+    # === BUSINESS METHODS ===#
 
     # This method is cached, must not return records! See also #8795
     @tools.ormcache(
@@ -322,6 +327,8 @@ class Website(models.Model):
         """
         :returns: The current pricelist record
         """
+        if request and 'forced_pricelist' in request.context:
+            return request.context['forced_pricelist']
         self = self.with_company(self.company_id)
         ProductPricelist = self.env['product.pricelist']
 
