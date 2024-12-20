@@ -77,7 +77,7 @@ class MailBlacklist(models.Model):
         else:
             record = self.create({'email': email})
             if message:
-                record.with_context(mail_create_nosubscribe=True).message_post(
+                record.with_context(mail_post_autofollow_author_skip=True).message_post(
                     body=message,
                     subtype_xmlid='mail.mt_note',
                 )
@@ -93,7 +93,7 @@ class MailBlacklist(models.Model):
         else:
             record = record.create({'email': email, 'active': False})
             if message:
-                record.with_context(mail_create_nosubscribe=True).message_post(
+                record.with_context(mail_post_autofollow_author_skip=True).message_post(
                     body=message,
                     subtype_xmlid='mail.mt_note',
                 )
