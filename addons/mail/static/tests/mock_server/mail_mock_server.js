@@ -200,7 +200,7 @@ async function channel_call_join(request) {
     })
         .add("Rtc", {
             iceServers: false,
-            selfSession: mailDataHelpers.Store.one(DiscussChannelRtcSession.browse(sessionId)),
+            localSession: mailDataHelpers.Store.one(DiscussChannelRtcSession.browse(sessionId)),
         })
         .get_result();
 }
@@ -269,7 +269,7 @@ async function discuss_get_or_create_chat(request) {
 
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
-    return DiscussChannel._get_or_create_chat(partners_to)
+    return DiscussChannel._get_or_create_chat(partners_to);
 }
 
 registerRoute("/discuss/channel/create_channel", discuss_create_channel);
@@ -279,7 +279,7 @@ async function discuss_create_channel(request) {
 
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
-    return DiscussChannel._create_channel(name, group_id)
+    return DiscussChannel._create_channel(name, group_id);
 }
 
 registerRoute("/discuss/channel/create_group", discuss_create_group);
@@ -291,7 +291,7 @@ async function discuss_create_group(request) {
 
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
-    return DiscussChannel._create_group(partners_to, name)
+    return DiscussChannel._create_group(partners_to, name);
 }
 
 registerRoute("/discuss/channel/fold", discuss_channel_fold);
