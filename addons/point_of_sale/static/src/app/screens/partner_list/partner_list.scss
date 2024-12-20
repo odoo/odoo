@@ -1,20 +1,20 @@
 .partner-list {
     tr {
         border: $border-width solid $border-color;
-        
+
         &:hover {
             cursor: pointer;
         }
-        
+
         &:active {
             background-color: $o-component-active-bg;
         }
     }
 }
 
-.partner-list table { 
-    border-collapse: separate; 
-    border-spacing: 0 8px; 
+.partner-list table {
+    border-collapse: separate;
+    border-spacing: 0 8px;
     margin-top: -8px;
 
     td {
@@ -40,15 +40,28 @@
     }
 }
 
+.fixed-head {
+    overflow: auto;
+    height: 100px;
+}
+
+.fixed-head thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
 @include media-breakpoint-down(lg) {
     .partner-list {
         table {
             border: transparent;
         }
+
         .partner-list {
             thead {
                 display: none;
             }
+
             td {
                 padding: 0;
             }
