@@ -94,7 +94,7 @@ class SaleOrderLine(models.Model):
                 binded_ro_ids.action_repair_cancel_draft()
                 binded_ro_ids._action_repair_confirm()
                 continue
-            if not line.product_template_id.sudo().create_repair or line.move_ids.sudo().repair_id or float_compare(line.product_uom_qty, 0, precision_rounding=line.product_uom_id.rounding) <= 0:
+            if line.product_template_id.sudo().service_tracking != 'repair' or line.move_ids.sudo().repair_id or float_compare(line.product_uom_qty, 0, precision_rounding=line.product_uom_id.rounding) <= 0:
                 continue
 
             order = line.order_id
