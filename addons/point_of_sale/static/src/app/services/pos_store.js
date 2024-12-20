@@ -748,7 +748,7 @@ export class PosStore extends WithLazyGetterTrap {
                 const newPackLotLines = [{ lot_name: code.code }];
                 pack_lot_ids = { modifiedPackLotLines, newPackLotLines };
             } else {
-                pack_lot_ids = await this.editLots(values.product_tmpl_id, packLotLinesToEdit);
+                pack_lot_ids = await this.editLots(values.product_id, packLotLinesToEdit);
             }
 
             if (!pack_lot_ids) {
