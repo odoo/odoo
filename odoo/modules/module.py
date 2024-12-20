@@ -453,7 +453,7 @@ def adapt_version(version: str) -> str:
     if not (2 <= len(version_str_parts) <= 5):
         raise ValueError(f"Invalid version {version!r}, must have between 2 and 5 parts")
     try:
-        version_parts = [int(v) for v in version_str_parts]
+        version_parts = [int(v) for v in version_str_parts[-3:]]
     except ValueError as e:
         raise ValueError(f"Invalid version {version!r}") from e
     serie = release.major_version
