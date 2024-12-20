@@ -538,7 +538,8 @@ export class Composer extends Component {
                           .map((recipient) => recipient.persona.id),
             default_res_ids: [this.thread.id],
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
-            mail_post_autofollow: this.thread.hasWriteAccess,
+            // Changed in 18.2+: finally get rid of autofollow, following should be done manually
+            mail_post_autofollow: false,
         };
         const action = {
             name: this.props.type === "note" ? _t("Log note") : _t("Compose Email"),

@@ -483,7 +483,8 @@ export class Store extends BaseStore {
         }
         const params = {
             context: {
-                mail_post_autofollow: !isNote && thread.hasWriteAccess,
+                // Changed in 18.2+: finally get rid of autofollow, following should be done manually
+                mail_post_autofollow: false,
             },
             post_data: postData,
             thread_id: thread.id,
