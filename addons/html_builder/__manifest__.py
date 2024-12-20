@@ -45,8 +45,6 @@
 
             'html_builder/static/src/builder/**/*.js',
             'html_builder/static/src/builder/**/*.xml',
-
-            'html_builder/static/src/builder/add_snippet_dialog/snippet_viewer.scss'
         ],
         'html_builder.inside_builder_style': [
             ('include', 'web._assets_helpers'),
@@ -56,7 +54,7 @@
         ],
         'html_builder.iframe_add_dialog': [
             ('include', 'web.assets_frontend'),
-            'html_builder/static/src/builder/add_snippet_dialog/snippet_viewer.scss'
+            'html_builder/static/src/builder/builder_sidebar/tabs/block_tab/add_snippet_dialog/snippet_viewer.scss'
         ],
         'web.assets_unit_tests': [
             'html_builder/static/tests/**/*',
