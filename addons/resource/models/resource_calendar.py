@@ -106,6 +106,16 @@ class ResourceCalendar(models.Model):
     flexible_hours = fields.Boolean(string="Flexible Hours",
                                     help="When enabled, it will allow employees to work flexibly, without relying on the company's working schedule (working hours).")
     full_time_required_hours = fields.Float(string="Company Full Time", help="Number of hours to work on the company schedule to be considered as fulltime.")
+    work_resources_count = fields.Integer("Work Resources count", compute='_compute_work_resources_count')
+
+    def _compute_work_resources_count(self):
+        count_data = self.env['resource.resource']._read_group(
+            [('calendar_id', 'in', self.ids)],
+            ['calendar_id'],
+            ['__count'])
+        mapped_counts = {resource_calendar.id: count for resource_calendar, count in count_data}
+        for calendar in self:
+            calendar.work_resources_count = mapped_counts.get(calendar.id, 0)
 
     @api.depends('attendance_ids', 'attendance_ids.hour_from', 'attendance_ids.hour_to', 'two_weeks_calendar', 'flexible_hours')
     def _compute_hours_per_day(self):
