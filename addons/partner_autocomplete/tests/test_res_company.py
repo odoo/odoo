@@ -22,7 +22,7 @@ class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
             # asserts are synchronized with default mock values
             res = company._enrich()
             self.assertTrue(res)
-            self.assertEqual(company.country_id, self.env.ref('base.de'))
+            self.assertEqual(company.country_id, self.env.ref('base.be'))
             self.assertEqual(len(company.partner_id.child_ids), 2)
 
     def test_extract_company_domain(self):
