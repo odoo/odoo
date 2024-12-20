@@ -78,6 +78,7 @@ class StockMove(models.Model):
         'stock.location', 'Source Location',
         help='The operation takes and suggests products from this location.',
         auto_join=True, index=True, required=True,
+        compute='_compute_location_id', store=True, precompute=True, inverse='_set_location_id', readonly=False,
         check_company=True)
     location_dest_id = fields.Many2one(
         'stock.location', 'Intermediate Location', required=True,
@@ -203,7 +204,23 @@ class StockMove(models.Model):
         for move in self:
             move.product_uom = move.product_id.uom_id.id
 
-    @api.depends('picking_id', 'picking_id.location_dest_id')
+    @api.depends('picking_id.location_id')
+    def _compute_location_id(self):
+        for move in self:
+            if move.picked:
+                continue
+            if not (location := move.location_id) or move.picking_id != move._origin.picking_id or move.picking_type_id != move._origin.picking_type_id:
+                if move.picking_id:
+                    location = move.picking_id.location_id
+                elif move.picking_type_id:
+                    location = move.picking_type_id.default_location_src_id
+            move.location_id = location
+
+    def _set_location_id(self):
+        for move in self:
+            move.warehouse_id = move.location_id.warehouse_id or move.warehouse_id
+
+    @api.depends('picking_id.location_dest_id')
     def _compute_location_dest_id(self):
         for move in self:
             location_dest = False
@@ -224,6 +241,8 @@ class StockMove(models.Model):
             move.location_dest_id = location_dest
 
     def _set_location_dest_id(self):
+        for move in self:
+            move.warehouse_id = move.location_dest_id.warehouse_id or move.warehouse_id
         for ml in self.move_line_ids:
             parent_path = [int(loc_id) for loc_id in ml.location_dest_id.parent_path.split('/')[:-1]]
             if ml.move_id.location_dest_id.id in parent_path:
@@ -734,15 +753,6 @@ Please change the quantity done or the rounding precision of your unit of measur
                     move_to_check_location.procure_method = 'make_to_stock'
                     move_to_check_location.move_orig_ids = [Command.clear()]
                     ml.unlink()
-        if 'location_id' in vals or 'location_dest_id' in vals:
-            wh_by_moves = defaultdict(self.env['stock.move'].browse)
-            for move in self:
-                move_warehouse = move.location_id.warehouse_id or move.location_dest_id.warehouse_id
-                if move_warehouse == move.warehouse_id:
-                    continue
-                wh_by_moves[move_warehouse] |= move
-            for warehouse, moves in wh_by_moves.items():
-                moves.warehouse_id = warehouse.id
         if move_to_confirm:
             move_to_confirm._action_assign()
         if receipt_moves_to_reassign:
