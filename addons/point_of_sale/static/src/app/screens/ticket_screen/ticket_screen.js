@@ -20,7 +20,6 @@ import {
 } from "@point_of_sale/app/components/numpad/numpad";
 import { PosOrderLineRefund } from "@point_of_sale/app/models/pos_order_line_refund";
 import { fuzzyLookup } from "@web/core/utils/search";
-import { parseUTCString } from "@point_of_sale/utils";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
 
@@ -354,8 +353,8 @@ export class TicketScreen extends Component {
 
         const sortOrders = (orders, ascending = false) =>
             orders.sort((a, b) => {
-                const dateA = parseUTCString(a.date_order, "yyyy-MM-dd HH:mm:ss");
-                const dateB = parseUTCString(b.date_order, "yyyy-MM-dd HH:mm:ss");
+                const dateA = a.date_order;
+                const dateB = b.date_order;
 
                 if (a.date_order !== b.date_order) {
                     return ascending ? dateA - dateB : dateB - dateA;
@@ -380,7 +379,7 @@ export class TicketScreen extends Component {
         }
     }
     getDate(order) {
-        return formatDateTime(parseUTCString(order.date_order));
+        return formatDateTime(order.date_order);
     }
     getTotal(order) {
         return this.env.utils.formatCurrency(order.getTotalWithTax());
@@ -731,7 +730,7 @@ export class TicketScreen extends Component {
             .filter((orderInfo) => {
                 const order = this.pos.models["pos.order"].get(orderInfo[0]);
 
-                if (order && parseUTCString(orderInfo[1]) > parseUTCString(order.date_order)) {
+                if (order && parseDateTime(orderInfo[1]) > order.date_order) {
                     return true;
                 }
 

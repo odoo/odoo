@@ -17,7 +17,7 @@
                                 <div class="d-flex align-items-center justify-content-between">
                                     <div class="d-flex flex-column">
                                         <h6 class="m-0" t-esc="order.pos_reference"/>
-                                        <span class="text-muted">#<t t-esc="order.tracking_number" /> - <t t-esc="getOrderDate(order)" /></span>
+                                        <span class="text-muted">#<t t-esc="order.tracking_number" /> - <t t-esc="order.date_order.toFormat('dd/MM/yyyy')" /></span>
                                     </div>
                                     <div class="d-flex justify-content-around gap-5 align-items-center">
                                         <i t-if="selfOrder.showDownloadButton(order)" class="fa fa-download" aria-hidden="true" t-on-click="() => this.selfOrder.downloadReceipt(order)"/>

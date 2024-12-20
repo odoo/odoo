@@ -108,8 +108,6 @@ export class PosPreset extends Base {
                         slots[date][sqlDatetime] = {
                             periode: attendance.day_period,
                             datetime: start,
-                            sql_datetime: sqlDatetime,
-                            humain_readable: start.toFormat("HH:mm"),
                             order_ids: new Set(usage[sqlDatetime] || []),
                         };
                     }
