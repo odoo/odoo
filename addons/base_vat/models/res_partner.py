@@ -633,6 +633,13 @@ class ResPartner(models.Model):
         stdnum_vat_format = getattr(stdnum.util.get_cc_module('ch', 'vat'), 'format', None)
         return stdnum_vat_format('CH' + vat)[2:] if stdnum_vat_format else vat
 
+    def format_vat_hu(self, vat):
+        stdnum_vat_fix_func = getattr(stdnum.util.get_cc_module('hu', 'vat'), 'compact', None)
+        vat = stdnum_vat_fix_func(vat)
+        if vat and len(vat) > 10:
+            vat = vat[:8] + '-' + vat[8] + '-' + vat[9] + vat[10]
+        return vat
+
     def check_vat_id(self, vat):
         """ Temporary Indonesian VAT validation to support the new format
         introduced in January 2024."""
