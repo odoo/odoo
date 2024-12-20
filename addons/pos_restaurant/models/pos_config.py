@@ -140,3 +140,7 @@ class PosConfig(models.Model):
             existing_session = self.env.ref('pos_restaurant.pos_closed_session_3', raise_if_not_found=False)
             if not existing_session:
                 convert.convert_file(self.env, 'pos_restaurant', 'data/restaurant_session_floor.xml', None, noupdate=True, mode='init', kind='data')
+
+    @api.depends('set_tip_after_payment', 'module_pos_restaurant_appointment')
+    def _compute_local_data_integrity(self):
+       super()._compute_local_data_integrity()
