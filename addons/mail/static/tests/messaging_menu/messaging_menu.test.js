@@ -978,7 +978,7 @@ test("chat should show unread counter on receiving new messages", async () => {
     await contains(".o-mail-NotificationItem .badge", { text: "1" });
 });
 
-test("preview for channel should show latest non-deleted message", async () => {
+test("preview for channel shows deleted message preview when this is most recent", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
     const channelId = pyEnv["discuss.channel"].create({ name: "Test" });
@@ -1005,7 +1005,9 @@ test("preview for channel should show latest non-deleted message", async () => {
         body: "",
         attachment_ids: [],
     });
-    await contains(".o-mail-NotificationItem-text", { text: "Partner1: message-1" });
+    await contains(".o-mail-NotificationItem-text", {
+        text: "Partner1: This message has been removed",
+    });
 });
 
 test("failure notifications are shown before channel preview", async () => {

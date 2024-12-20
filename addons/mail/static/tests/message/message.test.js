@@ -1064,7 +1064,7 @@ test('Quick edit (edit from Composer with ArrowUp) ignores empty ("deleted") mes
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message");
+    await contains(".o-mail-Message", { count: 2 }); // shows "This message has been removed" too
     triggerHotkey("ArrowUp");
     await contains(".o-mail-Message.o-editing");
     await contains(".o-mail-Message .o-mail-Composer-input", { value: "not empty" });
@@ -1479,7 +1479,7 @@ test("Channel should be opened after clicking on its mention", async () => {
     await contains(".o-mail-ChatWindow", { text: "my-channel" });
 });
 
-test("delete all attachments of message without content should no longer display the message", async () => {
+test("delete all attachments of message without content should mark message as deleted", async () => {
     const pyEnv = await startServer();
     const attachmentId = pyEnv["ir.attachment"].create({
         mimetype: "text/plain",
@@ -1498,7 +1498,7 @@ test("delete all attachments of message without content should no longer display
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Delete']");
     await click("button", { text: "Confirm" });
-    await contains(".o-mail-Message", { count: 0 });
+    await contains(".o-mail-Message", { text: "This message has been removed" });
 });
 
 test("delete all attachments of a message with some text content should still keep it displayed", async () => {
@@ -1537,7 +1537,7 @@ test("message with subtype should be displayed (and not considered as empty)", a
     await contains(".o-mail-Message-content", { text: "Task created" });
 });
 
-test("message considered empty", async () => {
+test("message considered deleted", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create([
@@ -1588,8 +1588,8 @@ test("message considered empty", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "The conversation is empty." });
-    await contains(".o-mail-Message", { count: 0 });
+    await contains(".o-mail-Message", { count: 9 });
+    await contains(".o-mail-Message", { count: 9, text: "This message has been removed" });
 });
 
 test("message with html not to be considered empty", async () => {
@@ -1886,44 +1886,6 @@ test("chatter - font size unchanged when there is only emoji", async () => {
     expect(parseFloat(getComputedStyle(emojiMessage).getPropertyValue("font-size"))).toBe(
         parseFloat(getComputedStyle(textMessage).getPropertyValue("font-size"))
     );
-});
-
-test("Delete starred message decrements starred counter once", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    pyEnv["mail.message"].create([
-        {
-            author_id: serverState.partnerId,
-            body: "delete me",
-            message_type: "comment",
-            model: "discuss.channel",
-            res_id: channelId,
-            starred_partner_ids: [serverState.partnerId],
-        },
-        {
-            author_id: serverState.partnerId,
-            body: "Hello World!",
-            message_type: "comment",
-            model: "discuss.channel",
-            res_id: channelId,
-            starred_partner_ids: [serverState.partnerId],
-        },
-        {
-            author_id: serverState.partnerId,
-            body: "test",
-            message_type: "comment",
-            model: "discuss.channel",
-            res_id: channelId,
-            starred_partner_ids: [serverState.partnerId],
-        },
-    ]);
-    await start();
-    await openDiscuss(channelId);
-    await contains("button", { count: 1, text: "Starred3" });
-    await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
-    await click(".o-mail-Message-moreMenu [title='Delete']");
-    await click("button", { text: "Confirm" });
-    await contains("button", { count: 1, text: "Starred2" });
 });
 
 test("Copy Message Link", async () => {

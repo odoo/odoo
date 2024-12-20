@@ -39,29 +39,6 @@ test("Messages are received cross-tab", async () => {
     await contains(".o-mail-Message-content", { target: env2, text: "Hello World!" });
 });
 
-test("Delete starred message updates counter", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    pyEnv["mail.message"].create({
-        body: "Hello World!",
-        model: "discuss.channel",
-        message_type: "comment",
-        res_id: channelId,
-        starred_partner_ids: [serverState.partnerId],
-    });
-    const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
-    await openDiscuss(channelId, { target: env1 });
-    await openDiscuss(channelId, { target: env2 });
-    await contains(".o-mail-Message", { target: env1, text: "Hello World!" });
-    await contains(".o-mail-Message", { target: env2, text: "Hello World!" });
-    await contains("button", { target: env2, text: "Starred1" });
-    await click(":nth-child(1 of .o-mail-Message) [title='Expand']", { target: env2 });
-    await click(".o-mail-Message-moreMenu [title='Delete']", { target: env2 });
-    await click("button", { text: "Confirm" }, { target: env2 });
-    await contains("button", { count: 0, target: env2, text: "Starred1" });
-});
-
 test.tags("focus required");
 test("Thread rename", async () => {
     const pyEnv = await startServer();
@@ -181,7 +158,9 @@ test("Remove attachment from message", async () => {
     await contains(".o-mail-AttachmentCard", { count: 0, target: env1, text: "test.txt" });
 });
 
-test("Message delete notification", async () => {
+test("Message (hard) delete notification", async () => {
+    // Note: This isn't a notification from when user click on "Delete message" action:
+    // this happens when mail_message server record is effectively deleted (unlink)
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create({
         body: "Needaction message",

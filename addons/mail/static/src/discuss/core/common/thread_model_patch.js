@@ -48,7 +48,7 @@ const threadPatch = {
                 if (!this.selfMember) {
                     return null;
                 }
-                const messages = this.nonEmptyMessages;
+                const messages = this.messages;
                 const separator = this.selfMember.localNewMessageSeparator;
                 if (separator === 0 && !this.loadOlder) {
                     return messages[0];
@@ -58,7 +58,7 @@ const threadPatch = {
                 }
                 // try to find a perfect match according to the member's separator
                 let message = this.store["mail.message"].get({ id: separator });
-                if (!message || this.notEq(message.thread) || message.isEmpty) {
+                if (!message || this.notEq(message.thread)) {
                     message = nearestGreaterThanOrEqual(messages, separator, (msg) => msg.id);
                 }
                 return message;

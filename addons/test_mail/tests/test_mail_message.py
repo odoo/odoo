@@ -74,12 +74,12 @@ class TestMessageValues(MailCommon):
         self.assertEqual(message.starred_partner_ids, self.partner_admin)
         self.assertFalse(message.sudo()._filter_empty(), 'Subtype with description')
 
-        # Completely void now
+        # Completely emptied now
         note_subtype.sudo().write({'description': ''})
         self.assertEqual(message.sudo()._filter_empty(), message)
         record._message_update_content(message, '', [])
-        self.assertFalse(message.notified_partner_ids)
-        self.assertFalse(message.starred_partner_ids)
+        self.assertEqual(message.notified_partner_ids, self.partner_admin)  # message still notified (albeit content is removed)
+        self.assertEqual(message.starred_partner_ids, self.partner_admin)  # starred messages stay (albeit content is removed)
 
         # test tracking values
         record.write({'user_id': self.user_admin.id})
