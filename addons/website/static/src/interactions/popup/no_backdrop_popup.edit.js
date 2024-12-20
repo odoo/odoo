@@ -2,8 +2,8 @@ import { registry } from "@web/core/registry";
 import { NoBackdropPopup } from "./no_backdrop_popup";
 
 export const NoBackdropPopupEdit = (I) => class extends I {
-    setup() {
-        super.setup();
+    start() {
+        super.start();
         if (this.el.classList.contains("show")) {
             // Use case: When the "Backdrop" option is disabled in edit mode.
             // The page scrollbar must be adjusted and events must be added.
