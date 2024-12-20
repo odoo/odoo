@@ -105,12 +105,16 @@ class CustomerPortal(payment_portal.PaymentPortal):
     # displayed orders, to assign an access token (triggering a sql update on flush)
     @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_quotes(self, **kwargs):
+        if not self._check_page_visibility("sale.portal_my_home_sale"):
+            return request.not_found()
         values = self._prepare_sale_portal_rendering_values(quotation_page=True, **kwargs)
         request.session['my_quotations_history'] = values['quotations'].ids[:100]
         return request.render("sale.portal_my_quotations", values)
 
     @http.route(['/my/orders', '/my/orders/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_orders(self, **kwargs):
+        if not self._check_page_visibility("sale.portal_my_home_sale"):
+            return request.not_found()
         values = self._prepare_sale_portal_rendering_values(quotation_page=False, **kwargs)
         request.session['my_orders_history'] = values['orders'].ids[:100]
         return request.render("sale.portal_my_orders", values)

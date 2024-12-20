@@ -80,6 +80,8 @@ class PortalAccount(CustomerPortal):
 
     @http.route(['/my/invoices', '/my/invoices/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_invoices(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
+        if not self._check_page_visibility("account.portal_my_home_invoice"):
+            return request.not_found()
         values = self._prepare_my_invoices_values(page, date_begin, date_end, sortby, filterby)
 
         # pager

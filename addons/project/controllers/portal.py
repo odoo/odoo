@@ -68,6 +68,8 @@ class ProjectCustomerPortal(CustomerPortal):
 
     @http.route(['/my/projects', '/my/projects/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_projects(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
+        if not self._check_page_visibility("project.portal_my_home"):
+            return request.not_found()
         values = self._prepare_portal_layout_values()
         Project = request.env['project.project']
         domain = self._prepare_project_domain()
@@ -491,6 +493,8 @@ class ProjectCustomerPortal(CustomerPortal):
 
     @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', groupby=None, **kw):
+        if not self._check_page_visibility("project.portal_my_home"):
+            return request.not_found()
         searchbar_filters = self._get_my_tasks_searchbar_filters()
 
         if not filterby:
