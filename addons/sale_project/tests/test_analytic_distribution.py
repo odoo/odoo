@@ -11,13 +11,29 @@ class TestAnalyticDistribution(HttpCase, TestSaleProjectCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
+        cls.company_data_2 = cls.setup_other_company()
+        cls.company_2 = cls.company_data_2['company']
         # Creating analytic plans within tests could cause some registry issues
         # hence we are creating them in the setupClass instead.
         # This is because creating a plan creates fields and columns on models inheriting
         # from the mixin.
         # The registry is reset on class cleanup.
         cls.plan_b = cls.env['account.analytic.plan'].create({'name': 'Q'})
+
+        cls.analytic_account_sale_company_2 = cls.env['account.analytic.account'].create({
+            'name': 'Project for selling timesheet - AA',
+            'code': 'AA-4030',
+            'plan_id': cls.analytic_plan.id,
+            'company_id': cls.company_2.id,
+        })
+        cls.project_global_2 = cls.env["project.project"].create({
+            'name': 'Project Global 2',
+            'account_id': cls.analytic_account_sale.id,
+            'allow_billable': True,
+        })
+        cls.product_delivery_manual2.with_company(cls.company_2).write({
+            'project_id': cls.project_global_2,
+        })
 
     def test_project_transmits_analytic_plans_to_sol_distribution(self):
         plan_a = self.analytic_plan
@@ -75,4 +91,24 @@ class TestAnalyticDistribution(HttpCase, TestSaleProjectCommon):
             sale_order_line.analytic_distribution,
             {str(self.project_global.account_id.id): 100},
             "The analytic distribution of the SOL should be set to the account of the project set on the product.",
+        )
+
+    def test_sol_analytic_distribution_task_in_project_service_multicompany(self):
+        self.project_global.account_id = self.analytic_account_sale
+        self.project_global_2.account_id = self.analytic_account_sale_company_2
+        # Create an order for company_2 while the user's current company is company 1
+        self.assertEqual(self.env.company, self.company)
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'company_id': self.company_2.id,
+        })
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_delivery_manual2.id,
+        })
+        self.assertEqual(
+            sale_order_line.analytic_distribution,
+            {str(self.project_global_2.account_id.id): 100},
+            "The analytic distribution of the SOL should be set to the account of the project "
+            "set on the product for the order's company",
         )

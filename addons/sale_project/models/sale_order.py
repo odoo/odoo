@@ -121,6 +121,20 @@ class SaleOrder(models.Model):
             order.project_ids = projects
             order.project_count = len(projects)
 
+    @api.onchange('company_id')
+    def _onchange_company_id_warning(self):
+        result = super()._onchange_company_id_warning()
+        if (
+            self.order_line
+            and self.state == 'draft'
+            and self.env.user.has_group('analytic.group_analytic_accounting')
+        ):
+            result['warning']['message'] = " ".join([
+                result['warning']['message'],
+                _("You might also consider updating analytic distributions.")
+            ])
+        return result
+
     def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """
         if len(self.company_id) == 1:
