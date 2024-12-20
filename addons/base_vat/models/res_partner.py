@@ -102,37 +102,6 @@ class ResPartner(models.Model):
     # We put on inverse to allow for different
     vat = fields.Char(inverse="_compute_vat", store=True)
 
-    def _split_vat(self, vat):
-        vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
-        return vat_country, vat_number
-
-    @api.model
-    def _get_eu_prefixed_countries(self):
-        return (
-                self.env.ref('base.europe').country_ids
-                + self.env.ref('base.ch')
-                + self.env.ref('base.no')
-                + self.env.ref('base.uk')
-                + self.env.ref('base.sm')
-        )
-
-    @api.model
-    def simple_vat_check(self, country_code, vat_number):
-        '''
-        Check the VAT number depending of the country.
-        http://sima-pc.com/nif.php
-        '''
-        if not country_code.encode().isalpha():
-            return False
-        check_func_name = 'check_vat_' + country_code
-        check_func = getattr(self, check_func_name, None) or getattr(stdnum.util.get_cc_module(country_code, 'vat'), 'is_valid', None)
-        if not check_func:
-            # No VAT validation available, default to check that the country code exists
-            country_code = _eu_country_vat_inverse.get(country_code, country_code)
-            return bool(self.env['res.country'].search([('code', '=ilike', country_code)]))
-        return check_func(vat_number)
-
-
     @api.onchange('vat', 'country_id')
     def _compute_vat(self):
         for partner in self:
@@ -151,16 +120,6 @@ class ResPartner(models.Model):
                 and not to_check[:2].upper() == company_code
                 and self.env.company.vat_check_vies
             )
-
-    @api.model
-    def fix_eu_vat_number(self, country_id, vat):
-        country = self.env["res.country"].browse(country_id)
-        if country and country in self._get_eu_prefixed_countries():
-            vat = re.sub('[^A-Za-z0-9]', '', vat).upper()
-            country_code = _eu_country_vat.get(country.code, country.code).upper()
-            if vat[:2] != country_code:
-                vat = country_code + vat
-        return vat
 
     @api.constrains('vat', 'country_id')
     def check_vat(self):
@@ -210,6 +169,47 @@ class ResPartner(models.Model):
                     partner._origin.message_post(body=msg)
                 _logger.warning("The VAT number %s failed VIES check.", partner.vat)
                 partner.vies_valid = False
+
+    def _split_vat(self, vat):
+        vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
+        return vat_country, vat_number
+
+    @api.model
+    def _get_eu_prefixed_countries(self):
+        return (
+            self.env.ref('base.europe').country_ids
+                + self.env.ref('base.ch')
+                + self.env.ref('base.no')
+                + self.env.ref('base.uk')
+                + self.env.ref('base.sm')
+        )
+
+    @api.model
+    def simple_vat_check(self, country_code, vat_number):
+        '''
+        Check the VAT number depending of the country.
+        http://sima-pc.com/nif.php
+        '''
+        if not country_code.encode().isalpha():
+            return False
+        check_func_name = 'check_vat_' + country_code
+        check_func = getattr(self, check_func_name, None) or getattr(stdnum.util.get_cc_module(country_code, 'vat'), 'is_valid', None)
+        if not check_func:
+            # No VAT validation available, default to check that the country code exists
+            country_code = _eu_country_vat_inverse.get(country_code, country_code)
+            return bool(self.env['res.country'].search([('code', '=ilike', country_code)]))
+        return check_func(vat_number)
+
+
+    @api.model
+    def fix_eu_vat_number(self, country_id, vat):
+        country = self.env["res.country"].browse(country_id)
+        if country and country in self._get_eu_prefixed_countries():
+            vat = re.sub('[^A-Za-z0-9]', '', vat).upper()
+            country_code = _eu_country_vat.get(country.code, country.code).upper()
+            if vat[:2] != country_code:
+                vat = country_code + vat
+        return vat
 
     @api.model
     def _run_vat_test(self, vat_number, default_country, partner_is_company=True):
