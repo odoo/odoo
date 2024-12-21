@@ -76,8 +76,8 @@ class MailThread(models.AbstractModel):
 
     MailThread features can be somewhat controlled through context keys :
 
-     - ``mail_create_nosubscribe``: at create or message_post, do not subscribe
-       uid to the record thread
+     - ``mail_create_nosubscribe``: at create, do not subscribe uid to the
+       record thread;
      - ``mail_create_nolog``: at create, do not log the automatic '<Document>
        created' message
      - ``mail_notrack``: at create and write, do not perform the value tracking
@@ -86,6 +86,10 @@ class MailThread(models.AbstractModel):
        (auto subscription, tracking, post, ...)
      - ``mail_notify_force_send``: if less than 50 email notifications to send,
        send them directly instead of using the queue; True by default
+    - ``mail_post_autofollow``: subscribe specific recipients ('partner_ids') during
+       message_post. False by default;
+    - ``mail_post_autofollow_author_skip``: do not subscribe author of a message
+       post. False by default, as we consider authors should receive answers;
     '''
     _description = 'Email Thread'
     _mail_flat_thread = True  # flatten the discussion history
@@ -261,6 +265,11 @@ class MailThread(models.AbstractModel):
             - subscribe followers of parent
             - log a creation message
         """
+        # when being in 'nosubscribe' mode, also propagate to any message posted
+        # during the process, unless specifically asked
+        if self.env.context.get('mail_create_nosubscribe') and 'mail_post_autofollow_author_skip' not in self.env.context:
+            self = self.with_context(mail_post_autofollow_author_skip=True)
+
         if self._context.get('tracking_disable'):
             threads = super(MailThread, self).create(vals_list)
             threads._track_discard()
@@ -1358,7 +1367,7 @@ class MailThread(models.AbstractModel):
             else:
                 # if no author, skip any author subscribe check; otherwise message_post
                 # checks anyway for real author and filters inactive (like odoobot)
-                thread_root = thread_root.with_context(from_alias=True, mail_create_nosubscribe=not message_dict.get('author_id'))
+                thread_root = thread_root.with_context(from_alias=True, mail_post_autofollow_author_skip=not message_dict.get('author_id'))
                 new_msg = thread_root.message_post(**post_params)
 
             if new_msg and original_partner_ids:
@@ -2268,22 +2277,13 @@ class MailThread(models.AbstractModel):
         # subscribe author(s) so that they receive answers; do it only when it is
         # a manual post by the author (aka not a system notification, not a message
         # posted 'in behalf of', and if still active).
-        author_subscribe = (not self._context.get('mail_create_nosubscribe') and
-                             msg_values['message_type'] != 'notification')
+        author_subscribe = (
+            not self._context.get('mail_post_autofollow_author_skip') and
+            msg_values['message_type'] not in ('notification', 'user_notification', 'auto_comment')
+        )
         if author_subscribe:
-            real_author_id = False
-            # if current user is active, they are the one doing the action and should
-            # be notified of answers. If they are inactive they are posting on behalf
-            # of someone else (a custom, mailgateway, ...) and the real author is the
-            # message author. In any case avoid odoobot.
-            if self.env.user.active:  # note that odoobot is always inactive, there is a python check
-                real_author_id = self.env.user.partner_id.id
-            elif msg_values['author_id']:
-                author = self.env['res.partner'].browse(msg_values['author_id'])
-                if author.active and author != self.env.ref('base.partner_root'):  # that happened :(
-                    real_author_id = author.id
-            if real_author_id:
-                self._message_subscribe(partner_ids=[real_author_id])
+            if real_author := self._message_compute_real_author(msg_values['author_id']):
+                self._message_subscribe(partner_ids=[real_author.id])
 
         self._message_post_after_hook(new_message, msg_values)
         self._notify_thread(new_message, msg_values, **notif_kwargs)
@@ -2890,6 +2890,20 @@ class MailThread(models.AbstractModel):
 
         return author_id, email_from
 
+    def _message_compute_real_author(self, author_id):
+        real_author = self.env['res.partner']
+        # if current user is active, they are the one doing the action and should
+        # be notified of answers. If they are inactive they are posting on behalf
+        # of someone else (a customer, mailgateway, ...) and the real author is the
+        # message author. In any case avoid odoobot.
+        if self.env.user.active:  # note that odoobot is always inactive, there is a python check
+            real_author = self.env.user.partner_id
+        elif author_id:
+            author = self.env['res.partner'].browse(author_id)
+            if author.active and author != self.env.ref('base.partner_root'):  # that happened :(
+                real_author = author
+        return real_author
+
     def _message_compute_parent_id(self, parent_id):
         # parent management, depending on ``_mail_flat_thread``
         # ``_mail_flat_thread`` True: no free message. If no parent, find the first
@@ -3176,6 +3190,8 @@ class MailThread(models.AbstractModel):
 
         :return: recipients data (see ``MailThread._notify_get_recipients()``)
         """
+        msg_vals = msg_vals or {}
+
         # add lang to context immediately since it will be useful in various rendering later
         self = self._fallback_lang()
         self._raise_for_invalid_parameters(
@@ -3183,7 +3199,6 @@ class MailThread(models.AbstractModel):
             restricting_names=self._get_notify_valid_parameters()
         )
 
-        msg_vals = msg_vals if msg_vals else {}
         recipients_data = self._notify_get_recipients(message, msg_vals, **kwargs)
         if not recipients_data:
             return recipients_data
@@ -3438,6 +3453,8 @@ class MailThread(models.AbstractModel):
            }
           );
         """
+        msg_vals = msg_vals or {}
+
         lang_to_recipients = {}
         for data in recipients_data:
             # filter active lang
@@ -3452,9 +3469,7 @@ class MailThread(models.AbstractModel):
             record_wlang = self.with_context(lang=lang)
             lang_model_description = model_description
             if not lang_model_description:
-                lang_model_description = record_wlang._get_model_description(
-                    msg_vals['model'] if msg_vals and msg_vals.get('model') else message.model
-                )
+                lang_model_description = record_wlang._get_model_description(msg_vals.get('model') or message.model)
             recipients_groups_list = record_wlang._notify_get_recipients_classify(
                 message,
                 lang_recipients_data,
@@ -3514,15 +3529,15 @@ class MailThread(models.AbstractModel):
 
         :return: dictionary of values used when rendering notification layout;
         """
-        if msg_vals is False:
-            msg_vals = {}
+        msg_vals = msg_vals or {}
+
         lang = force_email_lang if force_email_lang else self.env.lang
         record_wlang = self.with_context(lang=lang)
 
         # compute send user and its related signature; try to use self.env.user instead of browsing
         # user_ids if they are the author will give a sudo user, improving access performances and cache usage.
         signature = ''
-        email_add_signature = msg_vals.get('email_add_signature') if msg_vals and 'email_add_signature' in msg_vals else message.email_add_signature
+        email_add_signature = msg_vals.get('email_add_signature', message.email_add_signature)
         if email_add_signature:
             author = message.env['res.partner'].browse(msg_vals.get('author_id')) if 'author_id' in msg_vals else message.author_id
             author_user = self.env.user if self.env.user.partner_id == author else author.user_ids[0] if author and author.user_ids else False
@@ -3542,10 +3557,8 @@ class MailThread(models.AbstractModel):
 
         # record, model
         if not model_description:
-            model_description = record_wlang._get_model_description(
-                msg_vals.get('model') if 'model' in msg_vals else message.model
-            )
-        record_name = msg_vals.get('record_name') if 'record_name' in msg_vals else message.record_name
+            model_description = record_wlang._get_model_description(msg_vals.get('model', message.model))
+        record_name = msg_vals.get('record_name', message.record_name)
 
         # tracking: in case of missing value, perform search (skip only if sure we don't have any)
         check_tracking = msg_vals.get('tracking_value_ids', True) if msg_vals else bool(self)
@@ -3564,7 +3577,7 @@ class MailThread(models.AbstractModel):
                 ) for fmt_vals in tracking_values._tracking_value_format()
             ]
 
-        subtype_id = msg_vals.get('subtype_id') if msg_vals and 'subtype_id' in msg_vals else message.subtype_id.id
+        subtype_id = msg_vals.get('subtype_id', message.subtype_id.id)
         is_discussion = subtype_id == self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
 
         return {
@@ -3614,8 +3627,9 @@ class MailThread(models.AbstractModel):
         """
         if render_values is None:
             render_values = {}
+        msg_vals = msg_vals or {}
 
-        email_layout_xmlid = msg_vals.get('email_layout_xmlid') if msg_vals else message.email_layout_xmlid
+        email_layout_xmlid = msg_vals.get('email_layout_xmlid', message.email_layout_xmlid)
         template_xmlid = email_layout_xmlid if email_layout_xmlid else 'mail.mail_notification_layout'
 
         render_values = {**render_values, **recipients_group}
@@ -3711,7 +3725,8 @@ class MailThread(models.AbstractModel):
           directly. It lessens query count in some optimized use cases by avoiding
           access message content in db;
         """
-        msg_vals = dict(msg_vals or {})
+        msg_vals = msg_vals or {}
+
         partner_ids = self._extract_partner_ids_for_notifications(message, msg_vals, recipients_data)
         devices, private_key, public_key = self._get_web_push_parameters(partner_ids)
         if not devices:
@@ -3864,9 +3879,10 @@ class MailThread(models.AbstractModel):
         """
         msg_sudo = message.sudo()
         # get values from msg_vals or from message if msg_vals doen't exists
-        pids = msg_vals.get('partner_ids', []) if msg_vals else msg_sudo.partner_ids.ids
-        message_type = msg_vals.get('message_type') if msg_vals else msg_sudo.message_type
-        subtype_id = msg_vals.get('subtype_id') if msg_vals else msg_sudo.subtype_id.id
+        author_id = msg_vals.get('author_id') or message.author_id.id
+        pids = msg_vals.get('partner_ids', msg_sudo.partner_ids.ids)
+        message_type = msg_vals.get('message_type', msg_sudo.message_type)
+        subtype_id = msg_vals.get('subtype_id', msg_sudo.subtype_id.id)
         # is it possible to have record but no subtype_id ?
         recipients_data = []
 
@@ -3878,12 +3894,7 @@ class MailThread(models.AbstractModel):
         notify_author = kwargs.get('notify_author') or self.env.context.get('mail_notify_author')
         real_author_id = False
         if not notify_author:
-            if self.env.user.active:
-                real_author_id = self.env.user.partner_id.id
-            elif msg_vals.get('author_id'):
-                real_author_id = msg_vals['author_id']
-            else:
-                real_author_id = message.author_id.id
+            real_author_id = self._message_compute_real_author(author_id).id
 
         for pid, pdata in res.items():
             if pid and pid == real_author_id:
@@ -4158,8 +4169,8 @@ class MailThread(models.AbstractModel):
             return []
 
         msg_sudo = message.sudo()
-        msg_type = msg_vals.get('message_type') or msg_sudo.message_type
-        author_id = [msg_vals.get('author_id')] if 'author_id' in msg_vals else msg_sudo.author_id.ids
+        msg_type = msg_vals.get('message_type', msg_sudo.message_type)
+        author_id = [msg_vals.get('author_id', msg_sudo.author_id.id)]
         # never send to author and to people outside Odoo (email), except comments
         pids = set()
         if msg_type in {'comment', 'whatsapp_message'}:

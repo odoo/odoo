@@ -165,7 +165,7 @@ class ChatbotScript(models.Model):
             discuss_channel.chatbot_current_step_id = welcome_step.id
 
             if not is_html_empty(welcome_step.message):
-                posted_messages += discuss_channel.with_context(mail_create_nosubscribe=True).message_post(
+                posted_messages += discuss_channel.with_context(mail_post_autofollow_author_skip=True).message_post(
                     author_id=self.operator_partner_id.id,
                     body=plaintext2html(welcome_step.message),
                     message_type='comment',

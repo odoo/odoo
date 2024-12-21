@@ -1662,7 +1662,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                         default_model=test_records._name,
                         default_res_ids=test_records.ids,
                         # avoid successive tests issues with followers
-                        mail_create_nosubscribe=True,
+                        mail_post_autofollow_author_skip=True,
                     ))
                     composer.body = 'Hello {{ object.name }}'
                     composer.subject = 'My Subject'
@@ -1769,7 +1769,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                     'default_composition_mode': 'comment',
                     'default_template_id': self.template.id,
                     # avoid successive tests issues with followers
-                    'mail_create_nosubscribe': True,
+                    'mail_post_autofollow_author_skip': True,
                 }
                 if batch_mode == 'domain':
                     ctx['default_res_domain'] = [('id', 'in', test_records.ids)]
@@ -2062,7 +2062,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                     default_res_ids=test_records.ids,
                     default_template_id=self.template.id,
                     # avoid successive tests issues with followers
-                    mail_create_nosubscribe=True,
+                    mail_post_autofollow_author_skip=True,
                 )).save()
                 with self.mock_mail_gateway(mail_unlink_sent=False), \
                      self.mock_mail_app():
@@ -2957,7 +2957,7 @@ class TestComposerResultsMass(TestMailComposer):
                     default_res_ids=test_records.ids,
                     default_template_id=self.template.id,
                     # avoid successive tests issues with followers
-                    mail_create_nosubscribe=True,
+                    mail_post_autofollow_author_skip=True,
                 )).save()
                 with self.mock_mail_gateway(mail_unlink_sent=False), \
                      self.mock_mail_app():
