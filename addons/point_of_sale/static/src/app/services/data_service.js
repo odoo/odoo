@@ -98,6 +98,7 @@ export class PosData extends Reactive {
                     if (record[params.key]) {
                         remove.push(record[params.key]);
                     }
+<<<<<<< master:addons/point_of_sale/static/src/app/services/data_service.js
                 } else {
                     const serializedData = record.serialize();
                     const uiState =
@@ -109,10 +110,65 @@ export class PosData extends Reactive {
                     };
                     put.push(serializedRecord);
                 }
+||||||| ce73ed61bcf293953bc0c821ceaef3ddb9a47e3c:addons/point_of_sale/static/src/app/models/data_service.js
+
+                    return acc;
+                },
+                { put: [], remove: [] }
+            );
+        };
+
+        // This methods will add uiState to the serialized object
+        const dataFormatter = (record) => {
+            const serializedData = record.serialize();
+            const uiState = typeof record.uiState === "object" ? record.serializeState() : "{}";
+            return { ...serializedData, JSONuiState: JSON.stringify(uiState), id: record.id };
+        };
+
+        const dataToDelete = {};
+
+        for (const [model, params] of Object.entries(this.opts.databaseTable)) {
+            const nbrRecords = records[model].size;
+
+            if (!nbrRecords) {
+                continue;
+=======
+
+                    return acc;
+                },
+                { put: [], remove: [] }
+            );
+        };
+
+        // This methods will add uiState to the serialized object
+        const dataFormatter = (record) => {
+            const serializedData = record.serialize();
+            const uiState = typeof record.uiState === "object" ? record.serializeState() : "{}";
+            return { ...serializedData, JSONuiState: JSON.stringify(uiState), id: record.id };
+        };
+
+        const dataToDelete = {};
+
+        for (const [model, params] of Object.entries(this.opts.databaseTable)) {
+            const modelRecords = Array.from(records[model].values());
+
+            if (!modelRecords.length) {
+                continue;
+>>>>>>> cdf0451078949a2c8e53118741d28b052a34c823:addons/point_of_sale/static/src/app/models/data_service.js
             }
 
+<<<<<<< master:addons/point_of_sale/static/src/app/services/data_service.js
             await this.indexedDB.delete(model, remove);
             await this.indexedDB.create(model, put);
+||||||| ce73ed61bcf293953bc0c821ceaef3ddb9a47e3c:addons/point_of_sale/static/src/app/models/data_service.js
+            const data = dataSorter(this.models[model].getAll(), params.condition, params.key);
+            this.indexedDB.create(model, data.put);
+            dataToDelete[model] = data.remove;
+=======
+            const data = dataSorter(modelRecords, params.condition, params.key);
+            this.indexedDB.create(model, data.put);
+            dataToDelete[model] = data.remove;
+>>>>>>> cdf0451078949a2c8e53118741d28b052a34c823:addons/point_of_sale/static/src/app/models/data_service.js
         }
     }
 
