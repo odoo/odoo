@@ -20,7 +20,7 @@ class TestL10nArWithholdingArRi(TestAr):
             'number_increment': 1,
         })
         # Withholding 1: 1% untaxed_amount
-        cls.tax_wth_test_1 = cls.env.ref('account.%i_ri_tax_withholding_iibb_caba_applied' % cls.env.company.id)
+        cls.tax_wth_test_1 = cls.env.ref('account.%i_ex_tax_withholding_iibb_caba_applied' % cls.env.company.id)
         cls.tax_wth_test_1.write({
             'amount': 10,
             'amount_type': 'percent',
@@ -28,7 +28,7 @@ class TestL10nArWithholdingArRi(TestAr):
         })
 
         # Withholding 2: 1% total_amount
-        cls.tax_wth_test_2 = cls.env.ref('account.%i_ri_tax_withholding_iibb_ba_applied' % cls.env.company.id)
+        cls.tax_wth_test_2 = cls.env.ref('account.%i_ex_tax_withholding_iibb_ba_applied' % cls.env.company.id)
         cls.tax_wth_test_2.write({
             'amount': 10,
             'amount_type': 'percent',
@@ -38,8 +38,8 @@ class TestL10nArWithholdingArRi(TestAr):
         cls.tax_21 = cls.env.ref('account.%s_ri_tax_vat_21_ventas' % cls.env.company.id)
 
         cls.other_currency = cls.setup_other_currency('USD', rounding=0.001, rates=[('2023-01-01', 0.01), ('2023-05-01', 0.005)])
-        cls.tax_wth_earnings_incurred_scale_test_5 = cls.env.ref('account.%i_ri_tax_withholding_earnings_incurred_group_110_insc' % cls.env.company.id)
-        cls.tax_wth_earnings_incurred_test_6 = cls.env.ref('account.%i_ri_tax_withholding_earnings_incurred_group_35_insc' % cls.env.company.id)
+        cls.tax_wth_earnings_incurred_scale_test_5 = cls.env.ref('account.%i_ex_tax_withholding_profits_regimen_110_insc' % cls.env.company.id)
+        cls.tax_wth_earnings_incurred_test_6 = cls.env.ref('account.%i_ex_tax_withholding_profits_regimen_35_insc' % cls.env.company.id)
         cls.earnings_withholding_sequence = cls.env['ir.sequence'].create({
             'implementation': 'standard',
             'name': 'tax wth test',
