@@ -19,6 +19,7 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.l10n_in_ewaybill_password',
         readonly=False
     )
+    l10n_in_ewaybill_feature = fields.Boolean(related='company_id.l10n_in_ewaybill_feature', readonly=False)
 
     def l10n_in_ewaybill_test(self):
         self._l10n_in_check_gst_number()
