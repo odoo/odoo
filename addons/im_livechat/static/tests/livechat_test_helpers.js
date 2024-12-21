@@ -5,6 +5,7 @@ import {
     serverState,
     patchWithCleanup,
     MockServer,
+    mockEmojiLoading,
 } from "@web/../tests/web_test_helpers";
 import { DiscussChannel } from "./mock_server/mock_models/discuss_channel";
 import { DiscussChannelMember } from "./mock_server/mock_models/discuss_channel_member";
@@ -16,6 +17,7 @@ import { ResUsers } from "./mock_server/mock_models/res_users";
 import { session } from "@web/session";
 
 export function defineLivechatModels() {
+    mockEmojiLoading();
     return defineModels(livechatModels);
 }
 

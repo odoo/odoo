@@ -5,7 +5,7 @@ import { MailActivity } from "./mock_server/mock_models/mail_activity";
 import { CalendarFilters } from "./mock_server/mock_models/calendar_filters";
 
 import { mailModels } from "@mail/../tests/mail_test_helpers";
-import { defineModels } from "@web/../tests/web_test_helpers";
+import { defineModels, mockEmojiLoading } from "@web/../tests/web_test_helpers";
 
 export const calendarModels = {
     CalendarAttendee,
@@ -16,5 +16,6 @@ export const calendarModels = {
 };
 
 export function defineCalendarModels() {
+    mockEmojiLoading();
     return defineModels({ ...mailModels, ...calendarModels });
 }

@@ -66,7 +66,6 @@
             'web/static/src/session.js',
             'web/static/src/env.js',
             'web/static/src/core/**/*.js',
-            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
             ('include', 'spreadsheet.dependencies'),
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml',
