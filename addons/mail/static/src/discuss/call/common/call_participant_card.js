@@ -34,6 +34,7 @@ export class CallParticipantCard extends Component {
         this.ui = useState(useService("ui"));
         this.rootHover = useHover("root");
         this.state = useState({ drag: false, dragPos: undefined });
+        this.parentBoundingRect = undefined;
         onMounted(() => {
             if (!this.rtcSession) {
                 return;
@@ -196,8 +197,10 @@ export class CallParticipantCard extends Component {
                 insetEl.style.bottom = "";
             } else {
                 insetEl.style.bottom = "1vh";
-                insetEl.style.top = "";
+                insetEl.style.top = "unset";
             }
+            this.state.dragPos = undefined;
+            this.parentBoundingRect = undefined;
             document.removeEventListener("mouseup", onMouseup);
             document.removeEventListener("mousemove", onMousemove);
         };
@@ -209,31 +212,21 @@ export class CallParticipantCard extends Component {
         this.state.drag = true;
         const insetEl = this.root.el;
         const parent = insetEl.parentNode;
-        const clientX = ev.clientX ?? ev.touches[0].clientX;
-        const clientY = ev.clientY ?? ev.touches[0].clientY;
+        const boundingRect =
+            this.parentBoundingRect || (this.parentBoundingRect = parent.getBoundingClientRect());
+        const clientX = Math.max((ev.clientX ?? ev.touches[0].clientX) - boundingRect.left, 0);
+        const clientY = Math.max((ev.clientY ?? ev.touches[0].clientY) - boundingRect.top, 0);
         if (!this.state.dragPos) {
             this.state.dragPos = { posX: clientX, posY: clientY };
         }
         const dX = this.state.dragPos.posX - clientX;
         const dY = this.state.dragPos.posY - clientY;
-        this.state.dragPos.posX = Math.min(
-            Math.max(clientX, parent.offsetLeft),
-            parent.offsetLeft + parent.offsetWidth - insetEl.clientWidth
-        );
-        this.state.dragPos.posY = Math.min(
-            Math.max(clientY, parent.offsetTop),
-            parent.offsetTop + parent.offsetHeight - insetEl.clientHeight
-        );
-        insetEl.style.left =
-            Math.min(
-                Math.max(insetEl.offsetLeft - dX, 0),
-                parent.offsetWidth - insetEl.clientWidth
-            ) + "px";
-        insetEl.style.top =
-            Math.min(
-                Math.max(insetEl.offsetTop - dY, 0),
-                parent.offsetHeight - insetEl.clientHeight
-            ) + "px";
+        const widthOffset = parent.offsetWidth - insetEl.clientWidth;
+        const heightOffset = parent.offsetHeight - insetEl.clientHeight;
+        this.state.dragPos.posX = Math.min(clientX, widthOffset);
+        this.state.dragPos.posY = Math.min(clientY, heightOffset);
+        insetEl.style.left = Math.min(Math.max(insetEl.offsetLeft - dX, 0), widthOffset) + "px";
+        insetEl.style.top = Math.min(Math.max(insetEl.offsetTop - dY, 0), heightOffset) + "px";
     }
 
     onFullScreenChange() {
