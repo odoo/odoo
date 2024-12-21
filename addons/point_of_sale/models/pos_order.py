@@ -94,11 +94,12 @@ class PosOrder(models.Model):
         else:
             pos_order = self.env['pos.order'].browse(order.get('id'))
 
-            # Save line before to avoid exception if a line is deleted
+            # Save lines and payments before to avoid exception if a line is deleted
             # when vals change the state to 'paid'
-            if order.get('lines'):
-                pos_order.write({'lines': order.get('lines')})
-                order['lines'] = []
+            for field in ['lines', 'payment_ids']:
+                if order.get(field):
+                    pos_order.write({field: order.get(field)})
+                    order[field] = []
 
             pos_order.write(order)
 
