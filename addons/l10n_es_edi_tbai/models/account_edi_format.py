@@ -632,7 +632,7 @@ class AccountEdiFormat(models.Model):
         values['is_refund'] = invoice.move_type == 'in_refund'
         if values['is_refund']:
             values['credit_note_code'] = invoice.l10n_es_tbai_refund_reason
-            values['credit_note_invoice'] = invoice.reversed_entry_id
+            values['credit_note_invoices'] = invoice.reversed_entry_id | invoice.l10n_es_tbai_reversed_ids
         values['tipofactura'] = 'F1'
         return values
 
