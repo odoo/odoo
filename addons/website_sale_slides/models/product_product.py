@@ -9,6 +9,12 @@ class Product(models.Model):
 
     channel_ids = fields.One2many('slide.channel', 'product_id', string='Courses')
 
+    def _is_add_to_cart_allowed(self):
+        # Allow course related products to the cart regardless of product's rules
+        self.ensure_one()
+        res = super()._is_add_to_cart_allowed()
+        return res or self.env['slide.channel'].sudo().search_count([('product_id', '=', self.id)], limit=1)
+
     def get_product_multiline_description_sale(self):
         payment_channels = self.channel_ids.filtered(lambda course: course.enroll == 'payment')
 
