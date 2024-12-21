@@ -97,7 +97,7 @@ patch(PosStore.prototype, {
             0
         );
 
-        const nbNoteChange = Object.keys(orderChanges.noteUpdated).length;
+        const nbNoteChange = Object.keys(orderChanges.noteUpdate).length;
         if (nbNoteChange) {
             categories["noteUpdate"] = { count: nbNoteChange, name: _t("Note") };
         }

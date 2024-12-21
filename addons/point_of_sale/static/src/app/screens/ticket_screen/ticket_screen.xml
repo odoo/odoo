@@ -20,7 +20,7 @@
                                 <t t-esc="preset.name"/>
                             </button>
                         </div>
-                        <div class="item d-flex align-items-center justify-content-end">
+                        <div class="item d-flex align-items-center justify-content-end" t-on-click="onClickPageNbr">
                             <span class="page me-2"><t t-esc="getPageNumber()" /></span>
                             <div class="page-controls d-flex align-items-center gap-1">
                                 <button class="previous btn btn-light" t-on-click="() => this.onPrevPage()">
