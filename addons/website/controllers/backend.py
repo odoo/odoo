@@ -8,7 +8,13 @@ from odoo.http import request
 
 class WebsiteBackend(http.Controller):
 
+<<<<<<< master
     @http.route('/website/fetch_dashboard_data', type="jsonrpc", auth='user')
+||||||| a81134f7275db27f155b8ddc8206273c3e3cec7b
+    @http.route('/website/fetch_dashboard_data', type="json", auth='user')
+=======
+    @http.route('/website/fetch_dashboard_data', type="json", auth='user', readonly=True)
+>>>>>>> 9ac75ef0dd556fe78cda70fefd21f70e6c375332
     def fetch_dashboard_data(self, website_id):
         Website = request.env['website']
         has_group_system = request.env.user.has_group('base.group_system')
@@ -33,11 +39,17 @@ class WebsiteBackend(http.Controller):
             dashboard_data['dashboards']['plausible_share_url'] = current_website._get_plausible_share_url()
         return dashboard_data
 
-    @http.route('/website/iframefallback', type="http", auth='user', website=True)
+    @http.route('/website/iframefallback', type="http", auth='user', website=True, readonly=True)
     def get_iframe_fallback(self):
         return request.render('website.iframefallback')
 
+<<<<<<< master
     @http.route('/website/check_new_content_access_rights', type="jsonrpc", auth='user')
+||||||| a81134f7275db27f155b8ddc8206273c3e3cec7b
+    @http.route('/website/check_new_content_access_rights', type="json", auth='user')
+=======
+    @http.route('/website/check_new_content_access_rights', type="json", auth='user', readonly=True)
+>>>>>>> 9ac75ef0dd556fe78cda70fefd21f70e6c375332
     def check_create_access_rights(self, models):
         """
         TODO: In master, remove this route and method and find a better way
@@ -54,7 +66,13 @@ class WebsiteBackend(http.Controller):
             for model in models
         }
 
+<<<<<<< master
     @http.route('/website/track_installing_modules', type='jsonrpc', auth='user')
+||||||| a81134f7275db27f155b8ddc8206273c3e3cec7b
+    @http.route('/website/track_installing_modules', type='json', auth='user')
+=======
+    @http.route('/website/track_installing_modules', type='json', auth='user', readonly=True)
+>>>>>>> 9ac75ef0dd556fe78cda70fefd21f70e6c375332
     def website_track_installing_modules(self, selected_features, total_features=None):
         """
         During the website configuration, this route allows to track the
