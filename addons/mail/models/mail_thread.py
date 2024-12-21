@@ -3803,6 +3803,13 @@ class MailThread(models.AbstractModel):
             title = "%s: %s" % (author_name, title)
             icon = "/web/image/res.partner/%d/avatar_128" % author_id[0]
 
+        if not body and not message.body and message.attachment_ids:
+            attachment_count = len(message.attachment_ids)
+            if attachment_count == 1:
+                body = message.attachment_ids[0].name
+            else:
+                body = f"{message.attachment_ids[0].name} and {attachment_count - 1} other attachment(s)."
+
         payload = {
             'title': title,
             'options': {
