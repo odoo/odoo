@@ -6,7 +6,7 @@ from odoo import fields, models
 
 class MailBlacklist(models.Model):
     """ Model of blacklisted email addresses to stop sending emails."""
-    _inherit = ['mail.blacklist']
+    _inherit = 'mail.blacklist'
 
     opt_out_reason_id = fields.Many2one(
         'mailing.subscription.optout', string='Opt-out Reason',

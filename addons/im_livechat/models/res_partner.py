@@ -8,7 +8,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 class ResPartner(models.Model):
     """Update of res.partner class to take into account the livechat username."""
-    _inherit = ['res.partner']
+    _inherit = 'res.partner'
 
     user_livechat_username = fields.Char(compute='_compute_user_livechat_username')
 

@@ -19,6 +19,7 @@ class MailMessageSchedule(models.Model):
     exists on the <mail.mail> but it does not allow us to delay the sending
     of the <bus.bus> notifications.
     """
+    _name = 'mail.message.schedule'
     _description = 'Scheduled Messages'
     _order = 'scheduled_datetime DESC, id DESC'
     _rec_name = 'mail_message_id'

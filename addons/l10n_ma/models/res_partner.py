@@ -3,7 +3,7 @@ from odoo.exceptions import ValidationError
 
 
 class ResPartner(models.Model):
-    _inherit = ['res.partner']
+    _inherit = 'res.partner'
 
     @api.constrains('company_registry')
     def _check_company_registry_ma(self):
