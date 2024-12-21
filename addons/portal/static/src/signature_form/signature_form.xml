@@ -11,7 +11,7 @@
                     <t t-else="">Click here to see your document.</t>
                 </a>
             </div>
-            <t t-else="">
+            <t t-if="!isSignatureHidden">
                 <NameAndSignature t-props="nameAndSignatureProps"/>
                 <form method="POST">
                     <input type="hidden" name="csrf_token" t-att-value="csrfToken"/>

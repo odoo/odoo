@@ -9,7 +9,7 @@ import { pick } from "@web/core/utils/objects";
 import { renderToString } from "@web/core/utils/render";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 
-import { Component, useState, onWillStart, useRef, useEffect } from "@odoo/owl";
+import { Component, useState, onWillStart, useRef, useEffect, status } from "@odoo/owl";
 
 let htmlId = 0;
 export class NameAndSignature extends Component {
@@ -270,6 +270,9 @@ export class NameAndSignature extends Component {
      *  - call @see setMode with reset
      */
     resetSignature() {
+        if (status(this) === "destroyed") {
+            return;
+        }
         const { width, height } = this.resizeSignature();
 
         this.$signatureField.empty().jSignature({
