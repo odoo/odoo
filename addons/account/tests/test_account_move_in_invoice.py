@@ -2302,7 +2302,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         move = move_form.save()
         self.assertEqual(move.invoice_date.strftime('%Y-%m-%d'), '2022-05-06')
 
-    def _assert_payment_move_state(self, move_type, amount, counterpart_values_list, payment_state):
+    def _assert_payment_move_state(self, move_type, amount, counterpart_values_list, payment_state, post_move=True):
         def assert_partial(line1, line2):
             partial = self.env['account.partial.reconcile'].search(expression.OR([
                 [('debit_move_id', '=', line1.id), ('credit_move_id', '=', line2.id)],
@@ -2343,7 +2343,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                     }),
                 ]
             move = self.env['account.move'].create(move_vals)
-            move.action_post()
+            if post_move:
+                move.action_post()
             return move
 
         def create_payment(move, amount):
@@ -2485,6 +2486,69 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 payment_state=payment_state,
             ):
                 self._assert_payment_move_state(move_type, amount, counterpart_values_list, payment_state)
+
+    def test_payment_move_state_draft(self):
+        for move_type, amount, counterpart_values_list, payment_state, *extra in (
+            ('out_invoice', 1000.0, [('out_refund', 1000.0)], 'reversed'),
+            ('out_invoice', 1000.0, [('out_refund', 500.0), ('out_refund', 500.0)], 'reversed'),
+            ('out_invoice', 1000.0, [('out_refund', 500.0), ('entry', -500.0)], 'reversed'),
+            ('out_receipt', 1000.0, [('out_refund', 1000.0)], 'reversed'),
+            ('out_receipt', 1000.0, [('out_refund', 500.0), ('out_refund', 500.0)], 'reversed'),
+            ('out_refund', 1000.0, [('entry', 1000.0)], 'reversed'),
+            ('in_invoice', 1000.0, [('in_refund', 1000.0)], 'reversed'),
+            ('in_invoice', 1000.0, [('in_refund', 500.0), ('in_refund', 500.0)], 'reversed'),
+            ('in_invoice', 1000.0, [('in_refund', 500.0), ('entry', 500.0)], 'reversed'),
+            ('in_receipt', 1000.0, [('in_refund', 1000.0)], 'reversed'),
+            ('in_receipt', 1000.0, [('in_refund', 500.0), ('in_refund', 500.0)], 'reversed'),
+            ('in_refund', 1000.0, [('entry', -1000.0)], 'reversed'),
+            ('entry', 1000.0, [('entry', -1000.0)], 'not_paid'),
+            ('out_invoice', 1000.0, [('payment', 500.0)], 'not_paid'),
+            ('out_invoice', 1000.0, [('payment', 1000.0)], 'not_paid'),
+            ('out_invoice', 1000.0, [('statement_line', 500.0)], 'partial'),
+            ('out_invoice', 1000.0, [('statement_line', 1000.0)], 'paid'),
+            ('out_receipt', 1000.0, [('payment', 500.0)], 'not_paid'),
+            ('out_receipt', 1000.0, [('payment', 1000.0)], 'not_paid'),
+            ('out_receipt', 1000.0, [('statement_line', 500.0)], 'partial'),
+            ('out_receipt', 1000.0, [('statement_line', 1000.0)], 'paid'),
+            ('out_refund', 1000.0, [('payment', 500.0)], 'not_paid'),
+            ('out_refund', 1000.0, [('payment', 1000.0)], 'not_paid'),
+            ('out_refund', 1000.0, [('statement_line', -500.0)], 'partial'),
+            ('out_refund', 1000.0, [('statement_line', -1000.0)], 'paid'),
+            ('in_invoice', 1000.0, [('payment', 500.0)], 'not_paid'),
+            ('in_invoice', 1000.0, [('payment', 1000.0)], 'not_paid'),
+            ('in_invoice', 1000.0, [('statement_line', -500.0)], 'partial'),
+            ('in_invoice', 1000.0, [('statement_line', -1000.0)], 'paid'),
+            ('in_receipt', 1000.0, [('payment', 500.0)], 'not_paid'),
+            ('in_receipt', 1000.0, [('payment', 1000.0)], 'not_paid'),
+            ('in_receipt', 1000.0, [('statement_line', -500.0)], 'partial'),
+            ('in_receipt', 1000.0, [('statement_line', -1000.0)], 'paid'),
+            ('in_refund', 1000.0, [('payment', 500.0)], 'not_paid'),
+            ('in_refund', 1000.0, [('payment', 1000.0)], 'not_paid'),
+            ('in_refund', 1000.0, [('statement_line', 500.0)], 'partial'),
+            ('in_refund', 1000.0, [('statement_line', 1000.0)], 'paid'),
+            ('entry', 1000.0, [('payment', 500.0)], 'not_paid'),
+            ('entry', 1000.0, [('payment', 1000.0)], 'not_paid'),
+            ('entry', 1000.0, [('statement_line', 500.0)], 'not_paid'),
+            ('entry', 1000.0, [('statement_line', 1000.0)], 'not_paid'),
+            ('out_invoice', 1000.0, [('out_refund', 500.0), ('payment', 500.0)], 'partial'),
+            ('out_invoice', 1000.0, [('out_refund', 500.0), ('payment', 400.0)], 'partial'),
+            ('out_invoice', 1000.0, [('out_refund', 500.0), ('statement_line', 500.0)], 'paid'),
+            ('out_invoice', 1000.0, [('out_refund', 500.0), ('statement_line', 400.0)], 'partial'),
+            ('out_invoice', 1000.0, [('entry', -1000.0)], 'paid'),
+            ('in_invoice', 1000.0, [('in_refund', 500.0), ('payment', 500.0)], 'partial'),
+            ('in_invoice', 1000.0, [('in_refund', 500.0), ('payment', 400.0)], 'partial'),
+            ('in_invoice', 1000.0, [('in_refund', 500.0), ('statement_line', -500.0)], 'paid'),
+            ('in_invoice', 1000.0, [('in_refund', 500.0), ('statement_line', -400.0)], 'partial'),
+            ('in_invoice', 1000.0, [('entry', 1000.0)], 'paid'),
+            ('out_invoice', 0.0, [], 'not_paid'),
+        ):
+            with self.subTest(
+                move_type=move_type,
+                amount=amount,
+                counterpart_values_list=counterpart_values_list,
+                payment_state=payment_state,
+            ):
+                self._assert_payment_move_state(move_type, amount, counterpart_values_list, payment_state, post_move=False)
 
     def test_onchange_journal_currency(self):
         """

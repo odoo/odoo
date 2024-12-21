@@ -2657,15 +2657,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
     # Test creation of extra journal entries during the reconciliation to
     # deal with taxes that are exigible on payment (cash basis).
     # -------------------------------------------------------------------------
-
-    def test_reconcile_cash_basis_workflow_single_currency(self):
-        ''' Test the generated journal entries during the reconciliation to manage the cash basis taxes.
-        Also,
-        - Test the case when there is multiple receivable/payable accounts.
-        - Test the reconciliation with tiny amounts.
-        - Check there is no rounding issue when making the percentage.
-        - Check there is no lost cents when the journal entry is fully reconciled.
-        '''
+    def _prepare_cash_basis_move_and_payment(self):
         self.env.company.tax_exigibility = True
         self.cash_basis_tax_tiny_amount.amount = 0.01
         cash_basis_move = self.env['account.move'].with_context(skip_invoice_sync=True).create({
@@ -2732,6 +2724,17 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         })
 
+        return cash_basis_move, payment_move
+
+    def test_reconcile_cash_basis_workflow_single_currency(self):
+        ''' Test the generated journal entries during the reconciliation to manage the cash basis taxes.
+        Also,
+        - Test the case when there is multiple receivable/payable accounts.
+        - Test the reconciliation with tiny amounts.
+        - Check there is no rounding issue when making the percentage.
+        - Check there is no lost cents when the journal entry is fully reconciled.
+        '''
+        cash_basis_move, payment_move = self._prepare_cash_basis_move_and_payment()
         (cash_basis_move + payment_move).action_post()
 
         # Initial amounts by accounts:
@@ -2875,6 +2878,17 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             (self.tax_account_1,                    -33.33,     -33.33),
             (self.tax_account_2,                    -0.01,      -0.01),
         ])
+
+    def test_reconcile_draft_cash_basis_user_error(self):
+        ''' Test that a user error is raised when trying to generate cash basis entries from reconciling draft moves.
+        '''
+        cash_basis_move, payment_move = self._prepare_cash_basis_move_and_payment()
+        payment_move.action_post()
+
+        receivable_lines = (cash_basis_move + payment_move).line_ids\
+            .filtered(lambda line: line.account_id == self.extra_receivable_account_1)
+        with self.assertRaisesRegex(UserError, "generate cash basis entries for draft entries"):
+            receivable_lines.reconcile()
 
     def test_reconcile_cash_basis_workflow_multi_currency(self):
         ''' Same as before with a foreign currency. '''
