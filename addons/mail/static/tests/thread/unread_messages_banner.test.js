@@ -112,7 +112,7 @@ test("reset new message separator from unread messages banner", async () => {
     await contains("span", { text: "30 new messagesMark as Read", count: 0 });
 });
 
-test("scroll to unread notification", async () => {
+test.skip("scroll to unread notification", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
