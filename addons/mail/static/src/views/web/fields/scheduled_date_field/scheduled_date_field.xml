@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mail.ScheduledDateField">
+    <button t-attf-class="btn btn-light #{scheduledDate ? 'text-info' : ''}" data-hotkey="s" t-on-click="onClick" title="Send Later">
+        <i class="fa fa-clock-o"/>
+        <span t-if="scheduledDate">
+            Sending <t t-out="scheduledDate.toLocaleString(this.dateTimeFormat)"/>
+        </span>
+    </button>
+</t>
+</templates>

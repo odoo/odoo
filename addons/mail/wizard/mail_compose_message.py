@@ -10,6 +10,7 @@ from odoo import _, api, fields, models, Command, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.mail import is_html_empty, email_normalize, email_split_and_format
+from odoo.tools.misc import clean_context
 from odoo.addons.mail.tools.parser import parse_res_ids
 
 
@@ -654,15 +655,18 @@ class MailComposeMessage(models.TransientModel):
     # ACTIONS
     # ------------------------------------------------------------
 
-    def action_schedule_message(self, scheduled_date=False):
+    def action_schedule_message(self):
         # currently only allowed in mono-comment mode
         if any(wizard.composition_mode != 'comment' or wizard.composition_batch for wizard in self):
             raise UserError(_("A message can only be scheduled in monocomment mode"))
         create_values = []
+        # some actions might be triggered on message post based on some context keys
+        cleaned_ctx = clean_context(self.env.context)
         for wizard in self:
             res_id = wizard._evaluate_res_ids()[0]
             post_values = self._prepare_mail_values([res_id])[res_id]
-            post_scheduled_date = post_values.pop('scheduled_date')
+            if not post_values['scheduled_date']:
+                raise UserError(_("A scheduled date is needed to schedule a message"))
             create_values.append({
                 'attachment_ids': post_values.pop('attachment_ids'),
                 'author_id': post_values.pop('author_id'),
@@ -671,7 +675,8 @@ class MailComposeMessage(models.TransientModel):
                 'model': wizard.model,
                 'partner_ids': post_values.pop('partner_ids'),
                 'res_id': res_id,
-                'scheduled_date': scheduled_date or post_scheduled_date,
+                'scheduled_date': post_values.pop('scheduled_date'),
+                'send_context': cleaned_ctx,
                 'subject': post_values.pop('subject'),
                 'notification_parameters': json.dumps(post_values),  # last to not include popped post_values
             })
