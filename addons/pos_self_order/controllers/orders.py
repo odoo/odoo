@@ -115,6 +115,15 @@ class PosSelfOrderController(http.Controller):
                     })
                 lst_price = 0
 
+    @http.route('/pos-self-order/get-available-tables', auth='public', type='jsonrpc', website=True)
+    def get_available_tables(self, access_token, order_access_tokens):
+        pos_config = self._verify_pos_config(access_token)
+        orders = pos_config.current_session_id.order_ids.filtered_domain([
+            ("access_token", "not in", order_access_tokens)
+        ])
+        available_table_ids = pos_config.floor_ids.table_ids - orders.mapped('table_id')
+        return available_table_ids.read(['id'])
+
     @http.route('/pos-self-order/get-orders', auth='public', type='jsonrpc', website=True)
     def get_orders_by_access_token(self, access_token, order_access_tokens):
         pos_config = self._verify_pos_config(access_token)

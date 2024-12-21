@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from typing import Dict
-
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 
 class PosOrderLine(models.Model):
@@ -65,3 +64,11 @@ class PosOrder(models.Model):
                 'pos.payment.method': order.payment_ids.mapped('payment_method_id').read(self.env['pos.payment.method']._load_pos_data_fields(order.config_id.id), load=False),
                 'product.attribute.custom.value':  order.lines.custom_attribute_value_ids.read(order.lines.custom_attribute_value_ids._load_pos_data_fields(order.config_id.id), load=False),
             })
+
+    def _get_open_order(self, order):
+        open_order = super()._get_open_order(order)
+        if not self.env.context.get('from_self'):
+            return open_order
+        elif open_order:
+            del order['table_id']
+        return self.env['pos.order'].search([('uuid', '=', order.get('uuid'))], limit=1)
