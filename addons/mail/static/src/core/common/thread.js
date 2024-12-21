@@ -23,6 +23,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Transition } from "@web/core/transition";
 import { useBus, useRefListener, useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
+import { NotificationMessage } from "./notification_message";
 
 export const PRESENT_VIEWPORT_THRESHOLD = 3;
 const PRESENT_MESSAGE_THRESHOLD = 10;
@@ -40,7 +41,7 @@ const PRESENT_MESSAGE_THRESHOLD = 10;
  * @extends {Component<Props, Env>}
  */
 export class Thread extends Component {
-    static components = { Message, Transition, DateSection };
+    static components = { Message, NotificationMessage, Transition, DateSection };
     static props = [
         "showDates?",
         "isInChatWindow?",
