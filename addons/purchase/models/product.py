@@ -79,7 +79,6 @@ class ProductProduct(models.Model):
         action['display_name'] = _("Purchase History for %s", self.display_name)
         return action
 
-
 class ProductSupplierinfo(models.Model):
     _inherit = "product.supplierinfo"
 
@@ -87,6 +86,12 @@ class ProductSupplierinfo(models.Model):
     def _onchange_partner_id(self):
         self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
 
+    def _get_filtered_seller(self, params):
+        company_id = self.env.company.id
+        if params and 'order_id' in params and params['order_id'].company_id:
+            company_id = params['order_id'].company_id.id
+        filtered_seller = super()._get_filtered_seller(params)
+        return filtered_seller.filtered(lambda s: not s.company_id or s.company_id.id == company_id)
 
 class ProductPackaging(models.Model):
     _inherit = 'product.packaging'
