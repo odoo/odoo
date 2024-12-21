@@ -82,7 +82,7 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
             mailing.action_update_cards()
         self.assertEqual(len(self._wkhtmltoimage_bodies), 5)
 
-        with self.mock_mail_gateway(), self.assertQueryCount(243):
+        with self.mock_mail_gateway(), self.assertQueryCount(61):
             mailing._action_send_mail()
 
         cards = self.env['card.card'].search([('campaign_id', '=', campaign.id)])

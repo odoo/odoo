@@ -125,7 +125,7 @@ class TestMenuRootLookupByModel(MailCommon):
     def test_look_for_existing_menu_root_user_with_access(self):
         Menu = self.env['ir.ui.menu']
         with (self.patch_get_backend_root_menu_ids(self.env['res.company'], []),
-              self.assertQueryCount(employee=3)):
+              self.assertQueryCount(employee=2)):
             # Auto-detection: the menu root with a sub-menu having an action with a path is selected
             self.assertEqual(Menu._get_best_backend_root_menu_id_for_model('res.company'),
                              self.menu_root_settings.id)
@@ -139,14 +139,14 @@ class TestMenuRootLookupByModel(MailCommon):
                 ([self.menu_root_contact.id, self.menu_root_sales.id], self.menu_root_contact.id),
         )):
             with (self.patch_get_backend_root_menu_ids(self.env['res.partner'], return_values),
-                  self.assertQueryCount(employee=0 if idx > 0 else 1)):
+                  self.assertQueryCount(employee=0)):
                 self.assertEqual(Menu._get_best_backend_root_menu_id_for_model('res.partner'), expected_menu_root_id)
 
     @warmup
     @users('user_portal', 'user_public')
     def test_look_for_existing_menu_root_user_no_access(self):
         Menu = self.env['ir.ui.menu']
-        with self.assertQueryCount(user_portal=3, user_public=3):
+        with self.assertQueryCount(user_portal=2, user_public=2):
             self.assertEqual(Menu._get_best_backend_root_menu_id_for_model('res.partner'), None)
         with self.assertQueryCount(user_portal=1, user_public=1):
             self.assertEqual(Menu._get_best_backend_root_menu_id_for_model('res.company'), None)
@@ -158,5 +158,5 @@ class TestMenuRootLookupByModel(MailCommon):
     @warmup
     def test_look_for_non_existing_menu_root(self):
         with (self.patch_get_backend_root_menu_ids(self.env['res.bank'], []),
-              self.assertQueryCount(__system__=3)):
+              self.assertQueryCount(__system__=2)):
             self.assertEqual(self.env['ir.ui.menu']._get_best_backend_root_menu_id_for_model('res.bank'), None)

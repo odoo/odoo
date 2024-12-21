@@ -91,7 +91,7 @@ class TestMailPerformance(FullBaseMailPerformance):
         record_ticket = self.env['mail.test.ticket.mc'].browse(self.record_ticket.ids)
         attachments = self.env['ir.attachment'].create(self.test_attachments_vals)
 
-        with self.assertQueryCount(employee=99):  # test_mail_full: 98
+        with self.assertQueryCount(employee=88):  # test_mail_full: 87
             new_message = record_ticket.message_post(
                 attachment_ids=attachments.ids,
                 body=Markup('<p>Test Content</p>'),
