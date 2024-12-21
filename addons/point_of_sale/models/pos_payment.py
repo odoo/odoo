@@ -96,10 +96,8 @@ class PosPayment(models.Model):
             is_split_transaction = payment.payment_method_id.split_transactions
             if is_split_transaction and is_reverse:
                 reversed_move_receivable_account_id = accounting_partner.with_company(order.company_id).property_account_receivable_id.id
-            elif is_reverse:
-                reversed_move_receivable_account_id = payment.payment_method_id.receivable_account_id.id or self.company_id.account_default_pos_receivable_account_id.id
             else:
-                reversed_move_receivable_account_id = self.company_id.account_default_pos_receivable_account_id.id
+                reversed_move_receivable_account_id = payment.payment_method_id.receivable_account_id.id or self.company_id.account_default_pos_receivable_account_id.id
             debit_line_vals = pos_session._debit_amounts({
                 'account_id': reversed_move_receivable_account_id,
                 'move_id': payment_move.id,
