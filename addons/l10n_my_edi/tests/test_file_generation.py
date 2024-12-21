@@ -22,7 +22,7 @@ NS_MAP = {
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class L10nMyEDITestSubmission(AccountTestInvoicingCommon):
+class L10nMyEDITestFileSubmission(AccountTestInvoicingCommon):
 
     @classmethod
     @AccountTestInvoicingCommon.setup_country('my')
@@ -41,6 +41,7 @@ class L10nMyEDITestSubmission(AccountTestInvoicingCommon):
             'l10n_my_identification_number': '202001234567',
             'state_id': cls.env.ref('base.state_my_jhr').id,
             'street': 'that one street, 5',
+            'city': 'Main city',
             'phone': '+60123456789',
         })
         cls.partner_a.write({
@@ -50,6 +51,7 @@ class L10nMyEDITestSubmission(AccountTestInvoicingCommon):
             'country_id': cls.env.ref('base.my').id,
             'state_id': cls.env.ref('base.state_my_jhr').id,
             'street': 'that other street, 3',
+            'city': 'Main city',
             'phone': '+60123456786',
         })
 
