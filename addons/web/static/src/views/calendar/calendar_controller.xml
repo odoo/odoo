@@ -67,6 +67,10 @@
                                 <FilterPanel t-props="filterPanelProps" />
                             </div>
                         </div>
+                        <SuperQuickPanel t-if="showSideBar"
+                             t-props="superQuickPanelProps"
+                        />
+
                     </div>
                 </div>
             </Layout>

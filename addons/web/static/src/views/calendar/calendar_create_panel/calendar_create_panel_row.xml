@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.CalendarSuperQuickPanelFieldRow">
+        <div class="o_csqp_field mb-3">
+            <label class="o_csqp_label form-label fw-bold">
+                <t t-esc="props.fieldInfo.string || props.fieldName"/>
+            </label>
+
+            <!-- Decide what to render based on field type -->
+            <div t-if="props.fieldInfo.type === 'many2one'" class="o_csqp_input_wrapper">
+                <AutoComplete t-props="autoCompleteProps"/>
+            </div>
+
+            <div t-elif="props.fieldInfo.type === 'boolean'" class="form-check o_csqp_input_wrapper">
+                <input type="checkbox"
+                       class="form-check-input"
+                       t-model.bool="props.value"
+                       t-on-change="onValueChange"
+                />
+            </div>
+
+            <div t-elif="props.fieldInfo.type === 'float'" class="o_csqp_input_wrapper">
+                <input type="number"
+                       step="0.01"
+                       class="form-control"
+                       t-model.number="props.value"
+                       t-on-change="onValueChange"
+                />
+            </div>
+
+            <!-- fallback: treat as char -->
+            <div t-else="" class="o_csqp_input_wrapper">
+                <input type="text"
+                       class="form-control"
+                       t-model="props.value"
+                       t-on-change="onValueChange"
+                />
+            </div>
+        </div>
+    </t>
+
+    <!-- AutoComplete option template if you want custom display -->
+    <t t-name="web.CalendarSuperQuickPanelAutoCompleteOption">
+        <span t-esc="option.label"/>
+    </t>
+</templates>

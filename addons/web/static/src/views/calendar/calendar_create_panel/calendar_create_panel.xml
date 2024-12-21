@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- The main panel template -->
+    <t t-name="web.CalendarSuperQuickPanel">
+        <div class="o_calendar_super_quick_panel bg-light p-3 h-100 d-flex flex-column">
+            <h5 class="mb-3">
+                <t t-esc="panelTitle"/>
+            </h5>
+            <div>
+                <t t-foreach="sortedFieldNames" t-as="fieldName" t-key="fieldName">
+                    <FieldRow
+                        t-props="fieldRowProps(fieldName)"
+                    />
+                </t>
+            </div>
+            <!-- example "Save" button if you want -->
+            <button class="btn btn-primary mt-auto" t-on-click="() => console.log(state.values)">
+                Save
+            </button>
+        </div>
+    </t>
+
+    <!-- The row for a single field -->
+</templates>

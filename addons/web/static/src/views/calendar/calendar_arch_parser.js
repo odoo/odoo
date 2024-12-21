@@ -38,7 +38,9 @@ export class CalendarArchParser {
         let isTimeHidden = false;
         let formViewId = false;
         const popoverFieldNodes = {};
+        const superQuickPanelFields = {};
         const filtersInfo = {};
+
 
         visitXML(arch, (node) => {
             switch (node.tagName) {
@@ -127,6 +129,7 @@ export class CalendarArchParser {
                         jsClass
                     );
                     popoverFieldNodes[fieldName] = fieldInfo;
+                    superQuickPanelFields[fieldName] = fieldInfo;
 
                     const field = fields[fieldName];
                     if (!node.hasAttribute("invisible") || node.hasAttribute("filters")) {
@@ -182,6 +185,20 @@ export class CalendarArchParser {
 
                     break;
                 }
+                case "SuperQuickPanel": {
+                    console.log("heheheh")
+                    for (const child of node.children) {
+                        if (child.tagName === "field" && child.hasAttribute("name")) {
+                            const fieldName = child.getAttribute("name");
+                            superQuickPanelFields.push({
+                                name: fieldName,
+                                downsize: child.getAttribute("downsize") || null,
+                                string: child.getAttribute("string") || fieldName,
+                            });
+                        }
+                    }
+                    break;
+                }
             }
         });
 
@@ -203,6 +220,7 @@ export class CalendarArchParser {
             scale,
             scales,
             showUnusualDays,
+            superQuickPanelFields
         };
     }
 }
