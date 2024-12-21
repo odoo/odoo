@@ -1813,6 +1813,7 @@ class MailCommon(common.TransactionCase, MailCase):
                 data.pop("rating_avg", None)
                 data.pop("rating_count", None)
             if "whatsapp.message" not in self.env:
+                data.pop("whatsapp_account_name", None)
                 data.pop("whatsapp_channel_valid_until", None)
                 data.pop("whatsapp_partner_id", None)
         return list(threads_data)
