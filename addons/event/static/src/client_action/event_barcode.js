@@ -135,9 +135,34 @@ export class EventScanView extends Component {
 
     onClickBackToEvents() {
         if (this.isMultiEvent) {
+<<<<<<< saas-17.4
             // define action from scratch instead of using existing 'action_event_view' to avoid
             // messing with menu bar
             this.actionService.doAction("event.action_event_view", { clearBreadcrumbs: true });
+||||||| 86a85067ec9d10bf03422bcbcc705717d0a05dfe
+            // define action from scratch instead of using existing 'action_event_view' to avoid
+            // messing with menu bar
+            this.actionService.doAction({
+                type: "ir.actions.act_window",
+                name: _t("Events"),
+                res_model: "event.event",
+                views: [
+                    [false, "kanban"],
+                    [false, "calendar"],
+                    [false, "list"],
+                    [false, "gantt"],
+                    [false, "form"],
+                    [false, "pivot"],
+                    [false, "graph"],
+                    [false, "map"],
+                ],
+                target: "main",
+            });
+=======
+            this.actionService.doAction("event.action_event_view", {
+                clearBreadcrumbs: true,
+            });
+>>>>>>> e54e718533decd9ee33f38aac2b3f673382af2d5
         } else {
             this.actionService.restore();
         }
