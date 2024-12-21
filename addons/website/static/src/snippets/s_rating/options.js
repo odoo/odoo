@@ -1,4 +1,5 @@
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
+import { _t } from "@web/core/l10n/translation";
 
 import options from "@web_editor/js/editor/snippets.options";
 
@@ -124,11 +125,11 @@ options.registry.Rating = options.Class.extend({
      */
     _renderIcons: function () {
         const icons = {
-            'fa-star': 'fa-star-o',
-            'fa-thumbs-up': 'fa-thumbs-o-up',
-            'fa-circle': 'fa-circle-o',
-            'fa-square': 'fa-square-o',
-            'fa-heart': 'fa-heart-o'
+            'fa-star': 'fa-star',
+            'fa-thumbs-up': 'fa-thumbs-up',
+            'fa-circle': 'fa-circle',
+            'fa-square': 'fa-square',
+            'fa-heart': 'fa-heart'
         };
         const faClassActiveIcons = (this.iconType === "custom") ? this.faClassActiveCustomIcons : 'fa ' + this.iconType;
         const faClassInactiveIcons = (this.iconType === "custom") ? this.faClassInactiveCustomIcons : 'fa ' + icons[this.iconType];
@@ -136,5 +137,9 @@ options.registry.Rating = options.Class.extend({
         const $inactiveIcons = this.$target.find('.s_rating_inactive_icons > i');
         $activeIcons.removeClass().addClass(faClassActiveIcons);
         $inactiveIcons.removeClass().addClass(faClassInactiveIcons);
+        this.$target[0].setAttribute("aria-label", _t("%(amount)s out of %(total)s stars", {
+            amount: this.nbActiveIcons || 0,
+            total: this.nbTotalIcons,
+        }));
     },
 });
