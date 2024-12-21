@@ -26,7 +26,7 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
-    batch_for_taxes_computation(taxes, { special_mode = false } = {}) {
+    batch_for_taxes_computation(taxes, { special_mode = null } = {}) {
         function sort_key(taxes) {
             return taxes.sort((t1, t2) => t1.sequence - t2.sequence || t1.id - t2.id);
         }
@@ -80,7 +80,7 @@ export const accountTaxHelpers = {
         return results;
     },
 
-    propagate_extra_taxes_base(taxes, tax, taxes_data, { special_mode = false } = {}) {
+    propagate_extra_taxes_base(taxes, tax, taxes_data, { special_mode = null } = {}) {
         function* get_tax_before() {
             for (const tax_before of taxes) {
                 if (taxes_data[tax.id].batch.includes(tax_before)) {
@@ -223,7 +223,7 @@ export const accountTaxHelpers = {
             // method because we have no way to deal with it automatically in this method since it depends of
             // the type of involved fields and we don't have access to this information js-side.
             product = null,
-            special_mode = false,
+            special_mode = null,
         } = {}
     ) {
         const self = this;
@@ -465,8 +465,8 @@ export const accountTaxHelpers = {
             discount: load('discount', 0.0),
             currency_id: load('currency_id', {}),
             sign: load('sign', 1.0),
-            special_mode: kwargs.special_mode || false,
-            special_type: kwargs.special_type || false,
+            special_mode: kwargs.special_mode || null,
+            special_type: kwargs.special_type || null,
         }
     },
 
@@ -580,14 +580,6 @@ export const accountTaxHelpers = {
             }
         }
 
-        // Round 'total_per_tax'.
-        for (const amounts of Object.values(total_per_tax)) {
-            amounts.raw_tax_amount_currency = roundPrecision(amounts.raw_tax_amount_currency, amounts.currency_pd);
-            amounts.raw_tax_amount = roundPrecision(amounts.raw_tax_amount, amounts.company_currency_pd);
-            amounts.raw_base_amount_currency = roundPrecision(amounts.raw_base_amount_currency, amounts.currency_pd);
-            amounts.raw_base_amount = roundPrecision(amounts.raw_base_amount, amounts.company_currency_pd);
-        }
-
         // Dispatch the delta across the base lines.
         for (const amounts of Object.values(total_per_tax)) {
             if (!amounts.base_lines.length){
@@ -597,22 +589,22 @@ export const accountTaxHelpers = {
             const base_line = amounts.base_lines.sort(
                 (a, b) => a.tax_details.total_included_currency - b.tax_details.total_included_currency
             )[0];
-
             const tax_details = base_line.tax_details;
             const [index, tax_data] = tax_details.taxes_data.map((x, i) => [i, x]).find(([i, x]) => x.tax.id === amounts.tax.id);
-
-            const delta_base_amount_currency = amounts.raw_base_amount_currency - amounts.base_amount_currency;
-            const delta_base_amount = amounts.raw_base_amount - amounts.base_amount;
-
+            const delta_amount_currency = roundPrecision(amounts.raw_base_amount_currency + amounts.raw_tax_amount_currency, amounts.currency_pd) - amounts.base_amount_currency - amounts.tax_amount_currency;
+            const delta_amount = roundPrecision(amounts.raw_base_amount + amounts.raw_tax_amount, amounts.company_currency_pd) - amounts.base_amount - amounts.tax_amount;
+            const delta_tax_amount_currency = roundPrecision(amounts.raw_tax_amount_currency, amounts.currency_pd) - amounts.tax_amount_currency;
+            const delta_tax_amount = roundPrecision(amounts.raw_tax_amount, amounts.company_currency_pd) - amounts.tax_amount;
+            const delta_base_amount_currency = delta_amount_currency - delta_tax_amount_currency;
+            const delta_base_amount = delta_amount - delta_tax_amount;
             if (index === 0) {
                 tax_details.delta_base_amount_currency += delta_base_amount_currency;
                 tax_details.delta_base_amount += delta_base_amount;
             }
-
             tax_data.base_amount_currency += delta_base_amount_currency;
             tax_data.base_amount += delta_base_amount;
-            tax_data.tax_amount_currency += amounts.raw_tax_amount_currency - amounts.tax_amount_currency;
-            tax_data.tax_amount += amounts.raw_tax_amount - amounts.tax_amount;
+            tax_data.tax_amount_currency += delta_tax_amount_currency;
+            tax_data.tax_amount += delta_tax_amount;
         }
     },
 
