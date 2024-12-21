@@ -101,7 +101,7 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         self.assertEqual(self.test_user.karma, 40)
         self.assertEqual(self.test_user_2.karma, 200)
 
-        with self.assertQueryCount(8), patch.object(type(self.env['res.users']), 'write') as patched_user_write:
+        with self.assertQueryCount(6), patch.object(type(self.env['res.users']), 'write') as patched_user_write:
             Tracking._consolidate_cron()
 
         # consolidation should not change user karma
@@ -264,7 +264,7 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         last_tracking_3 = self.test_user_2.karma_tracking_ids[-1]
 
         users = (user | self.test_user | self.test_user_2).with_user(self.test_user)
-        with self.assertQueryCount(11):
+        with self.assertQueryCount(7):
             users.karma = 100
 
         tracking_1 = user.karma_tracking_ids[-1]
