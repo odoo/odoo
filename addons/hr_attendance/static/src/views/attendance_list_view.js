@@ -22,9 +22,9 @@ export class AttendanceListModel extends listView.Model {
 
     /** @override **/
     async load(params = {}) {
-        const activeDomainParam = params.domain.some((index) => Array.isArray(index) && index[0] == "employee_id.active");
+        const activeDomainParam = params.domain?.some((index) => Array.isArray(index) && index[0] == "employee_id.active");
         if (!activeDomainParam) {
-            params.domain.push(["employee_id.active", "=", true]);
+            params.domain?.push(["employee_id.active", "=", true]);
         }
         return super.load(params);
     }
