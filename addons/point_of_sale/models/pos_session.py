@@ -92,6 +92,7 @@ class PosSession(models.Model):
     is_in_company_currency = fields.Boolean('Is Using Company Currency', compute='_compute_is_in_company_currency')
     update_stock_at_closing = fields.Boolean('Stock should be updated at closing')
     bank_payment_ids = fields.One2many('account.payment', 'pos_session_id', 'Bank Payments', help='Account payments representing aggregated and bank split payments.')
+    sync_required = fields.Boolean()
 
     _uniq_name = models.Constraint(
         'unique(name)',
@@ -176,6 +177,7 @@ class PosSession(models.Model):
             except AccessError:
                 response[model] = []
 
+        self.sync_required = False
         return response
 
     def load_data_params(self):
@@ -193,6 +195,9 @@ class PosSession(models.Model):
                 'relations': self._load_pos_data_relations(model, fields)
             }
 
+        if self.sync_required:
+            response['_sync_required']= self.sync_required
+            
         return response
 
     def delete_opening_control_session(self):
@@ -598,7 +603,7 @@ class PosSession(models.Model):
             return check_closing_session
 
         validate_result = self.action_pos_session_closing_control(bank_payment_method_diffs=bank_payment_method_diffs)
-
+        self.sync_required = False
         # If an error is raised, the user will still be redirected to the back end to manually close the session.
         # If the return result is a dict, this means that normally we have a redirection or a wizard => we redirect the user
         if isinstance(validate_result, dict):

@@ -180,12 +180,13 @@ export class PosData extends Reactive {
         let localData = await this.getCachedServerDataFromIndexedDB();
         const sessionState = localData?.["pos.session"]?.[0]?.state;
 
-        if (navigator.onLine && sessionState !== "opened") {
+        if (navigator.onLine && (sessionState !== "opened" || this.sync_required)) {
             try {
                 const limitedLoading = this.isLimitedLoading();
                 const serverDate = localData?.["pos.session"]?.[0]?._data_server_date;
                 const lastConfigChange = DateTime.fromSQL(odoo.last_data_change);
                 const serverDateTime = DateTime.fromSQL(serverDate);
+                this.sync_required = false;
 
                 if (serverDateTime < lastConfigChange) {
                     await this.resetIndexedDB();
@@ -257,6 +258,8 @@ export class PosData extends Reactive {
             const params = await this.orm.call("pos.session", "load_data_params", [
                 odoo.pos_session_id,
             ]);
+            this.sync_required = params._sync_required === true;
+            delete params._sync_required;
             localStorage.setItem(key, JSON.stringify(params));
             return params;
         } catch {

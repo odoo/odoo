@@ -20,6 +20,11 @@ class PosConfig(models.Model):
         forbidden_keys.append('floor_ids')
         return forbidden_keys
 
+    def _get_session_sync_required_fields(self):
+        keys = super()._get_session_sync_required_fields()
+        keys.extend(['set_tip_after_payment','module_pos_restaurant_appointment', 'appointment_type_id'])
+        return keys
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
