@@ -70,12 +70,10 @@ export class X2ManyField extends Component {
             }),
             fieldType: this.isMany2Many ? "many2many" : "one2many",
             subViewActiveActions,
-            getEvalParams: (props) => {
-                return {
-                    evalContext: props.record.evalContext,
-                    readonly: props.readonly,
-                };
-            },
+            getEvalParams: (props) => ({
+                evalContext: props.record.evalContext,
+                readonly: props.readonly,
+            }),
         });
 
         this.addInLine = useAddInlineRecord({
@@ -193,12 +191,12 @@ export class X2ManyField extends Component {
             archInfo,
             list: this.list,
             openRecord: this.openRecord.bind(this),
+            readonly: this.props.readonly,
         };
 
         if (this.props.viewMode === "kanban") {
             const recordsDraggable = !this.props.readonly && archInfo.recordsDraggable;
             props.archInfo = { ...archInfo, recordsDraggable };
-            props.readonly = this.props.readonly;
             // TODO: apply same logic in the list case
             props.deleteRecord = (record) => {
                 if (this.isMany2Many) {
@@ -273,7 +271,7 @@ export class X2ManyField extends Component {
             return this._openRecord({
                 record,
                 context: this.props.context,
-                mode: this.props.readonly ? "readonly" : "edit",
+                readonly: this.props.readonly,
             });
         }
     }
