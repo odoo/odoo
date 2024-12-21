@@ -1142,7 +1142,7 @@ def _optimize_relational_name_search(condition, model):
         value = _value_to_ids(value, comodel, positive_operator)
     else:
         comodel = comodel.with_context(**field.context)
-        additional_domain = Domain(field.get_domain_list(model))
+        additional_domain = field.get_comodel_domain(model)
         value = _value_to_ids(value, comodel, positive_operator, additional_domain)
     if isinstance(value, OrderedSet):
         any_operator = 'in' if positive else 'not in'
