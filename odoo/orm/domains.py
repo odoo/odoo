@@ -1067,6 +1067,18 @@ def _optimize_in_list(condition, _):
     return DomainCondition(condition.field_expr, condition.operator, OrderedSet(value))
 
 
+@operator_optimization(['in', 'not in'])
+def _optimize_in_required(condition, model):
+    """Remove checks against a null value for required fields."""
+    value = condition.value
+    field = condition._field()
+    if field.falsy_value is None and field.required and model.env.registry.constraints_validated:
+        value = OrderedSet(v for v in value if v is not False)
+    if len(value) == len(condition.value):
+        return condition
+    return DomainCondition(condition.field_expr, condition.operator, value)
+
+
 @operator_optimization(['any', 'not any'])
 def _optimize_any_domain(condition, model):
     """Make sure the value is an optimized domain (or Query or SQL)"""

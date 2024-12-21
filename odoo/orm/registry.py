@@ -116,6 +116,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
     _init: bool  # whether init needs to be done
     ready: bool  # whether everything is set up
     loaded: bool  # whether all modules are loaded
+    constraints_validated: bool  # whether there was no errors during validation of constraints
     models: dict[str, type[BaseModel]]
 
     @classmethod
@@ -166,6 +167,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self._init = True
         self.loaded = False
         self.ready = False
+        self.constraints_validated = False
 
         self.models: dict[str, type[BaseModel]] = {}    # model name/model instance mapping
         self._sql_constraints = set()  # type: ignore
@@ -586,6 +588,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 # warn only, this is not a deployment showstopper, and
                 # can sometimes be a transient error
                 _schema.warning(*e.args)
+                self.constraints_validated = False
 
     def init_models(self, cr: Cursor, model_names: Iterable[str], context: dict[str, typing.Any], install: bool = True):
         """ Initialize a list of models (given by their name). Call methods
@@ -629,6 +632,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 func = self._post_init_queue.popleft()
                 func()
 
+            self.constraints_validated = True
+            self.check_null_constraints(cr, model_names)
             self.check_indexes(cr, model_names)
             self.check_foreign_keys(cr)
 
@@ -641,6 +646,25 @@ class Registry(Mapping[str, type["BaseModel"]]):
             del self._post_init_queue
             del self._foreign_keys
             del self._is_install
+
+    def check_null_constraints(self, cr: Cursor, model_names: Iterable[str]) -> None:
+        """ Check that all null constraints are set. """
+        expected = [
+            (Model, field)
+            for model_name in model_names
+            for Model in [self.models[model_name]]
+            if Model._auto and not Model._abstract
+            for field in Model._fields.values()
+            if field.column_type and field.store and field.required
+        ]
+        cr.execute("SELECT table_name, column_name FROM information_schema.columns WHERE is_nullable = 'NO' AND table_schema = 'public'")
+        existing = set(cr.fetchall())
+
+        for Model, field in expected:
+            if (Model._table, field.name) in existing:
+                continue
+            self.constraints_validated = False
+            _schema.warning("Missing non-null constraint on %s", field)
 
     def check_indexes(self, cr: Cursor, model_names: Iterable[str]) -> None:
         """ Create or drop column indexes for the given models. """
@@ -699,6 +723,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                         sql.create_index(cr, indexname, tablename, [expression], method, where)
                 except psycopg2.OperationalError:
                     _schema.error("Unable to add index for %s", self)
+                    self.constraints_validated = False
 
             elif not index and tablename == existing.get(indexname):
                 _schema.info("Keep unexpected index %s on table %s", indexname, tablename)
