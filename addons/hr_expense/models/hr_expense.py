@@ -110,6 +110,14 @@ class HrExpense(models.Model):
     duplicate_expense_ids = fields.Many2many(comodel_name='hr.expense', compute='_compute_duplicate_expense_ids')  # Used to trigger warnings
     same_receipt_expense_ids = fields.Many2many(comodel_name='hr.expense', compute='_compute_same_receipt_expense_ids')  # Used to trigger warnings
 
+    split_expense_ids = fields.Many2many(
+        comodel_name='hr.expense',
+        relation='hr_expense_split_rel',
+        column1='expense_id',
+        column2='related_expense_id',
+        string="Related Split Expenses",
+        help="All expenses related to this split, including the original and the splits.",
+    )
     # Amount fields
     tax_amount_currency = fields.Monetary(
         string="Tax amount in Currency",
@@ -725,6 +733,9 @@ class HrExpense(models.Model):
     # ----------------------------------------
     # Actions
     # ----------------------------------------
+
+    def action_open_split_expense(self):
+        return self.split_expense_ids._get_records_action(name=_("Split Expenses"))
 
     def action_show_same_receipt_expense_ids(self):
         self.ensure_one()
