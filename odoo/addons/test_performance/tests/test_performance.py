@@ -55,7 +55,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
         records = self.env['test_performance.base'].search([])
         self.assertEqual(len(records), 5)
 
-        with self.assertQueryCount(__system__=3, demo=3):
+        with self.assertQueryCount(__system__=2, demo=3):
             # without cache
             for record in records:
                 record.partner_id.country_id.name
@@ -285,12 +285,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
         self.assertEqual(rec1.line_ids, lines)
 
         # delete N lines: O(1) queries
-        with self.assertQueryCount(12):
+        with self.assertQueryCount(10):
             self.env.invalidate_all()
             rec1.write({'line_ids': [Command.delete(line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
 
-        with self.assertQueryCount(11):
+        with self.assertQueryCount(9):
             self.env.invalidate_all()
             rec1.write({'line_ids': [Command.delete(line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
@@ -300,12 +300,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
         lines = rec1.line_ids
 
         # unlink N lines: O(1) queries
-        with self.assertQueryCount(12):
+        with self.assertQueryCount(10):
             self.env.invalidate_all()
             rec1.write({'line_ids': [Command.unlink(line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
 
-        with self.assertQueryCount(11):
+        with self.assertQueryCount(9):
             self.env.invalidate_all()
             rec1.write({'line_ids': [Command.unlink(line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
@@ -339,7 +339,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
         self.assertEqual(rec2.line_ids, lines)
 
         # empty N lines in rec2: O(1) queries
-        with self.assertQueryCount(12):
+        with self.assertQueryCount(10):
             self.env.invalidate_all()
             rec2.write({'line_ids': [Command.clear()]})
         self.assertFalse(rec2.line_ids)
@@ -413,12 +413,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
         self.assertEqual(rec1.tag_ids, tags)
 
         # delete N tags: O(1) queries
-        with self.assertQueryCount(__system__=8, demo=8):
+        with self.assertQueryCount(__system__=6, demo=6):
             self.env.invalidate_all()
             rec1.write({'tag_ids': [Command.delete(tag.id) for tag in tags[0]]})
         self.assertEqual(rec1.tag_ids, tags[1:])
 
-        with self.assertQueryCount(__system__=8, demo=8):
+        with self.assertQueryCount(__system__=6, demo=6):
             self.env.invalidate_all()
             rec1.write({'tag_ids': [Command.delete(tag.id) for tag in tags[1:]]})
         self.assertFalse(rec1.tag_ids)
@@ -560,10 +560,10 @@ class TestPerformance(SavepointCaseWithUserDemo):
         self.assertEqual(len(records), 1280)
 
         # should only cause 2 queries thanks to prefetching
-        with self.assertQueryCount(__system__=2, demo=2):
+        with self.assertQueryCount(__system__=1, demo=1):
             records.mapped('value')
 
-        with self.assertQueryCount(__system__=2, demo=2):
+        with self.assertQueryCount(__system__=1, demo=1):
             records.invalidate_model(['value'])
             records.mapped('value')
 
@@ -681,10 +681,10 @@ class TestIrPropertyOptimizations(TransactionCase):
             self.Bacon.create({'property_eggs': False})
 
         # create with another value
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(1):
             self.Bacon.with_context(default_property_eggs=eggs.id).create({})
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(1):
             self.Bacon.create({'property_eggs': eggs.id})
 
     def test_with_truthy_default(self):
@@ -710,16 +710,16 @@ class TestIrPropertyOptimizations(TransactionCase):
         eggs = self.Eggs.create({})
         self.Bacon.create({'property_eggs': eggs.id})
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(1):
             self.Bacon.with_context(default_property_eggs=eggs.id).create({})
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(1):
             self.Bacon.create({'property_eggs': eggs.id})
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(1):
             self.Bacon.with_context(default_property_eggs=False).create({})
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(1):
             self.Bacon.create({'property_eggs': False})
 
 
