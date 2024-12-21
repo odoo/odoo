@@ -103,7 +103,11 @@ class IrModule(models.Model):
 
     def module_uninstall(self):
         unlinked_templates = [code for template in self.mapped('account_templates') for code in template]
-        self.env['res.company'].search([
-            ('chart_template', 'in', unlinked_templates),
-        ]).chart_template = False
+        if unlinked_templates:
+            companies = self.env['res.company'].search([
+                ('chart_template', 'in', unlinked_templates),
+            ])
+            companies.chart_template = False
+            companies.flush_recordset()
+
         return super().module_uninstall()
