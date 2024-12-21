@@ -6623,6 +6623,17 @@ registry.ImageTools = ImageHandlerOption.extend({
         return this._super(...arguments);
     },
 
+    /**
+     * @override
+     */
+    selectAttribute(previewMode, widgetValue, params) {
+        this._super(...arguments);
+        if (params.attributeName === "alt" && params.activeValue.trim() !== "") {
+            if (this.$target[0].getAttribute("role") === "presentation") {
+                this.$target[0].removeAttribute("role");
+            }
+        }
+    },
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
