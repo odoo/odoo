@@ -1355,6 +1355,26 @@
                                                 Add to cart
                                             </a>
                                         </div>
+                                        <div
+                                            id="contact_us_wrapper"
+                                            t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale']
+                                                else 'd-none'}} oe_structure oe_structure_solo #{_div_classes}"
+                                        >
+                                            <section
+                                                class="s_text_block"
+                                                data-snippet="s_text_block"
+                                                data-name="Text"
+                                            >
+                                                <div class="container">
+                                                    <a
+                                                        t-att-href="website.contact_us_button_url"
+                                                        class="btn btn-primary btn_cta"
+                                                    >
+                                                        Contact Us
+                                                    </a>
+                                                </div>
+                                            </section>
+                                        </div>
                                         <div id="product_option_block" class="d-flex flex-wrap w-100"/>
                                     </div>
                                 </div>
@@ -1366,25 +1386,6 @@
                                 This product has no valid combination.
                             </p>
                             <t t-call="website_sale.product_accordion"/>
-                            <div
-                                id="contact_us_wrapper"
-                                t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}} oe_structure oe_structure_solo #{_div_classes}"
-                            >
-                                <section
-                                    class="s_text_block"
-                                    data-snippet="s_text_block"
-                                    data-name="Text"
-                                >
-                                    <div class="container">
-                                        <a
-                                            t-att-href="website.contact_us_button_url"
-                                            class="btn btn-primary btn_cta"
-                                        >
-                                            Contact Us
-                                        </a>
-                                    </div>
-                                </section>
-                            </div>
                             <t
                                 t-if="is_view_active('website_sale.product_tags')"
                                 t-call="website_sale.product_tags"
