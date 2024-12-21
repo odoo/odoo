@@ -123,10 +123,36 @@ def _mock_register_proxy_user(func, self, *args, **kwargs):
 
 
 _demo_behaviour = {
+<<<<<<< master
     '_make_request': _mock_make_request,  # account_edi_proxy_client.user
     '_get_peppol_verification_state': _mock_get_peppol_verification_state,  # res.partner
     '_check_peppol_participant_exists': _mock_check_peppol_participant_exists,  # res.partner
     '_register_proxy_user': _mock_register_proxy_user,  # account_edi_proxy_client.user
+||||||| 9e0c6b50fc965207f3d9efabe96cd39d37f65c24
+    '_make_request': _mock_make_request,
+    'button_account_peppol_check_partner_endpoint': _mock_button_verify_partner_endpoint,
+    '_get_peppol_verification_state': _mock_get_peppol_verification_state,
+    '_peppol_migrate_registration': _mock_migrate_participant,
+    'button_peppol_sender_registration': _mock_user_creation,
+    'button_deregister_peppol_participant': _mock_deregister_participant,
+    'button_update_peppol_user_data': _mock_update_user_data,
+    'button_peppol_smp_registration': _mock_receiver_registration,
+    'button_check_peppol_verification_code': _mock_check_verification_code,
+    'button_register_peppol_participant': _mock_user_creation,
+    '_check_company_on_peppol': _mock_check_company_on_peppol,
+=======
+    '_make_request_peppol': _mock_make_request,
+    'button_account_peppol_check_partner_endpoint': _mock_button_verify_partner_endpoint,
+    '_get_peppol_verification_state': _mock_get_peppol_verification_state,
+    '_peppol_migrate_registration': _mock_migrate_participant,
+    'button_peppol_sender_registration': _mock_user_creation,
+    'button_deregister_peppol_participant': _mock_deregister_participant,
+    'button_update_peppol_user_data': _mock_update_user_data,
+    'button_peppol_smp_registration': _mock_receiver_registration,
+    'button_check_peppol_verification_code': _mock_check_verification_code,
+    'button_register_peppol_participant': _mock_user_creation,
+    '_check_company_on_peppol': _mock_check_company_on_peppol,
+>>>>>>> 15d43b3844c81c0aa35897a23c774a3dc896c49e
 }
 
 # -------------------------------------------------------------------------
