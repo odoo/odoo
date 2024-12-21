@@ -36,13 +36,18 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             'l10n_my_identification_type': 'BRN',
             'l10n_my_identification_number': '202001234567',
             'state_id': cls.env.ref('base.state_my_jhr').id,
+            'street': 'that one street, 5',
+            'city': 'Main city',
             'phone': '+60123456789',
         })
         cls.partner_a.write({
             'vat': 'C2584563201',
             'l10n_my_identification_type': 'BRN',
             'l10n_my_identification_number': '202001234568',
+            'country_id': cls.env.ref('base.my').id,
             'state_id': cls.env.ref('base.state_my_jhr').id,
+            'street': 'that other street, 3',
+            'city': 'Main city',
             'phone': '+60123456786',
         })
 
