@@ -144,6 +144,9 @@ class MailComposeMessage(models.TransientModel):
         compute="_compute_subtype_id", readonly=False, store=True)
     subtype_is_log = fields.Boolean('Is a log', compute='_compute_subtype_is_log')
     mail_activity_type_id = fields.Many2one('mail.activity.type', 'Mail Activity Type', ondelete='set null')
+    # We use these fields in view & JS
+    in_reply_mode = fields.Boolean('Is a reply comment', default=False)
+    in_forward_mode = fields.Boolean('Is a forward comment', default=False)
     # destination
     reply_to = fields.Char(
         'Reply To', compute='_compute_reply_to', readonly=False, store=True, compute_sudo=False,
