@@ -1,3 +1,5 @@
+import { convertSelfClosingTagsToOpenClosed } from "./sanitize";
+
 /**
  * @param { Document } document
  * @param { string } html
@@ -27,7 +29,10 @@ export function parseHTML(document, html) {
  */
 export function normalizeHTML(content, cleanup = () => {}) {
     const parser = new document.defaultView.DOMParser();
-    const body = parser.parseFromString(content, "text/html").body;
+    const body = parser.parseFromString(
+        convertSelfClosingTagsToOpenClosed(content),
+        "text/html"
+    ).body;
     cleanup(body);
     return body.innerHTML;
 }
