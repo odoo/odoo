@@ -1870,7 +1870,7 @@
         <t t-set="description_lines" t-value="line.get_description_following_lines()"/>
         <div t-if="description_lines" t-attf-class="text-muted small">
             <t t-foreach="description_lines" t-as="name_line">
-                <span t-if="name_line" class="d-block" t-out="name_line"/>
+                <span t-if="name_line" class="d-block text-truncate" t-out="name_line"/>
             </t>
         </div>
     </template>
@@ -1901,25 +1901,27 @@
                             always shown for unsellable lines, we use the raw image data as src
                             (which doesn't require access, unlike the image URL).
                         -->
-                        <img
-                            t-if="line._is_not_sellable_line() and line.product_id.image_128"
-                            t-att-src="image_data_uri(line.product_id.image_128)"
-                            class="o_image_64_max img rounded"
-                            t-att-alt="line.name_short"
-                        />
-                        <div
-                            t-elif="line.product_id.image_128"
-                            t-field="line.product_id.image_128"
-                            t-options="{
-                                'widget': 'image',
-                                'qweb_img_responsive': False,
-                                'class': 'o_image_64_max rounded',
-                            }"
-                        />
-                    </div>
-                    <div class="flex-grow-1 text-overflow-ellipsis">
                         <t t-call="website_sale.cart_line_product_link">
-                            <h6 t-field="line.name_short" class="d-inline align-top h6 fw-bold"/>
+                            <img
+                                t-if="line._is_not_sellable_line() and line.product_id.image_128"
+                                t-att-src="image_data_uri(line.product_id.image_128)"
+                                class="o_image_64_max img rounded"
+                                t-att-alt="line.name_short"
+                            />
+                            <div
+                                t-elif="line.product_id.image_128"
+                                t-field="line.product_id.image_128"
+                                t-options="{
+                                    'widget': 'image',
+                                    'qweb_img_responsive': False,
+                                    'class': 'o_image_64_max rounded',
+                                }"
+                            />
+                        </t>
+                    </div>
+                    <div class="flex-grow-1 overflow-hidden">
+                        <t t-call="website_sale.cart_line_product_link">
+                            <h6 t-field="line.name_short" class="d-block align-top h6 fw-bold text-truncate"/>
                         </t>
                         <t t-call="website_sale.cart_line_description_following_lines"/>
                         <div name="o_wsale_cart_line_button_container">
