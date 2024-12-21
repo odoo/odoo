@@ -3,12 +3,22 @@
 import json
 import logging
 import pprint
+
 from uuid import uuid4
 
 import requests
+<<<<<<< master
 
 from odoo.addons.payment import utils as payment_utils
 
+||||||| 76e1b0a55220d530a1e97768b3ab0e48904ea209
+from odoo.addons.payment import utils as payment_utils
+
+import requests
+=======
+>>>>>>> 3c863cda5ae05cbc370c0dcd633add5fc55508b7
+
+from odoo.addons.payment import utils as payment_utils
 
 _logger = logging.getLogger(__name__)
 
@@ -49,8 +59,9 @@ class AuthorizeAPI:
                 **(data or {})
             }
         }
+        logged_request = {operation: data or {}}
 
-        _logger.info("sending request to %s:\n%s", self.url, pprint.pformat(request))
+        _logger.info("sending request to %s:\n%s", self.url, pprint.pformat(logged_request))
         response = requests.post(self.url, json.dumps(request), timeout=60)
         response.raise_for_status()
         response = json.loads(response.content)
