@@ -7,13 +7,14 @@ import { effect } from "@web/core/utils/reactive";
 import { batched } from "@web/core/utils/timing";
 import { deduceUrl } from "@point_of_sale/utils";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
+import { ScreenSaver } from "@point_of_sale/app/components/screen_saver/screen_saver";
 
 /**
  * Chrome is the root component of the PoS App.
  */
 export class Chrome extends Component {
     static template = "point_of_sale.Chrome";
-    static components = { Transition, MainComponentsContainer, Navbar };
+    static components = { Transition, MainComponentsContainer, Navbar, ScreenSaver };
     static props = { disableLoader: Function };
     setup() {
         this.pos = usePos();

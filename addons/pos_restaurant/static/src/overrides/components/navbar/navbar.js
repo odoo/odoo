@@ -8,13 +8,17 @@ import {
     BACKSPACE,
 } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { TableSelector } from "./table_selector/table_selector";
+import { useIdleTimer } from "@point_of_sale/app/utils/use_idle_timer";
 
 patch(Navbar.prototype, {
+    setup() {
+        super.setup(...arguments);
+        this.timer = useIdleTimer(3000, () => this.pos.actionAfterIdle());
+    },
     /**
      * If no table is set to pos, which means the current main screen
      * is floor screen, then the order count should be based on all the orders.
      */
-
     get orderCount() {
         if (this.pos.config.module_pos_restaurant && this.pos.selectedTable) {
             return this.pos.getTableOrders(this.pos.selectedTable.id).length;
