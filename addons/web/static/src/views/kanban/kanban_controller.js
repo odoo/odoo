@@ -35,7 +35,7 @@ export class KanbanController extends Component {
         forceGlobalClick: { type: Boolean, optional: true },
         onSelectionChanged: { type: Function, optional: true },
         showButtons: { type: Boolean, optional: true },
-        Compiler: { type: Function, optional: true }, // optional in stable for backward compatibility
+        Compiler: Function,
         Model: Function,
         Renderer: Function,
         buttonTemplate: String,
@@ -143,12 +143,10 @@ export class KanbanController extends Component {
         });
         useSetupAction({
             rootRef: this.rootRef,
-            getLocalState: () => {
-                return {
-                    activeBars: this.progressBarState?.activeBars,
-                    modelState: this.model.exportState(),
-                };
-            },
+            getLocalState: () => ({
+                activeBars: this.progressBarState?.activeBars,
+                modelState: this.model.exportState(),
+            }),
         });
         usePager(() => {
             const root = this.model.root;
