@@ -1629,6 +1629,16 @@ msgstr "เปลี่ยนปริมาณสินค้า"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"การเปลี่ยนแปลงหมายเลขล็อต/หมายเลขซีเรียลสำหรับสายการเคลื่อนย้ายที่มีผลิตภัณฑ์ที่แตกต่างกันไม่ได้รับอนุญาต"
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_lot.py:0
@@ -8815,6 +8825,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
@@ -10735,6 +10752,13 @@ msgid ""
 msgstr ""
 "คุณไม่สามารถบรรจุปริมาณโดยตรงจากการถ่ายโอนที่แตกต่างกันลงในบรรจุภัณฑ์เดียวกันผ่านมุมมองนี้"
 " ลองเพิ่มพวกเขาในการเบิกสินค้าเป็นชุดและบรรจุไว้ที่นั่น"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr ""
 
 #. module: stock
 #. odoo-python

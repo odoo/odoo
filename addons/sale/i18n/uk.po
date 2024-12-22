@@ -1171,15 +1171,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"Дозволяє поділитися документом із замовниками в процесі продажу. \n"
-"Залиште це поле пустим якщо не плануєте ділитися цим документом із замовниками.\n"
-"Комерційна пропозиція: документ буде надісланий та доступний для клієнта у будь-який час.\n"
-"наприклад, ця опція буде корисною у випадках коли потрібно поділитися файлами з описом товару.\n"
-"Підтверджене замовлення: документ буде надісланий та доступний для клієнта у будь-який час.\n"
-"наприклад, ця опція буде корисною у випадках коли потрібно поділитися Документацією Користувача або цифровим контентом в електронній комерції.\n"
-"Всередині пропозиції: документ буде включений в комерційну пропозицію у форматі PDF між титульною сторінкою та табличною частиною зі змістом пропозиції. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -4240,7 +4234,6 @@ msgstr "Замовлення на продаж"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -5045,6 +5038,16 @@ msgid "There are existing"
 msgstr "Є існуючі"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "This default value is applied to any new product created. This can be "
@@ -5611,6 +5614,7 @@ msgstr ""
 "будь то товар, що зберігається, витратний матеріал або послуга."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Ваші замовлення"

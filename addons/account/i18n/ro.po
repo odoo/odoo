@@ -17,15 +17,15 @@
 # Corina Calin, 2024
 # Maria Muntean, 2024
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2024
-# Cozmin Candea <office@terrabit.ro>, 2024
 # Moataz Hussein, 2024
 # Andrei C, 2024
 # Betty Keresztesi, 2024
 # Lyall Kindmurr, 2024
-# Dorin Hongu <dhongu@gmail.com>, 2024
 # Larisa Pop, 2024
 # Toni Chirila, 2024
 # Wil Odoo, 2024
+# Cozmin Candea <office@terrabit.ro>, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-06 12:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -581,6 +581,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Stimate\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Aici este nota dvs. de credit\n"
+"        <t t-if=\"object.name\">\n"
+"            <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            nota de credit\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (cu referință: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        în valoare de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        de la <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br><br>\n"
+"        Nu ezitați să ne contactați dacă aveți întrebări.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -635,6 +666,55 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Stimate\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Aici este factura dvs.\n"
+"        <t t-if=\"object.name\">\n"
+"            <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            factura\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (cu referință: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        în valoare de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        de la <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            Această factură este deja plătită.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Vă rugăm să efectuați plata cât mai curând posibil.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br><br>\n"
+"                Vă rugăm să folosiți următoarea comunicare pentru plata dvs.: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    în contul <strong t-out=\"object.partner_bank_id.acc_number\"></strong>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"            <br><br>\n"
+"            PS: puteți revizui foile de pontaj <a t-att-href=\"'my/timesheets?search_in=invoice&amp;search=%s' % object.name\">din portal.</a>\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Nu ezitați să ne contactați dacă aveți întrebări.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -659,9 +739,9 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dragă <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
-"        Va multumim pentru plata efectuata.\n"
+"        Vă mulțumim pentru plata efectuată.\n"
 "        Iată chitanța dvs. de plată <span style=\"font-weight:bold;\" t-out=\"(object.name sau '').replace('/','-') sau ''\">BNK1-2021-05-0002</span>\n"
-"        la <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) sau ''\">10,00 USD</span> de la <t t-out=\"object.company_id.name or ''\">Compania Dvs.</t>.\n"
+"        în valoare de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) sau ''\">10,00 USD</span> de la <t t-out=\"object.company_id.name or ''\">Compania Dvs.</t>.\n"
 "        <br><br>\n"
 "        Nu ezitați să ne contactați dacă aveți întrebări.\n"
 "        <br><br>\n"
@@ -5954,7 +6034,7 @@ msgid ""
 "Entry."
 msgstr ""
 "Avansurile înregistrate în acest cont vor fi luate în considerare de "
-"înregistrarea de închidere a impozitelor."
+"înregistrarea de închidere a taxelor."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__draft
@@ -6892,7 +6972,7 @@ msgstr "Forță"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__force_tax_included
 msgid "Force the tax to be managed as a price included tax."
-msgstr "Forțați impozitul să fie gestionat ca taxă cu preț inclus."
+msgstr "Forțați taxa să fie gestionat ca taxă cu preț inclus."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__currency_id
@@ -6946,21 +7026,21 @@ msgstr "Cont fiscal străin (%s)"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account advance payment (%s)"
-msgstr "Plată în avans în contul impozitelor străine (%s)"
+msgstr "Plată în avans în contul taxelor străine (%s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account payable (%s)"
-msgstr "Cont de plătit pentru impozite străine (%s)"
+msgstr "Cont de plătit pentru taxe străine (%s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account receivable (%s)"
-msgstr "Cont de creanță cu impozite străine (%s)"
+msgstr "Cont de creanță cu taxe străine (%s)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__formula
@@ -7201,7 +7281,7 @@ msgstr "Grupați după: Taxă > Cont "
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__group
 msgid "Group of Taxes"
-msgstr "Grupul de impozite"
+msgstr "Grup de taxe"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7338,7 +7418,7 @@ msgstr "Cel mai mare nume"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
-msgstr "Cum se calculează valoarea totală a impozitului în comenzi și facturi"
+msgstr "Cum se calculează valoarea totală a taxei în comenzi și facturi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -9636,7 +9716,7 @@ msgstr "Nume model"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__strategy__biggest_tax
 msgid "Modify tax amount"
-msgstr "Modificați valoarea impozitului"
+msgstr "Modificați valoarea taxei"
 
 #. module: account
 #: model:ir.model,name:account.model_ir_module_module
@@ -11900,7 +11980,7 @@ msgstr "Recursie găsită pentru taxa %r."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Reduced tax:"
-msgstr "Impozit redus:"
+msgstr "Taxă redusă:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__ref
@@ -12706,8 +12786,8 @@ msgid ""
 "for such taxes on a given account during reconciliation."
 msgstr ""
 "Selectați această opțiune dacă taxele trebuie să utilizeze baza de numerar, "
-"ceea ce va crea o intrare pentru astfel de impozite pe un cont dat în timpul"
-" reconcilierii."
+"ceea ce va crea o intrare pentru astfel de taxe pe un cont dat în timpul "
+"reconcilierii."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__selected_payment_method_codes
@@ -13571,7 +13651,7 @@ msgstr "Taxă"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "Tax 15%"
-msgstr "Impozit 15%"
+msgstr "Taxă 15%"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__advance_tax_payment_account_id
@@ -13767,7 +13847,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax__type_tax_use
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Tax Type"
-msgstr "Tipul impozitului"
+msgstr "Tipul taxei"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_calculation_rounding_method
@@ -13887,8 +13967,7 @@ msgid ""
 "Taxes, fiscal positions, chart of accounts & legal statements for your "
 "country"
 msgstr ""
-"Impozite, poziții fiscale, plan de conturi și situații legale pentru țara "
-"dvs"
+"Taxe, poziții fiscale, plan de conturi și situații legale pentru țara dvs"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_enabled_tax_country_ids
@@ -14207,8 +14286,8 @@ msgid ""
 "The application scope of taxes in a group must be either the same as the "
 "group or left empty."
 msgstr ""
-"Domeniul de aplicare al impozitelor într-un grup trebuie să fie fie același "
-"cu grupul, fie lăsat gol."
+"Domeniul de aplicare al taxelor într-un grup trebuie să fie fie același cu "
+"grupul, fie lăsat gol."
 
 #. module: account
 #. odoo-python
@@ -14244,7 +14323,7 @@ msgid ""
 "The cash basis entries created from the taxes on this entry, when "
 "reconciling its lines."
 msgstr ""
-"Intrările de bază de numerar create din impozitele pe această intrare, când "
+"Intrările de bază de numerar create din taxele pe această intrare, când "
 "reconciliați liniile sale."
 
 #. module: account
@@ -14300,12 +14379,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
 msgid "The country for which this tax group is applicable."
-msgstr "Țara pentru care acest grup de impozite este aplicabil."
+msgstr "Țara pentru care acest grup de taxe este aplicabil."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__country_id
 msgid "The country for which this tax is applicable."
-msgstr "Țara pentru care acest impozit este aplicabil."
+msgstr "Țara pentru care această taxă este aplicabilă."
 
 #. module: account
 #. odoo-python
@@ -16860,8 +16939,8 @@ msgid ""
 "You can't change the company of your tax since there are some journal items "
 "linked to it."
 msgstr ""
-"Nu puteți schimba compania impozitului dvs. deoarece există unele elemente "
-"de jurnal legate de acesta."
+"Nu puteți schimba compania taxei dvs. deoarece există unele elemente de "
+"jurnal legate de acesta."
 
 #. module: account
 #. odoo-python
