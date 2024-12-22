@@ -1458,28 +1458,28 @@ msgstr "Đơn hàng trậm trễ"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation
 msgid "Backorder Confirmation"
-msgstr "Xác nhận đơn hàng chậm trễ"
+msgstr "Xác nhận đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation_line
 msgid "Backorder Confirmation Line"
-msgstr "Dòng xác nhận đơn hàng chậm trễ"
+msgstr "Dòng xác nhận đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__backorder_confirmation_line_ids
 msgid "Backorder Confirmation Lines"
-msgstr "Chi tiết xác nhận đơn hàng chậm trễ"
+msgstr "Chi tiết xác nhận đơn hàng tách kiện"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Backorder creation"
-msgstr "Tạo đơn hàng chậm trễ"
+msgstr "Tạo đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Backorders"
-msgstr "Đơn hàng chậm trễ"
+msgstr "Đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__barcode
@@ -2098,7 +2098,7 @@ msgstr "Lấy hàng theo số lượng"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr "Lấy hàng theo số lượng Đơn hàng chậm trễ"
+msgstr "Lấy hàng theo số lượng Đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_draft
@@ -2140,13 +2140,13 @@ msgstr "Địa điểm đối ứng"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__create_backorder
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Create Backorder"
-msgstr "Tạo đơn hàng chậm trễ"
+msgstr "Tạo đơn hàng tách kiện"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Create Backorder?"
-msgstr "Tạo đơn hàng chậm trễ?"
+msgstr "Tạo đơn hàng tách kiện?"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -2172,8 +2172,8 @@ msgid ""
 "                            products later. Do not create a backorder if you will not\n"
 "                            process the remaining products."
 msgstr ""
-"Tạo đơn hàng chậm trễ nếu bạn dự kiến sẽ xử lý các sản phẩm\n"
-"                          còn lại sau. Không tạo đơn hàng chậm trễ nếu bạn không\n"
+"Tạo đơn hàng tách kiện nếu bạn dự kiến sẽ xử lý các sản phẩm\n"
+"                          còn lại sau. Không tạo đơn hàng tách kiện nếu bạn không\n"
 "                          xử lý các sản phẩm còn lại. "
 
 #. module: stock
@@ -5565,7 +5565,7 @@ msgstr "Không có %s được chọn hoặc một phiếu xuất kho đã đư�
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "No Backorder"
-msgstr "Không có đơn hàng chậm trễ"
+msgstr "Không có đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__no-message
@@ -9036,7 +9036,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "The backorder %s has been created."
-msgstr "Đơn hàng chậm trễ %s đã được tạo."
+msgstr "Đơn hàng tách kiện %s đã được tạo."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
@@ -9434,9 +9434,9 @@ msgid ""
 "moves affects the product reservation, and should be done with care."
 msgstr ""
 "Đây là số lượng sản phẩm được lên kế hoạch điều chuyển. Việc giảm số lượng "
-"này sẽ không tạo ra một đơn hàng chậm trễ. Tuy nhiên, việc thay đổi số lượng"
-" này trên những điều chuyển đã chỉ định sẽ ảnh hưởng đến dự trữ sản phẩm và "
-"cần được thực hiện cẩn thận."
+"này sẽ không tạo ra một đơn hàng tách kiện. Tuy nhiên, việc thay đổi số "
+"lượng này trên những điều chuyển đã chỉ định sẽ ảnh hưởng đến dự trữ sản "
+"phẩm và cần được thực hiện cẩn thận."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__child_internal_location_ids
@@ -9650,7 +9650,7 @@ msgstr "Cần áp dụng"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__to_backorder
 msgid "To Backorder"
-msgstr "Cần lập đơn hàng chậm trễ"
+msgstr "Cần lập đơn hàng tách kiện"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -9670,7 +9670,7 @@ msgstr "Cần xuất"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "To Do"
-msgstr "Cần làm"
+msgstr "Việc cần làm"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -10702,8 +10702,8 @@ msgid ""
 " * Never: remaining products are cancelled"
 msgstr ""
 "Khi xác nhận một lệnh chuyển hàng:\n"
-"* Hỏi: người dùng được chọn nếu họ muốn tạo đơn hàng chậm trễ cho các sản phẩm còn lại\n"
-"* Luôn luôn: đơn hàng chậm trễ được tạo tự động cho các sản phẩm còn lại\n"
+"* Hỏi: người dùng được chọn nếu họ muốn tạo đơn hàng tách kiện cho các sản phẩm còn lại\n"
+"* Luôn luôn: đơn hàng tách kiện được tạo tự động cho các sản phẩm còn lại\n"
 "* Không bao giờ: các sản phẩm còn lại sẽ bị hủy"
 
 #. module: stock

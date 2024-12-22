@@ -6572,7 +6572,7 @@ msgstr "1行目インデックス"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_name
 msgid "First New Sequence"
-msgstr "最初の新しい付番"
+msgstr "最初の新しいシーケンス番号"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
@@ -7607,7 +7607,7 @@ msgstr "QIFで銀行取引明細書をインポート"
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__in_payment
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "In Payment"
-msgstr "決済中"
+msgstr "支払処理中"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -8041,7 +8041,7 @@ msgstr "請求書オンライン支払"
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_outstanding_credits_debits_widget
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_outstanding_credits_debits_widget
 msgid "Invoice Outstanding Credits Debits Widget"
-msgstr "未払請求書クレジットデビットウィジェット"
+msgstr "請求書 未消込貸方借方ウィジェット"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
@@ -10213,7 +10213,7 @@ msgstr "請求ごとではなく、取引先（銀行）ごとに支払が作成
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Only posted/cancelled journal entries can be reset to draft."
-msgstr "記帳済/キャンセル済の記帳のみドラフトに再設定できます。"
+msgstr "記帳済/キャンセル済の記帳のみドラフトにリセットできます。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__period_lock_date
@@ -10468,13 +10468,13 @@ msgstr "未消込入金勘定科目"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Outstanding credits"
-msgstr "未回収売掛金"
+msgstr "未消込貸方"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Outstanding debits"
-msgstr "未処理借方"
+msgstr "未消込借方"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -11859,7 +11859,7 @@ msgstr "RES取引先銀行"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
 msgid "Resequence"
-msgstr "再順序付け"
+msgstr "再付番"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -16257,7 +16257,7 @@ msgstr "政府に送信された請求書のキャンセル要求しかできま
 #. odoo-python
 #: code:addons/account/wizard/account_resequence.py:0
 msgid "You can only resequence items from the same journal"
-msgstr "同じ仕訳の項目のみ、再順序付けできます"
+msgstr "同じ仕訳の項目のみ、再付番できます"
 
 #. module: account
 #. odoo-python
@@ -16289,7 +16289,7 @@ msgstr "ここで、検証後に顧客の請求書に表示されるデフォル
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
 msgid "You can't Send & Print invoice(s) in draft state."
-msgstr "ドラフトの状態で請求書を送る＆印刷することはできません。"
+msgstr "ドラフトの状態で請求書を送信＆印刷することはできません。"
 
 #. module: account
 #. odoo-python
@@ -16603,7 +16603,7 @@ msgid ""
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
 "開始仕訳(%s)がすでに計上されている場合は、 \"openning_balance\"をインポートすることはできません。 "
-"どうしても勘定科目開始残高を変更したい場合は、仕訳をドラフトに再設定して下さい。"
+"どうしても勘定科目開始残高を変更したい場合は、仕訳をドラフトにリセットして下さい。"
 
 #. module: account
 #. odoo-python
@@ -17171,12 +17171,12 @@ msgstr "から"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding credits"
-msgstr "未払貸方"
+msgstr "未消込貸方"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding debits"
-msgstr "未払借方"
+msgstr "未消込借方"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form

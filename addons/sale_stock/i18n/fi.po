@@ -19,8 +19,8 @@
 # Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2024
 # Martin Trigaux, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,6 +82,9 @@ msgid ""
 "                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"small badge rounded-pill text-bg-success orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> Lähetetty\n"
+"                                    </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
@@ -161,6 +164,9 @@ msgid ""
 "            Orange: Partially Delivered\n"
 "            Green: Fully Delivered"
 msgstr ""
+"Sininen: Ei toimitettu/aloitettu\n"
+"            Oranssi: Osittain toimitettu\n"
+"            Vihreä: Täysin toimitettu"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -436,7 +442,7 @@ msgstr "Siirry odotettavissa oleviin toimituspäiviin mennessä"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
 msgid "No delivery yet! Automate them with sales orders."
-msgstr ""
+msgstr "Ei vielä toimitusta! Automatisoi ne myyntitilauksilla."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -522,6 +528,8 @@ msgid ""
 "Reduce back orders with reservations, locations management, smart\n"
 "                replenishment propositions, shipping connectors, barcode scanner, etc."
 msgstr ""
+"Vähennä jälkitoimituksia varausten, sijaintien hallinnan, älykkäiden\n"
+"                täydennysehdotuksien, logistiikka-integraatioiden, viivakoodinlukijan jne. avulla."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -698,6 +706,9 @@ msgid ""
 "                        From <strong>\"%(old_address)s\"</strong> to <strong>\"%(new_address)s\"</strong>,\n"
 "                        You should probably update the partner on this document."
 msgstr ""
+"Toimitusosoite on muutettu myyntitilauksessa<br/>\n"
+"                        Osoitteesta <strong>\"%(old_address)s\"</strong> osoitteeseen <strong>\"%(new_address)s</strong>\",\n"
+"                        Sinun pitäisi luultavasti päivittää tämän asiakirjan kumppani."
 
 #. module: sale_stock
 #. odoo-javascript

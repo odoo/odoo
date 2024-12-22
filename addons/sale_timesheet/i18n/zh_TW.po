@@ -1195,7 +1195,7 @@ msgstr "任務連結到的銷售訂單。"
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 msgid "Search in Invoice"
-msgstr "於應收憑單中搜尋"
+msgstr "在發票內搜尋"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1307,8 +1307,17 @@ msgstr "技術專長"
 
 #. module: sale_timesheet
 #. odoo-python
-#: code:addons/sale_timesheet/models/product_product.py:0
-#: code:addons/sale_timesheet/models/product_template.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+#, python-format
+msgid ""
+"The %s product is required by the Timesheets app and cannot be linked to a "
+"company."
+msgstr ""
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+#, python-format
 msgid ""
 "The %s product is required by the Timesheets app and cannot be archived nor "
 "deleted."

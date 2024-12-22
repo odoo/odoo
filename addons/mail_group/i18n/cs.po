@@ -5,6 +5,8 @@
 # Translators:
 # Wil Odoo, 2024
 # Jiří Podhorecký <jirka.p@volny.cz>, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Marta Wacławek, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Jiří Podhorecký <jirka.p@volny.cz>, 2024\n"
+"Last-Translator: Marta Wacławek, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,6 +45,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Dobrý den,<br><br>\n"
+"                Požádali jste o přihlášení do seznamu adresátů <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                Pro potvrzení prosím navštivte následující odkaz: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                Pokud se jedná o chybu nebo jste o tuto akci nežádali, tuto zprávu prosím ignorujte.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -57,6 +68,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Dobrý den,<br><br>\n"
+"                Požádali jste o odhlášení ze seznamu adresátů <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                Pro potvrzení prosím navštivte následující odkaz: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
+"                <br><br>\n"
+"                Pokud se jedná o chybu nebo jste o tuto akci nežádali, tuto zprávu prosím ignorujte.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -68,6 +88,12 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>Dobrý den <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
+"                <p>Níže najdete pokyny k <t t-out=\"object.mail_group_id.name\"></t> seznamu adresátů.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -796,7 +822,7 @@ msgstr ""
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_last_month_count
 msgid "Messages Per Month"
-msgstr ""
+msgstr "Zpráv na měsíc"
 
 #. module: mail_group
 #. odoo-python

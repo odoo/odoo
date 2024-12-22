@@ -1260,7 +1260,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
 #: model:project.project,label_tasks:sale_timesheet.project_support
 msgid "Services"
-msgstr "Interventions"
+msgstr "Services"
 
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_engineer
@@ -1330,8 +1330,17 @@ msgstr "Expertise technique"
 
 #. module: sale_timesheet
 #. odoo-python
-#: code:addons/sale_timesheet/models/product_product.py:0
-#: code:addons/sale_timesheet/models/product_template.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+#, python-format
+msgid ""
+"The %s product is required by the Timesheets app and cannot be linked to a "
+"company."
+msgstr ""
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+#, python-format
 msgid ""
 "The %s product is required by the Timesheets app and cannot be archived nor "
 "deleted."

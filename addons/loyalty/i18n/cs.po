@@ -1918,7 +1918,7 @@ msgstr "Kdy"
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_mail__trigger__points_reach
 msgid "When Reaching"
-msgstr ""
+msgstr "Při dosažení"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1926,6 +1926,8 @@ msgid ""
 "When customers make an order, they accumulate points they can exchange for "
 "rewards on the current order or on a future one."
 msgstr ""
+"Když zákazníci vytvoří objednávku, shromažďují body, které mohou vyměnit za "
+"odměny za aktuální nebo budoucí objednávku."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1933,6 +1935,8 @@ msgid ""
 "When generating coupon, you can define a specific points value that can be "
 "exchanged for rewards."
 msgstr ""
+"Při generování kupónu můžete definovat konkrétní bodovou hodnotu, kterou lze"
+" vyměnit za odměny."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_rule__reward_point_split
@@ -1940,11 +1944,14 @@ msgid ""
 "Whether to separate reward coupons per matched unit, only applies to "
 "'future' programs and trigger mode per money spent or unit paid.."
 msgstr ""
+"Zda oddělit kupóny na odměnu za odpovídající jednotku, se vztahuje pouze na "
+"„budoucí“ programy a režim spouštění na utracené peníze nebo zaplacenou "
+"jednotku."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__will_send_mail
 msgid "Will Send Mail"
-msgstr ""
+msgstr "Odešle poštou"
 
 #. module: loyalty
 #. odoo-python
@@ -1955,13 +1962,13 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__mode__with_code
 msgid "With a promotion code"
-msgstr ""
+msgstr "S propagačním kódem"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "You can not delete a program in an active state"
-msgstr ""
+msgstr "Nemůžete smazat program v aktivním stavu"
 
 #. module: loyalty
 #. odoo-python
@@ -1985,12 +1992,12 @@ msgstr ""
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_gift_card
 msgid "Your Gift Card at {{ object.company_id.name }}"
-msgstr ""
+msgstr "Váš dárkový poukaz v {{ object.company_id.name }}"
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_loyalty_card
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
-msgstr ""
+msgstr "Váš kupón na odměnu z {{ object.program_id.company_id.name }}"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -2005,7 +2012,7 @@ msgstr "sleva"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "e.g. 10% discount on laptops"
-msgstr ""
+msgstr "např. 10% sleva na laptopy"
 
 #. module: loyalty
 #. odoo-python
@@ -2013,23 +2020,23 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__ewallet
 msgid "eWallet"
-msgstr ""
+msgstr "Digitální peněženka"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "eWallet Products"
-msgstr ""
+msgstr "Produkty digitální peněženky"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "eWallet value"
-msgstr ""
+msgstr "Hodnota digitální peněženky"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "eWallets"
-msgstr ""
+msgstr "Digitální peněženky"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -2038,11 +2045,14 @@ msgid ""
 "                                    <br/>\n"
 "                                    Then, eWallets are proposed during the checkout, to pay orders."
 msgstr ""
+"Digitální peněženky jsou vytvářeny ručně nebo automaticky, když si zákazník objedná produkt digitální peněženky.\n"
+"                                    <br/>\n"
+"                                    Poté jsou při pokladně navrženy digitální peněženky, které budou platit objednávky."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "item(s) bought"
-msgstr ""
+msgstr "koupených produkt(ů)"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -2055,6 +2065,8 @@ msgid ""
 "on the cheapest product\n"
 "                                        <br/>"
 msgstr ""
+"na nejlevnější produkt\n"
+"                                        <br/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -2067,35 +2079,37 @@ msgid ""
 "on your order\n"
 "                                        <br/>"
 msgstr ""
+"na vaši objednávku\n"
+"                                        <br/>"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 msgid "per %s spent"
-msgstr ""
+msgstr "za %s utracené"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 msgid "per order"
-msgstr ""
+msgstr "na objednávku"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 msgid "per unit paid"
-msgstr ""
+msgstr "za zaplacenou jednotku"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "specific products"
-msgstr ""
+msgstr "konkrétní produkty"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "spent"
-msgstr ""
+msgstr "utraceno"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__excl
@@ -2121,7 +2135,7 @@ msgstr "k"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "usages"
-msgstr ""
+msgstr "použití"
 
 #. module: loyalty
 #. odoo-python

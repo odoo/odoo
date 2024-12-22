@@ -268,6 +268,86 @@ msgid ""
 ".\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Модуль локалізації для Данії\n"
+"===============================\n"
+"\n"
+"Це модуль для керування **схемою оподаткування для Данії**. Охоплює як бізнес однієї людини, так і I/S, IVS, ApS та A/S\n"
+"\n"
+"**Modulet opsætter:**\n"
+"\n"
+"- **Dansk kontoplan**\n"
+"\n"
+"- Dansk moms\n"
+"        - 25% moms\n"
+"        - Resturationsmoms 6,25%\n"
+"        - Omvendt betalingspligt\n"
+"\n"
+"- Konteringsgrupper\n"
+"        - EU (Virksomhed)\n"
+"        - EU (Privat)\n"
+"        - 3.lande\n"
+"\n"
+"- Finans raporter\n"
+"        - Resulttopgørelse\n"
+"        - Balance\n"
+"        - Momsafregning\n"
+"            - Afregning\n"
+"            - Rubrik A, B og C\n"
+"\n"
+"- **Anglo-Saxon regnskabsmetode**\n"
+"\n"
+".\n"
+"\n"
+"Produkt setup:\n"
+"==============\n"
+"\n"
+"**Vare**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%\n"
+"\n"
+"**Salgskonto:**     1010 Salg af vare, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%\n"
+"\n"
+"**Købskonto:**      2010 Direkte omkostninger vare, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Ydelse**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%, ydelser\n"
+"\n"
+"**Salgskonto:**     1011 Salg af ydelser, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%, ydelser\n"
+"\n"
+"**Købskonto:**      2011 Direkte omkostninger ydelser, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Vare med omvendt betalingspligt**\n"
+"\n"
+"**Salgsmoms:**      Salg omvendt betalingspligt\n"
+"\n"
+"**Salgskonto:**     1012 Salg af vare, u/moms\n"
+"\n"
+"**Købsmoms:**       Køb omvendt betalingspligt\n"
+"\n"
+"**Købskonto:**      2012 Direkte omkostninger vare, u/moms\n"
+"\n"
+"\n"
+".\n"
+"\n"
+"**Restauration**\n"
+"\n"
+"**Købsmoms:**       Restaurationsmoms 6,25%, købsmoms\n"
+"\n"
+"**Købskonto:**      4010 Restaurationsbesøg\n"
+"\n"
+".\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -339,6 +419,72 @@ msgid ""
 "110101- Caja\n"
 "11010101 Caja General\n"
 msgstr ""
+"\n"
+"\n"
+"Модуль локалізації для Домініканської Республіки\n"
+"===========================================\n"
+"\n"
+"Catálogo de Cuentas e Impuestos para República Dominicana, Compatible para\n"
+"**Internacionalización** con **NIIF** y alineado a las normas y regulaciones\n"
+"de la Dirección General de Impuestos Internos (**DGII**).\n"
+"\n"
+"**Este módulo consiste de:**\n"
+"\n"
+"- Catálogo de Cuentas Estándar (alineado a DGII y NIIF)\n"
+"- Catálogo de Impuestos con la mayoría de Impuestos Preconfigurados\n"
+"        - ITBIS para compras y ventas\n"
+"        - Retenciones de ITBIS\n"
+"        - Retenciones de ISR\n"
+"        - Grupos de Impuestos y Retenciones:\n"
+"                - Telecomunicaiones\n"
+"                - Proveedores de Materiales de Construcción\n"
+"                - Personas Físicas Proveedoras de Servicios\n"
+"        - Otros impuestos\n"
+"- Secuencias Preconfiguradas para manejo de todos los NCF\n"
+"        - Facturas con Valor Fiscal (para Ventas)\n"
+"        - Facturas para Consumidores Finales\n"
+"        - Notas de Débito y Crédito\n"
+"        - Registro de Proveedores Informales\n"
+"        - Registro de Ingreso Único\n"
+"        - Registro de Gastos Menores\n"
+"        - Gubernamentales\n"
+"- Posiciones Fiscales para automatización de impuestos y retenciones\n"
+"        - Cambios de Impuestos a Exenciones (Ej. Ventas al Estado)\n"
+"        - Cambios de Impuestos a Retenciones (Ej. Compra Servicios al Exterior)\n"
+"        - Entre otros\n"
+"\n"
+"**Nota:**\n"
+"Esta localización, aunque posee las secuencias para NCF, las mismas no pueden\n"
+"ser utilizadas sin la instalación de módulos de terceros o desarrollo\n"
+"adicional.\n"
+"\n"
+"Estructura de Codificación del Catálogo de Cuentas:\n"
+"===================================================\n"
+"\n"
+"**Un dígito** representa la categoría/tipo de cuenta del del estado financiero.\n"
+"**1** - Activo        **4** - Cuentas de Ingresos y Ganancias\n"
+"**2** - Pasivo        **5** - Costos, Gastos y Pérdidas\n"
+"**3** - Capital       **6** - Cuentas Liquidadoras de Resultados\n"
+"\n"
+"**Dos dígitos** representan los rubros de agrupación:\n"
+"11- Activo Corriente\n"
+"21- Pasivo Corriente\n"
+"31- Capital Contable\n"
+"\n"
+"**Cuatro dígitos** se asignan a las cuentas de mayor: cuentas de primer orden\n"
+"1101- Efectivo y Equivalentes de Efectivo\n"
+"2101- Cuentas y Documentos por pagar\n"
+"3101- Capital Social\n"
+"\n"
+"**Seis dígitos** se asignan a las sub-cuentas: cuentas de segundo orden\n"
+"110101 - Caja\n"
+"210101 - Proveedores locales\n"
+"\n"
+"**Ocho dígitos** son para las cuentas de tercer orden (las visualizadas\n"
+"en Odoo):\n"
+"1101- Efectivo y Equivalentes\n"
+"110101- Caja\n"
+"11010101 Caja General\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp
@@ -359,6 +505,21 @@ msgid ""
 "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Загальний огляд:\n"
+"---------\n"
+"\n"
+"* Шаблон плану рахунків і податків для компаній в Японії.\n"
+"* Ймовірно, це не охоплює всі необхідні облікові записи для компанії. Ви повинні додавати/видаляти/змінювати облікові записи на основі цього шаблону.\n"
+"\n"
+"Примітка:\n"
+"-----\n"
+"\n"
+"* Схема оподаткування '内税' and '外税' були додані для обробки особливих вимог, які можуть виникнути в результаті впровадження POS. [1] За звичайних обставин вам може взагалі не знадобитися їх використовувати.\n"
+"\n"
+"[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_sale
@@ -434,6 +595,9 @@ msgid ""
 "            Kenya eTIMS Device EDI Integration\n"
 "        "
 msgstr ""
+"\n"
+"            Інтеграція з пристроями Кенії eTIMS EDI\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ke_edi_oscu_stock
@@ -442,6 +606,9 @@ msgid ""
 "            Kenya eTIMS Device EDI Stock Integration\n"
 "        "
 msgstr ""
+"\n"
+"            Інтеграція зі складськими пристроями для Кенії eTIMS Device EDI\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ke_edi_oscu_mrp
@@ -7134,6 +7301,22 @@ msgid ""
 "This is the base module of the Serbian localization. It manages chart of accounts and taxes.\n"
 "This module is based on the official document \"Pravilnik o kontnom okviru i sadržini računa u kontnom okviru za privredna društva, zadruge i preduzetnike (\"Sl. glasnik RS\", br. 89/2020)\"\n"
 "Source: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_bh
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Bahrain in Odoo.\n"
+"===========================================================================\n"
+"Bahrain accounting basic charts and localization.\n"
+"\n"
+"Activates:\n"
+" - Chart of Accounts\n"
+" - Taxes\n"
+" - Tax reports\n"
+" - Fiscal Positions\n"
+" - States\n"
 msgstr ""
 
 #. module: base
@@ -14882,6 +15065,11 @@ msgstr "ID значка"
 #: model:res.country,name:base.bs
 msgid "Bahamas"
 msgstr "Багамські Острови"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_bh
+msgid "Bahrain - Accounting"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bh
@@ -31939,7 +32127,7 @@ msgstr "Запис часу"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__crud_model_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__crud_model_id
 msgid "Record to Create"
-msgstr ""
+msgstr "Запис для створення"
 
 #. module: base
 #. odoo-python
@@ -32123,7 +32311,7 @@ msgstr "Видаліть контекстну дію, пов’язану з ц�
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_m2m_operation__remove
 msgid "Removing"
-msgstr ""
+msgstr "Видалення"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
@@ -33649,7 +33837,7 @@ msgstr "Встановити пароль"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Set a value..."
-msgstr ""
+msgstr "Встановіть значення..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
@@ -36670,23 +36858,25 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_delivery
 msgid "This module integrates Delivery with WhatsApp"
-msgstr ""
+msgstr "Цей модуль інтегрує доставку з WhatsApp"
 
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp
 msgid ""
 "This module integrates Odoo with WhatsApp to use WhatsApp messaging service"
 msgstr ""
+"Цей модуль інтегрує Odoo з WhatsApp для використання WhatsApp сервіс "
+"повідомлень"
 
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_pos
 msgid "This module integrates POS with WhatsApp"
-msgstr ""
+msgstr "Цей модуль інтегрує POS з WhatsApp"
 
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_sale
 msgid "This module integrates sale with WhatsApp"
-msgstr ""
+msgstr "Цей модуль інтегрує продаж із WhatsApp"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_sms
@@ -36696,13 +36886,13 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_event
 msgid "This module integrates website event with WhatsApp"
-msgstr ""
+msgstr "Цей модуль інтегрує подію веб-сайту з WhatsApp"
 
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_website_sale
 #: model:ir.module.module,summary:base.module_whatsapp_website_sale
 msgid "This module integrates website sale with WhatsApp"
-msgstr ""
+msgstr "Цей модуль інтегрує веб-сайт продажів з WhatsApp"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_alipay
@@ -36715,12 +36905,14 @@ msgstr "Цей модуль застарів."
 #. module: base
 #: model:ir.module.module,summary:base.module_account_online_synchronization
 msgid "This module is used for Online bank synchronization."
-msgstr ""
+msgstr "Цей модуль використовується для онлайн-синхронізації банку."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_peppol
 msgid "This module is used to send/receive documents with PEPPOL"
 msgstr ""
+"Цей модуль використовується для надсилання/отримання документів за допомогою"
+" PEPPOL"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_appointment
@@ -37835,13 +38027,13 @@ msgstr "Оновити список модулів"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__object_write
 msgid "Update Record"
-msgstr ""
+msgstr "Оновити запис"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_related_model_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__update_related_model_id
 msgid "Update Related Model"
-msgstr ""
+msgstr "Оновлення пов’язаної моделі"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -38544,7 +38736,7 @@ msgstr "Видимий"
 #. module: base
 #: model:ir.module.module,summary:base.module_frontdesk
 msgid "Visitor management system"
-msgstr ""
+msgstr "Система управління відвідувачами"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip
@@ -38554,17 +38746,17 @@ msgstr "IP-телефонія"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip_onsip
 msgid "VoIP OnSIP"
-msgstr ""
+msgstr "VoIP OnSIP"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip_crm
 msgid "VoIP for CRM"
-msgstr ""
+msgstr "VoIP for CRM"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip_crm
 msgid "VoIP integration with CRM module."
-msgstr ""
+msgstr "VoIP інтеграція з CRM модулем."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__w-su
@@ -38699,7 +38891,7 @@ msgstr "Тести веб-ганта: Тести, специфічні для п
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_hierarchy
 msgid "Web Hierarchy"
-msgstr ""
+msgstr "Веб-ієрархія"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__web_icon
@@ -38720,7 +38912,7 @@ msgstr "Веб-маршрутизація"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_web_studio
 msgid "Web Studio Tests"
-msgstr ""
+msgstr "Тести Веб-студії"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_web_cohort
@@ -38730,19 +38922,19 @@ msgstr "Тест веб-когорти"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_web_studio
 msgid "Web studio Test"
-msgstr ""
+msgstr "Тести веб-студії"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__webhook_field_ids
 #: model:ir.model.fields,field_description:base.field_ir_cron__webhook_field_ids
 msgid "Webhook Fields"
-msgstr ""
+msgstr "Webhook поля"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__webhook_url
 #: model:ir.model.fields,field_description:base.field_ir_cron__webhook_url
 msgid "Webhook URL"
-msgstr ""
+msgstr "Webhook URL"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__website
@@ -38777,7 +38969,7 @@ msgstr "Зустрічі на веб-сайті"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_documents
 msgid "Website Documents"
-msgstr ""
+msgstr "Документи веб-сайту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_enterprise
@@ -38854,7 +39046,7 @@ msgstr "Оплата веб-сайту"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_website_sale_full
 msgid "Website Sale Full Tests"
-msgstr ""
+msgstr "Повні тести продажу на сайті"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_dashboard
@@ -38959,42 +39151,42 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_test_whatsapp
 #: model:ir.module.module,summary:base.module_test_whatsapp
 msgid "WhatsApp Tests"
-msgstr ""
+msgstr "WhatsApp Тести"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_delivery
 msgid "WhatsApp-Delivery"
-msgstr ""
+msgstr "WhatsApp-Доставка"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_pos
 msgid "WhatsApp-POS"
-msgstr ""
+msgstr "WhatsApp-POS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_sale
 msgid "WhatsApp-Sale"
-msgstr ""
+msgstr "WhatsApp-Продажі"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_event
 msgid "WhatsApp-Website-Events"
-msgstr ""
+msgstr "WhatsApp-Веб-сайт-Події"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_website_sale
 msgid "WhatsApp-eCommerce"
-msgstr ""
+msgstr "WhatsApp-eCommerce"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_account
 msgid "Whatsapp Accounting"
-msgstr ""
+msgstr "Whatsapp облік"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_payment
 msgid "Whatsapp-Payment"
-msgstr ""
+msgstr "Whatsapp-Оплата"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__sequence
@@ -39188,7 +39380,7 @@ msgstr "Робочий аркуш"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_maintenance_worksheet
 msgid "Worksheet for Maintenance"
-msgstr ""
+msgstr "Робочий лист для технічного обслуговування"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_control_worksheet
@@ -39204,7 +39396,7 @@ msgstr "Шаблон робочого листа під час плануван�
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Wow, your webhook call failed with a really unusual error: %s"
-msgstr ""
+msgstr "Вау! Ваш виклик webhook завершився з дуже незвичною помилкою:%s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_write
@@ -39260,6 +39452,8 @@ msgid ""
 "XML Export of the Journal Entries for the Mexican Tax Authorities for a "
 "compulsory audit."
 msgstr ""
+"XML-експорт журнальних записів для мексиканських податкових органів для "
+"обов’язкового аудиту."
 
 #. module: base
 #: model:res.country,name:base.ye
@@ -39269,7 +39463,7 @@ msgstr "Ємен"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_boolean_value__true
 msgid "Yes (True)"
-msgstr ""
+msgstr "Так (Правда)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -39810,7 +40004,7 @@ msgstr "вибір"
 #. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 msgid "create"
-msgstr ""
+msgstr "створити"
 
 #. module: base
 #. odoo-python
@@ -40009,7 +40203,7 @@ msgstr "Підписка електронної комерції"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_appointment_sale
 msgid "eCommerce on appointments"
-msgstr ""
+msgstr "eCommerce за домовленістю"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_elearning
@@ -40212,7 +40406,7 @@ msgstr "зарплата"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_self_order_preparation_display
 msgid "pos self prep display"
-msgstr ""
+msgstr "pos самопідготовка дисплея"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_account_reports
@@ -40275,7 +40469,7 @@ msgstr "вибір"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__selection_value
 msgid "selection_value"
-msgstr ""
+msgstr "значення_вибору"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_sales_subscriptions
@@ -40402,12 +40596,12 @@ msgstr "вірно"
 #. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 msgid "unlink"
-msgstr ""
+msgstr "від’єднати"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__update_boolean_value
 msgid "update_boolean_value"
-msgstr ""
+msgstr "оновити_логічне_значення"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__value
@@ -40417,12 +40611,12 @@ msgstr "значення"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_sale_loyalty
 msgid "website helpdesk sale"
-msgstr ""
+msgstr "служба підтримки веб-сайту продаж"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_sale_loyalty
 msgid "website helpdesk sale loyalty"
-msgstr ""
+msgstr "служба підтримки веб-сайту продаж лояльності"
 
 #. module: base
 #. odoo-python
