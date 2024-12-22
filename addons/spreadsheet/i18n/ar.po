@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -250,7 +250,7 @@ msgstr "%s ليس أسبوعاً صالحاً (يجب أن يكون عدداً �
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%s matches in all sheets"
-msgstr ""
+msgstr "%s مطابق في كافة الأوراق "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -861,12 +861,6 @@ msgid ""
 msgstr ""
 "يجب أن تكون كافة التواريخ أكبر من أو مساوية لأول تاريخ في cashflow_dates "
 "(%s). "
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "All the ranges and the range values must have the same size"
-msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2863,19 +2857,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % of \"%s\""
-msgstr ""
+msgstr "معروض على شكل نسبة % من \"%s\" "
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % of column total"
-msgstr ""
+msgstr "معروض على شكل نسبة % من إجمالي العمود "
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % of grand total"
-msgstr ""
+msgstr "معروض على شكل نسبة % من الإجمالي الكلي "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2899,7 +2893,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as % of row total"
-msgstr ""
+msgstr "معروض على شكل نسبة % من إجمالي الصف "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2911,7 +2905,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displayed as difference from \"%s\""
-msgstr ""
+msgstr "معروض على شكل فرق من \"%s\" "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3229,6 +3223,7 @@ msgstr "الحقل %(field)s غير مدعوم نظراً نوعه (%(type)s) "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/odoo_pivot.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_helpers.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 msgid "Field %s does not exist"
 msgstr "الحقل %s غير موجود "
 
@@ -4855,7 +4850,7 @@ msgstr "مايو"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Measure \"%s\" options"
-msgstr ""
+msgstr "خيارات قياس \"%s\" "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5189,7 +5184,7 @@ msgstr "بلا لون "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "No active dimension in the pivot"
-msgstr ""
+msgstr "لا يوجد بُعد نشط في المحور "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6056,7 +6051,7 @@ msgstr "يقوم بإحضار مجموعة من النتائج مقتصرة عل
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Returns a sequence of numbers."
-msgstr ""
+msgstr "يُظهر تسلسلًا من الأرقام. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6527,6 +6522,12 @@ msgstr "لون واحد "
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Single value from a table-like range."
 msgstr "قيمة واحدة من مجال شبيه بالجدول. "
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+msgid "Some measures are not available: %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8390,6 +8391,21 @@ msgstr "المطروح منه، أو عدد ليتم الطرح منه. "
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The minute component of the time."
 msgstr "مكون الدقيقة من الوقت. "
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/data_sources/data_source.js:0
+#: code:addons/spreadsheet/static/src/pivot/odoo_pivot_loader.js:0
+msgid "The model \"%(model)s\" does not exist."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/global_filters/components/filter_value/filter_value.js:0
+msgid ""
+"The model (%(model)s) of this global filter is not valid (it may have been "
+"renamed/deleted)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript

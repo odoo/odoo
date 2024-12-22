@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -58,6 +58,12 @@ msgid "+1 555-555-555"
 msgstr "+1 555-555-555"
 
 #. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+msgid ", fits in"
+msgstr ", cabe en"
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
 msgid ""
 "<i class=\"fa fa-warning\"/> An error occurred with your account. Please "
@@ -99,7 +105,7 @@ msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
 "                                <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Agregar</span>\n"
+"<span class=\"o_stat_text\">Añadir</span>\n"
 "                                <span class=\"o_stat_text\">acción de contexto</span>"
 
 #. module: sms
@@ -189,8 +195,8 @@ msgid ""
 "Add a contextual action on the related model to open a sms composer with "
 "this template"
 msgstr ""
-"Agregue una acción contextual en el modelo relacionado para abrir un editor "
-"de SMS con esta plantilla"
+"Añada una acción contextual en el modelo relacionado para abrir un editor de"
+" SMS con esta plantilla"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_sms__uuid
@@ -204,6 +210,12 @@ msgstr ""
 #: code:addons/sms/static/src/core/failure_model_patch.js:0
 msgid "An error occurred when sending an SMS"
 msgstr "Ocurrió un error al enviar un SMS"
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/core/failure_model_patch.js:0
+msgid "An error occurred when sending an SMS on “%(record_name)s”"
+msgstr ""
 
 #. module: sms
 #. odoo-python
@@ -1168,6 +1180,12 @@ msgstr "Error de envío del SMS"
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/messaging_menu/messaging_menu_patch.js:0
+msgid "SMS Failure: %(modelName)s"
+msgstr ""
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/messaging_menu/messaging_menu_patch.js:0
 msgid "SMS Failures"
 msgstr "Fallos de SMS"
 
@@ -1580,7 +1598,7 @@ msgstr ""
 "- 'Actualizar un registro': actualizar los valores de un registro\n"
 "- 'Crear actividad': crear una actividad (conversaciones)\n"
 "- 'Enviar correo electrónico': publicar un mensaje, una nota o enviar un correo electrónico (Conversaciones)\n"
-"- 'Enviar SMS': enviar SMS y registrarlos en los documentos (SMS)- 'Agregar o eliminar seguidores': agregar o eliminar seguidores de un registro (Conversaciones)\n"
+"- 'Enviar SMS': enviar SMS y registrarlos en los documentos (SMS)- 'Añadir o eliminar seguidores': añadir o eliminar seguidores de un registro (Conversaciones)\n"
 "- 'Crear registro': crear un nuevo registro con nuevos valores\n"
 "- 'Ejecutar código': un bloque de código Python que se ejecutará\n"
 "- 'Enviar notificación webhook': enviar una solicitud POST a un sistema externo, también conocido como Webhook\n"
@@ -1767,8 +1785,8 @@ msgstr "Su cuenta de SMS aún no ha sido activada."
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
-msgid "characters, fits in"
-msgstr "caracteres, cabe en"
+msgid "characters"
+msgstr "caracteres"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

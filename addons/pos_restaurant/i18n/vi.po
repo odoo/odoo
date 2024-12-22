@@ -3,16 +3,16 @@
 # 	* pos_restaurant
 # 
 # Translators:
-# Wil Odoo, 2024
 # Thi Huong Nguyen, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -383,6 +383,12 @@ msgid "Design floors and assign orders to tables"
 msgstr "Thiết kế tầng và gán đơn hàng cho từng bàn"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Dine in"
+msgstr "Dùng tại chỗ"
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__display_name
 msgid "Display Name"
@@ -433,12 +439,6 @@ msgstr "Đã gặp lỗi khi tải hình ảnh. Hãy thử lại. "
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
 msgid "Enter a table number"
 msgstr "Nhập số bàn"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
-msgid "Error"
-msgstr "Lỗi"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.espresso_product_template
@@ -549,12 +549,6 @@ msgstr ""
 #: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
 msgid "Funghi"
 msgstr "Nấm"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
-msgid "General Note"
-msgstr "Ghi chú chung"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_negroni_product_template
@@ -687,6 +681,12 @@ msgid "Margarita"
 msgstr "Margarita"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Message"
+msgstr "Tin nhắn"
+
+#. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.milkshake_banana_product_template
 msgid "Milkshake Banana"
 msgstr "Sữa lắc vị chuối"
@@ -736,9 +736,9 @@ msgstr "Không có tip"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
-msgid "No table or floating order found with this number"
-msgstr "Không tìm thấy bàn hoặc đơn hàng mở nào ứng với số này"
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Note"
+msgstr "Ghi chú"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1183,6 +1183,12 @@ msgstr "Bàn"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__takeaway
 msgid "Take Away"
 msgstr "Mang đi"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Take out"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__takeaway

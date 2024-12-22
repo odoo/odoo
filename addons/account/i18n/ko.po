@@ -5,17 +5,17 @@
 # Translators:
 # JH CHOI <hwangtog@gmail.com>, 2024
 # Martin Trigaux, 2024
+# Daye Jeong, 2024
 # Sarah Park, 2024
 # Wil Odoo, 2024
-# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 08:16+0000\n"
+"POT-Creation-Date: 2024-12-19 11:52+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1111,6 +1111,12 @@ msgid "<span class=\"text-warning\">Medium risk</span>: Iban"
 msgstr "<span class=\"text-warning\">중간 위험</span>: Iban"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid ""
+"<span invisible=\"name or name_placeholder or quick_edit_mode\">Draft</span>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 msgstr "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
@@ -1142,15 +1148,6 @@ msgid ""
 msgstr ""
 "<span invisible=\"rule_type != 'invoice_matching'\" class=\"o_form_label "
 "o_td_label\">다음과 일치하는 청구서/업체청구서</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid ""
-"<span invisible=\"state != 'draft' or name != '/' or posted_before or "
-"quick_edit_mode\">Draft</span>"
-msgstr ""
-"<span invisible=\"state != 'draft' or name != '/' or posted_before or "
-"quick_edit_mode\">초안</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -2381,7 +2378,7 @@ msgstr "고객이 모바일 뱅킹으로 즉시 결제할 수 있도록 청구�
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Add a description to your item."
-msgstr ""
+msgstr "항목에 설명을 추가하세요."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -3999,6 +3996,7 @@ msgstr "이월 대상"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_cash_journal_default_account_46
+#: model:account.account,name:account.1_cash_journal_default_account_57
 #: model:account.journal,name:account.1_cash
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -4010,6 +4008,16 @@ msgstr "현금"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Cash Account"
 msgstr "현금 계정"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_54
+msgid "Cash Bakery"
+msgstr "현금 베이커리"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_56
+msgid "Cash Bar"
+msgstr "현금 바"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
@@ -4046,6 +4054,11 @@ msgstr "현금주의 세금"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
 msgstr "현금주의 전환 계좌"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_53
+msgid "Cash Clothes Shop"
+msgstr "현금 의류 매장"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
@@ -4101,10 +4114,20 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "현금할인상각손실 계정"
 
 #. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_52
+msgid "Cash Furn. Shop"
+msgstr "현금 가구 매장"
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "금전 등록기"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_55
+msgid "Cash Restaurant"
+msgstr "현금 레스토랑"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -4354,7 +4377,7 @@ msgstr "클릭하세요:"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Click here to add a description to your product."
-msgstr ""
+msgstr "제품에 설명을 추가하려면 여기를 클릭하세요."
 
 #. module: account
 #. odoo-javascript
@@ -4583,7 +4606,7 @@ msgstr "이 전표와 관련된 회사"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Complete the partner data with email."
-msgstr ""
+msgstr "파트너 데이터를 이메일 주소를 포함하여 완성하세요."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -5027,7 +5050,7 @@ msgstr "첫 번째 현금 반올림 항목을 생성합니다."
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Create the product."
-msgstr ""
+msgstr "품목을 생성합니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -5742,6 +5765,7 @@ msgstr "기본"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__default_account_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Account"
 msgstr "기본 계정"
@@ -6423,7 +6447,6 @@ msgstr "이 계정에서 발행된 선지급금을 세금 결산 항목에 포�
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__draft
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Draft"
 msgstr "미결"
 
@@ -7122,7 +7145,7 @@ msgstr "기능 유형"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Fill in the details of the product or see the suggestion."
-msgstr ""
+msgstr "제품 세부 정보를 입력하거나 제안된 내용을 검토하세요."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
@@ -8569,6 +8592,11 @@ msgid "Invalid fiscal year last day"
 msgstr "회계연도 마감일이 잘못되었습니다."
 
 #. module: account
+#: model:account.journal,name:account.1_inventory_valuation
+msgid "Inventory Valuation"
+msgstr "재고 자산 평가"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
 msgid "Inventory Value"
 msgstr "재고 금액"
@@ -8978,6 +9006,12 @@ msgstr "전송이 완료되었습니다."
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
 msgid "Is Between"
 msgstr "다음 금액 범위에 있음"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
+#: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+msgid "Is Coa Installed"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -9696,10 +9730,6 @@ msgid "Liability"
 msgstr "부채"
 
 #. module: account
-msgid "Like the \"Global Lock Date\", but no exceptions are possible."
-msgstr "“글로벌 잠금 날짜\"와 비슷하지만 예외는 허용되지 않습니다."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__line_ids
 msgid "Line"
 msgstr "선"
@@ -10362,6 +10392,12 @@ msgid "Name"
 msgstr "이름"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name_placeholder
+#: model:ir.model.fields,field_description:account.field_account_move__name_placeholder
+msgid "Name Placeholder"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name_searchable
 msgid "Name Searchable"
 msgstr "검색 가능한 이름"
@@ -10458,6 +10494,16 @@ msgstr "새 값"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
 msgstr "최근 항목 우선"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "다음 활동 캘린더 행사"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -10572,19 +10618,6 @@ msgstr "결제 분개 항목 없음"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "No possible action found with the selected lines."
 msgstr "선택한 항목에 대해 진행할 수 있는 활동이 없습니다."
-
-#. module: account
-msgid ""
-"No users can edit accounts prior to and inclusive of this date. Use it for "
-"fiscal year locking for example."
-msgstr ""
-"이 날짜 이전에는 어떤 사용자도 계정을 수정할 수 없습니다. 이 날짜는 예를 들어 회계 연도를 잠그는 데 사용할 수 있습니다."
-
-#. module: account
-msgid ""
-"No users can edit journal entries related to a tax prior and inclusive of "
-"this date."
-msgstr "이 날짜를 포함하여 이전에 입력된 세금 관련 전표는 편집할 수 없습니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
@@ -11322,8 +11355,8 @@ msgstr "미결제 PDF"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "PEPPOL Electronic Document Invoicing"
-msgstr "PEPPOL 전자 문서 청구서 발행"
+msgid "PEPPOL Electronic Invoicing"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
@@ -11583,6 +11616,7 @@ msgstr "미지급금"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_payment.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__origin_payment_id
 #: model:ir.model.fields,field_description:account.field_account_move__origin_payment_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -12116,18 +12150,6 @@ msgid ""
 msgstr "청구서와 결제 내역이 일치하면 전표를 생성하도록 사전 설정"
 
 #. module: account
-msgid ""
-"Prevents creation and modification of entries in purchase journals up to the"
-" defined date inclusive."
-msgstr "당일을 포함하여 지정된 날짜까지 매입 전표에 항목을 만들고 수정하는 것을 제한합니다."
-
-#. module: account
-msgid ""
-"Prevents creation and modification of entries in sales journals up to the "
-"defined date inclusive."
-msgstr "당일을 포함하여 지정된 날짜까지 판매 전표에 항목을 만들고 수정하는 것을 제한합니다."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Preview"
@@ -12408,6 +12430,20 @@ msgstr "빠른 인코딩"
 #: model:account.account,name:account.1_expense_rd
 msgid "RD Expenses"
 msgstr "연구비"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
+msgid "Ratings"
+msgstr "평가"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
@@ -13192,7 +13228,6 @@ msgstr "바코드 스캔"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
-#: code:addons/account/wizard/account_payment_register.py:0
 msgid "Scan me with your banking app."
 msgstr "뱅킹 앱으로 스캔하십시오."
 
@@ -13648,7 +13683,7 @@ msgstr "날짜를 설정하세요. 당일을 포함하여 이동 시 보안이 �
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Set a price."
-msgstr ""
+msgstr "가격을 설정합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -14875,14 +14910,6 @@ msgid ""
 msgstr ""
 "%(partner_name)s에 대한 청구 빈도가 비정상적으로 보입니다. 기록 데이터에 따르면 다음 청구 예상 날짜는%(expected_date)s일 (매 %(mean)s (± %(wiggle)s) 일) 이전이 아니어야 합니다.\n"
 "이 날짜가 올바른지 확인해 주세요."
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
-msgid ""
-"The button priority shifted since the invoice has been sent. Let's register "
-"the payment now."
-msgstr "청구서가 전송되어 버튼의 우선순위가 변경되었습니다. 이제 결제를 등록해 보겠습니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_cash_basis_created_move_ids
@@ -17119,7 +17146,7 @@ msgstr "공급업체"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Verify the price and update if necessary."
-msgstr ""
+msgstr "가격을 확인하고 필요한 경우 업데이트합니다."
 
 #. module: account
 #. odoo-javascript
@@ -17429,12 +17456,6 @@ msgstr "발행된 항목만 조정할 수 있습니다."
 #: code:addons/account/models/account_move.py:0
 msgid "You can only register payment for posted journal entries."
 msgstr "발행된 전표만 결제를 등록할 수 있습니다."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "You can only register payments for (partially) unpaid documents."
-msgstr "(일부) 미결제 문서에 대해서만 결제를 등록할 수 있습니다."
 
 #. module: account
 #. odoo-python
@@ -18172,6 +18193,12 @@ msgstr "은(는) 해당 국가의 법률과 관련된 비용에 관여하지 않
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "bills for"
 msgstr "청구 대상"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid "by %s"
+msgstr ""
 
 #. module: account
 #. odoo-python

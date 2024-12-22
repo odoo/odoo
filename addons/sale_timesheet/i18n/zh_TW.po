@@ -4,16 +4,16 @@
 # 
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2024
-# Wil Odoo, 2024
 # Tony Ng, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1146,6 +1146,17 @@ msgid "Sales Orders"
 msgstr "銷售訂單"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
+msgid ""
+"Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+"If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
+"You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
+msgstr ""
+"在相應員工的工時表上預設選擇的銷售訂單項目。它會繞過專案及任務設定的銷售訂單項目，並可按需要，修改個別工時記項。換句話說，它定義了員工工時計費的收費率，例如可根據員工的專業知識、技能或經驗等計費。\n"
+"若想以不同收費率對相同服務計費，則需要建立兩個單獨的銷售訂單項目，因為每個銷售訂單項目只能有一個單價。\n"
+"你亦可以專為今次專案，特別設定員工工時表所採用的每小時公司成本。它將繞過員工預設的工時表成本。"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
 msgid ""
 "Sales order item to which the time spent will be added in order to be "
@@ -1162,7 +1173,7 @@ msgstr "任務連結到的銷售訂單。"
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 msgid "Search in Invoice"
-msgstr "於應收憑單中搜尋"
+msgstr "在發票內搜尋"
 
 #. module: sale_timesheet
 #. odoo-python

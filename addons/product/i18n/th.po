@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Wichanon Jamwutthipreecha, 2024
-# Wil Odoo, 2024
 # Tiffany Chang, 2024
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-27 08:16+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -993,6 +993,16 @@ msgstr "ปริมาณที่มีอยู่ควรมีค่าเ
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Contained quantity"
 msgstr "ปริมาณที่บรรจุอยู่"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__uom_category_id
+#: model:ir.model.fields,help:product.field_product_template__uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"การแปลงระหว่างหน่วยวัดจะเกิดขึ้นได้ก็ต่อเมื่ออยู่ในหมวดหมู่เดียวกัน "
+"การแปลงจะอิงตามอัตราส่วน"
 
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
@@ -3625,6 +3635,12 @@ msgstr "หน่วย"
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Units of Measure"
 msgstr "หน่วยวัด"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__uom_category_id
+#: model:ir.model.fields,field_description:product.field_product_template__uom_category_id
+msgid "UoM Category"
+msgstr "หมวดหมู่ UoM"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form

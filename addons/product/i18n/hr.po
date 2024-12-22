@@ -13,17 +13,17 @@
 # Luka Carević <luka@uvid.hr>, 2024
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2024
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
-# Bole <bole@dajmi5.com>, 2024
 # Tina Milas, 2024
 # hrvoje sić <hrvoje.sic@gmail.com>, 2024
+# Bole <bole@dajmi5.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-27 08:16+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: hrvoje sić <hrvoje.sic@gmail.com>, 2024\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2024\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -991,6 +991,17 @@ msgstr "Sadržana količina mora biti pozitivna."
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Contained quantity"
 msgstr "Sadržana količina"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__uom_category_id
+#: model:ir.model.fields,help:product.field_product_template__uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Konverzija jedinica mjere može se vršiti samo za jedinice mjere koje "
+"pripadaju istoj kategoriji. Konverzija će se izvršiti temeljem omjera "
+"jedinica mjere."
 
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
@@ -3572,6 +3583,12 @@ msgstr "Jedinice"
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Units of Measure"
 msgstr "Jedinice mjere"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__uom_category_id
+#: model:ir.model.fields,field_description:product.field_product_template__uom_category_id
+msgid "UoM Category"
+msgstr "Kategorija JM"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form

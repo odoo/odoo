@@ -32,7 +32,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -890,12 +890,6 @@ msgid ""
 msgstr ""
 "Kaikkien päivämäärien on oltava vähintään yhtä suuria kuin cashflow_dates-"
 "kohdan (%s) ensimmäinen päivämäärä."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "All the ranges and the range values must have the same size"
-msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3292,6 +3286,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/odoo_pivot.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_helpers.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 msgid "Field %s does not exist"
 msgstr "Kenttää %s ei ole olemassa"
 
@@ -6618,6 +6613,12 @@ msgstr "Yksittäinen arvo taulukkomaisesta alueesta."
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+msgid "Some measures are not available: %s"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Some used characters are not allowed in a sheet name (Forbidden characters "
@@ -8509,6 +8510,21 @@ msgstr "Minuutti tai luku, josta vähennetään."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The minute component of the time."
 msgstr "Ajan minuuttikomponentti."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/data_sources/data_source.js:0
+#: code:addons/spreadsheet/static/src/pivot/odoo_pivot_loader.js:0
+msgid "The model \"%(model)s\" does not exist."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/global_filters/components/filter_value/filter_value.js:0
+msgid ""
+"The model (%(model)s) of this global filter is not valid (it may have been "
+"renamed/deleted)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript

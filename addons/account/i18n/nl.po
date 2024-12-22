@@ -3,19 +3,19 @@
 # 	* account
 # 
 # Translators:
-# Jolien De Paepe, 2024
 # Jordy Blankestijn <jblankestijn@erpopen.nl>, 2024
-# Wil Odoo, 2024
 # Manon Rondou, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Jolien De Paepe, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 08:16+0000\n"
+"POT-Creation-Date: 2024-12-19 11:52+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1122,6 +1122,12 @@ msgid "<span class=\"text-warning\">Medium risk</span>: Iban"
 msgstr "<span class=\"text-warning\">Medium risico</span>: Iban"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid ""
+"<span invisible=\"name or name_placeholder or quick_edit_mode\">Draft</span>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 msgstr "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
@@ -1153,15 +1159,6 @@ msgid ""
 msgstr ""
 "<span invisible=\"rule_type != 'invoice_matching'\" class=\"o_form_label "
 "o_td_label\">Factuur afletteren met</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid ""
-"<span invisible=\"state != 'draft' or name != '/' or posted_before or "
-"quick_edit_mode\">Draft</span>"
-msgstr ""
-"<span invisible=\"state != 'draft' or name != '/' or posted_before or "
-"quick_edit_mode\">Concept</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -2442,7 +2439,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Add a description to your item."
-msgstr ""
+msgstr "Voeg een beschrijving toe aan de regel."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -4116,6 +4113,7 @@ msgstr "Overdragen naar"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_cash_journal_default_account_46
+#: model:account.account,name:account.1_cash_journal_default_account_57
 #: model:account.journal,name:account.1_cash
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -4127,6 +4125,16 @@ msgstr "Kas"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Cash Account"
 msgstr "Kasrekening"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_54
+msgid "Cash Bakery"
+msgstr "Bakkerij"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_56
+msgid "Cash Bar"
+msgstr "Cash Bar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
@@ -4163,6 +4171,11 @@ msgstr "Kasstelsel btw"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
 msgstr "Kasstelsel tussenrekening"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_53
+msgid "Cash Clothes Shop"
+msgstr "Kledingwinkel"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
@@ -4218,10 +4231,20 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "Betalingskorting verliesafschrijvingsrekening"
 
 #. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_52
+msgid "Cash Furn. Shop"
+msgstr "Kassa. Winkel"
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "Kassasystemen"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_55
+msgid "Cash Restaurant"
+msgstr "Cash restaurant"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -4488,7 +4511,7 @@ msgstr "Klik"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Click here to add a description to your product."
-msgstr ""
+msgstr "Klik hier om een ​​beschrijving aan je product toe te voegen."
 
 #. module: account
 #. odoo-javascript
@@ -4721,7 +4744,7 @@ msgstr "Bedrijf gerelateerd aan dit dagboek"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Complete the partner data with email."
-msgstr ""
+msgstr "Vul de contactgegevens in met e-mailadres."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -5174,7 +5197,7 @@ msgstr "Maak de eerste kasafronding"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Create the product."
-msgstr ""
+msgstr "Maak het product."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -5894,6 +5917,7 @@ msgstr "Standaard"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__default_account_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Account"
 msgstr "Standaard rekening"
@@ -6594,7 +6618,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__draft
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Draft"
 msgstr "Concept"
 
@@ -7309,7 +7332,7 @@ msgstr "Figuurtype"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Fill in the details of the product or see the suggestion."
-msgstr ""
+msgstr "Vul de details van het product in of bekijk de suggestie."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
@@ -8830,6 +8853,11 @@ msgid "Invalid fiscal year last day"
 msgstr "Foutieve laatste dag voor boekjaar"
 
 #. module: account
+#: model:account.journal,name:account.1_inventory_valuation
+msgid "Inventory Valuation"
+msgstr "Voorraadwaardering"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
 msgid "Inventory Value"
 msgstr "Voorraadwaarde"
@@ -9255,6 +9283,12 @@ msgstr "Wordt verzonden"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
 msgid "Is Between"
 msgstr "Is tussen"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
+#: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+msgid "Is Coa Installed"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -9986,11 +10020,6 @@ msgid "Liability"
 msgstr "Passiva"
 
 #. module: account
-msgid "Like the \"Global Lock Date\", but no exceptions are possible."
-msgstr ""
-"Net als de \"Global Lock Date\", maar er zijn geen uitzonderingen mogelijk."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__line_ids
 msgid "Line"
 msgstr "Regel"
@@ -10662,6 +10691,12 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name_placeholder
+#: model:ir.model.fields,field_description:account.field_account_move__name_placeholder
+msgid "Name Placeholder"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name_searchable
 msgid "Name Searchable"
 msgstr "Naam doorzoekbaar"
@@ -10760,6 +10795,16 @@ msgstr "Nieuwe waardes"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
 msgstr "Nieuwste eerst"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Volgende activiteitenafspraak"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -10878,22 +10923,6 @@ msgstr "Geen boekingen voor betalingen"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "No possible action found with the selected lines."
 msgstr "Geen mogelijke actie gevonden met de geselecteerde regels."
-
-#. module: account
-msgid ""
-"No users can edit accounts prior to and inclusive of this date. Use it for "
-"fiscal year locking for example."
-msgstr ""
-"Gebruikers kunnen geen rekeningen bewerken vóór en na deze datum. Gebruik "
-"het bijvoorbeeld voor het blokkeren van het fiscale jaar."
-
-#. module: account
-msgid ""
-"No users can edit journal entries related to a tax prior and inclusive of "
-"this date."
-msgstr ""
-"Er zijn geen gebruikers die de boekingen kunnen wijzigen gerelateerd aan een"
-" btw voorafgaand of op deze datum."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
@@ -11653,8 +11682,8 @@ msgstr "PDF zonder betaling"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "PEPPOL Electronic Document Invoicing"
-msgstr "PEPPOL Elektronische facturatie"
+msgid "PEPPOL Electronic Invoicing"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
@@ -11918,6 +11947,7 @@ msgstr "Crediteuren"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_payment.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__origin_payment_id
 #: model:ir.model.fields,field_description:account.field_account_move__origin_payment_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -12470,22 +12500,6 @@ msgstr ""
 " betalingen"
 
 #. module: account
-msgid ""
-"Prevents creation and modification of entries in purchase journals up to the"
-" defined date inclusive."
-msgstr ""
-"Voorkomt het aanmaken en wijzigen van boekingen in inkoopdagboeken tot en "
-"met de gedefinieerde datum."
-
-#. module: account
-msgid ""
-"Prevents creation and modification of entries in sales journals up to the "
-"defined date inclusive."
-msgstr ""
-"Voorkomt het maken en wijzigen van boekingen in verkoopdagboeken tot en met "
-"de gedefinieerde datum."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Preview"
@@ -12766,6 +12780,20 @@ msgstr "Snelle codering"
 #: model:account.account,name:account.1_expense_rd
 msgid "RD Expenses"
 msgstr "RD uitgaven"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
+msgid "Ratings"
+msgstr "Beoordelingen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
@@ -13558,7 +13586,6 @@ msgstr "Scan barcode"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
-#: code:addons/account/wizard/account_payment_register.py:0
 msgid "Scan me with your banking app."
 msgstr "Scan met je bank app."
 
@@ -14039,7 +14066,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Set a price."
-msgstr ""
+msgstr "Stel een prijs vast."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -15326,16 +15353,6 @@ msgid ""
 msgstr ""
 "De factureringsfrequentie voor %(partner_name)s lijkt ongewoon. Op basis van je historische gegevens ligt de verwachte datum van de volgende factuur niet voor %(expected_date)s (elke %(mean)s (± %(wiggle)s) dagen).\n"
 "Controleer of deze datum juist is."
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
-msgid ""
-"The button priority shifted since the invoice has been sent. Let's register "
-"the payment now."
-msgstr ""
-"De knopprioriteit is verschoven sinds de factuur is verzonden. Laten we de "
-"betaling nu registreren."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_cash_basis_created_move_ids
@@ -17746,7 +17763,7 @@ msgstr "Leveranciers"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Verify the price and update if necessary."
-msgstr ""
+msgstr "Controleer de prijs en pas deze indien nodig aan."
 
 #. module: account
 #. odoo-javascript
@@ -18081,14 +18098,6 @@ msgstr "Je kunt alleen geboekte boekingen afletteren."
 #: code:addons/account/models/account_move.py:0
 msgid "You can only register payment for posted journal entries."
 msgstr "Je kunt alleen betalingen registreren voor geboekte boekingen."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "You can only register payments for (partially) unpaid documents."
-msgstr ""
-"Je kunt alleen betalingen registreren voor (gedeeltelijk) onbetaalde "
-"documenten."
 
 #. module: account
 #. odoo-python
@@ -18941,6 +18950,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "bills for"
 msgstr "facturen voor"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid "by %s"
+msgstr ""
 
 #. module: account
 #. odoo-python

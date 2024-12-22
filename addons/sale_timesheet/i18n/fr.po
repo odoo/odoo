@@ -4,16 +4,16 @@
 # 
 # Translators:
 # 6534c450c77b2549e41c52e2051f5839, 2024
-# Wil Odoo, 2024
 # Manon Rondou, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,6 +74,9 @@ msgid ""
 "distribution of the sale order item '%(so_line_name)s' linked to the "
 "timesheet."
 msgstr ""
+"Les plans analytiques '%(missing_plan_names)s' sont requis dans la "
+"distribution analytique de l'article de commande client '%(so_line_name)s' "
+"lié à la feuille de temps."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
@@ -1162,6 +1165,17 @@ msgid "Sales Orders"
 msgstr "Commandes clients"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
+msgid ""
+"Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+"If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
+"You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
+msgstr ""
+"L'article de la commande qui sera sélectionné par défaut sur les feuilles de temps de l'employé correspondant. Il contourne l'article de la commande défini sur le projet et la tâche et peut être modifié sur chaque entrée de feuille de temps si nécessaire. En d'autres termes, il définit le taux auquel le temps d'un employé est facturé en fonction de son expertise, ses compétences ou son expérience par exemple. \n"
+"Si vous voulez facturer le même service à des taux différents, vous devez créer deux articles de commande séparés puisque chaque article de commande ne peut avoir qu'un seul prix unitaire à la fois.\n"
+"Vous pouvez également définir le coût horaire de l'entreprise de vos employés pour leurs feuilles de temps sur ce projet spécifiquement. Il contourne le coût de feuille de temps défini pour l'employé."
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
 msgid ""
 "Sales order item to which the time spent will be added in order to be "
@@ -1226,7 +1240,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
 #: model:project.project,label_tasks:sale_timesheet.project_support
 msgid "Services"
-msgstr "Interventions"
+msgstr "Services"
 
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_engineer
@@ -1507,6 +1521,7 @@ msgstr "Feuilles de temps prises en compte lorsque le temps passé est facturé"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Timesheets without a sales order item are reported as"
 msgstr ""
+"Les feuilles de temps sans article de commande client sont rapportées comme"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description

@@ -15,7 +15,6 @@
 # vaalds <vaalds@gmail.com>, 2024
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2024
 # Arminas Grigonis <arminas@versada.lt>, 2024
-# Gailius Kazlauskas <gailius@vialaurea.lt>, 2024
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2024
 # Donatas <donatasvaliulis16@gmail.com>, 2024
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2024
@@ -23,17 +22,18 @@
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024
 # Arunas V. <arunas@devoro.com>, 2024
 # Martin Trigaux, 2024
-# Linas Versada <linaskrisiukenas@gmail.com>, 2024
 # Jonas Zinkevicius <jozi@odoo.com>, 2024
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2024
+# Gailius Kazlauskas <gailius@vialaurea.lt>, 2024
+# Linas Versada <linaskrisiukenas@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-27 08:16+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: digitouch UAB <digitouchagencyeur@gmail.com>, 2024\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -970,6 +970,16 @@ msgstr "Turimas kiekis privalo būti teigiamas."
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Contained quantity"
 msgstr "Talpinamas kiekis"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__uom_category_id
+#: model:ir.model.fields,help:product.field_product_template__uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Konvertavimas galimas tik tarp tai pačiai grupei priklausančių matavimo "
+"vienetų. Konvertuojant kiekiai bus paskaičiuoti pagal santykį."
 
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
@@ -3565,6 +3575,12 @@ msgstr "Vienetai"
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Units of Measure"
 msgstr "Matavimo vienetai"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__uom_category_id
+#: model:ir.model.fields,field_description:product.field_product_template__uom_category_id
+msgid "UoM Category"
+msgstr "Matavimo vienetų kategorija"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form

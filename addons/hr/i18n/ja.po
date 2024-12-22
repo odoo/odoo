@@ -3,16 +3,16 @@
 # 	* hr
 # 
 # Translators:
-# Wil Odoo, 2024
 # Junko Augias, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,11 +69,6 @@ msgstr "1 通話"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
 msgstr "自ら選択した<br>6日間を含む12日間/年"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "12345678901"
-msgstr "12345678901"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -623,6 +618,11 @@ msgstr "バッジ ID"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account"
+msgstr "銀行口座"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
 msgstr "銀行口座"
 
 #. module: hr
@@ -2037,11 +2037,6 @@ msgid "Manager of employee %s is not set."
 msgstr "従業員の%sさんのマネージャーが定められていません。"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Marc Demo"
-msgstr "Marc Demo"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
 #: model:ir.model.fields,field_description:hr.field_res_users__marital
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2984,11 +2979,6 @@ msgid "Social Security Number"
 msgstr "社会保障番号"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Software Developer"
-msgstr "ソフトウエア開発者"
-
-#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee_base.py:0
 msgid "Some employee already have a work contact"
@@ -3147,7 +3137,7 @@ msgstr "派遣社員"
 msgid ""
 "The Badge ID must be alphanumeric without any accents and no longer than 18 "
 "characters."
-msgstr ""
+msgstr "バッジIDは、アクセント記号を含まない英数字で、18文字以内にして下さい。"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq

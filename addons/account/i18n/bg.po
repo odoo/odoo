@@ -30,18 +30,18 @@
 # Venelin Stoykov, 2024
 # Margarita Katzeva, 2024
 # Toma Tomov, 2024
-# Milena Georgieva, 2024
-# Maria Boyadjieva <marabo2000@gmail.com>, 2024
 # Emil Krastev, 2024
+# Milena Georgieva, 2024
 # Petko Karamotchev, 2024
+# Maria Boyadjieva <marabo2000@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 08:16+0000\n"
+"POT-Creation-Date: 2024-12-19 11:52+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Petko Karamotchev, 2024\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2024\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1030,6 +1030,12 @@ msgid "<span class=\"text-warning\">Medium risk</span>: Iban"
 msgstr "<span class=\"text-warning\">Среден риск</span>: IBAN"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid ""
+"<span invisible=\"name or name_placeholder or quick_edit_mode\">Draft</span>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 msgstr "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
@@ -1061,15 +1067,6 @@ msgid ""
 msgstr ""
 "<span invisible=\"rule_type != 'invoice_matching'\" class=\"o_form_label "
 "o_td_label\">Съвпадение на фактура/сметка с</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid ""
-"<span invisible=\"state != 'draft' or name != '/' or posted_before or "
-"quick_edit_mode\">Draft</span>"
-msgstr ""
-"<span invisible=\"state != 'draft' or name != '/' or posted_before or "
-"quick_edit_mode\">Чернова</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -2339,7 +2336,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Add a description to your item."
-msgstr ""
+msgstr "Добавете описание към Вашия продукт."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -2993,7 +2990,7 @@ msgstr "Приложимост"
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding_sale_tax
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
 msgid "Apply"
-msgstr "Приложи"
+msgstr "Приложете"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3059,7 +3056,7 @@ msgstr "Попитайте след 3 валидации без редакции
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "Ask me later"
-msgstr "Попиитай ме по-късно"
+msgstr "Попитайте ме по-късно"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__asset
@@ -3097,7 +3094,7 @@ msgstr "Прикачване"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
 msgid "Attach a file"
-msgstr "Прикачи файл"
+msgstr "Прикачване на файл"
 
 #. module: account
 #: model:ir.model,name:account.model_ir_attachment
@@ -3152,7 +3149,7 @@ msgstr "Съобщения за одитна следа"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__auditable
 msgid "Auditable"
-msgstr "одитируем"
+msgstr "Одитируем"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__8
@@ -3282,7 +3279,7 @@ msgstr "Налична банка на партньор"
 #: model:ir.model.fields,field_description:account.field_account_journal__available_payment_method_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_method_line__available_payment_method_ids
 msgid "Available Payment Method"
-msgstr "Налични Начини на Плащане"
+msgstr "Наличен начин на плащане"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__available_payment_method_line_ids
@@ -3293,7 +3290,7 @@ msgstr "Ред за Налични Начини на Плащане"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_average
 msgid "Average Price"
-msgstr "Средна Цена"
+msgstr "Средна цена"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
@@ -3310,7 +3307,7 @@ msgstr "BILL"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Bill"
-msgstr "обратно към сметката"
+msgstr "Обратно към сметка"
 
 #. module: account
 #. odoo-javascript
@@ -3326,7 +3323,7 @@ msgstr "Бургер с бекон"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__trust__bad
 msgid "Bad Debtor"
-msgstr "Лош Длъжник"
+msgstr "Лош длъжник"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__balance
@@ -3337,7 +3334,7 @@ msgstr "Салдо"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 msgid "Balance Sheet"
-msgstr "Счетоводен Баланс"
+msgstr "Счетоводен баланс"
 
 #. module: account
 #. odoo-python
@@ -3365,7 +3362,7 @@ msgstr "Банка"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank & Cash"
-msgstr "Банка &amp; Парична Наличност"
+msgstr "Банка и сметка в брой"
 
 #. module: account
 #. odoo-python
@@ -3377,7 +3374,7 @@ msgstr "Банкови и сметки в брой не могат да бъда
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Bank Account"
-msgstr "Банкова Сметка"
+msgstr "Банкова сметка"
 
 #. module: account
 #. odoo-python
@@ -3389,24 +3386,24 @@ msgstr "Банкова сметка %(link)s с номер %(number)s е изт�
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %s created"
-msgstr "Банкова Сметка%s създадена"
+msgstr "Банкова сметка%s създадена"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %s updated"
-msgstr "Банкова Сметка %s актуализирана"
+msgstr "Банкова сметка %s актуализирана"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Bank Account Name"
-msgstr "Име на Бнакова сметка"
+msgstr "Име на банкова сметка"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__account_number
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Bank Account Number"
-msgstr "IBAN на Банкова Сметка"
+msgstr "IBAN на банкова сметка"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_bank_id
@@ -3425,7 +3422,7 @@ msgstr ""
 #: model:ir.model,name:account.model_res_partner_bank
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Bank Accounts"
-msgstr "Банкови Сметки"
+msgstr "Банкови сметки"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_statements_source
@@ -3440,12 +3437,12 @@ msgstr "Банкови разходи"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "Bank Identifier Code"
-msgstr "Идентификатор на Банката"
+msgstr "Идентификатор на банката"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__bank_journal_ids
 msgid "Bank Journals"
-msgstr "Банков Дневник"
+msgstr "Банков дневник"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__bank_partner_id
@@ -3472,7 +3469,7 @@ msgstr "Настройка на банка"
 #: model:ir.model,name:account.model_account_bank_statement
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Bank Statement"
-msgstr "Банково Извлечение"
+msgstr "Банково извлечение"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_extract
@@ -3482,12 +3479,12 @@ msgstr "Дигитализиране на банково извлечение"
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "Ред на Банково Извлечение"
+msgstr "Ред на банково извлечение"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 msgid "Bank Statements"
-msgstr "Банкови Извлечения"
+msgstr "Банкови извлечения"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_id
@@ -3922,7 +3919,7 @@ msgstr "Отказан"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Credit Note"
-msgstr ""
+msgstr "Отменено кредитно известие"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3934,12 +3931,14 @@ msgstr "Отменена фактура"
 #: code:addons/account/models/account_move.py:0
 msgid "Cannot create a purchase document in a non purchase journal"
 msgstr ""
+"Не може да се създаде документ за покупка в дневник, който не е за покупки"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Cannot create a sale document in a non sale journal"
 msgstr ""
+"Не може да се създаде документ за продажба в дневник, който не е за продажби"
 
 #. module: account
 #. odoo-python
@@ -3995,6 +3994,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_cash_journal_default_account_46
+#: model:account.account,name:account.1_cash_journal_default_account_57
 #: model:account.journal,name:account.1_cash
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -4005,6 +4005,16 @@ msgstr "В брой"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Cash Account"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_54
+msgid "Cash Bakery"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_56
+msgid "Cash Bar"
 msgstr ""
 
 #. module: account
@@ -4041,6 +4051,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_53
+msgid "Cash Clothes Shop"
 msgstr ""
 
 #. module: account
@@ -4097,10 +4112,20 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr ""
 
 #. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_52
+msgid "Cash Furn. Shop"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "Касови апарати"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_55
+msgid "Cash Restaurant"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -4422,7 +4447,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Collect customer payments in one-click using Euro SEPA Service"
-msgstr ""
+msgstr "Събирайте плащания от клиенти с едно кликване с услугата Euro SEPA"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4430,6 +4455,8 @@ msgid ""
 "Collect information and produce statistics on the trade in goods in Europe "
 "with intrastat"
 msgstr ""
+"Събирайте информация и генерирайте статистика за търговията на стоки в "
+"Европа с Интрастат"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__color
@@ -4465,7 +4492,7 @@ msgstr "Комуникационен стандарт"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_type
 msgid "Communication Type"
-msgstr ""
+msgstr "Тип на комуникация"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -4483,7 +4510,7 @@ msgstr "Фирми"
 #: model:ir.model.fields,field_description:account.field_res_partner__ref_company_ids
 #: model:ir.model.fields,field_description:account.field_res_users__ref_company_ids
 msgid "Companies that refers to partner"
-msgstr "Компании, свързани с контрагент"
+msgstr "Фирми, свързани с контрагент"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__company_id
@@ -4542,7 +4569,7 @@ msgstr "Фирмена банкова сметка"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_country_id
 msgid "Company Country"
-msgstr "Държава на компанията"
+msgstr "Държава на фирмата"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__company_currency_id
@@ -4555,18 +4582,18 @@ msgstr "Държава на компанията"
 #: model:ir.model.fields,field_description:account.field_account_payment__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_payment_register__company_currency_id
 msgid "Company Currency"
-msgstr "Валута на компания"
+msgstr "Валута на фирмата"
 
 #. module: account
 #: model:ir.model,name:account.model_base_document_layout
 msgid "Company Document Layout"
-msgstr "Оформление на документа на компанията"
+msgstr "Оформление на документа на фирмата"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__company_fiscal_country_code
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__fiscal_country_codes
 msgid "Company Fiscal Country Code"
-msgstr "Данъчен код на държавата на компанията"
+msgstr "Данъчен код на държавата на фирмата"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
@@ -4581,14 +4608,14 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
 msgid "Company has a chart of accounts"
-msgstr "Дружеството има счетоводен план"
+msgstr "Фирмата има счетоводен план"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__company_id
 #: model:ir.model.fields,help:account.field_account_journal__company_id
 #: model:ir.model.fields,help:account.field_account_payment_method_line__company_id
 msgid "Company related to this journal"
-msgstr "Компания, свързана с този журнал"
+msgstr "Фирма, свързана с този журнал"
 
 #. module: account
 #. odoo-javascript
@@ -4637,7 +4664,7 @@ msgstr "Конфигурирайте"
 #: code:addons/account/models/onboarding_onboarding_step.py:0
 #: model:ir.actions.act_window,name:account.action_base_document_layout_configurator
 msgid "Configure your document layout"
-msgstr ""
+msgstr "Конфигурирайте оформлението на Вашия документ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
@@ -4738,12 +4765,12 @@ msgstr ""
 #: model:account.account,name:account.1_cost_of_goods_sold
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__cogs
 msgid "Cost of Goods Sold"
-msgstr "стойност на продадените стоки"
+msgstr "Стойност на продадените стоки"
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_production
 msgid "Cost of Production"
-msgstr "стойност на продукцията"
+msgstr "Стойност на продукцията"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_direct_cost
@@ -4959,7 +4986,7 @@ msgstr "Създаване на нова разписка за продажба"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_sellable
 msgid "Create a new sellable product"
-msgstr ""
+msgstr "Създайте нов продукт за продажба"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier
@@ -4982,6 +5009,8 @@ msgid ""
 "Create a structured report with multiple sections for convenient navigation "
 "and simultaneous printing."
 msgstr ""
+"Създайте структуриран доклад с множество секции за удобно навигиране и "
+"едновременен печат."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
@@ -5042,7 +5071,7 @@ msgstr "Създайте първото закръгляне на пари в б
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Create the product."
-msgstr ""
+msgstr "Създайте продукта."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -5272,7 +5301,7 @@ msgstr "Кредитен лимит конкретно за този партн�
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
 msgid "Cumulated Balance"
-msgstr ""
+msgstr "Натрупан баланс"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__cumulated_balance
@@ -5331,7 +5360,7 @@ msgstr "Валутен курс"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__currency_translation
 msgid "Currency Translation"
-msgstr ""
+msgstr "Конвертиране на валута"
 
 #. module: account
 #. odoo-python
@@ -5343,24 +5372,24 @@ msgstr "Currency exchange rate difference"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Currency must always be provided in order to generate a QR-code"
-msgstr ""
+msgstr "Валутата винаги трябва да бъде предоставяна, за да се генерира QR код"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_currency_id
 msgid "Currency of the credit journal item."
-msgstr ""
+msgstr "Валута на артикулa в кредитния дневник."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_currency_id
 msgid "Currency of the debit journal item."
-msgstr ""
+msgstr "Валута на артикулa в дебитния дневник."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_currency_rate
 #: model:ir.model.fields,help:account.field_account_move__invoice_currency_rate
 #: model:ir.model.fields,help:account.field_account_move_line__currency_rate
 msgid "Currency rate from company currency to document currency."
-msgstr ""
+msgstr "Обменен курс от валутата на компанията към валутата на документа."
 
 #. module: account
 #: model:account.account,name:account.1_current_assets
@@ -5382,7 +5411,7 @@ msgstr "Current Liabilities"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__current_statement_balance
 msgid "Current Statement Balance"
-msgstr ""
+msgstr "Текущо балансово извлечение"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity_unaffected
@@ -5392,17 +5421,17 @@ msgstr "Current Year Earnings"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__custom_audit_action_id
 msgid "Custom Audit Action"
-msgstr ""
+msgstr "Персонализирано одитно действие"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__custom
 msgid "Custom Python Function"
-msgstr ""
+msgstr "Персонализирана функция на Python"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__custom_user_amount
 msgid "Custom User Amount"
-msgstr ""
+msgstr "Персонализирана сума на потребителя"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__custom_user_currency_id
@@ -5427,7 +5456,7 @@ msgstr "Адреси"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Customer Bank Account"
-msgstr ""
+msgstr "Банкова сметка на клиента"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_refund
@@ -5459,7 +5488,7 @@ msgstr "Фактури за продажби"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_discount_expense_allocation_id
 msgid "Customer Invoices Discounts Account"
-msgstr ""
+msgstr "Сума на отстъпките по фактури на клиенти"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__out_and_in_invoices
@@ -5497,7 +5526,7 @@ msgstr "URL адрес на клиентския портал"
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__partner_customer_rank
 #: model:ir.model.fields,field_description:account.field_res_users__customer_rank
 msgid "Customer Rank"
-msgstr ""
+msgstr "Ранг на клиент"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -5533,7 +5562,7 @@ msgstr "Персонализирайте"
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_base_document_layout
 msgid "Customize the look of your documents."
-msgstr ""
+msgstr "Персонализирайте външния вид на документите си."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -5560,7 +5589,7 @@ msgstr "ДОСТАВЕНО НА МЯСТО"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DPU
 msgid "DELIVERED AT PLACE UNLOADED"
-msgstr ""
+msgstr "ДОСТАВЕНО НА МЯСТО, РАЗТОВАРЕНО"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DDP
@@ -5576,12 +5605,12 @@ msgstr "Табло за управление"
 #. module: account
 #: model:ir.actions.server,name:account.action_check_hash_integrity
 msgid "Data Inalterability Check"
-msgstr ""
+msgstr "Проверка за непроменимост на данните"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Data Inalterability Check Report -"
-msgstr ""
+msgstr "Доклад за проверка за непроменимост на данните -"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -5627,7 +5656,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_date_range
 msgid "Date Range"
-msgstr ""
+msgstr "Обхват на датите"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__date_scope
@@ -5663,7 +5692,7 @@ msgstr "Дати"
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__datetime
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__figure_type__datetime
 msgid "Datetime"
-msgstr ""
+msgstr "Дата и час"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__nb_days
@@ -5694,7 +5723,7 @@ msgstr "Дни след датата на фактурата"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__delay_type__days_end_of_month_on_the
 msgid "Days end of month on the"
-msgstr ""
+msgstr "Дни до края на месеца"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__days_next_month
@@ -5713,7 +5742,7 @@ msgstr "Дебит"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_amount_currency
 msgid "Debit Amount Currency"
-msgstr ""
+msgstr "Валута на сумата на дебита"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_move_id
@@ -5757,6 +5786,7 @@ msgstr "Стандартен"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__default_account_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Account"
 msgstr "Сметка по подразбиране"
@@ -5764,7 +5794,7 @@ msgstr "Сметка по подразбиране"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_type
 msgid "Default Account Type"
-msgstr ""
+msgstr "Тип сметка по подразбиране"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5836,7 +5866,7 @@ msgstr "Данъци по подразбиране"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__use_invoice_terms
 msgid "Default Terms & Conditions"
-msgstr ""
+msgstr "Стандартни Общи Условия"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_terms
@@ -5846,7 +5876,7 @@ msgstr "Стандартни срокове и условия"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_terms_html
 msgid "Default Terms and Conditions as a Web page"
-msgstr ""
+msgstr "Стандартни Общи Условия като уеб страница"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_defaults
@@ -5857,7 +5887,7 @@ msgstr "Стойности по подразбиране"
 #: model:ir.model.fields,field_description:account.field_res_company__incoterm_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__incoterm_id
 msgid "Default incoterm"
-msgstr ""
+msgstr "Условие на доставка по подразбиране"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__company_price_include
@@ -5873,24 +5903,24 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default taxes applied when creating new products."
-msgstr ""
+msgstr "Данъци по подразбиране, приложими при създаване на нови продукти."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,help:account.field_product_template__supplier_taxes_id
 msgid "Default taxes used when buying the product"
-msgstr ""
+msgstr "Данъци по подразбиране при покупка на продукт"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__taxes_id
 #: model:ir.model.fields,help:account.field_product_template__taxes_id
 msgid "Default taxes used when selling the product"
-msgstr ""
+msgstr "Данъци по подразбиране при продажба на продукт"
 
 #. module: account
 #: model:account.account,name:account.1_deferred_revenue
 msgid "Deferred Revenue"
-msgstr ""
+msgstr "Отложени приходи"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__allowed_journal_ids
@@ -5898,6 +5928,8 @@ msgid ""
 "Define in which journals this account can be used. If empty, can be used in "
 "all journals."
 msgstr ""
+"Дефинирайте в кой от дневниците тази сметка може да бъде използвана. Ако е "
+"празно, може да се използва във всички дневници."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5920,7 +5952,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
 msgid "Defines how the bank statements will be registered"
-msgstr ""
+msgstr "Дефинирайте как ще бъдат регистрирани банковите извлечения "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_applicability__display_account_prefix
@@ -5974,12 +6006,12 @@ msgstr ""
 #. module: account
 #: model:account.account.tag,name:account.demo_capital_account
 msgid "Demo Capital Account"
-msgstr ""
+msgstr "Демонстрационна капиталова сметка"
 
 #. module: account
 #: model:account.account.tag,name:account.demo_sale_of_land_account
 msgid "Demo Sale of Land Account"
-msgstr ""
+msgstr "Демонстрационна сметка за продажба на земя"
 
 #. module: account
 #: model:account.account.tag,name:account.demo_stock_account
@@ -6081,12 +6113,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__direction_sign
 #: model:ir.model.fields,field_description:account.field_account_move__direction_sign
 msgid "Direction Sign"
-msgstr ""
+msgstr "Указание за посока"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard__disable_merge_button
 msgid "Disable Merge Button"
-msgstr ""
+msgstr "Деактивирайте бутона за сливане"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_account_type__disabled
@@ -6129,17 +6161,17 @@ msgstr "Отстъпка (%)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount_allocation_dirty
 msgid "Discount Allocation Dirty"
-msgstr ""
+msgstr "Грешно разпределени отстъпки"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount_allocation_key
 msgid "Discount Allocation Key"
-msgstr ""
+msgstr "Ключ за разпределение на отстъпки"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount_allocation_needed
 msgid "Discount Allocation Needed"
-msgstr ""
+msgstr "Необходимо е разпределение на отстъпки"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -6151,7 +6183,7 @@ msgstr "Стойност на отстъпка"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount_balance
 msgid "Discount Balance"
-msgstr ""
+msgstr "Баланс на отстъпките"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount_date
@@ -6165,7 +6197,7 @@ msgstr "Дата на отстъпката"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__discount_days
 msgid "Discount Days"
-msgstr ""
+msgstr "Дни за отстъпки"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount_amount_currency
@@ -6176,13 +6208,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Discount of %(amount)s if paid today"
-msgstr ""
+msgstr "Отстъпка от %(amount)s ако се плати днес"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Discount of %(amount)s if paid within %(days)s days"
-msgstr ""
+msgstr "Отстъпка от %(amount)s ако се плати в рамките %(days)s дни"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__display_account_prefix
@@ -6349,7 +6381,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Distribution for Invoices"
-msgstr ""
+msgstr "Разпределение за фактури"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__refund_repartition_line_ids
@@ -6385,12 +6417,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_extract
 msgid "Document Digitization"
-msgstr ""
+msgstr "Дигитализация на документ"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_base_document_layout
 msgid "Documents Layout"
-msgstr ""
+msgstr "Оформление на документи"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__business_domain
@@ -6436,7 +6468,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__draft
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Draft"
 msgstr "Чернова "
 
@@ -6444,7 +6475,7 @@ msgstr "Чернова "
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft (%(currency_amount)s)"
-msgstr ""
+msgstr "Чернова"
 
 #. module: account
 #. odoo-python
@@ -6508,7 +6539,7 @@ msgstr "Чернова на разписка за продажба"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft Vendor Credit Note"
-msgstr ""
+msgstr "Чернова на кредитно известие към доставчик"
 
 #. module: account
 #. odoo-javascript
@@ -6576,13 +6607,13 @@ msgstr "Условия за плащане"
 #: model:ir.model.fields,field_description:account.field_account_payment__duplicate_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__duplicate_payment_ids
 msgid "Duplicate Payment"
-msgstr "Дублирай плащане"
+msgstr "Дублирайте плащане"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__duplicated_bank_account_partners_count
 #: model:ir.model.fields,field_description:account.field_res_users__duplicated_bank_account_partners_count
 msgid "Duplicated Bank Account Partners Count"
-msgstr ""
+msgstr "Броят на партньорите с дублирани банкови сметки"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -6614,7 +6645,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_tree
 msgid "EDI Format"
-msgstr ""
+msgstr "EDI формат"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
@@ -6636,7 +6667,7 @@ msgstr "EXCH"
 #: model:ir.model.fields,field_description:account.field_account_payment_term__early_discount
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Early Discount"
-msgstr ""
+msgstr "Ранна отстъпка"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
@@ -6660,7 +6691,7 @@ msgstr "Отстъпка за ранно плащане"
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move_line.py:0
 msgid "Early Payment Discount (%s)"
-msgstr ""
+msgstr "Отстъпка за ранно плащане (%s)"
 
 #. module: account
 #. odoo-python
@@ -6676,7 +6707,7 @@ msgstr "Режим на отстъпка за ранно плащане"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__discount_percentage
 msgid "Early Payment Discount granted for this payment term"
-msgstr ""
+msgstr "Отстъпка за ранно плащане, предоставена за този период на плащане"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -6689,17 +6720,19 @@ msgstr "Отстъпка за ранно плащане от"
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
 msgstr ""
+"Отстъпка за ранно плащане: <b>%(amount)s</b> ако се плати преди "
+"<b>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Early payment discounts:"
-msgstr ""
+msgstr "Отстъпки за ранно плащане:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Edit"
-msgstr "Редактирай"
+msgstr "Редактирайте"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_totals
@@ -8585,6 +8618,11 @@ msgid "Invalid fiscal year last day"
 msgstr ""
 
 #. module: account
+#: model:account.journal,name:account.1_inventory_valuation
+msgid "Inventory Valuation"
+msgstr "Оценяване на инвентар"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
 msgid "Inventory Value"
 msgstr "Стойност на инвентар "
@@ -8993,6 +9031,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
 msgid "Is Between"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
+#: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+msgid "Is Coa Installed"
 msgstr ""
 
 #. module: account
@@ -9715,10 +9759,6 @@ msgid "Liability"
 msgstr "Пасив"
 
 #. module: account
-msgid "Like the \"Global Lock Date\", but no exceptions are possible."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__line_ids
 msgid "Line"
 msgstr "Ред"
@@ -10160,7 +10200,7 @@ msgstr "Съобщение за фактура"
 #: model:ir.model.fields,field_description:account.field_res_company__message_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__message_ids
 msgid "Messages"
-msgstr "Syob]eniq"
+msgstr "Съобщения"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
@@ -10365,6 +10405,12 @@ msgid "Name"
 msgstr "Име"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name_placeholder
+#: model:ir.model.fields,field_description:account.field_account_move__name_placeholder
+msgid "Name Placeholder"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name_searchable
 msgid "Name Searchable"
 msgstr ""
@@ -10420,7 +10466,7 @@ msgstr ""
 #: model:account.report.column,name:account.generic_tax_report_column_net
 #: model:account.report.column,name:account.generic_tax_report_tax_account_column_net
 msgid "Net"
-msgstr "нето"
+msgstr "Нето"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__excluded
@@ -10461,6 +10507,16 @@ msgstr "Нови стойности"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
 msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Следващото събитие от календара на дейностите"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -10577,18 +10633,6 @@ msgid "No possible action found with the selected lines."
 msgstr ""
 
 #. module: account
-msgid ""
-"No users can edit accounts prior to and inclusive of this date. Use it for "
-"fiscal year locking for example."
-msgstr ""
-
-#. module: account
-msgid ""
-"No users can edit journal entries related to a tax prior and inclusive of "
-"this date."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
 msgid "Non Trade"
 msgstr ""
@@ -10606,13 +10650,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_non_current
 msgid "Non-current Assets"
-msgstr "Non-current Assets"
+msgstr "Дълготрайни активи"
 
 #. module: account
 #: model:account.account,name:account.1_non_current_liabilities
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__liability_non_current
 msgid "Non-current Liabilities"
-msgstr "Non-current Liabilities"
+msgstr "Дългосрочни задължения"
 
 #. module: account
 #: model:account.account,name:account.1_non_current_assets
@@ -11058,13 +11102,13 @@ msgstr "Отваряне на дневника"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_move_posted
 msgid "Opening Move Posted"
-msgstr "Публикувано Отваряне на движение"
+msgstr "Откриващото движение е осчетоводено"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Opening balance"
-msgstr "Opening balance"
+msgstr "Начално салдо"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_operating
@@ -11173,7 +11217,7 @@ msgstr "Друг"
 #: model:account.account,name:account.1_other_income
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__income_other
 msgid "Other Income"
-msgstr "Other Income"
+msgstr "Други приходи"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -11247,7 +11291,7 @@ msgstr "Неуредени кредити"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Outstanding debits"
-msgstr "Outstanding debits"
+msgstr "Неизплатени дебити"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -11320,7 +11364,7 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "PEPPOL Electronic Document Invoicing"
+msgid "PEPPOL Electronic Invoicing"
 msgstr ""
 
 #. module: account
@@ -11336,7 +11380,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "PROFORMA"
-msgstr "Проформа"
+msgstr "ПРОФОРМА"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11364,7 +11408,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "Paid Invoices"
-msgstr "Paid Invoices"
+msgstr "Платени фактури"
 
 #. module: account
 #. odoo-javascript
@@ -11581,6 +11625,7 @@ msgstr "Сметки задължения към доставчици"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_payment.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__origin_payment_id
 #: model:ir.model.fields,field_description:account.field_account_move__origin_payment_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -11953,8 +11998,7 @@ msgid ""
 "Please install a chart of accounts or create a miscellaneous journal before "
 "proceeding."
 msgstr ""
-"Please install a chart of accounts or create a miscellaneous journal before "
-"proceeding."
+"Моля, инсталирайте сметкоплан или създайте общ дневник, преди да продължите."
 
 #. module: account
 #. odoo-python
@@ -12114,18 +12158,6 @@ msgid ""
 msgstr ""
 "Предварително зададено е да създавате записи в дневника по време на "
 "съвпадение на фактури и плащания"
-
-#. module: account
-msgid ""
-"Prevents creation and modification of entries in purchase journals up to the"
-" defined date inclusive."
-msgstr ""
-
-#. module: account
-msgid ""
-"Prevents creation and modification of entries in sales journals up to the "
-"defined date inclusive."
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12408,6 +12440,20 @@ msgstr ""
 #: model:account.account,name:account.1_expense_rd
 msgid "RD Expenses"
 msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
+msgid "Ratings"
+msgstr "Оценявания"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
@@ -13196,7 +13242,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
-#: code:addons/account/wizard/account_payment_register.py:0
 msgid "Scan me with your banking app."
 msgstr ""
 
@@ -14865,14 +14910,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
-msgid ""
-"The button priority shifted since the invoice has been sent. Let's register "
-"the payment now."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_cash_basis_created_move_ids
 #: model:ir.model.fields,help:account.field_account_move__tax_cash_basis_created_move_ids
 msgid ""
@@ -16236,7 +16273,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_partner__credit
 #: model:ir.model.fields,field_description:account.field_res_users__credit
 msgid "Total Receivable"
-msgstr "Общо сметки вземания с натрупване"
+msgstr "Общо вземания"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
@@ -16301,7 +16338,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_partner__credit
 #: model:ir.model.fields,help:account.field_res_users__credit
 msgid "Total amount this customer owes you."
-msgstr "Обща сума, която клиентът Ви дължи."
+msgstr "Обща сума, която клиентът ви дължи."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__debit
@@ -16395,13 +16432,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Transfer from %s"
-msgstr "Transfer from %s"
+msgstr "Прехвърляне от %s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Transfer to %s"
-msgstr "Transfer to %s"
+msgstr "Прехвърляне към %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16476,14 +16513,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "Undefined Yet"
-msgstr "Още Неопределено"
+msgstr "Все още не е определено"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 #: model:account.account,name:account.1_unaffected_earnings_account
 msgid "Undistributed Profits/Losses"
-msgstr "Undistributed Profits/Losses"
+msgstr "Неразпределени печалби/загуби"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_unfold_all
@@ -16513,7 +16550,7 @@ msgstr "Единична цена"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Unit Price:"
-msgstr "Ед. цена:"
+msgstr "Единична цена:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
@@ -16580,7 +16617,7 @@ msgstr "Непубликувани статии в дневника"
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: model:ir.actions.server,name:account.action_account_unreconcile
 msgid "Unreconcile"
-msgstr "Отменете обединяване"
+msgstr "Отмяна на съгласуване"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -16728,7 +16765,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_exigibility
 msgid "Use Cash Basis"
-msgstr "Използвайте касова основа"
+msgstr "Използване на касова основа"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__selector
@@ -16808,15 +16845,17 @@ msgid ""
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
 msgstr ""
-"Използва се в отчетите, за да знаем дали трябва да разглеждаме статиите в "
-"дневника от началото на времето, вместо от фискалната година. Типовете "
-"профили, които трябва да бъдат нулирани на нула във всяка нова финансова "
-"година (като разходи, приходи ..), не трябва да имат тази опция."
+"Използва се в отчетите, за да се определи дали трябва да се разглеждат "
+"счетоводните записи от началото на времето, вместо само от текущата "
+"финансова година. Видовете сметки, които трябва да се нулират в началото на "
+"всяка финансова година (като разходи, приходи и т.н.), не трябва да имат "
+"тази опция активирана."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr "Used to order Journals in the dashboard view"
+msgstr ""
+"Използва се за подреждане на дневниците в изгледа на таблото за управление"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__loss_account_id
@@ -16883,7 +16922,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_accrued_orders_wizard__currency_id
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__company_currency_id
 msgid "Utility field to express amount currency"
-msgstr "Поле за изразяване на сума във валута"
+msgstr "Помощно поле за изразяване на валута на сумата"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__is_storno
@@ -16895,7 +16934,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
 msgid "VAT required"
-msgstr "Необходимо е ДДС"
+msgstr "Необходим е ДДС"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -17022,13 +17061,13 @@ msgstr "Кредитно известие на доставчик"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Vendor Payment"
-msgstr "Vendor Payment"
+msgstr "Плащане към доставчик"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_supplier_payment_term_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_supplier_payment_term_id
 msgid "Vendor Payment Terms"
-msgstr "Условия на плащане на Доставчика"
+msgstr "Условия на плащане на доставчика"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_payments_payable
@@ -17217,7 +17256,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_journal__show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
 msgstr ""
-"Дали това списание трябва да се показва на таблото за управление или не"
+"Дали този дневник трябва да се показва на таблото за управление или не"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__new_journal_name
@@ -17357,12 +17396,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can only register payment for posted journal entries."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "You can only register payments for (partially) unpaid documents."
 msgstr ""
 
 #. module: account
@@ -17542,8 +17575,8 @@ msgid ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
 msgstr ""
-"You cannot change the currency of the company since some journal items "
-"already exist"
+"Не можете да промените валутата на компанията, тъй като вече съществуват "
+"осчетоводени записи"
 
 #. module: account
 #. odoo-python
@@ -17642,8 +17675,9 @@ msgid ""
 "You cannot disable this setting because some of your taxes are cash basis. "
 "Modify your taxes first before disabling this setting."
 msgstr ""
-"You cannot disable this setting because some of your taxes are cash basis. "
-"Modify your taxes first before disabling this setting."
+"Не можете да деактивирате тази настройка, тъй като някои от вашите данъци са"
+" на касова основа. Модифицирайте данъците си, преди да деактивирате тази "
+"настройка."
 
 #. module: account
 #. odoo-python
@@ -17693,8 +17727,8 @@ msgid ""
 "You cannot have a receivable/payable account that is not reconcilable. "
 "(account code: %s)"
 msgstr ""
-"You cannot have a receivable/payable account that is not reconcilable. "
-"(account code: %s)"
+"Не можете да имате сметка за вземания, която не е съгласуема. (код на "
+"сметката:%s)"
 
 #. module: account
 #. odoo-python
@@ -17831,8 +17865,8 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
-"You cannot set a currency on this account as it already has some journal "
-"entries having a different foreign currency."
+"Не можете да зададете валута за тази сметка, тъй като вече има осчетоводени "
+"записи с различна чуждестранна валута."
 
 #. module: account
 #. odoo-python
@@ -17997,22 +18031,22 @@ msgstr "Вашите фактури"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "ZIP"
-msgstr "ZIP формат"
+msgstr "Пощенски код"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Zip Range"
-msgstr "Zip гама"
+msgstr "Диапазон на пощенските кодове"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__zip_from
 msgid "Zip Range From"
-msgstr "Zip Range From"
+msgstr "Начало на диапазона на пощенските кодове"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__zip_to
 msgid "Zip Range To"
-msgstr "Zip Range To"
+msgstr "Край на диапазона на пощенските кодове"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__days_sales_outstanding
@@ -18090,6 +18124,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid "by %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_sending_method__email
 msgid "by Email"
@@ -18149,7 +18189,7 @@ msgstr "напр. %(prefix)s"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "e.g. 101000"
-msgstr "e.g. 101000"
+msgstr "напр. 101000"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -18159,7 +18199,7 @@ msgstr "напр. 30 дни"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "e.g. Bank Fees"
-msgstr "напр. Банкови Такси"
+msgstr "напр. банкови такси"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -18175,7 +18215,7 @@ msgstr "напр. клиентски фактури"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_tree
 msgid "e.g. GAAP, IFRS, ..."
-msgstr "e.g. GAAP, IFRS, ..."
+msgstr "напр. GAAP, IFRS, ..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -18190,7 +18230,7 @@ msgstr "напр. моята компания"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "e.g. https://www.odoo.com"
-msgstr "e.g. https://www.odoo.com"
+msgstr "напр. https://www.odoo.com"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
