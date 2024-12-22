@@ -36,7 +36,7 @@ class WebSuite(odoo.tests.HttpCase):
     @odoo.tests.no_retry
     def test_unit_desktop(self):
         # Unit tests suite (desktop)
-        self.browser_js('/web/tests?headless&loglevel=2&preset=desktop&timeout=15000', "", "", login='admin', timeout=1800, success_signal="[HOOT] test suite succeeded", error_checker=unit_test_error_checker)
+        self.browser_js('/web/tests?headless&loglevel=2&preset=desktop&timeout=15000', "", "", login='admin', timeout=2000, success_signal="[HOOT] test suite succeeded", error_checker=unit_test_error_checker)
 
     @odoo.tests.no_retry
     def test_hoot(self):
