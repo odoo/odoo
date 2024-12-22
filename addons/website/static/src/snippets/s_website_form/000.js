@@ -9,6 +9,7 @@
     import { _t } from "@web/core/l10n/translation";
     import { renderToElement } from "@web/core/utils/render";
     import { post } from "@web/core/network/http_service";
+    import { localization } from "@web/core/l10n/localization";
 import {
     formatDate,
     formatDateTime,
@@ -145,7 +146,7 @@ import wUtils from '@website/js/utils';
                 // the values to submit() for these fields but this could break
                 // customizations that use the current behavior as a feature.
                 for (const name of fieldNames) {
-                    const fieldEl = this.el.querySelector(`[name="${name}"]`);
+                    const fieldEl = this.el.querySelector(`[name="${CSS.escape(name)}"]`);
 
                     // In general, we want the data-for and prefill values to
                     // take priority over set default values. The 'email_to'
@@ -674,8 +675,16 @@ import wUtils from '@website/js/utils';
                 case '!fileSet':
                     return value.name === '';
             }
+
+            const format = value.includes(':')
+                ? localization.dateTimeFormat
+                : localization.dateFormat;
             // Date & Date Time comparison requires formatting the value
-            value = (value.includes(':') ? parseDateTime(value) : parseDate(value)).toUnixInteger();
+            const dateTime = DateTime.fromFormat(value, format);
+            // If invalid, any value other than "NaN" would cause certain
+            // conditions to be broken.
+            value = dateTime.isValid ? dateTime.toUnixInteger() : NaN;
+
             comparable = parseInt(comparable);
             between = parseInt(between) || '';
             switch (comparator) {

@@ -133,7 +133,7 @@ class ChannelUsersRelation(models.Model):
 
             if not record.channel_id.active:
                 continue
-            elif not was_finished and record.completed_slides_count >= record.channel_id.total_slides:
+            elif not was_finished and record.channel_id.total_slides and record.completed_slides_count >= record.channel_id.total_slides:
                 completed_records += record
             elif was_finished and record.completed_slides_count < record.channel_id.total_slides:
                 uncompleted_records += record
@@ -742,6 +742,9 @@ class Channel(models.Model):
         if 'name' not in default:
             default['name'] = f"{self.name} ({_('copy')})"
 
+        if 'enroll' not in default and self.visibility == "members":
+            default['enroll'] = 'invite'
+
         return super().copy_data(default)
 
     def write(self, vals):
@@ -1269,3 +1272,9 @@ class Channel(models.Model):
         if field in image_fields:
             return self.website_default_background_image_url
         return super()._get_placeholder_filename(field)
+
+    def open_website_url(self):
+        """ Overridden to use a relative URL instead of an absolute when website_id is False. """
+        if self.website_id:
+            return super().open_website_url()
+        return self.env['website'].get_client_action(f'/slides/{slug(self)}')

@@ -51,7 +51,7 @@
                                                         <a t-attf-href="/customers/#{ industry_dict['industry_id'][0] and 'industry/%s/' % slug(industry_dict['industry_id']) or '' }#{ current_country_id and 'country/%s' % current_country_id or '' }#{ search_path }" 
                                                             class="text-reset" aria-label="See industries filters">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="radio" t-attf-name="#{industry_dict['industry_id'][1]}" t-att-checked="industry_dict['industry_id'][0] == current_industry_id and true or false"/>
+                                                                <input class="form-check-input pe-none" type="radio" t-attf-name="#{industry_dict['industry_id'][1]}" t-att-checked="industry_dict['industry_id'][0] == current_industry_id and true or false"/>
                                                                 <label class="form-check-label" t-attf-for="#{industry_dict['industry_id'][1]}" t-out="industry_dict['industry_id'][1]"/>
                                                             </div>
                                                         </a>
@@ -82,7 +82,7 @@
                                                         <a t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ country_dict['country_id'][0] and 'country/%s' % slug(country_dict['country_id']) or '' }#{ search_path }"
                                                             class="text-reset" aria-label="See countries filters">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="radio" t-attf-name="{country_dict['country_id'][1]}" t-att-checked="country_dict['country_id'][0] == current_country_id and true or false"/>
+                                                                <input class="form-check-input pe-none" type="radio" t-attf-name="{country_dict['country_id'][1]}" t-att-checked="country_dict['country_id'][0] == current_country_id and true or false"/>
                                                                 <label class="form-check-label" t-attf-for="{country_dict['country_id'][1]}" t-out="country_dict['country_id'][1]"/>
                                                             </div>
                                                         </a>
@@ -107,10 +107,10 @@
                                 <div class="o_wc_offcanvas_tags accordion-collapse collapse">
                                     <div class="accordion-body">
                                         <div class="d-flex flex-wrap align-items-center gap-1 mb-4" t-if="len(tags)">
-                                            <a class="me-2" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
+                                            <a class="badge text-bg-light" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
                                                 <span class="fa fa-1x fa-tags"/> All </a>
                                             <t t-foreach="tags" t-as="o_tag">
-                                                <a t-attf-class="bg-#{o_tag.classname} badge" t-out="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
+                                                <a t-attf-class="badge text-bg-#{o_tag.classname}" t-out="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
                                                 t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }?tag_id=#{slug(o_tag)}"/>
                                             </t>
                                         </div>
@@ -311,9 +311,9 @@
                 <t t-if="reference.website_published">
                     <div class="row">
                         <div class="col-md-2">
-                            <span t-field="reference.avatar_128" 
-                                class="d-flex justify-content-center justify-content-center h-100" 
-                                t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img-fluid rounded"}'/>
+                            <span t-field="reference.avatar_128"
+                                class="d-flex justify-content-center"
+                                t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img-fluid rounded mw-100"}'/>
                         </div>
                         <div class="card-body col-md-10">
                             <a t-attf-href="/customers/#{slug(reference)}">

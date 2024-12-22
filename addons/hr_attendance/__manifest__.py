@@ -46,6 +46,7 @@ actions(Check in/Check out) performed by them.
             # Front-end libraries
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_frontend_helpers'),
+            'web/static/lib/jquery/jquery.js',
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             ('include', 'web._assets_bootstrap_frontend'),

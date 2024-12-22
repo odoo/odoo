@@ -5,14 +5,16 @@
 # Translators:
 # Wil Odoo, 2023
 # Jolien De Paepe, 2023
+# Walid Sahli, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -114,7 +116,8 @@ msgid ""
 "containing the following link has been sent:</strong>"
 msgstr ""
 "<strong>Une réinitialisation du mot de passe a été demandée pour cet "
-"utilisateur. Un email lui a été envoyé, contenant le lien suivant :</strong>"
+"utilisateur. Un e-mail lui a été envoyé, contenant le lien suivant "
+":</strong>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -122,7 +125,7 @@ msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
 msgstr ""
-"<strong>Une invitation a été envoyée par email. Elle contient le lien "
+"<strong>Une invitation a été envoyée par e-mail. Elle contient le lien "
 "suivant pour s'abonner :</strong>"
 
 #. module: auth_signup
@@ -330,7 +333,7 @@ msgstr ""
 "                        </div>\n"
 "                        <t t-set=\"website_url\" t-value=\"object.get_base_url()\"></t>\n"
 "                        Votre domaine Odoo est : <b><a t-att-href=\"website_url\" t-out=\"website_url or ''\">http://yourcompany.odoo.com</a></b><br>\n"
-"                        Votre adresse email de connexion est : <b><a t-attf-href=\"/web/login?login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@example.com</a></b><br><br>\n"
+"                        Votre adresse e-mail de connexion est : <b><a t-attf-href=\"/web/login?login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@example.com</a></b><br><br>\n"
 "                        Vous n'avez jamais entendu parler d'Odoo ? C'est un logiciel professionnel tout-en-un apprécié par plus de 7 millions d'utilisateurs. Il améliorera considérablement votre expérience au travail et augmentera votre productivité.\n"
 "                        <br><br>\n"
 "                        Jetez un coup d’œil à notre <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo Tour</a> pour découvrir l'outil.\n"
@@ -556,7 +559,7 @@ msgstr "Vous avez déjà un compte ?"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr "Un autre utilisateur est déjà enregistré avec cette adresse email."
+msgstr "Un autre utilisateur est déjà enregistré avec cette adresse e-mail."
 
 #. module: auth_signup
 #. odoo-python
@@ -581,7 +584,7 @@ msgstr "Navigateur"
 #, python-format
 msgid "Cannot send email: user %s has no email address."
 msgstr ""
-"Impossible d'envoyer l'email : l'utilisateur %s n'a pas d'adresse email."
+"Impossible d'envoyer l'e-mail : l'utilisateur %s n'a pas d'adresse e-mail."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -687,7 +690,7 @@ msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "                                Thanks,"
 msgstr ""
-"Si vous ne vous attendez pas à ceci, vous pouvez ignorer cet email.<br/><br/>\n"
+"Si vous ne vous attendez pas à ceci, vous pouvez ignorer cet e-mail.<br/><br/>\n"
 "                                Merci,"
 
 #. module: auth_signup
@@ -726,6 +729,7 @@ msgid "Marc Demo"
 msgstr "Marc Demo"
 
 #. module: auth_signup
+#. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Multiple accounts found for this login"
@@ -790,7 +794,7 @@ msgstr "Sur invitation"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "Otherwise, you can safely ignore this email."
-msgstr "Sinon, vous pouvez ignorer cet email en toute sécurité."
+msgstr "Sinon, vous pouvez ignorer cet e-mail en toute sécurité."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -816,7 +820,7 @@ msgstr "Réinitialisation du mot de passe"
 msgid "Password reset instructions sent to your email"
 msgstr ""
 "Instructions de réinitialisation du mot de passe envoyées à votre adresse "
-"email"
+"e-mail"
 
 #. module: auth_signup
 #. odoo-python
@@ -858,7 +862,7 @@ msgstr "Envoyer les instructions de réinitialisation du mot de passe"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send an Invitation Email"
-msgstr "Envoyer une invitation par email"
+msgstr "Envoyer une invitation par e-mail"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.mail_template_data_unregistered_users
@@ -997,8 +1001,8 @@ msgid ""
 "There was an error when trying to deliver your Email, please check your "
 "configuration"
 msgstr ""
-"Une erreur s'est produite lors de l'envoi de votre email. Veuillez vérifier "
-"votre configuration"
+"Une erreur s'est produite lors de l'envoi de votre e-mail. Veuillez vérifier"
+" votre configuration"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -1037,7 +1041,7 @@ msgstr "Vous ne pouvez pas effectuer cette action sur un utilisateur archivé."
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr "Votre email"
+msgstr "Votre e-mail"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields

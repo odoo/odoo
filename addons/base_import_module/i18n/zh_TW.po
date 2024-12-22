@@ -3,14 +3,14 @@
 # 	* base_import_module
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-11-18 09:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -34,6 +34,7 @@ msgstr ""
 "如果需要網站主題，可到 https://github.com/odoo/design-themes 下載。\n"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
 msgid "Activate"
 msgstr "啟動"
@@ -88,16 +89,24 @@ msgid "Created on"
 msgstr "建立於"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be entirely removed!"
-msgstr "展示用資料只能用於測試資料庫。一旦載入，就無法全面移除！"
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"Error while importing module '%(module)s'.\n"
+"\n"
+" %(error_message)s \n"
+"\n"
+msgstr ""
+"匯入以下模組時發生錯誤：%(module)s。\n"
+"\n"
+" %(error_message)s \n"
+"\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -134,11 +143,6 @@ msgstr "匯入消息"
 #: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
 msgid "Import Module"
 msgstr "匯入模組"
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import demo data"
-msgstr "匯入演示數據"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
@@ -183,6 +187,20 @@ msgid "Last Updated on"
 msgstr "最後更新於"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Load demo data"
+msgstr "載入範例資料"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"Load demo data to test the industry's features with sample records. Do not "
+"load them if this is your production database."
+msgstr "載入模擬數據，以測試行業功能。如果這是正式運行資料庫，請勿載入模擬數據。"
+
+#. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
 msgid "Module"
 msgstr "模組"
@@ -196,6 +214,11 @@ msgstr "模組的 .ZIP 文件包"
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__module_type
 msgid "Module Type"
 msgstr "模塊類型"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_base_module_uninstall
+msgid "Module Uninstall"
+msgstr "模組卸載"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -254,22 +277,8 @@ msgstr "狀態"
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
-msgid "Studio customizations require Studio"
-msgstr "Studio 自訂需要安裝 Studio"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
 msgid "Studio customizations require the Odoo Studio app."
 msgstr "Studio自訂需要Odoo Studio模組。"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
-msgid "The following modules will also be installed:\n"
-msgstr "以下模組也將會安裝：\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -298,6 +307,14 @@ msgid "The module %s cannot be downloaded"
 msgstr "無法下載模塊 %s"
 
 #. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Unknown module dependencies:"
+msgstr "未知的模組依賴項："
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
 msgid "Upgrade"
 msgstr "升級"

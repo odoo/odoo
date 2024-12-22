@@ -3,22 +3,29 @@
 # 	* payment_stripe
 # 
 # Translators:
-# Wil Odoo, 2023
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_stripe
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/payment_form.js:0
+#, python-format
+msgid "Cannot display the payment form"
+msgstr "Không thể hiển thị biểu mẫu thanh toán"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__code
@@ -50,6 +57,13 @@ msgid "Enable Apple Pay"
 msgstr "Bật Apple Pay"
 
 #. module: payment_stripe
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/express_checkout_form.js:0
+#, python-format
+msgid "Free Shipping"
+msgstr "Miễn phí giao hàng"
+
+#. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Generate your webhook"
 msgstr "Tạo webhook của bạn"
@@ -73,7 +87,7 @@ msgstr ""
 #: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
 msgid "Incorrect payment details"
-msgstr ""
+msgstr "Thông thanh toán không chính xác"
 
 #. module: payment_stripe
 #. odoo-python
@@ -236,9 +250,8 @@ msgid ""
 "The refund did not go through. Please log into your Stripe Dashboard to get "
 "more information on that matter, and address any accounting discrepancies."
 msgstr ""
-"Hoàn tiền không được thực hiện. Vui lòng đăng nhập vào Trang tổng quan "
-"Stripe của bạn để biết thêm thông tin về vấn đề đó và xử lý các chênh lệch "
-"về kế toán."
+"Hoàn tiền không được thực hiện. Vui lòng đăng nhập vào Trang chủ Stripe của "
+"bạn để biết thêm thông tin về vấn đề đó và xử lý các chênh lệch về kế toán."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__code

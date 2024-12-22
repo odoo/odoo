@@ -3,16 +3,18 @@
 # 	* website_event
 # 
 # Translators:
-# Wil Odoo, 2024
 # Jolien De Paepe, 2024
+# Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -404,8 +406,8 @@ msgstr "Annuleren"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Cards"
-msgstr "Kaarten"
+msgid "Card design"
+msgstr "Kaart ontwerp"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
@@ -570,6 +572,13 @@ msgstr "E-mail"
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "End -"
 msgstr "Einde -"
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/website_event.js:0
+#, python-format
+msgid "Error"
+msgstr "Fout"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -744,11 +753,6 @@ msgid ""
 msgstr ""
 "Zoek uit wat mensen zien en zeggen over dit evenement, en neem deel aan de "
 "conversatie."
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Fold Tickets Details"
-msgstr "Vouw de ticket details"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -1006,7 +1010,7 @@ msgstr "We konden geen evenement vinden die aan je zoekopdracht voldoet."
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "No events scheduled yet"
-msgstr "Nog een evenementen gepland"
+msgstr "Nog geen evenementen gepland"
 
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.event_registration_action_from_visitor
@@ -1185,6 +1189,7 @@ msgstr "Registratie bevestigd!"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registration failed! These tickets are not available anymore."
 msgstr "Registratie mislukt! Deze tickets zijn niet langer beschikbaar."
 
@@ -1244,11 +1249,6 @@ msgid "SEO optimized"
 msgstr "SEO geoptimaliseerd"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "SHARE"
-msgstr "DELEN"
-
-#. module: website_event
 #: model:event.question.answer,name:website_event.event_7_question_0_answer_1
 msgid "Sales"
 msgstr "Verkoop"
@@ -1300,6 +1300,11 @@ msgstr "SEO naam"
 #: model:ir.model.fields,field_description:website_event.field_event_question_answer__sequence
 msgid "Sequence"
 msgstr "Reeks"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Share"
+msgstr "Delen"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
@@ -1372,9 +1377,16 @@ msgid "Suggested answer"
 msgstr "Voorgesteld antwoord"
 
 #. module: website_event
+#. odoo-python
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "Verdachte activiteit gedetecteerd door Google reCaptcha."
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Templates"
-msgstr "Sjablonen"
+msgid "Template badge"
+msgstr "Badgesjabloon"
 
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__text_box

@@ -14,7 +14,7 @@
         li.nav-item {
             white-space: nowrap;
             
-            a{
+            > a {
                 padding: 0;
                 padding-right: 1rem;
             }
@@ -66,6 +66,23 @@
 
         .o_record_cover_component {
             z-index: -1;
+        }
+    }
+}
+
+#modal_ticket_registration {
+    // Handle overflow behaviors.
+    #registration_form, #o_wevent_tickets, #o_wevent_tickets_collapse {
+        position: relative;
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+
+        @include media-breakpoint-up(sm) {
+            :not(.s_popup) > & {
+                overflow: auto;
+                min-height: 0;
+            }
         }
     }
 }

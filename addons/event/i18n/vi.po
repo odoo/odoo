@@ -96,13 +96,13 @@ msgid ""
 "'Badge - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
 "(object.name or '').replace('/',''))"
 msgstr ""
-"'Huy hiệu - %s - %s' % ((object.event_id.name or 'Sự kiện').replace('/',''),"
-" (object.name or '').replace('/',''))"
+"'Thẻ - %s - %s' % ((object.event_id.name or 'Sự kiện').replace('/',''), "
+"(object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_badge
 msgid "'Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr "'Huy hiệu - %s' % (object.name or 'Sự kiện').replace('/','')"
+msgstr "'Thẻ - %s' % (object.name or 'Sự kiện').replace('/','')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -242,7 +242,7 @@ msgid ""
 "                                        <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
 msgstr ""
 "<br/>\n"
-"                                        <span class=\"text-muted\">Chia sẻ đố vui với người tham dự khi phần nội dung kết thúc</span>"
+"                                        <span class=\"text-muted\">Chia sẻ quiz với người tham dự khi phần nội dung kết thúc</span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1064,7 +1064,7 @@ msgstr ""
 "                    </span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
 "                    <a t-attf-href=\"/event/{{ object.event_id.id }}/my_tickets?badge_mode=1&amp;registration_ids={{ object.ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(object.ids) }}\" target=\"_blank\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
-"                        Tải xuống huy hiệu\n"
+"                        Tải xuống thẻ\n"
 "                    </a>\n"
 "                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
 "                        <img t-att-src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % object.company_id.name\">\n"
@@ -1083,7 +1083,7 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <div>\n"
 "                        Xin chào <t t-out=\"object.name or 'quý khách'\"></t>,<br>\n"
-"                        Tệp đính kèm là huy hiệu của bạn dành cho sự kiện\n"
+"                        Tệp đính kèm là thẻ của bạn dành cho sự kiện\n"
 "                        <t t-if=\"is_online\">\n"
 "                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">Ra mắt online bộ sưu tập OpenWood</a>\n"
 "                        </t>\n"
@@ -1759,7 +1759,7 @@ msgstr "A6"
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction
 #: model:ir.model.fields,field_description:event.field_event_registration__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__active
@@ -2002,29 +2002,29 @@ msgstr "Số chỗ còn trống"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge
 msgid "Badge"
-msgstr "Huy hiệu"
+msgstr "Thẻ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
 msgid "Badge Background"
-msgstr "Nền huy hiệu"
+msgstr "Nền thẻ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_format
 msgid "Badge Dimension"
-msgstr "Kích thước huy hiệu"
+msgstr "Kích thước thẻ"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_badge
 msgid "Badge Example"
-msgstr "Ví dụ huy hiệu"
+msgstr "Ví dụ thẻ"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/controllers/main.py:0
 #, python-format
 msgid "Badges"
-msgstr "Huy hiệu"
+msgstr "Thẻ"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -2739,7 +2739,7 @@ msgstr "Sự kiện: Trình lập lịch biểu"
 #. module: event
 #: model:mail.template,name:event.event_registration_mail_template_badge
 msgid "Event: Registration Badge"
-msgstr "Sự kiện: Huy hiệu đăng ký"
+msgstr "Sự kiện: Thẻ đăng ký"
 
 #. module: event
 #: model:mail.template,name:event.event_subscription
@@ -2895,8 +2895,8 @@ msgid ""
 "From this dashboard you can report, analyze and detect trends regarding your"
 " event registrations."
 msgstr ""
-"Từ trang tổng quan này, bạn có thể báo cáo, phân tích, phát hiện xu hướng "
-"của đăng ký sự kiện. "
+"Từ trang chủ này, bạn có thể báo cáo, phân tích, phát hiện xu hướng của đăng"
+" ký sự kiện. "
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_full_page_ticket
@@ -3533,7 +3533,7 @@ msgstr "Now that your event is ready, click here to move it to another stage."
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,field_description:event.field_event_registration__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_used
@@ -3776,7 +3776,7 @@ msgstr "Mã QR"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
 msgid "Quiz on Tracks"
-msgstr "Câu đố trong phần nội dung"
+msgstr "Quiz trong phần nội dung"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__rating_ids
@@ -3939,7 +3939,7 @@ msgstr "Báo cáo"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_reserved
 msgid "Reserved Seats"
-msgstr "Số Chỗ đã Xí"
+msgstr "Chỗ đã đặt trước"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__user_id
@@ -3980,7 +3980,7 @@ msgstr "Lỗi gửi SMS"
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 #, python-format
 msgid "Scan a badge"
-msgstr "Quét huy hiệu"
+msgstr "Quét thẻ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4103,8 +4103,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
-"Hiển thị tất cả tập dữ liệu có ngày xử lý tiếp theo trước ngày hôm nay"
+msgstr "Hiển thị tất cả bản ghi có ngày xử lý tiếp theo trước ngày hôm nay"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_sold_out
@@ -4207,8 +4206,8 @@ msgid ""
 "Tag color. No color means no display in kanban or front-end, to distinguish "
 "internal tags from public categorization tags."
 msgstr ""
-"Tag color. No color means no display in kanban or front-end, to distinguish "
-"internal tags from public categorization tags."
+"Màu thẻ. Không màu nghĩa là không hiển thị trong kanban hoặc front-end, để "
+"phân biệt thẻ nội bộ với thẻ danh mục công cộng."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__tag_ids
@@ -4574,7 +4573,7 @@ msgstr "Loại"
 #: model:ir.model.fields,help:event.field_event_event__activity_exception_decoration
 #: model:ir.model.fields,help:event.field_event_registration__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trong tập dữ liệu."
+msgstr "Loại hoạt động ngoại lệ trong bản ghi."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__draft

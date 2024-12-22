@@ -5,20 +5,42 @@
 # Translators:
 # Wil Odoo, 2023
 # Jolien De Paepe, 2023
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid " (including link trackers and opt-out link) "
+msgstr "(y compris les trackers de liens et le lien de désinscription)"
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid " (including link trackers) "
+msgstr "(y compris les trackers de liens)"
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid " (including opt-out link) "
+msgstr "(y compris le lien de désinscription)"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
@@ -55,8 +77,8 @@ msgid ""
 "<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
 "Text Message have been canceled and will not be sent.</span>"
 msgstr ""
-"<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">Les SMS"
-" ont été annulés et ne seront pas envoyés.</span>"
+"<span name=\"canceled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS ont"
+" été annulés et ne seront pas envoyés.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -64,8 +86,8 @@ msgid ""
 "<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
 "Messages could not be delivered.</span>"
 msgstr ""
-"<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">Les SMS "
-"n'ont pas pu être livrés.</span>"
+"<span name=\"failed_text_sms\" invisible=\"mailing_type != 'sms'\">SMS n'ont"
+" pas pu être livrés.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -82,8 +104,8 @@ msgid ""
 "<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text"
 " Messages are being processed.</span>"
 msgstr ""
-"<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">Les SMS "
-"sont en cours de traitement.</span>"
+"<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">SMS sont"
+" en cours de traitement.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -91,8 +113,8 @@ msgid ""
 "<span name=\"scheduled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
 "Text Messages are in queue and will be sent soon.</span>"
 msgstr ""
-"<span name=\"scheduled_text_sms\" invisible=\"mailing_type != 'sms'\">Les "
-"SMS sont dans la file d'attente et seront envoyés sous peu.</span>"
+"<span name=\"scheduled_text_sms\" invisible=\"mailing_type != 'sms'\">SMS "
+"sont dans la file d'attente et seront envoyés sous peu.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -100,7 +122,7 @@ msgid ""
 "<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
 "Messages have been sent.</span>"
 msgstr ""
-"<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">Les SMS ont été "
+"<span name=\"sent_sms\" invisible=\"mailing_type != 'sms'\">SMS ont été "
 "envoyés.</span>"
 
 #. module: mass_mailing_sms
@@ -348,7 +370,7 @@ msgstr "Dupliquer"
 #: code:addons/mass_mailing_sms/models/res_users.py:0
 #, python-format
 msgid "Email Marketing"
-msgstr "Email Marketing"
+msgstr "E-mail Marketing"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_search
@@ -390,7 +412,7 @@ msgid ""
 "For an Email, Subject your Recipients will see in their inbox.\n"
 "                    For an SMS Text Message, internal Title of the Message."
 msgstr ""
-"Pour un email, l'objet que vos destinataires verront dans leur boîte de réception.\n"
+"Pour un e-mail, l'objet que vos destinataires verront dans leur boîte de réception.\n"
 "                    Pour un SMS, le titre interne du message."
 
 #. module: mass_mailing_sms
@@ -399,7 +421,7 @@ msgid ""
 "For an email, the subject your recipients will see in their inbox.\n"
 "For an SMS, the internal title of the message."
 msgstr ""
-"Pour un email, l'objet que vos destinataires verront dans leur boîte de réception.\n"
+"Pour un e-mail, l'objet que vos destinataires verront dans leur boîte de réception.\n"
 "Pour un SMS, le titre interne du message."
 
 #. module: mass_mailing_sms
@@ -860,8 +882,8 @@ msgstr "Sélection du gagnant par SMS"
 #. odoo-python
 #: code:addons/mass_mailing_sms/wizard/sms_composer.py:0
 #, python-format
-msgid "STOP SMS: %s"
-msgstr "STOP SMS : %s"
+msgid "STOP SMS: %(unsubscribe_url)s"
+msgstr "STOP SMS : %(unsubscribe_url)s"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized

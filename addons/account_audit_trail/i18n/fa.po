@@ -3,20 +3,22 @@
 # 	* account_audit_trail
 # 
 # Translators:
-# Hamid Darabi, 2023
-# Martin Trigaux, 2023
-# Hanna Kheradroosta, 2023
-# Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2023
 # Ali Reza Feizi Derakhshi, 2023
+# Hamed Mohammadi <hamed@dehongi.com>, 2024
+# Hamid Darabi, 2024
+# Martin Trigaux, 2024
+# M.Hossein S.Farvashani <Farvashani@gmail.com>, 2024
+# Hanna Kheradroosta, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-15 06:37+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-12-23 23:00+0000\n"
-"Last-Translator: Ali Reza Feizi Derakhshi, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,9 +27,22 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_account_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_account_id
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Account"
+msgstr "حساب"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_display_name
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_display_name
+msgid "Account Audit Log Display Name"
+msgstr ""
+
+#. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
 msgid "Activate Audit Trail"
-msgstr ""
+msgstr "رد ممیزی فعال"
 
 #. module: account_audit_trail
 #: model:ir.actions.act_window,name:account_audit_trail.action_account_audit_trail_report
@@ -36,14 +51,19 @@ msgstr ""
 #: model:ir.ui.menu,name:account_audit_trail.account_audit_trail_menu
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
 msgid "Audit Trail"
-msgstr ""
+msgstr "رد ممیزی"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "سطر صورتحساب بانک"
 
 #. module: account_audit_trail
 #. odoo-python
 #: code:addons/account_audit_trail/models/res_config_settings.py:0
 #, python-format
 msgid "Can't disable audit trail when there are existing records."
-msgstr ""
+msgstr "هنگامی چند سند وجود دارند نمی‌توان رد ممیزی را غیرفعال کرد."
 
 #. module: account_audit_trail
 #. odoo-python
@@ -58,9 +78,25 @@ msgid "Companies"
 msgstr "شرکت‌ها"
 
 #. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Company"
+msgstr "شرکت"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_company_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_company_id
+msgid "Company "
+msgstr ""
+
+#. module: account_audit_trail
 #: model:ir.model,name:account_audit_trail.model_res_config_settings
 msgid "Config Settings"
 msgstr "تنظیمات پیکربندی"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Create Only"
+msgstr ""
 
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
@@ -76,7 +112,7 @@ msgstr "توصیف"
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
 msgid "Go to Audit Trail"
-msgstr ""
+msgstr "به قسمت رد ممیزی بروید"
 
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
@@ -92,6 +128,16 @@ msgid "Journal Entry"
 msgstr "سند دفترروزنامه‌"
 
 #. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_mail_tracking_value
+msgid "Mail Tracking Value"
+msgstr "ارزش ردیابی نامه"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "ویزارد ادغام شریک"
+
+#. module: account_audit_trail
 #: model:ir.model,name:account_audit_trail.model_mail_message
 msgid "Message"
 msgstr "پیام"
@@ -102,6 +148,11 @@ msgid "Messages Search"
 msgstr "جستجوی پیام ها"
 
 #. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log
+msgid "Name"
+msgstr "نام"
+
+#. module: account_audit_trail
 #. odoo-python
 #: code:addons/account_audit_trail/models/mail_message.py:0
 #: code:addons/account_audit_trail/models/mail_message.py:0
@@ -110,10 +161,37 @@ msgid "Operation not supported"
 msgstr "عملیات پشتیبانی نمی شود"
 
 #. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_partner_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_partner_id
+msgid "Partner"
+msgstr "همکار"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Partners"
+msgstr "همکاران"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Record"
+msgstr "رکورد"
+
+#. module: account_audit_trail
 #: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__show_audit_log
 #: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__show_audit_log
 msgid "Show Audit Log"
-msgstr ""
+msgstr "ثبت ممیزی را نشان بده"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_tax_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_tax_id
+msgid "Tax"
+msgstr "مالیات"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Taxes"
+msgstr "مالیات ها"
 
 #. module: account_audit_trail
 #. odoo-python
@@ -123,26 +201,32 @@ msgid ""
 "To keep the audit trail, you can not delete journal entries once they have been posted.\n"
 "Instead, you can cancel the journal entry."
 msgstr ""
+"برای رد ممیزی، نمی‌توانید اسناد دفتر روزنامه را پس از ثبت شدن حذف کنید.\n"
+"در عوض می‌توانید آنها را لغو کنید."
 
 #. module: account_audit_trail
 #: model_terms:ir.actions.act_window,help:account_audit_trail.action_account_audit_trail_report
 msgid ""
 "To see the audit log you have to enable the audit trail option from settings"
 msgstr ""
+"برای دیدن ثبت ممیزی باید گزینه‌ی رد ممیزی را از قسمت تنظیمات فعال کنید"
 
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
 msgid "Update Only"
-msgstr ""
+msgstr "تنها به روزرسانی کنید"
 
 #. module: account_audit_trail
 #. odoo-python
 #: code:addons/account_audit_trail/models/mail_message.py:0
 #, python-format
 msgid "Updated"
-msgstr ""
+msgstr "به روزرسانی شده"
 
 #. module: account_audit_trail
-#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
-msgid "date"
-msgstr "تاریخ"
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid ""
+"You cannot remove parts of the audit trail. Archive the record instead."
+msgstr ""

@@ -10,7 +10,6 @@
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2023
 # ilan kl <ilan@qaroads.co.il>, 2023
 # Sagi Ahiel, 2023
-# Ha Ketem <haketem@gmail.com>, 2023
 # MichaelHadar, 2023
 # david danilov, 2023
 # שהאב חוסיין <shhab89@gmail.com>, 2023
@@ -26,14 +25,15 @@
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
 # Roy Sayag, 2024
 # yael terner, 2024
+# Ha Ketem <haketem@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: yael terner, 2024\n"
+"Last-Translator: Ha Ketem <haketem@gmail.com>, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -963,7 +963,7 @@ msgstr "מספר עובדים נוכחי"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Customer Relationship"
-msgstr "יחסי לקוח"
+msgstr "קשרי לקוח"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
@@ -993,6 +993,8 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
@@ -1005,6 +1007,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+#, python-format
 msgid "Department"
 msgstr "מחלקה"
 
@@ -1446,7 +1449,7 @@ msgstr "עובד עצמאי"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Fruit, coffee and <br>snacks provided."
-msgstr "אספקה של פירות, קפה וחטיפים."
+msgstr "אספקה של פירות, קפה <br>וחטיפים."
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_full_time
@@ -1570,7 +1573,7 @@ msgstr "מרחק בית-עבודה"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_icon_display
 msgid "Hr Icon Display"
-msgstr "תצוגת סמל של משאבי אנוש (HR)"
+msgstr "תצוגת סמל של משאבי אנוש "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
@@ -1841,7 +1844,7 @@ msgstr "התחל תוכנית"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Lead the entire sales cycle"
-msgstr "להוביל את כל מחזור המכירות"
+msgstr "הובלת מחזור המכירות"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__cohabitant
@@ -2174,7 +2177,7 @@ msgstr "מספר עובדים המועסקים במשרה זו בשלב תהלי
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "מספר הודעות הדורשות פעולה"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error_counter
@@ -2222,7 +2225,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr.mail_activity_plan_action
 #: model:ir.ui.menu,name:hr.menu_config_plan_plan
 msgid "On/Offboarding Plans"
-msgstr ""
+msgstr "תוכניות"
 
 #. module: hr
 #. odoo-javascript
@@ -2627,7 +2630,7 @@ msgstr "רשום עזיבה"
 #: code:addons/hr/models/res_partner.py:0 code:addons/hr/models/res_users.py:0
 #, python-format
 msgid "Related Employees"
-msgstr "עובדים קשורים"
+msgstr "עובדים מקושרים"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2642,7 +2645,7 @@ msgstr "עובד קשור"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_res_partner__employee_ids
 msgid "Related employees based on their private address"
-msgstr "עובדים קשורים על סמך כתובתם הפרטית"
+msgstr "עובדים מקשורים על סמך כתובת הפרטית"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
@@ -2820,6 +2823,13 @@ msgstr "מספר ביטוח לאומי"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Software Developer"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Some employee already have a work contact"
 msgstr ""
 
 #. module: hr

@@ -2,6 +2,7 @@
 <odoo>
     <!-- new layout for mass_mailing -->
     <template id="mass_mailing.layout" name="Mass Mailing Layout">
+        <t t-set="html_data" t-value="{'lang': lang and lang.replace('_', '-')}"/>
         <t t-call="web.frontend_layout">
             <body class="bg-white o_mailing_portal_body">
                 <header>

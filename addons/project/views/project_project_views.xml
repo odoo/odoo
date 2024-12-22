@@ -44,7 +44,7 @@
                 <sheet string="Project">
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
                         <button class="oe_stat_button" type="object" name="action_view_tasks" icon="fa-tasks">
-                            <field string="Tasks" name="task_count" widget="statinfo"/>
+                            <field string="Tasks" name="open_task_count" widget="statinfo"/>
                         </button>
                         <button class="oe_stat_button" name="project_update_all_action" type="object" groups="project.group_project_user">
                             <field name="last_update_color" invisible="1"/>
@@ -110,6 +110,8 @@
                                 <group>
                                     <div name="alias_def" colspan="2" class="pb-2">
                                         <!-- Always display the whole alias in edit mode. It depends in read only -->
+                                        <!-- Need to add alias_id in view for getting alias_domain_id by default -->
+                                        <field name="alias_id" invisible="1"/>
                                         <label for="alias_name" class="fw-bold o_form_label" string="Create tasks by sending an email to"/>
                                         <field name="alias_email" class="oe_read_only d-inline" widget="email" readonly="1" invisible="not alias_name" />
                                         <span class="oe_edit_only o_row">
@@ -127,7 +129,7 @@
                                 </group>
                             </group>
                             <group>
-                                <group name="group_tasks_managment" string="Tasks Management" col="1" class="row mt16 o_settings_container" groups="project.group_project_task_dependencies,project.group_project_milestone,project.group_project_recurring_tasks">
+                                <group name="group_tasks_managment" string="Tasks Management" col="1" class="row mt16 o_settings_container" groups="project.group_project_task_dependencies,project.group_project_milestone">
                                     <div>
                                         <setting class="col-lg-12" id="task_dependencies_setting" help="Determine the order in which to perform tasks" groups="project.group_project_task_dependencies">
                                             <field name="allow_task_dependencies"/>
@@ -148,7 +150,7 @@
                                                 <field name="rating_status" widget="radio" class="o_row"/>
                                                 <div  invisible="rating_status != 'periodic'"  required="rating_status == 'periodic'">
                                                     <label for="rating_status_period" string="Frequency"/>
-                                                    <field name="rating_status_period"/>
+                                                    <field class="mx-3 w-auto" name="rating_status_period"/>
                                                 </div>
                                                 <span colspan="2" class="text-muted o_row ps-1">
                                                     <i class="fa fa-lightbulb-o pe-2"/>
@@ -260,8 +262,11 @@
             <field name="inherit_id" ref="project.view_project"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="default_order">sequence, name, id</attribute>
+                </xpath>
                 <field name="sequence" position="attributes">
-                    <attribute name="invisible">0</attribute>
+                    <attribute name="column_invisible">0</attribute>
                     <attribute name="widget">handle</attribute>
                 </field>
             </field>
@@ -339,6 +344,8 @@
                     <div name="alias_def" class="mt-2" colspan="2">
                         <label for="alias_name" string="Create tasks by sending an email to"/>
                         <span>
+                            <!-- Need to add alias_id in view for getting alias_domain_id by default -->
+                            <field name="alias_id" invisible="1"/>
                             <field name="alias_name" placeholder="e.g. office-party"/>@
                             <field name="alias_domain_id" class="oe_inline" placeholder="e.g. domain.com"
                                    options="{'no_create': True, 'no_open': True}"/>

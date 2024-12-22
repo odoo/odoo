@@ -62,6 +62,7 @@ class WebsiteEventSaleController(WebsiteEventController):
         if any(info['event_ticket_id'] for info in registrations):
             order_sudo = request.website.sale_get_order()
             if order_sudo.amount_total:
+                request.session['sale_last_order_id'] = order_sudo.id
                 return request.redirect("/shop/checkout")
             # free tickets -> order with amount = 0: auto-confirm, no checkout
             elif order_sudo:

@@ -20,7 +20,9 @@ class StockMove(models.Model):
 
     def _should_force_price_unit(self):
         self.ensure_one()
-        return self.picking_type_id.code == 'mrp_operation' or super()._should_force_price_unit()
+        return ((self.picking_type_id.code == 'mrp_operation' and self.production_id) or
+                super()._should_force_price_unit()
+        )
 
     def _ignore_automatic_valuation(self):
         return bool(self.raw_material_production_id)
@@ -42,3 +44,28 @@ class StockMove(models.Model):
     def _is_production_consumed(self):
         self.ensure_one()
         return self.location_dest_id.usage == 'production' and self.location_id._should_be_valued()
+
+    def _get_out_svl_vals(self, forced_quantity):
+        unbuild_moves = self.filtered('unbuild_id')
+        # 'real cost' of finished product moves @ build time
+        price_unit_map = {
+            move.id: (
+                move.unbuild_id.mo_id.move_finished_ids.stock_valuation_layer_ids.filtered(
+                    lambda svl: svl.product_id == move.unbuild_id.mo_id.product_id
+                )[0].unit_cost,
+                move.company_id.currency_id.round,
+            )
+            for move in unbuild_moves.sudo()
+            if move.product_id.cost_method != 'standard' and
+            move.unbuild_id.mo_id.move_finished_ids.stock_valuation_layer_ids
+        }
+        svl_vals_list = super()._get_out_svl_vals(forced_quantity)
+        if price_unit_map:
+            for svl_vals in svl_vals_list:
+                if (move_id := svl_vals['stock_move_id']) in price_unit_map:
+                    unit_cost = price_unit_map[move_id][0]
+                    svl_vals.update({
+                        'unit_cost': unit_cost,
+                        'value': price_unit_map[move_id][1](unit_cost * svl_vals['quantity']),
+                    })
+        return svl_vals_list

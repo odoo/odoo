@@ -4,7 +4,7 @@
         <field name="model">hr.resume.line</field>
         <field name="arch" type="xml">
             <tree expand="1"
-                decoration-danger="expiration_status == 'expired'"
+                decoration-danger="expiration_status == 'expired' and date_start != date_end"
                 decoration-warning="expiration_status == 'expiring'"
                 default_group_by="employee_id">
                 <field name="employee_id" widget="many2one_avatar_user"/>

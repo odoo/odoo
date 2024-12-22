@@ -23,11 +23,7 @@ class AccountEdiXmlUBLDE(models.AbstractModel):
     def _export_invoice_vals(self, invoice):
         # EXTENDS account.edi.xml.ubl_bis3
         vals = super()._export_invoice_vals(invoice)
-
-        vals['vals'].update({
-            'customization_id': 'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.3#conformant#urn:xoev-de:kosit:extension:xrechnung_2.3',
-        })
-
+        vals['vals']['customization_id'] = self._get_customization_ids()['xrechnung']
         return vals
 
     def _export_invoice_constraints(self, invoice, vals):
@@ -40,3 +36,15 @@ class AccountEdiXmlUBLDE(models.AbstractModel):
         })
 
         return constraints
+
+    def _get_partner_party_vals(self, partner, role):
+        # EXTENDS account.edi.xml.ubl_bis3
+        vals = super()._get_partner_party_vals(partner, role)
+
+        if not vals.get('endpoint_id') and partner.email:
+            vals.update({
+                'endpoint_id': partner.email,
+                'endpoint_id_attrs': {'schemeID': 'EM'},
+            })
+
+        return vals

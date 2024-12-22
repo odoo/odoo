@@ -20,8 +20,7 @@ DEFAULT_ENDPOINT = 'https://iap.odoo.com'
 # Tools globals
 #----------------------------------------------------------
 
-_MAIL_DOMAIN_BLACKLIST = set([
-    # Top 100 email providers on SaaS at 2020-10
+_MAIL_PROVIDERS = {
     'gmail.com', 'hotmail.com', 'yahoo.com', 'qq.com', 'outlook.com', '163.com', 'yahoo.fr', 'live.com', 'hotmail.fr', 'icloud.com', '126.com',
     'me.com', 'free.fr', 'ymail.com', 'msn.com', 'mail.com', 'orange.fr', 'aol.com', 'wanadoo.fr', 'live.fr', 'mail.ru', 'yahoo.co.in',
     'rediffmail.com', 'hku.hk', 'googlemail.com', 'gmx.de', 'sina.com', 'skynet.be', 'laposte.net', 'yahoo.co.uk', 'yahoo.co.id', 'web.de',
@@ -29,7 +28,7 @@ _MAIL_DOMAIN_BLACKLIST = set([
     'sfr.fr', 'libero.it', 'mac.com', 'rocketmail.com', 'protonmail.com', 'gmx.com', 'gamil.com', 'hotmail.es', 'gmx.net', 'comcast.net',
     'yahoo.com.mx', 'linkedin.com', 'yahoo.com.br', 'yahoo.in', 'yahoo.ca', 't-online.de', '139.com', 'yandex.ru', 'yahoo.com.hk','yahoo.de',
     'yeah.net', 'yandex.com', 'nwytg.net', 'neuf.fr', 'yahoo.com.ar', 'outlook.es', 'abv.bg', 'aliyun.com', 'yahoo.com.tw', 'ukr.net', 'live.nl',
-    'wp.pl', 'hotmail.it', 'live.com.mx', 'zoho.com', 'live.co.uk', 'sohu.com', 'twoomail.com', 'yahoo.com.sg', 'odoo.com', 'yahoo.com.vn',
+    'wp.pl', 'hotmail.it', 'live.com.mx', 'zoho.com', 'live.co.uk', 'sohu.com', 'twoomail.com', 'yahoo.com.sg', 'yahoo.com.vn',
     'windowslive.com', 'gmail', 'vols.utk.edu', 'email.com', 'tiscali.it', 'yahoo.it', 'gmx.ch', 'trbvm.com', 'nwytg.com', 'mvrht.com', 'nyit.edu',
     'o2.pl', 'live.cn', 'gmial.com', 'seznam.cz', 'live.be', 'videotron.ca', 'gmil.com', 'live.ca', 'hotmail.de', 'sbcglobal.net', 'connect.hku.hk',
     'yahoo.com.au', 'att.net', 'live.in', 'btinternet.com', 'gmx.fr', 'voila.fr', 'shaw.ca', 'prodigy.net.mx', 'vip.qq.com', 'yahoo.com.ph',
@@ -44,10 +43,11 @@ _MAIL_DOMAIN_BLACKLIST = set([
     'freemail.hu', 'live.it', 'blackwaretech.com', 'byom.de', 'dispostable.com', 'dayrep.com', 'aim.com', 'prixgen.com', 'gmail.om',
     'asterisk-tech.mn', 'in.com', 'aliceadsl.fr', 'lycos.com', 'topnet.tn', 'teleworm.us', 'kedgebs.com', 'supinfo.com', 'posteo.de',
     'yahoo.com ', 'op.pl', 'gmail.fr', 'grr.la', 'oci.fr', 'aselcis.com', 'optusnet.com.au', 'mailcatch.com', 'rambler.ru', 'protonmail.ch',
-    'prisme.ch', 'bbox.fr', 'orbitalu.com', 'netcourrier.com', 'iinet.net.au',
+    'prisme.ch', 'bbox.fr', 'orbitalu.com', 'netcourrier.com', 'iinet.net.au', 'cegetel.net', 'proton.me', 'dbmail.com', 'club-internet.fr',
     # Dummy entries
     'example.com',
-])
+}
+_MAIL_DOMAIN_BLACKLIST = _MAIL_PROVIDERS | {'odoo.com'}
 
 # List of country codes for which we should offer state filtering when mining new leads.
 # See crm.iap.lead.mining.request#_compute_available_state_ids() or task-2471703 for more details.
@@ -134,13 +134,21 @@ def iap_jsonrpc(url, method='call', params=None, timeout=15):
                 e_class = exceptions.AccessError
             elif name == 'UserError':
                 e_class = exceptions.UserError
+            elif name == "ReadTimeout":
+                raise requests.exceptions.Timeout()
             else:
                 raise requests.exceptions.ConnectionError()
             e = e_class(message)
             e.data = response['error']['data']
             raise e
         return response.get('result')
-    except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError) as e:
+    except requests.exceptions.Timeout:
+        _logger.warning('Request timeout with the URL: %s', url)
+        raise exceptions.ValidationError(
+            _('The request to the service timed out. Please contact the author of the app. The URL it tried to contact was %s', url)
+        )
+    except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.HTTPError):
+        _logger.exception("iap jsonrpc %s failed", url)
         raise exceptions.AccessError(
             _('The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was %s', url)
         )

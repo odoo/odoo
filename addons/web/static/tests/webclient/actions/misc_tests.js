@@ -15,6 +15,8 @@ import {
 import { listView } from "@web/views/list/list_view";
 import { companyService } from "@web/webclient/company_service";
 import { onWillStart } from "@odoo/owl";
+import { GraphModel } from "@web/views/graph/graph_model";
+import { switchView } from "../../search/helpers";
 
 let serverData;
 let target;
@@ -358,6 +360,38 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsOnce(document.body, ".modal .o_form_view");
             await doAction(webClient, 5); // target 'new'
             assert.containsN(document.body, ".modal .o_form_view", 2);
+        }
+    );
+
+    QUnit.test(
+        "search defaults are removed from context when switching view",
+        async function (assert) {
+            assert.expect(1);
+            serverData.views["partner,false,graph"] = `<graph/>`;
+            serverData.views["partner,false,list"] = `<list/>`;
+            const context = {
+                search_default_x: true,
+                searchpanel_default_y: true,
+            };
+            patchWithCleanup(GraphModel.prototype, {
+                load(searchParams) {
+                    assert.deepEqual(searchParams.context, { lang: "en", tz: "taht", uid: 7 });
+                    return super.load(...arguments);
+                },
+            });
+
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, {
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "graph"],
+                ],
+                context,
+            });
+            // list view is loaded, switch to graph view
+            await switchView(target, "graph");
         }
     );
 

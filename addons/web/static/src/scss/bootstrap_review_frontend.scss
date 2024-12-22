@@ -53,7 +53,8 @@ $o-btn-outline-border-width-defaults: () !default;
         } @else {
             @extend .btn-fill-#{$color};
             @if index($o-btn-flat-defaults, $color) {
-                @extend .btn.flat;
+                // TODO In master: move definition to web_editor
+                @extend .btn.flat !optional;
             }
         }
     }
@@ -228,4 +229,44 @@ $-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);
     .btn:first-child, .btn:last-child {
         @include border-radius($input-border-radius, 0);
     }
+}
+
+// Dropdown
+.dropdown .dropdown-menu {
+    .text-muted {
+        color: adjust-color-to-background($text-muted, $dropdown-bg, mute-color($color-contrast-light), mute-color($color-contrast-dark)) !important;
+    }
+}
+
+// The following code adapts the style of disabled inputs to maintain color
+// consistency and make them more recognizable.
+.form-select {
+    // This is necessary to achieve a consistent "border rendering behaviour"
+    // across form-select and form-control when using semi-transparent
+    // borders and a background color (eg. disabled inputs).
+    // Otherwise, the color rendering of the semi-transparent border may be altered
+    // (the color may be darker depending on the background color used).
+    background-clip: padding-box;
+
+    &:disabled:not([multiple]):where(:not([size]), [size="1"]) {
+        background-image: str-replace($form-select-indicator, #{$form-select-indicator-color}, str-replace(#{$form-select-disabled-color}, "#", "%23"));
+    }
+}
+
+.form-control {
+    &:disabled, &[readonly] {
+        color: $form-select-disabled-color;
+    }
+}
+
+.form-check-input:disabled:not(:checked) {
+    background-color: $input-disabled-bg;
+
+    .form-switch & {
+        background-image: escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='#{$form-select-disabled-color}'/></svg>"));
+    }
+}
+
+.form-range:disabled::-webkit-slider-thumb {
+    border-color: $input-disabled-border-color;
 }

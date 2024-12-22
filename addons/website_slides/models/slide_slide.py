@@ -7,7 +7,6 @@ import io
 import logging
 import re
 import requests
-import PyPDF2
 
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
@@ -18,6 +17,7 @@ from odoo.addons.http_routing.models.ir_http import slug, url_for
 from odoo.exceptions import RedirectWarning, UserError, AccessError
 from odoo.http import request
 from odoo.tools import html2plaintext, sql
+from odoo.tools.pdf import PdfFileReader
 
 _logger = logging.getLogger(__name__)
 
@@ -110,7 +110,7 @@ class Slide(models.Model):
     _order = 'sequence asc, is_category asc, id asc'
     _partner_unfollow_enabled = True
 
-    YOUTUBE_VIDEO_ID_REGEX = r'^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*'
+    YOUTUBE_VIDEO_ID_REGEX = r'^(?:(?:https?:)?//)?(?:www\.|m\.)?(?:youtu\.be/|youtube(-nocookie)?\.com/(?:embed/|v/|shorts/|live/|watch\?v=|watch\?.+&v=))((?:\w|-){11})\S*$'
     GOOGLE_DRIVE_DOCUMENT_ID_REGEX = r'(^https:\/\/docs.google.com|^https:\/\/drive.google.com).*\/d\/([^\/]*)'
     VIMEO_VIDEO_ID_REGEX = r'\/\/(player.)?vimeo.com\/(?:[a-z]*\/)*([0-9]{6,11})\/?([0-9a-z]{6,11})?[?]?.*'
 
@@ -1336,7 +1336,7 @@ class Slide(models.Model):
 
         if data_bytes.startswith(b'%PDF-'):
             try:
-                pdf = PyPDF2.PdfFileReader(io.BytesIO(data_bytes), overwriteWarnings=False)
+                pdf = PdfFileReader(io.BytesIO(data_bytes), overwriteWarnings=False)
                 return (5 * len(pdf.pages)) / 60
             except Exception:
                 pass  # as this is a nice to have, fail silently
@@ -1402,3 +1402,9 @@ class Slide(models.Model):
             data['course'] = _('Course: %s', slide.channel_id.name)
             data['course_url'] = slide.channel_id.website_url
         return results_data
+
+    def open_website_url(self):
+        """ Overridden to use a relative URL instead of an absolute when website_id is False. """
+        if self.website_id:
+            return super().open_website_url()
+        return self.env['website'].get_client_action(f'/slides/slide/{slug(self)}')

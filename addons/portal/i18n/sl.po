@@ -14,14 +14,16 @@
 # Martin Trigaux, 2023
 # Grega Vavtar <grega@hbs.si>, 2024
 # Katja Deržič, 2024
+# Gregor Flajs, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-08-13 10:29+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Katja Deržič, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,7 +63,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid "<i class=\"fa fa-fw fa-sign-out me-1 small text-primary\"/> Logout"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-sign-out me-1 small text-primary\"/> Odjava"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
@@ -281,18 +283,8 @@ msgid "Add extra content to display in the email"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Add, remove or modify your addresses"
-msgstr ""
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Added On"
-msgstr ""
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Addresses"
 msgstr ""
 
 #. module: portal
@@ -468,6 +460,8 @@ msgid ""
 "Currently available to everyone viewing this document, click to restrict to "
 "internal employees."
 msgstr ""
+"Trenutno je na voljo vsem, ki si ogledajo ta dokument, kliknite, če želite "
+"omejiti na notranje zaposlene."
 
 #. module: portal
 #. odoo-javascript
@@ -477,6 +471,8 @@ msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
 msgstr ""
+"Trenutno omejeno na notranje zaposlene, kliknite, če želite, da je na voljo "
+"vsem, ki si ogledajo ta dokument."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
@@ -559,7 +555,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due today"
-msgstr ""
+msgstr "Rok za oddajo je danes"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
@@ -643,7 +639,7 @@ msgstr "ID"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Important:"
-msgstr ""
+msgstr "Pomembno:"
 
 #. module: portal
 #. odoo-javascript
@@ -662,7 +658,7 @@ msgstr "Interni uporabnik"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Internal notes are only displayed to internal users."
-msgstr ""
+msgstr "Notranje opombe so prikazane samo notranjim uporabnikom."
 
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__ko
@@ -726,6 +722,13 @@ msgid ""
 msgstr ""
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Key Description"
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_uid
@@ -749,7 +752,7 @@ msgstr "Najnovejša avtentikacija"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Leave a comment"
-msgstr ""
+msgstr "Pustite komentar"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
@@ -831,11 +834,6 @@ msgid "Next"
 msgstr "Naprej"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "No Documents to display"
-msgstr ""
-
-#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
 msgid "Note"
 msgstr "Opomba"
@@ -889,7 +887,7 @@ msgstr "Telefon"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Please enter your password to confirm you own this account"
-msgstr ""
+msgstr "Vnesite svoje geslo in potrdite, da ste lastnik tega računa."
 
 #. module: portal
 #. odoo-python
@@ -897,7 +895,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 #, python-format
 msgid "Portal Access Management"
-msgstr ""
+msgstr "Upravljanje dostopov portala"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
@@ -950,7 +948,7 @@ msgstr "Javno"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Published on"
-msgstr ""
+msgstr "Objavljeno na"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1022,6 +1020,7 @@ msgstr "Varnost"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_security.js:0
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Security Control"
 msgstr ""
@@ -1122,21 +1121,21 @@ msgstr ""
 #, python-format
 msgid ""
 "The attachment does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Priponka ne obstaja ali pa nimate pravic za dostop do nje."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" does not have a valid email."
-msgstr ""
+msgstr "Kontakt \"%s\" nima veljavnega e-poštnega naslova."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" has the same email as an existing user"
-msgstr ""
+msgstr "Stik \"%s\" ima enak e-poštni naslov kot obstoječi uporabnik"
 
 #. module: portal
 #. odoo-python
@@ -1144,7 +1143,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The document does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Dokument ne obstaja ali pa nimate pravic za dostop do njega."
 
 #. module: portal
 #. odoo-javascript
@@ -1173,7 +1172,7 @@ msgstr "Staro geslo ni pravilno, geslo ni bilo spremenjeno."
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" already has the portal access."
-msgstr ""
+msgstr "Partner \"%s\"že ima dostop do portala."
 
 #. module: portal
 #. odoo-python
@@ -1398,7 +1397,7 @@ msgstr "Geslo ne more biti prazno"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "You must be"
-msgstr ""
+msgstr "Morate biti"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1453,7 +1452,7 @@ msgstr "komentarji"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "full access"
-msgstr ""
+msgstr "Polni dostop"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -1474,7 +1473,7 @@ msgstr ""
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "logged in"
-msgstr ""
+msgstr "prijavljeni"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -1488,10 +1487,17 @@ msgstr ""
 
 #. module: portal
 #. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "revoke"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "to post a comment."
-msgstr ""
+msgstr "Objavite komentar"
 
 #. module: portal
 #. odoo-javascript

@@ -96,6 +96,32 @@ class MailComposerMixin(models.AbstractModel):
                 or not record.template_id
             )
 
+    def _render_lang(self, *args, **kwargs):
+        """ Given some record ids, return the lang for each record based on
+        lang field of template or through specific context-based key.
+        This method enters sudo mode to allow qweb rendering (which
+        is otherwise reserved for the 'mail template editor' group')
+        if we consider it safe. Safe means content comes from the template
+        which is a validated master data. As a summary the heuristic is :
+
+          * if no template, do not bypass the check;
+          * if record lang and template lang are the same, bypass the check;
+        """
+
+        if not self.template_id:
+            # Do not need to bypass the verification
+            return super()._render_lang(*args, **kwargs)
+
+        composer_value = self.lang
+        template_value = self.template_id.lang
+
+        call_sudo = False
+        if (not self.is_mail_template_editor and composer_value == template_value):
+            call_sudo = True
+
+        record = self.sudo() if call_sudo else self
+        return super(MailComposerMixin, record)._render_lang(*args, **kwargs)
+
     def _render_field(self, field, *args, **kwargs):
         """ Render the given field on the given records. This method enters
         sudo mode to allow qweb rendering (which is otherwise reserved for

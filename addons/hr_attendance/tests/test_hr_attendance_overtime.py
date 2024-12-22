@@ -18,6 +18,13 @@ class TestHrAttendanceOvertime(TransactionCase):
             'overtime_company_threshold': 10,
             'overtime_employee_threshold': 10,
         })
+        cls.company.resource_calendar_id.tz = 'Europe/Brussels'
+        cls.company_1 = cls.env['res.company'].create({
+            'name': 'Overtime Inc.',
+            'hr_attendance_overtime': True,
+            'overtime_start_date': datetime(2024, 5, 27),
+        })
+        cls.company_1.resource_calendar_id.tz = 'Europe/Brussels'
         cls.user = new_test_user(cls.env, login='fru', groups='base.group_user,hr_attendance.group_hr_attendance_manager', company_id=cls.company.id).with_company(cls.company)
         cls.employee = cls.env['hr.employee'].create({
             'name': "Marie-Edouard De La Court",
@@ -39,6 +46,11 @@ class TestHrAttendanceOvertime(TransactionCase):
             'name': 'Susan',
             'company_id': cls.company.id,
             'tz': 'Pacific/Honolulu',
+        })
+        cls.europe_employee = cls.env['hr.employee'].with_company(cls.company_1).create({
+            'name': 'Schmitt',
+            'company_id': cls.company_1.id,
+            'tz': 'Europe/Brussels',
         })
 
     def test_overtime_company_settings(self):
@@ -354,3 +366,18 @@ class TestHrAttendanceOvertime(TransactionCase):
             'check_out': datetime(2023, 1, 3, 21, 30)
         })
         self.assertEqual(m_attendance_3.overtime_hours, 0.5)
+
+        # Create an attendance record for early check-in
+        early_attendance = self.env['hr.attendance'].create({
+            'employee_id': self.europe_employee.id,
+            'check_in': datetime(2024, 5, 27, 23, 30),
+            'check_out': datetime(2024, 5, 28, 13, 30)
+        })
+
+        # 5:00 -> 19:00[in emp tz] should contain 5 hours of overtime
+        self.assertAlmostEqual(early_attendance.overtime_hours, 5)
+
+        # Total overtime for that day : 5 hours
+        overtime_record = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.europe_employee.id),
+                                                              ('date', '=', datetime(2024, 5, 28))])
+        self.assertAlmostEqual(overtime_record.duration, 5)

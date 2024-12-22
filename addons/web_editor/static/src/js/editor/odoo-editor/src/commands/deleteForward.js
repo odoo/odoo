@@ -29,6 +29,7 @@ import {
     isWhitespace,
     isVisibleTextNode,
     getOffsetAndCharSize,
+    ZERO_WIDTH_CHARS,
 } from '../utils/utils.js';
 
 /**
@@ -49,7 +50,7 @@ export function deleteText(charSize, offset, direction, alreadyMoved) {
     // Do remove the character, then restore the state of the surrounding parts.
     const restore = prepareUpdate(parentElement, firstSplitOffset, parentElement, secondSplitOffset);
     const isSpace = isWhitespace(middleNode) && !isInPre(middleNode);
-    const isZWS = middleNode.nodeValue === '\u200B';
+    const isZWS = ZERO_WIDTH_CHARS.includes(middleNode.nodeValue);
     middleNode.remove();
     restore();
 
@@ -70,7 +71,7 @@ export function deleteText(charSize, offset, direction, alreadyMoved) {
                 parentElement.oDeleteForward(firstSplitOffset, alreadyMoved);
             }
         }
-        if (isZWS) {
+        if (isZWS && parentElement.isConnected) {
             fillEmpty(parentElement);
         }
         return;
@@ -112,6 +113,13 @@ HTMLElement.prototype.oDeleteForward = function (offset) {
         this.parentElement.remove();
         restore();
         HTMLElement.prototype.oDeleteForward.call(grandparent, parentIndex);
+        return;
+    } else if (
+        firstLeafNode &&
+        firstLeafNode.nodeType === Node.TEXT_NODE &&
+        firstLeafNode.textContent === '\ufeff'
+    ) {
+        firstLeafNode.oDeleteForward(1);
         return;
     }
     if (
@@ -155,7 +163,20 @@ HTMLElement.prototype.oDeleteForward = function (offset) {
         return;
     }
 
-    const nextSibling = this.nextSibling;
+    let nextSibling = this.nextSibling;
+    while (nextSibling && isWhitespace(nextSibling)) {
+        const index = childNodeIndex(nextSibling);
+        const left = getState(nextSibling, index, DIRECTIONS.LEFT).cType;
+        const right = getState(nextSibling, index, DIRECTIONS.RIGHT).cType;
+        if (left === CTYPES.BLOCK_OUTSIDE && right === CTYPES.BLOCK_OUTSIDE) {
+            // If the next sibling is a whitespace, remove it.
+            nextSibling.remove();
+            nextSibling = this.nextSibling;
+        } else {
+            break;
+        }
+    }
+
     if (
         (
             offset === this.childNodes.length ||

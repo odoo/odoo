@@ -5,13 +5,14 @@
 # Translators:
 # Fabien Pinckaers <fp@openerp.com>, 2023
 # Jolien De Paepe, 2024
+# Manon Rondou, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -40,8 +41,8 @@ msgstr ""
 "            <p class=\"o_view_nocontent_smiling_face\">\n"
 "                Ajouter des adresses à la liste des adresses autorisées\n"
 "            </p><p>\n"
-"                Pour vous protéger des spams et des boucles de réponse, Odoo bloque automatiquement des emails\n"
-"                venant de votre passerelle au-delà d'un seuil de <b>%(threshold)i</b> emails toutes les <b>%(minutes)i</b>\n"
+"                Pour vous protéger des spams et des boucles de réponse, Odoo bloque automatiquement des e-mails\n"
+"                venant de votre passerelle au-delà d'un seuil de <b>%(threshold)i</b> e-mails toutes les <b>%(minutes)i</b>\n"
 "                minutes. S'il y a toutefois certaines adresses qui vous envoient très fréquemment des\n"
 "                mises à jour, vous pouvez les ajouter ci-dessous et Odoo les laissera passer.\n"
 "            </p>"
@@ -101,7 +102,7 @@ msgid ""
 "%(email)s is not recognized as a valid email. This is required to create a "
 "new customer."
 msgstr ""
-"%(email)s n'est pas reconnue comme une adresse email valide. Ceci est "
+"%(email)s n'est pas reconnue comme une adresse e-mail valide. Ceci est "
 "obligatoire pour créer un nouveau client."
 
 #. module: mail
@@ -204,7 +205,7 @@ msgstr "%(user_name)s a épinglé un message à ce canal."
 #: code:addons/mail/models/ir_mail_server.py:0
 #, python-format
 msgid "%s (Email Template)"
-msgstr "%s (Modèle d'email)"
+msgstr "%s (Modèle d'e-mail)"
 
 #. module: mail
 #. odoo-python
@@ -427,7 +428,7 @@ msgstr "<span class=\"d-block w-75 py-2\">Couleur de l'en-tête</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "<span class=\"me-1 oe_inline\">@</span>"
-msgstr ""
+msgstr "<span class=\"me-1 oe_inline\">@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -467,8 +468,8 @@ msgid ""
 "                                notifying all followers. It will appear in the messaging history.\n"
 "                            </span>"
 msgstr ""
-"<span invisible=\"mail_post_method != 'email'\">\n"
-"                                Le message sera envoyé sous forme d'email aux destinataires du\n"
+"<span invisible=\"mail_post_method != 'e-mail'\">\n"
+"                                Le message sera envoyé sous forme d'e-mail aux destinataires du\n"
 "                                modèle et n'apparaîtra pas dans l'historique des messages.\n"
 "                            </span>\n"
 "                            <span invisible=\"mail_post_method != 'note'\">\n"
@@ -666,6 +667,14 @@ msgstr "Nécessite une action"
 #: model:ir.model,name:mail.model_ir_actions_act_window_view
 msgid "Action Window View"
 msgstr "Vue de la fenêtre d'action"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#, python-format
+msgid "Actions"
+msgstr "Actions"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
@@ -903,7 +912,7 @@ msgstr "Ajouter une description à votre activité..."
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Add a new %(document)s or send an email to %(email_link)s"
-msgstr "Ajoutez un nouveau %(document)s ou envoyez un email à %(email_link)s"
+msgstr "Ajoutez un nouveau %(document)s ou envoyez un e-mail à %(email_link)s"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
@@ -913,7 +922,7 @@ msgstr "Ajouter un nouveau plan"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
 msgid "Add an email address to the blacklist"
-msgstr "Ajouter une adresse email à la liste noire"
+msgstr "Ajouter une adresse e-mail à la liste noire"
 
 #. module: mail
 #. odoo-javascript
@@ -1160,14 +1169,14 @@ msgstr "Un jeton d'accès doit être fourni pour chaque pièce jointe."
 #: code:addons/mail/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
-msgstr "Un email est demandé pour trouver_ou_créer du travail"
+msgstr "Un e-mail est demandé pour trouver_ou_créer du travail"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/failure_model.js:0
 #, python-format
 msgid "An error occurred when sending an email"
-msgstr "Une erreur est survenue lors de l'envoi d'un email"
+msgstr "Une erreur est survenue lors de l'envoi d'un e-mail"
 
 #. module: mail
 #. odoo-javascript
@@ -1254,7 +1263,7 @@ msgid ""
 "Are you sure you want to reset these email templates to their original "
 "configuration? Changes and translations will be lost."
 msgstr ""
-"Êtes-vous sûr de vouloir réinitialiser ces modèles d'email à leur "
+"Êtes-vous sûr de vouloir réinitialiser ces modèles d'e-mail à leur "
 "configuration initiale ? Toutes les modifications et traductions seront "
 "perdues."
 
@@ -1265,7 +1274,7 @@ msgstr ""
 #, python-format
 msgid "Are you sure you want to unblacklist this Email Address?"
 msgstr ""
-"Êtes-vous sûr de vouloir enlever cette adresse email de la liste noire ?"
+"Êtes-vous sûr de vouloir enlever cette adresse e-mail de la liste noire ?"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
@@ -1409,7 +1418,7 @@ msgid ""
 " did not match any partner."
 msgstr ""
 "Auteur du message. S'il n'est pas indiqué, email_from peut contenir une "
-"adresse email ne correspondant à aucun partenaire."
+"adresse e-mail ne correspondant à aucun partenaire."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__author_avatar
@@ -1581,7 +1590,7 @@ msgstr "Adresses sur liste noire"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_blacklist_action
 msgid "Blacklisted Email Addresses"
-msgstr "Adresses email sur liste noire"
+msgstr "Adresses e-mail sur liste noire"
 
 #. module: mail
 #. odoo-python
@@ -1646,7 +1655,7 @@ msgstr "Alias de rebond"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__bounce_email
 #: model:ir.model.fields,field_description:mail.field_res_company__bounce_email
 msgid "Bounce Email"
-msgstr "Email de rebond"
+msgstr "E-mail de rebond"
 
 #. module: mail
 #. odoo-python
@@ -1663,7 +1672,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_bounce_email_uniques
 msgid "Bounce emails should be unique"
-msgstr "Les emails de rebond doivent être uniques"
+msgstr "Les e-mails de rebond doivent être uniques"
 
 #. module: mail
 #. odoo-python
@@ -1698,6 +1707,17 @@ msgstr "Rejeté"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/webclient/web/webclient.js:0
+#, python-format
+msgid ""
+"Brave: enable 'Google Services for Push Messaging' to enable push "
+"notifications"
+msgstr ""
+"Brave : activer \"Google Services pour messages push\" pour activer les "
+"notifications push"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #, python-format
 msgid "Browser default"
@@ -1718,7 +1738,7 @@ msgstr "Clés du navigateur"
 #: code:addons/mail/models/mail_thread_cc.py:0
 #, python-format
 msgid "CC Email"
-msgstr "Email cc"
+msgstr "E-mail cc"
 
 #. module: mail
 #. odoo-javascript
@@ -1791,7 +1811,7 @@ msgstr "Annuler"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Cancel Email"
-msgstr "Annuler l'email"
+msgstr "Annuler l'e-mail"
 
 #. module: mail
 #. odoo-javascript
@@ -1871,7 +1891,7 @@ msgstr "Alias Catchall"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__catchall_email
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall_email
 msgid "Catchall Email"
-msgstr "Email Catchall"
+msgstr "E-mail Catchall"
 
 #. module: mail
 #. odoo-python
@@ -1888,7 +1908,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_catchall_email_uniques
 msgid "Catchall emails should be unique"
-msgstr "Les emails catchall doivent être uniques"
+msgstr "Les e-mails catchall doivent être uniques"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
@@ -2100,7 +2120,7 @@ msgstr "Résilié"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__new
 msgid "Collect replies on a specific email address"
-msgstr "Recueillir des réponses pour une adresse email spécifique"
+msgstr "Recueillir des réponses pour une adresse e-mail spécifique"
 
 #. module: mail
 #. odoo-javascript
@@ -2157,6 +2177,7 @@ msgstr "Sociétés"
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
 msgid "Companies using this domain as default for sending mails"
 msgstr ""
+"Les entreprises utilisent ce domaine par défaut pour envoyer des e-mails."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
@@ -2171,13 +2192,15 @@ msgstr "Société"
 
 #. module: mail
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/static/src/core/common/composer.js:0
 #: code:addons/mail/static/src/core/web/activity_mail_template.js:0
+#: code:addons/mail/wizard/mail_compose_message.py:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Compose Email"
-msgstr "Rédiger un email"
+msgstr "Rédiger un e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_mode
@@ -2382,6 +2405,13 @@ msgid "Country"
 msgstr "Pays"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/web/activity/activity_renderer.xml:0
+#, python-format
+msgid "Create"
+msgstr "Créer"
+
+#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__next_activity
 msgid "Create Activity"
 msgstr "Créer une activité"
@@ -2433,7 +2463,7 @@ msgstr "Créer un nouveau %(document)s"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Create new %(document)s by sending an email to %(email_link)s"
-msgstr "Créer un nouveau %(document)s en envoyant un email à %(email_link)s"
+msgstr "Créer un nouveau %(document)s en envoyant un e-mail à %(email_link)s"
 
 #. module: mail
 #. odoo-javascript
@@ -2599,12 +2629,12 @@ msgstr "Nom du canal personnalisé"
 msgid "Customer is required for inbox / email notification"
 msgstr ""
 "Le client est requis pour la notification dans la boîte de réception / par "
-"email"
+"e-mail"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Customize the look and feel of automated emails"
-msgstr "Personnaliser la présentation des emails automatisés"
+msgstr "Personnaliser la présentation des e-mails automatisés"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__custom_notifications
@@ -2748,6 +2778,10 @@ msgid ""
 " local-part e.g. 'notifications' either a complete email address e.g. "
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
+"Par défaut lorsqu'il n'y a pas de correspondance avec les filtres sortants "
+"du serveur. Il peut s'agir d'une partie locale, par ex. 'notifications' ou "
+"d'une adresse e-mail complète, par ex. 'notifications@example.com' pour "
+"outrepasser tous les e-mails sortants."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
@@ -2764,7 +2798,7 @@ msgstr ""
 "Destinataires par défaut de l'enregistrement :\n"
 "- partenaire (utilisant l'ID d'un partenaire ou le champ partner_id)\n"
 "OU\n"
-"- email (utilisant le champ email_from ou email)"
+"- e-mail (utilisant le champ email_from ou e-mail)"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
@@ -2818,7 +2852,7 @@ msgstr "Supprimer"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete
 msgid "Delete Emails"
-msgstr "Supprimer les emails"
+msgstr "Supprimer les e-mails"
 
 #. module: mail
 #. odoo-javascript
@@ -3103,7 +3137,7 @@ msgstr "Finaliser et planifier la suite"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.js:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -3181,7 +3215,7 @@ msgstr "Type d'échéance"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_dup
 msgid "Duplicated Email"
-msgstr "Email dupliqué"
+msgstr "E-mail dupliqué"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__voice_active_duration
@@ -3252,13 +3286,13 @@ msgstr "Modifier : %s"
 #: model:mail.activity.type,name:mail.mail_activity_data_email
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_add_signature
 #: model:ir.model.fields,field_description:mail.field_mail_message__email_add_signature
 msgid "Email Add Signature"
-msgstr "Signature d'ajout d'email"
+msgstr "Signature d'ajout d'e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__email
@@ -3266,7 +3300,7 @@ msgstr "Signature d'ajout d'email"
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__email
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
 msgid "Email Address"
-msgstr "Adresse email"
+msgstr "Adresse e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_email
@@ -3293,23 +3327,23 @@ msgstr "Mixin des alias de messagerie (léger)"
 #: model:ir.ui.menu,name:mail.mail_blacklist_menu
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
 msgid "Email Blacklist"
-msgstr "Liste noire des adresses email"
+msgstr "Liste noire des adresses e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_secondary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_secondary_color
 msgid "Email Button Color"
-msgstr "Couleur du bouton de l'email"
+msgstr "Couleur du bouton de l'e-mail"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_cc
 msgid "Email CC management"
-msgstr "Gestion de l'email cc"
+msgstr "Gestion de l'e-mail cc"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Email Configuration"
-msgstr "Configuration de l'email"
+msgstr "Configuration de l'e-mail"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_domain
@@ -3321,39 +3355,39 @@ msgstr "Domaine de messagerie"
 #: model:ir.model.fields,field_description:mail.field_res_company__email_primary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_primary_color
 msgid "Email Header Color"
-msgstr "Couleur de l'en-tête de l'email"
+msgstr "Couleur de l'en-tête de l'e-mail"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_mail
 msgid "Email Mass Mailing"
-msgstr "Email Marketing"
+msgstr "E-mail Marketing"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_layout_xmlid
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_layout_xmlid
 msgid "Email Notification Layout"
-msgstr "Mise en page des notifications par email"
+msgstr "Mise en page des notifications par e-mail"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Email Preview"
-msgstr "Aperçu de l'email"
+msgstr "Aperçu de l'e-mail"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Email Search"
-msgstr "Recherche des emails"
+msgstr "Recherche des e-mails"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__template_id
 #: model:ir.model.fields,field_description:mail.field_ir_cron__template_id
 msgid "Email Template"
-msgstr "Modèle d'email"
+msgstr "Modèle d'e-mail"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_template_preview
 msgid "Email Template Preview"
-msgstr "Aperçu du modèle d'email"
+msgstr "Aperçu du modèle d'e-mail"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_template_tree_all
@@ -3361,17 +3395,17 @@ msgstr "Aperçu du modèle d'email"
 #: model:ir.ui.menu,name:mail.menu_email_templates
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Email Templates"
-msgstr "Modèles d'email"
+msgstr "Modèles d'e-mail"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
 msgid "Email Thread"
-msgstr "Discussion par email"
+msgstr "Discussion par e-mail"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_blacklist_unique_email
 msgid "Email address already exists!"
-msgstr "L'adresse email existe déjà !"
+msgstr "L'adresse e-mail existe déjà !"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__email_from
@@ -3381,7 +3415,7 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
-"Adresse email de l'expéditeur. Ce champ est défini quand aucun partenaire "
+"Adresse e-mail de l'expéditeur. Ce champ est défini quand aucun partenaire "
 "correspondant n'est trouvé et remplace le champ author_id dans le chatter."
 
 #. module: mail
@@ -3390,8 +3424,8 @@ msgid ""
 "Email address to which replies will be redirected when sending emails in "
 "mass"
 msgstr ""
-"Adresse email vers laquelle les réponses seront redirigées lors de l'envoi "
-"d'emails en masse"
+"Adresse e-mail vers laquelle les réponses seront redirigées lors de l'envoi "
+"d'e-mails en masse"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__reply_to
@@ -3400,15 +3434,15 @@ msgid ""
 "mass; only used when the reply is not logged in the original discussion "
 "thread."
 msgstr ""
-"Adresse email vers laquelle les réponses seront redirigées lors de l'envoi "
-"d'emails en masse ; seulement utilisée lorsque la réponse n'est pas inscrite"
-" dans le fil de discussion original."
+"Adresse e-mail vers laquelle les réponses seront redirigées lors de l'envoi "
+"d'e-mails en masse ; seulement utilisée lorsque la réponse n'est pas "
+"inscrite dans le fil de discussion original."
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
 msgid ""
 "Email addresses that are blacklisted won't receive Email mailings anymore."
-msgstr "Les adresses qui sont sur liste noire ne recevront plus d'emails."
+msgstr "Les adresses qui sont sur liste noire ne recevront plus d'e-mails."
 
 #. module: mail
 #. odoo-python
@@ -3425,12 +3459,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__email_cc
 msgid "Email cc"
-msgstr "Email cc"
+msgstr "E-mail cc"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Assistant de composition d'emails"
+msgstr "Assistant de composition d'e-mails"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_domain
@@ -3439,24 +3473,24 @@ msgstr "Assistant de composition d'emails"
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_optional__alias_domain
 #: model:ir.model.fields,help:mail.field_res_company__alias_domain_name
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "Domaine de messagerie par ex. 'example.com' dans 'odoo@example.com'"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
 msgid "Email message"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_message
 msgid "Email resend wizard"
-msgstr "Assistant de renvoi d'email"
+msgstr "Assistant de renvoi d'e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__mail_template_ids
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__mail_template_ids
 msgid "Email templates"
-msgstr "Modèles d'email"
+msgstr "Modèles d'e-mail"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_mail
@@ -3464,7 +3498,7 @@ msgstr "Modèles d'email"
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_tree
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Emails"
-msgstr "Emails"
+msgstr "E-mails"
 
 #. module: mail
 #. odoo-javascript
@@ -3571,7 +3605,7 @@ msgid ""
 "Error without exception. Probably due to sending an email without computed "
 "recipients."
 msgstr ""
-"Erreur sans exception. Probablement due à l'envoi d'un email sans "
+"Erreur sans exception. Probablement due à l'envoi d'un e-mail sans "
 "destinataires calculés."
 
 #. module: mail
@@ -3626,6 +3660,13 @@ msgstr "Échec"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/webclient/web/webclient.js:0
+#, python-format
+msgid "Failed to enable push notifications"
+msgstr "Échec de l'activation des notifications push"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "Failed to load gifs..."
@@ -3662,6 +3703,13 @@ msgstr "Échec de rendu du modèle inline_template : %(template_txt)s)"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
+msgid "Failed to render inline_template template: %(template_txt)s"
+msgstr "Échec du rendu du modèle inline_template : %(template_txt)s"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, python-format
 msgid "Failed to render template: %(view_ref)s"
 msgstr "Échec de rendu du modèle : %(view_ref)s"
 
@@ -3685,7 +3733,7 @@ msgid ""
 "stored to ease the debugging of mailing issues."
 msgstr ""
 "Raison de l'échec. Ceci est souvent l'exception envoyée par le serveur de "
-"messagerie, stockée pour faciliter le débogage des emails d'incidents."
+"messagerie, stockée pour faciliter le débogage des e-mails d'incidents."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_type
@@ -3722,17 +3770,6 @@ msgstr "Récupérer jusqu'au nombre précisé de GIF."
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field_id
 msgid "Field"
 msgstr "Champ"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/mail_tracking_duration_mixin.py:0
-#, python-format
-msgid ""
-"Field \"(field)r on model %(model)r must be of type Many2one and have "
-"tracking=True for the computation of duration."
-msgstr ""
-"Le champ \"(field)r sur le modèle %(model)r doit être du type Many2one et "
-"avoir tracking=True pour calculer la durée."
 
 #. module: mail
 #. odoo-python
@@ -3775,6 +3812,17 @@ msgstr ""
 "Champ utilisé pour associer le modèle relié au sous-modèle lors de "
 "l'abonnement automatique à un document relié. Le champ est utilisé pour "
 "calculer getattr(related_document.relation_field)."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_tracking_duration_mixin.py:0
+#, python-format
+msgid ""
+"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
+"tracking=True for the computation of duration."
+msgstr ""
+"Le champ “%(field)s” sur le modèle “%(model)s” doit être du type Many2one et"
+" avoir tracking=True fpour le calcul de la durée."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model_fields
@@ -3960,7 +4008,7 @@ msgstr "Forcer une langue :"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
 msgid "Formatted Email"
-msgstr "Email formaté"
+msgstr "E-mail formaté"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_from
@@ -4108,8 +4156,10 @@ msgid "Groups"
 msgstr "Groupes"
 
 #. module: mail
+#. odoo-javascript
 #. odoo-python
 #: code:addons/mail/controllers/discuss/public_page.py:0
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #: model:ir.model,name:mail.model_mail_guest
 #: model:ir.model.fields,field_description:mail.field_bus_presence__guest_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__guest_id
@@ -4151,7 +4201,7 @@ msgstr "Routage HTTP"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__email
 msgid "Handle by Emails"
-msgstr "Recevoir par email"
+msgstr "Recevoir par e-mail"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__inbox
@@ -4510,7 +4560,7 @@ msgid ""
 "it is considered as being in UTC timezone."
 msgstr ""
 "Si cette option est définie, le gestionnaire de file d'attente enverra "
-"l'email après la date. Si cette option n'est pas définie, l'email sera "
+"l'e-mail après la date. Si cette option n'est pas définie, l'e-mail sera "
 "envoyé dès que possible. Sauf si un fuseau horaire est spécifié, il est "
 "considéré comme étant dans le fuseau horaire UTC."
 
@@ -4521,7 +4571,7 @@ msgid ""
 "the email will be send as soon as possible. You can use dynamic expression."
 msgstr ""
 "Si l'option est définie, le gestionnaire de la file d'attente enverra "
-"l'email après la date. Si l'option n'est pas définie, l'email sera envoyé "
+"l'e-mail après la date. Si l'option n'est pas définie, l'e-mail sera envoyé "
 "dès que possible. Vous pouvez utiliser l'expression dynamique."
 
 #. module: mail
@@ -4551,8 +4601,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Si l'adresse email est sur liste noire, le contact ne recevra plus d'email "
-"marketing d'aucune liste."
+"Si l'adresse e-mail est sur liste noire, le contact ne recevra plus d'e-mail"
+" marketing d'aucune liste."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__reply_to_force_new
@@ -4573,7 +4623,7 @@ msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
 msgstr ""
-"Si vous avez configuré un domain d'email \"catch-all\" redirigé vers le "
+"Si vous avez configuré un domain d'e-mail \"catch-all\" redirigé vers le "
 "serveur d'Odoo, entrez le nom du domaine ici."
 
 #. module: mail
@@ -4633,8 +4683,8 @@ msgid ""
 msgstr ""
 "En mode Commentaire : si cette option est activée, l'envoi des notifications"
 " est reporté. En mode Envoi de groupe : si cette option est activée, l'envoi"
-" des emails se fera après cette date. Cette date est considérée comme étant "
-"dans le fuseau horaire UTC."
+" des e-mails se fera après cette date. Cette date est considérée comme étant"
+" dans le fuseau horaire UTC."
 
 #. module: mail
 #. odoo-python
@@ -4668,7 +4718,7 @@ msgstr "Appel entrant..."
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__email
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Incoming Email"
-msgstr "Email entrant"
+msgstr "E-mail entrant"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -4763,14 +4813,14 @@ msgstr "domaine %(domain)r invalide (type %(domain_type)s)"
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_invalid
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_email_invalid
 msgid "Invalid email address"
-msgstr "Adresse email non valide"
+msgstr "Adresse e-mail non valide"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_blacklist.py:0
 #, python-format
 msgid "Invalid email address %r"
-msgstr "Adresse email invalide %r"
+msgstr "Adresse e-mail invalide %r"
 
 #. module: mail
 #. odoo-python
@@ -4804,7 +4854,7 @@ msgstr "Adresse d'envoi invalide"
 #: code:addons/mail/models/mail_thread_blacklist.py:0
 #, python-format
 msgid "Invalid primary email field on model %s"
-msgstr "Champ email principal non valide sur le modèle %s"
+msgstr "Champ e-mail principal non valide sur le modèle %s"
 
 #. module: mail
 #. odoo-python
@@ -5132,7 +5182,7 @@ msgstr "Conserver l'original"
 msgid ""
 "Keep a copy of the email content if emails are removed (mass mailing only)"
 msgstr ""
-"Conserver une copie du contenu de l'email si les emails sont supprimés "
+"Conserver une copie du contenu de l'e-mail si les e-mails sont supprimés "
 "(envoi de masse uniquement)"
 
 #. module: mail
@@ -5407,6 +5457,8 @@ msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
 msgstr ""
+"Partie locale de l'e-mail utilisée pour obtenir une réponse par ex. "
+"'catchall' dans 'catchall@example.com'"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -5414,6 +5466,8 @@ msgid ""
 "Local-part of email used for Return-Path used when emails bounce e.g. "
 "'bounce' in 'bounce@example.com'"
 msgstr ""
+"Partie locale de l'e-mail utilisée pour le chemin de retour lorsque des "
+"e-mails rebondissent  par ex. 'bounce' dans 'bounce@example.com'"
 
 #. module: mail
 #. odoo-javascript
@@ -5653,7 +5707,7 @@ msgstr "Modèle d'email utilisant ce serveur d'email"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_scheduler_action_ir_actions_server
 msgid "Mail: Email Queue Manager"
-msgstr "Email : Gestionnaire de la file d'attente des emails"
+msgstr "E-mail : Gestionnaire de la file d'attente des e-mails"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_gateway_action_ir_actions_server
@@ -5714,7 +5768,7 @@ msgid ""
 "Manage answers as new incoming emails instead of replies going to the same "
 "thread."
 msgstr ""
-"Gérez les réponses comme de nouveaux emails entrants, au lieu que les "
+"Gérez les réponses comme de nouveaux e-mails entrants, au lieu que les "
 "réponses aillent dans le même fil de discussion."
 
 #. module: mail
@@ -5952,7 +6006,7 @@ msgstr "Message publié sur \"%s\""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_to
 msgid "Message recipients (emails)"
-msgstr "Destinataires du message (emails)"
+msgstr "Destinataires du message (e-mails)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__references
@@ -6003,8 +6057,8 @@ msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
 msgstr ""
-"Type de message : Email pour les courriers électroniques, Notification pour "
-"les messages du système, Commentaire pour les autres messages tels que les "
+"Type de message : E-mail pour les courriers électroniques, Notification pour"
+" les messages du système, Commentaire pour les autres messages tels que les "
 "réponses des utilisateurs"
 
 #. module: mail
@@ -6075,12 +6129,12 @@ msgstr "Métadonnées pour les pièces jointes vocales"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_missing
 msgid "Missing email"
-msgstr "Email manquant"
+msgstr "E-mail manquant"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_email_missing
 msgid "Missing email address"
-msgstr "Adresse email manquante"
+msgstr "Adresse e-mail manquante"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_from_missing
@@ -6197,6 +6251,8 @@ msgstr "Mes modèles"
 #: model:ir.model.fields,field_description:mail.field_mail_followers__name
 #: model:ir.model.fields,field_description:mail.field_mail_guest__name
 #: model:ir.model.fields,field_description:mail.field_mail_template__name
+#: model:ir.model.fields,field_description:mail.field_res_partner__name
+#: model:ir.model.fields,field_description:mail.field_res_users__name
 msgid "Name"
 msgstr "Nom"
 
@@ -6488,7 +6544,7 @@ msgstr "Aucun"
 #: model:ir.model.fields,field_description:mail.field_res_partner__email_normalized
 #: model:ir.model.fields,field_description:mail.field_res_users__email_normalized
 msgid "Normalized Email"
-msgstr "Email normalisé"
+msgstr "E-mail normalisé"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__fetchmail_server__state__draft
@@ -6533,7 +6589,7 @@ msgstr "Notifications"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_notification
 msgid "Notification Email"
-msgstr "Notifications par email"
+msgstr "Notifications par e-mail"
 
 #. module: mail
 #. odoo-javascript
@@ -6850,6 +6906,14 @@ msgid "Open Form View"
 msgstr "Ouvrir la vue formulaire"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#, python-format
+msgid "Open Link"
+msgstr "Ouvrir le lien"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_tree
 msgid "Open Owner"
 msgstr "Ouvrir le propriétaire"
@@ -6919,7 +6983,7 @@ msgid ""
 "object.partner_id.lang }}."
 msgstr ""
 "Langue de traduction facultative (code ISO) à sélectionner lors de l'envoi "
-"d'un email. Si aucune langue n'est définie, la version anglaise sera "
+"d'un e-mail. Si aucune langue n'est définie, la version anglaise sera "
 "utilisée. Il doit généralement s'agir d'une expression d'espace réservé qui "
 "fournit le langage approprié, par ex. {{ object.partner_id.lang }}."
 
@@ -6931,7 +6995,7 @@ msgid ""
 " This has an impact on the generated message-id."
 msgstr ""
 "Discussion originale : les réponses vont au fil de discussion du document original. \n"
-" Une autre adresse email : les réponses vont à l'adresse email mentionnée dans l'ID de suivi du message au lieu du fil de discussion du document original. \n"
+" Une autre adresse e-mail : les réponses vont à l'adresse e-mail mentionnée dans l'ID de suivi du message au lieu du fil de discussion du document original. \n"
 " Ceci a un impact sur l'ID du message généré."
 
 #. module: mail
@@ -6959,7 +7023,7 @@ msgstr "Sortant"
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__email_outgoing
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Outgoing Email"
-msgstr "Email sortant"
+msgstr "E-mail sortant"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -7059,8 +7123,8 @@ msgid ""
 "(parent_model) and task (model))"
 msgstr ""
 "Modèle parent de l'alias. Le modèle possédant la référence de l'alias n'est "
-"pas nécessairement le modèle donné par alias_model_id (exemple : project "
-"(parent_model) et task (model))"
+"pas nécessairement le modèle donné par alias_model_id (exemple : projet "
+"(parent_model) et tâche (model))"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
@@ -7282,7 +7346,7 @@ msgid ""
 "- Handle in Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
 "Politique de gestion des notifications de messagerie:\n"
-"- Gérer par Emails: Les notifications sont envoyées à votre adresse email\n"
+"- Gérer par E-mails: Les notifications sont envoyées à votre adresse e-mail\n"
 "- Gérer dans Odoo: Les notifications apparaitront dans votre boîte de réception Odoo"
 
 #. module: mail
@@ -7430,10 +7494,10 @@ msgid ""
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
 msgstr ""
-"Traiter chaque email entrant comme une partie de conversation correspondant "
-"à ce type de documents. Cela créera un nouveau document pour chaque nouvelle"
-" conversation, or attachera les emails à une conversation (document) "
-"existante."
+"Traiter chaque e-mail entrant comme une partie de conversation correspondant"
+" à ce type de documents. Cela créera un nouveau document pour chaque "
+"nouvelle conversation, or attachera les e-mails à une conversation "
+"(document) existante."
 
 #. module: mail
 #. odoo-javascript
@@ -7737,8 +7801,7 @@ msgstr "Champ de relation"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.js:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/link_preview.xml:0
@@ -7760,7 +7823,7 @@ msgstr "Supprimer des abonnés"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist_remove
 msgid "Remove email from blacklist wizard"
-msgstr "Assistant pour supprimer l'email de la liste noire"
+msgstr "Assistant pour supprimer l'e-mail de la liste noire"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -7852,7 +7915,7 @@ msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
 msgstr ""
-"Adresse email de réponse. Définir le champ reply_to contourne la création "
+"Adresse e-mail de réponse. Définir le champ reply_to contourne la création "
 "automatique de fil."
 
 #. module: mail
@@ -7894,7 +7957,7 @@ msgstr "Renvoyer"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_partner_action
 msgid "Resend Email"
-msgstr "Renvoyer l'email"
+msgstr "Renvoyer l'e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend_wizard_id
@@ -8047,6 +8110,13 @@ msgstr "Enregistrer le modèle"
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Save as a new template"
 msgstr "Enregistrer comme un nouveau modèle"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+#, python-format
+msgid "Save editing"
+msgstr "Sauvegarder les modifications"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_gif_favorite
@@ -8257,7 +8327,7 @@ msgstr "Recherche: %s"
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid "Security Update: Email Changed"
-msgstr "Mise à jour de sécurité : Email modifié"
+msgstr "Mise à jour de sécurité : E-mail modifié"
 
 #. module: mail
 #. odoo-python
@@ -8326,13 +8396,13 @@ msgstr "Envoyer & fermer"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__mail_post
 msgid "Send Email"
-msgstr "Envoyer un email"
+msgstr "Envoyer un e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__mail_post_method
 #: model:ir.model.fields,field_description:mail.field_ir_cron__mail_post_method
 msgid "Send Email As"
-msgstr "Envoyer un email comme"
+msgstr "Envoyer un e-mail comme"
 
 #. module: mail
 #. odoo-python
@@ -8365,17 +8435,17 @@ msgstr "Envoyer un message aux abonnés..."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Send and receive emails through your Gmail account."
-msgstr "Envoyer et recevoir des emails via votre compte Gmail."
+msgstr "Envoyer et recevoir des e-mails via votre compte Gmail."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Send and receive emails through your Outlook account."
-msgstr "Envoyer et recevoir des emails via votre compte Outlook."
+msgstr "Envoyer et recevoir des e-mails via votre compte Outlook."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
 msgid "Send email"
-msgstr "Envoyer un email"
+msgstr "Envoyer un e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__force_send
@@ -8833,7 +8903,8 @@ msgstr "Arrêter de répondre"
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
 msgid "Store email and replies in the chatter of each record"
 msgstr ""
-"Sauvegarder l'email et les réponses dans le chatter de chaque enregistrement"
+"Sauvegarder l'e-mail et les réponses dans le chatter de chaque "
+"enregistrement"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_link_preview
@@ -9205,7 +9276,7 @@ msgstr "La durée des messages vocaux est limitée à 1 minute."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
-msgstr "L'email envoyé à"
+msgstr "L'e-mail envoyé à"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_partner_device_endpoint_unique
@@ -9220,7 +9291,7 @@ msgid ""
 "The following email templates could not be reset because their related source files could not be found:\n"
 "- %s"
 msgstr ""
-"Les modèles d'email suivants ne pouvaient pas être réinitialisés, parce leurs fichiers sources liés sont introuvables :\n"
+"Les modèles d'e-mail suivants ne pouvaient pas être réinitialisés, parce leurs fichiers sources liés sont introuvables :\n"
 "- %s"
 
 #. module: mail
@@ -9270,8 +9341,8 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Le modèle (type de document Odoo) auquel correspond cet alias. Chaque email "
-"entrant ne correspondant pas à un enregistrement existant entraînera la "
+"Le modèle (type de document Odoo) auquel correspond cet alias. Chaque e-mail"
+" entrant ne correspondant pas à un enregistrement existant entraînera la "
 "création d'un nouvel enregistrement de ce modèle (par ex. une tâche d'un "
 "projet)"
 
@@ -9283,7 +9354,7 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Le nom de l'alias, par exemple 'carrières' pour récupérer les emails de "
+"Le nom de l'alias, par exemple 'carrières' pour récupérer les e-mails de "
 "<carrières@example.odoo.com>"
 
 #. module: mail
@@ -9303,7 +9374,7 @@ msgstr "Le plan \"%(plan_name)s\" a été lancé"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
 msgid "The queue manager will send the email after the date"
-msgstr "Le gestionnaire de file d'attente enverra l'email après la date"
+msgstr "Le gestionnaire de file d'attente enverra l'e-mail après la date"
 
 #. module: mail
 #. odoo-python
@@ -9349,7 +9420,7 @@ msgstr "Le modèle appartient à cet utilisateur"
 #: model:ir.model.fields,help:mail.field_mail_mail__preview
 #: model:ir.model.fields,help:mail.field_mail_message__preview
 msgid "The text-only beginning of the body used as email preview."
-msgstr "Le début du texte du corps utilisé comme un aperçu de l'email."
+msgstr "Le début du texte du corps utilisé comme un aperçu de l'e-mail."
 
 #. module: mail
 #. odoo-javascript
@@ -9385,6 +9456,13 @@ msgstr "Cette action est impossible sur des modèles transitoires."
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/views/web/activity/activity_renderer.xml:0
+#, python-format
+msgid "This action will send an email."
+msgstr "Cette action enverra un e-mail"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
 #, python-format
 msgid "This channel doesn't have any attachments."
@@ -9415,8 +9493,8 @@ msgstr "Cette conversation n'a pas de messages épinglés."
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
-"Cette adresse email est sur liste noire. Cliquez pour l'enlever de la liste "
-"noire."
+"Cette adresse e-mail est sur liste noire. Cliquez pour l'enlever de la liste"
+" noire."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
@@ -9437,8 +9515,8 @@ msgid ""
 "This field is used to search on email address as the primary email field can"
 " contain more than strictly an email address."
 msgstr ""
-"Ce champ est utilisé pour rechercher un email étant donné que le champ email"
-" primaire peut contenir plus que strictement un email. "
+"Ce champ est utilisé pour rechercher un e-mail étant donné que le champ "
+"e-mail primaire peut contenir plus que strictement un e-mail. "
 
 #. module: mail
 #. odoo-python
@@ -9456,7 +9534,7 @@ msgid ""
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
 msgstr ""
-"Cette option supprime définitivement quelconque trace de l'email après son "
+"Cette option supprime définitivement quelconque trace de l'e-mail après son "
 "envoi, y compris du Menu technique dans les Paramètres, afin de préserver de"
 " l'espace de stockage dans votre base de données Odoo."
 
@@ -9527,7 +9605,7 @@ msgstr "Vers"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_to
 msgid "To (Emails)"
-msgstr "À (emails)"
+msgstr "À (e-mails)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__recipient_ids
@@ -9729,7 +9807,7 @@ msgstr ""
 "Type d'action serveur. Les valeurs suivantes sont disponibles :\n"
 "- 'Mettre à jour un enregistrement' : mettre à jours les valeurs d'un enregistrement\n"
 "- 'Créer une activité' : créer une activité (Discussion)\n"
-"- 'Envoyer un email' : publier un message, une note ou envoyer un email (Discussion)\n"
+"- 'Envoyer un e-mail' : publier un message, une note ou envoyer un e-mail (Discussion)\n"
 "- 'Envoyer un SMS' : envoyer des SMS, les enregistrer dans les documents (SMS)\n"
 "- 'Ajouter/supprimer des abonnés' : ajouter ou supprimer des abonnés sur un enregistrement (Discussion)\n"
 "- 'Créer un enregistrement' : créer un nouvel enregistrement avec de nouvelles valeurs\n"
@@ -9780,7 +9858,7 @@ msgstr "Impossible de se connecter au serveur SMTP"
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
-"Impossible de publier un message, veuillez configurer l'adresse email de "
+"Impossible de publier un message, veuillez configurer l'adresse e-mail de "
 "l'expéditeur."
 
 #. module: mail
@@ -9789,7 +9867,7 @@ msgstr ""
 #, python-format
 msgid "Unable to send message, please configure the sender's email address."
 msgstr ""
-"Impossible d'envoyer le message, veuillez configurer l'adresse email de "
+"Impossible d'envoyer le message, veuillez configurer l'adresse e-mail de "
 "l'expéditeur."
 
 #. module: mail
@@ -10023,7 +10101,7 @@ msgstr "Utiliser un serveur Gmail"
 #, python-format
 msgid "Use a local script to fetch your emails and create new records."
 msgstr ""
-"Utiliser un script local pour récupérer vos emails et créer de nouveaux "
+"Utiliser un script local pour récupérer vos e-mails et créer de nouveaux "
 "enregistrements."
 
 #. module: mail
@@ -10082,7 +10160,7 @@ msgid ""
 "'user_notification': generated for a specific recipient"
 msgstr ""
 "Utilisé pour catégoriser les générateurs de messages\n"
-"'email' : généré par un email entrant, par ex. mailgateway\n"
+"'e-mail' : généré par un e-mail entrant, par ex. mailgateway\n"
 "'comment' : généré par la contribution d'un utilisateur, par ex. via discussion ou le compositeur\n"
 "'email_outgoing' : généré par un mailing\n"
 "'notification' : généré par un système, par ex. messages de suivi\n"
@@ -10287,13 +10365,6 @@ msgstr "Type de vue"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
-#, python-format
-msgid "View image"
-msgstr "Visualiser l'image"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories.xml:0
 #, python-format
 msgid "View or join channels"
@@ -10439,7 +10510,7 @@ msgid ""
 "attached to each processed message. This will usually double the size of "
 "your message database."
 msgstr ""
-"Une copie originale complète de chaque email doit être conservée comme "
+"Une copie originale complète de chaque e-mail doit être conservée comme "
 "référence et attachée à chaque message traité. Cela engendrera le doublement"
 " de la taille de votre base de données des messages."
 
@@ -10450,7 +10521,7 @@ msgid ""
 "will be stripped of any attachments before being processed"
 msgstr ""
 "Si les pièces jointes doivent être ou non téléchargées. Si cela n'est pas "
-"activé, les emails entrants seront détachés de leurs pièces jointes avant "
+"activé, les e-mails entrants seront détachés de leurs pièces jointes avant "
 "d'être traités."
 
 #. module: mail
@@ -10674,7 +10745,7 @@ msgid ""
 "You do not have the access right to unblacklist emails. Please contact your "
 "administrator."
 msgstr ""
-"Vous n'avez pas les droits d'accès aux emails sur liste noire. Veuillez "
+"Vous n'avez pas les droits d'accès aux e-mails sur liste noire. Veuillez "
 "contacter votre administrateur."
 
 #. module: mail
@@ -10702,7 +10773,7 @@ msgid ""
 "You may attach files to this template, to be added to all emails created "
 "from this template"
 msgstr ""
-"Vous pouvez joindre des fichiers à ce modèle, à ajouter à tous les emails "
+"Vous pouvez joindre des fichiers à ce modèle, à ajouter à tous les e-mails "
 "créés sur ce modèle"
 
 #. module: mail
@@ -10776,7 +10847,7 @@ msgstr "Votre"
 msgid ""
 "Your account email has been changed from %(old_email)s to %(new_email)s."
 msgstr ""
-"L'adresse email de votre compte a été changée de %(old_email)s en "
+"L'adresse e-mail de votre compte a été changée de %(old_email)s en "
 "%(new_email)s."
 
 #. module: mail
@@ -10822,6 +10893,13 @@ msgid "Your name"
 msgstr "Votre nom"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/recipient_list.js:0
+#, python-format
+msgid "[%(name)s] (no email address)"
+msgstr "[%(name)s] (pas d'adresse e-mail)"
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
@@ -10848,7 +10926,7 @@ msgstr "alias %(name)s: %(error)s"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "attachment(s) of this email."
-msgstr "pièce(s) jointe(s) de cet email."
+msgstr "pièce(s) jointe(s) de cet e-mail."
 
 #. module: mail
 #. odoo-javascript
@@ -11014,7 +11092,7 @@ msgstr "par ex. \"Parcourir l'offre et discuter des détails\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "e.g. \"Welcome email\""
-msgstr "par ex. \"Email de bienvenue\""
+msgstr "par ex. \"E-mail de bienvenue\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -11027,12 +11105,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"bounce\""
-msgstr ""
+msgstr "par ex. \"bounce\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"catchall\""
-msgstr ""
+msgstr "par ex. \"catchall\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -11042,7 +11120,7 @@ msgstr "par exemple : \"mycompany.com\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"notifications\""
-msgstr ""
+msgstr "par ex. \"notifications\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -11223,6 +11301,13 @@ msgstr "modèle %s n'accepte pas la création de documents"
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__months
 msgid "months"
 msgstr "mois"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+#, python-format
+msgid "ms"
+msgstr "Mme"
 
 #. module: mail
 #. odoo-javascript
@@ -11448,6 +11533,13 @@ msgstr "votre alias"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "{{ object.partner_id.lang }}"
 msgstr "{{ object.partner_id.lang }}"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/autoresize_input.xml:0
+#, python-format
+msgid "{{ props.placeholder }}"
+msgstr "{{ props.placeholder }}"
 
 #. module: mail
 #. odoo-python

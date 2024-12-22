@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:10+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -470,11 +470,11 @@ msgstr "<i class=\"fa fa-comments\"/> ความคิดเห็น ("
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<i class=\"fa fa-desktop me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">Fullscreen</span>"
+"<i class=\"fa fa-desktop me-xl-2 my-1\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">Fullscreen</span>"
 msgstr ""
-"<i class=\"fa fa-desktop me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">เต็มจอ</span>"
+"<i class=\"fa fa-desktop me-xl-2 my-1\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">เต็มจอ</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -652,11 +652,11 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<i class=\"fa fa-share-alt me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">Share</span>"
+"<i class=\"fa fa-share-alt me-xl-2 my-1\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">Share</span>"
 msgstr ""
-"<i class=\"fa fa-share-alt me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">แชร์</span>"
+"<i class=\"fa fa-share-alt me-xl-2 my-1\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">แชร์</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -1075,11 +1075,8 @@ msgstr "ผลไม้"
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid ""
-"A good course has a structure. Pick a name for your first section and click "
-"<b>Save</b> to create it."
-msgstr ""
-"คอร์สที่ดีต้องมีโครงสร้าง เลือกชื่อสำหรับส่วนแรกของคุณแล้วคลิก<b>บันทึก</b> "
-"เพื่อสร้าง"
+"A good course has a structure. Pick a name for your first <b>Section</b>."
+msgstr "หลักสูตรที่ดีต้องมีโครงสร้าง เลือกชื่อสำหรับ<b>ส่วน</b>แรกของคุณ"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_4
@@ -1275,7 +1272,6 @@ msgstr "เพิ่มความคิดเห็น"
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #, python-format
 msgid "Add Content"
@@ -1335,7 +1331,7 @@ msgstr "เพิ่มผู้ติดต่อ..."
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 msgid "Add quiz"
-msgstr ""
+msgstr "เพิ่มแบบทดสอบ"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -1656,7 +1652,7 @@ msgstr "กลับ"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid "Back to course"
-msgstr ""
+msgstr "กลับสู่หลักสูตร"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_default_background_image_url
@@ -1921,6 +1917,13 @@ msgid "Clear filters"
 msgstr "ล้างตัวกรอง"
 
 #. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid "Click <b>Save</b> to create it."
+msgstr "คลิก<b>บันทึก</b>เพื่อสร้าง"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
 msgid "Click here to get started"
 msgstr "คลิกที่นี่เพื่อเริ่มต้น"
@@ -1947,8 +1950,8 @@ msgstr "คลิกปุ่ม \"แก้ไข\" ที่มุมด้า
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
-msgid "Click on the <b>Create</b> button to create your first course."
-msgstr "คลิกที่ปุ่ม <b>สร้าง</b> เพื่อสร้างคอร์สแรกของคุณ"
+msgid "Click on the <b>Save</b> button to create your first course."
+msgstr "คลิกที่ปุ่ม<b>บันทึก</b>เพื่อสร้างหลักสูตรแรกของคุณ"
 
 #. module: website_slides
 #. odoo-javascript
@@ -2935,7 +2938,7 @@ msgstr "ฝังมุมมอง"
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "Embed code"
-msgstr ""
+msgstr "รหัสที่ถูกฝัง"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
@@ -3041,7 +3044,7 @@ msgstr "แบบทดสอบ"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid "Exit Fullscreen"
-msgstr ""
+msgstr "ออกจากโหมดเต็มหน้าจอ"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_code_external
@@ -3297,6 +3300,7 @@ msgstr "คีย์ Google Doc"
 
 #. module: website_slides
 #. odoo-python
+#: code:addons/website_slides/models/slide_slide.py:0
 #: code:addons/website_slides/models/slide_slide.py:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__video_source_type__google_drive
 #, python-format
@@ -4643,6 +4647,13 @@ msgid "Ongoing Courses"
 msgstr "หลักสูตรต่อเนื่อง"
 
 #. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/controllers/mail.py:0
+#, python-format
+msgid "Only a single review can be posted per course."
+msgstr "สามารถโพสต์บทวิจารณ์ได้เพียงรายการเดียวต่อหลักสูตร"
+
+#. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__public
 msgid "Open"
 msgstr "เปิด"
@@ -4654,12 +4665,6 @@ msgstr "เปิด"
 #, python-format
 msgid "Operation not supported"
 msgstr "ไม่รองรับการทำงาน"
-
-#. module: website_slides
-#: code:addons/website_slides/controllers/mail.py:0
-#, python-format
-msgid "Only a single review can be posted per course."
-msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__lang
@@ -4856,7 +4861,7 @@ msgstr "ความคืบหน้า"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_main
 #, python-format
 msgid "Progress bar"
-msgstr ""
+msgstr "แถบความคืบหน้า"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promoted_slide_id
@@ -6412,6 +6417,11 @@ msgid "Use Course Groups to classify and organize your Courses."
 msgstr "ใช้กลุ่มหลักสูตรเพื่อจัดประเภทและจัดระเบียบหลักสูตรของคุณ"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
+msgid "Use template"
+msgstr "ใช้เทมเพลต"
+
+#. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
 msgid "Used to categorize and filter displayed channels/courses"
 msgstr "ใช้เพื่อจัดหมวดหมู่และตัวกรองสำหรับช่อง/หลักสูตรที่แสดง"
@@ -6503,6 +6513,7 @@ msgstr "ยอดเข้าชม •"
 
 #. module: website_slides
 #. odoo-python
+#: code:addons/website_slides/models/slide_slide.py:0
 #: code:addons/website_slides/models/slide_slide.py:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__video_source_type__vimeo
 #, python-format
@@ -7176,6 +7187,13 @@ msgstr "เช่น \"การแนะนำ\""
 #, python-format
 msgid "e.g. \"Which animal cannot fly?\""
 msgstr "เช่น “สัตว์ชนิดใดที่บินไม่ได้?”"
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "e.g. \"{{placeholder || \"another animal\"}}\""
+msgstr "เช่น \"{{placeholder || \"another animal\"}}\""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add

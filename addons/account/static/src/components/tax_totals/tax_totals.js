@@ -15,6 +15,7 @@ import {
     useRef,
     useState,
 } from "@odoo/owl";
+import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";
 
 /**
  A line of some TaxTotalsComponent, giving the values of a tax group.
@@ -34,6 +35,7 @@ class TaxGroupComponent extends Component {
         onWillUpdateProps(() => {
             this.setState("readonly");
         });
+        useNumpadDecimal();
     }
 
     //--------------------------------------------------------------------------
@@ -150,6 +152,9 @@ export class TaxTotalsComponent extends Component {
 
     formatData(props) {
         let totals = JSON.parse(JSON.stringify(toRaw(props.record.data[this.props.name])));
+        if (!totals) {
+            return;
+        }
         const currencyFmtOpts = { currencyId: props.record.data.currency_id && props.record.data.currency_id[0] };
 
         let amount_untaxed = totals.amount_untaxed;

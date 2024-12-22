@@ -16,7 +16,7 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Martin Trigaux, 2023
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,6 +65,8 @@ msgstr "<span class=\"o_stat_value\">%</span>"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
 msgstr ""
+"<span invisible=\"on_time_rate &gt;= 0\">Ei tietoja oikea-aikaisesta "
+"toimituksesta</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -74,7 +76,7 @@ msgstr "<span> päivää</span>"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<span>Forecasted: </span>"
-msgstr ""
+msgstr "<span>Ennustettu: </span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
@@ -159,7 +161,7 @@ msgstr "Vastaavaa kuittia ei löydy."
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_ids
 msgid "Created Purchase Order Lines"
-msgstr ""
+msgstr "Luotu ostotilausrivit"
 
 #. module: purchase_stock
 #. odoo-python
@@ -225,7 +227,7 @@ msgstr "Näyttönimi"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_dest_ids
 msgid "Downstream moves alt"
-msgstr ""
+msgstr "Alaspäin kulkeutuva vaihtoehto"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__dest_address_id
@@ -451,6 +453,9 @@ msgid ""
 " number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
+"Viimeisten x päivän aikana; ajallaan vastaanotettujen tuotteiden määrä "
+"jaettuna tilattujen tuotteiden määrällä. Muuttuja x on joko "
+"järjestelmäparametri purchase_stock.on_time_delivery_days tai oletusarvo 365"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
@@ -648,7 +653,7 @@ msgstr "Näytä Aseta toimittajaksi -painike"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__show_vendor
 msgid "Show Vendor"
-msgstr ""
+msgstr "Näytä myyjä"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__show_supplier

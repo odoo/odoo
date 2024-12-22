@@ -39,8 +39,6 @@ def uninstall_hook(env):
 
 
 def post_init_hook(env):
-    env['ir.module.module'].update_theme_images()
-
     if request:
         env = env(context=request.default_context())
         request.website_routing = env['website'].get_current_website().id

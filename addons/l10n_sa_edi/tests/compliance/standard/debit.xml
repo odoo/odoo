@@ -71,7 +71,7 @@
                 </cac:Country>
                 </cac:RegistrationAddress>
                 <cac:TaxScheme>
-                    <cbc:ID>VAT</cbc:ID>
+                    <cbc:ID>NOT_EU_VAT</cbc:ID>
                 </cac:TaxScheme>
             </cac:PartyTaxScheme>
             <cac:PartyLegalEntity>
@@ -102,9 +102,6 @@
     </cac:AccountingSupplierParty>
     <cac:AccountingCustomerParty>
         <cac:Party>
-            <cac:PartyIdentification>
-                <cbc:ID schemeID="CRN">353535353535353</cbc:ID>
-            </cac:PartyIdentification>
             <cac:PartyName>
                 <cbc:Name>Chichi Lboukla</cbc:Name>
             </cac:PartyName>
@@ -142,7 +139,7 @@
             <cac:Contact>
                 <cbc:ID>550</cbc:ID>
                 <cbc:Name>Chichi Lboukla</cbc:Name>
-                <cbc:Telephone>(870)-931-0505</cbc:Telephone>
+                <cbc:Telephone>+18709310505</cbc:Telephone>
                 <cbc:ElectronicMail>azure.Interior24@example.com</cbc:ElectronicMail>
             </cac:Contact>
         </cac:Party>
@@ -179,6 +176,7 @@
         <cbc:LineExtensionAmount currencyID="SAR">15.80</cbc:LineExtensionAmount>
         <cbc:TaxExclusiveAmount currencyID="SAR">15.80</cbc:TaxExclusiveAmount>
         <cbc:TaxInclusiveAmount currencyID="SAR">18.17</cbc:TaxInclusiveAmount>
+        <cbc:AllowanceTotalAmount currencyID="SAR">0.00</cbc:AllowanceTotalAmount>
         <cbc:PrepaidAmount currencyID="SAR">0.00</cbc:PrepaidAmount>
         <cbc:PayableAmount currencyID="SAR">18.17</cbc:PayableAmount>
     </cac:LegalMonetaryTotal>
@@ -189,18 +187,6 @@
         <cac:TaxTotal>
             <cbc:TaxAmount currencyID="SAR">2.37</cbc:TaxAmount>
             <cbc:RoundingAmount currencyID="SAR">18.17</cbc:RoundingAmount>
-            <cac:TaxSubtotal>
-                <cbc:TaxableAmount currencyID="SAR">15.80</cbc:TaxableAmount>
-                <cbc:TaxAmount currencyID="SAR">2.37</cbc:TaxAmount>
-                <cbc:Percent>15.0</cbc:Percent>
-                <cac:TaxCategory>
-                <cbc:ID>S</cbc:ID>
-                <cbc:Percent>15.0</cbc:Percent>
-                <cac:TaxScheme>
-                    <cbc:ID>VAT</cbc:ID>
-                </cac:TaxScheme>
-                </cac:TaxCategory>
-            </cac:TaxSubtotal>
         </cac:TaxTotal>
         <cac:Item>
             <cbc:Description>[P0002] Product B</cbc:Description>

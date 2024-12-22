@@ -226,6 +226,26 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             self.assertEqual(new_multiple_move_1.name, 'AJ/2016/01/0001')
             move_form.date = fields.Date.to_date('2016-01-10')
 
+    def test_sequence_draft_first_of_period(self):
+        """
+        | Step | Move | Action      | Date       | Name           |
+        | ---- | ---- | ----------- | ---------- | -----------    |
+        | 1    | `A`  | Add         | 2023-02-01 | `2023/02/0001` |
+        | 2    | `B`  | Add         | 2023-02-02 | `/`            |
+        | 3    | `B`  | Post        | 2023-02-02 | `2023/02/0002` |
+        | 4    | `A`  | Cancel      | 2023-02-01 | `2023/02/0001` | -> Assert
+        """
+        move_a = self.test_move.copy({'date': '2023-02-01'})
+        self.assertEqual(move_a.name, 'MISC/2023/02/0001')
+
+        move_b = self.test_move.copy({'date': '2023-02-02'})
+        self.assertEqual(move_b.name, '/')
+
+        move_b.action_post()
+        self.assertEqual(move_b.name, 'MISC/2023/02/0002')
+
+        move_a.button_cancel()
+        self.assertEqual(move_a.name, 'MISC/2023/02/0001')
 
     def test_journal_sequence(self):
         self.assertEqual(self.test_move.name, 'MISC/2016/01/0001')
@@ -618,6 +638,26 @@ class TestSequenceMixin(TestSequenceMixinCommon):
 
         for move in payments.move_id:
             self.assertRecordValues(move.line_ids, [{'move_name': move.name}] * len(move.line_ids))
+
+    def test_resequence_payment_and_non_payment_without_payment_sequence(self):
+        """Resequence wizard could be open for different move type if the payment sequence is set to False on the journal."""
+        journal = self.company_data['default_journal_bank'].copy({'payment_sequence': False})
+        bsl = self.env['account.bank.statement.line'].create({'name': 'test', 'amount': 100, 'journal_id': journal.id})
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'partner_id': self.partner_a.id,
+            'amount': 100,
+            'journal_id': journal.id,
+        })
+
+        payment.action_post()
+        wizard = Form(self.env['account.resequence.wizard'].with_context(
+            active_ids=(payment.move_id + bsl.move_id).ids,
+            active_model='account.move'),
+        )
+
+        wizard.save().resequence()
+        self.assertTrue(wizard)
 
 
 @tagged('post_install', '-at_install')

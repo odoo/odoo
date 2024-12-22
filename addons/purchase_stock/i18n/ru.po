@@ -3,11 +3,12 @@
 # 	* purchase_stock
 # 
 # Translators:
-# Сергей Шебанин <sergey@shebanin.ru>, 2023
 # alenafairy, 2023
 # Martin Trigaux, 2023
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2023
 # Wil Odoo, 2024
+# Сергей Шебанин <sergey@shebanin.ru>, 2024
+# Nadia Martynova, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Nadia Martynova, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -152,7 +153,7 @@ msgstr "Соответствующая квитанция не найдена."
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_ids
 msgid "Created Purchase Order Lines"
-msgstr "Создание строк заказов на поставку"
+msgstr "Создание позиций заказов на поставку"
 
 #. module: purchase_stock
 #. odoo-python
@@ -368,7 +369,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr "Правило минимального запаса"
+msgstr "Правило минимального остатка"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -520,7 +521,7 @@ msgstr "Позиции заказа"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order
 msgid "Purchase Order"
-msgstr "Заказа на покупку"
+msgstr "Заказ на покупку"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order_line
@@ -569,7 +570,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receipt"
-msgstr "Квитанция"
+msgstr "Поступления"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__receipt_status
@@ -608,7 +609,7 @@ msgstr "Запросите поставщиков для доставки ваш
 #: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Requests for quotation"
-msgstr "Запросы на котировки"
+msgstr "Запрос на коммерческое предложение"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
@@ -629,7 +630,9 @@ msgstr "Маршруты"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Schedule request for quotations earlier to avoid delays"
-msgstr "Заранее планируйте запрос котировок, чтобы избежать задержек"
+msgstr ""
+"Заранее планируйте отправку запросов на коммерческое предложение, чтобы "
+"избежать задержек"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
@@ -660,7 +663,7 @@ msgstr "Движение запасов"
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_line__qty_received_method__stock_moves
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
 msgid "Stock Moves"
-msgstr "Перемещения запасов"
+msgstr "Движения по складам"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_forecasted_product_product
@@ -769,11 +772,12 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
-"Это добавляет маршрут прямой поставки, применяемый к ТМЦ для доставки "
-"поставщиками вашим клиентам. ТМЦ на прямую поставку будет генерировать "
-"запрос на закупку для предложения после подтверждения заказа на продажу. Это"
-" поток по требованию. Запрашиваемый адрес доставки будет адресом доставки "
-"клиента, а не вашим складом."
+"Это добавляет маршрут прямой поставки (dropshipping), применяемый к товарам "
+"для доставки поставщиками напрямую к вашим клиентам. Заказ на прямую "
+"поставку (поставщик - клиент) создаст запрос на закупку у поставщиков после "
+"подтверждения заказа на продажу. Работа начинается после запроса клиента. "
+"Запрашиваемый адрес доставки будет адресом доставки клиента, а не вашим "
+"складом."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id

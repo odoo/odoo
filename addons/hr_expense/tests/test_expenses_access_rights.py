@@ -24,8 +24,32 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
                 'employee_id': expense_employee_2.id,
                 'product_id': self.product_a.id,
                 'quantity': 1,
-                'price_unit': 1,
             })
+
+        expense = self.env['hr.expense'].with_user(self.expense_user_employee).create({
+            'name': 'expense_1',
+            'date': '2016-01-01',
+            'product_id': self.product_a.id,
+            'quantity': 10.0,
+            'employee_id': self.expense_employee.id,
+        })
+
+        # The expense employee shouldn't be able to bypass the submit state.
+        with self.assertRaises(UserError):
+            expense.with_user(self.expense_user_employee).state = 'approve'
+
+        # Employee can report & submit their expense
+        expense_sheet = self.env['hr.expense.sheet'].with_user(self.expense_user_employee).create({
+            'name': 'expense sheet for employee',
+            'expense_line_ids': expense,
+            'payment_mode': expense.payment_mode,
+        })
+        expense_sheet.with_user(self.expense_user_employee).action_submit_sheet()
+        self.assertEqual(expense.state, 'submitted')
+
+        # Employee can also revert from the submitted state to a draft state
+        expense_sheet.with_user(self.expense_user_employee).action_reset_approval_expense_sheets()
+        self.assertEqual(expense.state, 'reported')
 
     def test_expense_sheet_access_rights(self):
         # The expense employee is able to a create an expense sheet.
@@ -40,7 +64,7 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
                 'name': 'expense_1',
                 'date': '2016-01-01',
                 'product_id': self.product_a.id,
-                'price_unit': 1000.0,
+                'quantity': 1000.0,
                 'employee_id': self.expense_employee.id,
             })],
         })
@@ -55,13 +79,19 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
                 'name': 'expense_1',
                 'date': '2016-01-01',
                 'product_id': self.product_a.id,
-                'price_unit': 1000.0,
+                'quantity': 1000.0,
                 'employee_id': self.expense_employee.id,
             })],
         })
         sheets = expense_sheet_approve | expense_sheet_refuse
 
         self.assertRecordValues(sheets, [{'state': 'draft'}, {'state': 'draft'}])
+
+        # The expense employee shouldn't be able to bypass the submit state.
+        with self.assertRaises(UserError):
+            expense_sheet_approve.with_user(self.expense_user_employee).state = 'approve'
+        with self.assertRaises(UserError):
+            expense_sheet_approve.with_user(self.expense_user_employee).approval_state = 'approve'
 
         # The expense employee is able to submit the expense sheet.
         sheets.with_user(self.expense_user_employee).action_submit_sheet()
@@ -80,6 +110,10 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
         expense_sheet_refuse.with_user(self.expense_user_manager).action_refuse_expense_sheets()
         expense_sheet_refuse.with_user(self.expense_user_manager)._do_refuse('failed')
         self.assertRecordValues(sheets, [{'state': 'approve'}, {'state': 'cancel'}])
+
+        # The expense employee shouldn't be able to modify an approved expense.
+        with self.assertRaises(UserError):
+            expense_sheet_approve.expense_line_ids[0].with_user(self.expense_user_employee).total_amount = 1000.0
 
         # An expense manager is not able to create the journal entry.
         with self.assertRaises(AccessError):
@@ -112,7 +146,7 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
                     'name': 'expense_1',
                     'date': '2016-01-01',
                     'product_id': self.product_a.id,
-                    'price_unit': 1000.0,
+                    'quantity': 1000.0,
                     'employee_id': expense_employee.id,
                 }),
             ],

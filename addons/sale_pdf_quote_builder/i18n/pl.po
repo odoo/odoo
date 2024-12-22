@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Damian Ratus, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Damian Ratus, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +30,12 @@ msgstr ""
 "'Zamówienie - %s' % (object.name)"
 
 #. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "<i class=\"fa fa-arrow-right\"/> Download examples"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on
 msgid ""
 "Allows you to share the document with your customers within a sale.\n"
@@ -37,7 +44,8 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sales order between the header pages and the quote table. "
 msgstr ""
 
 #. module: sale_pdf_quote_builder
@@ -70,11 +78,27 @@ msgid "Inside quote"
 msgstr ""
 
 #. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/utils.py:0
+#, python-format
+msgid ""
+"It seems that we're not able to process this pdf inside a quotation. It is "
+"either encrypted, or encoded in a format we do not support."
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "Learn more from the documentation."
+msgstr ""
+
+#. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
 "footer pages to your quote."
 msgstr ""
+"Uatrakcyjnij swoją ofertę, dodając do niej strony nagłówka, opisy produktów "
+"i strony stopki."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -91,12 +115,12 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 msgid "PDF Quote builder"
-msgstr ""
+msgstr "Kreator ofert PDF"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_product_document
 msgid "Product Document"
-msgstr ""
+msgstr "Product Document"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -114,7 +138,8 @@ msgid ""
 "Provide header pages and footer pages to compose an attractive quotation\n"
 "                            with more information about your company, your products and your services.\n"
 "                            The pdf of your quotes will be built by putting together header pages,\n"
-"                            product descriptions, details of the quote and then the footer pages."
+"                            product descriptions, details of the quote and then the footer pages.\n"
+"                            If empty, it will use those define in the company settings.<br/>"
 msgstr ""
 
 #. module: sale_pdf_quote_builder
@@ -162,4 +187,11 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
 msgid "Visible at"
+msgstr "Widoczny na"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "When attached inside a quote, the document must be a file, not a URL."
 msgstr ""

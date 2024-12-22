@@ -57,8 +57,9 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
     _getTagSearchDomain() {
         const searchDomain = [];
         let productTagIds = this.$el.get(0).dataset.productTagIds;
-        if (productTagIds) {
-            searchDomain.push(['all_product_tag_ids', 'in', JSON.parse(productTagIds).map(productTag => productTag.id)]);
+        productTagIds = productTagIds ? JSON.parse(productTagIds) : [];
+        if (productTagIds.length) {
+            searchDomain.push(['all_product_tag_ids', 'in', productTagIds.map(productTag => productTag.id)]);
         }
         return searchDomain;
     },

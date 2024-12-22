@@ -16,9 +16,10 @@ paymentExpressCheckoutForm.include({
      *
      * @private
      * @param {number} deliveryAmount - The delivery costs.
+     * @param {number} amountFreeShipping - The free shipping discount amount, <= 0.
      * @returns {Object} The information to be displayed on the payment form.
      */
-    _getOrderDetails(deliveryAmount) {
+    _getOrderDetails(deliveryAmount, amountFreeShipping) {
         const pending = this.paymentContext['shippingInfoRequired'] && deliveryAmount === undefined;
         const minorAmount = parseInt(this.paymentContext['minorAmount'])
         const displayItems = [
@@ -33,10 +34,16 @@ paymentExpressCheckoutForm.include({
                 amount: deliveryAmount,
             });
         }
+        if (amountFreeShipping) {
+            displayItems.push({
+                label: _t("Free Shipping"),
+                amount: amountFreeShipping,
+            });
+        }
         return {
             total: {
                 label: this.paymentContext['merchantName'],
-                amount: minorAmount + (deliveryAmount ?? 0),
+                amount: minorAmount + (deliveryAmount ?? 0) + (amountFreeShipping ?? 0),
                 // Delay the display of the amount until the shipping price is retrieved.
                 pending: pending,
             },
@@ -115,7 +122,7 @@ paymentExpressCheckoutForm.include({
                 addresses.shipping_address = {
                     name: ev.shippingAddress.recipient,
                     email: ev.payerEmail,
-                    phone: ev.shippingAddress.phone,
+                    phone: ev.shippingAddress.phone || ev.payerPhone,
                     street: ev.shippingAddress.addressLine[0],
                     street2: ev.shippingAddress.addressLine[1],
                     zip: ev.shippingAddress.postalCode,
@@ -190,9 +197,15 @@ paymentExpressCheckoutForm.include({
 
             // When the customer selects a different shipping option, update the displayed total.
             paymentRequest.on('shippingoptionchange', async (ev) => {
+                const result = await this.rpc('/shop/update_carrier', {
+                    carrier_id: parseInt(ev.shippingOption.id),
+                });
                 ev.updateWith({
                     status: 'success',
-                    ...this._getOrderDetails(ev.shippingOption.amount),
+                    ...this._getOrderDetails(
+                        ev.shippingOption.amount,
+                        result.delivery_discount_minor_amount || 0,
+                    ),
                 });
             });
         }

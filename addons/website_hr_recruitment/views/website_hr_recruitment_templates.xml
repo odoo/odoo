@@ -126,15 +126,21 @@
                     <meta itemprop="name" t-att-content="job.company_id.name"/>
                     <meta itemprop="logo" t-attf-content="/logo.png?company=#{job.company_id.id}"/>
                 </span>
-                <span itemprop="jobLocation" itemscope="itemscope" itemtype="https://schema.org/Place">
+                <span t-if="job.address_id.sudo().contact_address" itemprop="jobLocation" itemscope="itemscope" itemtype="https://schema.org/Place">
                     <meta itemprop="address" t-att-content="job.address_id.sudo().contact_address"/>
                 </span>
+                <t t-else="">
+                    <meta itemprop="jobLocationType" content="TELECOMMUTE"/>
+                    <span itemprop="applicantLocationRequirements" itemscope="itemscope" itemtype="https://schema.org/Country">
+                        <meta itemprop="name" t-att-content="job.company_id.country_id.name"/>
+                    </span>
+                </t>
                 <!-- Job name -->
                 <section class="pb32">
                     <div class="container">
                         <div class="mt32">
                             <div class="float-end">
-                                <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg float-end">Apply Now!</a>
+                                <a role="button" t-attf-href="/jobs/apply/#{slug(job)}" class="btn btn-primary btn-lg float-end">Apply Now!</a>
                             </div>
                             <h1 t-field="job.name"/>
                             <h5 class="fw-light o_not_editable" t-field="job.address_id" t-options='{
@@ -151,7 +157,7 @@
                 <div class="oe_structure">
                     <section class="o_job_bottom_bar mt24 mb48">
                         <div class="text-center">
-                            <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg">Apply Now!</a>
+                            <a role="button" t-attf-href="/jobs/apply/#{slug(job)}" class="btn btn-primary btn-lg">Apply Now!</a>
                         </div>
                     </section>
                 </div>
@@ -231,7 +237,7 @@
                                             <div class="col-sm">
                                                 <input id="recruitment3" type="tel"
                                                     class="form-control s_website_form_input"
-                                                    name="partner_mobile" required=""
+                                                    name="partner_phone" required=""
                                                     data-fill-with="phone"/>
                                             </div>
                                         </div>
@@ -323,12 +329,15 @@
                             <span class="text-muted small">Job</span>
                             <h6 t-field="job.name"/>
                         </div>
-                        <div t-if="job.address_id" class="d-flex flex-column align-items-baseline">
+                        <div class="d-flex flex-column align-items-baseline">
                             <span class="text-muted small">Location</span>
-                            <h6 t-field="job.address_id" t-options='{
+                            <h6 t-if="job.address_id" t-field="job.address_id" t-options='{
+                                "widget": "contact",
                                 "fields": ["city"],
-                                "no_tag_br": True
+                                "no_tag_br": True,
+                                "no_marker": True
                             }'/>
+                            <h6 t-else="">Remote</h6>
                         </div>
                         <div t-if="job.department_id" class="d-flex flex-column align-items-baseline">
                             <span class="text-muted small">Department</span>

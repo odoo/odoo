@@ -17,6 +17,7 @@ condition/math builtins.
 import dis
 import functools
 import logging
+import sys
 import types
 from opcode import HAVE_ARGUMENT, opmap, opname
 from types import CodeType
@@ -37,8 +38,37 @@ __all__ = ['test_expr', 'safe_eval', 'const_eval']
 # lp:703841), does import time.
 _ALLOWED_MODULES = ['_strptime', 'math', 'time']
 
-_UNSAFE_ATTRIBUTES = ['f_builtins', 'f_globals', 'f_locals', 'gi_frame', 'gi_code',
-                      'co_code', 'func_globals']
+# Mock __import__ function, as called by cpython's import emulator `PyImport_Import` inside
+# timemodule.c, _datetimemodule.c and others.
+# This function does not actually need to do anything, its expected side-effect is to make the
+# imported module available in `sys.modules`. The _ALLOWED_MODULES are imported below to make it so.
+def _import(name, globals=None, locals=None, fromlist=None, level=-1):
+    if name not in sys.modules:
+        raise ImportError(f'module {name} should be imported before calling safe_eval()')
+
+for module in _ALLOWED_MODULES:
+    __import__(module)
+
+
+_UNSAFE_ATTRIBUTES = [
+    # Frames
+    'f_builtins', 'f_code', 'f_globals', 'f_locals',
+    # Python 2 functions
+    'func_code', 'func_globals',
+    # Code object
+    'co_code', '_co_code_adaptive',
+    # Method resolution order,
+    'mro',
+    # Tracebacks
+    'tb_frame',
+    # Generators
+    'gi_code', 'gi_frame', 'g_yieldfrom'
+    # Coroutines
+    'cr_await', 'cr_code', 'cr_frame',
+    # Coroutine generators
+    'ag_await', 'ag_code', 'ag_frame',
+]
+
 
 def to_opcodes(opnames, _opmap=opmap):
     for x in opnames:
@@ -60,7 +90,7 @@ _CONST_OPCODES = set(to_opcodes([
     # stack manipulations
     'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP', 'DUP_TOP_TWO',
     'LOAD_CONST',
-    'RETURN_VALUE', # return the result of the literal/expr evaluation
+    'RETURN_VALUE',  # return the result of the literal/expr evaluation
     # literal collections
     'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE', 'BUILD_SET',
     # 3.6: literal map with constant keys https://bugs.python.org/issue27140
@@ -70,11 +100,13 @@ _CONST_OPCODES = set(to_opcodes([
     'COPY', 'SWAP',
     # Added in 3.11 https://docs.python.org/3/whatsnew/3.11.html#new-opcodes
     'RESUME',
+    # 3.12 https://docs.python.org/3/whatsnew/3.12.html#cpython-bytecode-changes
+    'RETURN_CONST',
 ])) - _BLACKLIST
 
 # operations which are both binary and inplace, same order as in doc'
 _operations = [
-    'POWER', 'MULTIPLY', # 'MATRIX_MULTIPLY', # matrix operator (3.5+)
+    'POWER', 'MULTIPLY',  # 'MATRIX_MULTIPLY', # matrix operator (3.5+)
     'FLOOR_DIVIDE', 'TRUE_DIVIDE', 'MODULO', 'ADD',
     'SUBTRACT', 'LSHIFT', 'RSHIFT', 'AND', 'XOR', 'OR',
 ]
@@ -94,6 +126,7 @@ _EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
     'GEN_START',  # added in 3.10 but already removed from 3.11.
     # Added in 3.11, replacing all BINARY_* and INPLACE_*
     'BINARY_OP',
+    'BINARY_SLICE',
 ])) - _BLACKLIST
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
@@ -108,7 +141,7 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'CALL_METHOD', 'LOAD_METHOD',
 
     'GET_ITER', 'FOR_ITER', 'YIELD_VALUE',
-    'JUMP_FORWARD', 'JUMP_ABSOLUTE',
+    'JUMP_FORWARD', 'JUMP_ABSOLUTE', 'JUMP_BACKWARD',
     'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE', 'POP_JUMP_IF_TRUE',
     'SETUP_FINALLY', 'END_FINALLY',
     # Added in 3.8 https://bugs.python.org/issue17611
@@ -130,17 +163,21 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     # special case of the previous for IS NONE / IS NOT NONE
     'POP_JUMP_FORWARD_IF_NONE', 'POP_JUMP_BACKWARD_IF_NONE',
     'POP_JUMP_FORWARD_IF_NOT_NONE', 'POP_JUMP_BACKWARD_IF_NOT_NONE',
-    #replacement of JUMP_ABSOLUTE
-    'JUMP_BACKWARD',
-    #replacement of JUMP_IF_NOT_EXC_MATCH
+    # replacement of JUMP_IF_NOT_EXC_MATCH
     'CHECK_EXC_MATCH',
     # new opcodes
     'RETURN_GENERATOR',
     'PUSH_EXC_INFO',
     'NOP',
-    'FORMAT_VALUE', 'BUILD_STRING'
-
+    'FORMAT_VALUE', 'BUILD_STRING',
+    # 3.12 https://docs.python.org/3/whatsnew/3.12.html#cpython-bytecode-changes
+    'END_FOR',
+    'LOAD_FAST_AND_CLEAR', 'LOAD_FAST_CHECK',
+    'POP_JUMP_IF_NOT_NONE', 'POP_JUMP_IF_NONE',
+    'CALL_INTRINSIC_1',
+    'STORE_SLICE',
 ])) - _BLACKLIST
+
 
 _logger = logging.getLogger(__name__)
 
@@ -264,16 +301,6 @@ def expr_eval(expr):
     c = test_expr(expr, _EXPR_OPCODES)
     return unsafe_eval(c)
 
-def _import(name, globals=None, locals=None, fromlist=None, level=-1):
-    if globals is None:
-        globals = {}
-    if locals is None:
-        locals = {}
-    if fromlist is None:
-        fromlist = []
-    if name in _ALLOWED_MODULES:
-        return __import__(name, globals, locals, level)
-    raise ImportError(name)
 _BUILTINS = {
     '__import__': _import,
     'True': True,
@@ -442,11 +469,14 @@ for mod in mods:
     __import__('dateutil.%s' % mod)
 datetime = wrap_module(__import__('datetime'), ['date', 'datetime', 'time', 'timedelta', 'timezone', 'tzinfo', 'MAXYEAR', 'MINYEAR'])
 dateutil = wrap_module(dateutil, {
-    mod: getattr(dateutil, mod).__all__
-    for mod in mods
+    "tz": ["UTC", "tzutc"],
+    "parser": ["isoparse", "parse"],
+    "relativedelta": ["relativedelta", "MO", "TU", "WE", "TH", "FR", "SA", "SU"],
+    "rrule": ["rrule", "rruleset", "rrulestr", "YEARLY", "MONTHLY", "WEEKLY", "DAILY", "HOURLY", "MINUTELY", "SECONDLY", "MO", "TU", "WE", "TH", "FR", "SA", "SU"],
 })
 json = wrap_module(__import__('json'), ['loads', 'dumps'])
 time = wrap_module(__import__('time'), ['time', 'strptime', 'strftime', 'sleep'])
 pytz = wrap_module(__import__('pytz'), [
     'utc', 'UTC', 'timezone',
 ])
+dateutil.tz.gettz = pytz.timezone

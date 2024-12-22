@@ -106,8 +106,9 @@ describe('applyColor', () => {
         await testEditor(BasicEditor, {
             contentBefore: unformat(`
                 <table><tbody>
-                    <tr><td>[ab</td></tr>
-                    <tr><td contenteditable="false">cd]</td></tr>
+                    <tr><td class="o_selected_td">[ab</td></tr>
+                    <tr><td contenteditable="false" class="o_selected_td">cd</td></tr>
+                    <tr><td class="o_selected_td">ef]</td></tr>
                 </tbody></table>
             `),
             stepFunction: setColor('rgb(255, 0, 0)', 'backgroundColor'),
@@ -115,6 +116,7 @@ describe('applyColor', () => {
                 <table><tbody>
                     <tr><td style="background-color: rgb(255, 0, 0);">[]ab</td></tr>
                     <tr><td contenteditable="false">cd</td></tr>
+                    <tr><td style="background-color: rgb(255, 0, 0);">ef</td></tr>
                 </tbody></table>
             `),
         });
@@ -153,6 +155,35 @@ describe('applyColor', () => {
             contentBefore: '<p><font style="background-color: rgb(255, 0, 0);" class="text-900">[abcabc]</font></p>',
             stepFunction: setColor('','color') && setColor('','backgroundColor'),
             contentAfter: '<p>[abcabc]</p>',
+        });
+    });
+    it('Shall not apply font tag to t nodes (protects if else nodes separation)', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: unformat(`[
+                <p>
+                    <t t-if="object.partner_id.parent_id">
+                       <t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>
+                    </t>
+                    <t t-else="">
+                        <t t-out="object.partner_id.name or ''">Brandon Freeman</t>
+                    </t>
+                </p>
+            ]`),
+            stepFunction: setColor('red', 'backgroundColor'),
+            contentAfter: unformat(`
+                <p>
+                    <t t-if="object.partner_id.parent_id">
+                        <t t-out="object.partner_id.parent_id.name or ''" style="background-color: red;">
+                            <font style="background-color: red;">[AzureInterior</font>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <t t-out="object.partner_id.name or ''" style="background-color: red;">
+                            <font style="background-color: red;">BrandonFreeman]</font>
+                        </t>
+                    </t>
+                </p>
+            `),
         });
     });
 });

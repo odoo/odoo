@@ -80,33 +80,35 @@ class WebsiteVisitor(models.Model):
                 'livechat_visitor_id': visitor.id,
                 'livechat_active': True,
             })
-            discuss_channels = self.env['discuss.channel'].create(discuss_channel_vals_list)
-            for channel in discuss_channels:
-                if not channel.livechat_visitor_id.partner_id:
-                    # sudo: mail.guest - creating a guest in a dedicated channel created from livechat
-                    guest = self.env["mail.guest"].sudo().create(
-                        {
-                            "country_id": country.id,
-                            "lang": get_lang(channel.env).code,
-                            "name": _("Visitor #%d", channel.livechat_visitor_id.id),
-                            "timezone": visitor.timezone,
-                        }
-                    )
-                    channel.add_members(guest_ids=guest.ids, post_joined_message=False)
-            # Open empty chatter to allow the operator to start chatting with the visitor.
-            channel_members = self.env['discuss.channel.member'].sudo().search([
-                ('partner_id', '=', self.env.user.partner_id.id),
-                ('channel_id', 'in', discuss_channels.ids),
-            ])
-            channel_members.write({
-                'fold_state': 'open',
-                'is_minimized': True,
-            })
-            discuss_channels_info = discuss_channels._channel_info()
-            notifications = []
-            for discuss_channel_info in discuss_channels_info:
-                notifications.append([operator.partner_id, 'website_livechat.send_chat_request', discuss_channel_info])
-            self.env['bus.bus']._sendmany(notifications)
+        discuss_channels = self.env['discuss.channel'].create(discuss_channel_vals_list)
+        if not discuss_channels:
+            return
+        for channel in discuss_channels:
+            if not channel.livechat_visitor_id.partner_id:
+                # sudo: mail.guest - creating a guest in a dedicated channel created from livechat
+                guest = self.env["mail.guest"].sudo().create(
+                    {
+                        "country_id": country.id,
+                        "lang": get_lang(channel.env).code,
+                        "name": _("Visitor #%d", channel.livechat_visitor_id.id),
+                        "timezone": visitor.timezone,
+                    }
+                )
+                channel.add_members(guest_ids=guest.ids, post_joined_message=False)
+        # Open empty chatter to allow the operator to start chatting with the visitor.
+        channel_members = self.env['discuss.channel.member'].sudo().search([
+            ('partner_id', '=', self.env.user.partner_id.id),
+            ('channel_id', 'in', discuss_channels.ids),
+        ])
+        channel_members.write({
+            'fold_state': 'open',
+            'is_minimized': True,
+        })
+        discuss_channels_info = discuss_channels._channel_info()
+        notifications = []
+        for discuss_channel_info in discuss_channels_info:
+            notifications.append([operator.partner_id, 'website_livechat.send_chat_request', discuss_channel_info])
+        self.env['bus.bus']._sendmany(notifications)
 
     def _merge_visitor(self, target):
         """ Copy sessions of the secondary visitors to the main partner visitor. """
@@ -121,8 +123,7 @@ class WebsiteVisitor(models.Model):
         visitor_id, upsert = super()._upsert_visitor(access_token, force_track_values=force_track_values)
         if upsert == 'inserted':
             visitor_sudo = self.sudo().browse(visitor_id)
-            discuss_channel_uuid = json.loads(request.httprequest.cookies.get('im_livechat_session', '{}')).get('uuid')
-            if discuss_channel_uuid:
+            if discuss_channel_uuid := request.httprequest.cookies.get("im_livechat_uuid"):
                 discuss_channel = request.env["discuss.channel"].sudo().search([("uuid", "=", discuss_channel_uuid)])
                 discuss_channel.write({
                     'livechat_visitor_id': visitor_sudo.id,

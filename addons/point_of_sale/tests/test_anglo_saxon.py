@@ -292,20 +292,109 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         aml_output = aml.filtered(lambda l: l.account_id.id == account_output.id)
         aml_expense = aml.filtered(lambda l: l.account_id.id == expense_account.id)
 
-        self.assertEqual(len(aml_output), 3, "There should be 3 output account move lines")
+        self.assertEqual(len(aml_output), 2, "There should be 2 output account move lines")
         # 2 moves in POS journal (Pos order + manual entry at delivery)
-        self.assertEqual(len(aml_output.move_id.filtered(lambda l: l.journal_id == self.pos_config.journal_id)), 2)
+        self.assertEqual(len(aml_output.move_id.filtered(lambda l: l.journal_id == self.pos_config.journal_id)), 1)
         # 1 move in stock journal (delivery from stock layers)
         self.assertEqual(len(aml_output.move_id.filtered(lambda l: l.journal_id == self.category.property_stock_journal)), 1)
         #Check the lines created after the picking validation
-        self.assertEqual(aml_output[2].credit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_output[2].debit, 0.0, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_output[1].debit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_output[1].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_expense[1].debit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_expense[1].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
-        #Check the lines created by the PoS session
-        self.assertEqual(aml_output[0].debit, 0.0, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_output[0].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_output[1].credit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_output[1].debit, 0.0, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_expense[0].debit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_expense[0].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
-        self.assertEqual(aml_expense[0].debit, 0.0, "Cost of Good Sold entry missing or mismatching")
+        #Check the lines created by the PoS session
+        self.assertEqual(aml_output[0].debit, 100.0, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_output[0].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
+
+    def test_action_pos_order_invoice(self):
+        self.company.point_of_sale_update_stock_quantities = 'closing'
+
+        # Setup a running session, with a paid pos order that is not invoiced
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+        self.pos_order_pos0 = self.PosOrder.create({
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'lines': [(0, 0, {
+                'product_id': self.product.id,
+                'price_unit': 450,
+                'qty': 1.0,
+                'price_subtotal': 450,
+                'price_subtotal_incl': 450,
+            })],
+            'amount_total': 450,
+            'amount_tax': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+        })
+        context_make_payment = {"active_ids": [self.pos_order_pos0.id], "active_id": self.pos_order_pos0.id}
+        self.pos_make_payment_0 = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 450.0,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        context_payment = {'active_id': self.pos_order_pos0.id}
+        self.pos_make_payment_0.with_context(context_payment).check()
+
+        # Invoice the pos order afterward (session still running)
+        self.pos_order_pos0.action_pos_order_invoice()
+
+        # Check that the stock output journal item from the invoice is reconciled (with its counterpart from the valuation entry)
+        stock_output_account = self.category.property_stock_account_output_categ_id
+        related_amls = current_session._get_related_account_moves().line_ids
+        stock_output_amls = related_amls.filtered_domain([('account_id', '=', stock_output_account.id)])
+
+        self.assertTrue(all(stock_output_amls.mapped('reconciled')))
+
+    def test_action_pos_order_invoice_with_discount(self):
+        """This test make sure that the line containing 'Discoun from' is correctly added to the invoice"""
+
+        # Setup a running session, with a paid pos order that is not invoiced
+        self.pos_config.open_ui()
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Test Pricelist',
+            'discount_policy': 'without_discount',
+            'item_ids': [(0, 0, {
+                'compute_price': 'percentage',
+                'percent_price': 5,
+                'min_quantity': 0,
+                'applied_on': '3_global',
+            })]
+        })
+        self.product.lst_price = 100
+        self.pos_order_pos0 = self.PosOrder.create({
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'pricelist_id': pricelist.id,
+            'lines': [(0, 0, {
+                'product_id': self.product.id,
+                'price_unit': 95,
+                'qty': 1.0,
+                'tax_ids': [(6, 0, self.tax_purchase_a.ids)],
+                'price_subtotal': 90.25,
+                'price_subtotal_incl': 103.79,
+                'discount': 5,
+            })],
+            'amount_total': 103.79,
+            'amount_tax': 13.51,
+            'amount_paid': 0,
+            'amount_return': 0,
+            'to_invoice': True,
+        })
+        context_make_payment = {"active_ids": [self.pos_order_pos0.id], "active_id": self.pos_order_pos0.id}
+        self.pos_make_payment_0 = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 450.0,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        context_payment = {'active_id': self.pos_order_pos0.id}
+        self.pos_make_payment_0.with_context(context_payment).check()
+
+        res = self.pos_order_pos0.action_pos_order_invoice()
+        invoice = self.env['account.move'].browse(res['res_id'])
+        self.assertTrue('Price discount from 100.00 -> 95.00' in invoice.invoice_line_ids.filtered(lambda l: l.display_type == "line_note").display_name)
+        product_line = invoice.invoice_line_ids.filtered(lambda l: l.display_type == "product")
+        self.assertEqual(product_line.price_unit, 95)  # Only pricelist applies
+        self.assertEqual(product_line.discount, 5)  # Disount is reflected
+        self.assertEqual(product_line.price_subtotal, 90.25)  # Discount applies on price_unit
+        self.assertEqual(product_line.price_total, 103.79)  # Taxes applied with price_total

@@ -6,6 +6,7 @@
 # Wil Odoo, 2023
 # Iran Villalobos López, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Martin Trigaux, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -85,6 +86,7 @@ msgstr "%s %% de descuento"
 #. odoo-python
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
+#: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -329,9 +331,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un producto almacenable es un producto para el que gestiona existencias. Debe tener instalada la aplicación Inventario.\n"
-"Un producto consumible es un producto para el que no gestiona las existencias.\n"
-"Un servicio es un producto no material."
+"Un producto almacenable es un producto del que gestiona las existencias. Debe tener instalada la aplicación Inventario.\n"
+"Un producto consumible es un producto del que no gestiona las existencias.\n"
+"Un servicio es el producto no material que proporciona."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -390,7 +392,7 @@ msgstr "Actividades"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,field_description:product.field_product_template__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decoración de actividad de excepción"
+msgstr "Decoración de la actividad de excepción"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_state
@@ -923,7 +925,7 @@ msgstr "Crear una nueva lista de precios"
 #: model_terms:ir.actions.act_window,help:product.product_template_action
 #: model_terms:ir.actions.act_window,help:product.product_template_action_all
 msgid "Create a new product"
-msgstr "Crear un nuevo producto"
+msgstr "Cree un nuevo producto"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -1048,7 +1050,7 @@ msgstr "Precio adicional predeterminado"
 #: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default unit of measure used for all stock operations."
 msgstr ""
-"Unidad de medida predeterminada que se usa para todas las operaciones de "
+"Unidad de medida de uso predeterminado para todas las operaciones de "
 "existencias."
 
 #. module: product
@@ -1351,7 +1353,7 @@ msgstr "Contenido del archivo (base64)"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__raw
 msgid "File Content (raw)"
-msgstr "Contenido del archivo (raw)"
+msgstr "Contenido del archivo (sin procesar)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__file_size
@@ -1549,8 +1551,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Si se encuentra seleccionado, algunos mensajes presentan error de entrega."
+msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
@@ -1637,7 +1638,7 @@ msgstr "Importar plantilla para listas de precios"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr "Importar plantilla de productos"
+msgstr "Plantilla de importación para productos"
 
 #. module: product
 #. odoo-python
@@ -1680,8 +1681,7 @@ msgstr "Referencia interna"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__barcode
 msgid "International Article Number used for product identification."
-msgstr ""
-"Número de artículo internacional usado para la identificación de producto."
+msgstr "Número de artículo internacional usado para identificar el producto."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1901,14 +1901,14 @@ msgstr "Cantidad min."
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__multi
 msgid "Multi-checkbox (option)"
-msgstr "Multi casillas (opciones)"
+msgstr "Varias casillas (opción)"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_check_multi_checkbox_no_variant
 msgid ""
 "Multi-checkbox display type is not compatible with the creation of variants"
 msgstr ""
-"El tipo de visualización con multi casillas no es compatible con la creación"
+"El tipo de visualización con varias casillas es incompatible con la creación"
 " de variantes"
 
 #. module: product
@@ -2115,7 +2115,7 @@ msgstr "Paquete tipo A"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Packaging"
-msgstr "Empaquetado"
+msgstr "Embalaje"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
@@ -2159,6 +2159,10 @@ msgid ""
 "\n"
 "Invalid URL: %s"
 msgstr ""
+"Ingrese una URL válida.\n"
+"Por ejemplo: https://www.odoo.com\n"
+"\n"
+"URL no válida: %s"
 
 #. module: product
 #. odoo-python
@@ -2488,19 +2492,19 @@ msgstr "Paquetes de productos"
 #: model:ir.model.fields,field_description:product.field_product_packaging__name
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Product Packaging"
-msgstr "Empaquetado del producto"
+msgstr "Embalaje del producto"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
 msgid "Product Packaging (PDF)"
-msgstr "Empaquetado del producto (PDF)"
+msgstr "Embalaje del producto (PDF)"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_stock_packaging
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packagings"
-msgstr "Empaquetado de los productos"
+msgstr "Embalajes del producto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_properties_definition
@@ -2902,8 +2906,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Show all records which has next action date is before today"
 msgstr ""
-"Mostrar todos los registros cuya fecha de siguiente actividad es antes de "
-"hoy"
+"Mostrar todos los registros cuya próxima fecha de acción es antes de la "
+"fecha de hoy."
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__without_discount
@@ -3303,7 +3307,7 @@ msgstr "Tipo"
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo de actividad de excepción registrada."
+msgstr "Tipo de la actividad de excepción registrada."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
@@ -3433,7 +3437,7 @@ msgstr "Conteo de valor"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Value Price Extra"
-msgstr "Valor del precio adicional"
+msgstr "Precio adicional del valor"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__standard_price
@@ -3705,7 +3709,7 @@ msgid ""
 "link to your file."
 msgstr ""
 "Puede subir un archivo desde su computadora o copiar y pegar un enlace de "
-"internet en su archivo."
+"internet a su archivo."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__image
@@ -3906,7 +3910,7 @@ msgid ""
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
 "Debe definir un producto para todo lo que vende o compra, ya sea un producto"
-" almacenable, un consumible o un servicio."
+" almacenable, uno consumible o un servicio."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action

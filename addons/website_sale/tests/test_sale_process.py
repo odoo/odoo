@@ -79,6 +79,9 @@ class TestUi(HttpCaseWithUserDemo):
     def test_01_admin_shop_tour(self):
         self.start_tour(self.env['website'].get_client_action_url('/shop'), 'shop', login='admin')
 
+    def test_01_cart_update_check(self):
+        self.start_tour('/', 'shop_update_cart', login='admin')
+
     def test_02_admin_checkout(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
             self.skipTest("Transfer provider is not installed")
@@ -141,11 +144,42 @@ class TestUi(HttpCaseWithUserDemo):
         self.start_tour("/", 'website_sale_tour_2', login="admin")
 
     def test_05_google_analytics_tracking(self):
-        if not odoo.tests.loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
+        # Data for google_analytics_view_item
+        attribute = self.env['product.attribute'].create({
+            'name': 'Color',
+            'sequence': 10,
+            'display_type': 'color',
+            'value_ids': [
+                Command.create({
+                    'name': 'Red',
+                }),
+                Command.create({
+                    'name': 'Pink',
+                }),
+            ]
+        })
+        self.env['product.template'].create({
+            'name': 'Colored T-Shirt',
+            'standard_price': 500,
+            'list_price': 750,
+            'detailed_type': 'consu',
+            'website_published': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute.id,
+                    'value_ids': attribute.value_ids,
+                })
+            ]
+        })
         self.env['website'].browse(1).write({'google_analytics_key': 'G-XXXXXXXXXXX'})
         self.start_tour("/shop", 'google_analytics_view_item')
+        # Data for google_analytics_add_to_cart
+        self.env['product.template'].create({
+            'name': 'Basic Shirt',
+            'standard_price': 500,
+            'detailed_type': 'consu',
+            'website_published': True
+        })
         self.start_tour("/shop", 'google_analytics_add_to_cart')
 
     def test_update_same_address_billing_shipping_edit(self):
@@ -241,8 +275,8 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
         self.env.user.company_id = self.company_a
 
         self.demo_user = self.user_demo
-        self.demo_user.company_ids += self.company_c
-        self.demo_user.company_id = self.company_c
+        self.demo_user.company_ids += self.company_b
+        self.demo_user.company_id = self.company_b
         self.demo_partner = self.demo_user.partner_id
 
         self.portal_user = self.user_portal
@@ -272,7 +306,7 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
             # 2. Logged in user/internal user, should not edit name or email address of billing
             self.default_address_values['partner_id'] = self.demo_partner.id
             self.WebsiteSaleController.address(**self.default_billing_address_values)
-            self.assertEqual(self.demo_partner.company_id, self.company_c, "Logged in user edited billing (the partner itself) should not get its company modified.")
+            self.assertEqual(self.demo_partner.company_id, self.company_b, "Logged in user edited billing (the partner itself) should not get its company modified.")
             self.assertNotEqual(self.demo_partner.name, self.default_address_values['name'], "Employee cannot change their name during the checkout process.")
             self.assertNotEqual(self.demo_partner.email, self.default_address_values['email'], "Employee cannot change their email during the checkout process.")
 

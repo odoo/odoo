@@ -13,7 +13,6 @@
 # Duma <domantasdoom@gmail.com>, 2023
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2023
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2023
-# Gailius Kazlauskas <gailius@vialaurea.lt>, 2023
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2023
 # Donatas F <osourcem@gmail.com>, 2023
 # Raimondas Z., 2023
@@ -27,19 +26,22 @@
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2023
 # Arunas V. <arunas@devoro.com>, 2023
 # Martin Trigaux, 2023
-# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023
 # Vytautas Dženkauskas, 2024
 # Linas Versada <linaskrisiukenas@gmail.com>, 2024
 # Jonas Zinkevicius <jozi@odoo.com>, 2024
+# Gailius Kazlauskas <gailius@vialaurea.lt>, 2024
 # Aurelija Vitkauskiene, 2024
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024
+# Greta Šeštokė, 2024
+# Sigitas Andriuska <sigitas.vialaurea@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Aurelija Vitkauskiene, 2024\n"
+"Last-Translator: Sigitas Andriuska <sigitas.vialaurea@gmail.com>, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -136,12 +138,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "27.00"
-msgstr ""
+msgstr "27.00"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "31.05"
-msgstr ""
+msgstr "31.05"
 
 #. module: sale
 #. odoo-javascript
@@ -492,6 +494,11 @@ msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
 msgstr "<i class=\"fa fa-fw fa-clock-o\"/>Pasibaigęs"
@@ -530,7 +537,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-print\"/> View Details"
-msgstr ""
+msgstr "<i class=\"fa fa-print\"/> Peržiūrėti informaciją"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -540,7 +547,7 @@ msgstr "<i class=\"fa fa-times\"/> Atmesti"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small class=\"text-muted\">Your contact</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Jūsų kontaktas</small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -604,7 +611,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By signing this proposal, I agree to the following terms:</span>"
-msgstr "<span>Pasirašydamas šį pasiūlymą sutinku su šiomis sąlygomis::</span>"
+msgstr "<span>Pasirašydamas šį pasiūlymą, sutinku su šiomis sąlygomis:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -711,11 +718,13 @@ msgstr "Patvirtintam pardavimo užsakymui reikalinga patvirtinimo data."
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "A note, whose content usually applies to the section or product above."
 msgstr ""
+"Pastaba, kurios turinys paprastai taikomas aukščiau esančiam skyriui arba "
+"produktui."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "A section title"
-msgstr ""
+msgstr "Skyriaus pavadinimas"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -755,7 +764,7 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Pay Quotation"
-msgstr "Sutikti ir apmokėti pasiūlymą"
+msgstr "Peržiūrėti pasiūlymą"
 
 #. module: sale
 #. odoo-python
@@ -889,7 +898,8 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
 
 #. module: sale
@@ -955,7 +965,7 @@ msgstr "Analitinis paskirstymas"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr ""
+msgstr "Analitinis paskirstymo paieška"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
@@ -970,12 +980,12 @@ msgstr "Analitinė eilutė"
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr ""
+msgstr "Analitinio plano taikymo sritys"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_precision
 msgid "Analytic Precision"
-msgstr ""
+msgstr "Analitinis tikslumas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_line_ids
@@ -1062,7 +1072,7 @@ msgstr "Automatinė sąskaita"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Bacon Burger"
-msgstr ""
+msgstr "Kiaulienos burgeris"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__journal_name
@@ -1098,6 +1108,10 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"Padidinkite savo pardavimus naudodami kelių rūšių programas\\: kuponai, "
+"akcijos, dovanų kortelė, lojalumas. Galima nustatyti konkrečias sąlygas "
+"(produktai, klientai, minimali pirkimo suma, laikotarpis). Apdovanojimai "
+"gali būti nuolaidos (% arba suma) arba nemokami produktai."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1107,7 +1121,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying this proposal, I agree to the following terms:"
-msgstr ""
+msgstr "Apmokėdamas šį pasiūlymą sutinku su šiomis sąlygomis:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1242,7 +1256,7 @@ msgstr "Komunikacija"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Communication history"
-msgstr ""
+msgstr "Bendravimo istorija"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
@@ -1794,7 +1808,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Discounts, Loyalty & Gift Card"
-msgstr ""
+msgstr "Nuolaidos, lojalumo ir dovanų kortelės"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_draft_invoice_warning
@@ -1974,7 +1988,7 @@ msgstr "Galiojimo pabaiga"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Expiration Date:"
-msgstr ""
+msgstr "Galioja iki:"
 
 #. module: sale
 #. odoo-python
@@ -2411,7 +2425,7 @@ msgstr "Sąskaitos adresas: "
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
 msgid "Invoicing Journal"
-msgstr ""
+msgstr "Pardavimų žurnalas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
@@ -2599,6 +2613,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Promotions, coupons, loyalty cards, Gift cards & eWallet"
 msgstr ""
+"Tvarkykite akcijas, kuponus, lojalumo korteles, dovanų korteles ir "
+"elektroninę piniginę"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -2832,7 +2848,7 @@ msgstr "Klaidų kiekis"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Pranešimų, kuriems reikia imtis veiksmų, skaičius"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error_counter
@@ -2914,7 +2930,7 @@ msgstr "Internetinis mokėjimas"
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_menu
 msgid "Online Payments"
-msgstr ""
+msgstr "Mokėjimai internetu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_sign
@@ -2968,7 +2984,7 @@ msgstr ""
 #: code:addons/sale/models/product_product.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr ""
+msgstr "Operacija nepalaikoma"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_cancel__lang
@@ -3186,13 +3202,13 @@ msgstr "Mokėjimo būdai"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Mokėjimo paslaugos tiekėjas"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_provider_menu
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Payment Providers"
-msgstr ""
+msgstr "Mokėjimo paslaugos tiekėjas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__reference
@@ -3244,7 +3260,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_sale_order__prepayment_percent
 msgid "Prepayment percentage"
-msgstr ""
+msgstr "Avansas procentais"
 
 #. module: sale
 #. odoo-python
@@ -3252,7 +3268,7 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Prepayment percentage must be a valid percentage."
-msgstr ""
+msgstr "Avanso procentas turi būti įvestas"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3716,7 +3732,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Sale Information"
-msgstr ""
+msgstr "Pardavimo informacija:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -3812,13 +3828,13 @@ msgid "Sales Analysis"
 msgstr "Pardavimų analizė"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis By Customers"
+#: model:ir.actions.act_window,name:sale.action_order_report_salesperson
+msgid "Sales Analysis By Salespersons"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_salesperson
-msgid "Sales Analysis By Salespersons"
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis Per Customers"
 msgstr ""
 
 #. module: sale
@@ -3905,7 +3921,6 @@ msgstr "Pardavimų užsakymas (-ai)"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4389,12 +4404,12 @@ msgstr "Mokesčių skaičiavimo apvalinimo būdas"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Tax excl."
-msgstr ""
+msgstr "Be mokesčių"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Tax incl."
-msgstr ""
+msgstr "Su mokesčiais"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -4429,7 +4444,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
 msgid "Terms & Conditions format"
-msgstr ""
+msgstr "Taisyklių ir sąlygų formatas"
 
 #. module: sale
 #. odoo-python
@@ -4446,7 +4461,7 @@ msgstr "Taisyklės &amp; sąlygos:"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Terms &amp; Conditions:"
-msgstr "Taisyklės &amp; sąlygos:"
+msgstr "Taisyklės ir sąlygos:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__note
@@ -4612,7 +4627,6 @@ msgstr ""
 
 #. module: sale
 #. odoo-python
-#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
@@ -4656,11 +4670,6 @@ msgid "The value of the down payment amount must be positive."
 msgstr "Pradinio įnašo reikšmė turi būti teigiama."
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid "There are currently no orders for your account."
-msgstr "Šiuo metu nėra užsakymų, priskirtų jūsų sąskaitai."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
 msgstr "Šiuo metu nėra komercinių pasiūlymų, priskirtų jūsų sąskaitai."
@@ -4673,6 +4682,16 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
 msgstr ""
 
 #. module: sale
@@ -5055,7 +5074,7 @@ msgstr "Variantų tinklelio įvestis"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "View Details"
-msgstr ""
+msgstr "Peržiūrėti informaciją"
 
 #. module: sale
 #. odoo-python
@@ -5103,6 +5122,7 @@ msgstr "Įspėjimas"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
@@ -5190,6 +5210,13 @@ msgstr ""
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid "You cannot change the pricelist of a confirmed order !"
+msgstr ""
+
+#. module: sale
+#. odoo-python
 #: code:addons/sale/models/product_product.py:0
 #: code:addons/sale/models/product_template.py:0
 #, python-format
@@ -5224,6 +5251,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr ""
@@ -5314,7 +5342,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
-msgstr ""
+msgstr "vienetai"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation

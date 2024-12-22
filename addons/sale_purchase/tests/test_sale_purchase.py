@@ -80,6 +80,8 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
 
         self.assertEqual(len(purchase_order), 1, "Only one PO should have been created, from the 2 Sales orders")
         self.assertEqual(len(purchase_order.order_line), 2, "The purchase order should have 2 lines")
+        self.assertIn(self.sale_order_1.name, purchase_order.origin, "The PO should have SO 1 in its source documents")
+        self.assertIn(self.sale_order_2.name, purchase_order.origin, "The PO should have SO 2 in its source documents")
         self.assertEqual(len(purchase_lines_so1), 1, "Only one SO line from SO 1 should have create a PO line")
         self.assertEqual(len(purchase_lines_so2), 1, "Only one SO line from SO 2 should have create a PO line")
         self.assertEqual(len(purchase_order.activity_ids), 0, "No activity should be scheduled on the PO")
@@ -88,6 +90,10 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.assertNotEqual(purchase_line1.product_id, purchase_line2.product_id, "The 2 PO line should have different products")
         self.assertEqual(purchase_line1.product_id, self.sol1_service_purchase_1.product_id, "The create PO line must have the same product as its mother SO line")
         self.assertEqual(purchase_line2.product_id, self.sol2_service_purchase_2.product_id, "The create PO line must have the same product as its mother SO line")
+
+        self.assertEqual(purchase_line1.price_unit, self.supplierinfo1.price, "Unit price should be taken from the vendor line")
+        self.assertEqual(purchase_line2.price_unit, self.supplierinfo2.price, "Unit price should be taken from the vendor line")
+        self.assertEqual(purchase_line1.discount, self.supplierinfo1.discount, "Discount should be taken from the vendor line")
 
         purchase_order.button_cancel()
 

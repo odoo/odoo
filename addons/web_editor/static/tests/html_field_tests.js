@@ -1,14 +1,18 @@
 /** @odoo-module **/
 
 import { click, editInput, getFixture, makeDeferred, mockSendBeacon, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { FileSelectorControlPanel } from "@web_editor/components/media_dialog/file_selector";
 import { FormController } from '@web/views/form/form_controller';
 import { HtmlField } from "@web_editor/js/backend/html_field";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { parseHTML, setSelection } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
-import { onRendered } from "@odoo/owl";
-import { wysiwygData } from "@web_editor/../tests/test_utils";
+import { onRendered, useEffect } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { COLOR_PICKER_TEMPLATE, wysiwygData } from "@web_editor/../tests/test_utils";
 import { OdooEditor } from '@web_editor/js/editor/odoo-editor/src/OdooEditor';
+import { uploadService } from "@web_editor/components/upload_progress_toast/upload_service";
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
 import { insertText } from '@web_editor/js/editor/odoo-editor/test/utils';
 
@@ -21,6 +25,49 @@ async function iframeReady(iframe) {
         await iframeLoadPromise;
     }
     await nextTick(); // ensure document is loaded
+}
+
+
+const pasteImage = async (editor, base64ImageData) => {
+    // Create image file.
+    const binaryImageData = atob(base64ImageData);
+    const uint8Array = new Uint8Array(binaryImageData.length);
+    for (let i = 0; i < binaryImageData.length; i++) {
+        uint8Array[i] = binaryImageData.charCodeAt(i);
+    }
+    const file = new File([uint8Array], "test_image.png", { type: 'image/png' });
+
+    // Create a promise to get the created img elements
+    const pasteImagePromise = makeDeferred();
+    const observer = new MutationObserver(mutations => {
+        mutations
+            .filter(mutation => mutation.type === 'childList')
+            .forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                    if (node instanceof HTMLElement) {
+                        pasteImagePromise.resolve(node);
+                    }
+                });
+            });
+    });
+    observer.observe(editor.editable, { subtree: true, childList: true });
+
+    // Simulate paste.
+    editor._onPaste({
+        preventDefault() { },
+        clipboardData: {
+            getData() { },
+            items: [{
+                kind: 'file',
+                type: 'image/png',
+                getAsFile: () => file,
+            }],
+        },
+    });
+
+    const img = await pasteImagePromise;
+    observer.disconnect();
+    return img;
 }
 
 QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
@@ -200,6 +247,50 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         await click(discardButton);
         assert.strictEqual(editable.innerHTML, `<p>first</p>`);
     });
+
+    QUnit.test("undo after discard html field changes in form", async (assert) => {
+        serverData.models.partner.records = [{ id: 1, txt: "<p>first</p>" }];
+        let wysiwyg;
+        const wysiwygPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await super.startWysiwyg(...arguments);
+                wysiwyg = this.wysiwyg;
+                wysiwygPromise.resolve();
+            },
+        });
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+        await wysiwygPromise;
+        const editor = wysiwyg.odooEditor;
+        const editable = editor.editable;
+        editor.testMode = true;
+        assert.strictEqual(editable.innerHTML, `<p>first</p>`);
+        const paragraph = editable.querySelector("p");
+        await setSelection(paragraph, 0);
+        await insertText(editor, "a");
+        assert.strictEqual(editable.innerHTML, `<p>afirst</p>`);
+        // For blur event here to call _onWysiwygBlur function in html_field
+        await editable.dispatchEvent(new Event("blur", { bubbles: true, cancelable: true }));
+        // Wait for the updates to be saved , if we don't wait the update of the value will
+        // be done after the call for discardChanges since it uses some async functions.
+        await new Promise((r) => setTimeout(r, 100));
+        const discardButton = target.querySelector(".o_form_button_cancel");
+        assert.ok(discardButton);
+        await click(discardButton);
+        assert.strictEqual(editable.innerHTML, `<p>first</p>`);
+        await editable.dispatchEvent(new KeyboardEvent('keydown', {key: 'z', ctrlKey: true, bubbles: true, cancelable: true}));
+        assert.strictEqual(editable.innerHTML, `<p>first</p>`);
+    });
+
 
     QUnit.module('Sandboxed Preview');
 
@@ -634,49 +725,6 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             }
         };
 
-        const pasteImage = async (editor) => {
-            // Create image file.
-            const base64ImageData = "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"
-            const binaryImageData = atob(base64ImageData);
-            const uint8Array = new Uint8Array(binaryImageData.length);
-            for (let i = 0; i < binaryImageData.length; i++) {
-                uint8Array[i] = binaryImageData.charCodeAt(i);
-            }
-            const file = new File([uint8Array], "test_image.png", { type: 'image/png' });
-
-            // Create a promise to get the created img elements
-            const pasteImagePromise = makeDeferred();
-            const observer = new MutationObserver(mutations => {
-                mutations
-                    .filter(mutation => mutation.type === 'childList')
-                    .forEach(mutation => {
-                        mutation.addedNodes.forEach(node => {
-                            if (node instanceof HTMLElement) {
-                                pasteImagePromise.resolve(node);
-                            }
-                        });
-                    });
-            });
-            observer.observe(editor.editable, { subtree: true, childList: true });
-
-            // Simulate paste.
-            editor._onPaste({
-                preventDefault() {},
-                clipboardData: {
-                    getData() {},
-                    items: [{
-                        kind: 'file',
-                        type: 'image/png',
-                        getAsFile: () => file,
-                    }],
-                },
-            });
-
-            const img = await pasteImagePromise;
-            observer.disconnect();
-            return img;
-        }
-
         await makeView({
             type: "form",
             resId: 1,
@@ -696,7 +744,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         Wysiwyg.setRange(paragraph);
 
         // Paste image.
-        const img = await pasteImage(editor);
+        const img = await pasteImage(editor, "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII");
         // Test environment replaces 'src' by 'data-src'.
         assert.ok(/^data:image\/png;base64,/.test(img.dataset['src']));
         assert.ok(img.classList.contains('o_b64_image_to_save'));
@@ -707,6 +755,72 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         await htmlField.commitChanges();
         assert.equal(img.dataset['src'], '/test_image_url.png?access_token=1234');
         assert.ok(!img.classList.contains('o_b64_image_to_save'));
+    });
+
+    QUnit.test("Pasted/dropped images are saved and content not transfered to next record", async (assert) => {
+        serverData.models.partner.records = [
+            { id: 1, txt: "<p class='image_target'>first</p>" },
+            { id: 2, txt: "<p>second</p>" },
+        ];
+
+        // Patch to get a promise to get the htmlField component instance when
+        // the wysiwyg is instancied.
+        const htmlFieldPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await super.startWysiwyg(...arguments);
+                await nextTick();
+                htmlFieldPromise.resolve(this);
+            }
+        });
+
+        const mockRPC = async function (route, args) {
+            if (route === '/web_editor/attachment/add_data') {
+                return {
+                    image_src: '/test_image_url.png',
+                    access_token: '1234',
+                    public: false,
+                }
+            }
+            if (route.includes("web_save")){
+                // reading next record
+                return [{ id: 2, txt: "<p>second</p>" }];
+            }
+        };
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resIds: [1, 2],
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+            mockRPC: mockRPC,
+        });
+        // Let the htmlField be mounted and recover the Component instance.
+        const htmlField = await htmlFieldPromise;
+        const editor = htmlField.wysiwyg.odooEditor;
+
+        const paragraph = editor.editable.querySelector(".image_target");
+        Wysiwyg.setRange(paragraph);
+
+        // Paste image.
+        const img = await pasteImage(editor, "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII");
+        // Restore 'src' attribute so that SavePendingImages can do its job.
+        img.src = img.dataset['src'];
+
+        const blurEvent = new Event('blur', {
+            bubbles: true,
+            cancelable: true
+        });
+        target.querySelector(".odoo-editor-editable").dispatchEvent(blurEvent);
+
+        await click(target.querySelector(".o_pager_next"));
+        await nextTick();
+        assert.containsOnce(target, ".odoo-editor-editable p:contains('second')");
     });
 
     QUnit.module('Odoo fields synchronisation');
@@ -940,7 +1054,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         const clipboardData = new DataTransfer();
         clipboardData.setData('text/plain', 'https://www.youtube.com/watch?v=qxb74CMR748');
         p.dispatchEvent(new ClipboardEvent('paste', { clipboardData, bubbles: true }));
-        assert.strictEqual(p.outerHTML, '<p>https://www.youtube.com/watch?v=qxb74CMR748<br></p>',
+        assert.strictEqual(p.outerHTML, '<p>https://www.youtube.com/watch?v=qxb74CMR748</p>',
             "The URL should be inserted as text");
         assert.isVisible($('.oe-powerbox-wrapper:contains("Embed Youtube Video")'),
             "The powerbox should be opened");
@@ -990,7 +1104,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         let linkPreview = document.querySelector(".modal a#link-preview");
         assert.strictEqual(labelInputField.value, 'This website',
             "The label input field should match the link's content");
-        assert.strictEqual(linkPreview.innerText.replaceAll("\u200B", ""), "This website",
+        assert.strictEqual(linkPreview.innerText.replaceAll("\ufeff", ""), "This website",
             "Link label in preview should match label input field");
 
         // Click on discard
@@ -998,7 +1112,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
 
         const p = document.querySelector(".test_target");
         // Select link label to open the floating toolbar.
-        setSelection(p, 0, p, 1);
+        setSelection(p, 1, p, 2);
         await nextTick();
         // Click on create-link button to open the Link Dialog.
         document.querySelector("#toolbar #create-link").click();
@@ -1017,7 +1131,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             "Preview should be updated on label input field change");
         // Click "Save".
         await click(document, ".modal .modal-footer button.btn-primary");
-        assert.strictEqual(p.innerText.replaceAll('\u200B', ''), 'New label',
+        assert.strictEqual(p.innerText.replaceAll('\ufeff', ''), 'New label',
             "The link's label should be updated");
     });
 
@@ -1055,4 +1169,330 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         assert.strictEqual(htmlField._isDirty(), false, 'should not be dirty as the content has not changed');
 
     });
+
+    QUnit.module("Image transform");
+
+    QUnit.test("Image transform should reset after click twice", async (assert) => {
+        assert.expect(8);
+
+        const isElementRotated = (element) => {
+            // Get the computed style of the element
+            const style = window.getComputedStyle(element);
+
+            // Get the transform property value
+            const transform = style.transform || style.mozTransform;
+
+            // If transform is 'none', the element is not rotated
+            if (transform === "none") {
+                return false;
+            }
+
+            // The matrix values will be in the form of matrix(a, b, c, d, e, f)
+            // For rotation, a and d will reflect the cosine of the angle, and b and c the sine.
+            const values = transform.split("(")[1].split(")")[0].split(",");
+
+            const a = parseFloat(values[0]);
+            const b = parseFloat(values[1]);
+
+            // Calculate the angle of rotation in degrees
+            const angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+
+            // If the angle is not 0, the element is rotated
+            return angle !== 0;
+        };
+
+        serverData.models.partner.records.push({
+            id: 1,
+            txt: `<p class="content"><br></p>`,
+        });
+        let htmlField;
+        const wysiwygPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await super.startWysiwyg(...arguments);
+                htmlField = this;
+                wysiwygPromise.resolve();
+            },
+            // To prevent saving when calling onWillUnmount
+            async commitChanges() {},
+        });
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+        await wysiwygPromise;
+        const editor = htmlField.wysiwyg.odooEditor;
+
+        const paragraph = editor.editable.querySelector(".content");
+        setSelection(paragraph, 0, paragraph, 0);
+        await nextTick();
+
+        // Paste image.
+        const img = await pasteImage(editor, "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII");
+        // p.childnodes = [text, img]
+        setSelection(paragraph, 1, paragraph, 2);
+        await nextTick();
+
+        // we need to trigger a mousup event manually so the wysiwyg run `_updateEditorUI`
+        let mouseUpEvent = new MouseEvent("mouseup", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+        });
+        img.dispatchEvent(mouseUpEvent);
+
+        assert.ok(
+            document.querySelector('div#toolbar[style*="visibility: visible"]'),
+            "Toolbar should be visible"
+        );
+        assert.ok(document.querySelector("div#image-transform"), "Image toolbar is shown");
+
+        setSelection(paragraph, 0, paragraph, 0);
+        await nextTick();
+
+        assert.ok(
+            document.querySelector('div#toolbar[style*="visibility: hidden"]'),
+            "Toolbar should be hidden"
+        );
+
+        img.setAttribute(
+            "style",
+            "transform: rotate(20deg) translateX(-0.5%) translateY(1%); animation-play-state: paused; transition: none;"
+        );
+
+        // setSelection(paragraph, 1, paragraph, 2);
+        // await nextTick();
+        mouseUpEvent = new MouseEvent("mouseup", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+        });
+        img.dispatchEvent(mouseUpEvent);
+        await nextTick();
+
+        assert.ok(
+            document.querySelector('div#toolbar[style*="visibility: visible"]'),
+            "Toolbar should be visible"
+        );
+        assert.ok(document.querySelector("div#image-transform"), "Image toolbar is shown");
+        document.querySelector("div#image-transform").click();
+        await nextTick();
+        assert.ok(
+            document.querySelector("div.transfo-container"),
+            "Transform div should be visible around the image"
+        );
+        assert.ok(
+            document.querySelector('div#toolbar[style*="visibility: visible"]'),
+            "Toolbar should stay visible"
+        );
+        // click second time
+        // simply using click on the element doesn't trigger the mousedown event
+        const mouseDownEvent = new MouseEvent("mousedown", {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+        });
+        document.querySelector("div#image-transform").dispatchEvent(mouseDownEvent);
+        await nextTick();
+        const isRotated = isElementRotated(img);
+        assert.notOk(isRotated, "The image should not be rotated");
+    });
 });
+
+export const mediaDialogServices = {
+    upload: uploadService,
+};
+
+export const uploadTestModule = QUnit.module(
+    "WebEditor.HtmlField.upload",
+    {
+        beforeEach: function () {
+            this.data = wysiwygData({
+                "mail.compose.message": {
+                    fields: {
+                        display_name: {
+                            string: "Displayed name",
+                            type: "char",
+                        },
+                        body: {
+                            string: "Message Body inline (to send)",
+                            type: "html",
+                        },
+                        attachment_ids: {
+                            string: "Attachments",
+                            type: "many2many",
+                            relation: "ir.attachment",
+                        },
+                    },
+                    records: [
+                        {
+                            id: 1,
+                            display_name: "Some Composer",
+                            body: "Hello",
+                            attachment_ids: [],
+                        },
+                    ],
+                },
+            });
+        },
+    },
+    function () {
+        QUnit.test("media dialog: upload", async function (assert) {
+            assert.expect(7);
+            const onAttachmentChangeTriggered = makeDeferred();
+            patchWithCleanup(HtmlField.prototype, {
+                _onAttachmentChange(event) {
+                    super._onAttachmentChange(event);
+                    onAttachmentChangeTriggered.resolve(true);
+                },
+            });
+            const defFileSelector = makeDeferred();
+            const onChangeTriggered = makeDeferred();
+            const webSaveTriggered = makeDeferred();
+            patchWithCleanup(FileSelectorControlPanel.prototype, {
+                setup() {
+                    super.setup();
+                    useEffect(
+                        () => {
+                            defFileSelector.resolve(true);
+                        },
+                        () => [],
+                    );
+                },
+                async onChangeFileInput() {
+                    super.onChangeFileInput();
+                    onChangeTriggered.resolve(true);
+                },
+            });
+            patchWithCleanup(Wysiwyg.prototype, {
+                async _getColorpickerTemplate() {
+                    return COLOR_PICKER_TEMPLATE;
+                },
+            });
+            // create and load form view
+            const serviceRegistry = registry.category("services");
+            for (const [serviceName, serviceDefinition] of Object.entries(mediaDialogServices)) {
+                serviceRegistry.add(serviceName, serviceDefinition);
+            }
+            const serverData = {
+                models: this.data,
+            };
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "test",
+                    res_model: "mail.compose.message",
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                },
+            };
+            serverData.views = {
+                "mail.compose.message,false,search": "<search></search>",
+                "mail.compose.message,false,form": `
+                    <form>
+                        <field name="body" type="html"/>
+                        <field name="attachment_ids" widget="many2many_binary"/>
+                    </form>`,
+            };
+            const mockRPC = (route, args) => {
+                if (args.method === "web_save") {
+                    const createVals = args.args[1];
+                    assert.ok(createVals && createVals.attachment_ids);
+                    assert.equal(createVals.attachment_ids[0][0], 4); // link command
+                    assert.equal(createVals.attachment_ids[0][1], 5); // on attachment id "5"
+                    webSaveTriggered.resolve();
+                }
+                if (route === "/web_editor/attachment/add_data") {
+                    const attachment = {
+                        id: 5,
+                        name: "test.jpg",
+                        description: false,
+                        mimetype: "image/jpeg",
+                        checksum: "7951a43bbfb08fd742224ada280913d1897b89ab",
+                        url: false,
+                        type: "binary",
+                        res_id: 0,
+                        res_model: "mail.compose.message",
+                        public: false,
+                        access_token: false,
+                        image_src: "/web/image/1-a0e63e61/test.jpg",
+                        image_width: 1,
+                        image_height: 1,
+                        original_id: false,
+                    };
+                    serverData.models["ir.attachment"].records.push({ ...attachment });
+                    return Promise.resolve(attachment);
+                } else if (route === "/web/dataset/call_kw/ir.attachment/generate_access_token") {
+                    return Promise.resolve(["129a52e1-6bf2-470a-830e-8e368b022e13"]);
+                }
+            };
+            const webClient = await createWebClient({ serverData, mockRPC });
+            await doAction(webClient, 1);
+            //trigger wysiwyg mediadialog
+            const fixture = getFixture();
+            const formField = fixture.querySelector('.o_field_html[name="body"]');
+            const textInput = formField.querySelector(".note-editable p");
+            textInput.innerText = "test";
+            const pText = $(textInput).contents()[0];
+            Wysiwyg.setRange(pText, 1, pText, 2);
+            await new Promise((resolve) => setTimeout(resolve)); //ensure fully set up
+            const wysiwyg = $(textInput.parentElement).data("wysiwyg");
+            wysiwyg.openMediaDialog();
+            assert.ok(
+                await Promise.race([
+                    defFileSelector,
+                    new Promise((res, _) => setTimeout(() => res(false), 400)),
+                ]),
+                "File Selector did not mount",
+            );
+            // upload test
+            const fileInputs = document.querySelectorAll(
+                ".o_select_media_dialog input.d-none.o_file_input",
+            );
+            const fileB64 =
+                "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigD//2Q==";
+            const fileBytes = new Uint8Array(
+                atob(fileB64)
+                    .split("")
+                    .map((char) => char.charCodeAt(0)),
+            );
+            // redefine 'files' so we can put mock data in through js
+            fileInputs.forEach((input) =>
+                Object.defineProperty(input, "files", {
+                    value: [new File(fileBytes, "test.jpg", { type: "image/jpeg" })],
+                }),
+            );
+            fileInputs.forEach((input) => {
+                input.dispatchEvent(new Event("change", {}));
+            });
+
+            assert.ok(
+                await Promise.race([
+                    onChangeTriggered,
+                    new Promise((res, _) => setTimeout(() => res(false), 400)),
+                ]),
+                "File change event was not triggered",
+            );
+            assert.ok(
+                await Promise.race([
+                    onAttachmentChangeTriggered,
+                    new Promise((res, _) => setTimeout(() => res(false), 400)),
+                ]),
+                "_onAttachmentChange was not called with the new attachment, necessary for unsused upload cleanup on backend"
+            );
+            // wait to check that dom is properly updated
+            await new Promise((res, _) => setTimeout(() => res(false), 400));
+            assert.ok(fixture.querySelector('.o_attachment[title="test.jpg"]'));
+
+            await click(fixture.querySelector(".o_form_button_save"));
+            await webSaveTriggered;
+        });
+    },
+);

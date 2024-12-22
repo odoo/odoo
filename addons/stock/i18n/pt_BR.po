@@ -4,17 +4,17 @@
 # 
 # Translators:
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
-# Wil Odoo, 2024
 # Kevilyn Rosa, 2024
 # Maitê Dietze, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Maitê Dietze, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -588,7 +588,7 @@ msgstr "<span class=\"o_stat_text\">Movimentações de produtos</span>"
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Putaway Rules</span>"
-msgstr "<span class=\"o_stat_text\">Regras de entrada em armazém</span>"
+msgstr "<span class=\"o_stat_text\">Regras de entrada em depósito</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -1207,6 +1207,11 @@ msgid "Archived"
 msgstr "Arquivado"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Are you sure you want to cancel this transfer?"
+msgstr "Tem certeza de que deseja cancelar essa transferência?"
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
 msgid "As soon as possible"
 msgstr "O mais rápido possível"
@@ -1489,7 +1494,7 @@ msgstr "Por lotes"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__serial
 msgid "By Unique Serial Number"
-msgstr "Por número de série único"
+msgstr "Por número de série exclusivo"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__procure_method
@@ -1637,6 +1642,17 @@ msgstr "Movimentação vinculada existe"
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
 msgstr "Alterar quantidade do produto"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"Não é permitido alterar o número de lote/série para linhas de movimentação "
+"com produtos diferentes."
 
 #. module: stock
 #. odoo-python
@@ -3546,6 +3562,13 @@ msgid "Generate Serials numbers"
 msgstr "Gerar números de série"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Generate Serials/Lots"
+msgstr "Gerar números de série/lotes"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get a full traceability from vendors to customers"
 msgstr "Obter uma rastreabilidade completa dos fornecedores aos clientes"
@@ -3654,7 +3677,7 @@ msgstr "Tem variantes"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Having Category"
-msgstr "Categoria"
+msgstr "Na categoria"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__height
@@ -4043,6 +4066,13 @@ msgstr "Importar"
 #, python-format
 msgid "Import Lots"
 msgstr "Importar lotes"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Import Serials/Lots"
+msgstr "Importar séries/lotes"
 
 #. module: stock
 #. odoo-python
@@ -4862,6 +4892,13 @@ msgid "Locations"
 msgstr "Locais"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr "Locais a atualizar"
+
+#. module: stock
 #: model:ir.actions.server,name:stock.action_toggle_is_locked
 msgid "Lock/Unlock"
 msgstr "Travar/destravar"
@@ -4882,6 +4919,11 @@ msgstr "Lote"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__lot_label_format
 msgid "Lot Label Format to auto-print"
 msgstr "Formato da etiqueta do lote a ser impressa automaticamente"
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_label_lot_template_view
+msgid "Lot Label Report"
+msgstr "Relatório de etiqueta de lote"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
@@ -5010,7 +5052,7 @@ msgstr "Estoque baixo? Vamos reabastecer."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__mto_pull_id
 msgid "MTO rule"
-msgstr "Regra de MTO"
+msgstr "Regra de PSE"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
@@ -5492,6 +5534,13 @@ msgstr "Nenhuma operação feita neste lote."
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
 msgid "No operations found. Let's create a transfer!"
 msgstr "Nenhuma operação encontrada. Vamos criar uma transferência!"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "No product found to generate Serials/Lots for."
+msgstr "Não foi encontrado nenhum produto para o qual gerar Nº de série/Lote."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -6082,6 +6131,11 @@ msgid "Package A"
 msgstr "Embalagem A"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "Package B"
+msgstr "Embalagem B"
+
+#. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
 msgid "Package Barcode (PDF)"
 msgstr "Código de barras da embalagem (PDF)"
@@ -6516,7 +6570,7 @@ msgstr "Processar operações em levas de transferências"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process transfers in batch per worker"
-msgstr "Processar transferências em lote por trabalhador"
+msgstr "Processar transferências em lote por prestador de serviços"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_procurement
@@ -6899,7 +6953,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_putaway_rule
 msgid "Putaway Rule"
-msgstr "Regra de armazenamento"
+msgstr "Regra de entrada em depósito"
 
 #. module: stock
 #. odoo-python
@@ -6918,17 +6972,17 @@ msgstr "Regra de armazenamento"
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 #, python-format
 msgid "Putaway Rules"
-msgstr "Regra de armazenamento"
+msgstr "Regra de entrada em depósito"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Putaway:"
-msgstr "Entrada em armazém:"
+msgstr "Entrada em depósito:"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_putaway_tree
 msgid "Putaways Rules"
-msgstr "Regras de entrada em armazém"
+msgstr "Regras de entrada em depósito"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_qty_multiple_check
@@ -7874,7 +7928,7 @@ msgstr "SSCC:"
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr "TERMOS E CONDIÇÕES PADRÕES DE VENDA"
+msgstr "TERMOS PADRÃO E CONDIÇÕES DE VENDA"
 
 #. module: stock
 #. odoo-javascript
@@ -7941,7 +7995,7 @@ msgstr "Pedidos de sucata"
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
 #, python-format
 msgid "Scrap Products"
-msgstr "Sucata"
+msgstr "Sucatear produtos"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrap_id
@@ -7951,7 +8005,7 @@ msgstr "Operação de sucata"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_scrap
 msgid "Scrap products"
-msgstr "Produtos de sucata"
+msgstr "Sucatear produtos"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrapped
@@ -8229,11 +8283,6 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_stock_general_settings
 msgid "Settings"
 msgstr "Definições"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "Shelf 1"
-msgstr "Prateleira 1"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -8885,6 +8934,13 @@ msgstr ""
 "O valor 'operação manual' criará uma movimentação de estoque após a atual. "
 "Com 'automático sem adição de etapas', o local é substituído na movimentação"
 " original."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr "O número de lote/série (%s) está vinculado a outro produto."
 
 #. module: stock
 #. odoo-python
@@ -10043,6 +10099,7 @@ msgid "Used to order the 'All Operations' kanban view"
 msgstr "Usado para ordenar a visão kanban 'todas as operações'"
 
 #. module: stock
+#: model:ir.model,name:stock.model_res_users
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__user_id
 #: model:res.groups,name:stock.group_stock_user
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -10648,6 +10705,16 @@ msgstr "Não é possível alterar o tipo de um produto que já foi usado."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr ""
+"Não é possível criar um ponto de pedido em espera que não seja acionado "
+"manualmente."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You can not delete moves linked to another operation"
@@ -10707,6 +10774,17 @@ msgstr ""
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 "Só é possível processar 1,0 %s de produtos com número de série exclusivo."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
+"Você só pode adiar pontos de pedidos manuais. Você deve arquivar os pontos "
+"de pedido de \"acionamento automático\" se não quiser que sejam acionados."
 
 #. module: stock
 #. odoo-python
@@ -10819,6 +10897,26 @@ msgstr "Não é possível excluir uma sucata concluída."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
+"Você não pode embalar quantidades de diferentes transferências na mesma "
+"embalagem nessa visualização. Tente adicioná-las a uma separação de lote e "
+"embalá-las lá."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr "Não é possível duplicar os quants de ações."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "You cannot modify inventory loss quantity"
@@ -10834,6 +10932,17 @@ msgid ""
 msgstr ""
 "Não é possível movimentar o mesmo conteúdo de embalagem mais de uma vez na "
 "mesma transferência ou dividir a mesma embalagem entre dois locais."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+"Não é possível embalar produtos no mesmo pacote quando eles são de "
+"transferências diferentes com tipos de operação diferentes."
 
 #. module: stock
 #. odoo-python
@@ -11029,13 +11138,6 @@ msgstr "Você deve selecionar uma rota para reabastecer seus produtos"
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You need to set a Serial Number before generating more."
-msgstr "É necessário definir um número de série antes de gerar mais."
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -11055,8 +11157,7 @@ msgstr "É necessário fornecer um número de série/lote para os produtos %s."
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "You should update this document to reflect your T&amp;C."
-msgstr ""
-"É necessário atualizar este documento para refletir seus termos e condições."
+msgstr "Você precisa atualizar esse documento para refletir seu T&amp;C."
 
 #. module: stock
 #. odoo-python

@@ -1,36 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* board
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Hrvoje Sić <hrvoje.sic@gmail.com>, 2022
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2022
-# Bole <bole@dajmi5.com>, 2023
-#
+# hrvoje sić <hrvoje.sic@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2024
+# Bole <bole@dajmi5.com>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2024\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
-"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hr\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/add_to_board/add_to_board.js:0
-#, python-format
-msgid "\"%s\" added to dashboard"
-msgstr "\"%s\" dodan na nadzornu ploču"
-
-#. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid ""
@@ -41,35 +34,28 @@ msgstr ""
 "                  Nadzornu ploču\""
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/add_to_board/legacy_add_to_board.js:0
-#, python-format
-msgid "'%s' added to dashboard"
-msgstr "'%s' dodano na nadzornu ploču"
-
-#. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 #, python-format
 msgid "Add"
 msgstr "Dodaj"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 #, python-format
 msgid "Add to my dashboard"
 msgstr "Dodaj na moju ploču"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/board_controller.js:0
 #, python-format
 msgid "Are you sure that you want to remove this item?"
 msgstr "Jeste li sigurni da želite ukloniti ovu stavku?"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/board_view.js:0
 #: model:ir.model,name:board.model_board_board
 #, python-format
@@ -77,19 +63,25 @@ msgid "Board"
 msgstr "Ploča"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "Change Layout"
 msgstr "Promjeni raspored"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/add_to_board/add_to_board.js:0
-#: code:addons/board/static/src/add_to_board/legacy_add_to_board.js:0
 #, python-format
 msgid "Could not add filter to dashboard"
 msgstr "Ne može se dodati filtar na nadzornu ploču"
+
+#. module: board
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
+#, python-format
+msgid "Dashboard"
+msgstr "Nadzorna ploča"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board__id
@@ -97,14 +89,15 @@ msgid "ID"
 msgstr "ID"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/board_action.xml:0
 #, python-format
 msgid "Invalid action"
 msgstr "Neispravna radnja"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
 #: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "Layout"
@@ -118,15 +111,14 @@ msgid "My Dashboard"
 msgstr "Moja nadzorna ploča"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/add_to_board/add_to_board.js:0
-#: code:addons/board/static/src/add_to_board/legacy_add_to_board.js:0
 #, python-format
 msgid "Please refresh your browser for the changes to take effect."
 msgstr "Molimo osvježite vaš preglednik kako bi izmjene bile vidljive."
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid ""
@@ -137,7 +129,7 @@ msgstr ""
 "                  bolokoji izbornik, prebacite se u graf pogled i kliknite"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid ""
@@ -148,15 +140,22 @@ msgstr ""
 "                  nadzornu ploču korištenjem ocija pretaživanja i grupiranja."
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "Your personal dashboard is empty"
 msgstr "Vaša nadzorna ploča je prazna"
 
 #. module: board
-#. openerp-web
+#. odoo-javascript
 #: code:addons/board/static/src/board_controller.xml:0
 #, python-format
 msgid "in the extended search options."
 msgstr "U opcijama naprednog pretraživanja."
+
+#. module: board
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#, python-format
+msgid "“%s” added to dashboard"
+msgstr "\"%s\" dodano na ploču"

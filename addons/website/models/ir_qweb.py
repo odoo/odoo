@@ -12,6 +12,7 @@ from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.osv import expression
 from odoo.addons.website.models import ir_http
+from odoo.exceptions import AccessError
 
 
 _logger = logging.getLogger(__name__)
@@ -43,11 +44,18 @@ class IrQWeb(models.AbstractModel):
         irQweb = super()._prepare_frontend_environment(values)
 
         current_website = request.website
-        editable = request.env.user.has_group('website.group_website_designer')
-        translatable = editable and irQweb.env.context.get('lang') != irQweb.env['ir.http']._get_default_lang().code
+        editable = irQweb.env.user.has_group('website.group_website_designer')
+        has_group_restricted_editor = irQweb.env.user.has_group('website.group_website_restricted_editor')
+        if not editable and has_group_restricted_editor and 'main_object' in values:
+            try:
+                main_object = values['main_object'].with_user(irQweb.env.user.id)
+                current_website._check_user_can_modify(main_object)
+                editable = True
+            except AccessError:
+                pass
+        translatable = has_group_restricted_editor and irQweb.env.context.get('lang') != irQweb.env['ir.http']._get_default_lang().code
         editable = editable and not translatable
 
-        has_group_restricted_editor = irQweb.env.user.has_group('website.group_website_restricted_editor')
         if has_group_restricted_editor and irQweb.env.user.has_group('website.group_multi_website'):
             values['multi_website_websites_current'] = lazy(lambda: current_website.name)
             values['multi_website_websites'] = lazy(lambda: [
@@ -85,7 +93,7 @@ class IrQWeb(models.AbstractModel):
             if editable:
                 # in edit mode add branding on ir.ui.view tag nodes
                 irQweb = irQweb.with_context(inherit_branding=True)
-            elif has_group_restricted_editor and not translatable:
+            elif has_group_restricted_editor:
                 # will add the branding on fields (into values)
                 irQweb = irQweb.with_context(inherit_branding_auto=True)
 

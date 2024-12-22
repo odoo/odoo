@@ -272,9 +272,6 @@ export class GifPicker extends Component {
             );
             this.offset += 20;
             this.state.favorites.gifs.push(...results);
-            for (const gif of results) {
-                this.pushGif(gif);
-            }
         } catch {
             this.state.loadingError = true;
         }

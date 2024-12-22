@@ -19,6 +19,10 @@
                     <!-- Call the external Bundle to render the css, js, and js loader tags -->
                     <t t-out="channel.script_external"/>
 
+                    <script>
+                        window.odoo ??= {};
+                        window.odoo.csrf_token = "<t t-out="request.csrf_token(None)"/>";
+                    </script>
                     <style type="text/css">
                         body {
                             height: 100%;
@@ -89,9 +93,7 @@
         <template id="loader" name="Livechat : Javascript appending the livechat button">
             <t t-translation="off">
                 if (!window.odoo) {
-                    window.odoo = {
-                        csrf_token: "<t t-out="request.csrf_token(None)"/>",
-                    };
+                    window.odoo = {};
                 }
                 odoo.__session_info__ = Object.assign(odoo.__session_info__ || {}, {
                     livechatData: {

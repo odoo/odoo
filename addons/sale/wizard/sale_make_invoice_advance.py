@@ -203,7 +203,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
             # Create deposit product if necessary
             if not self.product_id:
-                self.company_id.sale_down_payment_product_id = self.env['product.product'].create(
+                self.company_id.sudo().sale_down_payment_product_id = self.env['product.product'].create(
                     self._prepare_down_payment_product_values()
                 )
                 self._compute_product_id()
@@ -313,7 +313,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         else:
             percentage = self.fixed_amount / order.amount_total if order.amount_total else 1
 
-        order_lines = order.order_line.filtered(lambda l: not l.display_type)
+        order_lines = order.order_line.filtered(lambda l: not l.display_type and not l.is_downpayment)
         base_downpayment_lines_values = self._prepare_base_downpayment_line_values(order)
 
         tax_base_line_dicts = [
@@ -339,6 +339,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 # of the tax amount. Therefore fixed taxes are removed and are replace by a new line
                 # with appropriate amount, and non fixed taxes if the fixed tax affected the base of
                 # any other non fixed tax.
+                if fixed_tax.price_include:
+                    continue
+
                 if fixed_tax.include_base_amount:
                     pct_tax = taxes[list(taxes).index(fixed_tax) + 1:]\
                         .filtered(lambda t: t.is_base_affected and t.amount_type != 'fixed')
@@ -351,21 +354,38 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 ])
 
         downpayment_line_map = {}
+        analytic_map = {}
         for tax_id, analytic_distribution, price_subtotal in down_payment_values:
-            grouping_key = frozendict({
-                'tax_id': tuple(sorted(tax_id.ids)),
-                'analytic_distribution': analytic_distribution,
-            })
+            grouping_key = frozendict({'tax_id': tuple(sorted(tax_id.ids))})
             downpayment_line_map.setdefault(grouping_key, {
                 **base_downpayment_lines_values,
                 **grouping_key,
                 'product_uom_qty': 0.0,
                 'price_unit': 0.0,
             })
-            downpayment_line_map[grouping_key]['price_unit'] += \
-                order.currency_id.round(price_subtotal * percentage)
+            downpayment_line_map[grouping_key]['price_unit'] += price_subtotal
+            if analytic_distribution:
+                analytic_map.setdefault(grouping_key, [])
+                analytic_map[grouping_key].append((price_subtotal, analytic_distribution))
 
-        return list(downpayment_line_map.values())
+        lines_values = []
+        for key, line_vals in downpayment_line_map.items():
+            # don't add line if price is 0 and prevent division by zero
+            if order.currency_id.is_zero(line_vals['price_unit']):
+                continue
+            # weight analytic account distribution
+            if analytic_map.get(key):
+                line_analytic_distribution = {}
+                for price_subtotal, account_distribution in analytic_map[key]:
+                    for account, distribution in account_distribution.items():
+                        line_analytic_distribution.setdefault(account, 0.0)
+                        line_analytic_distribution[account] += price_subtotal / line_vals['price_unit'] * distribution
+                line_vals['analytic_distribution'] = line_analytic_distribution
+            # round price unit
+            line_vals['price_unit'] = order.currency_id.round(line_vals['price_unit'] * percentage)
+            lines_values.append(line_vals)
+
+        return lines_values
 
     def _prepare_base_downpayment_line_values(self, order):
         self.ensure_one()

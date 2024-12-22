@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import _, fields, models
 from odoo import Command
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_is_zero
 
 
 class StockMoveLine(models.Model):
@@ -55,13 +55,14 @@ class StockMoveLine(models.Model):
                 qty = line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id, rounding_method='HALF-UP')
                 qty_by_move[line.move_id] += qty
 
+            # If all moves are to be transferred to the wave, link the picking to the wave
             if lines == picking.move_line_ids and lines.move_id == picking.move_ids:
-                move_complete = True
+                add_all_moves = True
                 for move, qty in qty_by_move.items():
-                    if float_compare(move.product_qty, qty, precision_rounding=move.product_uom.rounding) != 0:
-                        move_complete = False
+                    if float_is_zero(qty, precision_rounding=move.product_uom.rounding):
+                        add_all_moves = False
                         break
-                if move_complete:
+                if add_all_moves:
                     wave.picking_ids = [Command.link(picking.id)]
                     continue
 

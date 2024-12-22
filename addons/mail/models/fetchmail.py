@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import imaplib
 import logging
 import poplib
 import socket
@@ -27,6 +28,38 @@ poplib._MAXLINE = 65536
 IMAP4._create_socket = lambda self, timeout=MAIL_TIMEOUT: socket.create_connection((self.host or None, self.port), timeout)
 
 
+def make_wrap_property(name):
+    return property(
+        lambda self: getattr(self.__obj__, name),
+        lambda self, value: setattr(self.__obj__, name, value),
+    )
+
+
+class IMAP4Connection:
+    """Wrapper around IMAP4 and IMAP4_SSL"""
+    def __init__(self, server, port, is_ssl):
+        self.__obj__ = IMAP4_SSL(server, port) if is_ssl else IMAP4(server, port)
+
+
+class POP3Connection:
+    """Wrapper around POP3 and POP3_SSL"""
+    def __init__(self, server, port, is_ssl, timeout=MAIL_TIMEOUT):
+        self.__obj__ = POP3_SSL(server, port, timeout=timeout) if is_ssl else POP3(server, port, timeout=timeout)
+
+
+IMAP_COMMANDS = [cmd.lower() for cmd in imaplib.Commands]
+IMAP_ATTRIBUTES = ['examine', 'login_cram_md5', 'move', 'recent', 'response', 'shutdown', 'unselect'] + IMAP_COMMANDS
+POP3_ATTRIBUTES = [
+    'apop', 'capa', 'close', 'dele', 'list', 'noop', 'pass_', 'quit', 'retr', 'rpop', 'rset', 'set_debuglevel', 'stat',
+    'stls', 'top', 'uidl', 'user', 'utf8'
+]
+for name in IMAP_ATTRIBUTES:
+    setattr(IMAP4Connection, name, make_wrap_property(name))
+
+for name in POP3_ATTRIBUTES:
+    setattr(POP3Connection, name, make_wrap_property(name))
+
+
 class FetchmailServer(models.Model):
     """Incoming POP/IMAP mail server account"""
 
@@ -46,7 +79,7 @@ class FetchmailServer(models.Model):
         ('imap', 'IMAP Server'),
         ('pop', 'POP Server'),
         ('local', 'Local Server'),
-    ], string='Server Type', index=True, required=True, default='pop')
+    ], string='Server Type', index=True, required=True, default='imap')
     server_type_info = fields.Text('Server Type Info', compute='_compute_server_type_info')
     is_ssl = fields.Boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP3S=995)")
     attach = fields.Boolean('Keep Attachments', help="Whether attachments should be downloaded. "
@@ -124,16 +157,10 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
             raise UserError(_('The server "%s" cannot be used because it is archived.', self.display_name))
         connection_type = self._get_connection_type()
         if connection_type == 'imap':
-            if self.is_ssl:
-                connection = IMAP4_SSL(self.server, int(self.port))
-            else:
-                connection = IMAP4(self.server, int(self.port))
+            connection = IMAP4Connection(self.server, int(self.port), self.is_ssl)
             self._imap_login(connection)
         elif connection_type == 'pop':
-            if self.is_ssl:
-                connection = POP3_SSL(self.server, int(self.port), timeout=MAIL_TIMEOUT)
-            else:
-                connection = POP3(self.server, int(self.port), timeout=MAIL_TIMEOUT)
+            connection = POP3Connection(self.server, int(self.port), self.is_ssl)
             #TODO: use this to remove only unread messages
             #connection.user("recent:"+server.user)
             connection.user(self.user)

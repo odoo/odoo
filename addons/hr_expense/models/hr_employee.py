@@ -3,6 +3,33 @@
 from odoo import fields, models, api
 
 
+class EmployeeBase(models.AbstractModel):
+    _inherit = 'hr.employee.base'
+
+    filter_for_expense = fields.Boolean(store=False, search='_search_filter_for_expense')
+
+    def _search_filter_for_expense(self, operator, value):
+        assert operator == '=' and value, "Operation not supported"
+
+        res = [('id', '=', 0)]  # Nothing accepted by domain, by default
+        user = self.env.user
+        employee = user.employee_id
+        if self.user_has_groups('hr_expense.group_hr_expense_user') or self.user_has_groups('account.group_account_user'):
+            res = ['|', ('company_id', '=', False), ('company_id', 'child_of', self.env.company.root_id.id)]  # Then, domain accepts everything
+        elif self.user_has_groups('hr_expense.group_hr_expense_team_approver') and user.employee_ids:
+            res = [
+                '|', '|', '|',
+                ('department_id.manager_id', '=', employee.id),
+                ('parent_id', '=', employee.id),
+                ('id', '=', employee.id),
+                ('expense_manager_id', '=', user.id),
+                '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id),
+            ]
+        elif user.employee_id:
+            res = [('id', '=', employee.id), '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id)]
+        return res
+
+
 class Employee(models.Model):
     _inherit = 'hr.employee'
 
@@ -25,8 +52,6 @@ class Employee(models.Model):
              'If empty, the approval is done by an Administrator or Approver (determined in settings/users).',
     )
 
-    filter_for_expense = fields.Boolean(store=False, search='_search_filter_for_expense')
-
     @api.depends('parent_id')
     def _compute_expense_manager(self):
         for employee in self:
@@ -40,29 +65,6 @@ class Employee(models.Model):
 
     def _get_user_m2o_to_empty_on_archived_employees(self):
         return super()._get_user_m2o_to_empty_on_archived_employees() + ['expense_manager_id']
-
-    def _search_filter_for_expense(self, operator, value):
-        assert operator == '='
-        assert value
-
-        res = [('id', '=', 0)]  # Nothing accepted by domain, by default
-        if self.user_has_groups('hr_expense.group_hr_expense_user') or self.user_has_groups('account.group_account_user'):
-            res = ['|', ('company_id', '=', False), ('company_id', 'child_of', self.env.company.root_id.id)]  # Then, domain accepts everything
-        elif self.user_has_groups('hr_expense.group_hr_expense_team_approver') and self.env.user.employee_ids:
-            user = self.env.user
-            employee = self.env.user.employee_id
-            res = [
-                '|', '|', '|',
-                ('department_id.manager_id', '=', employee.id),
-                ('parent_id', '=', employee.id),
-                ('id', '=', employee.id),
-                ('expense_manager_id', '=', user.id),
-                '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id),
-            ]
-        elif self.env.user.employee_id:
-            employee = self.env.user.employee_id
-            res = [('id', '=', employee.id), '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id)]
-        return res
 
 
 class EmployeePublic(models.Model):

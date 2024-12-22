@@ -5,7 +5,6 @@
 # Translators:
 # Daniel Osser <danielosser@gmail.com>, 2023
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2023
-# Daniel Löfgren, 2023
 # emavertel, 2023
 # lasch a <bmail440@gmail.com>, 2023
 # Björn Hayer, 2023
@@ -15,24 +14,25 @@
 # Haojun Zou <apollo_zhj@msn.com>, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
 # Robin Calvin, 2023
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Victor Ekström, 2024
 # Simon S, 2024
-# Lasse L, 2024
+# Tanguy Queguineur, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
-# Tanguy Quéguineur, 2024
+# Larissa Manderfeld, 2024
+# Lasse L, 2024
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tanguy Quéguineur, 2024\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,7 +123,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_count
 msgid "# Returns"
-msgstr ""
+msgstr "# Returnerar"
 
 #. module: stock
 #. odoo-python
@@ -140,6 +140,8 @@ msgid ""
 "%(warehouse)s can only provide %(free_qty)s %(uom)s, while the quantity to "
 "order is %(qty_to_order)s %(uom)s."
 msgstr ""
+"%(warehouse)s kan endast tillhandahålla %(free_qty)s %(uom)s, medan "
+"kvantiteten att beställa är %(qty_to_order)s %(uom)s."
 
 #. module: stock
 #. odoo-python
@@ -167,7 +169,7 @@ msgstr "%s (kopia)"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
-msgstr ""
+msgstr "%s --> Produktens UoM är %s (%s) - Flyttningens UoM är %s (%s)"
 
 #. module: stock
 #. odoo-python
@@ -217,7 +219,7 @@ msgstr "'Operationstyp - %s' % object.name"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_packages
 msgid "'Packages - %s' % (object.name)"
-msgstr "'Paket - %s' % (objekt.namn)"
+msgstr "'Paket - %s' % (object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking
@@ -236,24 +238,24 @@ msgstr "(kopia av) %s"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(document barcode)"
-msgstr ""
+msgstr "(streckkod för dokument)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(package barcode)"
-msgstr ""
+msgstr "(streckkod för paket)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(product barcode)"
-msgstr ""
+msgstr "(streckkod för produkt)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(serial barcode)"
-msgstr ""
+msgstr "(seriell streckkod)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -265,6 +267,11 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
+"* Ny: Aktiebehandlingen är skapad men inte bekräftad.\n"
+"* Waiting Another Move: En länkad lagerflytt bör göras före denna.\n"
+"* Väntar på tillgänglighet: Lagerflytten är bekräftad men produkten kan inte reserveras.\n"
+"* Tillgänglig: Produkten i lagerflytten är reserverad.\n"
+"* Klar: Produkten har överförts och överföringen har bekräftats."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -339,7 +346,7 @@ msgstr "08-12345678"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
 msgid "12345678901"
-msgstr ""
+msgstr "12345678901"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__2x7xprice
@@ -349,7 +356,7 @@ msgstr "2 x 7 med pris"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "2021-9-01"
-msgstr ""
+msgstr "2021-9-01"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -359,7 +366,7 @@ msgstr "2023-01-01"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "2023-09-24"
-msgstr ""
+msgstr "2023-09-24"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -377,12 +384,12 @@ msgstr "4 x 12"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__4x12_lots
 msgid "4 x 12 - One per lot/SN"
-msgstr ""
+msgstr "4 x 12 - En per parti/SN"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__4x12_units
 msgid "4 x 12 - One per unit"
-msgstr ""
+msgstr "4 x 12 - En per enhet"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x12xprice
@@ -397,12 +404,12 @@ msgstr "4 x 7 med pris"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
-msgstr ""
+msgstr "54326786758"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "98"
-msgstr ""
+msgstr "98"
 
 #. module: stock
 #. odoo-python
@@ -530,12 +537,12 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Allocation</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Allokering</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Detailed Operations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Detaljerad verksamhet</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -547,30 +554,30 @@ msgstr "<span class=\"o_stat_text\">Prognostiserad</span>"
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">In:</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">In:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "<span class=\"o_stat_text\">Location</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Lokalisering</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Lot/Serial Numbers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Parti-/Serienummer</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Max:</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Max:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Min:</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Min:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -587,34 +594,34 @@ msgstr "<span class=\"o_stat_text\">Operationer</span>"
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Out:</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Ut:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
 msgid "<span class=\"o_stat_text\">Product Moves</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Produktförflyttningar</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Putaway Rules</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Avvikelseregler</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "<span class=\"o_stat_text\">Routes</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Rutiner</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Storage Capacities</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Lagringskapacitet</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "<span class=\"o_stat_text\">Traceability</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Spårbarhet</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -643,12 +650,12 @@ msgstr "<span><strong>Lageradress:</strong></span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "<span>O-BTN.return</span>"
-msgstr ""
+msgstr "<span>O-BTN.retur</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
 msgid "<span>On Hand: </span>"
-msgstr ""
+msgstr "<span>På plats: </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -699,7 +706,7 @@ msgstr "<strong>Levererad</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery address</strong>"
-msgstr ""
+msgstr "<strong>Leveransadress</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -731,12 +738,12 @@ msgstr "<strong>Parti- / Serienummer</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
 msgid "<strong>Max qty:</strong>"
-msgstr ""
+msgstr "<strong>Max antal:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
 msgid "<strong>Min qty:</strong>"
-msgstr ""
+msgstr "<strong>Minsta antal:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -790,7 +797,7 @@ msgstr "<strong>Antal</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Recipient address</strong>"
-msgstr ""
+msgstr "<strong>Mottagarens adress</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -830,12 +837,12 @@ msgstr "<strong>Spårad(e) produkt(er):</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Warehouse address</strong>"
-msgstr ""
+msgstr "<strong>Lageradress</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
 msgid "<strong>Where do you want to send the products?</strong>"
-msgstr ""
+msgstr "<strong>Vart vill du skicka produkterna?</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
@@ -845,7 +852,7 @@ msgstr "? Detta kan leda till inkonsekvenser i din inventering."
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_barcode_uniq
 msgid "A barcode can only be assigned to one package type!"
-msgstr ""
+msgstr "En streckkod kan endast kopplas till en förpackningstyp!"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
@@ -995,7 +1002,7 @@ msgstr ""
 #: code:addons/stock/static/src/fields/stock_move_line_x2_many_field.js:0
 #, python-format
 msgid "Add line: %s"
-msgstr ""
+msgstr "Lägg till rad: %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1095,7 +1102,7 @@ msgstr "Tillåten plats"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_route_ids
 msgid "Allowed Route"
-msgstr ""
+msgstr "Tillåten rutt"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__always
@@ -1105,7 +1112,7 @@ msgstr "Alltid"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "Andrwep"
-msgstr ""
+msgstr "Andrwep"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1190,6 +1197,8 @@ msgid ""
 "Apply specific route for the replenishment instead of product's default "
 "routes."
 msgstr ""
+"Använd en specifik rutt för påfyllning istället för produktens "
+"standardrutter."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__4
@@ -1211,6 +1220,11 @@ msgstr "april"
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Archived"
 msgstr "Arkiverad"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Are you sure you want to cancel this transfer?"
+msgstr "Är du säker på att du vill avbryta den här överföringen?"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -1268,7 +1282,7 @@ msgstr "Vid konfirmationen"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 msgid "At Customer"
-msgstr ""
+msgstr "Hos kund"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_attachment_count
@@ -1296,47 +1310,47 @@ msgstr "Auto"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_delivery_slip
 msgid "Auto Print Delivery Slip"
-msgstr ""
+msgstr "Automatisk utskrift av leveranssedel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_lot_labels
 msgid "Auto Print Lot/SN Labels"
-msgstr ""
+msgstr "Automatisk utskrift av Lot/SN-etiketter"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_package_label
 msgid "Auto Print Package Label"
-msgstr ""
+msgstr "Automatisk utskrift av paketetikett"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_packages
 msgid "Auto Print Packages"
-msgstr ""
+msgstr "Paket för automatisk utskrift"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_product_labels
 msgid "Auto Print Product Labels"
-msgstr ""
+msgstr "Automatisk utskrift av produktetiketter"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_reception_report
 msgid "Auto Print Reception Report"
-msgstr ""
+msgstr "Automatisk utskrift Mottagningsrapport"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_reception_report_labels
 msgid "Auto Print Reception Report Labels"
-msgstr ""
+msgstr "Auto Print Mottagningsrapport Etiketter"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_return_slip
 msgid "Auto Print Return Slip"
-msgstr ""
+msgstr "Automatisk utskrift av retursedel"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Automate"
-msgstr ""
+msgstr "Automatisera"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__auto
@@ -1429,7 +1443,7 @@ msgstr "Streckkod"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Barcode Demo"
-msgstr ""
+msgstr "Streckkod Demo"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
@@ -1479,7 +1493,7 @@ msgstr "Spärrmeddelande"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "Blocking: %s"
-msgstr ""
+msgstr "Blockering: %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__quant_ids
@@ -1523,7 +1537,7 @@ msgstr ""
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "COPY"
-msgstr ""
+msgstr "KOPIA"
 
 #. module: stock
 #: model:product.template,name:stock.product_cable_management_box_product_template
@@ -1640,6 +1654,17 @@ msgstr "Det finns länkade flyttningar"
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
 msgstr "Ändra produktantal"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"Det är inte tillåtet att ändra parti- eller serienummer för flyttrader med "
+"olika produkter."
 
 #. module: stock
 #. odoo-python
@@ -1834,7 +1859,7 @@ msgstr "Beräkna leveranskostnad och skicka med Sendcloud"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Shiprocket"
-msgstr ""
+msgstr "Beräkna fraktkostnader och skicka med Shiprocket"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2053,7 +2078,7 @@ msgstr "Skapa nya parti- / serienummer"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
 msgid "Create Stock"
-msgstr ""
+msgstr "Skapa lager"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -2291,7 +2316,7 @@ msgstr "Kundplatser"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Customizable Desk"
-msgstr ""
+msgstr "Anpassningsbart skrivbord"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -2301,37 +2326,37 @@ msgstr "Cyklisk räkning"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_DATE"
-msgstr ""
+msgstr "DEMO_DATE"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_ORIGIN_DISPLAY_NAME"
-msgstr ""
+msgstr "DEMO_ORIGIN_DISPLAY_NAME"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_PARTNER_NAME"
-msgstr ""
+msgstr "DEMO_PARTNER_NAMN"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_PRODUCT_DISPLAY_NAME"
-msgstr ""
+msgstr "DEMO_PRODUKT_DISPLAY_NAMN"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_QUANTITY"
-msgstr ""
+msgstr "DEMO_QUANTITY"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_SOURCE_DISPLAY_NAME"
-msgstr ""
+msgstr "DEMO_SOURCE_DISPLAY_NAME"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_UOM"
-msgstr ""
+msgstr "DEMO_UOM"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
@@ -2460,7 +2485,7 @@ msgstr "december"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Default Barcode Name"
-msgstr ""
+msgstr "Standardnamn för streckkod"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_dest_id
@@ -2470,17 +2495,17 @@ msgstr "Standard destinationsplats"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Default Name"
-msgstr ""
+msgstr "Standardnamn"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Default O-BTN.return Barcode"
-msgstr ""
+msgstr "Standard O-BTN.return Streckkod"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Default Return Name"
-msgstr ""
+msgstr "Standard Returnamn"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_src_id
@@ -2500,7 +2525,7 @@ msgstr "Utgående standardrutt som ska följas"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_return_id
 msgid "Default returns location"
-msgstr ""
+msgstr "Standardplats för returer"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__forecast_uom_id
@@ -2629,6 +2654,7 @@ msgstr "Leveranser"
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_outgoing
 msgid "Deliveries allow you to send products from your stock to a partner."
 msgstr ""
+"Med Deliveries kan du skicka produkter från ditt lager till en partner."
 
 #. module: stock
 #. odoo-javascript
@@ -2706,22 +2732,22 @@ msgstr "Efterfrågan"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Demo Address and Name"
-msgstr ""
+msgstr "Demoadress och namn"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "Demo Display Name"
-msgstr ""
+msgstr "Demo Display Namn"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
 msgid "Demo Name"
-msgstr ""
+msgstr "Demo namn"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
 msgid "Demo Product"
-msgstr ""
+msgstr "Demo produkt"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_packaging__route_ids
@@ -2796,7 +2822,7 @@ msgstr "Beskrivning av mottagningen"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Description on transfer"
-msgstr ""
+msgstr "Beskrivning av överföring"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__description_picking
@@ -2806,17 +2832,17 @@ msgstr "Beskrivning av plockning"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_location_id
 msgid "Dest Location"
-msgstr ""
+msgstr "Dest Plats"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_package_id
 msgid "Dest Package"
-msgstr ""
+msgstr "Dest paket"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_package_id_domain
 msgid "Dest Package Id Domain"
-msgstr ""
+msgstr "Dest Paket Id Domän"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__partner_id
@@ -2862,7 +2888,7 @@ msgstr "Destinationsförpackning"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Destination Package:"
-msgstr ""
+msgstr "Destinationspaket:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__location_dest_id
@@ -2915,12 +2941,12 @@ msgstr "Skillnad"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 #, python-format
 msgid "Discard"
-msgstr "Förkasta"
+msgstr "Avbryt"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "Discard and manually resolve the conflict"
-msgstr "Förkasta och lösa konflikten manuellt"
+msgstr "Avbryt och lösa konflikten manuellt"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_assign_serial
@@ -2935,7 +2961,7 @@ msgstr "Visa Färdig"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_import_lot
 msgid "Display Import Lot"
-msgstr ""
+msgstr "Visa importparti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_lot_on_delivery_slip
@@ -3038,7 +3064,7 @@ msgstr "Gjort av"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_quantity
 msgid "Done Packaging Quantity"
-msgstr ""
+msgstr "Klar Förpackning Antal"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__draft
@@ -3065,6 +3091,9 @@ msgid ""
 "Due to receipts scheduled in the future, you might end up with "
 "excessive stock . Check the Forecasted Report  before reordering"
 msgstr ""
+"På grund av kvitton som planeras i framtiden kan det hända att du får ett "
+"för stort lager. Kontrollera den prognostiserade rapporten före "
+"ombeställning"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
@@ -3193,14 +3222,14 @@ msgstr "Befintliga serienummer. Vänligen korrigera de kodade serienumren:"
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #, python-format
 msgid "Exp"
-msgstr "Exp"
+msgstr "Förväntad"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Exp %s"
-msgstr "Exp %s"
+msgstr "Förväntad %s"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__expected
@@ -3454,7 +3483,7 @@ msgstr "Ledigt lager"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Free Stock in Transit"
-msgstr ""
+msgstr "Fritt lager under transitering"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
@@ -3539,7 +3568,14 @@ msgstr "Skapa"
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 #, python-format
 msgid "Generate Serials numbers"
-msgstr ""
+msgstr "Generera serienummer"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Generate Serials/Lots"
+msgstr "Generera serier/lotter"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3606,6 +3642,7 @@ msgstr ""
 #, python-format
 msgid "HTML reports cannot be auto-printed, skipping report: %s"
 msgstr ""
+"HTML-rapporter kan inte skrivas ut automatiskt, hoppar över rapport: %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -3849,6 +3886,10 @@ msgid ""
 "numbers. For moves that are returns, the detailed operations will always be "
 "prefilled, regardless of this option."
 msgstr ""
+"Om den här kryssrutan är markerad kommer Odoo automatiskt att förifylla de "
+"detaljerade operationerna med motsvarande produkter, platser och "
+"parti-/serienummer. För flyttar som är returer kommer de detaljerade "
+"operationerna alltid att förifyllas, oavsett detta alternativ."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_delivery_slip
@@ -3856,6 +3897,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the delivery slip "
 "of a picking when it is validated."
 msgstr ""
+"Om denna kryssruta är markerad kommer Odoo automatiskt att skriva ut "
+"följesedeln för ett plock när det bekräftas."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_lot_labels
@@ -3863,6 +3906,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN labels "
 "of a picking when it is validated."
 msgstr ""
+"Om denna kryssruta är markerad kommer Odoo automatiskt att skriva ut lot/SN-"
+"etiketterna för ett plock när det bekräftas."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_package_label
@@ -3870,6 +3915,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the package label "
 "when \"Put in Pack\" button is used."
 msgstr ""
+"Om denna kryssruta är markerad kommer Odoo automatiskt att skriva ut "
+"paketetiketten när knappen \"Put in Pack\" används."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_packages
@@ -3877,6 +3924,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the packages and "
 "their contents of a picking when it is validated."
 msgstr ""
+"Om denna kryssruta är markerad kommer Odoo automatiskt att skriva ut paketen"
+" och deras innehåll för ett plock när det bekräftas."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
@@ -3884,6 +3933,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the product labels"
 " of a picking when it is validated."
 msgstr ""
+"Om denna kryssruta är markerad kommer Odoo automatiskt att skriva ut "
+"produktetiketterna för ett plock när det bekräftas."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report_labels
@@ -3891,6 +3942,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the reception "
 "report labels of a picking when it is validated."
 msgstr ""
+"Om denna kryssruta är markerad kommer Odoo automatiskt att skriva ut "
+"mottagningsrapportens etiketter för en plockning när den bekräftas."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report
@@ -3898,6 +3951,9 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the reception "
 "report of a picking when it is validated and has assigned moves."
 msgstr ""
+"Om denna kryssruta är markerad kommer Odoo automatiskt att skriva ut "
+"mottagningsrapporten för en plockning när den är bekräftad och har "
+"tilldelade drag."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_return_slip
@@ -3905,6 +3961,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the return slip of"
 " a picking when it is validated."
 msgstr ""
+"Om denna kryssruta är markerad kommer Odoo automatiskt att skriva ut "
+"retursedeln för en plockning när den bekräftas."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_show_reception_report
@@ -3966,6 +4024,8 @@ msgid ""
 "If this picking was created as a return of another picking, this field links"
 " to the original picking."
 msgstr ""
+"Om detta plock skapades som en returnering av ett annat plock, länkar detta "
+"fält till det ursprungliga plocket."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__backorder_id
@@ -4006,7 +4066,14 @@ msgstr "Importera"
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 #, python-format
 msgid "Import Lots"
-msgstr ""
+msgstr "Importera partier"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Import Serials/Lots"
+msgstr "Importera serier/partier"
 
 #. module: stock
 #. odoo-python
@@ -4018,7 +4085,7 @@ msgstr "Importmall för lagerjusteringar"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "In Stock"
-msgstr ""
+msgstr "In Stock"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
@@ -4075,7 +4142,7 @@ msgstr "Ankommande leveranser"
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
 #, python-format
 msgid "Incorrect type of action submitted as a report, skipping action"
-msgstr ""
+msgstr "Felaktig typ av åtgärd inlämnad som en rapport, hoppar över åtgärd"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_diff_quantity
@@ -4177,6 +4244,8 @@ msgstr ""
 msgid ""
 "Internal transfers allow you to move products from one location to another."
 msgstr ""
+"Med interna överföringar kan du flytta produkter från en plats till en "
+"annan."
 
 #. module: stock
 #. odoo-python
@@ -4306,7 +4375,7 @@ msgstr "Inställning av lagerkvantitet"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_adjustment_name__inventory_adjustment_name
 msgid "Inventory Reason"
-msgstr ""
+msgstr "Inventering Orsak"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_route
@@ -4348,12 +4417,12 @@ msgstr "Låst"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__is_multi_location
 msgid "Is Multi Location"
-msgstr ""
+msgstr "Kan användas på flera platser"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__is_partial_package
 msgid "Is Partial Package"
-msgstr ""
+msgstr "Är partiellt paket"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_signed
@@ -4418,7 +4487,7 @@ msgstr "januari"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "John Doe"
-msgstr ""
+msgstr "John Doe"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_lead_days
@@ -4463,7 +4532,7 @@ msgstr "Behåll skillnaden"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "Keep current lines"
-msgstr ""
+msgstr "Håll aktuella linjer"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -4487,7 +4556,7 @@ msgstr ""
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "LOT-PR-00012"
-msgstr ""
+msgstr "LOT-PR-00012"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__label_type
@@ -4497,7 +4566,7 @@ msgstr "Etiketter att skriva ut"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "Laptop"
-msgstr ""
+msgstr "Bärbar dator"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -4532,7 +4601,7 @@ msgstr "Senaste effektiva inventering"
 #. module: stock
 #: model:product.removal,name:stock.removal_lifo
 msgid "Last In First Out (LIFO)"
-msgstr ""
+msgstr "Sist in, först ut (LIFO)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__write_uid
@@ -4680,7 +4749,7 @@ msgstr "Ledande tidningar"
 #. module: stock
 #: model:product.removal,name:stock.removal_least_packages
 msgid "Least Packages"
-msgstr ""
+msgstr "Minst paket"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_request_count__set_count__empty
@@ -4730,7 +4799,7 @@ msgstr "Länkade flyttar"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "List view of detailed operations"
-msgstr ""
+msgstr "Listvy över detaljerade operationer"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -4817,9 +4886,16 @@ msgid "Locations"
 msgstr "Lagerplatser"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr "Platser att uppdatera"
+
+#. module: stock
 #: model:ir.actions.server,name:stock.action_toggle_is_locked
 msgid "Lock/Unlock"
-msgstr ""
+msgstr "Lås/låsa upp"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_category_form_view_inherit
@@ -4836,23 +4912,28 @@ msgstr "Parti"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__lot_label_format
 msgid "Lot Label Format to auto-print"
-msgstr ""
+msgstr "Lot Label Format till automatisk utskrift"
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_label_lot_template_view
+msgid "Lot Label Report"
+msgstr "Rapport om partiets etikett"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
 msgid "Lot Properties"
-msgstr ""
+msgstr "Tomtfastigheter"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Lot/SN Labels"
-msgstr "Lot/SN Etiketter"
+msgstr "Parti/SN Etiketter"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
 msgid "Lot/SN:"
-msgstr "Lot/SN:"
+msgstr "Parti/SN:"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_lot
@@ -4902,12 +4983,12 @@ msgstr "Parti- / Serienummernamn"
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Lot/Serial Number Relocated"
-msgstr ""
+msgstr "Parti/Serialnummer Flyttad"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Lot/Serial:"
-msgstr ""
+msgstr "Parti/Serial:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_production_lot
@@ -4917,7 +4998,7 @@ msgstr "Parti- & serienummer"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Lots & Serial numbers will appear on the delivery slip"
-msgstr ""
+msgstr "Parti- och serienummer anges på leveranssedeln"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lots_visible
@@ -4944,7 +5025,7 @@ msgstr "Parti- / Serienummer"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "Lots/Serial numbers"
-msgstr ""
+msgstr "Parti/Serienummer"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
@@ -4959,7 +5040,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_product_replenish
 msgid "Low on stock? Let's replenish."
-msgstr ""
+msgstr "Lågt lager? Låt oss fylla på."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__mto_pull_id
@@ -5148,7 +5229,7 @@ msgstr "Flytta"
 #: model:ir.actions.act_window,name:stock.stock_move_action
 #: model:ir.ui.menu,name:stock.stock_move_menu
 msgid "Move Analysis"
-msgstr ""
+msgstr "Analys av rörelser"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -5277,7 +5358,7 @@ msgstr "Namn"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Name Demo"
-msgstr ""
+msgstr "Namn Demo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__nbr_moves_in
@@ -5344,7 +5425,7 @@ msgstr "Ny överföring"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_calendar_event_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Nästa Kalenderhändelse för Aktivitet"
+msgstr "Nästa Kalenderhändelse för aktivitet"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
@@ -5419,12 +5500,12 @@ msgstr "Inget behov av tilldelning konstaterat."
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_outgoing
 msgid "No delivery found. Let's create one!"
-msgstr ""
+msgstr "Ingen leverans hittades. Låt oss skapa en!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_internal
 msgid "No internal transfer found. Let's create one!"
-msgstr ""
+msgstr "Ingen intern överföring hittades. Låt oss skapa en!"
 
 #. module: stock
 #. odoo-python
@@ -5443,7 +5524,14 @@ msgstr "Inga åtgärder har vidtagits på detta parti."
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
 msgid "No operations found. Let's create a transfer!"
-msgstr ""
+msgstr "Inga operationer hittades. Låt oss skapa en överföring!"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "No product found to generate Serials/Lots for."
+msgstr "Ingen produkt hittades för att generera Serials/Lots för."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -5469,7 +5557,7 @@ msgstr "Ingen inlagringsregel hittad. Låt oss skapa en!"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
 msgid "No receipt found. Let's create one!"
-msgstr ""
+msgstr "Inget kvitto hittades. Låt oss skapa ett!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
@@ -5484,6 +5572,8 @@ msgid ""
 "No rule has been found to replenish %r in %r.\n"
 "Verify the routes configuration on the product."
 msgstr ""
+"Ingen regel har hittats för att fylla på %r i %r.\n"
+"Verifiera konfigurationen av rutterna på produkten."
 
 #. module: stock
 #. odoo-python
@@ -5623,6 +5713,9 @@ msgid ""
 "                                        install the IoT App on a computer that is on the same local network as the\n"
 "                                        barcode operator and configure the routing of the reports."
 msgstr ""
+"Odoo öppnar en PDF-förhandsgranskning som standard. Om du (endast Enterprise-användare) vill skriva ut direkt,\n"
+"                                        installera IoT-appen på en dator som är ansluten till samma lokala nätverk som streckkodsoperatören\n"
+"                                        streckkodsoperatören och konfigurera routningen av rapporterna."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -5685,7 +5778,7 @@ msgstr "Endast en lageransvarig kan godkänna en lagerjustering."
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__move
 msgid "Operation Quantities"
-msgstr ""
+msgstr "Operationsmängder"
 
 #. module: stock
 #. odoo-python
@@ -5810,7 +5903,7 @@ msgstr "Beställ en gång"
 #: code:addons/stock/static/src/views/stock_orderpoint_list_buttons.xml:0
 #, python-format
 msgid "Order To Max"
-msgstr ""
+msgstr "Order till max"
 
 #. module: stock
 #. odoo-python
@@ -5954,7 +6047,7 @@ msgstr "Ägare "
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Owner:"
-msgstr ""
+msgstr "Ägare:"
 
 #. module: stock
 #. odoo-python
@@ -5983,7 +6076,7 @@ msgstr "Datum för paketering"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Pack Date Demo"
-msgstr ""
+msgstr "Pack Datum Demo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -6018,7 +6111,12 @@ msgstr "Emballage"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package A"
-msgstr ""
+msgstr "Paket A"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "Package B"
+msgstr "Paket B"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
@@ -6051,12 +6149,12 @@ msgstr "Paketets innehåll"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Package Label"
-msgstr ""
+msgstr "Paketets etikett"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__package_label_to_print
 msgid "Package Label to Print"
-msgstr ""
+msgstr "Paketetikett att skriva ut"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__package_level_id
@@ -6101,12 +6199,12 @@ msgstr "Pakettyp"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Package Type Demo"
-msgstr ""
+msgstr "Pakettyp Demo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Package Type:"
-msgstr "Typ av paket"
+msgstr "Typ av paket:"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_type_view
@@ -6191,7 +6289,7 @@ msgstr "Packningszon"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "Pallet"
-msgstr ""
+msgstr "Pall"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
@@ -6218,7 +6316,7 @@ msgstr "Delvis betald"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__partial_package_names
 msgid "Partial Package Names"
-msgstr ""
+msgstr "Partiella paketnamn"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__partially_available
@@ -6239,7 +6337,7 @@ msgstr "Partneradress"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_action_inventory_tree
 msgid "Physical Inventory"
-msgstr ""
+msgstr "Fysisk inventering"
 
 #. module: stock
 #. odoo-python
@@ -6252,7 +6350,7 @@ msgstr "Plock"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quant_id
 msgid "Pick From"
-msgstr ""
+msgstr "Välj från"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pick_type_id
@@ -6263,7 +6361,7 @@ msgstr "Typ av plock"
 #: model:ir.model.fields,field_description:stock.field_stock_move__picked
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picked
 msgid "Picked"
-msgstr ""
+msgstr "Vald"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__picking_ids
@@ -6288,7 +6386,7 @@ msgstr "Plockåtgärder"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__picking_properties_definition
 msgid "Picking Properties"
-msgstr ""
+msgstr "Välja egenskaper"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
@@ -6323,6 +6421,8 @@ msgid ""
 "Please put this document inside your return parcel.<br/>\n"
 "                                Your parcel must be sent to this address:"
 msgstr ""
+"Vänligen lägg detta dokument i ditt returpaket.<br/>\n"
+"                                Ditt paket måste skickas till den här adressen:"
 
 #. module: stock
 #. odoo-python
@@ -6357,7 +6457,7 @@ msgstr "Föredragen rutt"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Presence depends on the type of operation."
-msgstr ""
+msgstr "Närvaron beror på vilken typ av operation det gäller."
 
 #. module: stock
 #. odoo-python
@@ -6367,7 +6467,7 @@ msgid ""
 "Press the CREATE button to define quantity for each product in your stock or"
 " import them from a spreadsheet throughout Favorites"
 msgstr ""
-"Tryck på CREATE-knappen för att definiera antal för varje produkt i ditt "
+"Tryck på SKAPA-knappen för att definiera antal för varje produkt i ditt "
 "lager eller importera dem från ett kalkylblad genom hela Favoriter"
 
 #. module: stock
@@ -6411,17 +6511,17 @@ msgstr "Printa Etikett"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Print label as:"
-msgstr ""
+msgstr "Skriv ut etiketten som:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Print on \"Put in Pack\""
-msgstr ""
+msgstr "Skriv ut \"Lägga i paket\""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Print on Validation"
-msgstr ""
+msgstr "Skriv ut vid validering"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__printed
@@ -6560,7 +6660,7 @@ msgstr "Produktkategori"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_report_label
 msgid "Product Display Name"
-msgstr ""
+msgstr "Produktens visningsnamn"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_product
@@ -6570,7 +6670,7 @@ msgstr "Produktetikett (ZPL)"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__product_label_format
 msgid "Product Label Format to auto-print"
-msgstr ""
+msgstr "Format för produktetikett för automatisk utskrift"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_label_product_product_view
@@ -6626,7 +6726,7 @@ msgstr "Produktkvantitet uppdaterad"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
 msgid "Product Relocated"
-msgstr ""
+msgstr "Produkt flyttad"
 
 #. module: stock
 #. odoo-javascript
@@ -6936,7 +7036,7 @@ msgstr "Kvantiteter att återställa"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantities unpacked"
-msgstr ""
+msgstr "Oförpackade kvantiteter"
 
 #. module: stock
 #. odoo-javascript
@@ -6984,7 +7084,7 @@ msgstr "Lagersaldo"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantity Relocated"
-msgstr ""
+msgstr "Kvantitet flyttad"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
@@ -7013,7 +7113,7 @@ msgstr "Antal har flyttats sedan senaste räkningen"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quantity_product_uom
 msgid "Quantity in Product UoM"
-msgstr ""
+msgstr "Kvantitet i produkten UoM"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__availability
@@ -7072,7 +7172,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantity or Reserved Quantity should be set."
-msgstr ""
+msgstr "Kvantitet eller Reserverad kvantitet ska anges."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_positive_quantity
@@ -7120,7 +7220,7 @@ msgstr "Quants kan inte skapas för förbrukningsvaror eller tjänster."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "RETURN OF"
-msgstr ""
+msgstr "ÅTERKOMST AV"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__rating_ids
@@ -7150,7 +7250,7 @@ msgstr "Anledning"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__message
 msgid "Reason for relocation"
-msgstr ""
+msgstr "Orsak till omlokalisering"
 
 #. module: stock
 #. odoo-javascript
@@ -7180,7 +7280,7 @@ msgstr "Kvitton"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
 msgid "Receipts allow you to get products from a partner."
-msgstr ""
+msgstr "Kvitton gör att du kan få produkter från en partner."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7248,7 +7348,7 @@ msgstr "Mottagningsrapport Etikett"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Reception Report Labels"
-msgstr ""
+msgstr "Etiketter för mottagningsrapporter"
 
 #. module: stock
 #. odoo-javascript
@@ -7298,12 +7398,12 @@ msgstr "Relaterade lagerflyttar"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Relocate"
-msgstr ""
+msgstr "Omlokalisera"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
 msgid "Relocate your stock"
-msgstr ""
+msgstr "Omlokalisera ditt lager"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -7380,7 +7480,7 @@ msgstr "Fyll på plats"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__should_replenish
 msgid "Replenish Quantities"
-msgstr ""
+msgstr "Fylla på kvantiteter"
 
 #. module: stock
 #. odoo-python
@@ -7449,7 +7549,7 @@ msgstr "Rapportera åtgärder"
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
 #, python-format
 msgid "Report Printing Error"
-msgstr ""
+msgstr "Fel vid utskrift av rapport"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
@@ -7528,7 +7628,7 @@ msgstr "Reserverad"
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_qty
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_packaging_qty
 msgid "Reserved Packaging Quantity"
-msgstr ""
+msgstr "Reserverat antal förpackningar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__reserved_quantity
@@ -7595,12 +7695,12 @@ msgstr "Retur Plockning Rad"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Return Slip"
-msgstr ""
+msgstr "Retursedel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_id
 msgid "Return of"
-msgstr ""
+msgstr "Återkomst av"
 
 #. module: stock
 #. odoo-python
@@ -7612,7 +7712,7 @@ msgstr "Returnering av %s"
 #. module: stock
 #: model:ir.actions.report,name:stock.return_label_report
 msgid "Return slip"
-msgstr ""
+msgstr "Retursedel"
 
 #. module: stock
 #. odoo-python
@@ -7778,7 +7878,7 @@ msgstr "Kör schemaläggaren"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "S0001"
-msgstr ""
+msgstr "S0001"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_sms
@@ -7795,7 +7895,7 @@ msgstr "SMS leveransfel"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "SSCC Demo"
-msgstr ""
+msgstr "SSCC Demo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -7872,12 +7972,12 @@ msgstr "Skrotningsordrar"
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
 #, python-format
 msgid "Scrap Products"
-msgstr ""
+msgstr "Skrotprodukter"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrap_id
 msgid "Scrap operation"
-msgstr ""
+msgstr "Skrotverksamhet"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_scrap
@@ -8086,7 +8186,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 #, python-format
 msgid "Set"
-msgstr "Sätt"
+msgstr "Ange"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_request_count__set_count__set
@@ -8096,7 +8196,7 @@ msgstr "Ange aktuellt värde"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set Warehouse Routes"
-msgstr "Sätt rutter för lagerplatser"
+msgstr "Ange rutter för lagerplatser"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category__removal_strategy_id
@@ -8118,7 +8218,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set expiration dates on lots & serial numbers"
-msgstr ""
+msgstr "Ange utgångsdatum för partier och serienummer"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8134,12 +8234,12 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_to_zero_quants_tree
 msgid "Set to 0"
-msgstr ""
+msgstr "Ställ in till 0"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
 msgid "Set to quantity on hand"
-msgstr ""
+msgstr "Ställ in till kvantitet i lager"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
@@ -8147,7 +8247,7 @@ msgid ""
 "Sets a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
 msgstr ""
-"Ställer in en plats om du producerar på en fast plats. Det kan vara en "
+"Ange en plats om du producerar på en fast plats. Det kan vara en "
 "partnerplats om du lägger ut tillverkningen på underleverantörer."
 
 #. module: stock
@@ -8157,14 +8257,9 @@ msgid "Settings"
 msgstr "Inställningar"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "Shelf 1"
-msgstr ""
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "Shelf A"
-msgstr ""
+msgstr "Hylla A"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posy
@@ -8211,7 +8306,7 @@ msgstr "Frakt: Skicka via e-post"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_shiprocket
 msgid "Shiprocket Connector"
-msgstr ""
+msgstr "Anslutning för skeppsrobotar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
@@ -8271,12 +8366,12 @@ msgstr "Visa på hand Qty Statusknapp"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_picking_type
 msgid "Show Picking Type"
-msgstr ""
+msgstr "Visa typ av plockning"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_quant
 msgid "Show Quant"
-msgstr ""
+msgstr "Visa Quant"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_show_reception_report
@@ -8286,7 +8381,7 @@ msgstr "Visa mottagningsrapport vid validering"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_reserved
 msgid "Show Reserved"
-msgstr ""
+msgstr "Visa reserverat"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_set_qty_button
@@ -8306,12 +8401,12 @@ msgstr "Visa alla poster som har nästa händelse före idag"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_m2o
 msgid "Show lot_id"
-msgstr ""
+msgstr "Visa lot_id"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_text
 msgid "Show lot_name"
-msgstr ""
+msgstr "Visa lot_name"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rules_report__warehouse_ids
@@ -8434,7 +8529,7 @@ msgstr "Ursprungsförpackning"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Source Package:"
-msgstr ""
+msgstr "Källpaket:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -8450,7 +8545,7 @@ msgstr "Stjärnmärkta produkter"
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__state
 msgid "State"
-msgstr "Etapp"
+msgstr "Läge"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__state
@@ -8496,7 +8591,7 @@ msgstr "Lager Tilldela serienummer"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Stock In Transit"
-msgstr ""
+msgstr "Lager i transit"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -8567,7 +8662,7 @@ msgstr "Historik över lagerkvantitet"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant_relocate
 msgid "Stock Quantity Relocation"
-msgstr ""
+msgstr "Omflyttning av lagerkvantitet"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_quantity
@@ -8619,7 +8714,7 @@ msgstr "Lagerspårrad"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids_without_package
 msgid "Stock move"
-msgstr ""
+msgstr "Aktierörelse"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -8717,7 +8812,7 @@ msgstr "Lagerplatser"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Store To"
-msgstr ""
+msgstr "Butik till"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_multi_locations
@@ -8814,6 +8909,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr "Lot/Serienummer (%s) är kopplat till en annan produkt."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
@@ -8821,7 +8923,7 @@ msgid ""
 msgstr ""
 "Serienumret (%s) används redan på följande plats(er): %s.\n"
 "\n"
-"Är detta förväntat? Detta kan till exempel inträffa om en leverans valideras innan dess motsvarande mottagningsoperation valideras. I detta fall kommer problemet att lösas automatiskt när alla steg är slutförda. I annat fall bör serienumret korrigeras för att förhindra inkonsekventa data."
+"Är detta förväntat? Detta kan till exempel inträffa om en leverans bekräftas innan dess motsvarande mottagningsoperation bekräftas. I detta fall kommer problemet att lösas automatiskt när alla steg är slutförda. I annat fall bör serienumret korrigeras för att förhindra inkonsekventa data."
 
 #. module: stock
 #. odoo-python
@@ -8833,7 +8935,7 @@ msgstr "Backorder %s har skapats."
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company!"
-msgstr ""
+msgstr "Streckkoden för en plats måste vara unik för varje företag!"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -8890,12 +8992,12 @@ msgstr "Den första i sekvensen är standard."
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "The following replenishment order have been generated"
-msgstr ""
+msgstr "Följande påfyllningsorder har genererats"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 msgid "The forecasted quantity of"
-msgstr ""
+msgstr "Den prognostiserade kvantiteten av"
 
 #. module: stock
 #. odoo-javascript
@@ -8987,6 +9089,8 @@ msgid ""
 "The quantities selected do not all belong to the same location.\n"
 "                    You may not assign them a package without moving them to a common location."
 msgstr ""
+"De valda kvantiteterna hör inte alla till samma plats.\n"
+"                    Du kan inte tilldela dem ett paket utan att flytta dem till en gemensam plats."
 
 #. module: stock
 #. odoo-python
@@ -9102,6 +9206,9 @@ msgid ""
 "There is nothing eligible to put in a pack. Either there are no quantities "
 "to put in a pack or all products are already in a pack."
 msgstr ""
+"Det finns inget kvalificerat att lägga i en förpackning. Antingen finns det "
+"inga kvantiteter att lägga i en förpackning eller så finns alla produkter "
+"redan i en förpackning."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -9146,6 +9253,8 @@ msgid ""
 "This checkbox is just indicative, it doesn't validate or generate any "
 "product moves."
 msgstr ""
+"Den här kryssrutan är bara vägledande, den validerar eller genererar inga "
+"produktrörelser."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -9172,6 +9281,8 @@ msgid ""
 "This is the default location for returns created from a picking with this "
 "operation type."
 msgstr ""
+"Detta är standardplatsen för returer som skapas från en plockning med denna "
+"operationstyp."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -9198,6 +9309,10 @@ msgid ""
 "quantity does not generate a backorder.Changing this quantity on assigned "
 "moves affects the product reservation, and should be done with care."
 msgstr ""
+"Detta är den produktkvantitet som är planerad att flyttas.att sänka denna "
+"kvantitet genererar inte en restorder.att ändra denna kvantitet på "
+"tilldelade flyttar påverkar produktreservationen och bör göras med "
+"försiktighet."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__child_internal_location_ids
@@ -9450,7 +9565,7 @@ msgstr "Att göra"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
 msgid "To Location"
-msgstr ""
+msgstr "Till plats"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__qty_to_order
@@ -9462,7 +9577,7 @@ msgstr "Att beställa"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
 msgid "To Package"
-msgstr ""
+msgstr "Till paket"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -9489,7 +9604,7 @@ msgstr "Dagens aktiviteter"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 msgid "Total Demand"
-msgstr ""
+msgstr "Total efterfrågan"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -9825,7 +9940,7 @@ msgstr "Måttenheter"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
 msgid "Unity of measure"
-msgstr ""
+msgstr "Enhetligt mått"
 
 #. module: stock
 #. odoo-python
@@ -9858,7 +9973,7 @@ msgstr "Osäker måttenhet"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__unwanted_replenish
 msgid "Unwanted Replenish"
-msgstr ""
+msgstr "Oönskad Återfylla"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom
@@ -9882,7 +9997,7 @@ msgstr "Uppdatera produktantalet"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
 msgid "Update Quantities"
-msgstr ""
+msgstr "Uppdatering av kvantiteter"
 
 #. module: stock
 #. odoo-javascript
@@ -9953,6 +10068,7 @@ msgid "Used to order the 'All Operations' kanban view"
 msgstr "Används för att sortera Kanban-vyn \"Alla operationer\""
 
 #. module: stock
+#: model:ir.model,name:stock.model_res_users
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__user_id
 #: model:res.groups,name:stock.group_stock_user
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -10034,23 +10150,23 @@ msgstr "Synlighetsdagar"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "WH/OUT/00001"
-msgstr ""
+msgstr "WH/OUT/00001"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "WH/OUT/0001"
-msgstr ""
+msgstr "WH/OUT/0001"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "WH/Outgoing"
-msgstr ""
+msgstr "WH/Outgående"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_generic_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "WH/Stock"
-msgstr ""
+msgstr "WH/Stock"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__confirmed
@@ -10437,7 +10553,7 @@ msgstr "Guide"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "Write one lot/serial name per line, followed by the quantity."
-msgstr ""
+msgstr "Skriv ett parti-/serienamn per rad, följt av kvantiteten."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -10445,6 +10561,8 @@ msgid ""
 "You are about to move quantities in a package without moving the full package.\n"
 "                    Those quantities will be removed from the following package(s):"
 msgstr ""
+"Du är på väg att flytta kvantiteter i ett paket utan att flytta hela paketet.\n"
+"                    Dessa kvantiteter kommer att tas bort från följande paket:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
@@ -10452,6 +10570,8 @@ msgid ""
 "You are going to pick products that are not referenced\n"
 "in this location. That leads to a negative stock."
 msgstr ""
+"Du kommer att välja produkter som inte refereras till\n"
+"på den här platsen. Det leder till ett negativt lager."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
@@ -10550,10 +10670,18 @@ msgstr "Du kan inte ändra typen av en produkt som redan har använts."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr "Du kan inte skapa en snoozed orderpunkt som inte utlöses manuellt."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You can not delete moves linked to another operation"
-msgstr ""
+msgstr "Du kan inte ta bort rörelser som är kopplade till en annan operation"
 
 #. module: stock
 #. odoo-python
@@ -10588,6 +10716,8 @@ msgid ""
 "You can only move a lot/serial to a new location if it exists in a single "
 "location."
 msgstr ""
+"Du kan bara flytta ett parti/en serie till en ny plats om det finns på en "
+"enda plats."
 
 #. module: stock
 #. odoo-python
@@ -10597,6 +10727,8 @@ msgid ""
 "You can only move positive quantities stored in locations used by a single "
 "company per relocation."
 msgstr ""
+"Du kan endast flytta positiva kvantiteter som lagras på platser som används "
+"av ett enda företag per flyttning."
 
 #. module: stock
 #. odoo-python
@@ -10604,6 +10736,17 @@ msgstr ""
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr "Du kan endast bearbeta 1.0 %s produkter med ett unikt serienummer."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
+"Du kan bara snooza manuella orderpunkter. Du bör hellre arkivera \"auto-"
+"trigger\" orderpunkter om du inte vill att de ska triggas."
 
 #. module: stock
 #. odoo-python
@@ -10621,6 +10764,8 @@ msgstr ""
 #, python-format
 msgid "You can't disable locations %s because they still contain products."
 msgstr ""
+"Du kan inte inaktivera platserna %s eftersom de fortfarande innehåller "
+"produkter."
 
 #. module: stock
 #. odoo-python
@@ -10713,6 +10858,26 @@ msgstr "Det går inte att radera en färdig skrotning."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
+"Du kan inte direkt packa kvantiteter från olika överföringar till samma "
+"paket via den här vyn. Försök att lägga till dem i en batchplockning och "
+"packa dem där."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr "Du kan inte duplicera aktiequanter."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "You cannot modify inventory loss quantity"
@@ -10728,6 +10893,17 @@ msgid ""
 msgstr ""
 "Du kan inte flytta samma paketinnehåll mer än en gång i samma överföring "
 "eller dela upp samma paket på två platser."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+"Du kan inte packa produkter i samma förpackning när de kommer från olika "
+"transfereringar med olika operationstyper."
 
 #. module: stock
 #. odoo-python
@@ -10816,6 +10992,8 @@ msgid ""
 "You cannot validate a transfer if no quantities are reserved. To force the "
 "transfer, encode quantities."
 msgstr ""
+"Du kan inte validera en överföring om inga kvantiteter är reserverade. För "
+"att tvinga fram överföringen, koda kvantiteterna."
 
 #. module: stock
 #. odoo-python
@@ -10825,6 +11003,8 @@ msgid ""
 "You can’t validate an empty transfer. Please add some products to move "
 "before proceeding."
 msgstr ""
+"Du kan inte validera en tom överföring. Lägg till några produkter att flytta"
+" innan du fortsätter."
 
 #. module: stock
 #. odoo-python
@@ -10909,14 +11089,7 @@ msgstr ""
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "You need to select a route to replenish your products"
-msgstr ""
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You need to set a Serial Number before generating more."
-msgstr "Du måste ange ett serienummer innan du kan generera fler."
+msgstr "Du måste välja en rutt för att fylla på dina produkter"
 
 #. module: stock
 #. odoo-python
@@ -11001,7 +11174,7 @@ msgstr "Ditt lager är för närvarande tomt"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__package_label_to_print__zpl
 msgid "ZPL"
-msgstr ""
+msgstr "ZPL"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__print_format__zpl
@@ -11013,12 +11186,12 @@ msgstr "ZPL-etiketter"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__zpl_lots
 msgid "ZPL Labels - One per lot/SN"
-msgstr ""
+msgstr "ZPL-etiketter - En per parti/SN"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__zpl_units
 msgid "ZPL Labels - One per unit"
-msgstr ""
+msgstr "ZPL-etiketter - En per enhet"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zplxprice
@@ -11046,7 +11219,7 @@ msgstr "bpost-anslutning"
 #. module: stock
 #: model:product.removal,method:stock.removal_closest
 msgid "closest"
-msgstr ""
+msgstr "närmast"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -11078,7 +11251,7 @@ msgstr "t.ex. centrallager"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "e.g. LOT/0001/20121"
-msgstr "t.ex. LOT/0001/20121"
+msgstr "t.ex. PARTI/0001/20121"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -11103,7 +11276,7 @@ msgstr "t.ex. mottagningar"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "e.g. SN000001"
-msgstr ""
+msgstr "t.ex. SN000001"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -11118,7 +11291,7 @@ msgstr "t.ex. mottagning i två steg"
 #. module: stock
 #: model:product.removal,method:stock.removal_fifo
 msgid "fifo"
-msgstr ""
+msgstr "fifo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
@@ -11141,12 +11314,12 @@ msgstr "är"
 #. module: stock
 #: model:product.removal,method:stock.removal_least_packages
 msgid "least_packages"
-msgstr ""
+msgstr "minst_förpackningar"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_lifo
 msgid "lifo"
-msgstr ""
+msgstr "lifo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -11187,7 +11360,7 @@ msgstr "report_stock_quantity_graph"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "reserved"
-msgstr ""
+msgstr "reserverad"
 
 #. module: stock
 #. odoo-javascript
@@ -11199,7 +11372,7 @@ msgstr "bör fyllas på"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__filter_for_stock_putaway_rule
 msgid "stock.putaway.rule"
-msgstr ""
+msgstr "lager.undan.regel"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__warehouse_id
@@ -11222,7 +11395,7 @@ msgstr "för att nå maximalt"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "units"
-msgstr ""
+msgstr "enheter"
 
 #. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation

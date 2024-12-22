@@ -32,6 +32,7 @@ class StockQuant(models.Model):
     def _compute_value(self):
         """ (Product.value_svl / Product.quantity_svl) * quant.quantity, i.e. average unit cost * on hand qty
         """
+        self.fetch(['company_id', 'location_id', 'owner_id', 'product_id', 'quantity'])
         for quant in self:
             quant.currency_id = quant.company_id.currency_id
             if not quant.location_id or not quant.product_id or\

@@ -16,6 +16,7 @@ export const popupService = {
             props: { popups },
         });
         let popupId = 0;
+        let zIndex = 10000;
         return {
             /**
              * Displays a popup over the interface.
@@ -29,10 +30,11 @@ export const popupService = {
             add(component, props) {
                 return new Promise((resolve) => {
                     const id = ++popupId;
+                    zIndex++;
                     popups[id] = {
                         component,
                         props: {
-                            keepBehind: false,
+                            zIndex,
                             cancelKey: "Escape",
                             confirmKey: "Enter",
                             // FIXME POSREF assigning the default props by hand defeats the point of default props

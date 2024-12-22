@@ -41,6 +41,11 @@
         <field name="model_id" ref="model_pos_order" />
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
+    <record id="rule_pos_order_line_multi_company" model="ir.rule">
+        <field name="name">Point Of Sale Order Line</field>
+        <field name="model_id" ref="model_pos_order_line" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
     <record id="rule_pos_session_multi_company" model="ir.rule">
         <field name="name">Point Of Sale Session</field>
         <field name="model_id" ref="model_pos_session" />
@@ -54,7 +59,7 @@
     <record id="rule_pos_order_report_multi_company" model="ir.rule">
         <field name="name">Point Of Sale Order Analysis multi-company</field>
         <field name="model_id" ref="model_report_pos_order"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
     <record id="rule_pos_payment_method_multi_company" model="ir.rule">
         <field name="name">PoS Payment Method</field>

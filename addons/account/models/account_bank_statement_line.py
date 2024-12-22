@@ -1,10 +1,13 @@
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv.expression import get_unaccent_wrapper
+from odoo.tools.misc import str2bool
 
 from odoo.addons.base.models.res_bank import sanitize_account_number
 
 from xmlrpc.client import MAXINT
+
+from odoo.tools import create_index
 
 
 class AccountBankStatementLine(models.Model):
@@ -44,7 +47,7 @@ class AccountBankStatementLine(models.Model):
         comodel_name='account.move',
         auto_join=True,
         string='Journal Entry', required=True, readonly=True, ondelete='cascade',
-        index='btree_not_null',
+        index=True,
         check_company=True)
     statement_id = fields.Many2one(
         comodel_name='account.bank.statement',
@@ -152,6 +155,14 @@ class AccountBankStatementLine(models.Model):
     # Technical field to store details about the bank statement line
     transaction_details = fields.Json(readonly=True)
 
+    def init(self):
+        super().init()
+        create_index(self.env.cr,
+                     indexname='account_bank_statement_line_internal_index_move_id_amount_idx',
+                     tablename='account_bank_statement_line',
+                     expressions=['internal_index', 'move_id', 'amount'],
+                     where='statement_id IS NULL')
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
@@ -235,6 +246,7 @@ class AccountBankStatementLine(models.Model):
                 """,
                 [max_index, journal.id] + extra_params,
             )
+            pending_items = self
             for st_line_id, amount, is_anchor, balance_start, state in self._cr.fetchall():
                 if is_anchor:
                     current_running_balance = balance_start
@@ -242,6 +254,10 @@ class AccountBankStatementLine(models.Model):
                     current_running_balance += amount
                 if record_by_id.get(st_line_id):
                     record_by_id[st_line_id].running_balance = current_running_balance
+                    pending_items -= record_by_id[st_line_id]
+            # Lines manually deleted from the form view still require to have a value set here, as the field is computed and non-stored.
+            for item in pending_items:
+                item.running_balance = item.running_balance
 
     @api.depends('date', 'sequence')
     def _compute_internal_index(self):
@@ -438,6 +454,9 @@ class AccountBankStatementLine(models.Model):
 
     def _find_or_create_bank_account(self):
         self.ensure_one()
+        if str2bool(self.env['ir.config_parameter'].sudo().get_param("account.skip_create_bank_account_on_reconcile")):
+            return self.env['res.partner.bank']
+
         # There is a sql constraint on res.partner.bank ensuring an unique pair <partner, account number>.
         # Since it's not dependent of the company, we need to search on others company too to avoid the creation
         # of an extra res.partner.bank raising an error coming from this constraint.
@@ -453,7 +472,7 @@ class AccountBankStatementLine(models.Model):
                 'partner_id': self.partner_id.id,
                 'journal_id': None,
             })
-        return bank_account.filtered(lambda x: x.company_id in (False, self.company_id))
+        return bank_account.filtered(lambda x: x.company_id.id in (False, self.company_id.id))
 
     def _get_default_amls_matching_domain(self):
         self.ensure_one()
@@ -651,7 +670,7 @@ class AccountBankStatementLine(models.Model):
             else:
                 other_lines += line
         if not liquidity_lines:
-            liquidity_lines = self.move_id.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_cash')
+            liquidity_lines = self.move_id.line_ids.filtered(lambda l: l.account_id.account_type in ('asset_cash', 'liability_credit_card'))
             other_lines -= liquidity_lines
         return liquidity_lines, suspense_lines, other_lines
 
@@ -672,7 +691,7 @@ class AccountBankStatementLine(models.Model):
             st_line_vals_to_write = {}
 
             if 'line_ids' in changed_fields:
-                liquidity_lines, suspense_lines, _other_lines = st_line._seek_for_lines()
+                liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
                 company_currency = st_line.journal_id.company_id.currency_id
                 journal_currency = st_line.journal_id.currency_id if st_line.journal_id.currency_id != company_currency\
                     else False
@@ -725,7 +744,7 @@ class AccountBankStatementLine(models.Model):
                             'foreign_currency_id': False,
                         })
 
-                    else:
+                    elif not other_lines:
 
                         # Update the statement line regarding the foreign currency of the suspense line.
 

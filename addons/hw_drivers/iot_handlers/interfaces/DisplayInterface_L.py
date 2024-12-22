@@ -2,11 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from re import sub, finditer
+import os
 import subprocess
-from vcgencmd import Vcgencmd
-import RPi.GPIO as GPIO
 
+try:
+    import screeninfo
+except ImportError:
+    screeninfo = None
+    import RPi.GPIO as GPIO
+    from vcgencmd import Vcgencmd
 
 from odoo.addons.hw_drivers.interface import Interface
 
@@ -19,31 +23,46 @@ class DisplayInterface(Interface):
 
     def get_devices(self):
         display_devices = {}
-        x_screen = 0
-        hdmi_port = {'hdmi_0' : 2}
-        rpi_type = GPIO.RPI_INFO.get('TYPE')
-        # RPI 3B+ response on for booth hdmi port
-        if 'Pi 4' in rpi_type:
-            hdmi_port.update({'hdmi_1': 7})
+        dummy_display = {
+            'distant_display': {
+                'identifier': 'distant_display',
+                'name': 'Distant Display',
+            }
+        }
+
+        if screeninfo is None:
+            # On IoT image < 24.10 we don't have screeninfo installed, so we can't get the connected displays
+            # We use old method to get the connected display
+            hdmi_ports = {'hdmi_0': 2, 'hdmi_1': 7} if 'Pi 4' in GPIO.RPI_INFO.get('TYPE') else {'hdmi_0': 2}
+            try:
+                for x_screen, port in enumerate(hdmi_ports):
+                    if Vcgencmd().display_power_state(hdmi_ports.get(port)) == 'on':
+                        display_devices[port] = self._add_device(port, x_screen)
+            except subprocess.CalledProcessError:
+                _logger.warning('Vcgencmd "display_power_state" method call failed')
+
+            return display_devices or dummy_display
 
         try:
-            for hdmi in hdmi_port:
-                power_state_hdmi = Vcgencmd().display_power_state(hdmi_port.get(hdmi))
-                if power_state_hdmi == 'on':
-                    iot_device = {
-                        'identifier': hdmi,
-                        'name': 'Display hdmi ' + str(x_screen),
-                        'x_screen': str(x_screen),
-                    }
-                    display_devices[hdmi] = iot_device
-                    x_screen += 1
-        except subprocess.CalledProcessError:
-            _logger.warning('Vcgencmd "display_power_state" method call failed')
+            os.environ['DISPLAY'] = ':0'
+            for x_screen, monitor in enumerate(screeninfo.get_monitors()):
+                display_devices[monitor.name] = self._add_device(monitor.name, x_screen)
+            return display_devices or dummy_display
+        except screeninfo.common.ScreenInfoError:
+            # If no display is connected, screeninfo raises an error, we return the distant display
+            return dummy_display
 
-        if not len(display_devices):
-            # No display connected, create "fake" device to be accessed from another computer
-            display_devices['distant_display'] = {
-                'name': "Distant Display",
-            }
+    @classmethod
+    def _add_device(cls, display_identifier, x_screen):
+        """Creates a display_device dict.
 
-        return display_devices
+        :param display_identifier: the identifier of the display
+        :param x_screen: the x screen number
+        :return: the display device dict
+        """
+
+        return {
+            'identifier': display_identifier,
+            'name': 'Display - ' + display_identifier,
+            'x_screen': str(x_screen),
+        }

@@ -3,16 +3,17 @@
 # 	* delivery
 # 
 # Translators:
-# Wil Odoo, 2023
 # Sarah Park, 2024
+# Daye Jeong, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sarah Park, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -369,6 +370,13 @@ msgid "Error: this delivery method is not available for this address."
 msgstr "오류 : 이 주소는 해당 배달 방법을 사용할 수 없습니다."
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "Error: this delivery method is not available."
+msgstr "오류: 이 배송 방법은 사용할 수 없습니다."
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
@@ -613,6 +621,11 @@ msgid "Pricing Rules"
 msgstr "가격 책정 규칙"
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_product_category
+msgid "Product Category"
+msgstr "품목 카테고리"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
 msgid "Product Qty"
 msgstr "품목 수량"
@@ -837,6 +850,15 @@ msgstr ""
 "\n"
 "다음의 배송 내역 (품목, 청구된 수량 및 가격)이 이미 처리가 완료되었습니다:\n"
 "\n"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr "배송업체 품목 카테고리는 현재 배송업체와 연결된 제품에서 사용되고 있으므로 삭제할 수 없습니다."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list

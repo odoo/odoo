@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_l10n_my_ubl_pint" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.l10n_my_ubl_pint</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="sst_registration_number" invisible="country_code != 'MY'" placeholder="A01-2345-67891012"/>
+                <field name="ttx_registration_number" invisible="country_code != 'MY'" placeholder="123-4567-89012345"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

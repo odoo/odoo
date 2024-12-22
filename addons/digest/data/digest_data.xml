@@ -11,7 +11,7 @@
         <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;"/>
         <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
         <style type="text/css">
-            <t t-set="color_company" t-value="company.email_secondary_color or '#875a7b'"/>
+            <t t-set="color_company" t-value="company.email_secondary_color or '#714B67'"/>
             /* Remove space around the email design. */
             html,
             body {
@@ -26,44 +26,48 @@
                 text-decoration: none;
             }
             #header_background {
-                background-color: <t t-out="color_company"/>;
-                padding-top:70px;
+                padding-top:20px;
             }
             #header {
-                border-start: 1px solid <t t-out="color_company"/>;
-                border-end: 1px solid <t t-out="color_company"/>;
+                border-top: 1px solid #d8dadd;
             }
             .global_layout {
                 width: 588px;
                 margin: 0 auto;
                 background-color: #ffffff;
+                border-left: 1px solid #d8dadd;
+                border-right: 1px solid #d8dadd;
             }
             .company_name {
                 display: inline;
                 vertical-align: middle;
+                color: #878d97;
                 font-weight: bold;
-                color: #8f8f8f;
-                font-size: 25px;
+                font-size: 24px;
             }
             .header_title {
-                font-weight: bold;
-                color: #282f33;
+                color: #374151;
+                font-size: 18px;
                 word-break: break-all;
             }
-            .button {
-                color: #ffffff;
-            }
             .td_button {
-                background-color: <t t-out="color_company"/>;
-                border-radius: 5px;
+                border-radius: 3px;
                 white-space: nowrap;
             }
+            .td_button_connect {
+                background-color: <t t-out="color_company"/>;
+            }
             #button_connect {
-                font-size: 15px;
+                color: #ffffff;
+                font-size: 16px;
+            }
+            #button_open_report {
+                color: #007e84;
+                font-size: 14px;
             }
             .header_date {
-                color: #8f8f8f;
-                font-size: 12px;
+                color: #878d97;
+                font-size: 14px;
             }
             .tip_title {
                 margin-top: 0;
@@ -72,16 +76,16 @@
             }
             .tip_content {
                 margin: 0 auto;
-                color: #333333;
+                color: #374151;
                 text-align: justify;
                 text-justify: inter-word;
                 margin: 15px auto 0 auto;
-                font-size: 15px;
+                font-size: 16px;
                 line-height: 25px;
             }
             .tip_button {
                 background-color: <t t-out="color_company"/>;
-                border-radius: 5px;
+                border-radius: 3px;
                 padding: 10px;
                 text-decoration: none;
             }
@@ -90,42 +94,37 @@
             }
             .illustration_border {
                 width: 100%;
-                border: 1px solid #808080;
+                border: 1px solid #d8dadd;
                 margin-top: 20px;
             }
             .kpi_row_footer {
                 padding-bottom: 20px;
             }
             .kpi_header {
-                font-size: 15px;
+                font-size: 14px;
                 font-weight: bold;
-                color: #282f33;
-            }
-            #button_open_report {
-                font-size: 12px;
-                font-weight: normal;
+                color: #374151;
             }
             .kpi_cell {
                 width: 33%;
                 text-align: center;
-                padding-top: 2px;
+                padding-top: 10px;
                 padding: 0;
             }
             .kpi_value {
-                color: #282f33;
+                color: #374151;
                 font-weight: bold;
                 text-decoration: none;
-                font-size: 30px;
+                font-size: 28px;
             }
             .kpi_border_col {
-                color: #00A09D;
+                color: #374151;
             }
             .kpi_value_label {
                 display: inline-block;
                 margin-bottom: 10px;
-                color: #888888;
-                font-size: 12px;
-                text-transform: uppercase;
+                color: #878d97;
+                font-size: 14px;
             }
             .kpi_margin_margin {
                 margin-bottom: 10px;
@@ -136,11 +135,11 @@
             }
             .preference {
                 margin-bottom: 15px;
-                color: #6b6d70;
-                font-size: 15px;
+                color: #374151;
+                font-size: 14px;
             }
             .by_odoo {
-                color: #8f8f8f;
+                color: #878d97;
                 font-size: 12px;
             }
             .odoo_link_text {
@@ -148,16 +147,16 @@
                 color: <t t-out="color_company"/>;
             }
             .run_business {
-                color: #2d2a26;
+                color: #374151;
                 margin: 15px auto;
                 font-size: 18px;
             }
             #footer {
-                background-color: #eeeeee;
-                color: #8f8f8f;
+                background-color: #F9FAFB;
+                color: #878d97;
                 text-align: center;
                 font-size: 20px;
-                border: 1px solid #eeeeee;
+                border: 1px solid #F9FAFB;
                 border-top: 0;
             }
             #stock_tip {
@@ -182,7 +181,7 @@
                 }
                 #header {
                     padding: 15px 20px;
-                    border: 1px solid #eeeeee;
+                    border: 1px solid #F9FAFB;
                 }
                 .company_name {
                     font-size: 15px;
@@ -269,15 +268,15 @@
 
     <!-- DIGEST MAIN TEMPLATE -->
     <template id="digest_mail_main">
-<table cellspacing="0" cellpadding="0" style="width: 100%;border: 1px solid #eeeeee;border-bottom: 0;" align="center">
+<table cellspacing="0" cellpadding="0" style="width: 100%;background-color: #F9FAFB;" align="center">
     <tbody>
         <tr>
             <td id="header_background" align="center">
                 <table cellspacing="0" cellpadding="0" border="0" id="header" class="global_layout">
                     <tbody>
                         <tr>
-                            <td style="padding: 20px 20px 0px 20px;" class="p0"><p t-field="company.name" class="company_name" /></td>
-                            <td align="right" style="padding: 20px 20px 0px 0px;" class="p0">
+                            <td style="padding: 20px 20px 5px 20px;" class="p0"><p t-field="company.name" class="company_name" /></td>
+                            <td align="right" style="padding: 20px 20px 5px 0px;" class="p0">
                                 <table>
                                     <tbody>
                                         <tr>
@@ -300,7 +299,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td style="padding: 0px 0px 20px 20px;" class="p0" colspan="2">
+                            <td style="padding: 10px 0px 20px 20px;" class="p0" colspan="2">
                                 <span t-esc="formatted_date" class="header_date"/>
                             </td>
                         </tr>
@@ -310,14 +309,14 @@
         </tr>
     </tbody>
 </table>
-<table cellspacing="0" cellpadding="0" border="0" style="width: 100%;background-color: #eeeeee;">
+<table cellspacing="0" cellpadding="0" border="0" style="width: 100%;background-color: #F9FAFB;">
     <tbody>
         <tr>
             <td align="center">
                 <table cellspacing="0" cellpadding="0" border="0" class="global_layout">
                     <tbody>
                         <tr t-if="tips" t-foreach="tips" t-as="tip">
-                            <td colspan="3" style="width: 100%;padding: 20px;border: 1px solid #eeeeee;">
+                            <td colspan="3" style="width: 100%;padding: 20px;border: 1px solid #F9FAFB;">
                                 <table>
                                     <tbody>
                                         <tr>
@@ -335,16 +334,16 @@
                                             <table t-if="kpi_info.get('kpi_col1') or kpi_info.get('kpi_col2') or kpi_info.get('kpi_col3')"
                                                     t-att-data-field="kpi_info['kpi_name']" cellspacing="0" cellpadding="10" style="width: 100%;margin-bottom: 5px;">
                                                 <tr class="kpi_header">
-                                                    <td colspan="2" style="padding: 0px 0px 10px 0px;">
-                                                        <span t-esc="kpi_info['kpi_fullname']"  />
+                                                    <td colspan="2" style="padding: 0px 0px 5px 0px;">
+                                                        <span style="text-transform: uppercase;" t-esc="kpi_info['kpi_fullname']"  />
                                                     </td>
-                                                    <td t-if="kpi_info['kpi_action']" align="right" style="padding: 0px 0px 10px 0px;">
+                                                    <td t-if="kpi_info['kpi_action']" align="right" style="padding: 0px 0px 5px 0px;">
                                                         <table>
                                                             <tbody>
                                                                 <tr>
-                                                                    <td class="td_button td_button_open_report" style="padding: 1px 10px;height: 24px;">
+                                                                    <td class="td_button td_button_open_report" style="padding: 1px 5px;height: 24px;">
                                                                         <a t-att-href="'/web#action=%s' % kpi_info['kpi_action']">
-                                                                            <span class="button" id="button_open_report">Open Report</span>
+                                                                            <span class="button" id="button_open_report">➔ Open Report</span>
                                                                         </a>
                                                                     </td>
                                                                 </tr>
@@ -353,21 +352,21 @@
                                                     </td>
                                                 </tr>
                                                 <tr style="vertical-align: top;">
-                                                    <td t-if="kpi_info.get('kpi_col1')" class="kpi_cell" style="border-top: 2px solid #00A09D;">
+                                                    <td t-if="kpi_info.get('kpi_col1')" class="kpi_cell" style="padding-top: 10px; border-top: 1px solid #e6e6e6;">
                                                         <div t-call="digest.digest_tool_kpi">
                                                             <t t-set="kpi_value" t-value="kpi_info['kpi_col1']['value']" />
                                                             <t t-set="kpi_margin" t-value="kpi_info['kpi_col1'].get('margin')" />
                                                             <t t-set="kpi_subtitle" t-value="kpi_info['kpi_col1']['col_subtitle']" />
                                                         </div>
                                                     </td>
-                                                    <td t-if="kpi_info.get('kpi_col2')" class="kpi_cell" t-att-style="'border-top: 2px solid ' + (company.email_secondary_color or '#875a7b')">
+                                                    <td t-if="kpi_info.get('kpi_col2')" class="kpi_cell" style="padding-top: 10px; border-top: 1px solid #e6e6e6;">
                                                         <div t-call="digest.digest_tool_kpi">
                                                             <t t-set="kpi_value" t-value="kpi_info['kpi_col2']['value']" />
                                                             <t t-set="kpi_margin" t-value="kpi_info['kpi_col2'].get('margin')" />
                                                             <t t-set="kpi_subtitle" t-value="kpi_info['kpi_col2']['col_subtitle']" />
                                                         </div>
                                                     </td>
-                                                    <td t-if="kpi_info.get('kpi_col3')" class="kpi_cell" style="border-top: 2px solid #00A09D;">
+                                                    <td t-if="kpi_info.get('kpi_col3')" class="kpi_cell" style="padding-top: 10px; border-top: 1px solid #e6e6e6;">
                                                         <div t-call="digest.digest_tool_kpi">
                                                             <t t-set="kpi_value" t-value="kpi_info['kpi_col3']['value']" />
                                                             <t t-set="kpi_margin" t-value="kpi_info['kpi_col3'].get('margin')" />
@@ -387,10 +386,10 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td style="padding: 20px;border: 1px solid #eeeeee;">
+                            <td style="padding: 20px; border-bottom: 1px solid #d8dadd;">
                                 <table border="0" width="100%">
                                     <tbody>
-                                        <tr style="background-color: #eeeeee;">
+                                        <tr style="background-color: #F9FAFB;">
                                             <td align="center" colspan="3" valign="center" style="padding: 15px;">
                                                 <div t-if="preferences" t-foreach="preferences" t-as="preference" class="preference">
                                                     <t t-out="preference" />
@@ -402,14 +401,14 @@
                                                         –
                                                         <a t-attf-href="/digest/#{object.id}/unsubscribe?token=#{unsubscribe_token}&amp;user_id=#{user.id}" target="_blank"
                                                             style="text-decoration: none;">
-                                                            <span style="color: #8f8f8f;">Unsubscribe</span>
+                                                            <span style="color: #878d97;">Unsubscribe</span>
                                                         </a>
                                                     </t>
                                                     <t t-elif="object and object._name == 'digest.digest'">
                                                         –
                                                         <a t-att-href="'/web#view_type=form&amp;model=digest.digest&amp;id=%s' % object.id" target="_blank"
                                                             style="text-decoration: none;">
-                                                            <span style="color: #8f8f8f;">Unsubscribe</span>
+                                                            <span style="color: #878d97;">Unsubscribe</span>
                                                         </a>
                                                     </t>
                                                 </div>
@@ -451,14 +450,14 @@
 
     <!-- MOBILE BANNER -->
     <template id="digest_section_mobile">
-<td colspan="3" style="padding: 20px;width:100%">
+<td colspan="3" style="padding: 20px;width:100%; border-bottom: 1px solid #d8dadd;">
     <table>
         <tbody>
             <tr>
-                <td align="right" style="width: 50%;">
-                    <img src="https://www.odoo.com/web/image/24717933/odoo-mobile.png" alt="Odoo Mobile" />
+                <td align="right" style="width: 33%;">
+                    <img src="https://www.odoo.com/web/image/38874595-16ef5349/odoo-mobile.png" alt="Odoo Mobile" />
                 </td>
-                <td align="left" style="width: 50%;">
+                <td align="left" style="width: 66%;">
                     <table>
                         <tbody>
                             <tr>
@@ -497,16 +496,16 @@
 
     <!-- KPI DISPLAY -->
     <template id="digest_tool_kpi">
-<span t-esc="kpi_value" style="color: #00A09D;font-weight: bold;text-decoration: none;" class="kpi_value kpi_border_col" />
+<span t-esc="kpi_value" style="color: #374151;text-decoration: none;" class="kpi_value kpi_border_col" />
 <br/>
 <span t-esc="kpi_subtitle" class="kpi_value_label" />
 <table t-if="kpi_margin" class="kpi_margin_margin" align="center" border="0" cellspacing="0" cellpadding="0">
     <tr>
-        <td t-if="kpi_margin &gt; 0.0" class="kpi_margin positive_kpi_margin" style="padding: 5px 10px;font-size: 12px;text-decoration: none;border-radius: 5px;border: 1px solid #c4ecd7;border-radius: 5px; background-color: #c4ecd7;color: #17613a;">
-            ▲ <t t-esc="'%.2f' % kpi_margin" /> %
+        <td t-if="kpi_margin &gt; 0.0" class="kpi_margin positive_kpi_margin" style="padding: 3px 10px;font-size: 12px;text-decoration: none;border-radius: 50px;border: 1px solid #c4ecd7;border-radius: 5px; background-color: #c4ecd7;color: #17613a;">
+            ⬆ <t t-esc="'%.2f' % kpi_margin" /> %
         </td>
-        <td t-elif="kpi_margin &lt; 0.0" class="kpi_margin negative_kpi_margin" style="padding: 5px 10px;font-size: 12px;text-decoration: none;border-radius: 5px;border: 1px solid #f4cfce;background-color: #f7dddc;color: #712b29;">
-            ▼ <t t-esc="'%.2f' % kpi_margin" /> %
+        <td t-elif="kpi_margin &lt; 0.0" class="kpi_margin negative_kpi_margin" style="padding: 3px 10px;font-size: 12px;text-decoration: none;border-radius: 50px;border: 1px solid #f4cfce;background-color: #f7dddc;color: #712b29;">
+            ⬇ <t t-esc="'%.2f' % kpi_margin" /> %
         </td>
     </tr>
 </table>

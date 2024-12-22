@@ -6,7 +6,12 @@ import { DELAY_FOR_SPINNER } from "@mail/core/web/chatter";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { getFixture, makeDeferred, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
+import {
+    getFixture,
+    makeDeferred,
+    patchWithCleanup,
+    triggerHotkey,
+} from "@web/../tests/helpers/utils";
 import {
     click,
     contains,
@@ -228,12 +233,14 @@ QUnit.test("chatter: drop attachments", async () => {
     await contains(".o-mail-AttachmentCard", { count: 3 });
 });
 
-QUnit.test("chatter: drop attachment should refresh thread data with hasParentReloadOnAttachmentsChange prop", async () => {
-    patchUiSize({ size: SIZES.XXL });
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
-    const views = {
-        "res.partner,false,form": `
+QUnit.test(
+    "chatter: drop attachment should refresh thread data with hasParentReloadOnAttachmentsChange prop",
+    async () => {
+        patchUiSize({ size: SIZES.XXL });
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({});
+        const views = {
+            "res.partner,false,form": `
             <form>
                 <sheet>
                     <field name="name"/>
@@ -244,33 +251,40 @@ QUnit.test("chatter: drop attachment should refresh thread data with hasParentRe
                     <field name="message_ids" options="{'post_refresh': 'always'}"/>
                 </div>
             </form>`,
-    };
-    const target = getFixture();
-    target.classList.add("o_web_client");
-    const { openFormView } = await start({
-        serverData: { views },
-        target,
-        async mockRPC(route) {
-            if (route === "/mail/attachment/upload") {
-                const attachmentId = pyEnv["ir.attachment"].create([
-                    { res_id: partnerId, res_model: "res.partner", mimetype: "application/pdf" }
-                ]);
-                pyEnv["res.partner"].write([partnerId], { message_main_attachment_id: attachmentId });
-                return Promise.resolve();
-            }
-        },
-    });
-    await openFormView("res.partner", partnerId);
-    const files = [
-        await createFile({
-            contentType: "application/pdf",
-            name: "text.pdf",
-        }),
-    ];
-    await dragenterFiles(".o-mail-Chatter", files);
-    await dropFiles(".o-mail-Dropzone", files);
-    await contains(".o-mail-Attachment iframe", { count: 1 });
-});
+        };
+        const target = getFixture();
+        target.classList.add("o_web_client");
+        const { openFormView } = await start({
+            serverData: { views },
+            target,
+            async mockRPC(route) {
+                if (route === "/mail/attachment/upload") {
+                    const attachmentId = pyEnv["ir.attachment"].create([
+                        {
+                            res_id: partnerId,
+                            res_model: "res.partner",
+                            mimetype: "application/pdf",
+                        },
+                    ]);
+                    pyEnv["res.partner"].write([partnerId], {
+                        message_main_attachment_id: attachmentId,
+                    });
+                    return Promise.resolve();
+                }
+            },
+        });
+        await openFormView("res.partner", partnerId);
+        const files = [
+            await createFile({
+                contentType: "application/pdf",
+                name: "text.pdf",
+            }),
+        ];
+        await dragenterFiles(".o-mail-Chatter", files);
+        await dropFiles(".o-mail-Dropzone", files);
+        await contains(".o-mail-Attachment iframe", { count: 1 });
+    }
+);
 
 QUnit.test("should display subject when subject isn't infered from the record", async () => {
     const pyEnv = await startServer();
@@ -516,19 +530,23 @@ QUnit.test("scroll position is kept when navigating from one record to another",
     const { openFormView } = await start();
     openFormView("res.partner", partnerId_1);
     await contains(".o-mail-Message", { count: 20 });
+    const clientHeight1 = $(".o-mail-Chatter")[0].clientHeight; // client height might change (cause: breadcrumb)
     const scrollValue1 = $(".o-mail-Chatter")[0].scrollHeight / 2;
     await contains(".o-mail-Chatter", { scroll: 0 });
     await scroll(".o-mail-Chatter", scrollValue1);
     openFormView("res.partner", partnerId_2);
     await contains(".o-mail-Message", { count: 30 });
+    const clientHeight2 = $(".o-mail-Chatter")[0].clientHeight;
     const scrollValue2 = $(".o-mail-Chatter")[0].scrollHeight / 3;
     await scroll(".o-mail-Chatter", scrollValue2);
     openFormView("res.partner", partnerId_1);
     await contains(".o-mail-Message", { count: 20 });
-    await contains(".o-mail-Chatter", { scroll: scrollValue1 });
+    const clientHeight3 = $(".o-mail-Chatter")[0].clientHeight;
+    await contains(".o-mail-Chatter", { scroll: scrollValue1 - (clientHeight3 - clientHeight1) });
     openFormView("res.partner", partnerId_2);
     await contains(".o-mail-Message", { count: 30 });
-    await contains(".o-mail-Chatter", { scroll: scrollValue2 });
+    const clientHeight4 = $(".o-mail-Chatter")[0].clientHeight;
+    await contains(".o-mail-Chatter", { scroll: scrollValue2 - (clientHeight4 - clientHeight2) });
 });
 
 QUnit.test("basic chatter rendering", async () => {

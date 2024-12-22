@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Tony Ng, 2023
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +23,7 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "+1 650-123-4567"
-msgstr "+1 650-123-4567"
+msgstr "(+852) 2632 9300"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -32,9 +32,9 @@ msgid ""
 "                                A password reset was requested for the Odoo account linked to this email.\n"
 "                                You may change your password by following this link which will remain valid during 24 hours:<br/>"
 msgstr ""
-",<br/><br/>\n"
-"                                此電子郵件中鏈接的 Odoo 帳戶請求密碼重置。\n"
-"                                您可以通過此鏈接更改密碼，該鏈接在 24 小時內有效：<br/>"
+"：<br/><br/>\n"
+"                                剛收到要求，為使用此電郵地址的 Odoo 帳戶重設密碼。\n"
+"                                你可透過以下連結更改密碼。連結在 24 小時內有效：<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -43,9 +43,9 @@ msgid ""
 "                        A new device was used to sign in to your account. <br/><br/>\n"
 "                        Here are some details about the connection:<br/>"
 msgstr ""
-",<br/><br/>\n"
-"                        使用了新設備登錄您的賬戶。<br/><br/>\n"
-"                        以下是有關連接的一些詳細信息：<br/>"
+"：<br/><br/>\n"
+"                        有人使用新的裝置登入你的帳戶。<br/><br/>\n"
+"                        該次連線的部份資料如下：<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -78,7 +78,7 @@ msgid ""
 "                                    Location:</span>"
 msgstr ""
 "<span style=\"font-weight: bold;\">\n"
-"                                    地點：</span>"
+"                                    地點 / 位置：</span>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -112,7 +112,7 @@ msgstr ""
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
-msgstr "<strong>要求該使用者更改密碼，包含下列連結已由email發出：</strong>"
+msgstr "<strong>已為此使用者請求重設密碼。已傳送包含以下連結的電子郵件：</strong>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -576,7 +576,7 @@ msgstr "瀏覽器"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr "無法發送email：使用者 %s email無資訊。"
+msgstr "未能傳送電子郵件：使用者 %s 沒有電郵地址。"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -679,8 +679,8 @@ msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "                                Thanks,"
 msgstr ""
-"如果您不希望這樣，可以放心地忽略這封郵件。<br/><br/>\n"
-"                                謝謝、"
+"若不是你要求更改密碼，請忽略本電郵。<br/><br/>\n"
+"                                謝謝！"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -715,6 +715,7 @@ msgid "Marc Demo"
 msgstr "Marc Demo"
 
 #. module: auth_signup
+#. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Multiple accounts found for this login"
@@ -763,7 +764,7 @@ msgstr "未提供登入帳號。"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "OS"
-msgstr "OS(作業系統)"
+msgstr "OS（作業系統）"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -779,7 +780,7 @@ msgstr "依邀請"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "Otherwise, you can safely ignore this email."
-msgstr "否則，您可以放心地忽略這封郵件。"
+msgstr "否則，你可以忽略此電郵。"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -789,21 +790,21 @@ msgstr "密碼"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Password Reset"
-msgstr "密碼重置"
+msgstr "重設密碼"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Password reset"
-msgstr "密碼重置"
+msgstr "重設密碼"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Password reset instructions sent to your email"
-msgstr "密碼重置說明已發送到您的電子郵箱"
+msgstr "重設密碼指示已發送至你的電郵"
 
 #. module: auth_signup
 #. odoo-python
@@ -839,7 +840,7 @@ msgstr "重設新密碼"
 #: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send Password Reset Instructions"
-msgstr "發送密碼重置說明"
+msgstr "發送重設密碼指示"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -1014,7 +1015,7 @@ msgstr "您不能對已存檔的用戶執行此操作。"
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr "您的電子信件"
+msgstr "你的電郵"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -1024,7 +1025,7 @@ msgstr "您的姓名"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "YourCompany"
-msgstr "您的公司"
+msgstr "YourCompany"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device

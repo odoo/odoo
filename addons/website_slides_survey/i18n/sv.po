@@ -5,11 +5,12 @@
 # Translators:
 # Levi Siuzdak (sile), 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Martin Trigaux, 2023
 # Lasse L, 2023
+# Larissa Manderfeld, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:10+0000\n"
-"Last-Translator: Lasse L, 2023\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +78,7 @@ msgstr ""
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "<i class=\"fa fa-arrow-right\"/> Get Certified"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Bli certifierad"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
@@ -115,16 +116,18 @@ msgstr "<i class=\"fa fa-share-alt\" aria-label=\"Share\" title=\"Share\"/>"
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Add Questions to this Survey"
 msgstr ""
+"<i class=\"oi oi-arrow-right me-1\"/> Lägg till frågor till denna "
+"undersökning"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "<i class=\"oi oi-arrow-right me-1\"/>All Certifications"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Alla verifieringar"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
 msgid "<i class=\"oi oi-arrow-right\"/> See Certifications"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right\"/> Visa verifieringar"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
@@ -142,6 +145,8 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"nbr_certification &gt; 0\">Finished</span>\n"
 "                <span class=\"o_stat_text\" invisible=\"nbr_certification == 0\">Certified</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"nbr_certification &gt; 0\">Avsluta</span>\n"
+"                <span class=\"o_stat_text\" invisible=\"nbr_certification == 0\">Verifierad</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.all_user_card
@@ -166,7 +171,7 @@ msgstr "<span class=\"text-muted\">Fullföljd</span>"
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
 msgid "<span>Start Now</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
-msgstr ""
+msgstr "<span>Börja nu</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
 
 #. module: website_slides_survey
 #: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_survey_id
@@ -339,7 +344,7 @@ msgstr "Certifieringar"
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "Certifications are exams that you successfully passed. <br/>"
-msgstr ""
+msgstr "Certifieringar är examina som du framgångsrikt har klarat. <br/>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
@@ -487,7 +492,7 @@ msgstr "Relaterat kursmaterial"
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "Score:"
-msgstr ""
+msgstr "Poäng:"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
@@ -675,7 +680,7 @@ msgstr ""
 msgid ""
 "You have failed the course: {{ object.slide_partner_id.channel_id.name }}"
 msgstr ""
-"Du har misslyckats med kursen: {{ objekt.slide_partner_id.kanal_id.namn }}"
+"Du har misslyckats med kursen: {{ object.slide_partner_id.channel_id.name }}"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content

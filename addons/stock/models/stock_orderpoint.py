@@ -36,7 +36,7 @@ class StockWarehouseOrderpoint(models.Model):
     warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse',
         compute="_compute_warehouse_id", store=True, readonly=False, precompute=True,
-        check_company=True, ondelete="cascade", required=True)
+        check_company=True, ondelete="cascade", required=True, index=True)
     location_id = fields.Many2one(
         'stock.location', 'Location', index=True,
         compute="_compute_location_id", store=True, readonly=False, precompute=True,
@@ -96,11 +96,11 @@ class StockWarehouseOrderpoint(models.Model):
 
     @api.depends('warehouse_id')
     def _compute_allowed_location_ids(self):
-        loc_domain = [('usage', 'in', ('internal', 'view'))]
         # We want to keep only the locations
         #  - strictly belonging to our warehouse
         #  - not belonging to any warehouses
         for orderpoint in self:
+            loc_domain = [('usage', 'in', ('internal', 'view'))]
             other_warehouses = self.env['stock.warehouse'].search([('id', '!=', orderpoint.warehouse_id.id)])
             for view_location_id in other_warehouses.mapped('view_location_id'):
                 loc_domain = expression.AND([loc_domain, ['!', ('id', 'child_of', view_location_id.id)]])
@@ -109,22 +109,35 @@ class StockWarehouseOrderpoint(models.Model):
 
     @api.depends('rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
     def _compute_lead_days(self):
-        for orderpoint in self.with_context(bypass_delay_description=True):
-            if not orderpoint.product_id or not orderpoint.location_id:
-                orderpoint.lead_days_date = False
-                continue
+        orderpoints_to_compute = self.filtered(lambda orderpoint: orderpoint.product_id and orderpoint.location_id)
+        for orderpoint in orderpoints_to_compute.with_context(bypass_delay_description=True):
             values = orderpoint._get_lead_days_values()
             lead_days, dummy = orderpoint.rule_ids._get_lead_days(orderpoint.product_id, **values)
             lead_days_date = fields.Date.today() + relativedelta.relativedelta(days=lead_days['total_delay'])
             orderpoint.lead_days_date = lead_days_date
+        (self - orderpoints_to_compute).lead_days_date = False
 
     @api.depends('route_id', 'product_id', 'location_id', 'company_id', 'warehouse_id', 'product_id.route_ids')
     def _compute_rules(self):
-        for orderpoint in self:
-            if not orderpoint.product_id or not orderpoint.location_id:
-                orderpoint.rule_ids = False
-                continue
-            orderpoint.rule_ids = orderpoint.product_id._get_rules_from_location(orderpoint.location_id, route_ids=orderpoint.route_id)
+        orderpoints_to_compute = self.filtered(lambda orderpoint: orderpoint.product_id and orderpoint.location_id)
+        # Products without routes have no impact on _get_rules_from_location.
+        product_ids_with_routes = set(orderpoints_to_compute.product_id.filter_has_routes().ids)
+        # Small cache mapping (location_id, route_id) -> stock.rule.
+        # This reduces calls to _get_rules_from_location for products without routes.
+        rules_cache = {}
+        for orderpoint in orderpoints_to_compute:
+            if orderpoint.product_id.id not in product_ids_with_routes:
+                cache_key = (orderpoint.location_id, orderpoint.route_id)
+                rule_ids = rules_cache.get(cache_key) or orderpoint.product_id._get_rules_from_location(
+                    orderpoint.location_id, route_ids=orderpoint.route_id
+                )
+                orderpoint.rule_ids = rule_ids
+                rules_cache[cache_key] = rule_ids
+            else:
+                orderpoint.rule_ids = orderpoint.product_id._get_rules_from_location(
+                    orderpoint.location_id, route_ids=orderpoint.route_id
+                )
+        (self - orderpoints_to_compute).rule_ids = False
 
     @api.depends('route_id', 'product_id')
     def _compute_visibility_days(self):
@@ -183,11 +196,20 @@ class StockWarehouseOrderpoint(models.Model):
         if self.route_id:
             self.qty_multiple = self._get_qty_multiple_to_order()
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        if any(val.get('snoozed_until', False) and val.get('trigger', self.default_get(['trigger'])['trigger']) == 'auto' for val in vals_list):
+            raise UserError(_("You can not create a snoozed orderpoint that is not manually triggered."))
+        return super().create(vals_list)
+
     def write(self, vals):
         if 'company_id' in vals:
             for orderpoint in self:
                 if orderpoint.company_id.id != vals['company_id']:
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
+        if 'snoozed_until' in vals:
+            if any(orderpoint.trigger == 'auto' for orderpoint in self):
+                raise UserError(_("You can only snooze manual orderpoints. You should rather archive 'auto-trigger' orderpoints if you do not want them to be triggered."))
         return super().write(vals)
 
     def action_product_forecast_report(self):
@@ -269,7 +291,7 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.qty_on_hand = products_qty[orderpoint.product_id.id]['qty_available']
                 orderpoint.qty_forecast = products_qty[orderpoint.product_id.id]['virtual_available'] + products_qty_in_progress[orderpoint.id]
 
-    @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
+    @api.depends('qty_multiple', 'product_min_qty', 'product_max_qty', 'visibility_days', 'product_id', 'location_id')
     def _compute_qty_to_order(self):
         for orderpoint in self:
             if not orderpoint.product_id or not orderpoint.location_id:
@@ -277,11 +299,12 @@ class StockWarehouseOrderpoint(models.Model):
                 continue
             qty_to_order = 0.0
             rounding = orderpoint.product_uom.rounding
-            # We want to know how much we should order to also satisfy the needs that gonna appear in the next (visibility) days
-            product_context = orderpoint._get_product_context(visibility_days=orderpoint.visibility_days)
-            qty_forecast_with_visibility = orderpoint.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + orderpoint._quantity_in_progress()[orderpoint.id]
-
-            if float_compare(qty_forecast_with_visibility, orderpoint.product_min_qty, precision_rounding=rounding) < 0:
+            # The check is on purpose. We only want to consider the visibility days if the forecast is negative and
+            # there is a already something to ressuply base on lead times.
+            if float_compare(orderpoint.qty_forecast, orderpoint.product_min_qty, precision_rounding=rounding) < 0:
+                # We want to know how much we should order to also satisfy the needs that gonna appear in the next (visibility) days
+                product_context = orderpoint._get_product_context(visibility_days=orderpoint.visibility_days)
+                qty_forecast_with_visibility = orderpoint.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + orderpoint._quantity_in_progress()[orderpoint.id]
                 qty_to_order = max(orderpoint.product_min_qty, orderpoint.product_max_qty) - qty_forecast_with_visibility
                 remainder = orderpoint.qty_multiple > 0.0 and qty_to_order % orderpoint.qty_multiple or 0.0
                 if (float_compare(remainder, 0.0, precision_rounding=rounding) > 0
@@ -485,6 +508,7 @@ class StockWarehouseOrderpoint(models.Model):
                         'url': f'#action={action.id}&id={move.picking_id.id}&model=stock.picking&view_type=form'
                     }],
                     'sticky': False,
+                    'next': {'type': 'ir.actions.act_window_close'},
                 }
             }
         return False

@@ -3,16 +3,17 @@
 # 	* delivery
 # 
 # Translators:
-# Wil Odoo, 2023
 # Jolien De Paepe, 2024
+# Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,8 +94,8 @@ msgid ""
 "for customers to follow."
 msgstr ""
 "Une description du mode de livraison que vous souhaitez communiquer à vos "
-"clients sur le bon de commande et l'email de confirmation de vente. Par ex. "
-"instructions à suivre par les clients."
+"clients sur le bon de commande et l'e-mail de confirmation de vente. Par ex."
+" instructions à suivre par les clients."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -374,6 +375,13 @@ msgid "Error: this delivery method is not available for this address."
 msgstr "Erreur: ce mode de livraison n'est pas disponible pour cette adresse."
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "Error: this delivery method is not available."
+msgstr "Erreur : ce mode de livraison n'est pas disponible."
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
@@ -627,6 +635,11 @@ msgid "Pricing Rules"
 msgstr "Règles de tarification"
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_product_category
+msgid "Product Category"
+msgstr "Catégorie de produits"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
 msgid "Product Qty"
 msgstr "Qté de produits"
@@ -722,8 +735,8 @@ msgid ""
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
 "Les détails du mode d'expédition doivent être inclus dans les bons de "
-"commande et leurs emails de confirmation. Par ex. Instructions à suivre par "
-"les clients."
+"commande et leurs e-mails de confirmation. Par ex. Instructions à suivre par"
+" les clients."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -859,6 +872,17 @@ msgstr ""
 "Vous ne pouvez pas mettre à jour les frais d'expéditions sur une commande si elle a déjà été facturée !\n"
 "\n"
 "Les lignes de livraison suivantes (produit, quantité facturée et prix) ont déjà été exécutées.\n"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr ""
+"Vous ne pouvez pas supprimer la catégorie de produits livrés car elle est "
+"utilisée pour le transport de produits par les transporteurs."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list

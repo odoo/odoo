@@ -110,9 +110,15 @@
                 <attribute name="delete">0</attribute>
                 <attribute name="import">0</attribute>
             </tree>
+            <xpath expr="//field[@widget='res_partner_many2one']" position="attributes">
+                <attribute name="widget">many2one</attribute>
+            </xpath>
             <field name="user_ids" position="replace">
                 <field name="portal_user_names" string="Assignees"/>
             </field>
+            <xpath expr="//field[@name='milestone_id']" position="attributes">
+                <attribute name="column_invisible">not context.get('allow_milestones', True)</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -140,7 +146,7 @@
                             </div>
                         </button>
                         <button name="action_project_sharing_open_subtasks" type="object" class="oe_stat_button" icon="fa-tasks"
-                            invisible="not id or subtask_count == 0" context="{'default_user_ids': [(6, 0, [uid])]}">
+                            invisible="not id or subtask_count == 0" context="{'default_user_ids': [(6, 0, [uid])], 'default_project_id': project_id }">
                             <field name="subtask_count" widget="statinfo" string="Sub-tasks"/>
                         </button>
                     </div>
@@ -149,7 +155,12 @@
                         <h1 class="d-flex flex-row justify-content-between">
                             <field name="priority" widget="priority" class="me-3"/>
                             <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
-                            <field name="state" widget="project_task_state_selection" options="{'is_toggle_mode': false}"/>
+                            <div class="d-flex justify-content-end o_state_container" invisible="not active">
+                                <field name="state" widget="project_task_state_selection" class="o_task_state_widget"/>
+                            </div>
+                            <div class="d-flex justify-content-start o_state_container w-100 w-md-50 w-lg-25" invisible="active">
+                                <field name="state" widget="project_task_state_selection" class="o_task_state_widget"/>
+                            </div>
                         </h1>
                     </div>
                     <group>
@@ -158,9 +169,9 @@
                             <field name="allow_milestones" invisible="1"/>
                             <field name="milestone_id"
                                 placeholder="e.g. Product Launch"
-                                context="{'default_project_id': project_id}"
                                 invisible="not allow_milestones"
-                                options="{'no_open': True, 'no_create': True, 'no_edit': True}"/>
+                                readonly="1"
+                                options="{'no_open': True}"/>
                             <field name="user_ids" invisible="1" />
                             <field name="portal_user_names"
                                 string="Assignees"
@@ -181,22 +192,29 @@
                             <field name="description" type="html" options="{'collaborative': true, 'allowCommandImage': false, 'allowCommandVideo': false, 'allowCommandFile': false}"/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks">
-                            <field name="child_ids" context="{'default_parent_id': id, 'default_partner_id': partner_id, 'form_view_ref' : 'project.project_sharing_project_task_view_form'}">
+                            <field name="child_ids" context="{
+                                'default_project_id': project_id,
+                                'default_display_in_project': False,
+                                'default_parent_id': id,
+                                'default_partner_id': partner_id,
+                                'form_view_ref' : 'project.project_sharing_project_task_view_form',
+                            }">
                                 <tree editable="bottom">
                                     <field name="project_id" column_invisible="True"/>
                                     <field name="state" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
-                                    <field name="priority" widget="priority" optional="show" nolabel="1"/>
-                                    <field name="state" widget="project_task_state_selection" nolabel="1"/>
+                                    <field name="priority" widget="priority" optional="show" nolabel="1" width="40px"/>
+                                    <field name="state" widget="project_task_state_selection" nolabel="1" width="40px"/>
                                     <field name="name"/>
                                     <field name="allow_milestones" column_invisible="True"/>
                                     <field name="milestone_id"
                                         optional="hide"
-                                        context="{'default_project_id': project_id}"
+                                        options="{'no_open': True}"
+                                        readonly="1"
                                         column_invisible="not parent.allow_milestones"
                                         invisible="not allow_milestones"/>
                                     <field name="company_id" column_invisible="True"/>
-                                    <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide" invisible="not project_id"/>
+                                    <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide"/>
                                     <field name="user_ids" column_invisible="True" />
                                     <field name="portal_user_names" string="Assignees" optional="show"/>
                                     <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" decoration-danger="date_deadline &lt; current_date" optional="show"/>
@@ -204,7 +222,7 @@
                                     <field name="stage_id" domain="[('user_id', '=', False), ('project_ids', 'in', [project_id])]"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form', 'search_view_ref': 'project.project_sharing_project_task_view_search'}"
-                                            invisible="project_id or project_id != id"/>
+                                            invisible="project_id != context.get('active_id')"/>
                                 </tree>
                             </field>
                         </page>
@@ -223,6 +241,9 @@
         <field name="priority">999</field>
         <field name="arch" type="xml">
             <search position="inside"/>
+            <xpath expr="//search/filter[@name='inactive']" position='attributes'>
+                <attribute name='invisible'>1</attribute>
+            </xpath>
         </field>
     </record>
 

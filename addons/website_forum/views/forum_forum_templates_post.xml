@@ -212,7 +212,7 @@
                 <h5 >You have a pending post</h5>
                 <span>Please wait for a moderator to validate your previous post to be allowed to reply to questions.</span>
             </div>
-            <div t-attf-class="alert alert-danger #{'d-none ' if question.state != 'flagged' else ''}text-center" >
+            <div t-attf-class="alert alert-danger o_wforum_flag_alert #{'d-none ' if question.state != 'flagged' else ''}text-center" >
                 <h5>This question has been flagged</h5>
                 <span t-if="question.can_moderate">As a moderator, you can either validate or reject this answer.</span>
                 <t t-call="website_forum.link_button">
@@ -506,7 +506,7 @@
 
 <!-- Utility template: Post a Comment -->
 <template id="post_comment">
-    <div class="o_wforum_post_comments_container rounded">
+    <div class="o_wforum_post_comments_container d-flex flex-column gap-2 rounded">
         <div class="css_editable_mode_hidden o_wforum_readable">
             <form t-att-id="_collapse_uid" class="oe_comment_grey js_website_submit_form js_wforum_submit_form collapse rounded o_cc2 p-2"
                 t-attf-action="/forum/#{slug(forum)}/post/#{slug(object)}/comment" method="POST">
@@ -530,6 +530,8 @@
             <div t-attf-class="o_wforum_post_comment d-flex rounded o_cc2 ps-3" t-att-data-last-activity="message.create_date">
                 <t t-set="allow_post_comment" t-value="(object.parent_id and object.parent_id.state != 'close' and object.parent_id.active != False)
                                                         or (not object.parent_id and object.state != 'close' and object.active != False)"/>
+                <t t-set="unlink_comment_required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_unlink_own or object.forum_id.karma_comment_unlink_all"/>
+                <t t-set="can_unlink_comment" t-value="user._is_admin() or user.karma >= unlink_comment_required_karma"/>
                 <div class="flex-grow-1 py-2 opacity-75">
                     <header>
                         <span t-call="website_forum.author_box">
@@ -557,7 +559,7 @@
                             <t t-set="inDropdown" t-value="True"/>
                             <t t-set="icon" t-value="'fa-trash-o text-muted'"/>
                             <t t-set="classes" t-value="'comment_delete'"/>
-                            <t t-set="karma" t-value="object.karma_unlink if not object.can_unlink else 0"/>
+                            <t t-set="karma" t-value="unlink_comment_required_karma if not can_unlink_comment and unlink_comment_required_karma else 0"/>
                         </t>
                         <t t-if="message.create_uid.id not in question.child_ids.create_uid.ids">
                             <t t-call="website_forum.link_button">

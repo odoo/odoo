@@ -3,8 +3,8 @@
 # 	* hr_contract
 # 
 # Translators:
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Lucia Pacheco, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Wil Odoo, 2024
 # Fernanda Alvarez, 2024
 # 
@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -133,8 +133,8 @@ msgid ""
 "According to Employee's Working Permit Expiration Date, this contract has "
 "been put in red on the %s. Please advise and correct."
 msgstr ""
-"Según la fecha de vencimiento del permiso de trabajo del empleado, se han "
-"hecho cambios en este contrato el %s, infórmelo y corríjalo."
+"Este contrato se puso en rojo el %s debido a la fecha de vencimiento del "
+"permiso de trabajo del empleado. Notifique esto y corríjalo."
 
 #. module: hr_contract
 #. odoo-python
@@ -144,8 +144,8 @@ msgid ""
 "According to the contract's end date, this contract has been put in red on "
 "the %s. Please advise and correct."
 msgstr ""
-"Según la fecha de término del contrato, se han hecho cambios en este "
-"contrato el %s, infórmelo y corríjalo."
+"Este contrato se puso en rojo el %s debido a la fecha de rescisión del "
+"contrato laboral. Notifique esto y corríjalo."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction
@@ -207,7 +207,7 @@ msgid ""
 "\n"
 "Employee: %(employee_name)s"
 msgstr ""
-"Un empleado solo puede tener un contrato al mismo tiempo. (Sin incluir contratos en estado de borrador y cancelados).\n"
+"Un empleado solo puede tener un contrato al mismo tiempo (sin incluir contratos en estado de borrador y cancelados).\n"
 "\n"
 "Empleado: %(employee_name)s"
 
@@ -230,7 +230,7 @@ msgstr "Número de cuenta bancaria"
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee_base
 msgid "Basic Employee"
-msgstr "Empleado de base"
+msgstr "Empleado básico"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__calendar_mismatch
@@ -456,7 +456,7 @@ msgstr "Creado el"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__currency_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__currency_id
 msgid "Currency"
-msgstr "Divisa"
+msgstr "Moneda"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_id
@@ -477,7 +477,7 @@ msgstr "Contrato actual del empleado"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 msgid "Currently Under Contract"
-msgstr "Actualmente bajo contrato"
+msgstr "Actualmente sujeto a contrato"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__default_resource_calendar_id
@@ -683,20 +683,18 @@ msgstr "Icono que indica una actividad de excepción."
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr ""
-"Si se encuentra seleccionado, hay nuevos mensajes que requieren de su "
-"atención."
+"Si se encuentra seleccionado, hay nuevos mensajes que requieren su atención."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Si se encuentra seleccionado, algunos mensajes presentan un error de envío."
+msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__is_under_contract
 msgid "Is Currently Under Contract"
-msgstr "Actualmente bajo contrato"
+msgstr "Actualmente sujeto a contrato"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_is_follower
@@ -792,7 +790,7 @@ msgstr "No hay datos para mostrar"
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__blocked
 msgid "Not Under Contract"
-msgstr "No se encuentra bajo contrato"
+msgstr "No está sujeto a contrato"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__notes
@@ -811,7 +809,7 @@ msgid ""
 "Number of days prior to the contract end date that a contract expiration "
 "warning is triggered."
 msgstr ""
-"Número de días antes de la fecha de finalización del contrato en que se "
+"Número de días antes de la fecha de terminación del contrato en los que se "
 "activa una advertencia de vencimiento del contrato."
 
 #. module: hr_contract
@@ -821,7 +819,7 @@ msgid ""
 "triggered."
 msgstr ""
 "Número de días antes de la fecha de vencimiento del permiso de trabajo en "
-"que se activa una advertencia."
+"los que se activa una advertencia."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error_counter
@@ -870,6 +868,11 @@ msgid "Reference Working Time"
 msgstr "Tiempo de trabajo de referencia"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "Detalle de las ausencias de los recursos"
+
+#. module: hr_contract
 #: model:ir.model,name:hr_contract.model_resource_calendar
 msgid "Resource Working Time"
 msgstr "Tiempo de trabajo de recursos"
@@ -894,7 +897,7 @@ msgstr "En proceso "
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Running Contracts"
-msgstr "Contratos en ejecución"
+msgstr "Contratos activos"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
@@ -1025,7 +1028,7 @@ msgstr "Tipo de la actividad de excepción registrada."
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__done
 msgid "Under Contract"
-msgstr "Bajo contrato"
+msgstr "Sujeto a contrato"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_res_users
@@ -1075,3 +1078,10 @@ msgstr "Número de permiso de trabajo"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Working Schedule"
 msgstr "Horario de trabajo"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_employee.py:0
+#, python-format
+msgid "You cannot delete an employee with a running contract."
+msgstr "No puede eliminar a un empleado con un contrato válido."

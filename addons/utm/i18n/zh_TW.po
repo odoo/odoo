@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -252,12 +252,12 @@ msgstr "編輯"
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_email_campaign_products
 msgid "Email Campaign - Products"
-msgstr "電郵廣告-產品"
+msgstr "電郵推廣活動 - 產品"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_email_campaign_services
 msgid "Email Campaign - Services"
-msgstr "電郵行銷 - 服務"
+msgstr "電郵推廣活動 - 服務"
 
 #. module: utm
 #. odoo-javascript
@@ -591,19 +591,19 @@ msgstr "本周"
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
-msgstr "這是一個幫助您追蹤不同行銷活動的名稱，例如，Fall_Drive、Christmas_Special"
+msgstr "此名稱可幫助你追蹤不同行銷活動，例：秋季推廣、聖誕特別優惠"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "這是傳達方法，例如，明信片、電子信件或橫幅廣告"
+msgstr "傳遞方式，例：明信片、電子郵件、橫幅廣告"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
-msgstr "這是連結來源，例如，搜尋引擎、其他域名或電子信件列表名稱"
+msgstr "連結的來源，例：搜尋引擎、其他網站，或電郵清單的名稱"
 
 #. module: utm
 #. odoo-javascript
@@ -643,7 +643,7 @@ msgstr "UTM 媒介"
 msgid ""
 "UTM Mediums track the mean that was used to attract traffic (e.g. "
 "\"Website\", \"Twitter\", ...)."
-msgstr "UTM 媒體跟踪用於吸引流量的平均值（例如“網站”、“推特”等）。"
+msgstr "「UTM 媒介」追蹤吸引訪客流量的方式及媒介（例如：網站、Twitter 等）。"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
@@ -665,7 +665,7 @@ msgstr "UTM 來源混入"
 msgid ""
 "UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", "
 "...)."
-msgstr "UTM Sources 追蹤流量來自何處（例如“May Newsletter”、“”、...）。"
+msgstr "「UTM 來源」追蹤流量從何而來（例：五月電子報）。"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.action_view_utm_stage
@@ -688,6 +688,15 @@ msgstr "UTMs"
 #, python-format
 msgid "Use This For My Campaigns"
 msgstr "將此用於我的行銷活動"
+
+#. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_source.py:0
+#, python-format
+msgid ""
+"You cannot update multiple records with the same name. The name should be "
+"unique!"
+msgstr "不可更新擁有相同名稱的多項記錄。名稱應該獨一無二。"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_form

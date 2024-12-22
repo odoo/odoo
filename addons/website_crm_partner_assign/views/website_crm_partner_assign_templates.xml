@@ -29,7 +29,7 @@
                 </a>
                 <div class="dropdown-menu">
                     <t t-foreach="grades" t-as="grade">
-                        <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
+                        <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
                         class="dropdown-item" t-out="grade['grade_id'][1]"/>
                     </t>
                 </div>
@@ -42,7 +42,7 @@
                 </a>
                 <div class="dropdown-menu">
                     <t t-foreach="countries" t-as="country" t-if="country['country_id']">
-                        <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % country['country_id'][0] or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
+                        <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
                         class="dropdown-item" t-out="country['country_id'][1]"/>
                     </t>
                 </div>
@@ -88,10 +88,10 @@
                                 <ul class="list-group list-group-flush">
                                     <t t-foreach="grades" t-as="grade">
                                         <li class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
-                                            <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
+                                            <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
                                             class="text-reset" aria-label="See categories filters">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" t-attf-name="#{grade['grade_id'][1]}" t-att-checked="bool(grade['active'])"/>
+                                                    <input class="form-check-input pe-none" type="radio" t-attf-name="#{grade['grade_id'][1]}" t-att-checked="bool(grade['active'])"/>
                                                     <label class="form-check-label" t-attf-for="#{grade['grade_id'][1]}" t-out="grade['grade_id'][1]"/>
                                                 </div>
                                             </a>
@@ -117,10 +117,10 @@
                                 <ul class="list-group list-group-flush">
                                     <t t-foreach="countries" t-as="country">
                                         <li t-if="country['country_id']" class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
-                                            <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % country['country_id'][0] or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
+                                            <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
                                             class="text-reset" aria-label="See countries filters">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" t-attf-name="#{country['country_id'][1]}" t-att-checked="bool(country['active'])"/>
+                                                    <input class="form-check-input pe-none" type="radio" t-attf-name="#{country['country_id'][1]}" t-att-checked="bool(country['active'])"/>
                                                     <label class="form-check-label" t-attf-for="#{country['country_id'][1]}" t-out="country['country_id'][1]"/>
                                                 </div>
                                             </a>
@@ -246,7 +246,7 @@
         <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="card mt-3 border-0">
             <div class="row">
                 <div class="col-md-2">
-                    <span t-field="reference.avatar_128" class="d-flex justify-content-center h-100" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img-fluid rounded"}'/>
+                    <span t-field="reference.avatar_128" class="d-flex justify-content-center" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img-fluid rounded mw-100"}'/>
                 </div>
                 <div class="card-body col-md-10">
                     <span t-field="reference.self"/>
@@ -303,6 +303,7 @@
                 <t t-set="title">Opportunities</t>
                 <t t-set="url" t-value="'/my/opportunities'"/>
                 <t t-set="placeholder_count" t-value="'opp_count'"/>
+                <t t-set="config_card" t-value="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id"/>
             </t>
         </div>
     </template>

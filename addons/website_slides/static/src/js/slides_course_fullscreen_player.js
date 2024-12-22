@@ -651,6 +651,10 @@
                 var slide = this.get('slide');
                 var $content = this.$('.o_wslides_fs_content');
                 $content.empty();
+                if (this.websiteAnimateWidget) {
+                    this.websiteAnimateWidget.destroy()
+                    this.websiteAnimateWidget = null;
+                }
 
                 // display quiz slide, or quiz attached to a slide
                 if (slide.category === 'quiz' || slide.isQuiz) {
@@ -671,12 +675,14 @@
                 } else if (slide.category === 'video' && slide.videoSourceType === 'google_drive') {
                     $content.empty().append(renderToElement('website.slides.fullscreen.video.google_drive', {widget: this}));
                 } else if (slide.category === 'article'){
+                    this.websiteAnimateWidget = new publicWidget.registry.WebsiteAnimate();
                     var $wpContainer = $('<div>').addClass('o_wslide_fs_article_content bg-white block w-100 overflow-auto p-3');
                     $wpContainer.html(slide.htmlContent);
                     $content.append($wpContainer);
                     this.trigger_up('widgets_start_request', {
                         $target: $content,
                     });
+                    this.websiteAnimateWidget.attachTo($wpContainer);
                 }
                 unhideConditionalElements();
             } finally {

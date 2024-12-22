@@ -25,7 +25,7 @@ class StockMove(models.Model):
 
     @api.model
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
-        excluded_fields = super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_id']
+        excluded_fields = super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_ids']
         if self.env['ir.config_parameter'].sudo().get_param('purchase_stock.merge_different_procurement'):
             excluded_fields += ['procure_method']
         return excluded_fields
@@ -61,22 +61,32 @@ class StockMove(models.Model):
             if invoiced_layer:
                 receipt_value += sum(invoiced_layer.mapped(lambda l: l.currency_id._convert(
                     l.value, order.currency_id, order.company_id, l.create_date, round=False)))
-            invoiced_value = 0
+            total_invoiced_value = 0
             invoiced_qty = 0
-            for invoice_line in line.sudo().invoice_lines:
+            for invoice_line in line._get_po_line_invoice_lines_su():
                 if invoice_line.move_id.state != 'posted':
                     continue
+                # Adjust unit price to account for discounts before adding taxes.
+                adjusted_unit_price = invoice_line.price_unit * (1 - (invoice_line.discount / 100)) if invoice_line.discount else invoice_line.price_unit
                 if invoice_line.tax_ids:
-                    invoiced_value += invoice_line.tax_ids.with_context(round=False).compute_all(
-                        invoice_line.price_unit, currency=invoice_line.currency_id, quantity=invoice_line.quantity)['total_void']
+                    invoice_line_value = invoice_line.tax_ids.with_context(round=False).compute_all(
+                        adjusted_unit_price, currency=invoice_line.currency_id, quantity=invoice_line.quantity)['total_void']
                 else:
-                    invoiced_value += invoice_line.price_unit * invoice_line.quantity
+                    invoice_line_value = adjusted_unit_price * invoice_line.quantity
+                total_invoiced_value += invoice_line.currency_id._convert(
+                        invoice_line_value, order.currency_id, order.company_id, invoice_line.move_id.invoice_date, round=False)
                 invoiced_qty += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_id.uom_id)
             # TODO currency check
-            remaining_value = invoiced_value - receipt_value
+            remaining_value = total_invoiced_value - receipt_value
             # TODO qty_received in product uom
             remaining_qty = invoiced_qty - line.product_uom._compute_quantity(received_qty, line.product_id.uom_id)
-            price_unit = float_round(remaining_value / remaining_qty, precision_digits=price_unit_prec) if remaining_value and remaining_qty else line._get_gross_price_unit()
+            if order.currency_id != order.company_id.currency_id and remaining_value and remaining_qty:
+                # will be rounded during currency conversion
+                price_unit = remaining_value / remaining_qty
+            elif remaining_value and remaining_qty:
+                price_unit = float_round(remaining_value / remaining_qty, precision_digits=price_unit_prec)
+            else:
+                price_unit = line._get_gross_price_unit()
         else:
             price_unit = line._get_gross_price_unit()
         if order.currency_id != order.company_id.currency_id:
@@ -84,8 +94,12 @@ class StockMove(models.Model):
             # in assigned state. However, the move date is the scheduled date until move is
             # done, then date of actual move processing. See:
             # https://github.com/odoo/odoo/blob/2f789b6863407e63f90b3a2d4cc3be09815f7002/addons/stock/models/stock_move.py#L36
+            convert_date = fields.Date.context_today(self)
+            # use currency rate at bill date when invoice before receipt
+            if float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom.rounding) > 0:
+                convert_date = max(line.sudo().invoice_lines.move_id.filtered(lambda m: m.state == 'posted').mapped('invoice_date'), default=convert_date)
             price_unit = order.currency_id._convert(
-                price_unit, order.company_id.currency_id, order.company_id, fields.Date.context_today(self), round=False)
+                price_unit, order.company_id.currency_id, order.company_id, convert_date, round=False)
         return price_unit
 
     def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description):
@@ -146,6 +160,46 @@ class StockMove(models.Model):
             }
         return rslt
 
+    def _account_entry_move(self, qty, description, svl_id, cost):
+        """
+        In case of a PO return, if the value of the returned product is
+        different from the purchased one, we need to empty the stock_in account
+        with the difference
+        """
+        am_vals_list = super()._account_entry_move(qty, description, svl_id, cost)
+        returned_move = self.origin_returned_move_id
+        move = (self | returned_move).with_prefetch(self._prefetch_ids)
+        pdiff_exists = bool(move.stock_valuation_layer_ids.stock_valuation_layer_ids.account_move_line_id)
+
+        if not am_vals_list or not self.purchase_line_id or pdiff_exists or float_is_zero(qty, precision_rounding=self.product_id.uom_id.rounding):
+            return am_vals_list
+
+        layer = self.env['stock.valuation.layer'].browse(svl_id)
+
+        if returned_move and self._is_out() and self._is_returned(valued_type='out'):
+            returned_layer = returned_move.stock_valuation_layer_ids.filtered(lambda svl: not svl.stock_valuation_layer_id)[:1]
+            unit_diff = layer._get_layer_price_unit() - returned_layer._get_layer_price_unit() if returned_layer else 0
+        elif returned_move and returned_move._is_out() and returned_move._is_returned(valued_type='out'):
+            returned_layer = returned_move.stock_valuation_layer_ids.filtered(lambda svl: not svl.stock_valuation_layer_id)[:1]
+            unit_diff = returned_layer._get_layer_price_unit() - self.purchase_line_id._get_gross_price_unit()
+        else:
+            return am_vals_list
+
+        diff = unit_diff * qty
+        company = self.purchase_line_id.company_id
+        if company.currency_id.is_zero(diff):
+            return am_vals_list
+
+        sm = self.with_company(company).with_context(is_returned=True)
+        accounts = sm.product_id.product_tmpl_id.get_product_accounts()
+        acc_exp_id = accounts['expense'].id
+        acc_stock_in_id = accounts['stock_input'].id
+        journal_id = accounts['stock_journal'].id
+        vals = sm._prepare_account_move_vals(acc_exp_id, acc_stock_in_id, journal_id, qty, description, False, diff)
+        am_vals_list.append(vals)
+
+        return am_vals_list
+
     def _prepare_extra_move_vals(self, qty):
         vals = super(StockMove, self)._prepare_extra_move_vals(qty)
         vals['purchase_line_id'] = self.purchase_line_id.id
@@ -174,7 +228,8 @@ class StockMove(models.Model):
         """ Overridden to return the vendor bills related to this stock move.
         """
         rslt = super(StockMove, self)._get_related_invoices()
-        rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.state == 'posted')
+        purchase_ids = self.env['purchase.order'].search([('picking_ids', 'in', self.picking_id.ids)])
+        rslt += purchase_ids.invoice_ids.filtered(lambda x: x.state == 'posted')
         return rslt
 
     def _get_source_document(self):
@@ -204,7 +259,7 @@ class StockMove(models.Model):
 
     def _is_purchase_return(self):
         self.ensure_one()
-        return self.location_dest_id.usage == "supplier"
+        return self.location_dest_id.usage == "supplier" or self.location_dest_id == self.env.ref('stock.stock_location_inter_wh', raise_if_not_found=False)
 
     def _get_all_related_aml(self):
         # The back and for between account_move and account_move_line is necessary to catch the

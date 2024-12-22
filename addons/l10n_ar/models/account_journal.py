@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api, _
-from odoo.exceptions import ValidationError, RedirectWarning
+from odoo.exceptions import UserError, ValidationError, RedirectWarning
 
 
 class AccountJournal(models.Model):
@@ -72,7 +72,7 @@ class AccountJournal(models.Model):
                 '4': ['B', 'C', 'I'],
                 '5': ['B', 'C', 'I'],
                 '6': ['A', 'B', 'C', 'I'],
-                '9': ['E'],
+                '9': ['E', 'B'],
                 '10': ['E'],
                 '13': ['A', 'B', 'C', 'I'],
                 '99': ['B', 'C', 'I']
@@ -133,16 +133,6 @@ class AccountJournal(models.Model):
             codes = expo_codes
         return [('code', 'in', codes)]
 
-    @api.constrains('type', 'l10n_ar_afip_pos_system', 'l10n_ar_afip_pos_number', 'l10n_latam_use_documents')
-    def _check_afip_configurations(self):
-        """ Do not let the user update the journal if it already contains confirmed invoices """
-        journals = self.filtered(lambda x: x.company_id.account_fiscal_country_id.code == "AR" and x.type in ['sale', 'purchase'])
-        invoices = self.env['account.move'].search([('journal_id', 'in', journals.ids), ('posted_before', '=', True)], limit=1)
-        if invoices:
-            raise ValidationError(
-                _("You can not change the journal's configuration if it already has validated invoices") + ' ('
-                + ', '.join(invoices.mapped('journal_id').mapped('name')) + ')')
-
     @api.constrains('l10n_ar_afip_pos_system')
     def _check_afip_pos_system(self):
         journals = self.filtered(
@@ -170,3 +160,27 @@ class AccountJournal(models.Model):
         """
         if self.type == 'sale' and self.l10n_ar_afip_pos_number:
             self.code = "%05i" % self.l10n_ar_afip_pos_number
+
+    def write(self, vals):
+        protected_fields = ('type', 'l10n_ar_afip_pos_system', 'l10n_ar_afip_pos_number', 'l10n_latam_use_documents')
+        fields_to_check = [field for field in protected_fields if field in vals]
+
+        if fields_to_check:
+            self._cr.execute("SELECT DISTINCT(journal_id) FROM account_move WHERE posted_before = True")
+            res = self._cr.fetchall()
+            journal_with_entry_ids = [journal_id for journal_id, in res]
+
+            for journal in self:
+                if (
+                    journal.company_id.account_fiscal_country_id.code != "AR"
+                    or journal.type not in ['sale', 'purchase']
+                    or journal.id not in journal_with_entry_ids
+                ):
+                    continue
+
+                for field in fields_to_check:
+                    # Wouldn't work if there was a relational field, as we would compare an id with a recordset.
+                    if vals[field] != journal[field]:
+                        raise UserError(_("You can not change %s journal's configuration if it already has validated invoices", journal.name))
+
+        return super().write(vals)

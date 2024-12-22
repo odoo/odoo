@@ -5,14 +5,15 @@
 # Translators:
 # Wil Odoo, 2024
 # Sarah Park, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-30 14:16+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2024-02-07 08:49+0000\n"
-"Last-Translator: Sarah Park, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,13 +56,6 @@ msgstr "Odoo 서버에 연결할 수 없습니다. 인터넷 연결을 확인한
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 #, python-format
-msgid "Do not have access to fetch token from Viva Wallet"
-msgstr "Viva Wallet에서 토큰을 가져올 권한이 없습니다."
-
-#. module: pos_viva_wallet
-#. odoo-python
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#, python-format
 msgid "It is essential to provide API key for the use of viva wallet"
 msgstr "Viva wallet을 사용하려면 API Key를 필수로 입력해야 합니다."
 
@@ -90,14 +84,14 @@ msgstr "전달한 토큰을 받지 못했습니다."
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 #, python-format
 msgid "Only 'group_pos_user' are allowed to fetch token from Viva Wallet"
-msgstr ""
+msgstr "'group_pos_user'만 Viva Wallet에서 토큰을 가져올 수 있습니다."
 
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 #, python-format
 msgid "Only 'group_pos_user' are allowed to get latest transaction status"
-msgstr ""
+msgstr "'group_pos_user'만 최신 트랜잭션 상태를 가져올 수 있습니다."
 
 #. module: pos_viva_wallet
 #: model:ir.model,name:pos_viva_wallet.model_pos_payment_method
@@ -130,7 +124,7 @@ msgstr "테스트 모드"
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 #, python-format
 msgid "There are some issues between us and Viva Wallet, try again later. %s"
-msgstr ""
+msgstr "Viva Wallet에 문제가 발생했습니다. 나중에 다시 시도하세요. %s"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -147,6 +141,8 @@ msgid ""
 "https://developer.vivawallet.com/getting-started/find-your-account-"
 "credentials/merchant-id-and-api-key/"
 msgstr ""
+"Viva Wallet 연결 시 사용: https://developer.vivawallet.com/getting-started/find-"
+"your-account-credentials/merchant-id-and-api-key/"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_client_id
@@ -155,6 +151,9 @@ msgid ""
 "https://developer.vivawallet.com/getting-started/find-your-account-"
 "credentials/pos-apis-credentials/#find-your-pos-apis-credentials"
 msgstr ""
+"Viva Wallet 연결 시 사용: https://developer.vivawallet.com/getting-started/find-"
+"your-account-credentials/pos-apis-credentials/#find-your-pos-apis-"
+"credentials"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_bearer_token
@@ -184,6 +183,13 @@ msgid "Viva Wallet Webhook Verification Key"
 msgstr "Viva Wallet 웹훅 인증 키"
 
 #. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid "Your transaction with Viva Wallet failed. Please try again later."
+msgstr "Viva Wallet과의 거래에 실패했습니다. 나중에 다시 시도해 주세요."
+
+#. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_terminal_id
 msgid "[Terminal ID of the Viva Wallet terminal], for example: 16002169"
 msgstr "[Viva Walle 단말기용 단말기], 예: 16002169"
@@ -193,11 +199,11 @@ msgstr "[Viva Walle 단말기용 단말기], 예: 16002169"
 #: code:addons/pos_viva_wallet/controllers/main.py:0
 #, python-format
 msgid "received a message for a pos payment provider not registered."
-msgstr ""
+msgstr "POS 결제 서비스 공급업체가 등록되지 않았다는 메시지를 받았습니다."
 
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/controllers/main.py:0
 #, python-format
 msgid "received a message for a terminal not registered in Odoo: %s"
-msgstr ""
+msgstr "Odoo에 등록되지 않은 터미널에 대한 메시지를 수신했습니다: %s"

@@ -33,7 +33,9 @@ export class Group extends DataPoint {
         }
         /** @type {import("./dynamic_group_list").DynamicGroupList | import("./dynamic_record_list").DynamicRecordList} */
         this.list = new List(this.model, config.list, data);
+        this._useGroupCountForList();
         if (config.record) {
+            config.record.context = { ...config.record.context, ...config.context };
             this.record = new this.model.constructor.Record(this.model, config.record, data.values);
         }
     }
@@ -82,6 +84,7 @@ export class Group extends DataPoint {
             });
         } else {
             await this.list.load({ domain: this.groupDomain });
+            this.count = this.list.isGrouped ? this.list.recordCount : this.list.count;
         }
         this.model._updateConfig(this.config, { extraDomain: filter }, { reload: false });
     }
@@ -94,6 +97,7 @@ export class Group extends DataPoint {
         if (this.config.isFolded) {
             await this.list.load();
         }
+        this._useGroupCountForList();
         this.model._updateConfig(
             this.config,
             { isFolded: !this.config.isFolded },
@@ -115,9 +119,20 @@ export class Group extends DataPoint {
         this.count -= records.length;
     }
 
+    /**
+     * The count returned by web_search_read is limited (see DEFAULT_COUNT_LIMIT). However, the one
+     * returned by web_read_group, for each group, isn't. So in the grouped case, it might happen
+     * that the group count is more accurate than the list one. It that case, we use it on the list.
+     */
+    _useGroupCountForList() {
+        if (!this.list.isGrouped && this.list.count === this.list.config.countLimit) {
+            this.list.count = this.count;
+        }
+    }
+
     async _removeRecords(recordIds) {
         const idsToRemove = recordIds.filter((id) => this.list.records.some((r) => r.id === id));
-        await this.list._removeRecords(idsToRemove);
+        this.list._removeRecords(idsToRemove);
         this.count -= idsToRemove.length;
     }
 }

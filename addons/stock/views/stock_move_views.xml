@@ -30,7 +30,7 @@
             <field name="model">stock.move</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Moves" create="0" default_order="date desc">
+                <tree string="Moves" create="0" default_order="date desc" duplicate ="0">
                     <field name="date" groups="base.group_no_one" decoration-danger="(state not in ('cancel','done')) and date > current_date"/>
                     <field name="reference"/>
                     <field name="picking_type_id" column_invisible="True"/>
@@ -162,6 +162,7 @@
                     <field name="show_quant" invisible="1"/>
                     <field name="show_lots_text" invisible="1"/>
                     <field name="show_lots_m2o" invisible="1"/>
+                    <field name="quantity" invisible="1"/>
                     <group>
                         <group>
                             <field name="product_id" readonly="id or move_line_ids"/>
@@ -211,7 +212,7 @@
                         column_invisible="not parent.show_quant"
                         options="{'no_create': True, 'no_open': True}"/>
                     <field name="lot_id" groups="stock.group_production_lot"
-                        column_invisible="parent.has_tracking == 'none' or not parent.show_lots_m2o"
+                        column_invisible="parent.show_quant or parent.has_tracking == 'none' or not parent.show_lots_m2o"
                         readonly="package_level_id and parent.picking_type_entire_packs"
                         domain="[('product_id', '=', parent.product_id), ('company_id', '=', company_id)]"
                         context="{
@@ -228,7 +229,7 @@
                         readonly="package_level_id and parent.picking_type_entire_packs"
                         domain="[('id', 'child_of', parent.location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]"
                         groups="stock.group_stock_multi_locations"/>
-                    <field name="package_id" column_invisible="not parent.show_quant" readonly="package_level_id and parent.picking_type_entire_packs" groups="stock.group_tracking_lot"/>
+                    <field name="package_id" column_invisible="1" readonly="package_level_id and parent.picking_type_entire_packs" groups="stock.group_tracking_lot"/>
                     <field name="result_package_id" readonly="package_level_id and parent.picking_type_entire_packs" groups="stock.group_tracking_lot" context="{'picking_id': picking_id}"/>
                     <field name="owner_id" column_invisible="parent.show_quant" readonly="package_level_id and parent.picking_type_entire_packs" groups="stock.group_tracking_owner"/>
                     <field name="state" column_invisible="True"/>
@@ -263,16 +264,17 @@
                     <field name="quant_id" column_invisible="context.get('picking_code') == 'incoming'"
                         domain="[('product_id', '=', product_id), ('location_id', 'child_of', picking_location_id)]"
                         context="{'default_location_id': location_id, 'default_product_id': product_id, 'search_view_ref': 'stock.quant_search_view', 'tree_view_ref': 'stock.view_stock_quant_tree_simple', 'form_view_ref': 'stock.view_stock_quant_form', 'readonly_form': False}"
+                        readonly="state in ('done', 'cancel') and is_locked"
                         widget="pick_from"
-                        options="{'no_open': True}"/>
-                    <field name="lot_id" column_invisible="context.get('show_lots_text')" groups="stock.group_production_lot" invisible="not lots_visible" context="{'default_product_id': product_id, 'default_company_id': company_id, 'active_picking_id': picking_id}" optional="show"/>
-                    <field name="lot_name" column_invisible="not context.get('show_lots_text')"  groups="stock.group_production_lot" invisible="not lots_visible" context="{'default_product_id': product_id}"/>
-                    <field name="location_dest_id" options="{'no_create': True}" column_invisible="context.get('picking_code') == 'outgoing'" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', picking_location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]"/>
-                    <field name="package_id" column_invisible="True"/>
+                        options="{'no_open': True, 'no_create': True}"/>
+                    <field name="lot_id" column_invisible="context.get('show_lots_text')" groups="stock.group_production_lot" invisible="not lots_visible" readonly="state in ('done', 'cancel') and is_locked" context="{'default_product_id': product_id, 'default_company_id': company_id, 'active_picking_id': picking_id}" optional="show"/>
+                    <field name="lot_name" column_invisible="not context.get('show_lots_text')"  groups="stock.group_production_lot" invisible="not lots_visible" readonly="state in ('done', 'cancel') and is_locked" context="{'default_product_id': product_id}"/>
+                    <field name="location_dest_id" options="{'no_create': True}" column_invisible="context.get('picking_code') == 'outgoing'" readonly="state in ('done', 'cancel') and is_locked" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', picking_location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]"/>
+                    <field name="package_id" readonly="state in ('done', 'cancel') and is_locked" column_invisible="True"/>
                     <field name="result_package_id" column_invisible="True"/>
-                    <field name="result_package_id" groups="stock.group_tracking_lot"/>
+                    <field name="result_package_id" readonly="state in ('done', 'cancel') and is_locked" groups="stock.group_tracking_lot"/>
                     <field name="lots_visible" column_invisible="True"/>
-                    <field name="owner_id" groups="stock.group_tracking_owner" column_invisible="context.get('picking_code') == 'incoming'"/>
+                    <field name="owner_id" groups="stock.group_tracking_owner" column_invisible="context.get('picking_code') == 'incoming'" readonly="state in ('done', 'cancel') and is_locked" />
                     <field name="state" column_invisible="True"/>
                     <field name="is_locked" column_invisible="True"/>
                     <field name="quantity" readonly="state in ('done', 'cancel') and is_locked" force_save="1"/>

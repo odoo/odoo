@@ -95,6 +95,11 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)",
     },
     {
+        content: "navbar shouldn't have any zwnbsp and no o_link_in_selection class",
+        trigger: 'iframe nav.navbar:not(:has(.o_link_in_selection)):not(:contains("\ufeff"))',
+        run: () => {}, // It's a check.
+    },
+    {
         content: "Click on Edit Link",
         trigger: 'iframe .o_edit_menu_popover a.o_we_edit_link',
     },
@@ -116,6 +121,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     },
     // Edit the menu item from the "edit menu" popover button
     ...wTourUtils.clickOnEditAndWaitEditMode(),
+    wTourUtils.clickOnExtraMenuItem({}, true),
     {
         content: "Click on the 'Modnar' link",
         trigger: 'iframe .top_menu .nav-item a:contains("Modnar")',
@@ -174,14 +180,14 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         debugHelp: "This is a hack/workaround for the next step",
     },
     {
-        content: "Drag item into parent",
+        content: "Drag 'Contact Us' item below the 'Home' item",
         trigger: '.oe_menu_editor li:contains("Contact us") .fa-bars',
-        run: "drag_and_drop_native .oe_menu_editor li:contains('Shop') .fa-bars",
+        run: "drag_and_drop_native .oe_menu_editor li:contains('Home') + li .fa-bars",
     },
     {
-        content: "Drag item into parent",
+        content: "Drag 'Contact Us' item as a child of the 'Home' item",
         trigger: '.oe_menu_editor li:contains("Contact us") .fa-bars',
-        run: 'drag_and_drop_native .oe_menu_editor li:contains("Contact us") .form-control',
+        run: "drag_and_drop_native .oe_menu_editor li:contains('Home') + li .form-control",
     },
     {
         content: "Wait for drop",
@@ -288,4 +294,119 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
             this.$anchor[0].dispatchEvent(new window.KeyboardEvent("keydown", { key: "ArrowDown" }));
         },
     },
+    ...wTourUtils.clickOnSave(),
+    // Nest and re-arrange menu items for a newly created menu
+    {
+        content: "Open site menu",
+        trigger: 'button[data-menu-xmlid="website.menu_site"]',
+    },
+    {
+        content: "Click on Edit Menu",
+        trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
+    },
+    {
+        content: "Trigger link dialog (click 'Add Menu Item')",
+        trigger: '.modal-body a:eq(0)',
+    },
+    {
+        content: "Write a label for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(0)',
+        run: 'text new_menu',
+    },
+    {
+        content: "Write a url for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(1)',
+        run: 'text #',
+    },
+    {
+        content: "Confirm the new menu entry",
+        trigger: '.modal-footer .btn-primary',
+    },
+    {
+        content: "Check if new menu(new_menu) is added",
+        trigger: ".oe_menu_editor li:contains('new_menu')",
+        run: () => {}, // It's a check.
+    },
+    {
+        content: "Trigger link dialog (click 'Add Menu Item')",
+        trigger: '.modal-body a:eq(0)',
+    },
+    {
+        content: "Write a label for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(0)',
+        run: 'text new_nested_menu',
+    },
+    {
+        content: "Write a url for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(1)',
+        run: 'text #',
+    },
+    {
+        content: "Confirm the new menu entry",
+        trigger: '.modal-footer .btn-primary',
+    },
+    {
+        content: "Check if new menu(new_nested_menu) is added",
+        trigger: ".oe_menu_editor li:contains('new_nested_menu')",
+        run: () => {}, // It's a check.
+    },
+    {
+        content: "Nest 'new_nested_menu' under 'new_menu'",
+        trigger: ".oe_menu_editor li:contains('new_nested_menu') .fa-bars",
+        run: "drag_and_drop_native .oe_menu_editor li:contains('new_menu') .form-control",
+    },
+    {
+        content: "Drag 'new_menu' above 'Modnar !!'",
+        trigger: ".oe_menu_editor li:contains('new_menu') .fa-bars",
+        run: "drag_and_drop_native .oe_menu_editor li:contains('Modnar !!') .fa-bars",
+    },
+    {
+        content: "Nest 'Modnar !!' under 'new_menu'",
+        trigger: ".oe_menu_editor li:contains('Modnar !!') .fa-bars",
+        run: "drag_and_drop_native .oe_menu_editor li:contains('new_menu') .form-control",
+    },
+
+    {
+        content: "Check if 'nested_menu' and 'Modnar !!' is nested under 'new_menu'",
+        trigger: ".oe_menu_editor li:contains('new_menu') > ul > li:contains('nested_menu') + li:contains('Modnar !!')",
+        run: () => {}, // It's a check.
+    },
+    {
+        content: "Move 'Modnar !!' above 'new_nested_menu' inside the 'new_menu'",
+        trigger: ".oe_menu_editor  li:contains('new_menu') > ul > li:contains('Modnar !!') .fa-bars",
+        run: "drag_and_drop_native .oe_menu_editor  li:contains('new_menu') > ul > li:contains('new_nested_menu') .fa-bars",
+    },
+    {
+        content: "Check if 'Modnar !!' is now above 'new_nested_menu' in 'new_menu'",
+        trigger: ".oe_menu_editor li:contains('new_menu') > ul > li:first:contains('Modnar !!')",
+        run: () => {}, // It's a check.
+    },
 ]);
+
+wTourUtils.registerWebsitePreviewTour(
+    "edit_menus_delete_parent",
+    {
+        test: true,
+        url: "/",
+    },
+    () => [
+        {
+            content: "Open site menu",
+            extra_trigger: "iframe #wrapwrap",
+            trigger: 'button[data-menu-xmlid="website.menu_site"]',
+        },
+        {
+            content: "Click on Edit Menu",
+            trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
+        },
+        {
+            content: "Delete Home menu",
+            trigger: ".modal-body ul li:nth-child(1) button.js_delete_menu",
+        },
+        {
+            content: "Save",
+            trigger: ".modal-footer button:first-child",
+            run: "click",
+        },
+    ]
+);

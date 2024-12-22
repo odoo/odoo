@@ -556,12 +556,47 @@ class configmanager(object):
         return opt
 
     def _warn_deprecated_options(self):
-        if self.options['longpolling_port']:
+        if self.options.get('longpolling_port', 0):
             warnings.warn(
                 "The longpolling-port is a deprecated alias to "
                 "the gevent-port option, please use the latter.",
                 DeprecationWarning)
             self.options['gevent_port'] = self.options.pop('longpolling_port')
+
+        for old_option_name, new_option_name in [
+            ('geoip_database', 'geoip_city_db'),
+            ('osv_memory_age_limit', 'transient_age_limit')
+        ]:
+            deprecated_value = self.options.pop(old_option_name, None)
+            if deprecated_value:
+                default_value = self.casts[new_option_name].my_default
+                current_value = self.options[new_option_name]
+
+                if deprecated_value in (current_value, default_value):
+                    # Surely this is from a --save that was run in a
+                    # prior version. There is no point in emitting a
+                    # warning because: (1) it holds the same value as
+                    # the correct option, and (2) it is going to be
+                    # automatically removed on the next --save anyway.
+                    pass
+                elif current_value == default_value:
+                    # deprecated_value != current_value == default_value
+                    # assume the new option was not set
+                    self.options[new_option_name] = deprecated_value
+                    warnings.warn(
+                        f"The {old_option_name!r} option found in the "
+                        "configuration file is a deprecated alias to "
+                        f"{new_option_name!r}, please use the latter.",
+                        DeprecationWarning)
+                else:
+                    # deprecated_value != current_value != default_value
+                    self.parser.error(
+                        f"The two options {old_option_name!r} "
+                        "(found in the configuration file but "
+                        f"deprecated) and {new_option_name!r} are set "
+                        "to different values. Please remove the first "
+                        "one and make sure the second is correct."
+                    )
 
     def _is_addons_path(self, path):
         from odoo.modules.module import MANIFEST_NAMES

@@ -3,16 +3,16 @@
 # 	* pos_restaurant
 # 
 # Translators:
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # Wil Odoo, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,7 +60,7 @@ msgstr "Додати"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 #, python-format
 msgid "Add Floor"
-msgstr ""
+msgstr "Додати зал"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -129,6 +129,7 @@ msgstr "Дозвольте розбиття рахунку"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
+#: model:ir.model.fields,help:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 msgid "Allow custom Internal notes on Orderlines."
 msgstr "Дозволити кастомні внутрішні примітки на рядках замовлень."
 
@@ -252,26 +253,26 @@ msgstr "Синій"
 #: code:addons/pos_restaurant/static/src/app/product_screen/product_screen.xml:0
 #, python-format
 msgid "Book table"
-msgstr ""
+msgstr "Забронювати стіл"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.burger_drink_combo_product_template
 msgid "Burger Menu Combo"
-msgstr ""
+msgstr "Burger Menu Combo"
 
 #. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_config.py:0
 #, python-format
 msgid "Cash Restaurant"
-msgstr ""
+msgstr "Каса ресторану"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/back_button/back_button.xml:0
 #, python-format
 msgid "Change table"
-msgstr ""
+msgstr "Змінити стіл"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
@@ -399,7 +400,7 @@ msgstr "Дозволяє розподілити рахунок у точці п�
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.espresso_product_template
 msgid "Espresso"
-msgstr ""
+msgstr "Espresso"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.fanta_product_template
@@ -491,7 +492,7 @@ msgstr "Зелений"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.green_tea_product_template
 msgid "Green Tea"
-msgstr ""
+msgstr "Зелений чай"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -541,7 +542,7 @@ msgstr "ID"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.ice_tea_product_template
 msgid "Ice Tea"
-msgstr ""
+msgstr "Ice Tea"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
@@ -565,6 +566,7 @@ msgstr "Внутрішню примітку додав офіціант."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_orderline_notes
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Internal Notes"
 msgstr "Внутрішні примітки"
@@ -626,7 +628,7 @@ msgstr "Маргарита"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.milkshake_banana_product_template
 msgid "Milkshake Banana"
-msgstr ""
+msgstr "Банановий молочний коктейль"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.minute_maid_product_template
@@ -664,14 +666,14 @@ msgstr "Кількість місць?"
 #: code:addons/pos_restaurant/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
 #, python-format
 msgid "Odoo Point of Sale"
-msgstr ""
+msgstr "Точка продажу Odoo"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
 #, python-format
 msgid "Odoo Restaurant"
-msgstr ""
+msgstr "Ресторан Odoo"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -788,11 +790,6 @@ msgstr "Сесія точки продажу"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__pos_config_ids
 msgid "Point of Sales"
 msgstr "Точка продажу"
-
-#. module: pos_restaurant
-#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
-msgid "Pos Iface Orderline Notes"
-msgstr "Pos Iface Рядок замовлення Примітки Notes"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
@@ -926,7 +923,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.schweppes_product_template
 msgid "Schweppes"
-msgstr ""
+msgstr "Schweppes"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1051,7 +1048,7 @@ msgstr "Назва столу?"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Table is not empty"
-msgstr ""
+msgstr "Стіл не пустий"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__table_ids
@@ -1088,6 +1085,8 @@ msgid ""
 "The table already contains an order. Do you want to proceed and transfer the"
 " order here?"
 msgstr ""
+"Стіл вже містить замовлення. Бажаєте продовжити та перемістити замовлення "
+"сюди?"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__table_id
@@ -1334,7 +1333,7 @@ msgstr "за столом"
 #: code:addons/pos_restaurant/static/src/overrides/components/product_screen/product_screen.xml:0
 #, python-format
 msgid "changes"
-msgstr ""
+msgstr "зміни"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1348,4 +1347,4 @@ msgstr "одиниці"
 #: code:addons/pos_restaurant/static/src/overrides/components/order_widget/order_widget.js:0
 #, python-format
 msgid "or book the table for later"
-msgstr ""
+msgstr "або забронюйте стіл на пізніше"

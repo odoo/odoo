@@ -55,5 +55,56 @@ class TestReportSession(TestPoSCommon):
         self.assertEqual(split_payment_bank[0]['cash_moves'][0]['amount'], 50)
         bank_payment = [p for p in report['payments'] if p.get('id', 0) == self.bank_pm1.id]
         self.assertEqual(bank_payment[0]['cash_moves'][0]['amount'], 40)
-        self.assertEqual(report['products_info']['total'], 100, "Total amount of products should be 100, as we want total without tax")
         self.assertEqual(report['products'][0]['products'][0]['base_amount'], 100, "Base amount of product should be 100, as we want price without tax")
+
+    def test_report_session_2(self):
+
+        self.product1 = self.create_product('Product A', self.categ_basic, 100)
+
+        self.config.open_ui()
+        session_id_1 = self.config.current_session_id.id
+        order_info = {'company_id': self.env.company.id,
+                      'session_id': session_id_1,
+                      'partner_id': self.partner_a.id,
+                      'lines': [(0, 0, {
+                          'name': "OL/0001",
+                          'product_id': self.product1.id,
+                          'price_unit': 100,
+                          'discount': 0,
+                          'qty': 1,
+                          'tax_ids': [],
+                          'price_subtotal': 100,
+                          'price_subtotal_incl': 100,
+                      })],
+                      'pricelist_id': self.config.pricelist_id.id,
+                      'amount_paid': 100.0,
+                      'amount_total': 100.0,
+                      'amount_tax': 0.0,
+                      'amount_return': 0.0,
+                      'to_invoice': False,
+                      }
+
+        order = self.env['pos.order'].create(order_info)
+        self.make_payment(order, self.bank_pm1, 100)
+
+        order = self.env['pos.order'].create(order_info)
+        self.make_payment(order, self.cash_pm1, 100)
+
+        self.config.current_session_id.action_pos_session_closing_control()
+
+        self.config.open_ui()
+        session_id_2 = self.config.current_session_id.id
+        order_info['session_id'] = session_id_2
+        order = self.env['pos.order'].create(order_info)
+        self.make_payment(order, self.bank_pm1, 100)
+
+        order = self.env['pos.order'].create(order_info)
+        self.make_payment(order, self.cash_pm1, 100)
+
+        self.config.current_session_id.action_pos_session_closing_control()
+
+        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
+        for payment in report['payments']:
+            session_name = self.env['pos.session'].browse(payment['session']).name
+            payment_method_name = self.env['pos.payment.method'].browse(payment['id']).name
+            self.assertEqual(payment['name'], payment_method_name + " " + session_name)

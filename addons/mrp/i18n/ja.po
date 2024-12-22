@@ -3,7 +3,7 @@
 # 	* mrp
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Junko Augias, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
 # 
@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -33,7 +33,7 @@ msgid ""
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
 " * ドラフト: 製造オーダはまだ確認されていません。\n"
-" * 確認済: 製造オーダが確認済で、在庫規則および構成品の再オーダがトリガされています。\n"
+" * 確認済: 製造オーダが確認済で、在庫規則および構成品の再オーダがトリガーされています。\n"
 " * 進行中: 製造が開始されています。(製造オーダ又は作業オーダ上)\n"
 " * クローズ対象: 製品が完成し、製造オーダをクローズする必要があります。\n"
 " * 完了: 製造オーダがクローズされ、在庫移動が計上されています。\n"
@@ -659,6 +659,16 @@ msgid "All"
 msgstr "全て"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_ids
+msgid "All Move"
+msgstr "全ての移動"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_raw_ids
+msgid "All Move Raw"
+msgstr "全移動未加工"
+
+#. module: mrp
 #. odoo-python
 #: code:addons/mrp/controller/main.py:0
 #, python-format
@@ -790,6 +800,11 @@ msgstr "工程をアーカイブ"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
 msgstr "アーカイブ済"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Are you sure you want to cancel this manufacturing order?"
+msgstr "この製造オーダを本当に取消しますか？"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -1269,6 +1284,15 @@ msgstr "取消"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Cancelled"
 msgstr "取消済"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"Cannot compute days to prepare due to missing route info for at least 1 "
+"component or for the final product."
+msgstr "少なくとも1つの構成品または最終プロダクトのルート情報がないため、準備にかかる日数を計算できません。"
 
 #. module: mrp
 #. odoo-python
@@ -2784,6 +2808,7 @@ msgstr "すでにブロック解除されています。"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
+#: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
 "It is not possible to unplan one single Work Order. You should unplan the "
@@ -3912,7 +3937,7 @@ msgstr "PDF"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Package barcode"
-msgstr "パッケージバーコード"
+msgstr "梱包バーコード"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
@@ -4572,6 +4597,11 @@ msgid "Quantity that can be produced with the current stock of components"
 msgstr "現在の構成品在庫で生産可能な数量"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_quant
+msgid "Quants"
+msgstr "保管ロット"
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
 msgid "RAM"
 msgstr "RAM"
@@ -4777,6 +4807,13 @@ msgstr "担当ユーザ"
 #, python-format
 msgid "Resupply lead time."
 msgstr "再補給リードタイム"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr "在庫に戻る"
 
 #. module: mrp
 #. odoo-javascript
@@ -5104,13 +5141,6 @@ msgid ""
 msgstr "一部の構成品は追跡される正しい構成品を取り出すには製造オーダの順序を指定する必要があります。"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid ""
-"Some product moves have already been confirmed, this manufacturing order "
-"can't be completely cancelled. Are you still sure you want to process?"
-msgstr "一部のプロダクトの移動はすでに確定しており、この製造オーダを完全に取消することはできません。それでも処理しますか？"
-
-#. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
@@ -5352,7 +5382,7 @@ msgstr "外注"
 #. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_product_template
 msgid "Table"
-msgstr "表"
+msgstr "テーブル"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_table_kit_product_template
@@ -5802,7 +5832,7 @@ msgstr "起動予定"
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #, python-format
 msgid "To Order"
-msgstr "注文する"
+msgstr "オーダ予定"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -6337,7 +6367,7 @@ msgid ""
 " operation type. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
-"調達が、同じオペレーションタイプが設定された'生産'ルートを持つとき、同じオペレーションタイプの部品表を使用して、そのプロダクトの製造オーダの作成を試みます。これにより、異なる部品表で異なる製造オーダのトリガとなる在庫ルールを定義できます。"
+"調達が、同じオペレーションタイプが設定された'生産'ルートを持つとき、同じオペレーションタイプの部品表を使用して、そのプロダクトの製造オーダの作成を試みます。これにより、異なる部品表で異なる製造オーダのトリガーとなる在庫ルールを定義できます。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__manual_consumption
@@ -6377,7 +6407,7 @@ msgid ""
 "perfectly integrated into the process. Workers can trigger feedback loops, "
 "maintenance alerts, scrap products, etc."
 msgstr ""
-"Odoo作業区コントロールパネルを使用すると、作業者は店舗で作業オーダを開始し、ワークシートの指示に従うことができます。品質テストはプロセスに完全に組み込まれています。作業員はフィードバックループ、修理警告、廃棄などをトリガできます。"
+"Odoo作業区コントロールパネルを使用すると、作業者は店舗で作業オーダを開始し、ワークシートの指示に従うことができます。品質テストはプロセスに完全に組み込まれています。作業員はフィードバックループ、修理警告、廃棄などをトリガーできます。"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning
@@ -6766,6 +6796,13 @@ msgstr "おなじシリアルナンバーを２度作成することはできま
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "You cannot start a work order that is already done or cancelled"
+msgstr "完了済または取消済の作業オーダを開始することはできません"
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
@@ -6879,6 +6916,15 @@ msgstr "生産量が当初の需要以下"
 #, python-format
 msgid "You should provide a lot number for the final product."
 msgstr "完成品用にロット番号を付与して下さい。"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid ""
+"You should update the components quantity instead of directly updating the "
+"quantity of the kit product."
+msgstr "キットプロダクトの数量を直接更新するのではなく、構成品の数量を更新する必要があります。"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__zpl
@@ -7005,3 +7051,31 @@ msgstr "分割"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
 msgstr "作業オーダ"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.xml:0
+#, python-format
+msgid "{{ foldButtonTitle }}"
+msgstr "{{ foldButtonTitle }}"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
+#, python-format
+msgid "{{ props.isFolded ? 'Unfold' : 'Fold' }}"
+msgstr "{{ props.isFolded ? 'Unfold' : 'Fold' }}"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview_byproducts_block/mrp_mo_overview_byproducts_block.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_byproducts_block/mrp_mo_overview_byproducts_block.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_operations_block/mrp_mo_overview_operations_block.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_operations_block/mrp_mo_overview_operations_block.xml:0
+#, python-format
+msgid "{{ state.isFolded ? 'Unfold' : 'Fold' }}"
+msgstr "{{ state.isFolded ? 'Unfold' : 'Fold' }}"

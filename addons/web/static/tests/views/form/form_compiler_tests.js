@@ -38,7 +38,7 @@ QUnit.module("Form Compiler", (hooks) => {
     QUnit.test("properly compile simple div", async (assert) => {
         const arch = /*xml*/ `<form><div>lol</div></form>`;
         const expected = /*xml*/ `
-            <t>
+            <t t-translation="off">
                 <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                     <div>lol</div>
                 </div>
@@ -52,7 +52,7 @@ QUnit.module("Form Compiler", (hooks) => {
         async (assert) => {
             const arch = /*xml*/ `<form><field field_id="test" name="test"/><label for="test" string=""/></form>`;
             const expected = /*xml*/ `
-            <t>
+            <t t-translation="off">
                 <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                     <Field id="'test'" name="'test'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['test']" readonly="__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew"/>
                     <FormLabel id="'test'" fieldName="'test'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['test']" className="&quot;&quot;" string="\`\`" />
@@ -65,7 +65,7 @@ QUnit.module("Form Compiler", (hooks) => {
     QUnit.test("properly compile simple div with field", async (assert) => {
         const arch = /*xml*/ `<form><div class="someClass">lol<field field_id="display_name" name="display_name"/></div></form>`;
         const expected = /*xml*/ `
-            <t>
+            <t t-translation="off">
                 <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                     <div class="someClass">
                         lol
@@ -120,7 +120,7 @@ QUnit.module("Form Compiler", (hooks) => {
                 </group>
             </form>`;
         const expected = /*xml*/ `
-            <t>
+            <t t-translation="off">
                 <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                     <OuterGroup>
                         <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" isVisible="true" itemSpan="1">
@@ -183,7 +183,7 @@ QUnit.module("Form Compiler", (hooks) => {
             </form>`;
 
         const expected = /*xml*/ `
-            <t>
+            <t t-translation="off">
             <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                 <div class="o_form_statusbar position-relative d-flex justify-content-between mb-0 mb-md-2 pb-2 pb-md-0"><StatusBarButtons/></div>
                 <div>someDiv</div>
@@ -205,7 +205,7 @@ QUnit.module("Form Compiler", (hooks) => {
             </form>`;
 
         const expected = /*xml*/ `
-            <t>
+            <t t-translation="off">
             <div class="o_form_renderer" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ __comp__.uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                 <div class="o_form_sheet_bg">
                     <div class="o_form_statusbar position-relative d-flex justify-content-between mb-0 mb-md-2 pb-2 pb-md-0"><StatusBarButtons/></div>
@@ -233,7 +233,7 @@ QUnit.module("Form Compiler", (hooks) => {
             </form>`;
 
         const expected = /*xml*/ `
-            <t>
+            <t t-translation="off">
                 <div class="o_form_renderer"
                      t-att-class="__comp__.props.class"
                      t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ __comp__.uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}"
@@ -532,7 +532,37 @@ QUnit.module("Form Renderer", (hooks) => {
 
         const arch = `<myNode invisible="field == 'value'" />`;
 
-        const expected = `<t><div class="myNode" t-if="( myCondition or myOtherCondition ) and !__comp__.evaluateBooleanExpr(&quot;field == 'value'&quot;,__comp__.props.record.evalContextWithVirtualIds)" t-ref="compiled_view_root"/></t>`;
+        const expected = `<t t-translation="off"><div class="myNode" t-if="( myCondition or myOtherCondition ) and !__comp__.evaluateBooleanExpr(&quot;field == 'value'&quot;,__comp__.props.record.evalContextWithVirtualIds)" t-ref="compiled_view_root"/></t>`;
+        assert.areEquivalent(compileTemplate(arch), expected);
+    });
+
+    QUnit.test("keep nosheet style if a sheet is part of a nested form", (assert) => {
+        const arch = `
+            <form>
+                <field name="move_line_ids" field_id="move_line_ids">
+                    <form>
+                        <sheet/>
+                    </form>
+                </field>
+            </form>`;
+
+        const expected = `<t t-translation="off">
+            <div
+                class="o_form_renderer o_form_nosheet"
+                t-att-class="__comp__.props.class"
+                t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}"
+                t-ref="compiled_view_root"
+            >
+                <Field
+                    id="'move_line_ids'"
+                    name="'move_line_ids'"
+                    record="__comp__.props.record"
+                    fieldInfo="__comp__.props.archInfo.fieldNodes['move_line_ids']"
+                    readonly="__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew"
+                />
+            </div>
+        </t>`;
+
         assert.areEquivalent(compileTemplate(arch), expected);
     });
 });

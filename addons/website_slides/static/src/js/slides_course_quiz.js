@@ -210,7 +210,7 @@
             }).then(function (quiz_data) {
                 self.slide.sessionAnswers = quiz_data.session_answers;
                 self.quiz = {
-                    description_safe: markup(quiz_data.slide_description),
+                    description_safe: quiz_data.slide_description ? markup(quiz_data.slide_description) : '',
                     questions: quiz_data.slide_questions || [],
                     questionsCount: quiz_data.slide_questions.length,
                     quizAttemptsCount: quiz_data.quiz_attempts_count || 0,
@@ -439,7 +439,7 @@
          * @private
          */
         _checkLocationHref: function () {
-            if (window.location.href.includes('quiz_quick_create')) {
+            if (window.location.href.includes('quiz_quick_create') && this.quiz.questionsCount === 0) {
                 this._onCreateQuizClick();
             }
         },

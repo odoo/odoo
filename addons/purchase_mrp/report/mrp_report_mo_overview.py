@@ -9,20 +9,22 @@ class ReportMoOverview(models.AbstractModel):
     def _get_extra_replenishments(self, product):
         res = super()._get_extra_replenishments(product)
         domain = [('state', 'in', ['draft', 'sent', 'to approve']), ('product_id', '=', product.id)]
-        warehouse_id = self.env.context.get('warehouse', False)
+        warehouse_id = self.env['stock.warehouse']._get_warehouse_id_from_context()
         if warehouse_id:
             domain += [('order_id.picking_type_id.warehouse_id', '=', warehouse_id)]
         po_lines = self.env['purchase.order.line'].search(domain, order='date_planned, id')
 
         for po_line in po_lines:
             line_qty = po_line.product_qty
-            for move in po_line.move_dest_ids:
-                linked_production = self.env['stock.move'].browse(move._rollup_move_dests()).raw_material_production_id
-                # Only create specific lines for moves directly linked to a manufacturing order
-                if not linked_production:
+            # Need to fetch every move connected to a manufacturing order from this PO line. This can happen when:
+            # - Multiple MOs are linked to a single PO line (e.g. Same MTO component for multiple MO).
+            # - A MO has a backorder / is splitted.
+            dest_moves = self.env['stock.move'].browse(po_line.move_dest_ids._rollup_move_dests())
+            for move in dest_moves:
+                if not move.raw_material_production_id:
                     continue
                 prod_qty = min(line_qty, move.product_uom._compute_quantity(move.product_uom_qty, po_line.product_uom))
-                res.append(self._format_extra_replenishment(po_line, prod_qty, linked_production.id))
+                res.append(self._format_extra_replenishment(po_line, prod_qty, move.raw_material_production_id.id))
                 line_qty -= prod_qty
             if line_qty:
                 res.append(self._format_extra_replenishment(po_line, line_qty))

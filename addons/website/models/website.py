@@ -189,6 +189,16 @@ class Website(models.Model):
     def _get_menu_ids(self):
         return self.env['website.menu'].search([('website_id', '=', self.id)]).ids
 
+    @tools.ormcache('self.env.uid', 'self.id', cache='templates')
+    def is_menu_cache_disabled(self):
+        """
+        Checks if the website menu contains a record like url.
+        :return: True if the menu contains a record like url
+        """
+        return any(self.env['website.menu'].browse(self._get_menu_ids()).filtered(
+            lambda menu: menu.url and re.search(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", menu.url))
+        )
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -327,7 +337,7 @@ class Website(models.Model):
         :param url: the url to check
         :return: True if the url has to be indexed, False otherwise
         """
-        return get_base_domain(url, True) == get_base_domain(self.domain, True)
+        return get_base_domain(url.lower(), True) == get_base_domain(self.domain.lower(), True)
 
     # ----------------------------------------------------------
     # Configurator
@@ -345,7 +355,7 @@ class Website(models.Model):
 
     def _OLG_api_rpc(self, route, params):
         # For text content generation
-        return self._api_rpc(route, params, 'website.olg_api_endpoint', DEFAULT_OLG_ENDPOINT, timeout=20)
+        return self._api_rpc(route, params, 'website.olg_api_endpoint', DEFAULT_OLG_ENDPOINT, timeout=45)
 
     def get_cta_data(self, website_purpose, website_type):
         return {'cta_btn_text': False, 'cta_btn_href': '/contactus'}
@@ -646,10 +656,12 @@ class Website(models.Model):
 
         if translated_ratio > 0.8:
             try:
+                database_id = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
                 response = self._OLG_api_rpc('/api/olg/1/generate_placeholder', {
                     'placeholders': list(generated_content.keys()),
                     'lang': website.default_lang_id.name,
                     'industry': industry,
+                    'database_id': database_id,
                 })
                 name_replace_parser = re.compile(r"XXXX", re.MULTILINE)
                 for key in generated_content:
@@ -1107,7 +1119,8 @@ class Website(models.Model):
         # there is one on request) or return a random one.
 
         # The format of `httprequest.host` is `domain:port`
-        domain_name = (request and request.httprequest.host
+        domain_name = (
+            request and request.httprequest.host
             or hasattr(threading.current_thread(), 'url') and threading.current_thread().url
             or '')
         website_id = self.sudo()._get_current_website_id(domain_name, fallback=fallback)
@@ -1388,15 +1401,16 @@ class Website(models.Model):
             domain = AND([domain, self.website_domain()])
         pages = self.env['website.page'].sudo().search(domain)
         if self:
-            pages = pages._get_most_specific_pages()
+            pages = pages.with_context(website_id=self.id)._get_most_specific_pages()
         return pages.ids
 
     def _get_website_pages(self, domain=None, order='name', limit=None):
+        website = self.get_current_website()
         if domain is None:
             domain = []
-        domain += self.get_current_website().website_domain()
+        domain += website.website_domain()
         pages = self.env['website.page'].sudo().search(domain, order=order, limit=limit)
-        pages = pages._get_most_specific_pages()
+        pages = pages.with_context(website_id=website.id)._get_most_specific_pages()
         return pages
 
     def search_pages(self, needle=None, limit=None):
@@ -1465,6 +1479,7 @@ class Website(models.Model):
         return action
 
     def button_go_website(self, path='/', mode_edit=False):
+        # TODO: adapt in master as 'mode_edit' is always set to False
         self._force()
         if mode_edit:
             # If the user gets on a translated page (e.g /fr) the editor will
@@ -1604,6 +1619,15 @@ class Website(models.Model):
                 if f'data-v{asset_type}="{asset_version}"' in snippet:
                     return True
         return False
+
+    def _check_user_can_modify(self, record):
+        """ Verify that the current user can modify the given record.
+
+        :param record: record on which to perform the check
+        :raise AccessError: if the operation is forbidden
+        """
+        record.check_access_rights('write')
+        record.check_access_rule('write')
 
     def _disable_unused_snippets_assets(self):
         snippet_assets = self.env['ir.asset'].with_context(active_test=False).search_fetch(
@@ -1955,3 +1979,16 @@ class Website(models.Model):
                         for word in re.findall(match_pattern, value):
                             if word[0] == search[0]:
                                 yield word.lower()
+
+    def _allConsentsGranted(self):
+        """
+        Checks if all (cookies) consents have been granted. Note that in the
+        case no cookies bar has been enabled, this considers that full consent
+        has been immediately given. Indeed, in that case, we suppose that the
+        user implemented his own consent behavior through custom code / app.
+        That custom code / app is able to override this function as desired and
+        xpath the `tracking_code_config` script in `website.layout`.
+        :return: True if all consents have been granted, False otherwise
+        """
+        self.ensure_one()
+        return not self.cookies_bar or self.env['ir.http']._is_allowed_cookie('optional')

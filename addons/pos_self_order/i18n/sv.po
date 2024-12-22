@@ -6,7 +6,6 @@
 # Robin Chatfield <robin.chatfield@gmail.com>, 2023
 # Haojun Zou <apollo_zhj@msn.com>, 2023
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
 # Robert Frykelius <robert.frykelius@linserv.se>, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Robin Calvin, 2023
@@ -16,13 +15,14 @@
 # Martin Trigaux, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2024
 # Claes-Johan Dahlin, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
@@ -35,7 +35,7 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
 msgid "\"QR codes\""
-msgstr ""
+msgstr "\"QR-koder\""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -45,13 +45,15 @@ msgid ""
 "%s is not available anymore, it has thus been removed from your order. "
 "Please review your order and validate it again."
 msgstr ""
+"%s är inte längre tillgänglig, den har därför tagits bort från din "
+"beställning. Vänligen granska din order och validera den igen."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
 #, python-format
 msgid "/ Tracker number:"
-msgstr ""
+msgstr "/ Tracker nummer:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -59,6 +61,8 @@ msgid ""
 "<br/>\n"
 "                    URL:"
 msgstr ""
+"<br/>\n"
+"                    URL:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -66,6 +70,8 @@ msgid ""
 "<span>Please note that the kiosk only works with Adyen &amp; Stripe "
 "terminals</span>"
 msgstr ""
+"<span>Observera att kiosken endast fungerar med Adyen &amp; Stripe-"
+"terminaler</span>"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -74,6 +80,8 @@ msgid ""
 "Access rights of this user will be used when visiting self order website "
 "when no session is open."
 msgstr ""
+"Den här användarens åtkomsträttigheter kommer att användas när du besöker "
+"webbplatsen för självbeställning när ingen session är öppen."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__active
@@ -88,13 +96,13 @@ msgstr "Lägg till språk"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Add an image to brand your header."
-msgstr ""
+msgstr "Lägg till en bild för att profilera din header."
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_home_ids
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
 msgid "Add images"
-msgstr ""
+msgstr "Lägg till bilder"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -117,41 +125,43 @@ msgid ""
 "Adjust the tax rate based on whether customers are dining in or opting for "
 "takeout."
 msgstr ""
+"Justera skattesatsen beroende på om kunderna äter på plats eller väljer att "
+"ta med sig mat."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
 #, python-format
 msgid "All the items will be removed from the cart."
-msgstr ""
+msgstr "Alla artiklar kommer att tas bort från kundvagnen."
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_alternative_fp_id
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_alternative_fp_id
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Alternative Fiscal Position"
-msgstr ""
+msgstr "Alternativ räkenskapsposition"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "An error has occurred"
-msgstr ""
+msgstr "Ett fel har inträffat"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
 #, python-format
 msgid "Any items already sent will not be canceled"
-msgstr ""
+msgstr "Eventuella redan skickade artiklar kommer inte att annulleras"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
 #, python-format
 msgid "Are you sure you want to cancel this order?"
-msgstr ""
+msgstr "Är du säker på att du vill avbeställa den här ordern?"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -165,23 +175,23 @@ msgstr "Tillgänglig"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_available_language_ids
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_available_language_ids
 msgid "Available Languages"
-msgstr ""
+msgstr "Tillgängliga språk"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
 msgid "Available in Self"
-msgstr ""
+msgstr "Tillgänglig i Self"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_available
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_available
 msgid "Available in Self Order"
-msgstr ""
+msgstr "Tillgänglig i självbeställning"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Available interface languages"
-msgstr ""
+msgstr "Tillgängliga gränssnittsspråk"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -206,7 +216,7 @@ msgstr "Avbryt"
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
 #, python-format
 msgid "Cancel Order"
-msgstr ""
+msgstr "Avbryt beställning"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -215,39 +225,39 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.js:0
 #, python-format
 msgid "Cancel order"
-msgstr ""
+msgstr "Avbryt beställning"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_service_mode
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_service_mode
 msgid "Choose the kiosk mode"
-msgstr ""
+msgstr "Välj kioskläge"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_mode
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_mode
 msgid "Choose the self ordering mode"
-msgstr ""
+msgstr "Välj självbeställningsläge"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_pay_after
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_pay_after
 msgid "Choose when the customer will pay"
-msgstr ""
+msgstr "Välj när kunden ska betala"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/combo_selection/combo_selection.xml:0
 #, python-format
 msgid "Choose your"
-msgstr ""
+msgstr "Välj din"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 #, python-format
 msgid "Choose your eating location"
-msgstr ""
+msgstr "Välj plats där du vill äta"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -268,22 +278,22 @@ msgstr "Stäng Sessionen"
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 #, python-format
 msgid "Combo"
-msgstr ""
+msgstr "Kombination"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_line_ids
 msgid "Combo Lines"
-msgstr ""
+msgstr "Kombinationslinjer"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_parent_id
 msgid "Combo Parent"
-msgstr ""
+msgstr "Combo Förälder"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_id
 msgid "Combo line reference"
-msgstr ""
+msgstr "Referens för kombinationslinje"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_config_settings
@@ -302,14 +312,14 @@ msgstr "Bekräfta"
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "Connection lost, please try again later"
-msgstr ""
+msgstr "Förbindelsen bröts, försök igen senare"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 #, python-format
 msgid "Could you please confirm your table number?"
-msgstr ""
+msgstr "Kan du bekräfta ditt bordsnummer?"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__create_uid
@@ -331,7 +341,7 @@ msgstr "Aktuellt"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "Custom Links"
-msgstr ""
+msgstr "Anpassade länkar"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_self_order_custom_link
@@ -339,11 +349,13 @@ msgid ""
 "Custom links that the restaurant can configure to be displayed on the self "
 "order screen"
 msgstr ""
+"Anpassade länkar som restaurangen kan konfigurera så att de visas på skärmen"
+" för självbeställning"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Customize Header"
-msgstr ""
+msgstr "Anpassa sidhuvudet"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__danger
@@ -353,7 +365,7 @@ msgstr "Fara"
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__dark
 msgid "Dark"
-msgstr ""
+msgstr "Mörk"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -377,7 +389,7 @@ msgstr "Standardanvändare"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_language_id
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_default_language_id
 msgid "Default language for the kiosk mode"
-msgstr ""
+msgstr "Standardspråk för kioskläget"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__nothing
@@ -392,7 +404,7 @@ msgstr "Inaktivera"
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 #, python-format
 msgid "Discard"
-msgstr "Förkasta"
+msgstr "Avbryt"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__display_name
@@ -402,14 +414,14 @@ msgstr "Visningsnamn"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Download QR Codes"
-msgstr ""
+msgstr "Ladda ner QR-koder"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 #, python-format
 msgid "Each Order"
-msgstr ""
+msgstr "Varje beställning"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -417,18 +429,20 @@ msgid ""
 "Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
 "                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
 msgstr ""
+"Varje bord i din planlösning tilldelas en unik QR-kod baserat på din konfiguration. Av säkerhetsskäl\n"
+"                    krypteras både försäljningsstället och bordsnamnen i den genererade URL:en, som visas i exemplet nedan:."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 #, python-format
 msgid "Eat In"
-msgstr ""
+msgstr "Äta in"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Eat in / Take out"
-msgstr ""
+msgstr "Äta i / ta ut"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -442,7 +456,7 @@ msgstr "Redigera"
 #: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
 #, python-format
 msgid "Enter your custom value"
-msgstr ""
+msgstr "Ange ditt anpassade värde"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -450,6 +464,8 @@ msgid ""
 "Feel free to use and print this QR code as many times as needed according to"
 " your requirements."
 msgstr ""
+"Använd och skriv gärna ut denna QR-kod så många gånger som behövs enligt "
+"dina krav."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -461,12 +477,12 @@ msgstr "Skatteområde"
 #: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 #, python-format
 msgid "Follow instructions on the terminal"
-msgstr ""
+msgstr "Följ instruktionerna på terminalen"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_kiosk_read_only_form_dialog
 msgid "From your Kiosk, open this URL:"
-msgstr ""
+msgstr "Öppna den här webbadressen från din kiosk:"
 
 #. module: pos_self_order
 #. odoo-python
@@ -480,7 +496,7 @@ msgstr "Generell"
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 #, python-format
 msgid "Get a tracker and enter its number here"
-msgstr ""
+msgstr "Skaffa en tracker och ange dess nummer här"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_ir_http
@@ -495,28 +511,30 @@ msgid ""
 "Hey, looks like you forgot to create products or add them to pos_config. "
 "Please add them before using the Self Order"
 msgstr ""
+"Hej, det ser ut som om du har glömt att skapa produkter eller lägga till dem"
+" i pos_config. Lägg till dem innan du använder Self Order"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Home buttons"
-msgstr ""
+msgstr "Hemknappar"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #, python-format
 msgid "Hope you enjoyed your meal!"
-msgstr ""
+msgstr "Hoppas att du njöt av din måltid!"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "How to customize"
-msgstr ""
+msgstr "Hur du anpassar"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "How to use"
-msgstr ""
+msgstr "Hur man använder"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__id
@@ -527,7 +545,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:pos_self_order.field_product_product__self_order_available
 #: model:ir.model.fields,help:pos_self_order.field_product_template__self_order_available
 msgid "If this product is available in the Self Order screens"
-msgstr ""
+msgstr "Om den här produkten finns tillgänglig i Self Order-skärmarna"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -535,6 +553,8 @@ msgid ""
 "If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make\n"
 "                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
 msgstr ""
+"Om du behöver anpassade QR-koder börjar du med att skanna den relevanta QR-koden för att få fram webbadressen. Gör sedan\n"
+"                använda en QR-kodgenerator som https://www.qrcode-monkey.com eller https://www.qr-code-generator.com"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -542,7 +562,7 @@ msgstr ""
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
 msgid "Image to display on the self order screen"
-msgstr ""
+msgstr "Bild som ska visas på skärmen för självbeställning"
 
 #. module: pos_self_order
 #. odoo-python
@@ -552,6 +572,7 @@ msgstr ""
 msgid ""
 "In Self-Order mode, you must have at least one table to generate QR codes"
 msgstr ""
+"I Self-Order-läget måste du ha minst ett bord för att generera QR-koder"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__inactive
@@ -566,14 +587,14 @@ msgstr "Information"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_form_view
 msgid "Information about your product for Self Order and Kiosk"
-msgstr ""
+msgstr "Information om din produkt för Self Order och Kiosk"
 
 #. module: pos_self_order
 #: model:ir.actions.act_window,name:pos_self_order.action_pos_self_order_search_view
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__kiosk
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_search_view
 msgid "Kiosk"
-msgstr ""
+msgstr "Kiosk"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
@@ -589,7 +610,7 @@ msgstr "Språk"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_available_language_ids
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_available_language_ids
 msgid "Languages available for the kiosk mode"
-msgstr ""
+msgstr "Tillgängliga språk för kioskläget"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__write_uid
@@ -604,7 +625,7 @@ msgstr "Senast uppdaterad den"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Let your customers order using their mobile or a kiosk."
-msgstr ""
+msgstr "Låt dina kunder beställa via mobilen eller en kiosk."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__light
@@ -625,6 +646,8 @@ msgid ""
 "Make it easy for your customers to explore your menu\n"
 "                online or order with the QR codes on your tables"
 msgstr ""
+"Gör det enkelt för dina kunder att utforska din meny\n"
+"                online eller beställa med QR-koderna på dina bord"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -632,30 +655,32 @@ msgid ""
 "Make it easy for your customers to explore your menu\n"
 "                online with the QR codes on your tables"
 msgstr ""
+"Gör det enkelt för dina kunder att utforska din meny\n"
+"                online med QR-koderna på dina bord"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 #, python-format
 msgid "Meal"
-msgstr ""
+msgstr "Måltid"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
 msgid "Mobile Menu"
-msgstr ""
+msgstr "Mobil meny"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Mobile self-order & Kiosk"
-msgstr ""
+msgstr "Mobil självbetjäning & Kiosk"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/landing_page/landing_page.xml:0
 #, python-format
 msgid "My Order"
-msgstr ""
+msgstr "Min beställning"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -676,13 +701,13 @@ msgstr "NY"
 #: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
 #, python-format
 msgid "NOTE"
-msgstr ""
+msgstr "NOT"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand_name
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
 msgid "Name of the image to display on the self order screen"
-msgstr ""
+msgstr "Namn på den bild som ska visas på självbeställningsskärmen"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -701,14 +726,14 @@ msgstr "Nej"
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 #, python-format
 msgid "No order found"
-msgstr ""
+msgstr "Ingen order hittades"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 #, python-format
 msgid "No products found"
-msgstr ""
+msgstr "Inga produkter hittades"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -720,7 +745,7 @@ msgstr "Ej tillgänglig"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
 msgid "Not available in Self"
-msgstr ""
+msgstr "Ej tillgängligt i Self"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -734,21 +759,20 @@ msgstr "Ok"
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 #, python-format
 msgid "Only pay after each is available with kiosk mode."
-msgstr ""
+msgstr "Endast betala efter varje är tillgängligt med kioskläge."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
 msgid "Open Kiosk"
-msgstr ""
+msgstr "Open Kiosk"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_kiosk_read_only_form_dialog
 msgid "Open in New Tab"
-msgstr ""
+msgstr "Öppna i ny flik"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
@@ -769,21 +793,21 @@ msgstr "Beställ Nu"
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 #, python-format
 msgid "Order number:"
-msgstr ""
+msgstr "Beställningsnummer:"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #, python-format
 msgid "Order to pick-up at the counter"
-msgstr ""
+msgstr "Beställning för avhämtning vid disken"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "Orders not found on server"
-msgstr ""
+msgstr "Beställningar hittades inte på servern"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -805,19 +829,19 @@ msgstr "Betala"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_pay_after
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_pay_after
 msgid "Pay After:"
-msgstr ""
+msgstr "Betala efter:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Pay after"
-msgstr ""
+msgstr "Betala efter"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #, python-format
 msgid "Pay at the cashier"
-msgstr ""
+msgstr "Betala i kassan"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -825,25 +849,27 @@ msgid ""
 "Personalize your splash screen by adding one or multiple images to create a "
 "slideshow"
 msgstr ""
+"Anpassa din splash screen genom att lägga till en eller flera bilder för att"
+" skapa ett bildspel"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
 #, python-format
 msgid "Pickup At Counter"
-msgstr ""
+msgstr "Upphämtning vid disk"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__counter
 msgid "Pickup zone"
-msgstr ""
+msgstr "Upphämtningszon"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_session.py:0
 #, python-format
 msgid "PoS Order by Session"
-msgstr ""
+msgstr "PoS Beställning per session"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_config
@@ -873,12 +899,12 @@ msgstr "Kassasession"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Point of sale:"
-msgstr ""
+msgstr "Försäljningsställe:"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
 msgid "Points of Sale"
-msgstr ""
+msgstr "Försäljningsställen"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__link_html
@@ -888,7 +914,7 @@ msgstr "Förhandsgranskning"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Preview Web interface"
-msgstr ""
+msgstr "Förhandsgranska webbgränssnitt"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__primary
@@ -898,7 +924,7 @@ msgstr "Primär"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Print QR Codes"
-msgstr ""
+msgstr "Skriv ut QR-koder"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_product_template
@@ -910,7 +936,7 @@ msgstr "Produkt"
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__description_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_form_view
 msgid "Product Description for Self Order"
-msgstr ""
+msgstr "Produktbeskrivning för Self Order"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -943,7 +969,7 @@ msgstr "Produkt Bild"
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "Product is not available"
-msgstr ""
+msgstr "Produkten är inte tillgänglig"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -962,22 +988,22 @@ msgstr "QR-koder"
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 #, python-format
 msgid "QR codes can only be generated in mobile or consultation mode."
-msgstr ""
+msgstr "QR-koder kan endast genereras i mobil- eller konsultationsläge."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__consultation
 msgid "QR menu"
-msgstr ""
+msgstr "QR-meny"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "QR menu & Kiosk activation"
-msgstr ""
+msgstr "QR-meny och aktivering av kiosk"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__mobile
 msgid "QR menu + Ordering"
-msgstr ""
+msgstr "QR-meny + Beställning"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -986,17 +1012,17 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 #, python-format
 msgid "Quantity select"
-msgstr ""
+msgstr "Välj antal"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Reset QR Codes"
-msgstr ""
+msgstr "Återställ QR-koder"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_restaurant_table
 msgid "Restaurant Table"
-msgstr ""
+msgstr "Restaurangbord"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1010,7 +1036,7 @@ msgstr "Försök igen"
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 #, python-format
 msgid "Search product"
-msgstr ""
+msgstr "Sök produkt"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__secondary
@@ -1030,6 +1056,9 @@ msgid ""
 "to display it for all points of sale. You have to select among the points of"
 " sale that have the 'QR Code Menu' feature enabled."
 msgstr ""
+"Välj för vilka försäljningsställen du vill visa den här länken. Lämna tomt "
+"om du vill visa den för alla försäljningsställen. Du måste välja bland de "
+"försäljningsställen som har funktionen \"QR-kodmeny\" aktiverad."
 
 #. module: pos_self_order
 #. odoo-python
@@ -1037,52 +1066,52 @@ msgstr ""
 #: code:addons/pos_self_order/models/pos_config.py:0
 #, python-format
 msgid "Self Kiosk"
-msgstr ""
+msgstr "Kiosk för självbetjäning"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand
 msgid "Self Order Kiosk Image Brand"
-msgstr ""
+msgstr "Kiosk för självbeställning Image Brand"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand_name
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
 msgid "Self Order Kiosk Image Brand Name"
-msgstr ""
+msgstr "Självbeställning Kiosk Image Varumärke"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Self Order:"
-msgstr ""
+msgstr "Självbeställning:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Self Ordering"
-msgstr ""
+msgstr "Självbeställning"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
 msgid "Self Ordering Enabled"
-msgstr ""
+msgstr "Självbeställning aktiverad"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_mode
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_mode
 msgid "Self Ordering Mode"
-msgstr ""
+msgstr "Självbeställningsläge"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_url
 msgid "Self Ordering Url"
-msgstr ""
+msgstr "Självbeställande Url"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 #, python-format
 msgid "Self-ordering availability:"
-msgstr ""
+msgstr "Tillgänglighet för självbeställning:"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__sequence
@@ -1098,31 +1127,31 @@ msgstr "Tjänst"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Service at"
-msgstr ""
+msgstr "Service på"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
 #, python-format
 msgid "Service at Table"
-msgstr ""
+msgstr "Service vid bordet"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #, python-format
 msgid "Service at table"
-msgstr ""
+msgstr "Service vid bordet"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Splash screens"
-msgstr ""
+msgstr "Stänkskärmar"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
 msgid "Start Kiosk"
-msgstr ""
+msgstr "Start Kiosk"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__status
@@ -1147,51 +1176,51 @@ msgstr "Tabell"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order__table_stand_number
 msgid "Table Stand Number"
-msgstr ""
+msgstr "Bordsstativ nummer"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
 #, python-format
 msgid "Table Tracker:"
-msgstr ""
+msgstr "Tabell Tracker:"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 #, python-format
 msgid "Table detective time!"
-msgstr ""
+msgstr "Dags för bordsdetektiv!"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Table:"
-msgstr ""
+msgstr "Bord:"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order__take_away
 msgid "Take Away"
-msgstr ""
+msgstr "Ta bort"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 #, python-format
 msgid "Take Out"
-msgstr ""
+msgstr "Ta ut"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_takeaway
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_takeaway
 msgid "Takeaway"
-msgstr ""
+msgstr "Takeaway"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 #, python-format
 msgid "Tax:"
-msgstr ""
+msgstr "Skatt:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1205,21 +1234,21 @@ msgstr "Moms:"
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 #, python-format
 msgid "Thanks a lot!"
-msgstr ""
+msgstr "Tack så mycket!"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 #, python-format
 msgid "The Self-Order default user must be a POS user"
-msgstr ""
+msgstr "Standardanvändaren för Self-Order måste vara en POS-användare"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 #, python-format
 msgid "The user must be a POS user"
-msgstr ""
+msgstr "Användaren måste vara en POS-användare"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_alternative_fp_id
@@ -1247,14 +1276,14 @@ msgstr "URL"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "URL:"
-msgstr ""
+msgstr "URL:"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "Uncategorised"
-msgstr ""
+msgstr "Okategoriserade"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__warning
@@ -1266,21 +1295,21 @@ msgstr "Varning"
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "We're currently closed"
-msgstr ""
+msgstr "Vi är för närvarande stängda"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_index.xml:0
 #, python-format
 msgid "We're currently closed."
-msgstr ""
+msgstr "Vi är för närvarande stängda."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #, python-format
 msgid "We're preparing your order!"
-msgstr ""
+msgstr "Vi förbereder din beställning!"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1292,14 +1321,14 @@ msgstr "Ja"
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #, python-format
 msgid "You cannot edit a posted orderline !"
-msgstr ""
+msgstr "Du kan inte redigera en publicerad orderrad!"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "You're not authorized to perform this action"
-msgstr ""
+msgstr "Du är inte behörig att utföra den här åtgärden"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1314,45 +1343,52 @@ msgstr "Din beställning"
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #, python-format
 msgid "Your Selection"
-msgstr ""
+msgstr "Ditt val"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "Your order has been canceled"
-msgstr ""
+msgstr "Din order har avbokats"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "Your order has been paid"
-msgstr ""
+msgstr "Din order har betalats"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 #, python-format
 msgid "Your order number"
-msgstr ""
+msgstr "Ditt ordernummer"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "Your order status has been changed"
-msgstr ""
+msgstr "Din orderstatus har ändrats"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "empty = all points of sale"
-msgstr ""
+msgstr "tom = alla försäljningsställen"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+#, python-format
+msgid "floor"
+msgstr "golv"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "https://odoo.com"
-msgstr ""
+msgstr "https://odoo.com"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
@@ -1364,4 +1400,4 @@ msgstr "odoo"
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 #, python-format
 msgid "options"
-msgstr ""
+msgstr "alternativ"

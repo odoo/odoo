@@ -172,6 +172,25 @@
                             </div>
                         </div>
                     </setting>
+                    <setting
+                        id="shipping_provider_shiprocket_setting"
+                        string="Shiprocket"
+                        help="Compute shipping cost and ship with Shiprocket"
+                        documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html"
+                    >
+                        <field name="module_delivery_shiprocket" widget="upgrade_boolean"/>
+                            <div class="content-group">
+                                <div class="mt8" invisible="not module_delivery_shiprocket">
+                                    <button
+                                        name="%(delivery.action_delivery_carrier_form)d"
+                                        icon="oi-arrow-right"
+                                        type="action"
+                                        string="Shiprocket Shipping Methods"
+                                        class="btn-link"
+                                        context="{'search_default_delivery_type': 'shiprocket'}"/>
+                                </div>
+                            </div>
+                    </setting>
                     <setting id="shipping_provider_mondialrelay_setting" string="Mondial Relay" help="Let the customer select a Mondial Relay shipping point">
                         <field name="module_delivery_mondialrelay"/>
                     </setting>
@@ -192,7 +211,7 @@
                         <setting id="automatic_invoice_generation" invisible="default_invoice_policy == 'delivery'" help="Generate the invoice automatically when the online payment is confirmed">
                             <field name="automatic_invoice"/>
                             <div  invisible="not automatic_invoice">
-                                <label for="invoice_mail_template_id" class="o_light_label"/>
+                                <label for="invoice_mail_template_id" class="o_light_label me-2"/>
                                 <field name="invoice_mail_template_id" class="oe_inline"/>
                             </div>
                         </setting>

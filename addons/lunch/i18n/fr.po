@@ -5,14 +5,15 @@
 # Translators:
 # Wil Odoo, 2023
 # Jolien De Paepe, 2023
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -585,6 +586,13 @@ msgid "Cancelled"
 msgstr "Annulé"
 
 #. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_supplier.py:0
+#, python-format
+msgid "Cannot send an email to this supplier!"
+msgstr "Impossible d'envoyer un e-mail à ce fournisseur !"
+
+#. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_payment
 msgid "Cash Moves"
@@ -855,7 +863,7 @@ msgstr "Modifier la commande"
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__email
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__send_by__mail
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_month
@@ -961,12 +969,12 @@ msgstr "Icône Font Awesome par ex. fa-tasks"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__email_formatted
 msgid "Format email address \"Name <email@domain>\""
-msgstr "Format d'adresse email \"Nom <email@domain>\""
+msgstr "Format d'adresse e-mail \"Nom <e-mail@domain>\""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__email_formatted
 msgid "Formatted Email"
-msgstr "Email formaté"
+msgstr "E-mail formaté"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_italiana
@@ -1306,34 +1314,34 @@ msgid "Lunch: Supplier Order"
 msgstr "Déjeuner : Commande du fournisseur"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_216
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_217
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr "Déjeuner : Alerte notification via Chat (Alerte pour le bureau 3)"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_217
-msgid "Lunch: send automatic email to Coin gourmand"
-msgstr "Déjeuner : Envoyer un email automatique à Coin gourmand"
-
-#. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_212
-msgid "Lunch: send automatic email to Lunch Supplier"
-msgstr "Déjeuner : Envoyer un email automatique au fournisseur de déjeuner"
-
-#. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_218
-msgid "Lunch: send automatic email to Pizza Inn"
-msgstr "Déjeuner : Envoyer un email automatique à Pizza Inn"
+msgid "Lunch: send automatic email to Coin gourmand"
+msgstr "Déjeuner : Envoyer un e-mail automatique à Coin gourmand"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_220
-msgid "Lunch: send automatic email to Sushi Shop"
-msgstr "Déjeuner : Envoyer un email automatique à Sushi Shop"
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_213
+msgid "Lunch: send automatic email to Lunch Supplier"
+msgstr "Déjeuner : Envoyer un e-mail automatique au fournisseur de déjeuner"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_219
+msgid "Lunch: send automatic email to Pizza Inn"
+msgstr "Déjeuner : Envoyer un e-mail automatique à Pizza Inn"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_221
+msgid "Lunch: send automatic email to Sushi Shop"
+msgstr "Déjeuner : Envoyer un e-mail automatique à Sushi Shop"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_220
 msgid "Lunch: send automatic email to The Corner"
-msgstr "Déjeuner : Envoyer un email automatique à The Corner"
+msgstr "Déjeuner : Envoyer un e-mail automatique à The Corner"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_res_config_settings__currency_id
@@ -1488,6 +1496,20 @@ msgstr "Pas de livraison"
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_account
 msgid "No cash move yet"
 msgstr "Pas encore de mouvements de trésorerie"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/views/no_content_helper.xml:0
+#, python-format
+msgid "No location found"
+msgstr "Aucun emplacement trouvé"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+#, python-format
+msgid "No lunch location available."
+msgstr "Aucun emplacement de lunch disponible."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
@@ -1691,6 +1713,13 @@ msgstr "Pizza margherita"
 #: model:lunch.product,name:lunch.product_vege
 msgid "Pizza Vegetarian"
 msgstr "Pizza végétarienne"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/views/no_content_helper.xml:0
+#, python-format
+msgid "Please create a location to start ordering."
+msgstr "Veuillez créer un emplacement pour pouvoir commander."
 
 #. module: lunch
 #: model_terms:lunch.alert,message:lunch.alert_office_3

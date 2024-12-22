@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from lxml import etree
@@ -7,8 +6,31 @@ from odoo import tools
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
+
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItEdi(AccountTestInvoicingCommon):
+
+    class RepartitionLine:
+        def __init__(self, factor_percent, repartition_type, tag_ids):
+            self.factor_percent = factor_percent
+            self.repartition_type = repartition_type
+            self.tag_ids = tag_ids
+
+    @classmethod
+    def get_tag_ids(cls, tag_codes):
+        """ Helper function to define tag ids for taxes """
+        return cls.env['account.account.tag'].search([
+            ('applicability', '=', 'taxes'),
+            ('country_id.code', '=', 'IT'),
+            ('name', 'in', tag_codes)]).ids
+
+    @classmethod
+    def repartition_lines(cls, *lines):
+        """ Helper function to define repartition lines in taxes """
+        return ([(5, 0, 0)] + [(0, 0, {
+            **line.__dict__,
+            'tag_ids': cls.get_tag_ids(line.tag_ids)
+        }) for line in lines])
 
     @classmethod
     def setUpClass(cls, chart_template_ref='it'):

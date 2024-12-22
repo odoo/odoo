@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -25,7 +25,7 @@ msgstr ""
 #: code:addons/utm/models/utm_source.py:0
 #, python-format
 msgid "%(content)s (%(model_description)s created on %(create_date)s)"
-msgstr "%(content)s (%(model_description)s creado en %(create_date)s)"
+msgstr "%(content)s (%(model_description)s creado el %(create_date)s)"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__active
@@ -344,7 +344,7 @@ msgstr "Después"
 #. module: utm
 #: model:ir.ui.menu,name:utm.menu_link_tracker_root
 msgid "Link Tracker"
-msgstr "Rastrear enlaces"
+msgstr "Rastreador de enlaces"
 
 #. module: utm
 #. odoo-javascript
@@ -716,6 +716,17 @@ msgstr "UTM"
 #, python-format
 msgid "Use This For My Campaigns"
 msgstr "Use esto para Mis campañas"
+
+#. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_source.py:0
+#, python-format
+msgid ""
+"You cannot update multiple records with the same name. The name should be "
+"unique!"
+msgstr ""
+"No puede actualizar varios registros con el mismo nombre, en nombre debe ser"
+" único. "
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_form

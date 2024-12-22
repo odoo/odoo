@@ -2043,7 +2043,7 @@ $o-base-website-values-palette: (
 
     'header-template': 'default', // 'default' / 'hamburger' / 'vertical' / 'sidebar'
     'header-font-size': null, // Default to BS (normal font-size)
-    'header-text-color': null,
+    'header-text-color': null, // TODO: should have been put in the color map
     'header-links-style': 'default', // 'default' / 'fill' / 'outline' / 'pills' / 'block' / 'border-bottom'
     'logo-height': null, // Default to navbar height (see portal)
     'hamburger-position': 'left', // 'left' / 'center' / 'right'
@@ -2204,9 +2204,18 @@ $o-theme-font-configs: (
 // and resetting to theme default": ideally, we should review that system to
 // actually removing the custos in those cases instead of setting a null value
 // but this cannot be migrated at the moment).
+// Also transforms `'True'` and `'False'` values into boolean `true`/`false`.
+// This is needed because of some options that wrongly set some CSS variables to
+// these values.
 @function o-map-force-nulls($map) {
     $-map: ();
     @each $key, $value in $map {
+        @if $value == 'True' {
+            $value: true;
+        }
+        @if $value == 'False' {
+            $value: false;
+        }
         $-map: map-merge($-map, (
             $key: if($value == 'NULL', null, $value),
         ));

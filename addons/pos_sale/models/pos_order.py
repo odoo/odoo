@@ -47,6 +47,9 @@ class PosOrder(models.Model):
     @api.model
     def create_from_ui(self, orders, draft=False):
         order_ids = super(PosOrder, self).create_from_ui(orders, draft)
+        if draft:
+            return order_ids
+
         for order in self.sudo().browse([o['id'] for o in order_ids]):
             for line in order.lines.filtered(lambda l: l.product_id == order.config_id.down_payment_product_id and l.qty != 0 and (l.sale_order_origin_id or l.refunded_orderline_id.sale_order_origin_id)):
                 sale_lines = line.sale_order_origin_id.order_line or line.refunded_orderline_id.sale_order_origin_id.order_line
@@ -80,14 +83,14 @@ class PosOrder(models.Model):
                 so_line_stock_move_ids = so_line.move_ids.group_id.stock_move_ids
                 for stock_move in so_line.move_ids:
                     picking = stock_move.picking_id
-                    if not picking.state in ['waiting', 'confirmed', 'assigned']:
+                    if picking.state not in ['waiting', 'confirmed', 'assigned']:
                         continue
                     new_qty = so_line.product_uom_qty - so_line.qty_delivered
                     if float_compare(new_qty, 0, precision_rounding=stock_move.product_uom.rounding) <= 0:
                         new_qty = 0
                     stock_move.product_uom_qty = so_line.compute_uom_qty(new_qty, stock_move, False)
-                    #If the product is delivered with more than one step, we need to update the quantity of the other steps
-                    for move in so_line_stock_move_ids.filtered(lambda m: m.state in ['waiting', 'confirmed'] and m.product_id == stock_move.product_id):
+                    # If the product is delivered with more than one step, we need to update the quantity of the other steps
+                    for move in so_line_stock_move_ids.filtered(lambda m: m.state in ['waiting', 'confirmed', 'assigned'] and m.product_id == stock_move.product_id):
                         move.product_uom_qty = stock_move.product_uom_qty
                         waiting_picking_ids.add(move.picking_id.id)
                     waiting_picking_ids.add(picking.id)
@@ -99,6 +102,9 @@ class PosOrder(models.Model):
             for picking in self.env['stock.picking'].browse(waiting_picking_ids):
                 if all(is_product_uom_qty_zero(move) for move in picking.move_ids):
                     picking.action_cancel()
+                else:
+                    # We make sure that the original picking still has the correct quantity reserved
+                    picking.action_assign()
 
         return order_ids
 
@@ -153,9 +159,9 @@ class PosOrderLine(models.Model):
 
     def _export_for_ui(self, orderline):
         result = super()._export_for_ui(orderline)
-        # NOTE We are not exporting 'sale_order_line_id' because it is being used in any views in the POS App.
         result['down_payment_details'] = bool(orderline.down_payment_details) and orderline.down_payment_details
         result['sale_order_origin_id'] = bool(orderline.sale_order_origin_id) and orderline.sale_order_origin_id.read(fields=['name'])[0]
+        result['sale_order_line_id'] = bool(orderline.sale_order_line_id) and orderline.sale_order_line_id.read(fields=['name'])[0]
         return result
 
     def _order_line_fields(self, line, session_id=None):
@@ -168,3 +174,9 @@ class PosOrderLine(models.Model):
             order_line = self.env['sale.order.line'].search([('id', '=', vals['sale_order_line_id']['id'])], limit=1)
             vals['sale_order_line_id'] = order_line.id if order_line else False
         return result
+
+    def _launch_stock_rule_from_pos_order_lines(self):
+        orders = self.mapped('order_id')
+        for order in orders:
+            self.env['stock.move'].browse(order.lines.sale_order_line_id.move_ids._rollup_move_origs()).filtered(lambda ml: ml.state not in ['cancel', 'done'])._action_cancel()
+        return super()._launch_stock_rule_from_pos_order_lines()

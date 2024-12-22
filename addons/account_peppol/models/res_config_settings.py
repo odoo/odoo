@@ -99,12 +99,8 @@ class ResConfigSettings(models.TransientModel):
 
     @api.depends('is_account_peppol_eligible', 'account_peppol_edi_user')
     def _compute_account_peppol_edi_mode(self):
-        edi_mode = self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode')
         for config in self:
-            if config.account_peppol_edi_user:
-                config.account_peppol_edi_mode = config.account_peppol_edi_user.edi_mode
-            else:
-                config.account_peppol_edi_mode = edi_mode or 'prod'
+            config.account_peppol_edi_mode = config.company_id._get_peppol_edi_mode()
 
     def _inverse_account_peppol_edi_mode(self):
         for config in self:
@@ -148,18 +144,28 @@ class ResConfigSettings(models.TransientModel):
                 _('Cannot register a user with a %s application', self.account_peppol_proxy_state))
 
         if not self.account_peppol_phone_number:
-            raise ValidationError(_("Please enter a phone number to verify your application."))
+            raise ValidationError(_("Please enter a mobile number to verify your application."))
         if not self.account_peppol_contact_email:
             raise ValidationError(_("Please enter a primary contact email to verify your application."))
 
         company = self.company_id
         edi_proxy_client = self.env['account_edi_proxy_client.user']
         edi_identification = edi_proxy_client._get_proxy_identification(company, 'peppol')
-        if company.partner_id._check_peppol_participant_exists(edi_identification) and not self.account_peppol_migration_key:
-            raise UserError(
-                _("A participant with these details has already been registered on the network. "
-                  "If you have previously registered to an alternative Peppol service, please deregister from that service, "
-                  "or request a migration key before trying again."))
+        company.partner_id._check_peppol_eas()
+
+        if (
+            (participant_info := company.partner_id._check_peppol_participant_exists(edi_identification, check_company=True))
+            and not self.account_peppol_migration_key
+        ):
+            error_msg = _(
+                "A participant with these details has already been registered on the network. "
+                "If you have previously registered to an alternative Peppol service, please deregister from that service, "
+                "or request a migration key before trying again. "
+            )
+
+            if isinstance(participant_info, str):
+                error_msg += _("The Peppol service that is used is likely to be %s.", participant_info)
+            raise UserError(error_msg)
 
         edi_user = edi_proxy_client.sudo()._register_proxy_user(company, 'peppol', self.account_peppol_edi_mode)
         self.account_peppol_proxy_state = 'not_verified'
@@ -205,7 +211,7 @@ class ResConfigSettings(models.TransientModel):
         self.ensure_one()
 
         if not self.account_peppol_contact_email or not self.account_peppol_phone_number:
-            raise ValidationError(_("Contact email and phone number are required."))
+            raise ValidationError(_("Contact email and mobile number are required."))
 
         params = {
             'update_data': {

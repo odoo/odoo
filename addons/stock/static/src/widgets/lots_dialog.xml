@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
+    <t t-name="stock.GenerateSerials">
+        <button class="btn btn-link" t-on-click="openDialog">Generate Serials/Lots</button>
+    </t>
+    <t t-name="stock.ImportLots">
+        <button class="btn btn-link" t-on-click="openDialog">Import Serials/Lots</button>
+    </t>
     <t t-name="stock.generate_serial_dialog">
         <Dialog size="size" title="title" withBodyPadding="false">
             <t t-set-slot="footer">

@@ -3,9 +3,9 @@
 # 	* stock_delivery
 # 
 # Translators:
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # Wil Odoo, 2023
 # Martin Trigaux, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,7 +105,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
 msgid "Applicable on Shipping Methods"
-msgstr ""
+msgstr "Застосовується до методів доставки"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_bulk
@@ -153,7 +153,7 @@ msgstr "Компанія"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Cost: %(price).2f %(currency)s"
-msgstr ""
+msgstr "Собівартість: %(price).2f %(currency)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_uid
@@ -266,7 +266,7 @@ msgstr "Ок"
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__country_of_origin
 msgid "Origin of Goods"
-msgstr "Походження твоарів"
+msgstr "Походження товарів"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
@@ -383,6 +383,8 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s"
 msgstr ""
+"Відправлення надіслане перевізнику %(carrier_name)s для доставки з номером "
+"відстеження %(ref)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
@@ -545,7 +547,7 @@ msgstr "URL-адреса відстеження"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Tracking links for shipment:"
-msgstr ""
+msgstr "Посилання для відстеження відправлення:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
@@ -586,6 +588,19 @@ msgstr "Мітка одиниці вимірювання ваги"
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
 msgid "Weight:"
 msgstr "Вага:"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they have different "
+"carriers (i.e. check that all of their transfers have a carrier assigned and"
+" are using the same carrier)."
+msgstr ""
+"Ви не можете запакувати товари в одну упаковку, якщо вони мають різні "
+"перевізники (тобто переконайтеся, що для всіх їхніх переміщень призначено "
+"перевізника та вони використовують одного перевізника)."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form

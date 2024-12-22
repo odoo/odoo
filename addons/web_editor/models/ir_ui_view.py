@@ -69,19 +69,19 @@ class IrUiView(models.Model):
 
         try:
             value = converter.from_html(Model, Model._fields[field], el)
-        except ValueError:
+            if value is not None:
+                # TODO: batch writes?
+                record = Model.browse(int(el.get('data-oe-id')))
+                if not self.env.context.get('lang') and self.get_default_lang_code():
+                    record.with_context(lang=self.get_default_lang_code()).write({field: value})
+                else:
+                    record.write({field: value})
+
+                if callable(Model._fields[field].translate):
+                    self._copy_custom_snippet_translations(record, field)
+
+        except (ValueError, TypeError):
             raise ValidationError(_("Invalid field value for %s: %s", Model._fields[field].string, el.text_content().strip()))
-
-        if value is not None:
-            # TODO: batch writes?
-            record = Model.browse(int(el.get('data-oe-id')))
-            if not self.env.context.get('lang') and self.get_default_lang_code():
-                record.with_context(lang=self.get_default_lang_code()).write({field: value})
-            else:
-                record.write({field: value})
-
-            if callable(Model._fields[field].translate):
-                self._copy_custom_snippet_translations(record, field)
 
     def save_oe_structure(self, el):
         self.ensure_one()
@@ -213,7 +213,7 @@ class IrUiView(models.Model):
 
     @api.model
     def _get_allowed_root_attrs(self):
-        return ['style', 'class']
+        return ['style', 'class', 'target', 'href']
 
     def replace_arch_section(self, section_xpath, replacement, replace_tail=False):
         # the root of the arch section shouldn't actually be replaced as it's
@@ -233,6 +233,8 @@ class IrUiView(models.Model):
         for attribute in self._get_allowed_root_attrs():
             if attribute in replacement.attrib:
                 root.attrib[attribute] = replacement.attrib[attribute]
+            elif attribute in root.attrib:
+                del root.attrib[attribute]
 
         # Note: after a standard edition, the tail *must not* be replaced
         if replace_tail:

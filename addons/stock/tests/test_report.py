@@ -96,6 +96,16 @@ class TestReports(TestReportsCommon):
         self.assertEqual(target, rendering.replace(b' ', b''), 'The rendering is not good, make sure quotes are correctly escaped')
         self.assertEqual(qweb_type, 'text', 'the report type is not good')
 
+    def test_reports_product_no_barcode(self):
+        """ Test that product without barcode is correctly rendered without a barcode.
+        """
+        report = self.env.ref('stock.label_product_product')
+        self.product1.barcode = False
+        target = b'\n\n^XA^CI28\n^FT100,80^A0N,40,30^FD[C4181234""154654654654]Mellohi"^FS\n^FT100,115^A0N,30,24^FDC4181234""15465^FS\n^FT100,150^A0N,30,24^FD4654654^FS\n^XZ\n'
+        rendering, qweb_type = report._render_qweb_text('stock.label_product_product', self.product1.product_tmpl_id.id, {'quantity_by_product': {self.product1.product_tmpl_id.id: 1}, 'active_model': 'product.template'})
+        self.assertEqual(target, rendering.replace(b' ', b''), 'Product name, default code or barcode is not correctly rendered, make sure the quotes are escaped correctly')
+        self.assertEqual(qweb_type, 'text', 'the report type is not good')
+
     def test_report_quantity_1(self):
         product_form = Form(self.env['product.product'])
         product_form.detailed_type = 'product'
@@ -1162,7 +1172,9 @@ class TestReports(TestReportsCommon):
 
     def test_report_forecast_11_non_reserved_order(self):
         """ Creates deliveries with different operation type reservation methods.
-        Checks replenishment lines are correctly sorted by reservation_date:
+        Checks replenishment lines are correctly sorted by the flollowing criteria:
+            - If the reservation date is in the past at any time T, use the priority and scheduled date
+            - If the reservation date is in the future, use reservation date, priority and scheduled date
             'manual': always last (no reservation_date)
             'at_confirm': reservation_date = time of creation
             'by_date': reservation_date = scheduled_date - reservation_days_before(_priority)
@@ -1230,11 +1242,11 @@ class TestReports(TestReportsCommon):
         delivery_at_confirm = delivery_form.save()
         delivery_at_confirm.action_confirm()
 
-        # Order should be: delivery_by_date, delivery_at_confirm, delivery_by_date_priority, delivery_manual
+        # Order should be: delivery_at_confirm, delivery_by_date, delivery_by_date_priority, delivery_manual
         _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
         self.assertEqual(len(lines), 4, "The report must have 4 lines.")
-        self.assertEqual(lines[0]['document_out']['id'], delivery_by_date.id)
-        self.assertEqual(lines[1]['document_out']['id'], delivery_at_confirm.id)
+        self.assertEqual(lines[0]['document_out']['id'], delivery_at_confirm.id)
+        self.assertEqual(lines[1]['document_out']['id'], delivery_by_date.id)
         self.assertEqual(lines[2]['document_out']['id'], delivery_by_date_priority.id)
         self.assertEqual(lines[3]['document_out']['id'], delivery_manual.id)
 
@@ -1286,6 +1298,49 @@ class TestReports(TestReportsCommon):
         self.assertEqual(len(lines), 1)
         self.assertEqual(bool(lines[0]['move_out']), True)
         self.assertEqual(lines[0]['in_transit'], True)
+
+    def test_report_forecast_13_availability_from_sublocations(self):
+        """
+            Check that the forecast_availability is correctly computed for moves
+            whose source is a sublocation of the stock warehouse location
+        """
+        stock_location = self.env.ref('stock.warehouse0').lot_stock_id
+        sublocation = self.env['stock.location'].create({
+            'name': 'Warehouse0 / Sublocation',
+            'posx': 0,
+            'barcode': 'TEST_BARCODE_LOCATION',
+            'location_id': stock_location.id
+        })
+        self.env['stock.quant']._update_available_quantity(self.product, sublocation, 10.0)
+        delivery_form = Form(self.env['stock.picking'])
+        delivery_form.picking_type_id = self.picking_type_out
+        delivery_form.partner_id = self.partner
+        with delivery_form.move_ids_without_package.new() as move:
+            move.product_id = self.product
+            move.product_uom_qty = 3
+        delivery = delivery_form.save()
+        delivery.action_confirm()
+        delivery.do_unreserve()
+        self.assertRecordValues(delivery.move_ids, [
+            {
+                'product_uom_qty': 3.0,
+                'location_id': stock_location.id,
+                'quantity': 0.0,
+                'forecast_availability': 3.0,
+            }
+        ])
+        # Change the source of the picking to be the sublocation
+        # and check the forecast_availability stays unchanged
+        with Form(delivery) as delivery_form:
+            delivery_form.location_id = sublocation
+        self.assertRecordValues(delivery.move_ids, [
+            {
+                'product_uom_qty': 3.0,
+                'location_id': sublocation.id,
+                'quantity': 0.0,
+                'forecast_availability': 3.0,
+            }
+        ])
 
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received
@@ -1811,3 +1866,58 @@ class TestReports(TestReportsCommon):
         self.assertEqual(mto_move.product_uom_qty, incoming_qty, "Move quantities should be unchanged")
         self.assertEqual(mto_move.procure_method, 'make_to_stock', "Procure method not correctly reset")
         self.assertEqual(mto_move.state, 'assigned', "Unassigning receipt move shouldn't affect the out move reservation")
+
+    def test_report_reception_immediate_transfer(self):
+        """ Having a delivery, a receipt with a move line created before the move
+        (i.e., an immediate transfer) for the product of the SO should have the delivery in its
+        'Allocation' entries.
+        """
+        Report = self.env['report.stock.report_reception']
+
+        planned_delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'move_ids': [(0, 0, {
+                'name': 'TRRIT move',
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+                'product_id': self.product.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        planned_delivery.action_confirm()
+
+        immediate_receipt_transfer = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+        self.env['stock.move.line'].create({
+            'picking_id': immediate_receipt_transfer.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product.id,
+            'quantity': 1,
+        })
+
+        sources_to_lines = Report._get_report_values(docids=[immediate_receipt_transfer.id])['sources_to_lines']
+        for _, lines in sources_to_lines.items():
+            for line in lines:
+                self.assertFalse(line['is_qty_assignable'])
+
+        immediate_receipt_transfer.button_validate()
+        out_move = planned_delivery.move_ids
+        in_move = immediate_receipt_transfer.move_ids
+
+        sources_lines_items, = Report._get_report_values(docids=[immediate_receipt_transfer.id])['sources_to_lines'].items()
+        sources, lines = sources_lines_items
+        (source,), = sources
+        self.assertEqual(source, planned_delivery)
+        self.assertEqual(lines[0]['quantity'], out_move.quantity)
+
+        Report.action_assign(out_move.ids, [out_move.quantity], [in_move.ids])
+        self.assertEqual(out_move.procure_method, 'make_to_order')
+
+        Report.action_unassign(out_move.id, out_move.quantity, in_move.ids)
+        self.assertEqual(out_move.procure_method, 'make_to_stock')

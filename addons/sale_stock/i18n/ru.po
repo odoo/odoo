@@ -9,13 +9,14 @@
 # Константин Коровин <korovin74@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Сергей Шебанин <sergey@shebanin.ru>, 2024
+# Nadia Martynova, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-15 10:37+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -345,12 +346,12 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_users_view_form
 msgid "Inventory"
-msgstr "Инвентарь"
+msgstr "Склад"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_route
 msgid "Inventory Routes"
-msgstr "Маршруты запасов"
+msgstr "Маршруты Склада"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
@@ -482,6 +483,11 @@ msgid "Product"
 msgstr "Товар"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Перемещение продукта (Позиции движения запасов)"
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
 msgid "Qty Available Today"
 msgstr "Количество доступно сегодня"
@@ -496,7 +502,7 @@ msgstr "Количество к поставке"
 #: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Quotations"
-msgstr "Предложения"
+msgstr "Коммерческие предложения"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -613,7 +619,7 @@ msgstr "Страховое время для продажи"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_route__sale_selectable
 msgid "Selectable on Sales Order Line"
-msgstr "Возможность выбора в строке заказа на продажу"
+msgstr "Возможность выбора в позиции заказа на продажу"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__one
@@ -631,6 +637,11 @@ msgid "Shipping Policy"
 msgstr "Политика доставки"
 
 #. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
+msgid "Started"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
 msgstr "Движение запасов"
@@ -639,7 +650,7 @@ msgstr "Движение запасов"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order_line__qty_delivered_method__stock_move
 msgid "Stock Moves"
-msgstr "Перемещения запасов"
+msgstr "Движения по складам"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_forecasted_product_product
@@ -689,8 +700,8 @@ msgid ""
 "The ordered quantity cannot be decreased below the amount already delivered."
 " Instead, create a return in your inventory."
 msgstr ""
-"Заказанное количество не может быть уменьшено ниже уже поставленного. Вместо"
-" этого создайте возврат в инвентаре."
+"Заказанное количество не может быть ниже уже доставленного. Вместо этого "
+"создайте возврат на Склад. "
 
 #. module: sale_stock
 #. odoo-python
@@ -700,8 +711,8 @@ msgid ""
 "The ordered quantity of a sale order line cannot be decreased below the "
 "amount already delivered. Instead, create a return in your inventory."
 msgstr ""
-"Заказанное количество в строке заказа на продажу не может быть уменьшено "
-"ниже уже поставленного. Вместо этого создайте возврат в инвентаре."
+"Заказанное количество не может быть ниже уже доставленного. Рекоммендуем "
+"создать возврат на Склад. "
 
 #. module: sale_stock
 #. odoo-javascript

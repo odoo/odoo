@@ -43,11 +43,11 @@ const MonthRegexp = /^0?([1-9]|1[0-2])\/(\d{4})$/i;
  */
 
 /**
- * @param {string} dateRange
+ * @param {object | undefined} dateRange
  * @returns {QuarterDateRange | undefined}
  */
 function parseAccountingQuarter(dateRange) {
-    const found = dateRange.match(QuarterRegexp);
+    const found = toString(dateRange?.value).trim().match(QuarterRegexp);
     return found
         ? {
               rangeType: "quarter",
@@ -58,11 +58,23 @@ function parseAccountingQuarter(dateRange) {
 }
 
 /**
- * @param {string} dateRange
+ * @param {object | undefined} dateRange
  * @returns {MonthDateRange | undefined}
  */
-function parseAccountingMonth(dateRange) {
-    const found = dateRange.match(MonthRegexp);
+function parseAccountingMonth(dateRange, locale) {
+    if (
+        typeof dateRange?.value === "number" &&
+        dateRange.format?.includes("m") &&
+        !dateRange.format?.includes("d")
+    ) {
+        const date = toJsDate(dateRange.value, locale);
+        return {
+            rangeType: "month",
+            year: date.getFullYear(),
+            month: date.getMonth() + 1,
+        };
+    }
+    const found = toString(dateRange?.value).trim().match(MonthRegexp);
     return found
         ? {
               rangeType: "month",
@@ -73,11 +85,11 @@ function parseAccountingMonth(dateRange) {
 }
 
 /**
- * @param {string} dateRange
+ * @param {object | undefined} dateRange
  * @returns {YearDateRange | undefined}
  */
 function parseAccountingYear(dateRange, locale) {
-    const dateNumber = toNumber(dateRange, locale);
+    const dateNumber = toNumber(dateRange?.value, locale);
     // This allows a bit of flexibility for the user if they were to input a
     // numeric value instead of a year.
     // Users won't need to fetch accounting info for year 3000 before a long time
@@ -90,11 +102,11 @@ function parseAccountingYear(dateRange, locale) {
 }
 
 /**
- * @param {string} dateRange
+ * @param {object | undefined} dateRange
  * @returns {DayDateRange}
  */
 function parseAccountingDay(dateRange, locale) {
-    const dateNumber = toNumber(dateRange, locale);
+    const dateNumber = toNumber(dateRange?.value, locale);
     return {
         rangeType: "day",
         year: functionRegistry.get("YEAR").compute.bind({ locale })(dateNumber),
@@ -104,15 +116,14 @@ function parseAccountingDay(dateRange, locale) {
 }
 
 /**
- * @param {string | number} dateRange
+ * @param {object | undefined} dateRange
  * @returns {DateRange}
  */
 export function parseAccountingDate(dateRange, locale) {
     try {
-        dateRange = toString(dateRange).trim();
         return (
             parseAccountingQuarter(dateRange) ||
-            parseAccountingMonth(dateRange) ||
+            parseAccountingMonth(dateRange, locale) ||
             parseAccountingYear(dateRange, locale) ||
             parseAccountingDay(dateRange, locale)
         );
@@ -122,7 +133,7 @@ export function parseAccountingDate(dateRange, locale) {
                 _t(
                     `'%s' is not a valid period. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`
                 ),
-                dateRange
+                dateRange?.value
             )
         );
     }
@@ -147,36 +158,29 @@ functionRegistry.add("ODOO.CREDIT", {
     args: ODOO_FIN_ARGS(),
     category: "Odoo",
     returns: ["NUMBER"],
-    compute: function (
+    computeValueAndFormat: function (
         accountCodes,
         dateRange,
-        offset = 0,
-        companyId = null,
-        includeUnposted = false
+        offset = { value: 0 },
+        companyId = { value: null },
+        includeUnposted = { value: false }
     ) {
-        accountCodes = toString(accountCodes)
+        accountCodes = toString(accountCodes?.value)
             .split(",")
             .map((code) => code.trim())
             .sort();
-        offset = toNumber(offset, this.locale);
+        offset = toNumber(offset.value, this.locale);
         dateRange = parseAccountingDate(dateRange, this.locale);
-        includeUnposted = toBoolean(includeUnposted);
-        return this.getters.getAccountPrefixCredit(
+        includeUnposted = toBoolean(includeUnposted.value);
+        const value = this.getters.getAccountPrefixCredit(
             accountCodes,
             dateRange,
             offset,
-            companyId,
+            companyId.value,
             includeUnposted
         );
-    },
-    computeFormat: function (
-        accountCodes,
-        dateRange,
-        offset = 0,
-        companyId = null,
-        includeUnposted = false
-    ) {
-        return this.getters.getCompanyCurrencyFormat(companyId && companyId.value) || "#,##0.00";
+        const format = this.getters.getCompanyCurrencyFormat(companyId.value) || "#,##0.00";
+        return { value, format };
     },
 });
 
@@ -185,36 +189,29 @@ functionRegistry.add("ODOO.DEBIT", {
     args: ODOO_FIN_ARGS(),
     category: "Odoo",
     returns: ["NUMBER"],
-    compute: function (
+    computeValueAndFormat: function (
         accountCodes,
         dateRange,
-        offset = 0,
-        companyId = null,
-        includeUnposted = false
+        offset = { value: 0 },
+        companyId = { value: null },
+        includeUnposted = { value: false }
     ) {
-        accountCodes = toString(accountCodes)
+        accountCodes = toString(accountCodes?.value)
             .split(",")
             .map((code) => code.trim())
             .sort();
-        offset = toNumber(offset, this.locale);
+        offset = toNumber(offset.value, this.locale);
         dateRange = parseAccountingDate(dateRange, this.locale);
-        includeUnposted = toBoolean(includeUnposted);
-        return this.getters.getAccountPrefixDebit(
+        includeUnposted = toBoolean(includeUnposted.value);
+        const value = this.getters.getAccountPrefixDebit(
             accountCodes,
             dateRange,
             offset,
-            companyId,
+            companyId.value,
             includeUnposted
         );
-    },
-    computeFormat: function (
-        accountCodes,
-        dateRange,
-        offset = 0,
-        companyId = null,
-        includeUnposted = false
-    ) {
-        return this.getters.getCompanyCurrencyFormat(companyId && companyId.value) || "#,##0.00";
+        const format = this.getters.getCompanyCurrencyFormat(companyId.value) || "#,##0.00";
+        return { value, format };
     },
 });
 
@@ -223,45 +220,37 @@ functionRegistry.add("ODOO.BALANCE", {
     args: ODOO_FIN_ARGS(),
     category: "Odoo",
     returns: ["NUMBER"],
-    compute: function (
+    computeValueAndFormat: function (
         accountCodes,
         dateRange,
-        offset = 0,
-        companyId = null,
-        includeUnposted = false
+        offset = { value: 0 },
+        companyId = { value: null },
+        includeUnposted = { value: false }
     ) {
-        accountCodes = toString(accountCodes)
+        accountCodes = toString(accountCodes?.value)
             .split(",")
             .map((code) => code.trim())
             .sort();
-        offset = toNumber(offset, this.locale);
+        offset = toNumber(offset.value, this.locale);
         dateRange = parseAccountingDate(dateRange, this.locale);
-        includeUnposted = toBoolean(includeUnposted);
-        return (
+        includeUnposted = toBoolean(includeUnposted.value);
+        const value =
             this.getters.getAccountPrefixDebit(
                 accountCodes,
                 dateRange,
                 offset,
-                companyId,
+                companyId.value,
                 includeUnposted
             ) -
             this.getters.getAccountPrefixCredit(
                 accountCodes,
                 dateRange,
                 offset,
-                companyId,
+                companyId.value,
                 includeUnposted
-            )
-        );
-    },
-    computeFormat: function (
-        accountCodes,
-        dateRange,
-        offset = 0,
-        companyId = null,
-        includeUnposted = false
-    ) {
-        return this.getters.getCompanyCurrencyFormat(companyId && companyId.value) || "#,##0.00";
+            );
+        const format = this.getters.getCompanyCurrencyFormat(companyId.value) || "#,##0.00";
+        return { value, format };
     },
 });
 

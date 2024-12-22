@@ -15,14 +15,18 @@
 # jl2035 <jaka.luthar@gmail.com>, 2023
 # Martin Trigaux, 2024
 # Grega Vavtar <grega@hbs.si>, 2024
+# Braulio D. López Vázquez <bdl@odoo.com>, 2024
+# Larissa Manderfeld, 2024
+# Wil Odoo, 2024
+# Gregor Flajs, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Grega Vavtar <grega@hbs.si>, 2024\n"
+"Last-Translator: Gregor Flajs, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,19 +60,18 @@ msgstr "%s ocen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "&amp; Dostava"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "&amp;nbsp;(<i>Your shipping address will be requested later)</i>"
-msgstr ""
+msgstr "&amp;nbsp;(<i>Vaš naslov za dostavo bo zahtevan kasneje)</i>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "&amp;nbsp;item(s)&amp;nbsp;-&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;izdelek(izdelki)&amp;nbsp;-&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -108,7 +111,7 @@ msgstr "66 odstotkov"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "<b class=\"w-100\">Order summary</b>"
-msgstr ""
+msgstr "<b class=\"w-100\">Povzetek naročila</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -133,7 +136,6 @@ msgstr "<b>Cenik</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<b>Shipping: </b>"
 msgstr "<b>Dostava: </b>"
 
@@ -405,7 +407,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "<strong>No suitable payment option could be found.</strong><br/>"
-msgstr ""
+msgstr "<strong>Primerne možnosti plačila ni bilo mogoče najti.</strong><br/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -468,11 +470,6 @@ msgid ""
 "</tbody>\n"
 "</table>\n"
 "            "
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "<u class=\"h5\">Documents</u>"
 msgstr ""
 
 #. module: website_sale
@@ -787,7 +784,7 @@ msgstr "Povprečna ocena"
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Back to cart"
-msgstr ""
+msgstr "Nazaj v košarico"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -851,14 +848,13 @@ msgstr "Velik"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Billing"
 msgstr "Obračun"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Billing address"
-msgstr ""
+msgstr "Naslov za račun"
 
 #. module: website_sale
 #. odoo-python
@@ -956,22 +952,6 @@ msgstr "Ali je mogoče sliko 1024 povečati"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
 msgid "Can Publish"
 msgstr "Lahko objavite"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence a video at first position."
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence embedded image/video with a non compatible image."
-msgstr ""
-"Vgrajene slike/videoposnetka ni mogoče ponovno preštevilčiti z nezdružljivo "
-"sliko."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1093,7 +1073,7 @@ msgstr ""
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Checkout"
-msgstr ""
+msgstr "Zaključi nakup"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1227,6 +1207,11 @@ msgstr "Obdelava stroškov dostave in odprema preko Easypost"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Compute shipping cost and ship with Shiprocket"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
 msgstr "Obdelava stroškov dostave in odprema preko DHL"
 
@@ -1318,7 +1303,7 @@ msgstr "Prispevek"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 #, python-format
 msgid "Continue checkout"
-msgstr ""
+msgstr "Nadaljujte z nakupom"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -1326,13 +1311,15 @@ msgid ""
 "Continue checkout\n"
 "                                    <i class=\"fa fa-angle-right ms-2 fw-light\"/>"
 msgstr ""
+"Nadaljujte z nakupom\n"
+"                                    <i class=\"fa fa-angle-right ms-2 fw-light\"/>"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Continue shopping"
-msgstr ""
+msgstr "Nadaljuj z nakupovanjem"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_couches
@@ -1663,6 +1650,11 @@ msgid "Do you wish to clear your cart before adding products to it?"
 msgstr "Želite počistiti košarico, preden vanjo dodate izdelke?"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "Documents"
+msgstr "Dokumenti"
+
+#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/product_document.py:0
 #, python-format
@@ -1830,7 +1822,7 @@ msgstr "Dodatni različni mediji"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Extra info"
-msgstr ""
+msgstr "Dodatne informacije"
 
 #. module: website_sale
 #. odoo-python
@@ -1904,7 +1896,7 @@ msgstr "Iz spletne strani"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Full name"
-msgstr ""
+msgstr "Polno ime"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures
@@ -2174,7 +2166,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/website_sale_utils.js:0
 #, python-format
 msgid "Item(s) added to your cart"
-msgstr ""
+msgstr "Artikli so bili dodani v vaš voziček"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
@@ -2520,6 +2512,13 @@ msgstr ""
 "stik z nami za več informacij."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+#, python-format
+msgid "No shipping method is selected."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__none
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "None"
@@ -2736,11 +2735,6 @@ msgid "Pay now"
 msgstr "Plačaj takoj"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment
-msgid "Pay with"
-msgstr "Plačaj preko"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
@@ -2750,7 +2744,7 @@ msgstr "Plačilo"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Payment Information"
-msgstr ""
+msgstr "Informacije o plačilu"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_methods
@@ -2761,6 +2755,11 @@ msgstr "Načini plačila"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
 msgid "Payment Providers"
 msgstr "Ponudniki plačil"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_token
+msgid "Payment Token"
+msgstr "Plačilni žeton"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
@@ -3328,7 +3327,7 @@ msgstr "Nadaljuj naročilo"
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Return to shipping"
-msgstr ""
+msgstr "Nazaj na dostavo"
 
 #. module: website_sale
 #. odoo-python
@@ -3450,7 +3449,7 @@ msgstr "Vzorec"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Save address"
-msgstr ""
+msgstr "Shrani naslov"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -3551,7 +3550,7 @@ msgstr "Souporaba"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Ship to the same address"
-msgstr ""
+msgstr "Dostava na isti naslov"
 
 #. module: website_sale
 #. odoo-python
@@ -3582,6 +3581,16 @@ msgstr "Metode odpreme"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Shipping address"
+msgstr "Naslov za dostavo"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket Shipping Methods"
 msgstr ""
 
 #. module: website_sale
@@ -3665,12 +3674,12 @@ msgstr "Prijavi se"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Sign in"
-msgstr "Prijavi"
+msgstr "Prijava"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Sign in/up at checkout"
-msgstr "Prijava/prijava na blagajni"
+msgstr "Prijava/prijavi se na blagajni"
 
 #. module: website_sale
 #. odoo-python
@@ -3819,7 +3828,7 @@ msgstr "Osnova"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_included
 msgid "Tax Included"
-msgstr ""
+msgstr "DDV vključen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4197,7 +4206,7 @@ msgstr "Prikaži izdelek"
 #: code:addons/website_sale/static/src/js/notification/add_to_cart_notification/add_to_cart_notification.xml:0
 #, python-format
 msgid "View cart"
-msgstr ""
+msgstr "Ogled košarice"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_view_detail
@@ -4450,6 +4459,13 @@ msgstr ""
 "                                            Če želite spremeniti naslov za dostavo, ustvarite"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -4498,6 +4514,15 @@ msgid "Your Name"
 msgstr "Vaše ime"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid ""
+"Your account is not allowed to pay in company %s. Please log out and create "
+"a new account for this website, or contact the website administrator."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "Your cart is empty!"
@@ -4528,7 +4553,7 @@ msgstr "Poštna številka"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_delivery_zip_prefix
 msgid "Zip Prefix"
-msgstr ""
+msgstr "Predpona poštne številke"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -4629,7 +4654,7 @@ msgstr "ali"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 msgid "remove"
-msgstr ""
+msgstr "odstrani"
 
 #. module: website_sale
 #. odoo-javascript

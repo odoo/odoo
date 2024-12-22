@@ -34,7 +34,7 @@ msgid ""
 msgstr ""
 "<div>\n"
 "                    Estimada <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
-"                    Ignore esto si es un error nuestro, pero parece ser que no está en su oficina y no hay ninguna solicitud de tiempo personal de su parte.<br>\n"
+"                    Ignore esto si es un error nuestro, pero parece ser que no está en su oficina y no hay ninguna solicitud de ausencia de su parte.<br>\n"
 "                    Tome las medidas correspondientes para poder aclarar esta ausencia laboral.<br>\n"
 "                     No dude en contactar a su responsable o al departamento de recursos humanos.\n"
 "                    <br>Saludos,<br><br>\n"
@@ -92,12 +92,12 @@ msgstr "Correo electrónico enviado"
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "Employee's Presence to Define"
-msgstr "Asistencia del empleado por definir"
+msgstr "Presencia del empleado a definir"
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
 msgid "Employee: Presence Reminder"
-msgstr "Empleado: Recordatorio de presencia"
+msgstr "Empleado: recordatorio de presencia"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
@@ -114,14 +114,14 @@ msgid ""
 "Please, take appropriate measures in order to carry out this work absence.\n"
 "Do not hesitate to contact your manager or the human resource department."
 msgstr ""
-"Excepción hecha si hubo un error de nuestra parte, parece que no estás en tu oficina y no hay alguna solicitud de tiempo personal de ti.\n"
-"Por favor, toma las medidas apropiadas con el fin de llevar a cabo esta ausencia laboral.\n"
-"No dudes en contactar a tu gerente o al departamento de recursos humanos."
+"Ignore este mensaje si cometimos un error, pero parece ser que no se encuentra en su oficina y no solicitó hacer uso de su ausencias disponibles.\n"
+"Tome las medidas correspondientes para poder aclarar esta ausencia laboral.\n"
+"No dude en contactar a su gerente o al departamento de recursos humanos."
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.ir_cron_presence_control_ir_actions_server
 msgid "HR Presence: cron"
-msgstr "Presencia RR.HH.: cron"
+msgstr "Presencia RR. HH.: cron"
 
 #. module: hr_presence
 #: model:mail.template,name:hr_presence.mail_template_presence
@@ -131,14 +131,14 @@ msgstr "RR. HH.: correo electrónico de ausencia del empleado"
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
 msgid "Hr Presence Last Compute Date"
-msgstr "Presencia RR.HH. Última fecha de cálculo"
+msgstr "Presencia RR. HH. Última fecha de cálculo"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__hr_presence_state_display
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__hr_presence_state_display
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__hr_presence_state_display
 msgid "Hr Presence State Display"
-msgstr "Visualización de estado de Presencia RR.HH. "
+msgstr "Visualización de estado de Presencia RR. HH. "
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
@@ -189,8 +189,8 @@ msgid ""
 "Sent manually in presence module when an employee wasn't working despite not"
 " being off"
 msgstr ""
-"Se envía de forma manual en el módulo de presencia cuando un empleado no "
-"trabajo sin pedir un tiempo personal"
+"Se envía manualmente en el módulo de presencia cuando un empleado no trabajo"
+" sin pedir una ausencia"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -220,24 +220,24 @@ msgstr "No hay móvil profesional para este empleado."
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "Time Off"
-msgstr "Tiempo personal"
+msgstr "Ausencias"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__to_define
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_base__hr_presence_state_display__to_define
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__to_define
 msgid "To Define"
-msgstr "Por definir"
+msgstr "A definir"
 
 #. module: hr_presence
 #: model:mail.template,subject:hr_presence.mail_template_presence
 msgid "Unexpected Absence"
-msgstr "Ausencia Inesperada"
+msgstr "Ausencia inesperada"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log
 msgid "Users Log"
-msgstr "Registro de Usuarios"
+msgstr "Registro de usuarios"
 
 #. module: hr_presence
 #. odoo-python

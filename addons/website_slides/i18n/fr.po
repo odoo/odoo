@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Jolien De Paepe, 2024
-# Wil Odoo, 2024
 # Asia Ba, 2024
+# Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:10+0000\n"
-"Last-Translator: Asia Ba, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -472,16 +473,16 @@ msgstr "<i class=\"fa fa-comments\"/> Commentaires ("
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<i class=\"fa fa-desktop me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">Fullscreen</span>"
+"<i class=\"fa fa-desktop me-xl-2 my-1\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">Fullscreen</span>"
 msgstr ""
-"<i class=\"fa fa-desktop me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">Plein écran</span>"
+"<i class=\"fa fa-desktop me-xl-2 my-1\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">Plein écran</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<i class=\"fa fa-envelope\"/> Send Email"
-msgstr "<i class=\"fa fa-envelope\"/> Envoyer un email"
+msgstr "<i class=\"fa fa-envelope\"/> Envoyer un e-mail"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -650,11 +651,11 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<i class=\"fa fa-share-alt me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">Share</span>"
+"<i class=\"fa fa-share-alt me-xl-2 my-1\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">Share</span>"
 msgstr ""
-"<i class=\"fa fa-share-alt me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">Partager</span>"
+"<i class=\"fa fa-share-alt me-xl-2 my-1\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">Partager</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -1053,7 +1054,7 @@ msgstr "<strong>Aucun participant pour le moment !</strong>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<strong>Sharing is caring!</strong> Email(s) sent."
-msgstr "<strong>Aimer, c'est partager !</strong> Email(s) envoyé(s)."
+msgstr "<strong>Aimer, c'est partager !</strong> E-mail(s) envoyé(s)."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_1
@@ -1070,11 +1071,10 @@ msgstr "Un fruit"
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid ""
-"A good course has a structure. Pick a name for your first section and click "
-"<b>Save</b> to create it."
+"A good course has a structure. Pick a name for your first <b>Section</b>."
 msgstr ""
-"Un bon cours a une structure. Choisissez un nom pour votre première section "
-"et cliquez sur <b>Enregistrer</b> pour la créer."
+"Un bon cours est structuré. Choisissez un nom pour votre première "
+"<b>Section</b>."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_4
@@ -1277,7 +1277,6 @@ msgstr "Ajouter un commentaire"
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #, python-format
 msgid "Add Content"
@@ -1337,7 +1336,7 @@ msgstr "Ajouter des contacts..."
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 msgid "Add quiz"
-msgstr ""
+msgstr "Ajouter un quiz"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -1661,7 +1660,7 @@ msgstr "Retour"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid "Back to course"
-msgstr ""
+msgstr "Revenir aux cours"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_default_background_image_url
@@ -1926,6 +1925,13 @@ msgid "Clear filters"
 msgstr "Effacer les filtres"
 
 #. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid "Click <b>Save</b> to create it."
+msgstr "Cliquez sur <b>Enregistrer</b> pour finaliser la création."
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
 msgid "Click here to get started"
 msgstr "Cliquez ici pour démarrer"
@@ -1956,8 +1962,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
-msgid "Click on the <b>Create</b> button to create your first course."
-msgstr "Cliquez sur le bouton <b>Créer</b> pour créer votre premier cours."
+msgid "Click on the <b>Save</b> button to create your first course."
+msgstr ""
+"Cliquez sur le bouton <b>Enregistrer</b> pour créer votre premier cours."
 
 #. module: website_slides
 #. odoo-javascript
@@ -2111,7 +2118,7 @@ msgstr "Temps d'achèvement"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
 msgid "Compose Email"
-msgstr "Rédiger un email"
+msgstr "Rédiger un e-mail"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_config_settings
@@ -2617,7 +2624,7 @@ msgid ""
 "Defines the email your Attendees will receive each time you upload new "
 "content."
 msgstr ""
-"Définit l'email que vos participants recevront chaque fois que vous mettez "
+"Définit l'e-mail que vos participants recevront chaque fois que vous mettez "
 "en ligne un nouveau contenu."
 
 #. module: website_slides
@@ -2626,7 +2633,7 @@ msgid ""
 "Defines the email your Attendees will receive once they reach the end of "
 "your course."
 msgstr ""
-"Définit l'email que vos participants recevront une fois qu'ils auront "
+"Définit l'e-mail que vos participants recevront une fois qu'ils auront "
 "atteint la fin de votre cours."
 
 #. module: website_slides
@@ -2918,24 +2925,24 @@ msgstr "eLearning : Invitation au cours promotionnel"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__partner_email
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__share_channel_template_id
 msgid "Email template used when sharing a channel"
-msgstr "Modèle d'email utilisé lors du partage d'un canal"
+msgstr "Modèle d'e-mail utilisé lors du partage d'un canal"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__share_slide_template_id
 msgid "Email template used when sharing a slide"
-msgstr "Modèle d'email utilisé lors du partage d'une diapositive"
+msgstr "Modèle d'e-mail utilisé lors du partage d'une diapositive"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #, python-format
 msgid "Email(s) sent."
-msgstr "Email(s) envoyé(s)."
+msgstr "E-mail(s) envoyé(s)."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_code
@@ -2953,7 +2960,7 @@ msgstr "Intégrer des vues"
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "Embed code"
-msgstr ""
+msgstr "Code intégré"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
@@ -3061,7 +3068,7 @@ msgstr "Exercises"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid "Exit Fullscreen"
-msgstr ""
+msgstr "Quitter le mode plein écran"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_code_external
@@ -3325,6 +3332,7 @@ msgstr "Clé Google Doc"
 
 #. module: website_slides
 #. odoo-python
+#: code:addons/website_slides/models/slide_slide.py:0
 #: code:addons/website_slides/models/slide_slide.py:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__video_source_type__google_drive
 #, python-format
@@ -3646,7 +3654,7 @@ msgid ""
 "Impossible to send emails. Select a \"Channel Share Template\" for courses "
 "%(course_names)s first"
 msgstr ""
-"Impossible d'envoyer des emails. Sélectionnez d'abord un \"Modèle du canal "
+"Impossible d'envoyer des e-mails. Sélectionnez d'abord un \"Modèle du canal "
 "partagé\" pour les cours %(course_names)s"
 
 #. module: website_slides
@@ -3657,7 +3665,7 @@ msgid ""
 "Impossible to send emails. Select a \"Share Template\" for courses "
 "%(course_names)s first"
 msgstr ""
-"Impossible d'envoyer des emails. Sélectionnez d'abord un \"Modèle de "
+"Impossible d'envoyer des e-mails. Sélectionnez d'abord un \"Modèle de "
 "partage\" pour les cours %(course_names)s."
 
 #. module: website_slides
@@ -4699,6 +4707,13 @@ msgid "Ongoing Courses"
 msgstr "Cours en cours"
 
 #. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/controllers/mail.py:0
+#, python-format
+msgid "Only a single review can be posted per course."
+msgstr "Une seule révision peut être publiée par cours."
+
+#. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__public
 msgid "Open"
 msgstr "Ouvert"
@@ -4712,12 +4727,6 @@ msgid "Operation not supported"
 msgstr "Opération non prise en charge"
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/mail.py:0
-#, python-format
-msgid "Only a single review can be posted per course."
-msgstr ""
-
-#. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__lang
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
@@ -4726,7 +4735,7 @@ msgid ""
 "object.partner_id.lang }}."
 msgstr ""
 "Langue de traduction facultative (code ISO) à sélectionner lors de l'envoi "
-"d'un email. Si aucune langue n'est définie, la version anglaise sera "
+"d'un e-mail. Si aucune langue n'est définie, la version anglaise sera "
 "utilisée. Il doit généralement s'agir d'une expression d'espace réservé qui "
 "fournit le langage approprié, par ex. {{ object.partner_id.lang }}."
 
@@ -4825,7 +4834,7 @@ msgstr "Veuillez entrer un lien Google Drive valide"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
 msgid "Please enter valid email(s)"
-msgstr "Veuillez saisir un ou plusieurs adresses email valides"
+msgstr "Veuillez saisir un ou plusieurs adresses e-mail valides"
 
 #. module: website_slides
 #. odoo-javascript
@@ -5453,7 +5462,7 @@ msgstr "Envoyer"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__send_email
 #, python-format
 msgid "Send Email"
-msgstr "Envoyer un email"
+msgstr "Envoyer un e-mail"
 
 #. module: website_slides
 #: model:mail.template,description:website_slides.mail_template_channel_completed
@@ -5478,7 +5487,7 @@ msgstr "Envoyé aux participants potentiels pour qu'ils consultent le cours."
 #. module: website_slides
 #: model:mail.template,description:website_slides.slide_template_shared
 msgid "Sent when attendees share the course by email"
-msgstr "Envoyé lorsque les participants partagent le cours par email"
+msgstr "Envoyé lorsque les participants partagent le cours par e-mail"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__seo_name
@@ -5550,7 +5559,7 @@ msgstr "Partager l'URL"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
 msgid "Share by Email"
-msgstr "Partager par email"
+msgstr "Partager par e-mail"
 
 #. module: website_slides
 #. odoo-javascript
@@ -5770,7 +5779,7 @@ msgstr "Démarrer ce cours"
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
 msgid "Start with the customer – find out what they want and give it to them."
-msgstr "Commencez par le client: trouvez ce qu'il veut et donner-le lui."
+msgstr "Commencez par le client : trouvez ce qu'il veut et donnez-le lui."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
@@ -6375,7 +6384,7 @@ msgstr "URL du fichier Google Drive ou URL de la vidéo YouTube"
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
-"Impossible de publier un message, veuillez configurer l'adresse email de "
+"Impossible de publier un message, veuillez configurer l'adresse e-mail de "
 "l'expéditeur."
 
 #. module: website_slides
@@ -6496,6 +6505,11 @@ msgid "Use Course Groups to classify and organize your Courses."
 msgstr "Utilisez les groupes de cours pour classer et organiser vos cours."
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
+msgid "Use template"
+msgstr "Utiliser un modèle"
+
+#. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
 msgid "Used to categorize and filter displayed channels/courses"
 msgstr "Utilisé pour catégoriser et filtrer les canaux/cours affichés"
@@ -6587,6 +6601,7 @@ msgstr "Vues •"
 
 #. module: website_slides
 #. odoo-python
+#: code:addons/website_slides/models/slide_slide.py:0
 #: code:addons/website_slides/models/slide_slide.py:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__video_source_type__vimeo
 #, python-format
@@ -7201,7 +7216,7 @@ msgstr "fil d'Ariane"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
 msgid "by email."
-msgstr "par email."
+msgstr "par e-mail."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -7274,6 +7289,13 @@ msgid "e.g. \"Which animal cannot fly?\""
 msgstr "par ex. \"Quel animal ne peut pas voler ?\""
 
 #. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "e.g. \"{{placeholder || \"another animal\"}}\""
+msgstr "par ex. \"{{placeholder || \"another animal\"}}\""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add
 msgid "e.g. Computer Science for kids"
 msgstr "par ex. L'informatique pour les enfants"
@@ -7339,7 +7361,7 @@ msgstr "pour les publiques."
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #, python-format
 msgid "friend1@email.com, friend2@email.com"
-msgstr "friend1@email.com, friend2@email.com"
+msgstr "friend1@e-mail.com, friend2@e-mail.com"
 
 #. module: website_slides
 #. odoo-javascript

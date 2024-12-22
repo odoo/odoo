@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-02-08 07:29+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,13 +42,6 @@ msgstr ""
 #: model:ir.model,name:spreadsheet_account.model_account_account
 msgid "Account"
 msgstr "Tili"
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-#, python-format
-msgid "Account type."
-msgstr ""
 
 #. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_res_company
@@ -86,14 +79,6 @@ msgstr "Tilin etuliitteen %s"
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-#, python-format
-msgid "Reference date."
-msgstr ""
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "Returns the account ids of a given group."
 msgstr "Palauttaa tietyn ryhmän tilitunnukset."
@@ -127,6 +112,14 @@ msgstr "Katso tietueet"
 #, python-format
 msgid "Set to TRUE to include unposted entries."
 msgstr ""
+"Asetetaan arvoksi TRUE, jos haluat sisällyttää postittamattomat merkinnät."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+#, python-format
+msgid "The account type (income, expense, asset_current,...)."
+msgstr "Tilityyppi (tulot, menot, saamiset_juoksevat,...)."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -140,7 +133,7 @@ msgstr "Yrityksen verovuotta ei löytynyt."
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "The company to target (Advanced)."
-msgstr ""
+msgstr "Kohdeyritys (Advanced)."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -148,7 +141,7 @@ msgstr ""
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "The company."
-msgstr ""
+msgstr "oma yritys"
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -158,17 +151,33 @@ msgid ""
 "The date range. Supported formats are \"21/12/2022\", \"Q1/2022\", "
 "\"12/2022\", and \"2022\"."
 msgstr ""
+"Päivämääräalue. Tuetut muodot ovat \"21/12/2022\", \"Q1/2022\", \"12/2022\" "
+"ja \"2022\"."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+#, python-format
+msgid "The day from which to extract the fiscal year end."
+msgstr "Päivä, josta verovuoden loppu otetaan."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+#, python-format
+msgid "The day from which to extract the fiscal year start."
+msgstr "Päivä, josta verovuoden alku otetaan."
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "The prefix of the accounts."
-msgstr ""
+msgstr "Tilien etuliite."
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "Year offset applied to date_range."
-msgstr ""
+msgstr "Päiväysalueeseen sovellettava vuoden siirtymä."

@@ -38,7 +38,7 @@ export class GaugeField extends Component {
 
     renderChart() {
         const gaugeValue = this.props.record.data[this.props.name];
-        let maxValue = Math.max(gaugeValue, this.props.record.data[this.props.maxValueField]);
+        let maxValue = Math.max(gaugeValue, this.props.record.data[this.props.maxValueField] || this.props.maxValue);
         let maxLabel = maxValue;
         if (gaugeValue === 0 && maxValue === 0) {
             maxValue = 1;
@@ -92,8 +92,12 @@ export class GaugeField extends Component {
 GaugeField.template = "web.GaugeField";
 GaugeField.props = {
     ...standardFieldProps,
-    maxValueField: { type: String },
+    maxValueField: { type: String, optional: true },
+    maxValue: { type: Number, optional: true},
     title: { type: String, optional: true },
+};
+GaugeField.defaultProps = {
+    maxValue: 100,
 };
 
 export const gaugeField = {
@@ -106,13 +110,19 @@ export const gaugeField = {
         },
         {
             label: _t("Max value field"),
-            name: "max_value",
+            name: "max_value_field",
             type: "field",
             availableTypes: ["integer", "float"],
+        },
+        {
+            label: _t("Max value"),
+            name: "max_value",
+            type: "string",
         },
     ],
     extractProps: ({ options }) => ({
         maxValueField: options.max_field,
+        maxValue: options.max_value,
         title: options.title,
     }),
 };

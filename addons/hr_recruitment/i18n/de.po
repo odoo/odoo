@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -1417,6 +1417,11 @@ msgid "Email cc"
 msgstr "E-Mail-CC"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "E-Mail-Domain z. B. 'example.com' in 'odoo@example.com'"
+
+#. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
@@ -2651,7 +2656,7 @@ msgstr "Anforderungen"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Reserve"
-msgstr "Reservieren"
+msgstr "Reserve"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -2782,7 +2787,7 @@ msgstr "E-Mail versenden"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Send Interview Survey"
-msgstr "Umfrage zum Bewerbungsgespräch versenden"
+msgstr "Bewerbungsumfrage versenden"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_applicant_mass_sms
@@ -2795,7 +2800,7 @@ msgstr "SMS versenden"
 msgid ""
 "Send an Interview Survey to the applicant during the recruitment process"
 msgstr ""
-"Senden Sie dem Bewerber eine Umfrage zum Bewerbungsgespräch während des "
+"Senden Sie dem Bewerber eine Bewerbungsumfrage während des "
 "Einstellungsprozesses"
 
 #. module: hr_recruitment
@@ -3279,6 +3284,7 @@ msgstr ""
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "You must define a Contact Name for this applicant."
 msgstr "Sie müssen eine Kontaktperson für diesen Bewerber bestimmen."
@@ -3326,4 +3332,4 @@ msgstr "z. B. Verkaufsleiter"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "to"
-msgstr "bis"
+msgstr "an"

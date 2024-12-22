@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -44,15 +44,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sales order between the header pages and the quote table. "
 msgstr ""
-"販売中の顧客とドキュメントを共有できます。\n"
-"顧客とドキュメントを共有したくない場合は空欄にして下さい。\n"
-"見積書: ドキュメントは顧客に送信され、顧客はいつでもアクセスできます。\n"
-"例: このオプションはプロダクト説明ファイルを共有するのに便利です。\n"
-"確定オーダ: ドキュメントが顧客に送信され、顧客がアクセスできるようになります。\n"
-"例: このオプションは、ユーザマニュアルやeコマースで購入したデジタルコンテンツを共有するのに便利です。\n"
-"引用の内側: ドキュメントは見出しページと見積書テーブルの間の見積書PDFに含まれます。"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_company
@@ -82,6 +76,16 @@ msgstr "ヘッダーページ"
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
 msgid "Inside quote"
 msgstr "見積書内"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/utils.py:0
+#, python-format
+msgid ""
+"It seems that we're not able to process this pdf inside a quotation. It is "
+"either encrypted, or encoded in a format we do not support."
+msgstr ""
+"このpdfを見積書内で処理することができないようです。暗号化されているか、弊社がサポートしていない形式でエンコードされているかのどちらかです。"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -197,3 +201,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
 msgid "Visible at"
 msgstr "以下で表示"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "When attached inside a quote, the document must be a file, not a URL."
+msgstr "引用の中に添付する場合、ドキュメントはURLではなくファイルでなければなりません。"

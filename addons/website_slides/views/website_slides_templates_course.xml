@@ -8,31 +8,33 @@
             <div class="row align-items-center justify-content-between">
                 <!-- Desktop Mode -->
                 <nav aria-label="breadcrumb" class="col-md-8 d-none d-md-flex">
-                    <ol class="breadcrumb bg-transparent mb-0 ps-0 py-0 overflow-hidden">
-                        <li class="breadcrumb-item">
-                            <a href="/slides">Courses</a>
+                    <ol class="breadcrumb flex-nowrap bg-transparent mb-0 ps-0 py-0 overflow-hidden">
+                        <li class="breadcrumb-item flex-shrink-0">
+                            <a href="/slides" title="Courses">Courses</a>
                         </li>
-                        <t t-set="breadcrumb_class" t-value="'breadcrumb-item %s' % ('fw-bold' if not slide else '')" />
-                        <li t-att-class="'breadcrumb-item w-25 %s' % ('fw-bold' if not search_category and not search_tag and not search_slide_category and not slide else '')">
-                            <a t-if="invite_preview" t-attf-href="/slides/#{channel.id}?#{keep_query('invite_hash', 'invite_partner_id')}" class="text-truncate d-block"><span t-esc="channel.name"/></a>
-                            <a t-else="" t-att-href="'/slides/%s' % slug(channel)" class="text-truncate d-block"><span t-esc="channel.name"/></a>
+                        <t t-set="breadcrumb_class" t-value="'breadcrumb-item text-truncate %s' % ('fw-bold' if not slide else '')" />
+                        <li t-att-class="'breadcrumb-item text-truncate %s' % ('fw-bold' if not search_category and not search_tag and not search_slide_category and not slide else '')">
+                            <a t-if="invite_preview" t-attf-href="/slides/#{channel.id}?#{keep_query('invite_hash', 'invite_partner_id')}" class="text-truncate d-block"><span t-esc="channel.name" t-att-title="channel.name"/></a>
+                            <a t-else="" t-att-href="'/slides/%s' % slug(channel)" class="text-truncate d-block"><span t-esc="channel.name" t-att-title="channel.name"/></a>
                         </li>
-                        <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_category" t-if="search_category">
-                            <a t-if="invite_preview" t-attf-href="/slides/#{channel.id}/category/#{search_category.id}?#{keep_query('invite_hash', 'invite_partner_id')}"><span t-esc="search_category.name"/></a>
-                            <a t-else="" t-attf-href="/slides/#{slug(channel)}/category/#{slug(search_category)}"><span t-esc="search_category.name"/></a>
+                        <li t-att-class="breadcrumb_class" t-if="search_category">
+                            <a t-if="invite_preview" t-attf-href="/slides/#{channel.id}/category/#{search_category.id}?#{keep_query('invite_hash', 'invite_partner_id')}" aria-current='page'><span t-esc="search_category.name" t-att-title="search_category.name"/></a>
+                            <a t-else="" t-attf-href="/slides/#{slug(channel)}/category/#{slug(search_category)}" aria-current='page'><span t-esc="search_category.name" t-att-title="search_category.name"/></a>
                         </li>
-                        <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_tag" t-if="search_tag">
-                            <a t-att-href="'/slides/%s/tag/%s' % (slug(channel), slug(search_tag))"><span t-esc="search_tag.name"/></a>
+                        <li t-att-class="breadcrumb_class" t-if="search_tag">
+                            <a t-att-href="'/slides/%s/tag/%s' % (slug(channel), slug(search_tag))" aria-current='page'><span t-esc="search_tag.name" t-att-title="search_tag.name"/></a>
                         </li>
-                        <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_uncategorized" t-if="search_uncategorized">
-                            <a t-if="invite_preview" t-attf-href="/slides/#{channel.id}?uncategorized=1&amp;#{keep_query('invite_hash', 'invite_partner_id')}">Uncategorized</a>
-                            <a t-else="" t-attf-href="/slides/#{slug(channel)}?uncategorized=1">Uncategorized</a>
+                        <li t-att-class="breadcrumb_class" t-if="search_uncategorized">
+                            <a t-if="invite_preview" t-attf-href="/slides/#{channel.id}?uncategorized=1&amp;#{keep_query('invite_hash', 'invite_partner_id')}" aria-current='page' title="Uncategorized">Uncategorized</a>
+                            <a t-else="" t-attf-href="/slides/#{slug(channel)}?uncategorized=1" aria-current='page' title="Uncategorized">Uncategorized</a>
                         </li>
-                        <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_slide_category" t-if="search_slide_category">
-                            <a t-att-href="'/slides/%s?slide_category=%s' % (slug(channel), search_slide_category)"><span t-esc="slide_categories[search_slide_category]"/></a>
+                        <li t-att-class="breadcrumb_class" t-if="search_slide_category">
+                            <a t-att-href="'/slides/%s?slide_category=%s' % (slug(channel), search_slide_category)" aria-current='page'>
+                                <span t-esc="slide_categories.get('search_slide_category', '-')" t-att-title="slide_categories.get('search_slide_category', '-')"/>
+                            </a>
                         </li>
-                        <li t-if="slide" class="breadcrumb-item fw-bold">
-                            <a t-att-href="'/slides/slide/%s' % slug(slide)"><span t-esc="slide.name"/></a>
+                        <li t-if="slide" class="breadcrumb-item text-truncate fw-bold">
+                            <a t-att-href="'/slides/slide/%s' % slug(slide)"><span t-esc="slide.name" t-att-title="slide.name"/></a>
                         </li>
                     </ol>
                 </nav>
@@ -65,19 +67,19 @@
                                     t-attf-href="/slides/#{channel.id if invite_preview else slug(channel)}?#{keep_query('invite_hash', 'invite_partner_id') if invite_preview else ''}">
                                     &#9492;<span class="ms-1" t-esc="channel.name"/>
                                 </a>
-                                <a t-att-class="dropdown_class" t-att-aria-current="'page' and search_category" t-if="search_category"
+                                <a t-att-class="dropdown_class" aria-current="page" t-if="search_category"
                                     t-attf-href="/slides/#{channel.id if invite_preview else slug(channel)}/category/#{search_category.id if invite_preview else slug(search_category)}?#{keep_query('invite_hash', 'invite_partner_id') if invite_preview else ''}">
                                     &#9492;<span class="ms-1" t-esc="search_category.name"/>
                                 </a>
-                                <a t-att-class="dropdown_class" t-att-aria-current="'page' and search_tag" t-if="search_tag" t-att-href="'/slides/%s/tag/%s' % (slug(channel), slug(search_tag))">
+                                <a t-att-class="dropdown_class" aria-current="page" t-if="search_tag" t-att-href="'/slides/%s/tag/%s' % (slug(channel), slug(search_tag))">
                                     &#9492;<span class="ms-1" t-esc="search_tag.name"/>
                                 </a>
-                                <a t-att-class="dropdown_class" t-att-aria-current="'page' and search_uncategorized" t-if="search_uncategorized"
+                                <a t-att-class="dropdown_class" aria-current="page" t-if="search_uncategorized"
                                     t-attf-href="/slides/#{channel.id if invite_preview else slug(channel)}?uncategorized=1&amp;#{keep_query('invite_hash', 'invite_partner_id') if invite_preview else ''}">
                                     &#9492;<span class="ms-1">Uncategorized</span>
                                 </a>
-                                <a t-att-class="dropdown_class" t-att-aria-current="'page' and search_slide_category" t-if="search_slide_category" t-att-href="'/slides/%s?slide_category=%s' % (slug(channel), search_slide_category)">
-                                    &#9492;<span class="ms-1" t-esc="slide_categories[search_slide_category]"/>
+                                <a t-att-class="dropdown_class" aria-current="page" t-if="search_slide_category" t-att-href="'/slides/%s?slide_category=%s' % (slug(channel), search_slide_category)">
+                                    &#9492;<span class="ms-1" t-esc="slide_categories.get('search_slide_category', '-')"/>
                                 </a>
                                  <a t-if="slide" class="dropdown-item active" t-att-href="'/slides/slide/%s' % (slug(slide))">
                                     &#9492;<span class="ms-1" t-esc="slide.name"/>

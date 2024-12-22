@@ -28,33 +28,26 @@ class StockMoveLine(models.Model):
             create_column(self._cr, "stock_move_line", "expiration_date", "timestamp")
         return super()._auto_init()
 
-    @api.depends('product_id', 'picking_type_use_create_lots', 'lot_id.expiration_date')
+    @api.depends('product_id', 'lot_id.expiration_date', 'picking_id.scheduled_date')
     def _compute_expiration_date(self):
         for move_line in self:
-            if not move_line.expiration_date and move_line.lot_id.expiration_date:
+            if move_line.lot_id.expiration_date:
                 move_line.expiration_date = move_line.lot_id.expiration_date
             elif move_line.picking_type_use_create_lots:
                 if move_line.product_id.use_expiration_date:
                     if not move_line.expiration_date:
-                        move_line.expiration_date = fields.Datetime.today() + datetime.timedelta(days=move_line.product_id.expiration_time)
+                        from_date = move_line.picking_id.scheduled_date or fields.Datetime.today()
+                        move_line.expiration_date = from_date + datetime.timedelta(days=move_line.product_id.expiration_time)
                 else:
                     move_line.expiration_date = False
 
-    @api.onchange('lot_id')
-    def _onchange_lot_id(self):
-        if not self.picking_type_use_existing_lots or not self.product_id.use_expiration_date:
-            return
-        if self.lot_id:
-            self.expiration_date = self.lot_id.expiration_date
-        else:
-            self.expiration_date = False
-
-    @api.onchange('product_id', 'product_uom_id')
+    @api.onchange('product_id', 'product_uom_id', 'picking_id')
     def _onchange_product_id(self):
         res = super()._onchange_product_id()
         if self.picking_type_use_create_lots:
             if self.product_id.use_expiration_date:
-                self.expiration_date = fields.Datetime.today() + datetime.timedelta(days=self.product_id.expiration_time)
+                from_date = self.picking_id.scheduled_date or fields.Datetime.today()
+                self.expiration_date = from_date + datetime.timedelta(days=self.product_id.expiration_time)
             else:
                 self.expiration_date = False
         return res

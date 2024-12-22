@@ -21,11 +21,13 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'service_type': 'timesheet',
             'service_tracking': 'task_in_project'
         }
+        cls.company_data['product_order_no'].write(service_values)
+        service_values['expense_policy'] = 'cost'
         cls.company_data['product_order_cost'].write(service_values)
         cls.company_data['product_delivery_cost'].write(service_values)
+        service_values['expense_policy'] = 'sales_price'
         cls.company_data['product_order_sales_price'].write(service_values)
         cls.company_data['product_delivery_sales_price'].write(service_values)
-        cls.company_data['product_order_no'].write(service_values)
 
         # create AA, SO and invoices
         cls.analytic_plan = cls.env['account.analytic.plan'].create({
@@ -364,3 +366,47 @@ class TestReInvoice(TestCommonSaleTimesheet):
 
         # The actual test :
         wizard.create_invoices()  # No exception should be raised, there is indeed something to be invoiced since it was reversed
+
+    def test_project_update_reinvoiced_vendor_bill_product(self):
+        project_product, expense_product = self.env['product.product'].create([{
+            'name': 'Project creation',
+            'type': 'service',
+            'service_tracking': 'task_in_project',
+        }, {
+            'name': 'Expense Product',
+            'expense_policy': 'sales_price',
+            'list_price': 20,
+        }])
+        sale_order = self.env['sale.order'].create({'partner_id': self.partner_a.id})
+        self.env['sale.order.line'].create({
+            'product_id': project_product.id,
+            'order_id': sale_order.id,
+        })
+        sale_order.action_confirm()
+        project = sale_order.project_ids
+        self.assertTrue(project, 'Project should have been created on sale order confirmation')
+
+        vendor_bill = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'invoice_date': sale_order.date_order,
+            'journal_id': self.env['account.journal'].search([('code', '=', 'BILL'), ('company_id', '=', self.env.company.id)]).id,
+            'move_type': 'in_invoice',
+        })
+        self.env['account.move.line'].create({
+            'product_id': expense_product.id,
+            'move_id': vendor_bill.id,
+            'account_id': self.env['account.account'].search([('code', '=', '600000'), ('company_id', '=', self.env.company.id)]).id,
+            'analytic_distribution': {project.analytic_account_id.id: 100},
+            'price_unit': 20,
+        })
+        vendor_bill.action_post()  # An analytic line is created for the vendor bill move line
+        self.assertEqual(project.analytic_account_id.vendor_bill_count, 1, 'Vendor bill should be linked to project account')
+        self.assertTrue(vendor_bill.line_ids.analytic_line_ids, 'Analytic line should be created for the account move line')
+        self.assertTrue(sale_order.order_line.analytic_line_ids, 'Analytic line should be linked to the sale order line created by the re-invoiced expense product')
+
+        # Only the original vendor bill amount should appear on the project update, to stay consistent with the corresponding hr_expense behavior
+        updates = project._get_profitability_items()
+        data_line = updates['costs']['data'][0]
+        self.assertEqual(data_line['id'], 'other_purchase_costs')
+        self.assertEqual(data_line['billed'], -20)
+        self.assertEqual(updates['costs']['total']['billed'], -20, 'Only the vendor bill should be deducted')

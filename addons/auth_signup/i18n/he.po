@@ -9,23 +9,24 @@
 # Martin Trigaux, 2023
 # david danilov, 2023
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
-# Ha Ketem <haketem@gmail.com>, 2023
 # NoaFarkash, 2023
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2023
+# Orel Nahmany, 2024
+# Ha Ketem <haketem@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2023\n"
+"Last-Translator: Ha Ketem <haketem@gmail.com>, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -157,6 +158,45 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- תוכן -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <t t-set=\"invited_users\" t-value=\"ctx.get('invited_users', [])\"></t>\n"
+"                <td style=\"text-align : left\">\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        הזמנות בהמתנה\n"
+"                    </span><br><br>\n"
+"                </td>\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        לכבוד<t t-out=\"object.name or ''\">מישל אדמין</t>,<br> <br>\n"
+"                        הוספת את המשתמש/ים הבאים למסד הנתונים שלך אבל הם לא נרשמו עדיין:\n"
+"                        <ul>\n"
+"                            <t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
+"                                <li t-out=\"invited_user or ''\">demo@example.com</li>\n"
+"                            </t>\n"
+"                        </ul>\n"
+"                        בדוק איתם כדי שהם יוכלו לגשת למסד הנתונים שלך ולהתחיל לעבוד .\n"
+"                        <br><br>\n"
+"                      יום נפלא!<br>\n"
+"                        --<br>The <t t-out=\"object.company_id.name or ''\">YourCompany</t> Team\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -503,10 +543,11 @@ msgid "Marc Demo"
 msgstr ""
 
 #. module: auth_signup
+#. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Multiple accounts found for this login"
-msgstr ""
+msgstr "לשם משתמש זה קיימים מספר חשבונות"
 
 #. module: auth_signup
 #. odoo-python
@@ -539,7 +580,7 @@ msgstr ""
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "No account found for this login"
-msgstr ""
+msgstr "לא נמצא חשבון לשם משתמש זה"
 
 #. module: auth_signup
 #. odoo-python
@@ -591,7 +632,7 @@ msgstr "איפוס סיסמא"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Password reset instructions sent to your email"
-msgstr ""
+msgstr "הוראות לאיפוס סיסמא נשלחו למייל שלך"
 
 #. module: auth_signup
 #. odoo-python
@@ -609,7 +650,7 @@ msgstr "מופעל ע\"י"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login_successful
 msgid "Registration successful."
-msgstr ""
+msgstr "הרשמה הסתיימה בהצלחה"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
@@ -638,32 +679,32 @@ msgstr "שלח הזמנה בדוא\"ל"
 #: model:mail.template,description:auth_signup.mail_template_data_unregistered_users
 msgid ""
 "Sent automatically to admin if new user haven't responded to the invitation"
-msgstr ""
+msgstr "שליחה אוטומטית למנהל/ת מערכת אם המשתמש/ת לא ענה להזמנה"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.set_password_email
 msgid "Sent to new user after you invited them"
-msgstr ""
+msgstr "יישלח למשתמש חדש אחרי שליחת ההזמנה"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.mail_template_user_signup_account_created
 msgid "Sent to portal user who registered themselves"
-msgstr ""
+msgstr "נשלח למשתמש פורטל שנרשם לבד"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
 msgid "Settings: New Portal Signup"
-msgstr ""
+msgstr "הגדרות: הרשמה חדשה לפורטל"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
 msgid "Settings: New User Invite"
-msgstr ""
+msgstr "הגדרות: הזמנת משתמש חדש"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
 msgid "Settings: Unregistered User Reminder"
-msgstr ""
+msgstr "הגדרות: תזכורת לגבי משתמשים לא רשומים"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -740,7 +781,7 @@ msgstr "הרשמה: לא ניתן שם משתמש"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no name or partner given for new user"
-msgstr ""
+msgstr "הרשמה: לא צויין שם או שותף למשתמש החדש"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state

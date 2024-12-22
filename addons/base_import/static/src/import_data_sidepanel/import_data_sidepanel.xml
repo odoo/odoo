@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="ImportDataSidepanel">
-        <div class="o_import_data_sidepanel p-3 overflow-auto">
+        <div class="o_import_data_sidepanel p-3 overflow-auto bg-view">
             <div class="pb-4">
                 <h4>Imported file</h4>
                 <div class="mb-2 d-flex align-items-center">
@@ -68,7 +68,7 @@
                 <div class="d-flex">
                     <div class="o_import_batch_limit w-50 pe-1">
                         <label class="mb-1" for="o_import_batch_limit">Batch limit</label>
-                        <input class="w-100" id="o_import_batch_limit" t-att-value="getOptionValue('limit')" t-on-change="(ev) => this.setOptionValue('limit', ev.target.value)" />
+                        <input class="w-100" id="o_import_batch_limit" t-att-value="getOptionValue('limit')" t-on-change="(ev) => this.setOptionValue('limit', ev.target.value || 1)" />
                     </div>
                     <div class="w-50 ps-1" data-tooltip="Warning: ignores the labels line, empty lines and lines composed only of empty cells">
                         <label class="mb-1" for="o_import_row_start">Start at line</label>

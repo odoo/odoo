@@ -35,6 +35,7 @@ class StockWarehouseOrderpoint(models.Model):
                         'url': f'#action={action.id}&id={production.id}&model=mrp.production'
                     }],
                     'sticky': False,
+                    'next': {'type': 'ir.actions.act_window_close'},
                 }
             }
         return super()._get_replenishment_order_notification()
@@ -63,7 +64,12 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _compute_days_to_order(self):
         res = super()._compute_days_to_order()
-        for orderpoint in self:
+        # Avoid computing rule_ids in case no manufacture rules.
+        if not self.env['stock.rule'].search([('action', '=', 'manufacture')]):
+            return res
+        # Compute rule_ids only for orderpoint with boms
+        orderpoints_with_bom = self.filtered(lambda orderpoint: orderpoint.product_id.variant_bom_ids or orderpoint.product_id.bom_ids)
+        for orderpoint in orderpoints_with_bom:
             if 'manufacture' in orderpoint.rule_ids.mapped('action'):
                 boms = (orderpoint.product_id.variant_bom_ids or orderpoint.product_id.bom_ids)
                 orderpoint.days_to_order = boms and boms[0].days_to_prepare_mo or 0
@@ -104,7 +110,12 @@ class StockWarehouseOrderpoint(models.Model):
         bom_manufacture = self.env['mrp.bom']._bom_find(orderpoints_without_kit.product_id, bom_type='normal')
         bom_manufacture = self.env['mrp.bom'].concat(*bom_manufacture.values())
         productions_group = self.env['mrp.production']._read_group(
-            [('bom_id', 'in', bom_manufacture.ids), ('state', '=', 'draft'), ('orderpoint_id', 'in', orderpoints_without_kit.ids)],
+            [
+                ('bom_id', 'in', bom_manufacture.ids),
+                ('state', '=', 'draft'),
+                ('orderpoint_id', 'in', orderpoints_without_kit.ids),
+                ('id', 'not in', self.env.context.get('ignore_mo_ids', [])),
+            ],
             ['orderpoint_id', 'product_uom_id'],
             ['product_qty:sum'])
         for orderpoint, uom, product_qty_sum in productions_group:

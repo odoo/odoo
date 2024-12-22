@@ -22,7 +22,7 @@
             <field name="name">website.form</field>
             <field name="model">website</field>
             <field name="arch" type="xml">
-                <form string="Website Settings">
+                <form string="Website Settings" duplicate="0">
                     <sheet>
                         <group name="domain">
                             <field name="name"/>
@@ -69,7 +69,7 @@
             <field name="name">website.tree</field>
             <field name="model">website</field>
             <field name="arch" type="xml">
-                <tree string="Websites">
+                <tree string="Websites" duplicate="0">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="domain"/>

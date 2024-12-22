@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Thang Nguyen, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -311,7 +313,7 @@ msgstr "Sản phẩm"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Dịch chuyển sản phẩm (Dòng dịch chuyển tồn kho)"
+msgstr "Điều chuyển sản phẩm (Dòng điều chuyển tồn kho)"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__delivery_type
@@ -426,7 +428,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move
 msgid "Stock Move"
-msgstr "Dịch chuyển tồn kho"
+msgstr "Điều chuyển tồn kho"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_package_type
@@ -558,7 +560,7 @@ msgstr "Theo dõi:"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking
 msgid "Transfer"
-msgstr "Điều chuyển"
+msgstr "Lệnh chuyển hàng"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move__weight
@@ -591,9 +593,24 @@ msgid "Weight:"
 msgstr "Khối lượng:"
 
 #. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they have different "
+"carriers (i.e. check that all of their transfers have a carrier assigned and"
+" are using the same carrier)."
+msgstr ""
+"Bạn không thể đóng gói sản phẩm vào cùng một kiện hàng khi chúng được vận "
+"chuyển bởi các hãng vận chuyển khác nhau (nghĩa là hãy kiểm tra để đảm bảo "
+"tất cả lệnh chuyển hàng của chúng đã được chỉ định cho cùng một hãng vận "
+"chuyển)."
+
+#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
-msgstr "Bạn có nhiều liên kết theo dõi đơn hàng, hãy xem trong chatter."
+msgstr ""
+"Bạn có nhiều liên kết theo dõi đơn hàng, hãy xem trong cửa sổ trò chuyện."
 
 #. module: stock_delivery
 #. odoo-python
@@ -614,12 +631,12 @@ msgstr "Tiền tố mã bưu chính"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDShipping Weight:"
-msgstr "^A0N,44,33^FDShipping Weight:"
+msgstr "^A0N,44,33^FDCân nặng vận chuyển:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDWeight:"
-msgstr "^A0N,44,33^FDWeight:"
+msgstr "^A0N,44,33^FDCân nặng:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery

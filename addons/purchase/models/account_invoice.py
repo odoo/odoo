@@ -32,7 +32,7 @@ class AccountMove(models.Model):
 
     @api.onchange('purchase_vendor_bill_id', 'purchase_id')
     def _onchange_purchase_auto_complete(self):
-        ''' Load from either an old purchase order, either an old vendor bill.
+        r''' Load from either an old purchase order, either an old vendor bill.
 
         When setting a 'purchase.bill.union' in 'purchase_vendor_bill_id':
         * If it's a vendor bill, 'invoice_vendor_bill_id' is set and the loading is done by '_onchange_invoice_vendor_bill'.
@@ -52,7 +52,8 @@ class AccountMove(models.Model):
 
         # Copy data from PO
         invoice_vals = self.purchase_id.with_company(self.purchase_id.company_id)._prepare_invoice()
-        new_currency_id = self.invoice_line_ids and self.currency_id or invoice_vals.get('currency_id')
+        has_invoice_lines = bool(self.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')))
+        new_currency_id = self.currency_id if has_invoice_lines else invoice_vals.get('currency_id')
         del invoice_vals['ref'], invoice_vals['payment_reference']
         del invoice_vals['company_id']  # avoid recomputing the currency
         if self.move_type == invoice_vals['move_type']:
@@ -81,6 +82,10 @@ class AccountMove(models.Model):
                 self.payment_reference = refs[0]
             elif len(refs) > 1:
                 self.payment_reference = refs[-1]
+
+        # Copy company_id (only changes if the id is of a child company (branch))
+        if self.company_id != self.purchase_id.company_id:
+            self.company_id = self.purchase_id.company_id
 
         self.purchase_id = False
 

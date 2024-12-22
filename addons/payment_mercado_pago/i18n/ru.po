@@ -6,6 +6,7 @@
 # Martin Trigaux, 2023
 # ILMIR <karamov@it-projects.info>, 2024
 # Wil Odoo, 2024
+# Collex100, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:57+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Collex100, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,34 +35,37 @@ msgid ""
 "Call your card issuer to activate your card or use another payment method. "
 "The phone number is on the back of your card."
 msgstr ""
+"Позвоните эмитенту вашей карты, чтобы активировать ее или воспользоваться "
+"другим способом оплаты. Номер телефона указан на обратной стороне вашей "
+"карты."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 #, python-format
 msgid "Check expiration date."
-msgstr ""
+msgstr "Проверьте срок годности."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 #, python-format
 msgid "Check the card number."
-msgstr ""
+msgstr "Проверьте номер карты."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 #, python-format
 msgid "Check the card security code."
-msgstr ""
+msgstr "Проверьте код безопасности карты."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 #, python-format
 msgid "Check the data."
-msgstr ""
+msgstr "Проверьте данные."
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__code
@@ -100,7 +104,7 @@ msgstr "Поставщик платежей"
 #. module: payment_mercado_pago
 #: model:ir.model,name:payment_mercado_pago.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "платеж"
+msgstr "Платежная транзакция"
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -108,6 +112,7 @@ msgstr "платеж"
 #, python-format
 msgid "Payment was not processed, use another card or contact issuer."
 msgstr ""
+"Платеж не был обработан, используйте другую карту или свяжитесь с эмитентом."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -163,6 +168,8 @@ msgid ""
 "The communication with the API failed. The response is empty. Please verify "
 "your access token."
 msgstr ""
+"Не удалось установить связь с API. Ответ пуст. Пожалуйста, проверьте свой "
+"токен доступа."
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__code
@@ -174,7 +181,7 @@ msgstr "Технический код данного провайдера пла
 #: code:addons/payment_mercado_pago/const.py:0
 #, python-format
 msgid "This payment method does not process payments in installments."
-msgstr ""
+msgstr "Этот способ оплаты не предусматривает рассрочку платежа."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -184,6 +191,8 @@ msgid ""
 "We are processing your payment. Don't worry, in less than 2 business days, "
 "we will notify you by e-mail if your payment has been credited."
 msgstr ""
+"Мы обрабатываем ваш платеж. Не волнуйтесь, менее чем через 2 рабочих дня мы "
+"сообщим вам по электронной почте, что ваш платеж был зачислен."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -194,6 +203,9 @@ msgid ""
 "will notify you by e-mail if your payment has been credited or if we need "
 "more information."
 msgstr ""
+"Мы обрабатываем ваш платеж. Не волнуйтесь, менее чем через 2 рабочих дня мы "
+"сообщим вам по электронной почте, если ваш платеж был зачислен или если нам "
+"нужна дополнительная информация."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -202,6 +214,8 @@ msgstr ""
 msgid ""
 "We were unable to process your payment, please check your card information."
 msgstr ""
+"Мы не смогли обработать ваш платеж, пожалуйста, проверьте информацию о вашей"
+" карте."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -210,6 +224,8 @@ msgstr ""
 #, python-format
 msgid "We were unable to process your payment, please use another card."
 msgstr ""
+"Мы не смогли обработать ваш платеж, пожалуйста, воспользуйтесь другой "
+"картой."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -219,6 +235,8 @@ msgid ""
 "You have already made a payment for that value. If you need to pay again, "
 "use another card or another payment method."
 msgstr ""
+"Вы уже совершили платеж на эту сумму. Если вам нужно заплатить еще раз, "
+"используйте другую карту или другой способ оплаты."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -228,20 +246,22 @@ msgid ""
 "You have reached the limit of allowed attempts. Choose another card or other"
 " means of payment."
 msgstr ""
+"Вы исчерпали лимит разрешенных попыток. Выберите другую карту или другое "
+"средство оплаты."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 #, python-format
 msgid "You must authorize the payment with this card."
-msgstr ""
+msgstr "Вы должны авторизовать платеж с помощью этой карты."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 #, python-format
 msgid "Your card has not enough funds."
-msgstr ""
+msgstr "На вашей карте недостаточно средств."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -251,3 +271,5 @@ msgid ""
 "Your payment has been credited. In your summary you will see the charge as a"
 " statement descriptor."
 msgstr ""
+"Ваш платеж был зачислен. В вашей сводке вы увидите списание средств в "
+"качестве дескриптора выписки."

@@ -48,7 +48,7 @@ msgstr "Clave de cliente API"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_login
 msgid "API Login ID"
-msgstr "ID de inicio de sesión API"
+msgstr "ID de inicio de sesión de la API"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_signature_key
@@ -73,7 +73,7 @@ msgstr "Authorize.Net"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.Net Profile ID"
-msgstr "Authorize.Net Profile ID"
+msgstr "ID de perfil de Authorize.Net"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -125,7 +125,7 @@ msgstr ""
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Expiration"
-msgstr "Expiración"
+msgstr "Vencimiento"
 
 #. module: payment_authorize
 #. odoo-python
@@ -135,7 +135,7 @@ msgid ""
 "Failed to authenticate.\n"
 "%s"
 msgstr ""
-"Fallo al autenticar.\n"
+"Error de autenticación.\n"
 "%s"
 
 #. module: payment_authorize
@@ -244,7 +244,7 @@ msgstr "El código técnico de este proveedor de pagos."
 msgid ""
 "The transaction is not in a status to be refunded. (status: %s, details: %s)"
 msgstr ""
-"La transacción no está en un estado en el que se pueda reembolsar. (estado: "
+"La transacción no está en un estado en el que se pueda reembolsar. (Estado: "
 "%s, detalles: %s)"
 
 #. module: payment_authorize
@@ -260,16 +260,15 @@ msgid ""
 "The unique reference for the partner/token combination in the Authorize.net "
 "backend."
 msgstr ""
-"La referencia única para la combinación partner/token en el motor "
-"Authorize.net."
+"La referencia única para la combinación de contacto y token en el backend de"
+" Authorize.Net."
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_provider.py:0
 #, python-format
 msgid "This action cannot be performed while the provider is disabled."
-msgstr ""
-"Esta acción no se puede realizar mientras el proveedor está deshabilitado."
+msgstr "Esta acción no se puede realizar si el proveedor está deshabilitado."
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form

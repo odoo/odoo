@@ -5,6 +5,8 @@
 # Translators:
 # Wil Odoo, 2023
 # Jolien De Paepe, 2024
+# Tiffany Chang, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -771,7 +773,7 @@ msgstr ""
 "                            <ul>\n"
 "                                <li t-out=\"event_organizer.name or ''\">YourCompany</li>\n"
 "                                <t t-if=\"event_organizer.email\">\n"
-"                                    <li>Email : <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\"></a></li>\n"
+"                                    <li>E-mail : <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\"></a></li>\n"
 "                                </t>\n"
 "                                <t t-if=\"event_organizer.phone\">\n"
 "                                    <li>Téléphone : <t t-out=\"event_organizer.phone or ''\"></t></li>\n"
@@ -1093,7 +1095,7 @@ msgstr ""
 "                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;\" t-out=\"object.event_id.name or ''\">Révélation en ligne de la collection OpenWood</a>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
-"                            <strong t-out=\"object.event_id.name or ''\">Révélation en ligne de la collection OpenWood</strong>.\n"
+"                            <strong t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</strong>.\n"
 "                        </t>\n"
 "                    </div>\n"
 "                    <div>\n"
@@ -1137,8 +1139,8 @@ msgstr ""
 "                            </td>\n"
 "                            <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
 "                                <div><t t-out=\"object.event_id.name or ''\">Révélation en ligne de la collection OpenWood</t></div>\n"
-"                                <div><strong>Du</strong> <t t-out=\"object.event_id.date_begin_located or ''\">4 mai 2021, 7:00:00 AM</t></div>\n"
-"                                <div><strong>Au</strong> <t t-out=\"object.event_id.date_end_located or ''\">6 mai 2021, 5:00:00 PM</t></div>\n"
+"                                <div><strong>Du</strong> <t t-out=\"object.event_id.date_begin_located or ''\">4 mai 2021, 7 h</t></div>\n"
+"                                <div><strong>Au</strong> <t t-out=\"object.event_id.date_end_located or ''\">6 mai 2021, 5 h</t></div>\n"
 "                                <div style=\"font-size:12px;color:#9e9e9e\"><i>(<t t-out=\"object.event_id.date_tz or ''\">Europe/Bruxelles</t>)</i></div>\n"
 "                            </td>\n"
 "                            <td style=\"vertical-align:top;\">\n"
@@ -1175,7 +1177,7 @@ msgstr ""
 "                                    </t>\n"
 "                                    </div>\n"
 "                                    <t t-if=\"object.event_id.address_id.country_id.name\">\n"
-"                                        <div t-out=\"object.event_id.address_id.country_id.name\">Argentina</div>\n"
+"                                        <div t-out=\"object.event_id.address_id.country_id.name\">Argentine</div>\n"
 "                                        <t t-set=\"location\" t-valuef=\"{{location}}, {{object.event_id.address_id.country_id.name}}\"></t>\n"
 "                                    </t>\n"
 "                                </t>\n"
@@ -1193,12 +1195,12 @@ msgstr ""
 "                    <!-- CONTACT ORGANIZER -->\n"
 "                    <t t-if=\"event_organizer\">\n"
 "                        <div>\n"
-"                            <span style=\"font-weight:300;margin:10px 0px\">Des questions sur cet événement ?</span>\n"
+"                            <span style=\"font-weight:300;margin:10px 0px\">Des questions concernant cet événement ?</span>\n"
 "                            <div>Veuillez contacter l'organisateur :</div>\n"
 "                            <ul>\n"
 "                                <li><t t-out=\"event_organizer.name or ''\">YourCompany</t></li>\n"
 "                                <t t-if=\"event_organizer.email\">\n"
-"                                    <li>Email : <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email\">info@yourcompany.com</a></li>\n"
+"                                    <li>E-mail : <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email\">info@yourcompany.com</a></li>\n"
 "                                </t>\n"
 "                                <t t-if=\"event_organizer.phone\">\n"
 "                                    <li>Téléphone : <t t-out=\"event_organizer.phone\">+1 650-123-4567</t></li>\n"
@@ -1673,7 +1675,7 @@ msgstr ""
 "                            <ul>\n"
 "                                <li><t t-out=\"event_organizer.name or ''\">YourCompany</t></li>\n"
 "                                <t t-if=\"event_organizer.email\">\n"
-"                                    <li>Email : <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
+"                                    <li>E-mail : <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
 "                                </t>\n"
 "                                <t t-if=\"event_organizer.phone\">\n"
 "                                    <li>Téléphone : <t t-out=\"event_organizer.phone\">+1 650-123-4567</t></li>\n"
@@ -1858,7 +1860,7 @@ msgid ""
 "All the communication emails sent to attendees will be translated in this "
 "language."
 msgstr ""
-"Tous les emails de communication envoyés aux participants seront traduits "
+"Tous les e-mails de communication envoyés aux participants seront traduits "
 "dans cette langue."
 
 #. module: event
@@ -2235,7 +2237,7 @@ msgstr "Nom de la société"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "Compose Email"
-msgstr "Rédiger un email"
+msgstr "Rédiger un e-mail"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_3_tag_2
@@ -2370,7 +2372,7 @@ msgstr "Client"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "Customer Email"
-msgstr "Email client"
+msgstr "E-mail client"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
@@ -2470,12 +2472,12 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__email
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: event
 #: model:ir.model,name:event.model_mail_template
 msgid "Email Templates"
-msgstr "Modèles d'email"
+msgstr "Modèles d'e-mail"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2628,7 +2630,7 @@ msgstr ""
 "Échec avec erreur :\n"
 "  - %(error)s\n"
 "\n"
-"Vous recevez cet email parce que vous êtes :\n"
+"Vous recevez cet e-mail parce que vous êtes :\n"
 "  - l'organisateur de l'événement,\n"
 "  - ou le responsable de l'événement,\n"
 "  - ou le dernier auteur du modèle.\n"
@@ -3134,7 +3136,7 @@ msgstr "En cours"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Insert dynamic Google Maps in your email templates"
-msgstr "Insérer Google Maps dynamique dans vos modèles d'email"
+msgstr "Insérer Google Maps dynamique dans vos modèles d'e-mail"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -4026,7 +4028,7 @@ msgid ""
 "confirmation emails, sell tickets, etc."
 msgstr ""
 "Programmez et organisez vos événements : gérez les inscriptions, envoyez des"
-" emails de confirmation automatisés, vendez des tickets, etc."
+" e-mails de confirmation automatisés, vendez des tickets, etc."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__scheduled
@@ -4074,7 +4076,7 @@ msgstr "Envoyer"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Send by Email"
-msgstr "Envoyer par email"
+msgstr "Envoyer par e-mail"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_done
@@ -4965,7 +4967,7 @@ msgstr "ou"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "organizer@email.com"
-msgstr "organizer@email.com"
+msgstr "organizer@e-mail.com"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_started

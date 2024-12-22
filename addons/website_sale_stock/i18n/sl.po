@@ -10,6 +10,7 @@
 # Grega Vavtar <grega@hbs.si>, 2023
 # Ethan Vincent, 2024
 # Lancelot Semal, 2024
+# Gregor Flajs, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Lancelot Semal, 2024\n"
+"Last-Translator: Gregor Flajs, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,7 +119,7 @@ msgstr ""
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Out of Stock"
-msgstr ""
+msgstr "Ni na zalogi"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -204,21 +205,21 @@ msgstr ""
 #: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "The item has not been added to your cart since it is not available."
-msgstr ""
+msgstr "Izdelka ni bilo mogoče dodati v vašo košarico, ker ni na voljo."
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/models/product_product.py:0
 #, python-format
 msgid "The product '%(product_name)s' is now available"
-msgstr ""
+msgstr "Izdelek '%(product_name)s' je zdaj na voljo"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "This product is out of stock."
-msgstr ""
+msgstr "Ta izdelek ni objavljen"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -242,7 +243,7 @@ msgstr "Skladišče"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "We'll notify you once the product is back in stock."
-msgstr ""
+msgstr "Ko bo izdelek spet na zalogi, vas bomo obvestili."
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
@@ -267,7 +268,7 @@ msgstr "Dodali ste že"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added all the available product in your cart."
-msgstr ""
+msgstr "V košarico ste že dodali vse razpoložljive izdelke."
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -278,8 +279,16 @@ msgstr ""
 
 #. module: website_sale_stock
 #. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr ""
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr ""

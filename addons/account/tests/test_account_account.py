@@ -175,7 +175,7 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         self.assertEqual(account.name, "Existing Account")
 
     def test_compute_account_type(self):
-        existing_account = self.env['account.account'].search([], limit=1)
+        existing_account = self.company_data['default_account_revenue']
         # account_type should be computed
         new_account_code = self.env['account.account']._search_new_account_code(
             company=existing_account.company_id,
@@ -456,3 +456,87 @@ class TestAccountAccount(AccountTestInvoicingCommon):
             {'account_id': account.id,              'balance': 1000.0,  'amount_currency': 2000.0},
             {'account_id': account.id,              'balance': -1000.0, 'amount_currency': -2000.0},
         ])
+
+    def test_account_group_hierarchy_consistency(self):
+        """ Test if the hierarchy of account groups is consistent when creating, deleting and recreating an account group """
+        def create_account_group(name, code_prefix, company):
+            return self.env['account.group'].create({
+                'name': name,
+                'code_prefix_start': code_prefix,
+                'code_prefix_end': code_prefix,
+                'company_id': company.id
+            })
+
+        group_1 = create_account_group('group_1', 1, self.env.company)
+        group_10 = create_account_group('group_10', 10, self.env.company)
+        group_100 = create_account_group('group_100', 100, self.env.company)
+        group_101 = create_account_group('group_101', 101, self.env.company)
+
+        self.assertEqual(len(group_1.parent_id), 0)
+        self.assertEqual(group_10.parent_id, group_1)
+        self.assertEqual(group_100.parent_id, group_10)
+        self.assertEqual(group_101.parent_id, group_10)
+
+        # Delete group_101 and recreate it
+        group_101.unlink()
+        group_101 = create_account_group('group_101', 101, self.env.company)
+
+        self.assertEqual(len(group_1.parent_id), 0)
+        self.assertEqual(group_10.parent_id, group_1)
+        self.assertEqual(group_100.parent_id, group_10)
+        self.assertEqual(group_101.parent_id, group_10)
+
+        # The root becomes a child and vice versa
+        group_3 = create_account_group('group_3', 3, self.env.company)
+        group_31 = create_account_group('group_31', 31, self.env.company)
+        group_3.code_prefix_start = 312
+        self.assertEqual(len(group_31.parent_id), 0)
+        self.assertEqual(group_3.parent_id, group_31)
+
+    def test_muticompany_account_groups(self):
+        """
+            Ensure that account groups are always in a root company
+            Ensure that accounts and account groups from a same company tree match
+        """
+
+        branch_company = self.env['res.company'].create({
+            'name': 'Branch Company',
+            'parent_id': self.env.company.id,
+        })
+
+        parent_group = self.env['account.group'].create({
+            'name': 'Parent Group',
+            'code_prefix_start': '123',
+            'code_prefix_end': '124'
+        })
+        child_group = self.env['account.group'].with_company(branch_company).create({
+            'name': 'Child Group',
+            'code_prefix_start': '125',
+            'code_prefix_end': '126',
+        })
+        self.assertEqual(
+            child_group.company_id,
+            child_group.company_id.root_id,
+            "company_id should never be a branch company"
+        )
+
+        branch_account = self.env['account.account'].with_company(branch_company).create({
+            'name': 'Branch Account',
+            'code': '1234',
+        })
+        self.assertEqual(
+            branch_account.group_id,
+            parent_group,
+            "group_id computation should work for accounts that are not in the root company"
+        )
+
+        parent_account = self.env['account.account'].create({
+            'name': 'Parent Account',
+            'code': '1235'
+        })
+        parent_account.with_company(branch_company).code = '1256'
+        self.assertEqual(
+            parent_account.with_company(branch_company).group_id,
+            child_group,
+            "group_id computation should work if company_id is not in self.env.companies"
+        )

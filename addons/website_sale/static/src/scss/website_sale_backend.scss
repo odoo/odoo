@@ -65,3 +65,16 @@
         }
     }
 }
+
+// This is an ugly workaround to prevent the div content from overflowing
+.o_form_sheet > div.float-start {
+    float: none !important;
+
+    .o_inner_group {
+        padding-right: $spacer;
+
+        @include media-breakpoint-up(md) {
+            width: 50%;
+        }
+    }
+}

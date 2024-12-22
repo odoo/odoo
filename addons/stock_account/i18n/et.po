@@ -17,16 +17,17 @@
 # Eneli Õigus <enelioigus@gmail.com>, 2023
 # Piia Paurson <piia@avalah.ee>, 2023
 # Martin Aavastik <martin@avalah.ee>, 2023
-# Anna, 2023
 # Leaanika Randmets, 2023
+# Stevin Lilla, 2024
+# Anna, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Leaanika Randmets, 2023\n"
+"Last-Translator: Anna, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -433,7 +434,7 @@ msgstr "Sisenev"
 #: model:ir.actions.act_window,name:stock_account.inventory_aging_action
 #: model:ir.ui.menu,name:stock_account.menu_inventory_aging
 msgid "Inventory Aging"
-msgstr ""
+msgstr "Väheliikuvad kaubad"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -636,7 +637,7 @@ msgstr "Ümberhindamine põhjus"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__warehouse_id
 msgid "Receipt WH"
-msgstr ""
+msgstr "Lao kviitung"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__reference
@@ -1097,6 +1098,17 @@ msgid ""
 " You must define one before processing this operation."
 msgstr ""
 "Teil ei ole ühtegi sisendkontot määratud tootekategooriale. Jätkamiseks "
+"peate määrama vähemalt ühe. "
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"You don't have any output valuation account defined on your product "
+"category. You must define one before processing this operation."
+msgstr ""
+"Teil ei ole ühtegi väljundkontot määratud tootekategooriale. Jätkamiseks "
 "peate määrama vähemalt ühe. "
 
 #. module: stock_account

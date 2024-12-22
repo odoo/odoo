@@ -5,6 +5,7 @@
 # Translators:
 # Iran Villalobos López, 2024
 # Lucia Pacheco, 2024
+# Martin Trigaux, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Wil Odoo, 2024
 # Fernanda Alvarez, 2024
@@ -13,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -483,9 +484,7 @@ msgstr "<span name=\"failed_text\">correo(s) no enviado(s).</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"failed_text\">emails could not be sent.</span>"
-msgstr ""
-"<span name=\"failed_text\">No se pudieron enviar los correos "
-"electrónicos.</span>"
+msgstr "<span name=\"failed_text\">correos que no se pudieron enviar.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -534,12 +533,12 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"sent\">emails have been sent.</span>"
-msgstr "<span name=\"sent\">se enviaron los correos.</span>"
+msgstr "<span name=\"sent\">correos enviados.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.digest_mail_main
-msgid "<span style=\"color: #8f8f8f;\">Turn off Mailing Reports</span>"
-msgstr "<span style=\"color: #8f8f8f;\">Desactivar correos de reportes</span>"
+msgid "<span style=\"color: #878d97;\">Turn off Mailing Reports</span>"
+msgstr "<span style=\"color: #878d97;\">Desactivar reportes de correo</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_alert
@@ -697,7 +696,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "A sample of"
-msgstr "Un ejemplo de"
+msgstr "Un grupo con el"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_showcase
@@ -805,7 +804,7 @@ msgstr "Actividades"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decoración de actividad de excepción"
+msgstr "Decoración de la actividad de excepción"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_state
@@ -1688,7 +1687,7 @@ msgstr "Continuar leyendo <i class=\"fa fa-long-arrow-right align-middle ms-1\"/
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Could not retrieve URL: %s"
-msgstr "No se pudo recuperar el URL: %s"
+msgstr "No se pudo recuperar la URL: %s"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_bounce
@@ -1854,7 +1853,7 @@ msgid ""
 "message. Click on the picture to change its <em>rounded corner</em> style."
 msgstr ""
 "Elimine la imagen anterior o reemplácela por otra que ilustre su mensaje. "
-"Haga clic en la imagen para cambiar su <em> esquina redondeada</em>."
+"Haga clic en la imagen para cambiar su <em>esquina redondeada</em>."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__delivered
@@ -2057,7 +2056,7 @@ msgstr "En la lista de exclusión de correos electrónicos"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Email Content"
-msgstr "Contenido de correo"
+msgstr "Contenido del correo"
 
 #. module: mass_mailing
 #. odoo-python
@@ -2185,7 +2184,7 @@ msgstr "Motivo del error"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__failure_type
 msgid "Failure type"
-msgstr "Tipo de fallo"
+msgstr "Tipo de error"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__favorite
@@ -2395,6 +2394,11 @@ msgid "Group By..."
 msgstr "Agrupar por..."
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_http
+msgid "HTTP Routing"
+msgstr "Enrutamiento HTTP"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__has_message
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__has_message
 msgid "Has Message"
@@ -2433,22 +2437,22 @@ msgstr "Este es el código de su cupón, ¡pero apúrese! Termina el 28/9"
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__utm_campaign__ab_testing_winner_selection__clicks_ratio
 msgid "Highest Click Rate"
-msgstr "Mayor índice de clics"
+msgstr "Mayor tasa de clics"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__utm_campaign__ab_testing_winner_selection__opened_ratio
 msgid "Highest Open Rate"
-msgstr "Mayor índice de aperturas"
+msgstr "Mayor tasa de apertura"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__utm_campaign__ab_testing_winner_selection__replied_ratio
 msgid "Highest Reply Rate"
-msgstr "Mayor índice de respuestas"
+msgstr "Mayor tasa de respuesta"
 
 #. module: mass_mailing
 #: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_1
 msgid "I changed my mind"
-msgstr "Cambie de opinión"
+msgstr "Cambié de opinión"
 
 #. module: mass_mailing
 #: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_0
@@ -2504,8 +2508,7 @@ msgstr "Icono que indica una actividad de excepción."
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr ""
-"Si se encuentra seleccionado, hay nuevos mensajes que requieren de su "
-"atención."
+"Si se encuentra seleccionado, hay nuevos mensajes que requieren su atención."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__ab_testing_enabled
@@ -2525,8 +2528,7 @@ msgstr ""
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_has_error
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Si se encuentra seleccionado, algunos mensajes presentan error de entrega."
+msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_compose_message__mass_mailing_name
@@ -2544,8 +2546,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Si la dirección de correo electrónico está en la lista de exclusión, el "
-"contacto ya no recibirá correos masivos de ninguna lista. "
+"El contacto ya no recibirá correos masivos de ninguna lista si la dirección "
+"de correo electrónico está en la lista de exclusión."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
@@ -2796,7 +2798,7 @@ msgstr "Probemos la aplicación de Marketing por correo electrónico."
 #: model:ir.model,name:mass_mailing.model_link_tracker
 #: model:ir.ui.menu,name:mass_mailing.link_tracker_menu_mass_mailing
 msgid "Link Tracker"
-msgstr "Rastrear enlaces"
+msgstr "Rastreador de enlaces"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_link_tracker_click
@@ -2879,7 +2881,7 @@ msgstr "Marketing por correo: prueba A/B"
 #. module: mass_mailing
 #: model:ir.actions.server,name:mass_mailing.ir_cron_mass_mailing_queue_ir_actions_server
 msgid "Mail Marketing: Process queue"
-msgstr "Marketing por correo: fila del proceso"
+msgstr "Marketing por correo: procesar la cola"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_render_mixin
@@ -3105,12 +3107,12 @@ msgstr "Correos que se me han asignado"
 #. module: mass_mailing
 #: model:res.groups,name:mass_mailing.group_mass_mailing_campaign
 msgid "Manage Mass Mailing Campaigns"
-msgstr "Gestionar campañas de envíos masivos"
+msgstr "Gestione campañas de correo masivo."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Manage mass mailing campaigns"
-msgstr "Gestionar campañas de correo masivo"
+msgstr "Gestione campañas de correo masivo."
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__utm_campaign__ab_testing_winner_selection__manual
@@ -3219,7 +3221,7 @@ msgstr "Título del medio"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Medium"
-msgstr "Media"
+msgstr "Medio"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -3395,7 +3397,7 @@ msgstr "Se importaron nuevos contactos"
 #. module: mass_mailing
 #: model:utm.campaign,title:mass_mailing.mass_mail_campaign_1
 msgid "Newsletter"
-msgstr "Boletín de noticias"
+msgstr "Boletín informativo"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_calendar_event_id
@@ -3476,7 +3478,7 @@ msgstr "Sin personalización"
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mail_mail_statistics_mailing
 msgid "No data yet!"
-msgstr "¡No hay datos aún!"
+msgstr "Todavía no hay información"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_subscription_action_report_optout
@@ -3514,7 +3516,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
 msgid "No saved filter yet!"
-msgstr "Todavía no hay archivo guardado"
+msgstr "No hay ningún filtro guardado"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -3696,7 +3698,7 @@ msgstr "Abierto el"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__opened_ratio
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__opened_ratio
 msgid "Opened Ratio"
-msgstr "Proporción de apertura"
+msgstr "Tasa de apertura"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__opt_out
@@ -3739,7 +3741,7 @@ msgstr ""
 "Idioma de traducción opcional (código ISO) a seleccionar para el envío de "
 "correos electrónicos. Si no se selecciona esta opción, se utilizará la "
 "versión en inglés. Por lo general, se usa una expresión de marcador de "
-"posición para indicar el idioma adecuado, por ejemplo, ${{ "
+"posición para indicar el idioma adecuado, por ejemplo, {{ "
 "object.partner_id.lang }}."
 
 #. module: mass_mailing
@@ -3751,13 +3753,13 @@ msgstr "Excluirse"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_search
 msgid "Optout Reason"
-msgstr "Motivo de la exlcusión"
+msgstr "Motivo de la exclusión"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_subscription_optout_action
 #: model:ir.ui.menu,name:mass_mailing.mailing_subscription_optout_menu
 msgid "Optout Reasons"
-msgstr "Motivos de la exlcusión"
+msgstr "Motivos de la exclusión"
 
 #. module: mass_mailing
 #: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_4
@@ -4132,7 +4134,7 @@ msgstr "Restaurar"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Retry"
-msgstr "Reintentar"
+msgstr "Volver a intentar"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_hr_options
@@ -4150,7 +4152,7 @@ msgstr "Esquinas redondeadas"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_has_sms_error
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Error al enviar SMS"
+msgstr "Error en el envío del SMS"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
@@ -4192,7 +4194,7 @@ msgstr "Planeado"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__scheduled_date
 msgid "Scheduled Date"
-msgstr "Fecha prevista"
+msgstr "Fecha programada"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_tree
@@ -4207,7 +4209,7 @@ msgstr "Periodo programado"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__next_departure
 msgid "Scheduled date"
-msgstr "Hora prevista"
+msgstr "Fecha programada"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__schedule_date
@@ -4279,7 +4281,7 @@ msgstr "Seleccione las listas de correo..."
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Select mailing lists:"
-msgstr "Seleccione las listas de correo:"
+msgstr "Listas de correo seleccionadas:"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__ab_testing_winner_selection
@@ -4297,12 +4299,12 @@ msgstr "Enviar"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ab_testing_schedule_datetime
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__ab_testing_schedule_datetime
 msgid "Send Final On"
-msgstr "Enviar final en"
+msgstr "Enviar final el"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__email_from
 msgid "Send From"
-msgstr "Enviado desde"
+msgstr "Enviar desde"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
@@ -4352,7 +4354,7 @@ msgstr "Enviar el"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send test"
-msgstr "Enviar cuestionario "
+msgstr "Enviar prueba"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__state__sending
@@ -4624,7 +4626,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features
 msgid "Tell what's the value for the customer for this feature."
-msgstr "Indique cuál es el valor para el cliente para esta característica."
+msgstr "Mencione el valor de esta característica para el cliente."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -4820,8 +4822,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
-"Este correo electrónico está en la lista negra para envíos masivos. Haga "
-"clic para eliminarlo de la lista negra."
+"Este correo está en la lista de exclusión para envíos masivos. Haga clic "
+"para eliminarlo de esa lista."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__email_normalized
@@ -4831,7 +4833,7 @@ msgid ""
 msgstr ""
 "Este campo se utiliza para buscar en la dirección de correo electrónico, ya "
 "que el campo de correo electrónico principal puede contener más de una "
-"dirección de correo electrónico."
+"dirección."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_res_config_settings__group_mass_mailing_campaign
@@ -4884,8 +4886,8 @@ msgid ""
 " one as a copy."
 msgstr ""
 "Para agregar una cuarta columna, reduzca el tamaño de estas tres columnas "
-"mediante el icono adecuado de cada bloque. Luego duplique una de las "
-"columnas para crear una nueva como copia."
+"con el icono correspondiente de cada bloque y luego duplique una para crear "
+"una nueva como copia."
 
 #. module: mass_mailing
 #. odoo-python
@@ -5072,10 +5074,9 @@ msgid ""
 "or right-aligned image alongside textual content. Duplicate the element to "
 "create a list that fits your needs."
 msgstr ""
-"Utilice este snippet para crear varios tipos de componentes que presenten "
-"una imagen alineada a la izquierda o a la derecha junto con un contenido de "
-"texto. Duplique los elementos para crear una lista que se adecue a sus "
-"necesidades."
+"Utilice este snippet para crear varios tipos de componentes que incluyan una"
+" imagen alineada a la izquierda o a la derecha y texto. Duplique los "
+"elementos para crear una lista que se adapte a sus necesidades."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_numbers
@@ -5144,15 +5145,15 @@ msgid ""
 " back please accept this 20% discount on you next purchase by clicking the "
 "button."
 msgstr ""
-" ¡Continuamos creciendo y queremos que formes parte de ello! Hemos "
-"incrementado las horas de atención y tenemos muchas nuevas marcas "
-"disponibles. Para agradecer que volviste acepta este 20% de descuento en tu "
-"próxima compra, solo tienes que dar clic al botón."
+"¡Seguimos creciendo y queremos que seas parte de ello! Hemos incrementado "
+"las horas de atención y tenemos muchas nuevas marcas disponibles. "
+"Agradecemos que hayas vuelto y te otorgamos 20% de descuento en tu próxima "
+"compra, solo haz clic en el botón."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_references
 msgid "We are in good company."
-msgstr "Tenemos buena compañía."
+msgstr "Está en las mejores manos."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__website_message_ids

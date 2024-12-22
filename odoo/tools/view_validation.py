@@ -164,8 +164,6 @@ def _get_expression_contextual_values(item_ast):
 
     if isinstance(item_ast, ast.Constant):
         return set()
-    if isinstance(item_ast, ast.Str):
-        return set()
     if isinstance(item_ast, (ast.List, ast.Tuple)):
         values = set()
         for item in item_ast.elts:
@@ -264,9 +262,9 @@ def get_dict_asts(expr):
 
     if not isinstance(expr, ast.Dict):
         raise ValueError("Non-dict expression")
-    if not all(isinstance(key, ast.Str) for key in expr.keys):
+    if not all((isinstance(key, ast.Constant) and isinstance(key.value, str)) for key in expr.keys):
         raise ValueError("Non-string literal dict key")
-    return {key.s: val for key, val in zip(expr.keys, expr.values)}
+    return {key.value: val for key, val in zip(expr.keys, expr.values)}
 
 
 def _check(condition, explanation):

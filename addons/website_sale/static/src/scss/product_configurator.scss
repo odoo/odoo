@@ -50,6 +50,10 @@
         display: block;
     }
 
+    .availability_messages {
+        display: none;
+    }
+
     .js_add,
     .oe_price,
     .oe_default_price,
@@ -80,11 +84,18 @@ option.css_not_available {
 $-arrow-url: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='175' height='100' fill='#000'><polygon points='0,0 100,0 50,50'/></svg>");
 
 select.form-select.css_attribute_select {
-    background-image: str-replace($-arrow-url, "#000", str-replace(#{$input-color}, "#", "%23"));
-    background-size: 20px;
-    background-position: 100% 65%;
-    background-repeat: no-repeat;
     max-width: 400px;
+
+    &:not([multiple]):where(:not([size]), [size="1"]) {
+        background-image: str-replace($-arrow-url, "#000", str-replace(#{$input-color}, "#", "%23"));
+        background-size: 20px;
+        background-position: 100% 65%;
+        background-repeat: no-repeat;
+
+        &:disabled {
+            background-image: str-replace($-arrow-url, "#000", str-replace(#{$form-select-disabled-color}, "#", "%23"));
+        }
+    }
 }
 // In the case of a modal, we cannot rely on '$input-color' to define the color
 // of the select arrow because '$input-color' is set based on the background
@@ -237,6 +248,12 @@ label.css_attribute_color.css_not_available {
 
 .modal.o_technical_modal .oe_advanced_configurator_modal .btn.js_add_cart_json {
     padding: 0.075rem 0.75rem;
+}
+
+@include media-breakpoint-down(md) {
+    .oe_advanced_configurator_modal th.td-img + th {
+        display: none;
+    }
 }
 
 .js_product {

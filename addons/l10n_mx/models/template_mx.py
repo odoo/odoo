@@ -18,7 +18,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_account_input_categ_id': 'cuenta205_06_01',
             'property_stock_account_output_categ_id': 'cuenta107_05_01',
             'property_stock_valuation_account_id': 'cuenta115_01',
-            'property_cash_basis_base_account_id': 'cuenta801_01_99',
         }
 
     @template('mx', 'res.company')
@@ -33,11 +32,13 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'cuenta105_02',
                 'income_currency_exchange_account_id': 'cuenta702_01',
                 'expense_currency_exchange_account_id': 'cuenta701_01',
+                'deferred_expense_account_id': 'cuenta173_01',
                 'account_journal_early_pay_discount_loss_account_id': 'cuenta9993',
                 'account_journal_early_pay_discount_gain_account_id': 'cuenta9994',
                 'tax_cash_basis_journal_id': 'cbmx',
                 'account_sale_tax_id': 'tax12',
                 'account_purchase_tax_id': 'tax14',
+                'account_cash_basis_base_account_id': 'cuenta801_01_99',
             },
         }
 

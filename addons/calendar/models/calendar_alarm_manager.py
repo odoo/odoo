@@ -2,9 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from datetime import timedelta, datetime
+from datetime import timedelta
 from dateutil.relativedelta import relativedelta
-from pytz import UTC
 
 from odoo import api, fields, models
 from odoo.tools import plaintext2html
@@ -41,7 +40,7 @@ class AlarmManager(models.AbstractModel):
                         END as last_alarm,
                         cal.start as first_event_date,
                         CASE
-                            WHEN cal.recurrency THEN rrule.until
+                            WHEN cal.recurrency AND end_type = 'end_date' THEN rrule.until
                             ELSE cal.stop
                         END as last_event_date,
                         calcul_delta.min_delta,
@@ -153,7 +152,7 @@ class AlarmManager(models.AbstractModel):
         already.
         """
         lastcall = self.env.context.get('lastcall', False) or fields.date.today() - relativedelta(weeks=1)
-        now = datetime.now(tz=UTC)
+        now = fields.Datetime.now()
         self.env.cr.execute('''
             SELECT "alarm"."id", "event"."id"
               FROM "calendar_event" AS "event"
@@ -182,12 +181,14 @@ class AlarmManager(models.AbstractModel):
 
         event_ids = list(set(event_id for event_ids in events_by_alarm.values() for event_id in event_ids))
         events = self.env['calendar.event'].browse(event_ids)
-        attendees = events.attendee_ids.filtered(lambda a: a.state != 'declined')
+        now = fields.Datetime.now()
+        attendees = events.filtered(lambda e: e.stop > now).attendee_ids.filtered(lambda a: a.state != 'declined')
         alarms = self.env['calendar.alarm'].browse(events_by_alarm.keys())
         for alarm in alarms:
             alarm_attendees = attendees.filtered(lambda attendee: attendee.event_id.id in events_by_alarm[alarm.id])
             alarm_attendees.with_context(
-                calendar_template_ignore_recurrence=True
+                calendar_template_ignore_recurrence=True,
+                mail_notify_author=True,
             )._send_mail_to_attendees(
                 alarm.mail_template_id,
                 force_send=True
@@ -196,7 +197,10 @@ class AlarmManager(models.AbstractModel):
         for event in events:
             if event.recurrence_id:
                 next_date = event.get_next_alarm_date(events_by_alarm)
-                event.recurrence_id.with_context(date=next_date)._setup_alarms()
+                # In cron, setup alarm only when there is a next date on the target. Otherwise the 'now()'
+                # check in the call below can generate undeterministic behavior and setup random alarms.
+                if next_date:
+                    event.recurrence_id.with_context(date=next_date)._setup_alarms()
 
     @api.model
     def get_next_notif(self):

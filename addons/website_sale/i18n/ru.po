@@ -15,18 +15,20 @@
 # Sergey Vilizhanin, 2023
 # Максим Дронь <dronmax@gmail.com>, 2023
 # ILMIR <karamov@it-projects.info>, 2023
-# Collex100, 2023
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2023
 # Martin Trigaux, 2023
 # Vasiliy Korobatov <korobatov@gmail.com>, 2023
 # Сергей Шебанин <sergey@shebanin.ru>, 2024
+# Collex100, 2024
+# Alexey Korepov <murznn@gmail.com>, 2024
+# Nadia Martynova, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -62,7 +64,6 @@ msgstr "%s отзывы"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "&amp; Доставка"
 
@@ -139,7 +140,6 @@ msgstr "<b>Прайс-лист</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<b>Shipping: </b>"
 msgstr "<b>Доставка: </b>"
 
@@ -543,11 +543,6 @@ msgstr ""
 "            "
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "<u class=\"h5\">Documents</u>"
-msgstr "<u class=\"h5\">Документы</u>"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
 msgid "<u>Terms and Conditions</u>"
 msgstr "<u>Условия и положения</u>"
@@ -933,7 +928,6 @@ msgstr "Большой"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Billing"
 msgstr "Биллинг"
 
@@ -1038,22 +1032,6 @@ msgstr "Можно ли увеличить изображение 1024"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
 msgid "Can Publish"
 msgstr "Можно опубликовать"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence a video at first position."
-msgstr "Невозможно повторно скомпоновать видео в первой позиции."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence embedded image/video with a non compatible image."
-msgstr ""
-"Невозможно повторно скомпоновать встроенное изображение/видео с "
-"несовместимым изображением."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1308,6 +1286,11 @@ msgstr "Компоненты"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping cost and ship with Easypost"
 msgstr "Рассчитайте стоимость доставки и отправьте с помощью Easypost"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Compute shipping cost and ship with Shiprocket"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1647,7 +1630,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_description
 msgid "Description for Online Quotations"
-msgstr "Описание для онлайн-котировок"
+msgstr "Описание для Онлайн-предложения"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_description
@@ -1752,6 +1735,11 @@ msgstr ""
 #, python-format
 msgid "Do you wish to clear your cart before adding products to it?"
 msgstr "Вы хотите очистить корзину перед добавлением в нее товаров?"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "Documents"
+msgstr "Документы"
 
 #. module: website_sale
 #. odoo-python
@@ -2416,7 +2404,7 @@ msgstr "Line Subtotals Tax Display"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__linked_line_id
 msgid "Linked Order Line"
-msgstr "Связанная линия заказов"
+msgstr "Связанная позиция заказа"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
@@ -2638,6 +2626,13 @@ msgstr ""
 "информации."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+#, python-format
+msgid "No shipping method is selected."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__none
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "None"
@@ -2807,7 +2802,7 @@ msgstr "Дата заказа"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__website_order_line
 msgid "Order Lines displayed on Website"
-msgstr "Строки заказов отображаются на сайте"
+msgstr "Позиции заказов отображаются на сайте"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -2854,11 +2849,6 @@ msgid "Pay now"
 msgstr "Оплатить сейчас"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment
-msgid "Pay with"
-msgstr "Оплатить"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
@@ -2881,6 +2871,11 @@ msgid "Payment Providers"
 msgstr ""
 "Выберите поставщиков платежных услуг и включите способы оплаты при "
 "оформлении заказа"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_token
+msgid "Payment Token"
+msgstr "Платежный токен"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
@@ -3705,6 +3700,16 @@ msgid "Shipping address"
 msgstr "Адрес доставки"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket"
+msgstr "Корабельная ракета"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket Shipping Methods"
+msgstr "Способы доставки Shiprocket"
+
+#. module: website_sale
 #: model:website.menu,name:website_sale.menu_shop
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Shop"
@@ -3974,7 +3979,7 @@ msgstr "Спасибо за ваш заказ."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
 msgid "The #1"
-msgstr "1 секунда"
+msgstr "Номер один"
 
 #. module: website_sale
 #. odoo-python
@@ -4579,6 +4584,13 @@ msgstr ""
 "                                            Если вы хотите изменить адрес доставки, создайте"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
+msgstr "Нельзя использовать видео в качестве основного изображения продукта."
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -4625,6 +4637,15 @@ msgstr "Ваш Email"
 #, python-format
 msgid "Your Name"
 msgstr "Ваше имя"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid ""
+"Your account is not allowed to pay in company %s. Please log out and create "
+"a new account for this website, or contact the website administrator."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -4716,6 +4737,11 @@ msgstr "продажи в сфере электронной коммерции"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Shop"
 msgstr "магазин электронной коммерции"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
+msgid "eCommerce cart"
+msgstr "корзина электронной коммерции"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server

@@ -137,6 +137,9 @@
             <field name="arch" type="xml">
                 <form string="Currency">
                     <field name="is_current_company_currency" invisible="1"/>
+                    <div class="alert alert-info text-center" role="alert" groups="base.group_no_one">
+                        You cannot reduce the number of decimal places of a currency already used on an accounting entry.
+                    </div>
                     <div class="alert alert-info text-center" role="alert" invisible="not is_current_company_currency">
                         This is your company's currency.
                     </div>
@@ -156,7 +159,7 @@
 
                         <group groups="base.group_no_one">
                             <group string="Price Accuracy">
-                                <field name="rounding" readonly="id"/>
+                                <field name="rounding"/>
                                 <field name="decimal_places"/>
                             </group>
 

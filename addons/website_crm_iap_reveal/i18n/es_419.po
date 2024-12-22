@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Iran Villalobos López, 2023
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Iran Villalobos López, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,8 +111,8 @@ msgstr "Crear una regla de conversión"
 msgid ""
 "Create rules to generate B2B leads/opportunities from your website visitors."
 msgstr ""
-"Defina reglas para generar leads/oportunidades B2B a partir de los "
-"visitantes de su sitio web."
+"Cree reglas para generar leads u oportunidades B2B con los visitantes de su "
+"sitio web."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__create_uid
@@ -140,7 +141,7 @@ msgstr "Nombre en pantalla"
 #: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Enter Valid Regex."
-msgstr "Ingrese la expresión regular válida."
+msgstr "Escriba una expresión regular válida."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__contact_filter_type
@@ -236,7 +237,7 @@ msgstr "Regla de generación de leads"
 #: model:ir.actions.act_window,name:website_crm_iap_reveal.crm_reveal_view_action
 #: model:ir.ui.menu,name:website_crm_iap_reveal.crm_reveal_view_menu_action
 msgid "Lead Generation Views"
-msgstr "Opiniones sobre la generación de leads"
+msgstr "Vistas de generación de leads"
 
 #. module: website_crm_iap_reveal
 #: model:ir.actions.server,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead_ir_actions_server
@@ -360,9 +361,10 @@ msgid ""
 "to target the homepage. Example: /page* to track all the pages which begin "
 "with /page"
 msgstr ""
-"Expresión regular para rastrear las páginas del sitio web. Déjelo vacío para"
-" rastrear todo el sitio web, o para dirigirse a la página de inicio. Por "
-"ejemplo: /page* para rastrear todas las páginas que empiezan por /page"
+"Expresión regular para rastrear las páginas del sitio web. Déjela vacía para"
+" rastrearlo por completo o use / para tener la página principal como "
+"objetivo. Por ejemplo: /page* para rastrear todas las páginas que inician "
+"con /page."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__website_id
@@ -382,7 +384,7 @@ msgstr "Regla"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__name
 msgid "Rule Name"
-msgstr "Nombre de regla"
+msgstr "Nombre de la regla"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__team_id
@@ -397,7 +399,7 @@ msgstr "Vendedor"
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_view_search
 msgid "Search CRM Reveal Rule"
-msgstr "Buscar la regla revelatoria del CRM"
+msgstr "Buscar regla de revelación de CRM"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__seniority_id
@@ -437,10 +439,10 @@ msgid ""
 "criteria. Their details will show up in the history thread of generated "
 "leads/opportunities. One credit is consumed per tracked contact."
 msgstr ""
-"Este es el número de contactos que hay que rastrear si su función/antigüedad"
-" coinciden con sus criterios. Sus datos aparecerán en el hilo del historial "
-"de leads/oportunidades generadas. Se consume un crédito por cada contacto "
-"rastreado."
+"Este es el número de contactos que hay que rastrear si su función o "
+"antigüedad coinciden con sus criterios. Los datos aparecerán en el hilo del "
+"historial de leads u oportunidades generadas. Se consume un crédito por cada"
+" contacto rastreado."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__suffix
@@ -448,8 +450,8 @@ msgid ""
 "This will be appended in name of generated lead so you can identify "
 "lead/opportunity is generated with this rule"
 msgstr ""
-"Se añadirá al nombre del lead generado para que pueda identificar el "
-"lead/oportunidad con esta regla."
+"Se agregará al nombre del lead generado para que pueda identificar que el "
+"lead u oportunidad se creó con esta regla."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_view__reveal_state__to_process
@@ -477,8 +479,8 @@ msgid ""
 "Used to order the rules with same URL and countries. Rules with a lower "
 "sequence number will be processed first."
 msgstr ""
-"Se utiliza para ordenar las reglas con la misma URL y países. Se procesarán "
-"primero las reglas con un número de secuencia más bajo."
+"Se utiliza para ordenar las reglas con la misma URL y países. Las reglas con"
+" un número de secuencia más bajo se procesarán primero."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__priority__3
@@ -489,7 +491,7 @@ msgstr "Muy alta"
 #: model:ir.actions.act_window,name:website_crm_iap_reveal.crm_reveal_rule_action
 #: model:ir.ui.menu,name:website_crm_iap_reveal.crm_reveal_rule_menu_action
 msgid "Visits to Leads Rules"
-msgstr "Reglas de las visitas a los leads"
+msgstr "Reglas de visitas a leads"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__website_id
@@ -505,17 +507,17 @@ msgstr "Condiciones de tráfico del sitio web"
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "additional credit(s) are consumed if the company matches this rule."
 msgstr ""
-"se consumirán créditos adicionales si la empresa cumple con esta regla."
+"créditos adicionales se consumirán si la empresa cumple con esta regla."
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "e.g. /page"
-msgstr "p.ej. /página"
+msgstr "Por ejemplo, /pagina"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "e.g. US Visitors"
-msgstr "p.ej. visitantes de Estados Unidos"
+msgstr "Por ejemplo, visitantes de Estados Unidos"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form

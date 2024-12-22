@@ -7,8 +7,10 @@ from odoo import _, fields, models, modules, tools
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.exceptions import UserError
+from odoo.tools import split_every
 
 _logger = logging.getLogger(__name__)
+BATCH_SIZE = 50
 
 
 class AccountEdiProxyClientUser(models.Model):
@@ -84,7 +86,6 @@ class AccountEdiProxyClientUser(models.Model):
             }
         }
         for edi_user in self:
-            proxy_acks = []
             params['domain']['receiver_identifier'] = edi_user.edi_identification
             try:
                 # request all messages that haven't been acknowledged
@@ -105,76 +106,77 @@ class AccountEdiProxyClientUser(models.Model):
                 continue
 
             company = edi_user.company_id
-            # retrieve attachments for filtered messages
-            all_messages = edi_user._make_request(
-                f"{edi_user._get_server_url()}/api/peppol/1/get_document",
-                {'message_uuids': message_uuids},
-            )
+            journal = company.peppol_purchase_journal_id
+            # use the first purchase journal if the Peppol journal is not set up
+            # to create the move anyway
+            if not journal:
+                journal = self.env['account.journal'].search([
+                    *self.env['account.journal']._check_company_domain(company),
+                    ('type', '=', 'purchase')
+                ], limit=1)
 
-            for uuid, content in all_messages.items():
-                enc_key = content["enc_key"]
-                document_content = content["document"]
-                filename = content["filename"] or 'attachment' # default to attachment, which should not usually happen
-                partner_endpoint = content["accounting_supplier_party"]
-                decoded_document = edi_user._decrypt_data(document_content, enc_key)
-
-                journal_id = company.peppol_purchase_journal_id
-                # use the first purchase journal if the Peppol journal is not set up
-                # to create the move anyway
-                if not journal_id:
-                    journal_id = self.env['account.journal'].search([
-                        *self.env['account.journal']._check_company_domain(company),
-                        ('type', '=', 'purchase')
-                    ], limit=1)
-
-                attachment_vals = {
-                    'name': f'{filename}.xml',
-                    'raw': decoded_document,
-                    'type': 'binary',
-                    'mimetype': 'application/xml',
-                }
-
-                try:
-                    attachment = self.env['ir.attachment'].create(attachment_vals)
-                    move = journal_id\
-                        .with_context(
-                            default_move_type='in_invoice',
-                            default_peppol_move_state=content['state'],
-                            default_extract_can_show_send_button=False,
-                            default_peppol_message_uuid=uuid,
-                        )\
-                        ._create_document_from_attachment(attachment.id)
-                    if partner_endpoint:
-                        move._message_log(body=_(
-                            'Peppol document has been received successfully. Sender endpoint: %s', partner_endpoint))
-                    else:
-                        move._message_log(body=_('Peppol document has been received successfully'))
-                # pylint: disable=broad-except
-                except Exception:
-                    # if the invoice creation fails for any reason,
-                    # we want to create an empty invoice with the attachment
-                    move = self.env['account.move'].create({
-                        'move_type': 'in_invoice',
-                        'peppol_move_state': 'done',
-                        'company_id': company.id,
-                        'extract_can_show_send_button': False,
-                        'peppol_message_uuid': uuid,
-                    })
-                    attachment_vals.update({
-                        'res_model': 'account.move',
-                        'res_id': move.id,
-                    })
-                    self.env['ir.attachment'].create(attachment_vals)
-
-                proxy_acks.append(uuid)
-
-            if not tools.config['test_enable']:
-                self.env.cr.commit()
-            if proxy_acks:
-                edi_user._make_request(
-                    f"{edi_user._get_server_url()}/api/peppol/1/ack",
-                    {'message_uuids': proxy_acks},
+            for uuids in split_every(BATCH_SIZE, message_uuids):
+                proxy_acks = []
+                # retrieve attachments for filtered messages
+                all_messages = edi_user._make_request(
+                    f"{edi_user._get_server_url()}/api/peppol/1/get_document",
+                    {'message_uuids': uuids},
                 )
+
+                for uuid, content in all_messages.items():
+                    enc_key = content["enc_key"]
+                    document_content = content["document"]
+                    filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
+                    partner_endpoint = content["accounting_supplier_party"]
+                    decoded_document = edi_user._decrypt_data(document_content, enc_key)
+                    attachment_vals = {
+                        'name': f'{filename}.xml',
+                        'raw': decoded_document,
+                        'type': 'binary',
+                        'mimetype': 'application/xml',
+                    }
+
+                    try:
+                        attachment = self.env['ir.attachment'].create(attachment_vals)
+                        move = journal\
+                            .with_context(
+                                default_move_type='in_invoice',
+                                default_peppol_move_state=content['state'],
+                                default_peppol_message_uuid=uuid,
+                            )\
+                            ._create_document_from_attachment(attachment.id)
+                        if partner_endpoint:
+                            move._message_log(body=_(
+                                'Peppol document has been received successfully. Sender endpoint: %s', partner_endpoint))
+                        else:
+                            move._message_log(body=_('Peppol document has been received successfully'))
+                    # pylint: disable=broad-except
+                    except Exception:  # noqa: BLE001
+                        # if the invoice creation fails for any reason,
+                        # we want to create an empty invoice with the attachment
+                        move = self.env['account.move'].create({
+                            'move_type': 'in_invoice',
+                            'peppol_move_state': 'done',
+                            'company_id': company.id,
+                            'peppol_message_uuid': uuid,
+                        })
+                        attachment_vals.update({
+                            'res_model': 'account.move',
+                            'res_id': move.id,
+                        })
+                        self.env['ir.attachment'].create(attachment_vals)
+                    if 'is_in_extractable_state' in move._fields:
+                        move.is_in_extractable_state = False
+
+                    proxy_acks.append(uuid)
+
+                if not tools.config['test_enable']:
+                    self.env.cr.commit()
+                if proxy_acks:
+                    edi_user._make_request(
+                        f"{edi_user._get_server_url()}/api/peppol/1/ack",
+                        {'message_uuids': proxy_acks},
+                    )
 
     def _peppol_get_message_status(self):
         for edi_user in self:
@@ -186,37 +188,42 @@ class AccountEdiProxyClientUser(models.Model):
                 continue
 
             message_uuids = {move.peppol_message_uuid: move for move in edi_user_moves}
-            messages_to_process = edi_user._make_request(
-                f"{edi_user._get_server_url()}/api/peppol/1/get_document",
-                {'message_uuids': list(message_uuids.keys())},
-            )
+            for uuids in split_every(BATCH_SIZE, message_uuids.keys()):
+                messages_to_process = edi_user._make_request(
+                    f"{edi_user._get_server_url()}/api/peppol/1/get_document",
+                    {'message_uuids': uuids},
+                )
 
-            for uuid, content in messages_to_process.items():
-                if uuid == 'error':
-                    # this rare edge case can happen if the participant is not active on the proxy side
-                    # in this case we can't get information about the invoices
-                    edi_user_moves.peppol_move_state = 'error'
-                    log_message = _("Peppol error: %s", content['message'])
-                    edi_user_moves._message_log_batch(bodies=dict((move.id, log_message) for move in edi_user_moves))
-                    continue
+                for uuid, content in messages_to_process.items():
+                    if uuid == 'error':
+                        # this rare edge case can happen if the participant is not active on the proxy side
+                        # in this case we can't get information about the invoices
+                        edi_user_moves.peppol_move_state = 'error'
+                        log_message = _("Peppol error: %s", content['message'])
+                        edi_user_moves._message_log_batch(bodies={move.id: log_message for move in edi_user_moves})
+                        break
 
-                move = message_uuids[uuid]
-                if content.get('error'):
-                    move.peppol_move_state = 'error'
-                    move._message_log(body=_("Peppol error: %s", content['error']['message']))
-                    continue
+                    move = message_uuids[uuid]
+                    if content.get('error'):
+                        # "Peppol request not ready" error:
+                        # thrown when the IAP is still processing the message
+                        if content['error'].get('code') == 702:
+                            continue
 
-                move.peppol_move_state = content['state']
-                move._message_log(body=_('Peppol status update: %s', content['state']))
+                        move.peppol_move_state = 'error'
+                        move._message_log(body=_("Peppol error: %s", content['error']['message']))
+                        continue
 
-            if message_uuids:
+                    move.peppol_move_state = content['state']
+                    move._message_log(body=_('Peppol status update: %s', content['state']))
+
                 edi_user._make_request(
                     f"{edi_user._get_server_url()}/api/peppol/1/ack",
-                    {'message_uuids': list(message_uuids.keys())},
+                    {'message_uuids': uuids},
                 )
 
     def _cron_peppol_get_participant_status(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'pending')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ['pending', 'not_verified', 'sent_verification'])])
         edi_users._peppol_get_participant_status()
 
     def _peppol_get_participant_status(self):
@@ -228,5 +235,12 @@ class AccountEdiProxyClientUser(models.Model):
                 _logger.error('Error while updating Peppol participant status: %s', e)
                 continue
 
-            if proxy_user['peppol_state'] in {'active', 'rejected', 'canceled'}:
-                edi_user.company_id.account_peppol_proxy_state = proxy_user['peppol_state']
+            state_map = {
+                'active': 'active',
+                'verified': 'pending',
+                'rejected': 'rejected',
+                'canceled': 'canceled',
+            }
+
+            if proxy_user['peppol_state'] in state_map:
+                edi_user.company_id.account_peppol_proxy_state = state_map[proxy_user['peppol_state']]

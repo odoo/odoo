@@ -16,15 +16,15 @@
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2023
 # Henri Komulainen <henri.komulainen@web-veistamo.fi>, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -142,7 +142,7 @@ msgstr ""
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Campaigns that are assigned to me"
-msgstr ""
+msgstr "Minulle osoitetut kampanjat"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_christmas_special
@@ -391,7 +391,7 @@ msgstr "Mediat"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "My Campaigns"
-msgstr ""
+msgstr "Omat kampanjat"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source_mixin__name
@@ -558,6 +558,8 @@ msgid ""
 "Stages allow you to organize your workflow  (e.g. plan, design, in progress,"
 " done, …)."
 msgstr ""
+"Vaiheiden avulla voit järjestää työnkulun (esim. suunnitelma, suunnittelu, "
+"käynnissä, valmis, ...)."
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_tag__color
@@ -649,6 +651,8 @@ msgid ""
 "Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely"
 " content."
 msgstr ""
+"Seuraa tulevia tapahtumia (esim. joulu, musta perjantai, ...) ja julkaise "
+"oikea-aikaista sisältöä."
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_campaign
@@ -723,19 +727,28 @@ msgid "Use This For My Campaigns"
 msgstr "Käytä tätä kampanjoihini"
 
 #. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_source.py:0
+#, python-format
+msgid ""
+"You cannot update multiple records with the same name. The name should be "
+"unique!"
+msgstr ""
+
+#. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_form
 msgid "e.g. \"Brainstorming\""
-msgstr ""
+msgstr "esim. \"Aivoriihi\""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "e.g. \"Christmas Mailing\""
-msgstr ""
+msgstr "esim. \"Joulupostitus\""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
 msgid "e.g. \"Email\""
-msgstr ""
+msgstr "esim. \"Sähköposti\""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form

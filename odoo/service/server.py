@@ -16,6 +16,7 @@ import sys
 import threading
 import time
 import unittest
+from io import BytesIO
 from itertools import chain
 
 import psutil
@@ -148,6 +149,16 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
             return
         super().send_header(keyword, value)
 
+    def end_headers(self, *a, **kw):
+        super().end_headers(*a, **kw)
+        # At this point, Werkzeug assumes the connection is closed and will discard any incoming
+        # data. In the case of WebSocket connections, data should not be discarded. Replace the
+        # rfile/wfile of this handler to prevent any further action (compatibility with werkzeug >= 2.3.x).
+        # See: https://github.com/pallets/werkzeug/blob/2.3.x/src/werkzeug/serving.py#L334
+        if self.headers.get('Upgrade') == 'websocket':
+            self.rfile = BytesIO()
+            self.wfile = BytesIO()
+
 class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
     given by the environment, this is used by autoreload to keep the listen
@@ -165,7 +176,7 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
                 # If the value can't be parsed to an integer then it's computed in an automated way to
                 # half the size of db_maxconn because while most requests won't borrow cursors concurrently
                 # there are some exceptions where some controllers might allocate two or more cursors.
-                self.max_http_threads = config['db_maxconn'] // 2
+                self.max_http_threads = max((config['db_maxconn'] - config['max_cron_threads']) // 2, 1)
             self.http_threads_sem = threading.Semaphore(self.max_http_threads)
         super(ThreadedWSGIServerReloadable, self).__init__(host, port, app,
                                                            handler=RequestHandler)
@@ -264,7 +275,7 @@ class FSWatcherWatchdog(FSWatcherBase):
     def dispatch(self, event):
         if isinstance(event, (FileCreatedEvent, FileModifiedEvent, FileMovedEvent)):
             if not event.is_directory:
-                path = getattr(event, 'dest_path', event.src_path)
+                path = getattr(event, 'dest_path', '') or event.src_path
                 self.handle_file(path)
 
     def start(self):
@@ -1299,6 +1310,7 @@ def preload_registries(dbnames):
     for dbname in dbnames:
         try:
             update_module = config['init'] or config['update']
+            threading.current_thread().dbname = dbname
             registry = Registry.new(dbname, update_module=update_module)
 
             # run test_file if provided

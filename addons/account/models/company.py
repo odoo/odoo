@@ -6,6 +6,7 @@ import calendar
 
 from odoo import fields, models, api, _, Command
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
+from odoo.tools import date_utils
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
 from odoo.tools.float_utils import float_round, float_is_zero
@@ -27,11 +28,19 @@ MONTH_SELECTION = [
     ('12', 'December'),
 ]
 
-PEPPOL_LIST = [
-    'AD', 'AL', 'AT', 'BA', 'BE', 'BG', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI',
-    'FR', 'GB', 'GR', 'HR', 'HU', 'IE', 'IS', 'IT', 'LI', 'LT', 'LU', 'LV', 'MC', 'ME',
-    'MK', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'RS', 'SE', 'SI', 'SK', 'SM', 'TR', 'VA',
+# List of countries where Peppol should be used by default.
+PEPPOL_DEFAULT_COUNTRIES = [
+    'AT', 'BE', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI',
+    'FR', 'GR', 'IE', 'IS', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL',
+    'NO', 'PL', 'PT', 'RO', 'SE', 'SI',
 ]
+
+# List of countries where Peppol is accessible.
+PEPPOL_LIST = PEPPOL_DEFAULT_COUNTRIES + [
+    'AD', 'AL',  'BA', 'BG', 'GB', 'HR', 'HU', 'LI', 'MC', 'ME',
+    'MK', 'RS', 'SK', 'SM', 'TR', 'VA',
+]
+
 
 class ResCompany(models.Model):
     _name = "res.company"
@@ -82,7 +91,7 @@ class ResCompany(models.Model):
         string="Gain Exchange Rate Account",
         check_company=True,
         domain="[('deprecated', '=', False),\
-                ('account_type', 'in', ('income', 'income_other'))]")
+                ('internal_group', '=', 'income')]")
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Loss Exchange Rate Account",
@@ -259,7 +268,7 @@ class ResCompany(models.Model):
             if html:
                 company.invoice_terms_html = html
 
-    @api.depends('parent_id.max_tax_lock_date')
+    @api.depends('tax_lock_date', 'parent_id.max_tax_lock_date')
     def _compute_max_tax_lock_date(self):
         for company in self:
             company.max_tax_lock_date = max(company.tax_lock_date or date.min, company.parent_id.sudo().max_tax_lock_date or date.min)
@@ -283,7 +292,7 @@ class ResCompany(models.Model):
         return new_prefix + current_code.replace(old_prefix, '', 1).lstrip('0').rjust(digits-len(new_prefix), '0')
 
     def reflect_code_prefix_change(self, old_code, new_code):
-        if not old_code:
+        if not old_code or new_code == old_code:
             return
         accounts = self.env['account.account'].search([
             *self.env['account.account']._check_company_domain(self),
@@ -470,12 +479,18 @@ class ResCompany(models.Model):
             ('code', '=', str(code)),
         ]):
             code -= 1
-        return self.env['account.account'].create({
-                'code': str(code),
-                'name': _('Undistributed Profits/Losses'),
-                'account_type': unaffected_earnings_type,
-                'company_id': self.id,
-            })
+        return self.env['account.account']._load_records([
+            {
+                'xml_id': f"account.{str(self.id)}_unaffected_earnings_account",
+                'values': {
+                              'code': str(code),
+                              'name': _('Undistributed Profits/Losses'),
+                              'account_type': unaffected_earnings_type,
+                              'company_id': self.id,
+                          },
+                'noupdate': True,
+            }
+        ])
 
     def get_opening_move_differences(self, opening_move_lines):
         # TO BE REMOVED IN MASTER
@@ -729,15 +744,27 @@ class ResCompany(models.Model):
 
         return results_by_journal
 
+    @api.model
+    def _with_locked_records(self, records):
+        """ To avoid sending the same records multiple times from different transactions,
+        we use this generic method to lock the records passed as parameter.
+
+        :param records: The records to lock.
+        """
+        if not records.ids:
+            return
+        self._cr.execute(f'SELECT * FROM {records._table} WHERE id IN %s FOR UPDATE SKIP LOCKED', [tuple(records.ids)])
+        available_ids = {r[0] for r in self._cr.fetchall()}
+        if available_ids != set(records.ids):
+            raise UserError(_("Some documents are being sent by another process already."))
+
     def compute_fiscalyear_dates(self, current_date):
         """
-        The role of this method is to provide a fallback when account_accounting is not installed.
-        As the fiscal year is irrelevant when account_accounting is not installed, this method returns the calendar year.
-        :param current_date: A datetime.date/datetime.datetime object.
+        Returns the dates of the fiscal year containing the provided date for this company.
         :return: A dictionary containing:
             * date_from
             * date_to
         """
-
-        return {'date_from': datetime(year=current_date.year, month=1, day=1).date(),
-                'date_to': datetime(year=current_date.year, month=12, day=31).date()}
+        self.ensure_one()
+        date_from, date_to = date_utils.get_fiscal_year(current_date, day=self.fiscalyear_last_day, month=int(self.fiscalyear_last_month))
+        return {'date_from': date_from, 'date_to': date_to}

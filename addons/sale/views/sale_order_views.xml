@@ -214,7 +214,7 @@
                 <attribute name="optional">hide</attribute>
             </field>
             <field name="amount_to_invoice" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="column_invisible">1</attribute>
             </field>
         </field>
     </record>
@@ -247,10 +247,10 @@
                         confirm="Are you sure you want to void the authorized transaction? This action can't be undone."
                         invisible="not authorized_transaction_ids"/>
                 <button id="create_invoice" name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
-                    type="action" class="btn-primary" data-hotkey="i"
+                    type="action" class="btn-primary" data-hotkey="q"
                     invisible="invoice_status != 'to invoice'"/>
                 <button id="create_invoice_percentage" name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
-                    type="action" context="{'default_advance_payment_method': 'percentage'}" data-hotkey="i"
+                    type="action" context="{'default_advance_payment_method': 'percentage'}" data-hotkey="q"
                     invisible="invoice_status != 'no' or state != 'sale'"/>
                 <button name="action_quotation_send" id="send_by_email_primary" string="Send by Email" type="object" data-hotkey="g"
                     invisible="state != 'draft'" class="btn-primary"

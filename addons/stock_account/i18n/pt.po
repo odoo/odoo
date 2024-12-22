@@ -5,16 +5,17 @@
 # Translators:
 # Manuela Silva <mmsrs@sky.com>, 2023
 # Wil Odoo, 2023
-# Maitê Dietze, 2024
 # NumerSpiral HBG, 2024
+# Maitê Dietze, 2024
+# Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: NumerSpiral HBG, 2024\n"
+"Last-Translator: Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,14 +28,14 @@ msgstr ""
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid " Product cost updated from %(previous)s to %(new_cost)s."
-msgstr ""
+msgstr " Custo do produto atualizado de %(previous)s para %(new_cost)s."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 #, python-format
 msgid " [Accounted on %s]"
-msgstr ""
+msgstr " [Contabilizado em %s]"
 
 #. module: stock_account
 #. odoo-python
@@ -43,6 +44,7 @@ msgstr ""
 #, python-format
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
 msgstr ""
+"%(user)s alterou o custo de %(previous)s para %(new_price)s - %(product)s"
 
 #. module: stock_account
 #. odoo-python
@@ -53,6 +55,8 @@ msgid ""
 "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - "
 "%(product)s"
 msgstr ""
+"%(user)s alterou a valorização do inventário de %(previous)s para "
+"%(new_value)s - %(product)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -60,6 +64,8 @@ msgid ""
 ")\n"
 "                            <small class=\"mx-2 fst-italic\">Use a negative added value to record a decrease in the product value</small>"
 msgstr ""
+")\n"
+"                            <small class=\"mx-2 fst-italic\">Adicione um valor negativo para registrar uma diminuição no valor do produto</small>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -69,7 +75,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "<b>Set other input/output accounts on specific </b>"
-msgstr ""
+msgstr "<b>Definir outras contas de entrada/saída especificamente em </b>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_picking
@@ -89,7 +95,7 @@ msgstr "<span>Quantidade </span>"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "<span>SN/LN</span>"
-msgstr ""
+msgstr "<span>NS/NL</span>"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
@@ -126,23 +132,24 @@ msgstr "Informação contabilística"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Add Manual Valuation"
-msgstr ""
+msgstr "Acrescentar Valorização Manual"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
 msgstr ""
+"Adicionar custo adicional (transporte, alfândega, ...) no valor do produto."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Added Value"
-msgstr ""
+msgstr "Valor Acrescentado"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__added_value
 msgid "Added value"
-msgstr ""
+msgstr "Valor acrescentado"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -151,6 +158,8 @@ msgid ""
 "Affect landed costs on reception operations and split them among products to"
 " update their cost price."
 msgstr ""
+"Afetar os custos de postos no destino nas operações de recepção e dividi-los"
+" entre os produtos para atualizar os seus preços de custo."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
@@ -160,7 +169,7 @@ msgstr "Conta Analítica"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_ids
 msgid "Analytic Account Line"
-msgstr ""
+msgstr "Linha de Contas Analítica"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_plan
@@ -170,7 +179,7 @@ msgstr "Planos analíticos"
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
 msgid "Automated"
-msgstr ""
+msgstr "Automatica"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_stock_accounting_automatic
@@ -185,7 +194,7 @@ msgstr "Custo médio"
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__average
 msgid "Average Cost (AVCO)"
-msgstr ""
+msgstr "Custo Médio (PM)"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -210,6 +219,9 @@ msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
 msgstr ""
+"Não é possível encontrar uma conta de entrada de armazém para o produto %s. "
+"Deve definir um na categoria de produto, ou no local, antes de processar "
+"esta operação."
 
 #. module: stock_account
 #. odoo-python
@@ -220,6 +232,9 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
+"Não é possível encontrar uma conta de saída de armazém para o produto %s. "
+"Deve definir um na categoria de produto, ou no local, antes de processar "
+"esta operação."
 
 #. module: stock_account
 #. odoo-python
@@ -229,11 +244,13 @@ msgid ""
 "Changing your cost method is an important change that will impact your "
 "inventory valuation. Are you sure you want to make that change?"
 msgstr ""
+"Mudar o seu método de custeio é uma mudança importante que terá impacto na "
+"valorização de inventário. Tem certeza de querer fazer essa mudança?"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 msgid "Choose a date to get the valuation at that date"
-msgstr ""
+msgstr "Escolha uma data para obter a valorização nessa data"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_origin_id
@@ -260,6 +277,8 @@ msgid ""
 "Configuration error. Please configure the price difference account on the "
 "product or its category to process this operation."
 msgstr ""
+"Erro de configuração. Configure a conta de diferença de preço no produto ou "
+"na sua categoria para processar esta operação."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
@@ -275,6 +294,8 @@ msgstr "Método de Custo"
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
 msgstr ""
+"Alteração do método de custeio para a categoria de produto %s: de %s para "
+"%s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
@@ -287,6 +308,8 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
+"Os itens do diário de contrapartida para todos os movimentos de entrada de inventário serão lançados nesta conta, a menos que haja uma conta de valorização específica\n"
+"                definida para o local de origem. Este é o valor pré definido para todos os produtos desta categoria. Também pode ser definido diretamente em cada produto."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
@@ -315,7 +338,7 @@ msgstr "Moeda"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_quantity_svl
 msgid "Current Quantity"
-msgstr ""
+msgstr "Quantidade Atual"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_value_svl
@@ -336,6 +359,9 @@ msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
 msgstr ""
+"Data em que os lançamentos contabilísticos serão criados em caso de "
+"valorização de inventário permanente. Não sendo definida, será usada a data "
+"do inventário."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
@@ -350,7 +376,7 @@ msgstr "Descrição"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_lot_on_invoice
 msgid "Display Lots & Serial Numbers on Invoices"
-msgstr ""
+msgstr "Exibir Lotes e Números de Série nas Faturas"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
@@ -361,7 +387,7 @@ msgstr "Nome"
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_lot_on_invoice
 msgid "Display Serial & Lot Number on Invoices"
-msgstr ""
+msgstr "Exibir Número de Lote de Série nas Faturas"
 
 #. module: stock_account
 #. odoo-python
@@ -375,7 +401,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
 msgid "First In First Out (FIFO)"
-msgstr ""
+msgstr "Primeiro a Entrar Primeiro a Sair (FIFO)"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -385,7 +411,7 @@ msgstr "Agrupar por..."
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Has Remaining Qty"
-msgstr ""
+msgstr "Tem Qtd Restante"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__id
@@ -430,7 +456,7 @@ msgstr "Linha de Fatura"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__price_diff_value
 msgid "Invoice value correction with invoice currency"
-msgstr ""
+msgstr "Correção do valor da fatura com a moeda da fatura"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
@@ -469,7 +495,7 @@ msgstr "Última Atualização em"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
 msgid "Linked To"
-msgstr ""
+msgstr "Vinculado A"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -486,14 +512,14 @@ msgstr "Manual"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: %s."
-msgstr ""
+msgstr "Valorização Manual de Inventário: %s."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: No Reason Given."
-msgstr ""
+msgstr "Valorização Manual de Inventário: Nenhum Motivo Fornecido."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
@@ -505,21 +531,24 @@ msgid ""
 "        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
 "        "
 msgstr ""
+"Manual: Os lançamentos contabilísticos para valorizar o inventário não são lançados automaticamente.\n"
+"        Automatizado: um lançamento contabilístico é criado automaticamente para valorizar o inventário quando um produto entra ou sai da empresa.\n"
+"        "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Moved Quantity"
-msgstr ""
+msgstr "Quantidade Movimentada"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value
 msgid "New value"
-msgstr ""
+msgstr "Novo valor"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value_by_qty
 msgid "New value by quantity"
-msgstr ""
+msgstr "Novo valor por quantidade"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -543,7 +572,7 @@ msgstr "Produto"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__categ_id
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product Category"
-msgstr "Categoria de Artigo"
+msgstr "Categoria do Artigo"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
@@ -556,7 +585,7 @@ msgstr "Movimentos do artigo (movimentos de stock)"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 #, python-format
 msgid "Product Revaluation"
-msgstr ""
+msgstr "Revalorização do Artigo"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_tmpl_id
@@ -573,7 +602,7 @@ msgstr "Variante de Artigo"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Product value manually modified (from %s to %s)"
-msgstr ""
+msgstr "Valor do produto modificado manualmente (de %s para %s)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -598,7 +627,7 @@ msgstr "Motivo"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason of the revaluation"
-msgstr ""
+msgstr "Motivo da Revalorização"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__warehouse_id
@@ -613,7 +642,7 @@ msgstr "Referência"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
 msgid "Related product"
-msgstr ""
+msgstr "Artigo Relacionado"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
@@ -623,7 +652,7 @@ msgstr "Qtd Remanescente"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_value
 msgid "Remaining Value"
-msgstr ""
+msgstr "Valor Restante"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
@@ -633,19 +662,19 @@ msgstr "Operação de Devolução de Stock"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr ""
+msgstr "Linha de Operação de Devolução de Stock"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Revaluation of %s"
-msgstr ""
+msgstr "Revalorização de %s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Revalue"
-msgstr ""
+msgstr "Revalorizar"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -663,6 +692,10 @@ msgid ""
 "        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
+"Preço Padrão: Os produtos são avaliados pelo custo padrão definido no produto.\n"
+"     Custo Médio (AVCO): Os produtos são avaliados pelo custo médio ponderado.\n"
+"     Primeiro a entrar, primeiro a sair (FIFO): Os produtos são avaliados supondo-se que aqueles que entrarem primeiro na empresa também serão os primeiros a sair.\n"
+"     "
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_stock_accounting_automatic
@@ -706,7 +739,7 @@ msgstr "Relatório de Reabastecimento de Inventário"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_request_count
 msgid "Stock Request an Inventory Count"
-msgstr ""
+msgstr "Solicitação de Inventariação de Armazém"
 
 #. module: stock_account
 #. odoo-javascript
@@ -716,7 +749,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
 #, python-format
 msgid "Stock Valuation"
-msgstr ""
+msgstr "Valorização de Inventário"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_id
@@ -743,7 +776,7 @@ msgstr "Conta de avaliação de stock (Outgoing)"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__stock_valuation_layer_ids
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
-msgstr ""
+msgstr "Camada de Valorização de Inventário"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -751,6 +784,9 @@ msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
+"Campo técnico para mostrar corretamente a moeda da empresa selecionada "
+"atualmente que corresponde ao valor total das camadas de valorização do "
+"artigo"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
@@ -769,6 +805,8 @@ msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
 msgstr ""
+"As contas de Entrada e/ou Saída de Armazém não podem ser as mesmas que a "
+"conta de Valorização de Inventário."
 
 #. module: stock_account
 #. odoo-python
@@ -779,6 +817,8 @@ msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
 msgstr ""
+"A ação leva à criação de um lançamento no diário, para o qual não tem "
+"direitos de acesso."
 
 #. module: stock_account
 #. odoo-python
@@ -786,6 +826,8 @@ msgstr ""
 #, python-format
 msgid "The added value doesn't have any impact on the stock valuation"
 msgstr ""
+"O valor acrescentado não tem nenhum impacto sobre a valorização do "
+"inventário"
 
 #. module: stock_account
 #. odoo-python
@@ -795,6 +837,8 @@ msgid ""
 "The move lines are not in a consistent state: some are entering and other "
 "are leaving the company."
 msgstr ""
+"As linhas de movimentos não apresentam consistência: alguns estão como "
+"entradas e outros estão como saídas da empresa."
 
 #. module: stock_account
 #. odoo-python
@@ -805,6 +849,9 @@ msgid ""
 "intercompany in a single step while they should go through the intercompany "
 "transit location."
 msgstr ""
+"As linhas de movimentos não apresentam consistência: elas mostram a execução"
+" de um movimento entre companhias numa única etapa, enquanto que elas "
+"deveriam mostrar passagem pelo local de trânsito inter companhia."
 
 #. module: stock_account
 #. odoo-python
@@ -814,6 +861,8 @@ msgid ""
 "The move lines are not in a consistent states: they do not share the same "
 "origin or destination company."
 msgstr ""
+"As linhas de movimentos não apresentam consistência: elas não partilham da "
+"mesma empresa de origem ou destino."
 
 #. module: stock_account
 #. odoo-python
@@ -832,6 +881,8 @@ msgid ""
 "There are no valuation layers. Valuation layers are created when there are "
 "product moves that impact the valuation of the stock."
 msgstr ""
+"Não há camadas de valorização. As camadas de valorização são criadas quando "
+"há movimentos de artigos que impactam a valorização do inventário."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
@@ -842,13 +893,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Total Remaining Quantity"
-msgstr ""
+msgstr "Quantidade Total Restante"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Total Remaining Value"
-msgstr ""
+msgstr "Valor Total Restante"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__total_value
@@ -871,16 +922,18 @@ msgid ""
 "Trigger a decrease of the delivered/received quantity in the associated Sale"
 " Order/Purchase Order"
 msgstr ""
+"Acionar uma diminuição da quantidade entregue/recebida na Ordem de "
+"Venda/Ordem de Compra associada"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
 msgid "Unit Cost"
-msgstr ""
+msgstr "Custo Unitário"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
 msgid "Unit Value"
-msgstr ""
+msgstr "Valor Unitário"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
@@ -892,7 +945,7 @@ msgstr "Unidade de medida"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "Update quantities on SO/PO"
-msgstr ""
+msgstr "Atualizar quantidades em OV/OC"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -930,23 +983,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
 msgid "Valuation"
-msgstr ""
+msgstr "Valorização"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
 msgid "Valuation Currency"
-msgstr ""
+msgstr "Moeda de Valorização"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
 msgid "Valuation Report"
-msgstr ""
+msgstr "Relatório de Valorização"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 msgid "Valuation at Date"
-msgstr ""
+msgstr "Valorização à Data"
 
 #. module: stock_account
 #. odoo-python
@@ -954,6 +1007,8 @@ msgstr ""
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
 msgstr ""
+"Alteração do método de valorização para a categoria do produto %s: de %s "
+"para %s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -965,7 +1020,7 @@ msgstr "Valor"
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 #, python-format
 msgid "Value On Hand:"
-msgstr ""
+msgstr "Valor Em Mão:"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
@@ -985,6 +1040,8 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"Quando a valorização de inventário permanente é ativada num artigo, esta "
+"conta manterá o valor atual dos artigos."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -993,6 +1050,9 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
+"Ao fazer a valorização de inventário permanente, os itens do diário de contrapartida para todos os movimentos de inventário de saída serão lançados nesta conta,\n"
+"                a menos que haja uma conta de valorização específica definida no local de destino. Este é o valor pré definido para todos os artigos desta categoria.\n"
+"                Também pode ser definido diretamente em cada artigo."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
@@ -1000,25 +1060,28 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
+"Ao fazer a valorização de inventário permanente, este é o Diário de "
+"Contabilização no qual os lançamentos serão automaticamente lançados quando "
+"os movimentos de inventário forem processados."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
 msgid "Wizard model to reavaluate a stock inventory for a product"
-msgstr ""
+msgstr "Assistente modelo para revalorizar o inventário de um artigo"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with a standard cost method."
-msgstr ""
+msgstr "Não se pode revalorizar um produto com um método de custeio padrão."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
-msgstr ""
+msgstr "Não pode revalorizar um artigo com um inventários vazio ou negativo."
 
 #. module: stock_account
 #. odoo-python
@@ -1029,6 +1092,9 @@ msgid ""
 "to the creation of a journal entry, for which you don't have the access "
 "rights."
 msgstr ""
+"Não pode atualizar o custo de um artigo em valorização de inventário "
+"permanente, pois isso leva à criação de um lançamento no diário, para o qual"
+" não tem direitos de acesso."
 
 #. module: stock_account
 #. odoo-python
@@ -1038,6 +1104,19 @@ msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"Não tem nenhuma conta de valorização de entrada definida na sua categoria de"
+" artigo. Deve definir uma, antes de processar esta operação."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"You don't have any output valuation account defined on your product "
+"category. You must define one before processing this operation."
+msgstr ""
+"Não tem nenhuma conta de valorização de saída definida na sua categoria de "
+"artigo. Deve definir uma antes de processar esta operação."
 
 #. module: stock_account
 #. odoo-python
@@ -1047,6 +1126,8 @@ msgid ""
 "You don't have any stock input account defined on your product category. You"
 " must define one before processing this operation."
 msgstr ""
+"Você não tem nenhuma conta de entrada de armazém definida na sua categoria "
+"de artigo. Deve definir uma antes de processar esta operação."
 
 #. module: stock_account
 #. odoo-python
@@ -1056,6 +1137,8 @@ msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts."
 msgstr ""
+"Não tem nenhum diário de armazém definido na sua categoria de artigo. "
+"Verifique se tem um plano de contas instalado."
 
 #. module: stock_account
 #. odoo-python
@@ -1068,13 +1151,15 @@ msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"Não tem nenhuma conta de valorização de inventário definida na sua categoria"
+" de artigo. Deve definir uma antes de processar esta operação."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "You must set a counterpart account on your product category."
-msgstr ""
+msgstr "Deve estabelecer uma conta de contrapartida na categoria de artigo."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -1089,7 +1174,7 @@ msgstr "por"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
-msgstr ""
+msgstr "localizações"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document

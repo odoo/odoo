@@ -228,6 +228,35 @@ QUnit.test("sidebar quick search at 20 or more pinned channels", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { count: 20 });
 });
 
+QUnit.test("sidebar quick search takes DM custom name into account", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    for (let id = 1; id <= 20; id++) {
+        pyEnv["discuss.channel"].create({ name: `channel${id}` });
+    }
+    const chatId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(chatId);
+    await contains(".o-mail-DiscussSidebarChannel", { count: 21 });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
+    // set custom name
+    await insertText("input.o-mail-Discuss-threadName:enabled", "Marc", {
+        replace: true,
+    });
+    triggerHotkey("Enter");
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Marc" });
+    // search
+    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "Marc");
+    await contains(".o-mail-DiscussSidebarChannel");
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Marc" });
+});
+
 QUnit.test("sidebar: basic chat rendering", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });

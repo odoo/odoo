@@ -17,15 +17,3 @@ class ProductRibbon(models.Model):
     bg_color = fields.Char(string='Ribbon background color', required=False)
     text_color = fields.Char(string='Ribbon text color', required=False)
     html_class = fields.Char(string='Ribbon class', required=True, default='')
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if 'bg_color' in vals and not '!important' in vals['bg_color']:
-                vals['bg_color'] += ' !important'
-        return super().create(vals_list)
-
-    def write(self, data):
-        if 'bg_color' in data and not '!important' in data['bg_color']:
-            data['bg_color'] += ' !important'
-        return super().write(data)

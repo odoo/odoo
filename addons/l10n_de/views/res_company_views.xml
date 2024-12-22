@@ -6,7 +6,7 @@
             <field name="inherit_id" ref="account.view_company_form"/>
             <field name="arch" type="xml">
                 <field name="vat" position="after">
-                    <field name="l10n_de_stnr" invisible="country_code != 'DE'"/>
+                    <field name="l10n_de_stnr" invisible="%(base.de)d not in account_enabled_tax_country_ids"/>
                     <field name="l10n_de_widnr" invisible="country_code != 'DE'"/>
                 </field>
             </field>

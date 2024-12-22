@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -810,13 +810,13 @@ msgstr "Danh sách người dùng được chọn"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__action_id
 msgid "Action"
-msgstr "Hành động"
+msgstr "Tác vụ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_needaction
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__active
@@ -888,7 +888,7 @@ msgstr "Tự động: thực thi một lệnh python cụ thể"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__count
 msgid "Automatic: number of records"
-msgstr "Tự động: số lượng tập dữ liệu"
+msgstr "Tự động: số lượng bản ghi"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__sum
@@ -1288,10 +1288,10 @@ msgid ""
 "[('state', '=', 'done')]. The expression can contain reference to 'user' "
 "which is a browse record of the current user if not in batch mode."
 msgstr ""
-"Tên miền để lọc tập dữ liệu. Quy tắc chung, không phụ thuộc vào người dùng, "
-"ví dụ: [('trạng thái', '=', 'xong')]. Biểu thức có thể chứa tham chiếu đến "
-"'người dùng' là tập dữ liệu duyệt của người dùng hiện tại nếu không ở chế độ"
-" hàng loạt."
+"Tên miền để lọc bản ghi. Quy tắc chung, không phụ thuộc vào người dùng, ví "
+"dụ: [('trạng thái', '=', 'xong')]. Biểu thức có thể chứa tham chiếu đến "
+"'người dùng' là bản ghi duyệt của người dùng hiện tại nếu không ở chế độ "
+"hàng loạt."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__done
@@ -1771,7 +1771,7 @@ msgstr "Karma"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__karma_tracking_ids
 msgid "Karma Changes"
-msgstr "Karma Changes"
+msgstr "Thay đổi karma"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_form
@@ -2054,7 +2054,7 @@ msgstr "Tin nhắn thông báo"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_needaction_counter
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_has_error_counter
@@ -2271,11 +2271,6 @@ msgstr "Làm mới thử thách"
 #: model:ir.actions.act_window,name:gamification.goals_from_challenge_act
 msgid "Related Goals"
 msgstr "Mục tiêu liên quan"
-
-#. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_user_wizard__user_id
-msgid "Related user name for the resource to manage its access."
-msgstr "Người dùng liên quan đến nguồn lực để quản lý sự truy cập."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__remaining_sending
@@ -2604,7 +2599,7 @@ msgstr "Lý do kiểm tra"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__action_id
 msgid "The action that will be called to update the goal value."
-msgstr "Hành động sẽ được gọi để cập nhật giá trị mục tiêu."
+msgstr "Tác vụ sẽ được gọi để cập nhật giá trị mục tiêu."
 
 #. module: gamification
 #. odoo-python
@@ -2663,7 +2658,7 @@ msgid ""
 "res_id for action."
 msgstr ""
 "Trường tên trên hồ sơ người dùng (res.users) có chứa giá trị cho res_id cho "
-"hành động."
+"tác vụ."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__condition__higher
@@ -2798,7 +2793,7 @@ msgid ""
 "user.id, user.partner_id.id..."
 msgstr ""
 "Giá trị để so sánh với trường đặc biệt. Biểu thức có thể chứa tham chiếu đến"
-" 'người dùng' là tập dữ liệu duyệt của người dùng hiện tại, ví dụ: user.id, "
+" 'người dùng' là bản ghi duyệt của người dùng hiện tại, ví dụ: user.id, "
 "user.partner_id.id ..."
 
 #. module: gamification
@@ -2841,7 +2836,7 @@ msgstr "Tổng"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_karma_tracking
 msgid "Track Karma Changes"
-msgstr "Track Karma Changes"
+msgstr "Theo dõi thay đổi karma"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_tracking_action

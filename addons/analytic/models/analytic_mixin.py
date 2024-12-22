@@ -3,6 +3,7 @@
 from odoo import models, fields, api, _
 from odoo.tools import SQL
 from odoo.tools.float_utils import float_round, float_compare
+from odoo.tools.misc import flatten
 from odoo.exceptions import UserError, ValidationError
 
 class AnalyticMixin(models.AbstractModel):
@@ -87,6 +88,17 @@ class AnalyticMixin(models.AbstractModel):
         domain = self._apply_analytic_distribution_domain(domain)
         return super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
 
+    def mapped(self, func):
+        # Get the related analytic accounts as a recordset instead of the distribution
+        if func == 'analytic_distribution' and self.env.context.get('distribution_ids'):
+            return self.env['account.analytic.account'].browse(flatten(record._get_analytic_account_ids() for record in self))
+        return super().mapped(func)
+
+    def filtered_domain(self, domain):
+        # Filter based on the accounts used (i.e. allowing a name_search) instead of the distribution
+        # A domain on a binary field doesn't make sense anymore outside of set or not; and it is still doable.
+        return super(AnalyticMixin, self.with_context(distribution_ids=True)).filtered_domain(domain)
+
     def write(self, vals):
         """ Format the analytic_distribution float value, so equality on analytic_distribution can be done """
         decimal_precision = self.env['decimal.precision'].precision_get('Percentage Analytic')
@@ -125,11 +137,13 @@ class AnalyticMixin(models.AbstractModel):
 
     def _apply_analytic_distribution_domain(self, domain):
         return [
-            ('analytic_distribution_search', leaf[1], leaf[2]) if len(leaf) == 3 and leaf[0] == 'analytic_distribution' and isinstance(leaf[2], (str, tuple, list)) else leaf
+            ('analytic_distribution_search', leaf[1], leaf[2])
+            if len(leaf) == 3 and leaf[0] == 'analytic_distribution' and isinstance(leaf[2], (str, tuple, list))
+            else leaf
             for leaf in domain
         ]
 
     def _get_analytic_account_ids(self) -> list[int]:
         """ Get the analytic account ids from the analytic_distribution dict """
         self.ensure_one()
-        return [int(account_id) for ids in self.analytic_distribution for account_id in ids.split(',')]
+        return [int(account_id) for ids in (self.analytic_distribution or {}) for account_id in ids.split(',')]

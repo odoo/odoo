@@ -1,5 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from freezegun import freeze_time
+
+from odoo import Command
 from odoo.tests import common, Form
 from odoo.tools import float_compare
 
@@ -353,3 +356,246 @@ class TestDeliveryCost(common.TransactionCase):
             ('is_delivery', '=', True)
         ])
         self.assertEqual(line.price_unit, self.normal_delivery.fixed_price)
+
+    def test_price_with_weight_volume_variable(self):
+        """ Test that the price is correctly computed when the variable is weight*volume. """
+        qty = 3
+        list_price = 2
+        volume = 2.5
+        weight = 1.5
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_18.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.env['product.product'].create({
+                        'name': 'wv',
+                        'weight': weight,
+                        'volume': volume,
+                    }).id,
+                    'product_uom_qty': qty,
+                    'product_uom': self.product_uom_unit.id,
+                }),
+            ],
+        })
+        delivery = self.env['delivery.carrier'].create({
+            'name': 'Delivery Charges',
+            'delivery_type': 'base_on_rule',
+            'product_id': self.product_delivery_normal.id,
+            'price_rule_ids': [(0, 0, {
+                'variable': 'price',
+                'operator': '>=',
+                'max_value': 0,
+                'list_price': list_price,
+                'variable_factor': 'wv',
+            })]
+        })
+        self.assertEqual(
+            delivery._get_price_available(sale_order),
+            qty * list_price * weight * volume,
+            "The shipping price is not correctly computed with variable weight*volume.",
+        )
+
+    def test_delivery_product_taxes_on_branch(self):
+        """ Check taxes populated on delivery line on branch company.
+            Taxes from the branch company should be taken with a fallback on parent company.
+        """
+        company = self.env.company
+        branch = self.env['res.company'].create({
+            'name': 'Branch',
+            'country_id': company.country_id.id,
+            'parent_id': company.id,
+        })
+        # create taxes for the parent company and its branch
+        tax_groups = self.env['account.tax.group'].create([{
+            'name': 'Tax Group A',
+            'company_id': company.id,
+        }, {
+            'name': 'Tax Group B',
+            'company_id': branch.id,
+        }])
+        tax_a = self.env['account.tax'].create({
+            'name': 'Tax A',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 10,
+            'tax_group_id': tax_groups[0].id,
+            'company_id': company.id,
+        })
+        tax_b = self.env['account.tax'].create({
+            'name': 'Tax B',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 20,
+            'tax_group_id': tax_groups[1].id,
+            'company_id': branch.id,
+        })
+        # create delivery product with taxes from both branch and parent company
+        delivery_product = self.env['product.product'].create({
+            'name': 'Delivery Product',
+            'taxes_id': [Command.set((tax_a + tax_b).ids)],
+        })
+        # create delivery
+        delivery = self.env['delivery.carrier'].create({
+            'name': 'Delivery Charges',
+            'delivery_type': 'fixed',
+            'product_id': delivery_product.id,
+            'company_id': branch.id,
+        })
+        # create a SO from Branch
+        sale_order = self.SaleOrder.create({
+            'partner_id': self.partner_4.id,
+            'company_id': branch.id,
+            'order_line': [Command.create({
+                'product_id': self.product_4.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_uom_unit.id,
+                'price_unit': 750.00,
+            })],
+        })
+        # add delivery
+        wizard = self.env['choose.delivery.carrier'].create({
+            'order_id': sale_order.id,
+            'carrier_id': delivery.id,
+            'company_id': branch.id,
+        })
+        wizard.button_confirm()
+        delivery_line = sale_order.order_line.filtered(lambda l: l.is_delivery)
+
+        # delivery line should have taxes from the branch company
+        self.assertRecordValues(delivery_line, [{'product_id': delivery_product.id, 'tax_id': tax_b.ids}])
+
+        # update delivery product by setting only the tax from parent company
+        delivery_product.write({'taxes_id': [Command.set((tax_a).ids)]})
+        # update delivery
+        wizard = self.env['choose.delivery.carrier'].create({
+            'order_id': sale_order.id,
+            'carrier_id': delivery.id,
+            'company_id': branch.id,
+        })
+        wizard.button_confirm()
+        delivery_line = sale_order.order_line.filtered(lambda l: l.is_delivery)
+
+        # delivery line should have taxes from the parent company as there is no tax from the branch company
+        self.assertRecordValues(delivery_line, [{'product_id': delivery_product.id, 'tax_id': tax_a.ids}])
+
+    def test_update_weight_in_shipping_when_change_quantity(self):
+        product_test = self.env['product.product'].create({
+            'name': 'Test product',
+            'weight': 1,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_18.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product_test.id,
+                    'product_uom_qty': 10,
+                    'product_uom': self.product_uom_unit.id,
+                }),
+            ],
+        })
+        delivery = self.env['delivery.carrier'].create({
+            'name': 'Delivery Charges',
+            'delivery_type': 'base_on_rule',
+            'product_id': product_test.id,
+            'price_rule_ids': [
+                Command.create({
+                    'variable': 'weight',
+                    'operator': '<=',
+                    'max_value': 30,
+                    'list_base_price': 5,
+                    'variable_factor': 'weight',
+                }),
+                Command.create({
+                    'variable': 'weight',
+                    'operator': '>=',
+                    'max_value': 60,
+                    'list_base_price': 10,
+                    'variable_factor': 'weight',
+                })
+            ]
+        })
+
+        del_form = sale_order.action_open_delivery_wizard()
+        choose_delivery_carrier = self.env[del_form['res_model']].with_context(del_form['context']).create({
+            'carrier_id': delivery.id,
+            'order_id': sale_order.id
+        })
+        choose_delivery_carrier.button_confirm()
+        self.assertEqual(choose_delivery_carrier.total_weight, 10)
+        sale_order.order_line.write({
+            'product_uom_qty': 100,
+        })
+        updated_del_form = sale_order.action_open_delivery_wizard()
+        self.assertEqual(updated_del_form['context']['default_total_weight'], 100)
+
+    def test_base_on_rule_currency_is_converted(self):
+        """
+        For based on rules delivery method without a company, check that the price
+        is converted from the main's company's currency to the current company's on SOs
+        """
+
+        # Create a company that uses a different currency
+        currency_bells = self.env['res.currency'].create({
+            'name': 'Bell',
+            'symbol': 'C',
+        })
+
+        nook_inc = self.env['res.company'].create({
+            'name': 'Nook inc.',
+            'currency_id': currency_bells.id,
+        })
+
+        with freeze_time('2000-01-01'):  # Make sure the rate is in the past
+            self.env['res.currency.rate'].with_company(nook_inc).create({
+                'currency_id': currency_bells.id,
+                'company_rate': 0.5,
+                'inverse_company_rate': 2,
+            })
+
+        # Company less shipping method
+        product_delivery_rule = self.env['product.product'].with_company(nook_inc).create({
+            'name': 'rule delivery charges',
+            'type': 'service',
+            'list_price': 10.0,
+            'categ_id': self.env.ref('delivery.product_category_deliveries').id,
+        })
+
+        delivery = self.env['delivery.carrier'].with_company(nook_inc).create({
+            'name': 'Rule Delivery',
+            'delivery_type': 'base_on_rule',
+            'product_id': product_delivery_rule.id,
+            'price_rule_ids': [(0, 0, {
+                'variable': 'price',
+                'operator': '>=',
+                'max_value': 0,
+                'variable_factor': 'weight',
+                'list_base_price': 15,
+            })],
+            'fixed_margin': 10,
+        })
+
+        # Create sale using the shipping method
+        so = self.SaleOrder.with_company(nook_inc).create({
+            'partner_id': self.partner_18.id,
+            'partner_invoice_id': self.partner_18.id,
+            'partner_shipping_id': self.partner_18.id,
+            'order_line': [(0, 0, {
+                'name': 'PC Assamble + 2GB RAM',
+                'product_id': self.product_4.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_uom_unit.id,
+                'price_unit': 750.00,
+            })],
+        })
+
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_company(nook_inc).with_context({
+            'default_order_id': so.id,
+            'default_carrier_id': delivery.id,
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
+
+        # check delivery price was properly converted
+        delivery_sol = so.order_line[-1]
+        self.assertEqual(delivery_sol.product_id, delivery.product_id)
+        self.assertEqual(delivery_sol.price_subtotal, 12.5)

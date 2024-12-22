@@ -14,6 +14,11 @@
                     <field name="dropship_picking_count" widget="statinfo" string="Dropship"/>
                 </button>
             </xpath>
+            <xpath expr="//field[@name='picking_type_id']" position="attributes">
+                <attribute name="domain">
+                    [('code', 'in', ('incoming', 'dropship')), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]
+                </attribute>
+            </xpath>
         </field>
     </record>
 </odoo>

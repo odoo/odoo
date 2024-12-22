@@ -34,8 +34,9 @@ class AccountFrFec(models.TransientModel):
             self.export_type = 'official'
 
     def _get_where_query(self):
-        where_params = {'company_id': self.env.company.id}
-        where_query = "am.company_id = %(company_id)s\n"
+        accessible_branches = self.env.company._accessible_branches()
+        where_params = {'company_ids': tuple(accessible_branches.ids)}
+        where_query = "am.company_id IN %(company_ids)s\n"
         # For official report: only use posted entries
         if self.export_type == "official":
             where_query += "AND am.state = 'posted'\n"
@@ -198,17 +199,18 @@ class AccountFrFec(models.TransientModel):
             AND am.date < %(date_from)s
             AND aa.include_initial_balance = 't'
         GROUP BY aml.account_id, aa.account_type
-        HAVING aa.account_type not in ('asset_receivable', 'liability_payable')
+        HAVING aa.account_type not in ('asset_receivable', 'liability_payable') AND round(sum(aml.balance), %(currency_digits)s) != 0
         '''
+        currency_digits = 2
         params = {
             **where_params,
             'formatted_date_year': self.date_from.year,
             'formatted_date_from': fields.Date.to_string(self.date_from).replace('-', ''),
             'date_from': self.date_from,
+            'currency_digits': currency_digits,
         }
         self._cr.execute(sql_query, params)
 
-        currency_digits = 2
         for row in self._cr.fetchall():
             listrow = list(row)
             account_id = listrow.pop()
@@ -287,7 +289,7 @@ class AccountFrFec(models.TransientModel):
             AND am.date < %(date_from)s
             AND aa.include_initial_balance = 't'
         GROUP BY aml.account_id, aa.account_type, rp.ref, rp.id
-        HAVING aa.account_type in ('asset_receivable', 'liability_payable')
+        HAVING aa.account_type in ('asset_receivable', 'liability_payable') AND round(sum(aml.balance), %(currency_digits)s) != 0
         '''
         self._cr.execute(sql_query, params)
 
@@ -366,13 +368,11 @@ class AccountFrFec(models.TransientModel):
         '''
 
         with io.BytesIO() as fecfile:
-            csv_writer = pycompat.csv_writer(fecfile, delimiter='|', lineterminator='')
+            csv_writer = pycompat.csv_writer(fecfile, delimiter='|', lineterminator='\r\n')
 
             # Write header and initial balances
             for initial_row in rows_to_write:
                 initial_row = list(initial_row)
-                # We don't skip \n at then end of the file if there are only initial balances, for simplicity. An empty period export shouldn't happen IRL.
-                initial_row[-1] += u'\r\n'
                 csv_writer.writerow(initial_row)
 
             # Write current period's data
@@ -384,13 +384,9 @@ class AccountFrFec(models.TransientModel):
                 has_more_results = self._cr.rowcount > query_limit # we load one more result than the limit to check if there is more
                 query_results = self._cr.fetchall()
                 for i, row in enumerate(query_results[:query_limit]):
-                    if i < len(query_results) - 1:
-                        # The file is not allowed to end with an empty line, so we can't use lineterminator on the writer
-                        row = list(row)
-                        row[-1] += u'\r\n'
                     csv_writer.writerow(row)
 
-            base64_result = base64.encodebytes(fecfile.getvalue())
+            base64_result = base64.encodebytes(fecfile.getvalue()[:-2])
 
         end_date = fields.Date.to_string(self.date_to).replace('-', '')
         suffix = ''

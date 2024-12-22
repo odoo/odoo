@@ -437,6 +437,13 @@ _SAFE_QWEB_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'POP_JUMP_BACKWARD_IF_FALSE', 'POP_JUMP_BACKWARD_IF_TRUE',
     'POP_JUMP_FORWARD_IF_NONE', 'POP_JUMP_FORWARD_IF_NOT_NONE',
     'POP_JUMP_BACKWARD_IF_NONE', 'POP_JUMP_BACKWARD_IF_NOT_NONE',
+    # 3.12 https://docs.python.org/3/whatsnew/3.12.html#new-opcodes
+    'END_FOR',
+    'LOAD_FAST_AND_CLEAR',
+    'POP_JUMP_IF_NOT_NONE', 'POP_JUMP_IF_NONE',
+    'RERAISE',
+    'CALL_INTRINSIC_1',
+    'STORE_SLICE',
 ])) - _BLACKLIST
 
 
@@ -674,6 +681,8 @@ class IrQWeb(models.AbstractModel):
 
             :returns: tuple containing code, options and main method name
         """
+        if not isinstance(template, (int, str, etree._Element)):
+            template = str(template)
         # The `compile_context`` dictionary includes the elements used for the
         # cache key to which are added the template references as well as
         # technical information useful for generating the function. This
@@ -1317,7 +1326,7 @@ class IrQWeb(models.AbstractModel):
 
         if unqualified_el_tag != 't':
             el.set('t-tag-open', el_tag)
-            if unqualified_el_tag not in VOID_ELEMENTS:
+            if el_tag not in VOID_ELEMENTS:
                 el.set('t-tag-close', el_tag)
 
         if not ({'t-out', 't-esc', 't-raw', 't-field'} & set(el.attrib)):
@@ -1371,7 +1380,7 @@ class IrQWeb(models.AbstractModel):
             attributes = ''.join(f' {name}="{escape(str(value))}"'
                                 for name, value in attrib.items() if value or isinstance(value, str))
             self._append_text(f'<{el_tag}{"".join(attributes)}', compile_context)
-            if unqualified_el_tag in VOID_ELEMENTS:
+            if el_tag in VOID_ELEMENTS:
                 self._append_text('/>', compile_context)
             else:
                 self._append_text('>', compile_context)
@@ -1386,7 +1395,7 @@ class IrQWeb(models.AbstractModel):
             body = self._compile_directive(el, compile_context, 'inner-content', level)
 
         if unqualified_el_tag != 't':
-            if unqualified_el_tag not in VOID_ELEMENTS:
+            if el_tag not in VOID_ELEMENTS:
                 self._append_text(f'</{el_tag}>', compile_context)
 
         return body

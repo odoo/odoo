@@ -277,3 +277,13 @@ export function clickShipLaterButton() {
         },
     ]
 }
+
+export function shippingLaterHighlighted(){
+    return [
+        {
+            content: 'Shipping later button is highlighted',
+            trigger: '.button:contains("Ship Later").highlight',
+            isCheck: true
+        }
+    ]
+}

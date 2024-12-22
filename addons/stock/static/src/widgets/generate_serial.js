@@ -7,7 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { parseInteger  } from "@web/views/fields/parsers";
 import { getId } from "@web/model/relational_model/utils";
-import { Component, useRef, xml, onMounted } from "@odoo/owl";
+import { Component, useRef, onMounted } from "@odoo/owl";
 
 export class GenerateDialog extends Component {
     setup() {
@@ -83,7 +83,7 @@ GenerateDialog.props = {
 GenerateDialog.components = { Dialog };
 
 class GenerateSerials extends Component {
-    static template = xml`<button class="btn btn-link" t-on-click="openDialog">Generate Serials</button>`;
+    static template = "stock.GenerateSerials";
 
     setup(){
         this.dialog = useService("dialog");
@@ -98,7 +98,7 @@ class GenerateSerials extends Component {
 }
 
 class ImportLots extends Component {
-    static template = xml`<button class="btn btn-link" t-on-click="openDialog">Import Lots</button>`;
+    static template = "stock.ImportLots";
 
     setup(){
         this.dialog = useService("dialog");

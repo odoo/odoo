@@ -1,4 +1,9 @@
+import logging
+
 from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountMoveSend(models.TransientModel):
@@ -7,7 +12,8 @@ class AccountMoveSend(models.TransientModel):
     l10n_es_edi_facturae_enable_xml = fields.Boolean(compute='_compute_l10n_es_edi_facturae_enable_xml')
     l10n_es_edi_facturae_checkbox_xml = fields.Boolean(
         string="Generate Facturae edi file",
-        compute='_compute_l10n_es_edi_facturae_checkbox_xml',
+        default=True,
+        company_dependent=True,
     )
 
     def _get_wizard_values(self):
@@ -21,9 +27,8 @@ class AccountMoveSend(models.TransientModel):
         # EXTENDS 'account'
         values = super()._get_wizard_vals_restrict_to(only_options)
         return {
-            **values,
             'l10n_es_edi_facturae_checkbox_xml': False,
-            **only_options,
+            **values,
         }
 
     # -------------------------------------------------------------------------
@@ -79,21 +84,31 @@ class AccountMoveSend(models.TransientModel):
         super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
 
         if invoice_data.get('l10n_es_edi_facturae_xml') and invoice._l10n_es_edi_facturae_get_default_enable():
-            xml_content, errors = invoice._l10n_es_edi_facturae_render_facturae()
-            if errors:
-                invoice_data['error'] = {
-                    'error_title': _("Errors occurred while creating the EDI document (format: %s):", "Facturae"),
-                    'errors': errors,
-                }
-            else:
-                invoice_data['l10n_es_edi_facturae_attachment_values'] = {
-                    'name': invoice._l10n_es_edi_facturae_get_filename(),
-                    'raw': xml_content,
-                    'mimetype': 'application/xml',
-                    'res_model': invoice._name,
-                    'res_id': invoice.id,
-                    'res_field': 'l10n_es_edi_facturae_xml_file',  # Binary field
-                }
+            try:
+                xml_content, errors = invoice._l10n_es_edi_facturae_render_facturae()
+                if errors:
+                    invoice_data['error'] = {
+                        'error_title': _("Errors occurred while creating the EDI document (format: %s):", "Facturae"),
+                        'errors': errors,
+                    }
+                else:
+                    invoice_data['l10n_es_edi_facturae_attachment_values'] = {
+                        'name': invoice._l10n_es_edi_facturae_get_filename(),
+                        'raw': xml_content,
+                        'mimetype': 'application/xml',
+                        'res_model': invoice._name,
+                        'res_id': invoice.id,
+                        'res_field': 'l10n_es_edi_facturae_xml_file',  # Binary field
+                    }
+            except UserError as e:
+                if self.env.context.get('forced_invoice'):
+                    _logger.warning(
+                        'An error occured during generation of Facturae EDI of %s: %s',
+                        invoice.name,
+                        e.args[0]
+                    )
+                else:
+                    raise
 
     @api.model
     def _link_invoice_documents(self, invoice, invoice_data):

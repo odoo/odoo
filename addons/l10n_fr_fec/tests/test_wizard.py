@@ -68,9 +68,9 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
 
         cls.expected_report = (
             "JournalCode|JournalLib|EcritureNum|EcritureDate|CompteNum|CompteLib|CompAuxNum|CompAuxLib|PieceRef|PieceDate|EcritureLib|Debit|Credit|EcritureLet|DateLet|ValidDate|Montantdevise|Idevise\r\n"
-            "INV|Customer Invoices|INV/2021/00001|20210502|701100|Finished products (or group) A|||-|20210502|Hello Darkness|0,00| 000000000001437,12|||20210502|-000000000001437,12|EUR\r\n"
-            "INV|Customer Invoices|INV/2021/00001|20210502|701100|Finished products (or group) A|||-|20210502|my old friend|0,00| 000000000001676,64|||20210502|-000000000001676,64|EUR\r\n"
-            "INV|Customer Invoices|INV/2021/00001|20210502|701100|Finished products (or group) A|||-|20210502|/|0,00| 000000000003353,28|||20210502|-000000000003353,28|EUR\r\n"
+            "INV|Customer Invoices|INV/2021/00001|20210502|701000|Sales of finished products|||-|20210502|Hello Darkness|0,00| 000000000001437,12|||20210502|-000000000001437,12|EUR\r\n"
+            "INV|Customer Invoices|INV/2021/00001|20210502|701000|Sales of finished products|||-|20210502|my old friend|0,00| 000000000001676,64|||20210502|-000000000001676,64|EUR\r\n"
+            "INV|Customer Invoices|INV/2021/00001|20210502|701000|Sales of finished products|||-|20210502|/|0,00| 000000000003353,28|||20210502|-000000000003353,28|EUR\r\n"
             "INV|Customer Invoices|INV/2021/00001|20210502|445710|VAT collected|||-|20210502|TVA 20,0%|0,00| 000000000001293,41|||20210502|-000000000001293,41|EUR\r\n"
             f"INV|Customer Invoices|INV/2021/00001|20210502|411100|Customers - Sales of goods or services|{cls.partner_a.id}|partner_a|-|20210502|INV/2021/00001| 000000000007760,45|0,00|||20210502| 000000000007760,45|EUR"
         )
@@ -113,3 +113,64 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
         self.wizard.generate_fec()
         content = base64.b64decode(self.wizard.fec_data).decode()
         self.assertEqual(self.expected_report, content)
+
+    def test_fec_sub_companies(self):
+        """When exporting FEC, data from child companies should be included"""
+        main_company = self.env.company
+        self.maxDiff = None
+        branch_a, branch_b = self.env['res.company'].create([
+            {
+                'name': 'Branch A',
+                'country_id': main_company.country_id.id,
+                'parent_id': main_company.id,
+            }, {
+                'name': 'Branch B',
+                'country_id': main_company.country_id.id,
+                'parent_id': main_company.id
+            }
+        ])
+        branch_a1 = self.env['res.company'].create({
+            'name': 'Branch A1',
+            'country_id': main_company.country_id.id,
+            'parent_id': branch_a.id,
+        })
+
+        self.cr.precommit.run()  # load the COA
+        all_companies = (main_company + branch_a + branch_a1 + branch_b)
+
+        for i, company in enumerate(all_companies, start=1):
+            self.init_invoice('out_invoice', invoice_date=self.today, post=True, amounts=[i * 100], company=company)
+
+        self.env.flush_all()
+
+        expected_content = self.expected_report + (
+            "\r\n"
+            "INV|Customer Invoices|INV/2021/00002|20210502|707000|Sales of goods|||-|20210502|test line|0,00| 000000000000100,00|||20210502|-000000000000100,00|EUR\r\n"
+            f"INV|Customer Invoices|INV/2021/00002|20210502|411100|Customers - Sales of goods or services|{self.partner_a.id}|partner_a|-|20210502|INV/2021/00002| 000000000000100,00|0,00|||20210502| 000000000000100,00|EUR\r\n"
+            "INV|Customer Invoices|INV/2021/00003|20210502|707000|Sales of goods|||-|20210502|test line|0,00| 000000000000200,00|||20210502|-000000000000200,00|EUR\r\n"
+            f"INV|Customer Invoices|INV/2021/00003|20210502|411100|Customers - Sales of goods or services|{self.partner_a.id}|partner_a|-|20210502|INV/2021/00003| 000000000000200,00|0,00|||20210502| 000000000000200,00|EUR\r\n"
+            "INV|Customer Invoices|INV/2021/00004|20210502|707000|Sales of goods|||-|20210502|test line|0,00| 000000000000300,00|||20210502|-000000000000300,00|EUR\r\n"
+            f"INV|Customer Invoices|INV/2021/00004|20210502|411100|Customers - Sales of goods or services|{self.partner_a.id}|partner_a|-|20210502|INV/2021/00004| 000000000000300,00|0,00|||20210502| 000000000000300,00|EUR\r\n"
+            "INV|Customer Invoices|INV/2021/00005|20210502|707000|Sales of goods|||-|20210502|test line|0,00| 000000000000400,00|||20210502|-000000000000400,00|EUR\r\n"
+            f"INV|Customer Invoices|INV/2021/00005|20210502|411100|Customers - Sales of goods or services|{self.partner_a.id}|partner_a|-|20210502|INV/2021/00005| 000000000000400,00|0,00|||20210502| 000000000000400,00|EUR"
+        )
+
+        self.wizard.generate_fec()
+        content = base64.b64decode(self.wizard.fec_data).decode()
+        self.assertEqual(expected_content, content)
+
+        # Select only parent company
+        self.env.user.write({
+            'company_ids': [Command.set(main_company.ids)],
+            'company_id': main_company.id,
+        })
+
+        expected_content = self.expected_report + (
+            "\r\n"
+            "INV|Customer Invoices|INV/2021/00002|20210502|707000|Sales of goods|||-|20210502|test line|0,00| 000000000000100,00|||20210502|-000000000000100,00|EUR\r\n"
+            f"INV|Customer Invoices|INV/2021/00002|20210502|411100|Customers - Sales of goods or services|{self.partner_a.id}|partner_a|-|20210502|INV/2021/00002| 000000000000100,00|0,00|||20210502| 000000000000100,00|EUR"
+        )
+
+        self.wizard.generate_fec()
+        content = base64.b64decode(self.wizard.fec_data).decode()
+        self.assertEqual(expected_content, content)

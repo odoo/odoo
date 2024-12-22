@@ -56,7 +56,7 @@ class Project(models.Model):
         project_and_state_counts = self.env['project.task'].with_context(
             active_test=any(project.active for project in self)
         )._read_group(
-            [('project_id', 'in', self.ids)],
+            [('project_id', 'in', self.ids), ('display_in_project', '=', True)],
             ['project_id', 'state'],
             ['__count'],
         )
@@ -127,7 +127,7 @@ class Project(models.Model):
         string='Members')
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', search='_search_is_favorite',
         compute_sudo=True, string='Show Project on Dashboard')
-    label_tasks = fields.Char(string='Use Tasks as', default='Tasks', translate=True,
+    label_tasks = fields.Char(string='Use Tasks as', default=lambda s: _('Tasks'), translate=True,
         help="Name used to refer to the tasks of your project e.g. tasks, tickets, sprints, etc...")
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
@@ -244,12 +244,14 @@ class Project(models.Model):
     def _compute_allow_rating(self):
         self.allow_rating = self.env.user.has_group('project.group_project_rating')
 
-    @api.depends('analytic_account_id.company_id')
+    @api.depends('analytic_account_id.company_id', 'partner_id.company_id')
     def _compute_company_id(self):
         for project in self:
-            # if a new restriction is put on the account, the restriction on the project is updated.
+            # if a new restriction is put on the account or the customer, the restriction on the project is updated.
             if project.analytic_account_id.company_id:
                 project.company_id = project.analytic_account_id.company_id
+            if not project.company_id and project.partner_id.company_id:
+                project.company_id = project.partner_id.company_id
 
     @api.depends_context('company')
     @api.depends('company_id', 'company_id.resource_calendar_id')
@@ -264,7 +266,7 @@ class Project(models.Model):
         """
         for project in self:
             account = project.analytic_account_id
-            if project.partner_id and project.partner_id.company_id and project.company_id and project.company_id != project.partner_id.company_id:
+            if project.partner_id and project.partner_id.company_id and project.company_id != project.partner_id.company_id:
                 raise UserError(_('The project and the associated partner must be linked to the same company.'))
             if not account or not account.company_id:
                 continue
@@ -413,6 +415,11 @@ class Project(models.Model):
         subtasks_not_displayed = all_subtasks.filtered(
             lambda task: not task.display_in_project
         )
+        all_subtasks.filtered(
+            lambda child: child.project_id == self
+        ).write({
+            'project_id': project.id
+        })
         project.write({'tasks': [Command.set(new_tasks.ids)]})
         subtasks_not_displayed.write({
             'display_in_project': False
@@ -466,6 +473,11 @@ class Project(models.Model):
         return projects
 
     def write(self, vals):
+        if vals.get('access_token'):
+            self.ensure_one()  # We are not supposed to add a single access token to multiple project
+            if self.privacy_visibility != 'portal':
+                vals['access_token'] = ''
+
         # Here we modify the project's stage according to the selected company (selecting the first
         # stage in sequence that is linked to the company).
         company_id = vals.get('company_id')
@@ -628,6 +640,19 @@ class Project(models.Model):
                 res -= waiting_subtype
         return res
 
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
+        """ Give access to the portal user/customer if the project visibility is portal. """
+        groups = super()._notify_get_recipients_groups(message, model_description, msg_vals=msg_vals)
+        if not self:
+            return groups
+
+        self.ensure_one()
+        portal_privacy = self.privacy_visibility == 'portal'
+        for group_name, _group_method, group_data in groups:
+            if group_name in ['portal', 'portal_customer'] and not portal_privacy:
+                group_data['has_button_access'] = False
+        return groups
+
     # ---------------------------------------------------
     #  Actions
     # ---------------------------------------------------
@@ -665,6 +690,7 @@ class Project(models.Model):
             'delete': False,
             'search_default_open_tasks': True,
             'active_id_chatter': self.id,
+            'allow_milestones': self.allow_milestones,
         }
         action['display_name'] = self.name
         return action
@@ -682,7 +708,7 @@ class Project(models.Model):
         favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
 
     def action_view_tasks(self):
-        action = self.env['ir.actions.act_window'].with_context({'active_id': self.id})._for_xml_id('project.act_project_project_2_project_task_all')
+        action = self.env['ir.actions.act_window'].with_context(active_id=self.id)._for_xml_id('project.act_project_project_2_project_task_all')
         action['display_name'] = _("%(name)s", name=self.name)
         context = action['context'].replace('active_id', str(self.id))
         context = ast.literal_eval(context)
@@ -893,27 +919,27 @@ class Project(models.Model):
     @api.model
     def _create_analytic_account_from_values(self, values):
         company = self.env['res.company'].browse(values.get('company_id', False))
-        project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
+        project_plan_id = int(self.env['ir.config_parameter'].sudo().get_param('analytic.analytic_plan_projects'))
+
+        if not project_plan_id:
+            project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
+            project_plan_id = project_plan.id
+
         analytic_account = self.env['account.analytic.account'].create({
             'name': values.get('name', _('Unknown Analytic Account')),
             'company_id': company.id,
             'partner_id': values.get('partner_id'),
-            'plan_id': project_plan.id,
+            'plan_id': project_plan_id,
         })
         return analytic_account
 
     def _create_analytic_account(self):
         for project in self:
-            company_id = project.company_id.id
-            project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
-            analytic_account = self.env['account.analytic.account'].create({
+            project.analytic_account_id = self._create_analytic_account_from_values({
+                'company_id': project.company_id.id,
                 'name': project.name,
-                'company_id': company_id,
-                'partner_id': project.partner_id.id,
-                'plan_id': project_plan.id,
-                'active': True,
+                'partner_id': project.partner_id.id
             })
-            project.write({'analytic_account_id': analytic_account.id})
 
     def _get_projects_to_make_billable_domain(self):
         return [('partner_id', '!=', False)]
@@ -956,6 +982,9 @@ class Project(models.Model):
                 portal_users = project.message_partner_ids.user_ids.filtered('share')
                 project.message_unsubscribe(partner_ids=portal_users.partner_id.ids)
                 project.tasks._unsubscribe_portal_users()
+                # revoke access_token since the project and its tasks are no longer accessible for portal/public users
+                project.tasks.access_token = ''
+                project.access_token = ''
 
     # ---------------------------------------------------
     # Project sharing

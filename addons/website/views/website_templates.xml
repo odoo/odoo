@@ -90,7 +90,7 @@
             <t t-if="not additional_title and main_object and 'name' in main_object">
                 <t t-set="additional_title" t-value="main_object.name"/>
             </t>
-            <t t-set="default_title" t-translation="off"> <t t-if="additional_title"><t t-out="additional_title"/> | </t><t t-out="(website or res_company).name"/> </t>
+            <t t-set="default_title" t-translation="off" t-value="(additional_title + ' | ' if additional_title else '') + (website or res_company).name"/>
             <t t-set="seo_object" t-value="seo_object or main_object"/>
             <t t-if="seo_object and 'website_meta_title' in seo_object and seo_object.website_meta_title">
                 <t t-set="title" t-value="seo_object.website_meta_title"/>
@@ -161,7 +161,7 @@
         <!-- website.is_public_user() is needed for menus having a page with
         restricted visibility (only shown to logged in user): public users and
         logged in users can't share the menu cache. -->
-        <attribute name="t-cache">xmlid,website,website.is_public_user()</attribute>
+        <attribute name="t-cache">None if website.is_menu_cache_disabled() else (xmlid,website,website.is_public_user())</attribute>
     </xpath>
 
     <xpath expr="//header" position="before">
@@ -190,13 +190,37 @@
     </xpath>
 
     <xpath expr="//div[@id='wrapwrap']" position="after">
-        <t t-if="website and website.google_analytics_key and request.env['ir.http']._is_allowed_cookie('optional') and not editable">
+        <t t-if="website and website.google_analytics_key and not editable">
             <script id="tracking_code" t-attf-src="https://www.googletagmanager.com/gtag/js?id={{ website.google_analytics_key }}" async="async"/>
-            <script>
+            <script id="tracking_code_config">
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
+                gtag('consent', 'default', {
+                    'ad_storage': 'denied',
+                    'ad_user_data': 'denied',
+                    'ad_personalization': 'denied',
+                    'analytics_storage': 'denied',
+                });
                 gtag('js', new Date());
                 gtag('config', '<t t-esc="website.google_analytics_key"/>');
+                function allConsentsGranted() {
+                    gtag('consent', 'update', {
+                        'ad_storage': 'granted',
+                        'ad_user_data': 'granted',
+                        'ad_personalization': 'granted',
+                        'analytics_storage': 'granted',
+                    });
+                }
+                <t t-if="website._allConsentsGranted()">
+                    allConsentsGranted();
+                </t>
+                <t t-else="">
+                    document.addEventListener(
+                        "optionalCookiesAccepted",
+                        allConsentsGranted,
+                        {once: true}
+                    );
+                </t>
             </script>
         </t>
         <t t-if="website and website.plausible_shared_key and not editable">
@@ -318,7 +342,7 @@
 <!-- TODO adapt in master: remove o_main_nav id -->
 <template id="template_header_mobile" name="Template Header Mobile">
     <t t-call="website.navbar">
-        <t t-set="_navbar_classes" t-valuef="o_header_mobile d-block d-lg-none shadow-sm"/>
+        <t t-set="_navbar_classes" t-valuef="o_header_mobile d-block d-lg-none shadow-sm px-0"/>
         <t t-set="_navbar_expand_class" t-valuef="None"/>
         <t t-set="_navbar_name" t-valuef="Mobile"/>
 
@@ -326,7 +350,7 @@
             <!-- Brand -->
             <t t-call="website.placeholder_header_brand"/>
             <ul class="o_header_mobile_buttons_wrap navbar-nav flex-row align-items-center gap-2 mb-0">
-                <li>
+                <li class="o_not_editable">
                     <button
                         class="nav-link btn me-auto p-2 o_not_editable"
                         type="button"
@@ -347,7 +371,7 @@
                 <div class="offcanvas-body d-flex flex-column justify-content-between h-100 w-100">
                     <ul class="navbar-nav">
                         <!-- Search bar -->
-                        <t t-call="website.placeholder_header_search_box">
+                        <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                             <t t-set="_classes" t-valuef="mb-3"/>
                             <t t-set="_input_classes" t-valuef="rounded-start-pill text-bg-light ps-3"/>
                             <t t-set="_submit_classes" t-valuef="rounded-end-pill bg-o-color-3 pe-3"/>
@@ -471,7 +495,7 @@
                 <!-- Extra elements -->
                 <ul class="navbar-nav align-items-center gap-2 flex-shrink-0 justify-content-end ps-3">
                     <!-- Search Bar -->
-                    <t t-call="website.placeholder_header_search_box">
+                    <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                         <t t-set="_layout" t-valuef="modal"/>
                         <t t-set="_input_classes" t-valuef="border border-end-0 p-3"/>
                         <t t-set="_submit_classes" t-valuef="border border-start-0 px-4 bg-o-color-4"/>
@@ -557,7 +581,7 @@
                     <div class="offcanvas-body d-flex flex-column justify-content-between">
                         <ul class="navbar-nav">
                             <!-- Search bar -->
-                            <t t-call="website.placeholder_header_search_box">
+                            <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                                 <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
                                 <t t-set="_submit_classes" t-valuef="rounded-end-pill bg-o-color-3"/>
                                 <t t-set="limit" t-valuef="0"/>
@@ -681,7 +705,7 @@
                             <t t-set="_div_class" t-valuef="h-100 border-start o_border_contrast"/>
                         </t>
                     <!-- Search bar -->
-                    <t t-call="website.placeholder_header_search_box">
+                    <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                         <t t-set="_input_classes" t-valuef="o_header_stretch_search_input border-0 rounded-0 bg-transparent text-reset"/>
                         <t t-set="_submit_classes" t-valuef="o_navlink_background_hover rounded-0 text-reset"/>
                         <t t-set="_form_classes" t-valuef="h-100 z-index-0"/>
@@ -746,7 +770,7 @@
                 <div class="o_header_hide_on_scroll d-grid align-items-center w-100 o_grid_header_3_cols pb-3">
                     <ul class="navbar-nav align-items-center gap-1">
                         <!-- Search bar -->
-                        <t t-call="website.placeholder_header_search_box">
+                        <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                             <t t-set="_layout" t-valuef="modal"/>
                             <t t-set="_input_classes" t-valuef="border border-end-0 p-3"/>
                             <t t-set="_submit_classes" t-valuef="border border-start-0 px-4 bg-o-color-4"/>
@@ -864,7 +888,7 @@
                     </t>
                     <ul class="o_header_search_right_col navbar-nav align-items-center gap-2 ms-auto ps-3">
                         <!-- Search bar -->
-                        <t t-call="website.placeholder_header_search_box">
+                        <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                             <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
                             <t t-set="_submit_classes" t-valuef="rounded-end-pill pe-3 bg-o-color-3"/>
                         </t>
@@ -941,7 +965,7 @@
                             <t t-set="_div_class" t-valuef="d-flex align-items-center"/>
                         </t>
                         <!-- Search bar -->
-                        <t t-call="website.placeholder_header_search_box">
+                        <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                             <t t-set="_layout" t-valuef="modal"/>
                             <t t-set="_input_classes" t-valuef="border border-end-0 p-3"/>
                             <t t-set="_submit_classes" t-valuef="border border-start-0 px-4 bg-o-color-4"/>
@@ -1042,7 +1066,7 @@
                         </t>
                         <ul class="navbar-nav align-items-center gap-1">
                             <!-- Search bar -->
-                            <t t-call="website.placeholder_header_search_box">
+                            <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                                 <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
                                 <t t-set="_submit_classes" t-valuef="rounded-end-pill p-3 bg-o-color-3 lh-1"/>
                             </t>
@@ -1128,7 +1152,7 @@
                         </ul>
                         <ul class="navbar-nav">
                             <!-- Search bar -->
-                            <t t-call="website.placeholder_header_search_box">
+                            <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                                 <t t-set="_input_classes" t-valuef="border-0 border-start rounded-0"/>
                                 <t t-set="_submit_classes" t-valuef="rounded-0 bg-o-color-4"/>
                                 <t t-set="_form_classes" t-valuef="h-100 z-index-0"/>
@@ -1250,7 +1274,7 @@
                         <ul class="navbar-nav d-grid align-items-center py-2 o_grid_header_3_cols">
                             <!-- Search bar -->
                             <li class="o_header_sales_four_search_placeholder" t-if="is_view_active('website.header_search_box') == False"/>
-                            <t t-call="website.placeholder_header_search_box">
+                            <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                                 <t t-set="_form_classes" t-valuef="me-auto"/>
                                 <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
                                 <t t-set="_submit_classes" t-valuef="rounded-end-pill bg-o-color-3 lh-1"/>
@@ -1310,7 +1334,7 @@
                     <div class="d-flex flex-column justify-content-between h-100 w-100">
                         <ul class="navbar-nav p-0">
                             <!-- Search bar -->
-                            <t t-call="website.placeholder_header_search_box">
+                            <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                                 <t t-set="_classes" t-valuef="mb-3"/>
                                 <t t-set="_input_classes" t-valuef="rounded-start-pill ps-3 text-bg-light"/>
                                 <t t-set="_submit_classes" t-valuef="rounded-end-pill pe-3 bg-o-color-3"/>
@@ -1442,7 +1466,7 @@
                     <!-- Extra elements -->
                     <ul class="navbar-nav align-items-center gap-1 flex-wrap flex-shrink-0 justify-content-end ps-3">
                         <!-- Search Bar -->
-                        <t t-call="website.placeholder_header_search_box">
+                        <t t-call="website.placeholder_header_search_box" t-nocache="The searchbox should not cache previous searches.">
                             <t t-set="_layout" t-valuef="modal"/>
                             <t t-set="_input_classes" t-valuef="border border-end-0 p-3"/>
                             <t t-set="_submit_classes" t-valuef="border border-start-0 px-4 bg-o-color-4"/>
@@ -1631,7 +1655,7 @@
                             <ul class="list-unstyled">
                                 <li><i class="fa fa-comment fa-fw me-2"/><span><a href="/contactus">Contact us</a></span></li>
                                 <li><i class="fa fa-envelope fa-fw me-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
-                                <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1(650)555-0111">+1 (650) 555-0111</a></span></li>
+                                <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span></li>
                             </ul>
                             <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
@@ -1675,7 +1699,7 @@
                         </div>
                         <div class="col-lg-3">
                             <ul class="list-unstyled mb-2">
-                                <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1(650)555-0111">+1 (650) 555-0111</a></span></li>
+                                <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span></li>
                                 <li><i class="fa fa-envelope fa-fw me-2"/><span><a href="mailto:hello@mycompany.com">hello@mycompany.com</a></span></li>
                             </ul>
                             <div class="s_social_media text-start no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
@@ -1720,7 +1744,7 @@
                     </div>
                     <p class="text-center mb-1">250 Executive Park Blvd, Suite 3400 • San Francisco CA 94134 • United States</p>
                     <ul class="list-inline text-center">
-                        <li class="list-inline-item mx-3"><i class="fa fa-1x fa-fw fa-phone me-2"/><span class="o_force_ltr"><a href="tel:+1(650)555-0111">+1 (650) 555-0111</a></span></li>
+                        <li class="list-inline-item mx-3"><i class="fa fa-1x fa-fw fa-phone me-2"/><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span></li>
                         <li class="list-inline-item mx-3"><i class="fa fa-1x fa-fw fa-envelope me-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
                     </ul>
                 </div>
@@ -1781,7 +1805,7 @@
                             <h5>Get in touch</h5>
                             <ul class="list-unstyled">
                                 <li class="py-1"><i class="fa fa-1x fa-fw fa-envelope me-2"/><a href="mailto:info@yourcompany.com">info@yourcompany.com</a></li>
-                                <li class="py-1"><i class="fa fa-1x fa-fw fa-phone me-2"/><span class="o_force_ltr"><a href="tel:+1(650)555-0111">+1 (650) 555-0111</a></span></li>
+                                <li class="py-1"><i class="fa fa-1x fa-fw fa-phone me-2"/><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556"</a></span></li>
                             </ul>
                         </div>
                         <div class="col-lg-3 pb16">
@@ -1854,7 +1878,7 @@
                         </div>
                         <div class="col-lg-3 pt16 pb16">
                             <p class="mb-2">Call us</p>
-                            <h5><span class="o_force_ltr"><a href="tel:+1(650)555-0111">+1 (650) 555-0111</a></span></h5>
+                            <h5><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span></h5>
                         </div>
                         <div class="col-lg-3 pt16 pb16">
                             <p class="mb-2">Send us a message</p>
@@ -1986,7 +2010,7 @@
                         </div>
                         <div class="col-lg-6 pb24">
                             <ul class="list-unstyled mb-0">
-                                <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1(650)555-0111">+1 (650) 555-0111</a></span></li>
+                                <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span></li>
                                 <li><i class="fa fa-envelope fa-fw me-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
                             </ul>
                         </div>
@@ -2557,6 +2581,7 @@
 User-agent: *
 <t t-if="website.domain and not website._is_indexable_url(url_root)">
 Disallow: /
+Sitemap: <t t-esc="website.domain"/>/sitemap.xml
 </t>
 <t t-else="">
 Sitemap: <t t-esc="url_root"/>sitemap.xml
@@ -2891,7 +2916,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     <xpath expr="." position="inside">
         <li t-attf-class="#{_item_class}">
             <t t-if="_layout == 'modal'">
-                <div class="modal fade" id="o_search_modal" aria-hidden="true" tabindex="-1">
+                <div class="modal fade css_editable_mode_hidden" id="o_search_modal" aria-hidden="true" tabindex="-1">
                     <div class="modal-dialog modal-lg pt-5">
                         <div class="modal-content mt-5">
                             <t t-call="website.header_search_box_input">
@@ -2939,10 +2964,10 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
             </t>
             <t t-elif="_txt_elt_content == 'phone_mail'">
                 <div t-attf-class="s_text_block #{_div_class}" data-name="Text">
-                    <a href="tel:+1 (650) 555-0111" class="nav-link o_nav-link_secondary">
+                    <a href="tel:+1 555-555-5556" class="nav-link o_nav-link_secondary">
                         <small>
                             <i class="fa fa-1x fa-fw fa-phone me-1"/>&#847; <!-- Empty character needed to be able to delete the icon. -->
-                            <span class="o_force_ltr">+1 (650) 555-0111</span>
+                            <span class="o_force_ltr">+1 555-555-5556</span>
                         </small>
                     </a>
                     <a href="mailto:info@yourcompany.example.com" class="nav-link o_nav-link_secondary">
@@ -2962,17 +2987,17 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
             </t>
             <t t-elif="_txt_elt_content == 'mail_stretched'">
                 <div t-attf-class="s_text_block #{_div_class}" data-name="Text">
-                    <a href="tel:+1 (650) 555-0111" class="nav-link o_nav-link_secondary p-2 o_navlink_background_hover d-flex align-items-center h-100 text-reset">
+                    <a href="tel:+1 555-555-5556" class="nav-link o_nav-link_secondary p-2 o_navlink_background_hover d-flex align-items-center h-100 text-reset">
                         <i class="fa fa-1x fa-fw fa-phone me-1"/>
-                        <span class="o_force_ltr"><small>+1 (650) 555-0111</small></span>
+                        <span class="o_force_ltr"><small>+1 555-555-5556</small></span>
                     </a>
                 </div>
             </t>
             <t t-else="">
                 <div t-attf-class="s_text_block #{_div_class}" data-name="Text">
-                    <a href="tel:+1 (650) 555-0111" class="nav-link o_nav-link_secondary p-2">
+                    <a href="tel:+1 555-555-5556" class="nav-link o_nav-link_secondary p-2">
                         <i class="fa fa-1x fa-fw fa-phone me-1"/>
-                        <span class="o_force_ltr"><small>+1 (650) 555-0111</small></span>
+                        <span class="o_force_ltr"><small>+1 555-555-5556</small></span>
                     </a>
                 </div>
             </t>

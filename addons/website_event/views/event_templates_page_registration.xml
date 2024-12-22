@@ -5,6 +5,8 @@
 <template id="event_details" name="Event Header">
     <t t-call="website_event.layout">
         <div class="h-100" name="event" itemscope="itemscope" itemtype="http://schema.org/Event">
+            <meta itemprop="startDate" t-attf-content="{{event.date_begin}}Z"/>
+            <meta itemprop="endDate" t-attf-content="{{event.date_end}}Z"/>
             <t t-out="0"/>
         </div>
     </t>
@@ -16,13 +18,15 @@
     <t t-set="hide_register_cta" t-value="True"/>
     <t t-call="website_event.event_details">
         <section class="h-100" t-cache="event if not editable and event.website_published else None">
-            <div class="container overflow-hidden h-100 pb-5">
+            <div class="container overflow-hidden pb-5">
                 <div class="row h-100">
-                <div class="col">
+                <div class="col pe-xxl-5">
                     <t t-call="website_event.navbar"/>
                     <!-- Show the button tickets only on mobile -->
-                    <div class="container d-lg-none py-3">
-                        <t t-call="website_event.registration_template"/>
+                    <div class="container d-lg-none">
+                        <t t-call="website_event.registration_template">
+                            <t t-set="toast_message" t-value=""/>
+                        </t>
                     </div>
                     <!-- Description -->
                     <div id="o_wevent_event_main_col">
@@ -51,7 +55,7 @@
                             </div>
                             <!-- Date & Time -->
                             <div class="o_wevent_sidebar_block border-bottom pb-3 my-3">
-                                <h6 class="o_wevent_sidebar_title text-muted text-uppercase">Date &amp; Time</h6>
+                                <h6 class="o_wevent_sidebar_title">Date &amp; Time</h6>
                                 <div class="d-flex">
                                     <h6 t-field="event.date_begin" class="my-1" t-options="{'tz_name': event.date_tz, 'format': 'full', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
                                 </div>
@@ -72,8 +76,8 @@
                                 <span t-else="" t-field="event.date_end" t-options="{'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}" t-att-datetime="event.date_end"/>
                                 (<span t-out="event.date_tz"/>)
 
-                                <a href="#" role="button" data-bs-toggle="dropdown" class="btn btn-secondary text-bg-secondary dropdown w-100 mt-3">
-                                    <p class="mb-0"><i class="fa fa-calendar me-2"/>Add to Calendar</p>
+                                <a href="#" role="button" data-bs-toggle="dropdown" class="btn btn-secondary dropdown w-100 mt-3">
+                                    <i class="fa fa-calendar me-2"/>Add to Calendar
                                 </a>
                                 <div class="dropdown-menu">
                                     <a t-att-href="iCal_url" class="dropdown-item">iCal/Outlook</a>
@@ -82,34 +86,34 @@
                             </div>
                             <!-- Location -->
                             <div t-if="event.address_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-3">
-                                <h6 class="o_wevent_sidebar_title text-muted text-uppercase">Location</h6>
-                                <h4 t-field="event.address_id" class="" t-options='{
+                                <h6 class="o_wevent_sidebar_title">Location</h6>
+                                <h4 t-field="event.address_id" class="font-sans-serif mt-0 mb-1" style="font-size: 1rem" t-options='{
                                     "widget": "contact",
                                     "fields": ["name"]
                                 }'/>
-                                <div itemprop="location" class="mb-2" t-field="event.address_id" t-options='{
+                                <div itemprop="location" class="mb-2 small" t-field="event.address_id" t-options='{
                                     "widget": "contact",
                                     "fields": ["address"],
                                     "no_marker": True
                                 }'/>
-                                <div class="mb-3" t-field="event.address_id" t-options='{
+                                <div class="mb-2 small" t-field="event.address_id" t-options='{
                                     "widget": "contact",
                                     "fields": ["phone", "mobile", "email"]
                                 }'/>
-                                <a t-att-href="event._google_map_link()" target="_blank" class="btn btn-secondary text-bg-secondary w-100">
-                                    <p class="mb-0"><i class="fa fa-map-marker fa-fw" role="img"/>Get the direction</p>
+                                <a t-att-href="event._google_map_link()" target="_blank" class="btn btn-secondary w-100">
+                                    <i class="fa fa-map-marker fa-fw" role="img"/>Get the direction
                                 </a>
                             </div>
                             <!-- Organizer -->
                             <div t-if="event.organizer_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-3">
-                                <h6 class="o_wevent_sidebar_title text-muted text-uppercase">Organizer</h6>
-                                <h4 t-field="event.organizer_id"/>
-                                <div itemprop="location" t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email']}"/>
+                                <h6 class="o_wevent_sidebar_title">Organizer</h6>
+                                <h4 t-field="event.organizer_id" class="font-sans-serif mt-0 mb-1" style="font-size: 1rem"/>
+                                <div class="small" itemprop="location" t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email']}"/>
                             </div>
                             <!-- Social -->
                             <div class="o_wevent_sidebar_block">
-                                <h6 class="o_wevent_sidebar_title text-muted text-uppercase">SHARE</h6>
-                                <p class="mb-2">Find out what people see and say about this event, and join the conversation.</p>
+                                <h6 class="o_wevent_sidebar_title">Share</h6>
+                                <p>Find out what people see and say about this event, and join the conversation.</p>
                                 <t t-snippet-call="website.s_share">
                                     <t t-set="_no_title" t-value="True"/>
                                     <t t-set="_classes" t-valuef="o_wevent_sidebar_social mx-n1"/>
@@ -136,6 +140,9 @@
             </t>
         </div>
         <button t-if="event.event_registrations_open" type="button" data-bs-toggle="modal" data-bs-target="#modal_ticket_registration" class="btn btn-primary w-100">Register</button>
+        <div t-if="registration_error_code == 'insufficient_seats'" class="alert alert-danger my-3" role="alert">
+            Registration failed! These tickets are not available anymore.
+        </div>
     </div>
     <div t-if="toast_message" class="o_wevent_register_toaster d-none" t-att-data-message="toast_message"/>
     <div t-if="not event.event_registrations_open" class="mb-3">
@@ -351,7 +358,7 @@
             <div class="modal-content">
             <div class="modal-header">
                 <div class="o_wevent_registration_title modal-title fs-5" id="staticBackdropLabel">Tickets</div>
-                <div t-if="len(event.event_ticket_ids) &gt; 1" class="o_wevent_price_range ms-2"/>
+                <div t-if="len(event.event_ticket_ids) &gt; 2" class="o_wevent_price_range ms-2"/>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -374,10 +381,10 @@
                         </span>
                         <div id="o_wevent_tickets_collapse" class="modal-body collapse show">
                             <div t-foreach="tickets" t-as="ticket"
-                                class="d-flex justify-content-between o_wevent_ticket_selector"
+                                t-attf-class="d-flex justify-content-between o_wevent_ticket_selector mb-2 pb-2 {{not ticket_last and 'border-bottom' or ''}}"
                                 t-att-name="ticket.name">
                                 <div itemscope="itemscope" itemtype="http://schema.org/Offer">
-                                    <h5 itemprop="name" t-field="ticket.name" class="my-0"/>
+                                    <h5 itemprop="name" t-field="ticket.name" class="h6 my-0"/>
                                     <t t-if="ticket.description">
                                         <small t-field="ticket.description" class="text-muted py-2"/>
                                         <br/>
@@ -395,8 +402,8 @@
                                         (<span t-out="ticket.event_id.date_tz"/>)
                                     </small>
                                 </div>
-                                <div class="d-flex align-items-center justify-content-between p-0">
-                                    <div class="o_wevent_registration_multi_select flex-md-grow-1 me-2 text-end"/>
+                                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+                                    <div class="o_wevent_registration_multi_select flex-md-grow-1 text-end"/>
                                     <div class="ms-auto">
                                         <select t-if="not ticket.is_expired and ticket.sale_available"
                                             t-attf-name="nb_register-#{ticket.id}"
@@ -416,7 +423,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
+                        <div class="modal-footer flex-lg-row border-top">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary o_wait_lazy_js a-submit" disabled="" t-attf-id="#{event.id}">
                                 Register
@@ -466,7 +473,7 @@
                                 </t>
                             </div>
                         </div>
-                        <div class="modal-footer">
+                        <div class="modal-footer flex-lg-row border-top">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary o_wait_lazy_js a-submit" t-attf-id="#{event.id}" disabled="disabled">
                                 Register

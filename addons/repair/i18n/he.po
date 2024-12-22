@@ -5,7 +5,6 @@
 # Translators:
 # Lilach Gilliam <lilach@apprcase.com>, 2023
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2023
-# Ha Ketem <haketem@gmail.com>, 2023
 # ilan kl <ilan@qaroads.co.il>, 2023
 # Moshe Flam <pashute@gmail.com>, 2023
 # שהאב חוסיין <shhab89@gmail.com>, 2023
@@ -18,16 +17,19 @@
 # Martin Trigaux, 2023
 # דודי מלכה <Dudimalka6@gmail.com>, 2023
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2023
-# yael terner, 2023
+# Roy Sayag, 2024
+# yael terner, 2024
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
+# Ha Ketem <haketem@gmail.com>, 2024
+# Uri Segman, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024\n"
+"Last-Translator: Uri Segman, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,7 +97,7 @@ msgstr "<span>הזמנות</span>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<span>Repair Order #:</span>"
-msgstr ""
+msgstr "<span>הזמנת תיקון #:</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -185,12 +187,12 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__reserve_visible
 msgid "Allowed to Reserve Production"
-msgstr ""
+msgstr "Allowed to Reserve Production"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__unreserve_visible
 msgid "Allowed to Unreserve Production"
-msgstr ""
+msgstr "Allowed to Unreserve Production"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_parts_late
@@ -286,7 +288,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Create Quotation"
-msgstr ""
+msgstr "צור הצעת מחיר"
 
 #. module: repair
 #. odoo-python
@@ -555,7 +557,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Laptop"
-msgstr ""
+msgstr "מחשב נייד"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__write_uid
@@ -629,12 +631,9 @@ msgid "My Activity Deadline"
 msgstr "מועד אחרון לפעילות שלי"
 
 #. module: repair
-#. odoo-python
-#: code:addons/repair/models/repair.py:0
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__draft
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
-#, python-format
 msgid "New"
 msgstr "חדש"
 
@@ -711,7 +710,7 @@ msgstr "מספר השגיאות"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "מספר הודעות הדורשות פעולה"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
@@ -799,6 +798,11 @@ msgid "Product Moves"
 msgstr "תנועות מוצר"
 
 #. module: repair
+#: model:ir.model,name:repair.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "תנועות המוצר (תנועת שורת מלאי)"
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_qty
 msgid "Product Quantity"
 msgstr "כמות מוצרים"
@@ -864,7 +868,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__recycle_location_id
 msgid "Recycled Parts Destination Location"
-msgstr ""
+msgstr "מיקום יעד"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__remove
@@ -889,7 +893,7 @@ msgstr "תיקון "
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Notes"
-msgstr ""
+msgstr "הערות תיקון"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warehouse__repair_type_id
@@ -1290,7 +1294,7 @@ msgstr "בתיקון"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__under_warranty
 msgid "Under Warranty"
-msgstr ""
+msgstr "תחת אחריות"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_uom_name

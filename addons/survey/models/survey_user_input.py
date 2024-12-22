@@ -23,7 +23,7 @@ class SurveyUserInput(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     # answer description
-    survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, ondelete='cascade')
+    survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, ondelete='cascade', index=True)
     scoring_type = fields.Selection(string="Scoring", related="survey_id.scoring_type")
     start_datetime = fields.Datetime('Start date and time', readonly=True)
     end_datetime = fields.Datetime('End date and time', readonly=True)
@@ -43,7 +43,7 @@ class SurveyUserInput(models.Model):
     # identification / access
     access_token = fields.Char('Identification token', default=lambda self: str(uuid.uuid4()), readonly=True, required=True, copy=False)
     invite_token = fields.Char('Invite token', readonly=True, copy=False)  # no unique constraint, as it identifies a pool of attempts
-    partner_id = fields.Many2one('res.partner', string='Contact', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Contact', readonly=True, index='btree_not_null')
     email = fields.Char('Email', readonly=True)
     nickname = fields.Char('Nickname', help="Attendee nickname, mainly used to identify them in the survey session leaderboard.")
     # questions / answers
@@ -444,7 +444,8 @@ class SurveyUserInput(models.Model):
 
             question_section = question.page_id.title or _('Uncategorized')
             for user_input in self:
-                user_input_lines = user_input.user_input_line_ids.filtered(lambda line: line.question_id == question)
+                user_input_lines = user_input.user_input_line_ids.filtered(lambda line:
+                    line.question_id == question and (line.answer_type != 'char_box' or question.comment_count_as_answer))
                 if question.question_type == 'simple_choice':
                     answer_result_key = self._simple_choice_question_answer_result(user_input_lines, question_correct_suggested_answers, question_incorrect_scored_answers)
                 elif question.question_type == 'multiple_choice':
@@ -708,7 +709,7 @@ class SurveyUserInputLine(models.Model):
     # survey data
     user_input_id = fields.Many2one('survey.user_input', string='User Input', ondelete='cascade', required=True, index=True)
     survey_id = fields.Many2one(related='user_input_id.survey_id', string='Survey', store=True, readonly=False)
-    question_id = fields.Many2one('survey.question', string='Question', ondelete='cascade', required=True)
+    question_id = fields.Many2one('survey.question', string='Question', ondelete='cascade', required=True, index=True)
     page_id = fields.Many2one(related='question_id.page_id', string="Section", readonly=False)
     question_sequence = fields.Integer('Sequence', related='question_id.sequence', store=True)
     # answer

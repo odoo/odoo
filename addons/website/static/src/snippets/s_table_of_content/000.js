@@ -14,6 +14,7 @@ const TableOfContent = publicWidget.Widget.extend({
         this._stripNavbarStyles();
         await this._super(...arguments);
         this.$scrollingElement = this.$target.closest(".s_table_of_content").closestScrollable();
+        this.$scrollingTarget = $().getScrollingTarget(this.$scrollingElement);
         this.previousPosition = -1;
         this._updateTableOfContentNavbarPosition();
         this._updateTableOfContentNavbarPositionBound = this._updateTableOfContentNavbarPosition.bind(this);
@@ -68,7 +69,8 @@ const TableOfContent = publicWidget.Widget.extend({
         position += isHorizontalNavbar ? this.$el.outerHeight() : 0;
         this.$el.find('.s_table_of_content_navbar').css('maxHeight', isHorizontalNavbar ? '' : `calc(100vh - ${position + 40}px)`);
         if (this.previousPosition !== position) {
-            new ScrollSpy(this.$scrollingElement, {
+            const target = this.$scrollingTarget[0];
+            new ScrollSpy(target instanceof Window ? target.document.body : target, {
                 target: this.$el.find('.s_table_of_content_navbar'),
                 method: 'offset',
                 offset: position + 100,

@@ -3,6 +3,9 @@
 
   <t t-name="website_event_exhibitor.ExhibitorConnectClosedDialog">
     <Dialog size="'md'" header="false" footer="false" >
+        <div class="modal-header p-1 m-0">
+            <button type="button" class="btn-close" t-on-click.stop="() => this.props.close()"></button>
+        </div>
         <div class="o_wesponsor_js_connect_modal_main container">
             <div class="row mt-2">
                 <t t-if="! sponsorData.event_is_ongoing">
@@ -40,16 +43,16 @@
                     </strong> (<span t-out="sponsorData.event_date_tz"/>)
                     to meet them!
                 </div>
-                <div class="col-2">
+                <div class="col-2" t-if="sponsorData.website_image_url">
                     <img class="img" style="max-width: 100%;"
                         t-att-src="sponsorData.website_image_url"
                         t-att-alt="sponsorData.name"/>
                 </div>
                 <div class="col-10">
                     <div class="d-flex align-items-top mb-3">
-                        <div class="d-flex flex-column">
-                            <div class="d-flex align-items-center">
-                                <h4 t-out="sponsorData.name" class="mb4"/>
+                        <div class="d-flex flex-column me-2">
+                            <div class="mb4">
+                                <h4 class="d-inline" t-out="sponsorData.name"/>
                                 <span class="badge text-bg-primary ms-2"
                                     t-out="sponsorData.sponsor_type_name"/>
                             </div>

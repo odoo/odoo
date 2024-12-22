@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { browser } from "@web/core/browser/browser";
+import { KeepLast } from "@web/core/utils/concurrency";
 
 var SelectBox = publicWidget.Widget.extend({
     events: {
@@ -21,19 +22,13 @@ var SelectBox = publicWidget.Widget.extend({
         this.placeholder = placeholder;
 
         this.orm = this.bindService("orm");
-    },
-    /**
-     * @override
-     */
-    willStart: function () {
-        var self = this;
-        var defs = [this._super.apply(this, arguments)];
-        defs.push(this.orm.searchRead(this.obj, [], ["id", "name"]).then(function (result) {
-            self.objects = result.map((val) => {
-                return {id: val.id, text: val.name};
-            });
-        }));
-        return Promise.all(defs);
+        this.keepLast = new KeepLast();
+
+        // TODO remove in master, contained the whole list of preloaded entries.
+        // Now we lazy load results based on the user search. We still save them
+        // in this array each time so that the "Create" feature works and so
+        // that potential custo may still make sense, or at least do not crash.
+        this.objects = [];
     },
     /**
      * @override
@@ -43,6 +38,7 @@ var SelectBox = publicWidget.Widget.extend({
         this.$el.select2({
             placeholder: self.placeholder,
             allowClear: true,
+            formatNoMatches: false,
             createSearchChoice: function (term) {
                 if (self._objectExists(term)) {
                     return null;
@@ -51,8 +47,78 @@ var SelectBox = publicWidget.Widget.extend({
             },
             createSearchChoicePosition: 'bottom',
             multiple: false,
-            data: self.objects,
-            minimumInputLength: self.objects.length > 100 ? 3 : 0,
+            ajax: {
+                dataType: 'json',
+                data: term => term,
+                transport: (params, success, failure) => {
+                    // Do not search immediately: wait for the user to stop
+                    // typing (basically, this is a debounce).
+                    clearTimeout(this._loadDataTimeout);
+                    this._loadDataTimeout = setTimeout(() => {
+                        // We want to search with a limit and not care about any
+                        // pagination implementation. To make this work, we
+                        // display the exact match first though, which requires
+                        // an extra RPC (could be refactored into a new
+                        // controller in master but... see TODO).
+                        // TODO at some point this whole app will be moved as a
+                        // backend screen, with real m2o fields etc... in which
+                        // case the "exact match" feature should be handled by
+                        // the ORM somehow ?
+                        const limit = 100;
+                        const searchReadParams = [
+                            ['id', 'name'],
+                            {
+                                limit: limit,
+                                order: 'name, id desc', // Allows to have exact match first
+                            },
+                        ];
+                        const proms = [];
+                        proms.push(this.orm.searchRead(
+                            this.obj,
+                            // Exact match + results that start with the search
+                            [['name', '=ilike', `${params.data}%`]],
+                            ...searchReadParams
+                        ));
+                        proms.push(this.orm.searchRead(
+                            this.obj,
+                            // Results that contain the search but do not start
+                            // with it
+                            [['name', '=ilike', `%_${params.data}%`]],
+                            ...searchReadParams
+                        ));
+                        // Keep last is there in case a RPC takes longer than
+                        // the debounce delay + next rpc delay for some reason.
+                        this.keepLast.add(Promise.all(proms)).then(([startingMatches, endingMatches]) => {
+                            // We loaded max a 2 * limit amount of records but
+                            // ensure that we do not display "ending matches" if
+                            // we may not have loaded all "starting matches".
+                            if (startingMatches.length < limit) {
+                                const startingMatchesId = startingMatches.map((value) => value.id);
+                                const extraEndingMatches = endingMatches.filter(
+                                    (value) => !startingMatchesId.includes(value.id)
+                                );
+                                return startingMatches.concat(extraEndingMatches);
+                            }
+                            // In that case, we made one RPC too much but this
+                            // was chosen over not making them go in parallel.
+                            // We don't want to display "ending matches" if not
+                            // all "starting matches" have been loaded.
+                            return startingMatches;
+                        })
+                        .then(params.success)
+                        .catch(params.error);
+                    }, 400);
+                },
+                results: data => {
+                    this.objects = data.map(x => ({
+                        id: x.id,
+                        text: x.name,
+                    }));
+                    return {
+                        results: this.objects,
+                    };
+                },
+            },
         });
     },
 
@@ -72,16 +138,14 @@ var SelectBox = publicWidget.Widget.extend({
      * @param {String} name
      */
     _createObject: function (name) {
-        var self = this;
         var args = {
             name: name
         };
-        if (this.obj === "utm.campaign"){
+        if (this.obj === "utm.campaign") {
             args.is_auto_campaign = true;
         }
-        return this.orm.create(this.obj, [args]).then(function (record) {
-            self.$el.attr('value', record);
-            self.objects.push({'id': record, 'text': name});
+        return this.orm.create(this.obj, [args]).then(record => {
+            this.$el.attr('value', record);
         });
     },
 
@@ -425,7 +489,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
      * @private
      */
     _onShortenUrlButtonClick: async function (ev) {
-        const textValue = ev.target.dataset["clipboard-text"];
+        const textValue = ev.target.dataset.clipboardText;
         await browser.navigator.clipboard.writeText(textValue);
 
         if (!$('#btn_shorten_url').hasClass('btn-copy') || this.url_copy_animating) {

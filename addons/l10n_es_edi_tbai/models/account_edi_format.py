@@ -109,8 +109,33 @@ class AccountEdiFormat(models.Model):
             # - If called from a cron, then the re-ordering of jobs should prevent this from triggering
             # - If called manually, then the user will see this error pop up when it triggers
             chain_head = invoice.company_id._get_l10n_es_tbai_last_posted_invoice()
+            error_msg = ''
             if chain_head and chain_head != invoice and not chain_head._l10n_es_tbai_is_in_chain():
-                raise UserError(f"TicketBAI: Cannot post invoice while chain head ({chain_head.name}) has not been posted")
+                error_msg = _("TicketBAI: Cannot post invoice while chain head (%s) has not been posted", chain_head.name)
+            if (
+                invoice.move_type == 'out_refund'
+                and not invoice.reversed_entry_id or (
+                    not invoice.reversed_entry_id._l10n_es_tbai_is_in_chain()
+                    and invoice.reversed_entry_id.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'es_tbai'))  # avoid imported ones
+            ):
+                error_msg = _("TicketBAI: Cannot post a reversal move while the source document (%s) has not been posted", invoice.reversed_entry_id.name)
+
+            # Tax configuration check: In case of foreign customer we need the tax scope to be set
+            com_partner = invoice.commercial_partner_id
+            if (com_partner.country_id.code not in ('ES', False) or (com_partner.vat or '').startswith("ESN")) and\
+                    invoice.line_ids.tax_ids.filtered(lambda t: not t.tax_scope):
+                error_msg = _(
+                    "In case of a foreign customer, you need to configure the tax scope on taxes:\n%s",
+                    "\n".join(invoice.line_ids.tax_ids.mapped('name'))
+                )
+
+            if error_msg:
+                return {
+                    invoice: {
+                        'error': error_msg,
+                        'blocking_level': 'error',
+                    }
+                }
 
             # Generate the XML values.
             inv_dict = self._get_l10n_es_tbai_invoice_xml(invoice)
@@ -348,9 +373,9 @@ class AccountEdiFormat(models.Model):
             invoice_lines.append({
                 'line': line,
                 'discount': discount * refund_sign,
-                'unit_price': (line.balance + discount) / line.quantity * refund_sign,
+                'unit_price': (line.balance + discount) / line.quantity * refund_sign if line.quantity > 0 else 0,
                 'total': total,
-                'description': regex_sub(r'[^0-9a-zA-Z ]', '', line.name)[:250]
+                'description': regex_sub(r'[^0-9a-zA-Z ]', '', line.name or '')[:250]
             })
         values['invoice_lines'] = invoice_lines
         # Tax details (desglose)
@@ -363,10 +388,19 @@ class AccountEdiFormat(models.Model):
         # NOTE there's 11 more codes to implement, also there can be up to 3 in total
         # See https://www.gipuzkoa.eus/documents/2456431/13761128/Anexo+I.pdf/2ab0116c-25b4-f16a-440e-c299952d683d
         export_exempts = invoice.invoice_line_ids.tax_ids.filtered(lambda t: t.l10n_es_exempt_reason == 'E2')
-        values['regime_key'] = ['02'] if export_exempts else ['01']
+        # If an invoice line contains an OSS tax, the invoice is considered as an OSS operation
+        is_oss = self._has_oss_taxes(invoice)
 
-        if invoice.l10n_es_is_simplified:
-            values['regime_key'].append(52)  # code for simplified invoices
+        if is_oss:
+            values['regime_key'] = ['17']
+        elif export_exempts:
+            values['regime_key'] = ['02']
+        else:
+            values['regime_key'] = ['01']
+
+        if invoice.l10n_es_is_simplified and invoice.company_id.l10n_es_tbai_tax_agency != 'bizkaia':
+            values['regime_key'] += ['52']  # code for simplified invoices
+        values['nosujeto_causa'] = 'IE' if is_oss else 'RL'
 
         return values
 

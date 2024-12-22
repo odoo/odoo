@@ -1,16 +1,29 @@
 import ast
 import os
 import logging
+from odoo import MIN_PY_VERSION
 from shutil import copyfileobj
 from types import CodeType
 
 _logger = logging.getLogger(__name__)
+
+try:
+    import num2words
+    from .num2words_patch import Num2Word_AR_Fixed
+except ImportError:
+    _logger.warning("num2words is not available, Arabic number to words conversion will not work")
+    num2words = None
 
 from werkzeug.datastructures import FileStorage
 from werkzeug.routing import Rule
 from werkzeug.wrappers import Request, Response
 
 from .json import scriptsafe
+
+try:
+    from stdnum import util
+except ImportError:
+    util = None
 
 try:
     from xlrd import xlsx
@@ -65,3 +78,60 @@ def literal_eval(expr):
     return orig_literal_eval(expr)
 
 ast.literal_eval = literal_eval
+
+if MIN_PY_VERSION >= (3, 12):
+    raise RuntimeError("The num2words monkey patch is obsolete. Bump the version of the library to the latest available in the official package repository, if it hasn't already been done, and remove the patch.")
+
+if num2words:
+    num2words.CONVERTER_CLASSES["ar"] = Num2Word_AR_Fixed()
+
+_soap_clients = {}
+
+
+def new_get_soap_client(wsdlurl, timeout=30):
+    # stdnum library does not set the timeout for the zeep Transport class correctly
+    # (timeout is to fetch the wsdl and operation_timeout is to perform the call),
+    # requiring us to monkey patch the get_soap_client function.
+    # Can be removed when https://github.com/arthurdejong/python-stdnum/issues/444 is
+    # resolved and the version of the dependency is updated.
+    # The code is a copy of the original apart for the line related to the Transport class.
+    # This was done to keep the code as similar to the original and to reduce the possibility
+    # of introducing import errors, even though some imports are not in the requirements.
+    # See https://github.com/odoo/odoo/pull/173359 for a more thorough explanation.
+    if (wsdlurl, timeout) not in _soap_clients:
+        try:
+            from zeep.transports import Transport
+            transport = Transport(operation_timeout=timeout, timeout=timeout)  # operational_timeout added here
+            from zeep import CachingClient
+            client = CachingClient(wsdlurl, transport=transport).service
+        except ImportError:
+            # fall back to non-caching zeep client
+            try:
+                from zeep import Client
+                client = Client(wsdlurl, transport=transport).service
+            except ImportError:
+                # other implementations require passing the proxy config
+                try:
+                    from urllib import getproxies
+                except ImportError:
+                    from urllib.request import getproxies
+                # fall back to suds
+                try:
+                    from suds.client import Client
+                    client = Client(
+                        wsdlurl, proxy=getproxies(), timeout=timeout).service
+                except ImportError:
+                    # use pysimplesoap as last resort
+                    try:
+                        from pysimplesoap.client import SoapClient
+                        client = SoapClient(
+                            wsdl=wsdlurl, proxy=getproxies(), timeout=timeout)
+                    except ImportError:
+                        raise ImportError(
+                            'No SOAP library (such as zeep) found')
+        _soap_clients[(wsdlurl, timeout)] = client
+    return _soap_clients[(wsdlurl, timeout)]
+
+
+if util:
+    util.get_soap_client = new_get_soap_client

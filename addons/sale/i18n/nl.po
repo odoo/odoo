@@ -6,13 +6,14 @@
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2024
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -744,6 +745,11 @@ msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
 msgstr "<i class=\"fa fa-fw fa-check\"/> Betaald"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
+msgstr "<i class=\"fa fa-fw fa-check\"/> Teruggedraaid"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
 msgstr "<i class=\"fa fa-fw fa-clock-o\"/>Vervallen"
@@ -1165,15 +1171,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"Hiermaa kan je het document delen met je klanten binnen een verkoop. \n"
-"Laat het leeg als je dit document niet wilt delen met klanten. \n"
-"Offerte: het document wordt verzonden naar de klanten en is op elk moment toegankelijk voor hen.\n"
-"bijv. deze optie kan handig zijn om bestanden met productbeschrijvingen te delen. \n"
-"Bevestigde order: het document wordt verzonden naar de klanten en is toegankelijk voor hen.\n"
-"bijv. deze optie kan handig zijn voor het delen van gebuikershandleidingen of digitale inhoud die via e-commerce is gekocht. \n"
-"Binnen offerte: Het document wordt opgenomen in de PDF van de offerte tussen de voorbladen en de offertetabel."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1892,7 +1892,7 @@ msgstr "Personaliseer je offertes en orders."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr "DHL Express Connector"
+msgstr "DHL Express connector"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -3905,7 +3905,7 @@ msgstr "Beoordelingen"
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__expense_policy
 msgid "Re-Invoice Expenses"
-msgstr "Her-factureer declaraties"
+msgstr "Doorberekenen declaraties"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
@@ -4136,14 +4136,14 @@ msgid "Sales Analysis"
 msgstr "Verkoopanalyse"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis By Customers"
-msgstr "Verkoopanalyse per klant"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
 msgstr "Verkoopanalyse per verkoper"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis Per Customers"
+msgstr "Verkoopanalyse per klant"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -4229,7 +4229,6 @@ msgstr "Verkooporder(s)"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4522,7 +4521,7 @@ msgstr "Afleveradres"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_shiprocket
 msgid "Shiprocket Connector"
-msgstr "Shiprocket Connector"
+msgstr "Shiprocket connector"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4975,7 +4974,6 @@ msgstr ""
 
 #. module: sale
 #. odoo-python
-#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
@@ -5023,11 +5021,6 @@ msgid "The value of the down payment amount must be positive."
 msgstr "De waarde van de aanbetaling moet positief zijn."
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid "There are currently no orders for your account."
-msgstr "Er zijn momenteel geen orders voor je account."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
 msgstr "Er zijn momenteel geen offertes voor je account."
@@ -5041,6 +5034,19 @@ msgstr "Er zijn momenteel geen verkooporders voor je account."
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
 msgstr "Er zijn bestaande"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
+"Er lijkt nog geen kortingsproduct geconfigureerd te zijn voor dit bedrijf. "
+"Je kunt een korting per regel gebruiken of een beheerder vragen om de "
+"korting de eerste keer toe te kennen."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5307,12 +5313,12 @@ msgstr "UTM Campagne"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Unit Price"
-msgstr "Prijs"
+msgstr "Eenheidsprijs"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unit Price:"
-msgstr "Prijs"
+msgstr "Eenheidsprijs"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom
@@ -5476,6 +5482,7 @@ msgstr "Waarschuwing"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
@@ -5562,6 +5569,13 @@ msgstr "Je kan een geblokkeerde order niet annuleren. Deblokkeer het eerst."
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid "You cannot change the pricelist of a confirmed order !"
+msgstr "Je kunt de prijslijst van een bevestigde order niet wijzigen!"
+
+#. module: sale
+#. odoo-python
 #: code:addons/sale/models/product_product.py:0
 #: code:addons/sale/models/product_template.py:0
 #, python-format
@@ -5603,6 +5617,7 @@ msgstr ""
 "of het nu een fysiek product, verbruiksartikel of een dienst is."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Je orders"

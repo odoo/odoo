@@ -3,7 +3,7 @@
 import datetime
 import json
 import pytz
-from urllib.parse import urlparse
+from urllib.parse import urlencode
 from unittest.mock import patch
 
 import odoo
@@ -63,7 +63,7 @@ class TestHttpSession(TestHttpBase):
         ])
         self.assertFalse(session['db'])
         self.assertEqual(res.status_code, 303)
-        self.assertEqual(urlparse(res.headers['Location']).path, '/web/database/selector')
+        self.assertURLEqual(res.headers.get('Location'), '/web/database/selector')
 
     def test_session4_web_authenticate_multidb(self):
         self.db_list = [get_db_name(), 'another_database']
@@ -206,3 +206,22 @@ class TestHttpSession(TestHttpBase):
             with self.assertRaises(TypeError):
                 dict.update(session, foo=value)
             self.assertFalse(session.foo)
+
+    def test_session8_logout(self):
+        sid = self.authenticate('admin', 'admin').sid
+        self.assertTrue(odoo.http.root.session_store.get(sid), "session should exist")
+        self.url_open('/web/session/logout', allow_redirects=False).raise_for_status()
+        self.assertFalse(odoo.http.root.session_store.get(sid), "session should not exist")
+
+    def test_session9_explicit_session(self):
+        forged_sid = 'da39a3ee5e6b4b0d3255bfef95601890afd80709'
+        admin_session = self.authenticate('admin', 'admin')
+        with self.assertLogs('odoo.http') as capture:
+            qs = urlencode({'debug': 1, 'session_id': forged_sid})
+            self.url_open(f'/web/session/logout?{qs}').raise_for_status()
+        self.assertEqual(len(capture.output), 1)
+        self.assertRegex(capture.output[0],
+            r"^WARNING:odoo.http:<function odoo\.addons\.\w+\.controllers\.\w+\.logout> "
+            r"called ignoring args {('session_id', 'debug'|'debug', 'session_id')}$"
+        )
+        self.assertEqual(admin_session.debug, '1')

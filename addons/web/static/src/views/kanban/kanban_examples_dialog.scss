@@ -12,8 +12,9 @@
 
         // sidebar
         .nav-link.active {
-            background-color: #{$o-brand-primary};
-            color: $white;
+            $o-btn-primary-theme-colors: map-get($o-btns-bs-override, "primary");
+            background-color: map-get($o-btn-primary-theme-colors, "background");
+            color: map-get($o-btn-primary-theme-colors, "color");
             &, &:hover, &:focus, &:active {
                 border-right-color: var(--notebook-link-border-color-active);
             }

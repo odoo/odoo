@@ -3,7 +3,7 @@
 <data>
     <!-- Main survey layout -->
     <template id="survey.layout" name="Survey Layout" inherit_id="web.frontend_layout" primary="True">
-        <xpath expr="//div[@id='wrapwrap']" position="before">
+        <xpath expr="//head" position="before">
             <!--TODO DBE Fix me : If one day, there is a survey_livechat bridge module, put this in that module-->
             <t t-set="no_livechat" t-value="True"/>
         </xpath>
@@ -16,7 +16,13 @@
                              else ('background-image: url(' + survey.background_image_url + ');')
                              if survey and survey.background_image_url and not survey_data
                              else '')"/>
-            <attribute name="t-attf-class" add="o_survey_background" separator=" "/>
+            <attribute name="t-att-class"
+                       add="(('o_survey_background o_survey_background_shadow')
+                             if (question and question.background_image_url)
+                             or (page and page.background_image_url)
+                             or (survey and survey.background_image_url)
+                             else 'o_survey_background')"
+                       separator=" "/>
         </xpath>
         <xpath expr="//head/t[@t-call-assets][last()]" position="after">
             <t t-call-assets="survey.survey_assets" lazy_load="True"/>
@@ -65,7 +71,7 @@
         <t t-call="survey.layout">
             <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
             <div class="wrap o_survey_wrap d-flex">
-                <div class="container o_survey_form d-flex flex-column mb-5">
+                <div class="o_container_small o_survey_form d-flex flex-column mb-5">
                     <t t-call="survey.survey_fill_header" />
                     <t t-call="survey.survey_fill_form" />
                 </div>
@@ -186,8 +192,8 @@
             t-att-data-time-limit-minutes="time_limit_minutes"/>
         <t t-if="survey.questions_layout == 'one_page'">
             <t t-foreach='survey.question_and_page_ids' t-as='question'>
-                <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title pb16 text-break w-lg-50 mx-lg-auto" />
-                <div t-if="question.is_page" t-field='question.description' class="text-break w-lg-50 mx-lg-auto"/>
+                <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title pb16 text-break"/>
+                <div t-if="question.is_page" t-field='question.description' class="text-break"/>
                 <t t-if="not question.is_page and question in answer.predefined_question_ids" t-call="survey.question_container"/>
             </t>
 
@@ -201,8 +207,8 @@
         </t>
 
         <t t-if="survey.questions_layout == 'page_per_section'">
-            <h2 t-field='page.title' class="o_survey_title pb16 text-break w-lg-50 mx-lg-auto" />
-            <div t-field='page.description' class="oe_no_empty text-break w-lg-50 mx-lg-auto"/>
+            <h2 t-field='page.title' class="o_survey_title pb16 text-break" />
+            <div t-field='page.description' class="oe_no_empty text-break"/>
 
             <input type="hidden" name="page_id" t-att-value="page.id" />
             <t t-foreach='page.question_ids' t-as='question'>
@@ -228,7 +234,7 @@
         An exception is made for options with images, where we always want to optimize screen space.-->
         <t t-set="minimized_display" t-value="survey.questions_layout == 'page_per_question' and not any(suggestion.value_image for suggestion in question.suggested_answer_ids)" />
         <div t-if="survey.questions_layout == 'page_per_question'"
-            t-attf-class="o_survey_page_per_question #{'w-lg-50 mx-lg-auto' if question.question_type in ('numerical_box', 'date', 'datetime') else ''}">
+            t-attf-class="o_survey_page_per_question">
             <input type="hidden" name="question_id" t-att-value="question.id" />
             <!-- User has already answered for this session -->
             <t t-if="answer.is_session_answer and (has_answered or answer.question_time_limit_reached)">
@@ -272,7 +278,7 @@
     <template id="survey_fill_form_done" name="Survey: finished">
         <div class="wrap">
             <div class="o_survey_finished mt32 mb32">
-                <h1>Thank you!</h1>
+                <h1 class="fs-2">Thank you!</h1>
                 <div t-field="survey.description_done" class="oe_no_empty" />
                 <div class="row">
                     <div class="col">
@@ -332,8 +338,7 @@
         <t t-set="is_skipped_question" t-value="skipped_questions and question in skipped_questions"/>
         <div t-attf-class="js_question-wrapper pb-4
                            #{'d-none' if not display_question else ''}
-                           #{'me-2' if extra_right_margin else ''}
-                           #{'w-lg-50 mx-lg-auto' if survey.questions_layout != 'page_per_question' else ''}"
+                           #{'me-2' if extra_right_margin else ''}"
              t-att-id="question.id"
              t-att-data-required="bool(question.constr_mandatory and (not survey.users_can_go_back or survey.questions_layout == 'one_page')) or None"
              t-att-data-constr-error-msg="question.constr_error_msg or default_constr_error_msg if question.constr_mandatory else None"
@@ -354,7 +359,7 @@
             <t t-if="question.question_type == 'multiple_choice'" t-call="survey.question_multiple_choice"/>
             <t t-if="question.question_type == 'matrix'" t-call="survey.question_matrix"/>
             <div t-attf-class="o_survey_question_error d-flex align-items-center justify-content-between overflow-hidden
-                 border-0 py-0 px-3 alert alert-danger #{'slide_in' if is_skipped_question else ''}" role="alert">
+                 border-0 py-0 px-3 alert alert-danger mt-2 #{'slide_in' if is_skipped_question else ''}" role="alert">
                 <span t-if="is_skipped_question" t-out="question.constr_error_msg or default_constr_error_msg"/>
             </div>
         </div>
@@ -362,7 +367,7 @@
 
     <template id="question_text_box" name="Question: free text box">
         <div class="o_survey_comment_container h-auto p-0">
-            <textarea class="form-control o_survey_question_text_box bg-transparent text-dark rounded-0 p-0" rows="3"
+            <textarea class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0" rows="3"
                       t-att-name="question.id" t-att-placeholder="question.question_placeholder"
                       t-att-data-question-type="question.question_type"><t t-if="answer_lines" t-esc="answer_lines[0].value_text_box or None"/></textarea>
         </div>
@@ -371,7 +376,7 @@
     <template id="question_char_box" name="Question: text box">
         <div class="o_survey_comment_container p-0">
             <input t-att-type="'email' if question.validation_email else 'text'"
-               class="form-control o_survey_question_text_box bg-transparent text-dark rounded-0 p-0"
+               class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
                t-att-name="question.id" t-att-placeholder="question.question_placeholder"
                t-att-value="answer_lines[0].value_char_box if answer_lines else None"
                t-att-data-question-type="question.question_type"
@@ -382,7 +387,7 @@
 
     <template id="question_numerical_box" name="Question: numerical box">
         <div class="o_survey_answer_wrapper p-1 rounded">
-            <input type="number" step="any" class="form-control o_survey_question_numerical_box bg-transparent text-dark rounded-0 p-0"
+            <input type="number" step="any" class="form-control o_survey_question_numerical_box bg-transparent rounded-0 p-0"
                 t-att-name="question.id" t-att-placeholder="question.question_placeholder"
                 t-att-value="answer_lines[0].value_numerical_box if answer_lines else None"
                 t-att-data-question-type="question.question_type"
@@ -393,7 +398,7 @@
 
     <template id="question_date" name="Question: date box">
         <div class="input-group o_survey_form_date o_survey_answer_wrapper p-1 rounded">
-            <input type="text" class="form-control datetimepicker-input o_survey_question_date bg-transparent text-dark rounded-0 p-0"
+            <input type="text" class="form-control datetimepicker-input o_survey_question_date bg-transparent rounded-0 p-0"
                    t-att-name="question.id" t-att-placeholder="question.question_placeholder"
                    t-att-value="format_date(answer_lines[0].value_date) if answer_lines else None"
                    t-att-data-question-type="question.question_type"
@@ -406,7 +411,7 @@
 
     <template id="question_datetime" name="Question: datetime box">
         <div class="input-group o_survey_form_date o_survey_answer_wrapper p-1 rounded">
-            <input type="text" class="form-control datetimepicker-input o_survey_question_datetime bg-transparent text-dark rounded-0 p-0"
+            <input type="text" class="form-control datetimepicker-input o_survey_question_datetime bg-transparent rounded-0 p-0"
                    t-att-name="question.id" t-att-placeholder="question.question_placeholder"
                    t-att-value="format_datetime(answer_lines[0].value_datetime) if answer_lines else None"
                    t-att-data-question-type="question.question_type"
@@ -422,7 +427,7 @@
             <!-- Directly use field or route if the user doesn't have access rights -->
             <div t-if="not env.user.has_group('survey.group_survey_user')"
                 class="o_survey_choice_img d-flex my-3 justify-content-center">
-                <img t-att-src="'/survey/get_question_image/%s/%s/%s/%s' % (survey.access_token, answer.access_token, question.id, label.id)"/>
+                <img t-att-src="'/survey/get_question_image/%s/%s/%s/%s' % (survey.access_token, answer.access_token, question.id, label.id)" class="mw-100 h-auto"/>
             </div>
             <div t-else=""  t-field="label.value_image"
                 class="o_survey_choice_img d-flex my-3 justify-content-center"
@@ -488,13 +493,13 @@
                     </label>
                 </div>
                 <div t-attf-class="o_survey_comment_container mt-3 py-0 px-1 #{'d-none' if not comment_line else ''}">
-                    <textarea type="text" class="form-control o_survey_question_text_box bg-transparent text-dark rounded-0 p-0"
+                    <textarea type="text" class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
                         t-att-disabled="None if comment_line else 'disabled'"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
                 </div>
             </t>
             <div t-if='question.comments_allowed and not question.comment_count_as_answer'
                 class="mb-2 o_survey_comment_container mt-3">
-                <textarea type="text" class="col form-control o_survey_comment o_survey_question_text_box bg-transparent text-dark rounded-0 p-0"
+                <textarea type="text" class="col form-control o_survey_comment o_survey_question_text_box bg-transparent rounded-0 p-0"
                     t-att-placeholder="question.comments_message or default_comments_message if not survey_form_readonly else ''"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
         </div>
@@ -553,12 +558,12 @@
                     </label>
                 </div>
                 <div t-attf-class="o_survey_comment_container mt-3 py-0 px-1 #{'d-none' if not comment_line else ''}">
-                    <textarea type="text" class="form-control o_survey_question_text_box bg-transparent text-dark rounded-0 p-0"
+                    <textarea type="text" class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
                         t-att-disabled="None if comment_line else 'disabled'"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
                 </div>
             </t>
             <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="mb-2 o_survey_comment_container mt-3">
-                <textarea type="text" class="col form-control o_survey_comment o_survey_question_text_box bg-transparent text-dark rounded-0 p-0"
+                <textarea type="text" class="col form-control o_survey_comment o_survey_question_text_box bg-transparent rounded-0 p-0"
                     t-att-placeholder="question.comments_message or default_comments_message if not survey_form_readonly else ''"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
             </div>
         </div>
@@ -607,7 +612,7 @@
             </tbody>
         </table>
         <div t-if='question.comments_allowed'>
-            <textarea type="text" class="form-control o_survey_question_text_box o_survey_comment bg-transparent text-dark rounded-0 p-0 mt-3"
+            <textarea type="text" class="form-control o_survey_question_text_box o_survey_comment bg-transparent rounded-0 p-0 mt-3"
                       t-att-placeholder="question.comments_message or default_comments_message if not survey_form_readonly else ''"
                       t-att-name="'%s_%s' % (question.id, 'comment')"><t t-esc="comment_line.value_char_box if comment_line else ''"/></textarea>
         </div>

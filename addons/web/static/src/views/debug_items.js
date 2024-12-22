@@ -394,6 +394,7 @@ export function manageAttachments({ component, env }) {
                 context: {
                     default_res_model: component.props.resModel,
                     default_res_id: resId,
+                    skip_res_field_check: true,
                 },
             });
         },

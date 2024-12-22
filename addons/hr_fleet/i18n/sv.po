@@ -10,6 +10,7 @@
 # Frida E, 2023
 # Simon S, 2023
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,16 +32,18 @@ msgid ""
 "<span class=\"o_stat_value\">1</span>\n"
 "                        <span class=\"o_stat_text\">Employee</span>"
 msgstr ""
+"<span class=\"o_stat_value\">1</span>\n"
+"                        <span class=\"o_stat_text\">Anställd</span>"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_mail_activity_plan_template
 msgid "Activity plan template"
-msgstr ""
+msgstr "Mall för verksamhetsplan"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_mail_activity_plan_template__responsible_type
 msgid "Assignment"
-msgstr ""
+msgstr "Uppdrag"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_employee_view_list
@@ -53,7 +56,7 @@ msgstr "Bilagor"
 #: code:addons/hr_fleet/models/employee.py:0
 #, python-format
 msgid "Cannot remove address from employees with linked cars."
-msgstr ""
+msgstr "Kan inte ta bort adress från anställda med länkade bilar."
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__employee_cars_count
@@ -64,7 +67,7 @@ msgstr "Bilar"
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.hr_departure_wizard_view_form
 msgid "Company Car"
-msgstr ""
+msgstr "Företagsbil"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_employee_view_list
@@ -89,7 +92,7 @@ msgstr "Förare"
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_odometer__driver_employee_id
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_services_view_form_inherit_hr
 msgid "Driver (Employee)"
-msgstr ""
+msgstr "Förare (anställd)"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_assignation_log
@@ -107,7 +110,7 @@ msgstr "Anställd"
 #: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "Employee %s is not linked to a vehicle."
-msgstr ""
+msgstr "Anställd %s är inte kopplad till ett fordon."
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__driver_employee_name
@@ -124,17 +127,17 @@ msgstr "Vagnparksansvarig"
 #: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "Fleet Manager is limited to Employee plans."
-msgstr ""
+msgstr "Fleet Manager är begränsad till Employee-planer."
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
 msgid "Fleet Mobility Card"
-msgstr ""
+msgstr "Mobilitetskort för flottan"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__future_driver_employee_id
 msgid "Future Driver (Employee)"
-msgstr ""
+msgstr "Framtida förare (anställd)"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__license_plate
@@ -146,7 +149,7 @@ msgstr "Registreringsnummer"
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__mobility_card
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__mobility_card
 msgid "Mobility Card"
-msgstr ""
+msgstr "Mobilitetskort"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__attachment_number
@@ -168,12 +171,12 @@ msgstr "Offentlig-anställd"
 #: code:addons/hr_fleet/models/fleet_vehicle.py:0
 #, python-format
 msgid "Related Employee"
-msgstr ""
+msgstr "Relaterad medarbetare"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__release_campany_car
 msgid "Release Company Car"
-msgstr ""
+msgstr "Släpp företagsbil"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_services
@@ -186,6 +189,8 @@ msgstr "Service av fordon"
 #, python-format
 msgid "The vehicle of employee %(employee)s is not linked to a fleet manager."
 msgstr ""
+"Fordonet för anställda %(employee)s är inte kopplat till en "
+"vagnparksansvarig."
 
 #. module: hr_fleet
 #. odoo-javascript
@@ -212,4 +217,4 @@ msgstr "Fordonsavtal"
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__car_ids
 msgid "Vehicles (private)"
-msgstr ""
+msgstr "Fordon (privata)"

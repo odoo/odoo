@@ -3,16 +3,17 @@
 # 	* mrp_subcontracting
 # 
 # Translators:
-# Wil Odoo, 2023
-# Fernanda Alvarez, 2023
+# Wil Odoo, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,8 +77,8 @@ msgid ""
 "take these into account automatically."
 msgstr ""
 "Seleccione esta casilla para crear una nueva ubicación de subcontratación "
-"dedicada para esta empresa. Tome en cuenta que las rutas de subcontratación "
-"estándar se adaptarán para considerarlas en automático."
+"específica para esta empresa. Tome en cuenta que las rutas de "
+"subcontratación estándar se adaptarán para considerarla en automático."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
@@ -128,6 +129,7 @@ msgid "Detail Component"
 msgstr "Detalles de componente"
 
 #. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Details"
 msgstr "Detalles"
@@ -176,11 +178,11 @@ msgstr "Ocultar"
 #, python-format
 msgid ""
 "In order to manage stock accurately, subcontracting locations must be type "
-"Internal, linked to the appropriate company and not specific to a warehouse."
+"Internal, linked to the appropriate company."
 msgstr ""
-"Para gestionar las existencias de forma precisa, las ubicaciones de "
-"subcontratación deben ser internas, estar vinculadas a la empresa "
-"correspondiente y no específicas a un almacén."
+"Las ubicaciones de subcontratación deben ser de tipo interno y estar "
+"vinculadas a la empresa adecuada, esto ayudará a gestionar las existencias "
+"de forma precisa."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_filter
@@ -210,6 +212,13 @@ msgid ""
 msgstr ""
 "Lista de productos que se utilizan en la lista de materiales, se utiliza "
 "para filtrar la lista de productos en la vista del portal de subcontratación"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr "Ubicaciones por actualizar"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
@@ -271,7 +280,7 @@ msgstr "Nada por registrar"
 #: code:addons/mrp_subcontracting/models/stock_quant.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr "Operación no compatible"
+msgstr "Operación incompatible"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
@@ -302,7 +311,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Movimientos de producto (línea de movimiento de existencias)"
+msgstr "Movimientos de producto (línea de movimiento de stock)"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_replenish
@@ -379,15 +388,16 @@ msgstr "Subcontratista de reabastecimiento"
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#: code:addons/mrp_subcontracting/wizard/product_replenish.py:0
 #: model:stock.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 #, python-format
 msgid "Resupply Subcontractor on Order"
-msgstr "Subcontratista de reabastecimiento en la orden"
+msgstr "Reabastecer al subcontratista al ordenar"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
 msgid "Resupply Subcontractors"
-msgstr "Subcontratistas de reabastecimiento"
+msgstr "Reabastecer subcontratistas"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_return_picking
@@ -431,7 +441,7 @@ msgstr "Estado"
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move
 msgid "Stock Move"
-msgstr "Movimiento de existencias"
+msgstr "Movimiento de stock"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__picking_ids
@@ -651,6 +661,15 @@ msgstr "No puede alterar la ubicación de subcontratación de la empresa"
 #, python-format
 msgid "You cannot write on fields %s in mrp.production."
 msgstr "No puede escribir en los campos %s de mrp.production."
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid "You might want to update the locations of this transfer's operations"
+msgstr ""
+"Tal vez quiera actualizar las ubicaciones de las operaciones de este "
+"traslado"
 
 #. module: mrp_subcontracting
 #. odoo-python

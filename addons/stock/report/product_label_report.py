@@ -25,7 +25,7 @@ class ReportProductLabel(models.AbstractModel):
             product = Product.browse(int(p))
             default_code_markup = markupsafe.Markup(product.default_code) if product.default_code else ''
             product_info = {
-                'barcode': markupsafe.Markup(product.barcode),
+                'barcode': markupsafe.Markup(product.barcode) if product.barcode else '',
                 'quantity': q,
                 'display_name_markup': markupsafe.Markup(product.display_name),
                 'default_code': (default_code_markup[:15], default_code_markup[15:30])

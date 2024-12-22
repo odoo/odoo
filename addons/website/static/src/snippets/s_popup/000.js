@@ -2,9 +2,12 @@
 
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { cookie } from "@web/core/browser/cookie";
+import { _t } from "@web/core/l10n/translation";
 import {throttleForAnimation} from "@web/core/utils/timing";
-import { utils as uiUtils } from "@web/core/ui/ui_service";
+import { getTabableElements } from "@web/core/utils/ui";
+import { utils as uiUtils, SIZES } from "@web/core/ui/ui_service";
 import {setUtmsHtmlDataset} from '@website/js/content/inject_dom';
+import wUtils from "@website/js/utils";
 
 // TODO In master, export this class too or merge it with PopupWidget
 const SharedPopupWidget = publicWidget.Widget.extend({
@@ -59,7 +62,7 @@ const SharedPopupWidget = publicWidget.Widget.extend({
             // '_hideBottomFixedElements' method and re-display any bottom fixed
             // elements that may have been hidden (e.g. the live chat button
             // hidden when the cookies bar is open).
-            $().getScrollingElement()[0].dispatchEvent(new Event('scroll'));
+            $().getScrollingTarget()[0].dispatchEvent(new Event('scroll'));
         }
 
         this.el.classList.add('d-none');
@@ -69,7 +72,7 @@ const SharedPopupWidget = publicWidget.Widget.extend({
 publicWidget.registry.SharedPopup = SharedPopupWidget;
 
 const PopupWidget = publicWidget.Widget.extend({
-    selector: '.s_popup',
+    selector: ".s_popup:not(#website_cookies_bar)",
     events: {
         'click .js_close_popup': '_onCloseClick',
         'click .btn-primary': '_onBtnPrimaryClick',
@@ -94,7 +97,21 @@ const PopupWidget = publicWidget.Widget.extend({
             this._showPopupOnClick();
         } else {
             this._popupAlreadyShown = !!cookie.get(this.$el.attr('id'));
-            if (!this._popupAlreadyShown) {
+            // Check if every child element of the popup is conditionally hidden,
+            // and if so, never show an empty popup.
+            // config.device.isMobile is true if the device is <= SM, but the device
+            // visibility option uses < LG to hide on mobile. So compute it here.
+            const isMobile = uiUtils.getSize() < SIZES.LG;
+            const emptyPopup = [
+                ...this.$el[0].querySelectorAll(".oe_structure > *:not(.s_popup_close)")
+            ].every((el) => {
+                const visibilitySelectors = el.dataset.visibilitySelectors;
+                const deviceInvisible = isMobile
+                    ? el.classList.contains("o_snippet_mobile_invisible")
+                    : el.classList.contains("o_snippet_desktop_invisible");
+                return (visibilitySelectors && el.matches(visibilitySelectors)) || deviceInvisible;
+            });
+            if (!this._popupAlreadyShown && !emptyPopup) {
                 this._bindPopup();
             }
         }
@@ -106,6 +123,7 @@ const PopupWidget = publicWidget.Widget.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         $(document).off('mouseleave.open_popup');
+        this.releaseFocus && this.releaseFocus();
         this.$el.find('.modal').modal('hide');
         clearTimeout(this.timeout);
         if (this.modalShownOnClickEl) {
@@ -159,12 +177,12 @@ const PopupWidget = publicWidget.Widget.extend({
             return;
         }
         this.$el.find('.modal').modal('show');
+        this.releaseFocus = this._trapFocus();
     },
     /**
      * @private
      */
-    _showPopupOnClick() {
-        const hash = window.location.hash;
+    _showPopupOnClick(hash = window.location.hash) {
         // If a hash exists in the URL and it corresponds to the ID of the modal,
         // then we open the modal.
         if (hash && hash.substring(1) === this.modalShownOnClickEl.id) {
@@ -187,6 +205,50 @@ const PopupWidget = publicWidget.Widget.extend({
             primaryBtnEl.classList.contains("s_website_form_send")
             || primaryBtnEl.classList.contains("o_website_form_send")
         );
+    },
+    /**
+     * Traps the focus within the modal.
+     *
+     * @private
+     * @returns {Function} refocuses the element that was focused before the
+     * modal opened.
+     */
+    _trapFocus() {
+        let tabableEls = getTabableElements(this.el);
+        const previouslyFocusedEl = document.activeElement || document.body;
+        if (tabableEls.length) {
+            tabableEls[0].focus();
+        } else {
+            this.el.focus();
+        }
+        // The focus should stay free for no backdrop popups.
+        if (this.el.querySelector(".s_popup_no_backdrop")) {
+            return () => previouslyFocusedEl.focus();
+        }
+        const _onKeydown = (ev) => {
+            if (ev.key !== "Tab") {
+                return;
+            }
+            // Update tabableEls: they might have changed in the meantime.
+            tabableEls = getTabableElements(this.el);
+            if (!tabableEls.length) {
+                ev.preventDefault();
+                return;
+            }
+            if (!ev.shiftKey && ev.target === tabableEls[tabableEls.length - 1]) {
+                ev.preventDefault();
+                tabableEls[0].focus();
+            }
+            if (ev.shiftKey && ev.target === tabableEls[0]) {
+                ev.preventDefault();
+                tabableEls[tabableEls.length - 1].focus();
+            }
+        };
+        this.el.addEventListener("keydown", _onKeydown);
+        return () => {
+            this.el.removeEventListener("keydown", _onKeydown);
+            previouslyFocusedEl.focus();
+        };
     },
 
     //--------------------------------------------------------------------------
@@ -218,6 +280,10 @@ const PopupWidget = publicWidget.Widget.extend({
         this.$el.find('.media_iframe_video iframe').each((i, iframe) => {
             iframe.src = '';
         });
+        this.releaseFocus && this.releaseFocus();
+        // Reset to avoid calling it twice. It may happen with cookie bars or in
+        // the destroy.
+        this.releaseFocus = null;
     },
     /**
      * @private
@@ -231,8 +297,16 @@ const PopupWidget = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _onHashChange() {
-        this._showPopupOnClick();
+    _onHashChange(ev) {
+        if (ev && ev.newURL) {
+            // Keep the new hash from the event to avoid conflict with the eCommerce
+            // hash attributes managing.
+            // TODO : it should not have been a hash at all for ecommerce, but a
+            // query string parameter
+            this._showPopupOnClick(new URL(ev.newURL).hash);
+        } else {
+            this._showPopupOnClick();
+        }
     },
 });
 
@@ -350,6 +424,77 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         'click #cookies-consent-essential, #cookies-consent-all': '_onAcceptClick',
     }),
 
+    /**
+     * @override
+     */
+    destroy() {
+        if (this.toggleEl) {
+            this.toggleEl.removeEventListener("click", this._onToggleCookiesBar);
+            this.toggleEl.remove();
+        }
+        this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _showPopup() {
+        this._super(...arguments);
+        const policyLinkEl = this.el.querySelector(".o_cookies_bar_text_policy");
+        if (policyLinkEl && window.location.pathname === new URL(policyLinkEl.href).pathname) {
+            this.toggleEl = wUtils.cloneContentEls(`
+            <button class="o_cookies_bar_toggle btn btn-info btn-sm rounded-circle d-flex gap-2 align-items-center position-fixed pe-auto">
+                <i class="fa fa-eye" alt="" aria-hidden="true"></i> <span class="o_cookies_bar_toggle_label"></span>
+            </button>
+            `).firstElementChild;
+            this.el.insertAdjacentElement("beforebegin", this.toggleEl);
+            this._toggleCookiesBar();
+            this._onToggleCookiesBar = this._toggleCookiesBar.bind(this);
+            this.toggleEl.addEventListener("click", this._onToggleCookiesBar);
+        }
+    },
+    /**
+     * Toggles the cookies bar with a button so that the page is readable.
+     *
+     * @private
+     */
+    _toggleCookiesBar() {
+        const popupEl = this.el.querySelector(".modal");
+        $(popupEl).modal("toggle");
+        // As we're using Bootstrap's events, the PopupWidget prevents the modal
+        // from being shown after hiding it: override that behavior.
+        this._popupAlreadyShown = false;
+        cookie.delete(this.el.id);
+
+        const hidden = !popupEl.classList.contains("show");
+        this.toggleEl.querySelector(".fa").className = `fa ${hidden ? "fa-eye" : "fa-eye-slash"}`;
+        this.toggleEl.querySelector(".o_cookies_bar_toggle_label").innerText = hidden
+            ? _t("Show the cookies bar")
+            : _t("Hide the cookies bar");
+        if (hidden || !popupEl.classList.contains("s_popup_bottom")) {
+            this.toggleEl.style.removeProperty("--cookies-bar-toggle-inset-block-end");
+        } else {
+            // Lazy-loaded images don't have a height yet. We need to await them
+            wUtils.onceAllImagesLoaded($(popupEl)).then(() => {
+                const popupHeight = popupEl.querySelector(".modal-content").offsetHeight;
+                const toggleMargin = 8;
+                // Avoid having the toggleEl over another button, but if the
+                // cookies bar is too tall, place it at the bottom anyway.
+                const bottom = document.body.offsetHeight > popupHeight + this.toggleEl.offsetHeight + toggleMargin
+                    ? `calc(
+                        ${getComputedStyle(popupEl.querySelector(".modal-dialog")).paddingBottom}
+                        + ${popupHeight + toggleMargin}px
+                    )`
+                    : "";
+                this.toggleEl.style.setProperty("--cookies-bar-toggle-inset-block-end", bottom);
+            });
+        }
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -359,8 +504,13 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
      * @param ev
      */
     _onAcceptClick(ev) {
-        this.cookieValue = `{"required": true, "optional": ${ev.target.id === 'cookies-consent-all'}}`;
+        const isFullConsent = ev.target.id === "cookies-consent-all";
+        this.cookieValue = `{"required": true, "optional": ${isFullConsent}}`;
+        if (isFullConsent) {
+            document.dispatchEvent(new Event("optionalCookiesAccepted"));
+        }
         this._onHideModal();
+        this.toggleEl && this.toggleEl.remove();
     },
     /**
      * @override
@@ -376,7 +526,7 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         for (const [key, value] of params) {
             if (key in trackingFields) {
                 // Using same cookie expiration value as in python side
-                cookie.set(trackingFields[key], value, 31 * 24 * 60 * 60, "required");
+                cookie.set(trackingFields[key], value, 31 * 24 * 60 * 60, "optional");
             }
         }
         setUtmsHtmlDataset();

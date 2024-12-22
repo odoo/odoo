@@ -3,18 +3,19 @@
 # 	* mrp_subcontracting
 # 
 # Translators:
-# Wil Odoo, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
-# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
+# Wil Odoo, 2024
+# Chloe Wang, 2024
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +54,7 @@ msgstr "BOM 类型"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__bom_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__bom_ids
 msgid "BoMs for which the Partner is one of the subcontractors"
-msgstr "作为分包商之一的合作伙伴的物料清单（BOM）"
+msgstr "作为外包商之一的合作伙伴的物料清单 BOM"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__bom_product_ids
@@ -125,6 +126,7 @@ msgid "Detail Component"
 msgstr "组件详情"
 
 #. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Details"
 msgstr "详情"
@@ -173,8 +175,8 @@ msgstr "隐藏"
 #, python-format
 msgid ""
 "In order to manage stock accurately, subcontracting locations must be type "
-"Internal, linked to the appropriate company and not specific to a warehouse."
-msgstr "为了准确管理库存，外包地点须为内部类型，链接至相关公司，而非特定仓库。"
+"Internal, linked to the appropriate company."
+msgstr "为了准确管理库存，分包地点必须为内部类型，并与相应的公司关联。"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_filter
@@ -201,13 +203,20 @@ msgstr "是否为外包地点？"
 msgid ""
 "List of Products used in the BoM, used to filter the list of products in the"
 " subcontracting portal view"
-msgstr "物料清单（BOM）中使用的产品列表，用于筛选分包门户视图中的产品列表"
+msgstr "物料清单 BOM 中使用的产品列表，用于筛选分包门户视图中的产品列表"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr "待更新位置"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__production_ids
 msgid "MRP Productions for which the Partner is the subcontractor"
-msgstr "合作伙伴是分包商的物料需求计划（MRP）产品"
+msgstr "合作伙伴是外包商的物料需求计划 MRP 产品"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -260,7 +269,7 @@ msgstr "无待记录内容"
 #: code:addons/mrp_subcontracting/models/stock_quant.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr "不支持的作业"
+msgstr "操作不支持"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
@@ -315,7 +324,7 @@ msgstr "生产"
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_quant
 msgid "Quants"
-msgstr "数量"
+msgstr "库存量"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -366,6 +375,7 @@ msgstr "分包商重新供应"
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#: code:addons/mrp_subcontracting/wizard/product_replenish.py:0
 #: model:stock.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 #, python-format
 msgid "Resupply Subcontractor on Order"
@@ -601,7 +611,7 @@ msgstr "仓库"
 msgid ""
 "Wizard in case of consumption in warning/strict and more component has been "
 "used for a MO (related to the bom)"
-msgstr "警告/严格消耗、且生产订单（相较物料清单（BOM））使用更多组件时的向导"
+msgstr "警告/严格消耗、且生产订单 (相较物料清单 BOM) 使用更多组件时的向导"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -625,6 +635,13 @@ msgstr "不能更改公司的分包地点"
 #, python-format
 msgid "You cannot write on fields %s in mrp.production."
 msgstr "不能在mrp.production的%s字段写入。"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid "You might want to update the locations of this transfer's operations"
+msgstr "您可能需要更新该调拨作业的位置"
 
 #. module: mrp_subcontracting
 #. odoo-python

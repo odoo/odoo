@@ -199,7 +199,8 @@
                             </div>
 
                             <!-- CASE: converter when currency is different than the company one -->
-                            <label for="total_amount" string="" invisible="not is_multiple_currency and not product_has_cost"/>
+                            <label name="total_amount_product_cost_label" for="total_amount" string="Total" invisible="is_multiple_currency or not product_has_cost"/>
+                            <label name="total_amount_multicurrency_label" for="total_amount" string="" invisible="not is_multiple_currency"/>
                             <div class="o_row" invisible="not is_multiple_currency and not product_has_cost">
                                 <field name="total_amount" widget='monetary' options="{'currency_field': 'company_currency_id'}"
                                        force_save="1" readonly="not is_editable or product_has_cost" class="oe_inline"/>
@@ -213,7 +214,7 @@
                                        widget="many2many_tags"
                                        readonly="not is_editable"
                                        options="{'no_create': True}"/>
-                                <field name="tax_amount"/>
+                                <field name="tax_amount_currency"/>
                             </div>
                             <t groups="hr_expense.group_hr_expense_team_approver">
                                 <field name="employee_id" groups="!hr.group_hr_user"
@@ -236,7 +237,7 @@
                                    invisible="not accounting_date or state not in ['approved', 'done']"
                                    readonly="not is_editable"/>
                             <field name="account_id" options="{'no_create': True}"
-                                   domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('company_id', '=', company_id)]"
+                                   domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('deprecated', '=', False)]"
                                    groups="account.group_account_readonly" readonly="not is_editable"
                                    context="{'default_company_id': company_id}"/>
                             <field name="analytic_distribution" widget="analytic_distribution"
@@ -485,7 +486,7 @@
                     <h2 class="d-none d-md-block">
                         Drag and drop files to create expenses
                     </h2>
-                    <p>
+                    <p class="d-none d-md-block">
                         Or
                     </p>
                     <h2 class="d-none d-md-block">
@@ -526,7 +527,7 @@
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <div name="options" position="inside">
-                    <span class="d-inline-block">
+                    <span class="d-inline-flex">
                         <field name="can_be_expensed"/>
                         <label for="can_be_expensed"/>
                     </span>

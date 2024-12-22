@@ -1,11 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests.common import new_test_user
+from odoo.exceptions import AccessError
+from odoo.tests import Form, new_test_user, tagged
+
 from .common import TestSaleProjectCommon
-from odoo.tests import Form
-from odoo.tests.common import tagged
+
 
 @tagged('post_install', '-at_install')
 class TestSaleProject(TestSaleProjectCommon):
@@ -648,3 +648,228 @@ class TestSaleProject(TestSaleProjectCommon):
         sale_line = self.env['sale.order.line'].browse(sale_line_id)
         self.assertEqual(sale_line.product_id, product_service, 'The created SOL should use the right product.')
         self.assertTrue(product_service.name in sale_line_name, 'The created SOL should use the full name of the product and not just what was typed.')
+
+    def test_sale_order_items_of_the_project_status(self):
+        """
+        Checks that the sale order items appearing in the project status display every
+        sale.order.line referrencing a product ignores the notes and sections
+        """
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Project X',
+            'plan_id': self.env.ref('analytic.analytic_plan_projects').id,
+        })
+        project = self.env['project.project'].create({
+            'name': 'Project X',
+            'partner_id': self.partner.id,
+            'allow_billable': True,
+            'analytic_account_id': analytic_account.id,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'project_id': project.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_order_service1.id,
+                    'product_uom_qty': 1,
+                }),
+                Command.create({
+                    'name': "Section",
+                    'display_type': "line_section",
+                }),
+                Command.create({
+                    'name': "notes",
+                    'display_type': "line_section",
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+            'analytic_account_id': analytic_account.id,
+        })
+        relevant_sale_order_lines = sale_order.order_line.filtered(lambda sol: sol.product_id)
+        reported_sale_order_lines = self.env['sale.order.line'].search(project.action_view_sols()['domain'])
+        self.assertEqual(project.sale_order_line_count, 2)
+        self.assertEqual(relevant_sale_order_lines, reported_sale_order_lines)
+
+    def test_sale_order_with_project_task_from_multi_companies(self):
+        uom_hour = self.env.ref("uom.product_uom_hour")
+        will_smith = self.env["res.partner"].create({"name": "Will Smith"})
+        multi_company_project = self.env["project.project"].create({
+            "name": "Multi Company Project",
+            "company_id": None,
+            "allow_billable": True,
+        })
+
+        company_a, company_b = self.env['res.company'].create([
+            {"name": "Company A"},
+            {"name": "Company B"},
+        ])
+
+        # cannot be done in batch because of `_check_sale_product_company` constraint
+        product_a, product_b = (
+            self.env["product.product"].with_company(company).create({
+                "name": "Task Creating Product",
+                "standard_price": 30,
+                "list_price": 90,
+                "type": "service",
+                "service_tracking": "task_global_project",
+                "invoice_policy": "order",
+                "uom_id": uom_hour.id,
+                "uom_po_id": uom_hour.id,
+                "project_id": multi_company_project.id,
+            })
+            for company in [company_a, company_b]
+        )
+        sale_order_a, sale_order_b = self.env["sale.order"].create([
+            {
+                "partner_id": will_smith.id,
+                "order_line": [
+                    Command.create({
+                        "product_id": product.id,
+                        "product_uom_qty": 10,
+                    }),
+                    Command.create({
+                        "product_id": product.id,
+                        "product_uom_qty": 10,
+                    }),
+                ],
+                'company_id': company.id,
+            }
+            for company, product in zip([company_a, company_b], [product_a, product_b])
+        ])
+        (sale_order_a + sale_order_b).action_confirm()
+
+        for company in [company_a, company_b]:
+            self.assertEqual(multi_company_project.with_company(company).sale_order_count, 2, "Expected all sale orders to be counted by project")
+            self.assertEqual(
+                multi_company_project.with_company(company).sale_order_line_count,
+                len(sale_order_a.order_line) + len(sale_order_b.order_line),  # expect 4
+                "Expected all sale order lines lines to be counted by project")
+            sale_order_action = multi_company_project.with_company(company).action_view_sos()
+            self.assertEqual(sale_order_action["type"], "ir.actions.act_window")
+            self.assertEqual(sale_order_action["res_model"], "sale.order")
+
+    def test_action_view_task_stages(self):
+        SaleOrder = self.env['sale.order'].with_context(tracking_disable=True)
+        SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
+
+        sale_order_2 = SaleOrder.create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+        })
+        sale_line_1_order_2 = SaleOrderLine.create({
+            'product_id': self.product_order_service1.id,
+            'product_uom_qty': 10,
+            'product_uom': self.product_order_service1.uom_id.id,
+            'price_unit': self.product_order_service1.list_price,
+            'order_id': sale_order_2.id,
+        })
+
+        self.env['project.task'].create({
+            'name': 'Task',
+            'sale_line_id': sale_line_1_order_2.id,
+            'project_id': self.project_global.id,
+        })
+        action = sale_order_2.action_view_task()
+        self.assertEqual(action["context"]["default_project_id"], self.project_global.id)
+
+    def test_task_compute_sale_order_id(self):
+        """
+        Check whether a task's sale_order_id is set iff its partner_id matches
+        the SO's partner_id, partner_invoice_id, or partner_shipping_id fields.
+        """
+        project_user = new_test_user(
+            self.env, groups='project.group_project_user',
+            login='Project user', name='Project user',
+        )
+        partners = [
+            self.partner,
+            self.partner_a,
+            self.partner_b,
+            self.env['res.partner'].create({'name': "unrelated partner"}),
+        ]
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': partners[0].id,
+            'partner_invoice_id': partners[1].id,
+            'partner_shipping_id': partners[2].id,
+            'order_line': [Command.create({'product_id': self.product_order_service1.id})],
+        })
+        sale_order.action_confirm()
+
+        task0, task1, task2, task3 = self.env['project.task'].with_user(project_user).create([{
+            'name': f"Task {i}",
+            'sale_line_id': sale_order.order_line.id,
+            'project_id': self.project_global.id,
+            'partner_id': partner.id,
+        } for i, partner in enumerate(partners)])
+
+        self.assertEqual(task0.sale_order_id, sale_order, "Task matches SO's partner_id")
+        self.assertEqual(task1.sale_order_id, sale_order, "Task matches SO's partner_invoice_id")
+        self.assertEqual(task2.sale_order_id, sale_order, "Task matches SO's partner_shipping_id")
+        self.assertFalse(task3.sale_order_id, "Task partner doesn't match any of the SO partners")
+
+        with self.assertRaises(AccessError):
+            sale_order.with_user(project_user).partner_id
+        task3.with_user(project_user).write({
+            'partner_id': self.partner.id,
+            'sale_line_id': sale_order.order_line.id,
+        })
+        self.assertEqual(task3.sale_order_id, sale_order, "Task matches SO's partner_id")
+
+    def test_action_view_project_ids(self):
+        order = self.env['sale.order'].create({
+            'name': 'Project Order',
+            'partner_id': self.partner.id
+        })
+
+        sol = self.env['sale.order.line'].create({
+            'product_id': self.product_order_service4.id,
+            'order_id': order.id,
+        })
+
+        order.action_confirm()
+        action = order.action_view_project_ids()
+        self.assertEqual(action['type'], 'ir.actions.act_window', 'Should return a window action')
+        self.assertEqual(action['context']['default_sale_line_id'], sol.id, 'The SOL linked to the SO should be chosen as default value')
+
+        self.product_order_service4.type = 'consu'
+        action = order.action_view_project_ids()
+        self.assertEqual(action['type'], 'ir.actions.act_window', 'Should return a window action')
+        self.assertFalse(action['context']['default_sale_line_id'], 'No SOL should be set by default since the product changed')
+
+    def test_confirm_sale_order_on_task_save(self):
+        sale_order = self.env['sale.order'].create({
+            'name': 'Sale Order',
+            'partner_id': self.partner.id,
+        })
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_order_service1.id,
+        })
+        self.assertEqual(sale_order.state, 'draft')
+
+        task = self.env['project.task'].create({
+            'name': 'Task',
+            'project_id': self.project_global.id,
+        })
+        task.write({'sale_line_id': sale_order_line.id})
+        self.assertEqual(sale_order.state, 'sale')
+
+    def test_confirm_sale_order_on_project_creation(self):
+        sale_order = self.env['sale.order'].create({
+            'name': 'Sale Order',
+            'partner_id': self.partner.id,
+        })
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_order_service1.id,
+        })
+        self.assertEqual(sale_order.state, 'draft')
+
+        self.env['project.project'].create({
+            'name': 'Project',
+            'sale_line_id': sale_order_line.id,
+        })
+        self.assertEqual(sale_order.state, 'sale')

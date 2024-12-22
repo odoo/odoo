@@ -3,7 +3,6 @@
 # 	* stock_picking_batch
 # 
 # Translators:
-# Gelo Joga, 2023
 # Wil Odoo, 2024
 # Larissa Manderfeld, 2024
 # 
@@ -76,8 +75,8 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"Un traslado no se añadirá automáticamente a los lotes que superen este número de líneas si el traslado se añade al mismo.\n"
-"Deje este valor como '0' si no hay límite de líneas."
+"Si el lote excede el número de líneas, no se añadirá el traslado automáticamente\n"
+"Deje este valor como \"0\" si no hay límite de líneas."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
@@ -85,8 +84,8 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"Un traslado no se añadirá automáticamente a los lotes que superen este número de traslados.\n"
-"Deje este valor como '0' si no hay límite de traslados."
+"Si el lote excede el número de traslados, no se hará el traslado automáticamente.\n"
+"Deje este valor como \"0\" si no hay un límite de peso."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
@@ -119,18 +118,18 @@ msgstr "Icono de tipo de actvidad"
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "Add Operations"
-msgstr "Agregar operaciones"
+msgstr "Añadir operaciones"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Add pickings to"
-msgstr "Agregar recolecciones a"
+msgstr "Añadir pickings a"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Add to"
-msgstr "Agregar"
+msgstr "Añadir"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -139,17 +138,17 @@ msgstr "Agregar"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree_detailed_wave
 #, python-format
 msgid "Add to Wave"
-msgstr "Agregar a la agrupación"
+msgstr "Añadir a la ola"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
 msgid "Add to batch"
-msgstr "Agregar a agrupación"
+msgstr "Añadir al lote"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_add_to_wave_action_stock_picking
 msgid "Add to wave"
-msgstr "Agregar a recolección por olas"
+msgstr "Añadir a recolección por olas"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -159,7 +158,7 @@ msgstr "Asignación"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__allowed_picking_ids
 msgid "Allowed Picking"
-msgstr "Selecciones Permitidas"
+msgstr "Picking permitido"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -208,7 +207,7 @@ msgstr "Agrupe automáticamente los lotes por ubicación de origen."
 msgid ""
 "Automatically put pickings into batches as they are confirmed when possible."
 msgstr ""
-"Ponga automáticamente las recolecciones en lotes a medida que se vayan "
+"Ponga automáticamente los pickings en lotes a medida que se vayan "
 "confirmando cuando sea posible."
 
 #. module: stock_picking_batch
@@ -241,30 +240,30 @@ msgstr "Nombre del lote"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_internal_search_inherit
 #, python-format
 msgid "Batch Transfer"
-msgstr "Transferir agrupación"
+msgstr "Traslado por lote"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
 msgid "Batch Transfer Lines"
-msgstr "Líneas de agrupación de albaranes"
+msgstr "Líneas de traslado por lote"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Batch Transfers"
-msgstr "Agrupación de albaranes"
+msgstr "Traslados por lote"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Batch Transfers not finished"
-msgstr "Agrupaciones de albaranes no finalizadas"
+msgstr "Traslados por lote sin finalizar"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_move_line__batch_id
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking__batch_id
 msgid "Batch associated to this transfer"
-msgstr "Agrupación asociada a este albarán"
+msgstr "Lote asociado a este traslado"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -330,22 +329,22 @@ msgstr "Contacto"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_batch
 msgid "Count Picking Batch"
-msgstr "Contar el lote de picking"
+msgstr "Total de pickings por lotes"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_wave
 msgid "Count Picking Wave"
-msgstr "Onda de selección de cuentas"
+msgstr "Número de pickings por olas"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Create a new batch transfer"
-msgstr "Crear una nueva agrupación de albaranes"
+msgstr "Crear un nuevo traslado por lote"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 msgid "Create a new wave transfer"
-msgstr "Crear una nueva transferencia de onda"
+msgstr "Crear un nuevo traslado por ola"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__create_uid
@@ -467,18 +466,18 @@ msgid ""
 "If the Automatic Batches feature is enabled, at least one 'Group by' option "
 "must be selected."
 msgstr ""
-"Si la función Agrupación de albaranes automáticos está activada, debe "
-"seleccionarse al menos una opción \"Agrupar por\"."
+"Si se habilita la función de lotes automáticos, se debe seleccionar por lo "
+"menos una opción de \"Agrupar por\"."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "In Progress"
-msgstr "En progreso"
+msgstr "En proceso"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__in_progress
 msgid "In progress"
-msgstr "En progreso"
+msgstr "En proceso"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_is_follower
@@ -507,7 +506,7 @@ msgstr "Última actualización el"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Late Activities"
-msgstr "Actividades tardías"
+msgstr "Actividades retrasadas"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__line_ids
@@ -517,7 +516,7 @@ msgstr "Línea"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__picking_ids
 msgid "List of transfers associated to this batch"
-msgstr "Lista de albaranes asociados a esta agrupación"
+msgstr "Lista de traslados asociados a este lote"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -537,12 +536,12 @@ msgstr "Número de lote"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid "Maximum lines per batch"
-msgstr "Líneas máximas por agrupación de albarán"
+msgstr "Líneas máximas por lote"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid "Maximum transfers per batch"
-msgstr "Albaranes máximos por agrupación de albarán"
+msgstr "Traslados máximos por lote"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
@@ -563,7 +562,7 @@ msgstr "Modo"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree
 msgid "Move Lines"
-msgstr "Movimientos"
+msgstr "Líneas de movimiento"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__my_activity_date_deadline
@@ -633,12 +632,12 @@ msgstr "ID del paquete"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__picking_ids
 msgid "Picking"
-msgstr "Recolección"
+msgstr "Albarán"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_type
 msgid "Picking Type"
-msgstr "Tipo de recolección"
+msgstr "Tipo de albarán"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -647,8 +646,7 @@ msgstr "Tipo de recolección"
 msgid ""
 "Please add 'Done' quantities to the batch picking to create a new pack."
 msgstr ""
-"Agregue cantidades hechas a la recolección por lote para crear un paquete "
-"nuevo."
+"Añada cantidades \"hechas\" al picking por lote para crear un paquete nuevo."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -727,7 +725,7 @@ msgstr "Error de envío del SMS"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__scheduled_date
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Scheduled Date"
-msgstr "Fecha prevista"
+msgstr "Fecha programada"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
@@ -737,15 +735,15 @@ msgid ""
 "              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
 "                but this scheduled date will not be set for all transfers in batch."
 msgstr ""
-"Scheduled date for the transfers to be processed.\n"
-"              - If manually set then scheduled date for all transfers in batch will automatically update to this date.\n"
-"              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
-"                but this scheduled date will not be set for all transfers in batch."
+"Fecha programada en la que se procesarán los traslados.\n"
+"              - Si se configura manualmente, la fecha programada para todos los traslados en lote se actualizará automáticamente a esta fecha.\n"
+"              - Si no se configura manualmente, y se añaden, remueven o actualizan los traslados, entonces esta será la fecha programada más temprana\n"
+"                pero esta fecha programada no se establecerá en todos los traslados por lote."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Search Batch Transfer"
-msgstr "Buscar agrupación de albaranes"
+msgstr "Buscar traslado por lote"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_allocation
@@ -760,7 +758,7 @@ msgstr "Mostrar \"Comprobar disponibilidad\""
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_clear_qty_button
 msgid "Show Clear Qty Button"
-msgstr "Mostrar botón de quitar cantidades"
+msgstr "Mostrar botón de borrar cantidades"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_lots_text
@@ -818,7 +816,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
 msgid "Stock Batch Transfer"
-msgstr "Agrupación de albaranes disponible"
+msgstr "Traslado por lote de stock"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_move
@@ -828,7 +826,7 @@ msgstr "Movimiento de stock"
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_package_destination
 msgid "Stock Package Destination"
-msgstr "Destino de stock del paquete"
+msgstr "Destino del paquete de stock"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_line_ids
@@ -854,7 +852,7 @@ msgid ""
 "\n"
 "Incompatibilities: %s"
 msgstr ""
-"Los siguientes traslados no se pueden agregar al traslado por lote %s. Revise sus estados y tipos de operación.\n"
+"Los siguientes traslados no se pueden añadir al traslado por lote %s. Revise sus estados y tipos de operación.\n"
 "\n"
 "Incompatibilidades: %s"
 
@@ -866,11 +864,10 @@ msgid ""
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"El objetivo de la agrupación de albaraneses agrupar las operaciones que "
-"pueden (deben) realizarse juntas para aumentar su eficiencia. También puede "
-"ser útil asignar trabajos (una persona = una agrupación) o ayudar a la "
-"gestión del tiempo de las operaciones (por ejemplo, tareas a realizar a las "
-"13:00)."
+"El objetivo del traslado por lote es agrupar operaciones que pueden (deben) "
+"hacerse juntas para aumentar su eficacia. También puede ser útil para "
+"asignar trabajos (una persona = un lote) o ayudar a la gestión temporal de "
+"las operaciones (tareas que deben hacerse a las 13h)."
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
@@ -880,10 +877,10 @@ msgid ""
 "                    It may also be useful to assign jobs (one person = one batch) or\n"
 "                    help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"El objetivo de la transferencia por olas es agrupar operaciones de diferentes albaranes\n"
-"                   para aumentar su eficacia.\n"
-"                   También puede ser útil asignar trabajos (una persona = un lote) o\n"
-"                     ayudar a la gestión del calendario de operaciones (tareas que deben realizarse a las 13.00 horas)."
+"El objetivo del traslado por olas es agrupar operaciones de distintos traslados\n"
+"                    para aumentar su eficiencia.\n"
+"                    También puede ser útil para asignar trabajos (una persona = un lote) o\n"
+"                    mejorar la gestión de tiempo de las operaciones (tareas que se deben realizar antes de las 13h)."
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -922,7 +919,7 @@ msgstr "Este lote es una ola"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "To Do"
-msgstr "Por hacer"
+msgstr "Pendiente"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -991,18 +988,18 @@ msgstr "Almacén"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__wave_id
 msgid "Wave Transfer"
-msgstr "Transferencia de ondas"
+msgstr "Traslado por olas"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_add_to_wave
 msgid "Wave Transfer Lines"
-msgstr "Líneas de transferencia de ondas"
+msgstr "Líneas de traslados por olas"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.action_picking_tree_wave
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_wave_menu
 msgid "Wave Transfers"
-msgstr "Traslados con recolección por olas"
+msgstr "Traslados por ola"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -1022,38 +1019,38 @@ msgstr "Historial de comunicación del sitio web"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
 msgid "When checked, create the batch in draft status"
-msgstr "Si está marcada, crea la agrupación de albaranes en estado borrador"
+msgstr "Cuando se selecciona, crea el lote en estado de borrador"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You cannot delete Done batch transfers."
-msgstr "No se pueden eliminar las transferencias por lotes realizadas."
+msgstr "No puede eliminar traslados por lote terminados."
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You have to set some pickings to batch."
-msgstr "Tienes que configurar algunas selecciones a los lotes."
+msgstr "Tiene que establecer algunas pickings a los lotes."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
 msgid "a new batch transfer"
-msgstr "una nueva transferencia por lotes"
+msgstr "un nuevo traslado por lotes"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__new
 msgid "a new wave transfer"
-msgstr "una nueva ola de transferencia"
+msgstr "un nuevo traslado por olas"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
 msgid "an existing batch transfer"
-msgstr "una transferencia por lotes existente"
+msgstr "un traslado por lotes existente"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing
 msgid "an existing wave transfer"
-msgstr "una transferencia de onda existente"
+msgstr "un traslado por olas existente"

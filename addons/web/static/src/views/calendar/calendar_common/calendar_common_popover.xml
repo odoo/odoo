@@ -17,7 +17,7 @@
 
     <t t-name="web.CalendarCommonPopover.popover">
         <div class="card-header d-flex justify-content-between py-2 pe-2">
-            <span class="popover-header border-0" t-esc="props.record.title" />
+            <span class="popover-header border-0 text-truncate" t-esc="props.record.title" t-att-data-tooltip="props.record.title"/>
             <span class="o_cw_popover_close ms-4 mt-2 me-2" t-on-click.stop="() => props.close()">
                 <i class="fc-close fc-icon fc-icon-x" />
             </span>
@@ -46,7 +46,7 @@
                 <t t-foreach="Object.keys(props.model.popoverFieldNodes)" t-as="fieldId" t-key="fieldId">
                     <t t-set="fieldInfo" t-value="props.model.popoverFieldNodes[fieldId]"/>
                     <t t-if="!isInvisible(fieldInfo, slot.record)">
-                        <li class="list-group-item flex-shrink-0 d-flex flex-wrap align-items-start" t-att-class="fieldInfo.attrs.class">
+                        <li class="list-group-item d-flex text-nowrap align-items-center" t-att-class="fieldInfo.attrs.class"  t-att-data-tooltip="getFormattedValue(fieldId, slot.record)">
                             <span class="fw-bold me-2" t-if="!fieldInfo.options.noLabel">
                                 <t t-if="fieldInfo.options.icon">
                                     <i t-attf-class="fa-fw {{fieldInfo.options.icon}} text-400" />
@@ -55,7 +55,7 @@
                                     <t t-esc="fieldInfo.string" />
                                 </t>
                             </span>
-                            <div class="flex-grow-1">
+                            <div class="flex-grow-1 o_cw_popover_field overflow-hidden">
                                 <Field name="fieldInfo.name" record="slot.record" fieldInfo="fieldInfo" type="fieldInfo.widget" />
                             </div>
                         </li>

@@ -6,6 +6,7 @@ from collections import defaultdict
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.misc import OrderedSet
 
 
 class StockMove(models.Model):
@@ -33,7 +34,7 @@ class StockMove(models.Model):
         for move in self:
             if not move.is_subcontract:
                 continue
-            if float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding):
+            if not move.picked or float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding):
                 continue
             productions = move._get_subcontract_production()
             if not productions or (productions[:1].consumption == 'strict' and not productions[:1]._has_tracked_component()):
@@ -190,13 +191,19 @@ class StockMove(models.Model):
         }
 
     def _action_cancel(self):
+        productions_to_cancel_ids = OrderedSet()
         for move in self:
             if move.is_subcontract:
                 active_productions = move.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel'))
                 moves_todo = self.env.context.get('moves_todo')
                 not_todo_productions = active_productions.filtered(lambda p: p not in moves_todo.move_orig_ids.production_id) if moves_todo else active_productions
                 if not_todo_productions:
-                    not_todo_productions.with_context(skip_activity=True).action_cancel()
+                    productions_to_cancel_ids.update(not_todo_productions.ids)
+
+        if productions_to_cancel_ids:
+            productions_to_cancel = self.env['mrp.production'].browse(productions_to_cancel_ids)
+            productions_to_cancel.with_context(skip_activity=True).action_cancel()
+
         return super()._action_cancel()
 
     def _action_confirm(self, merge=True, merge_into=False):
@@ -209,9 +216,13 @@ class StockMove(models.Model):
             bom = move._get_subcontract_bom()
             if not bom:
                 continue
+            company = move.company_id
+            subcontracting_location = \
+                move.picking_id.partner_id.with_company(company).property_stock_subcontractor \
+                or company.subcontracting_location_id
             move.write({
                 'is_subcontract': True,
-                'location_id': move.picking_id.partner_id.with_company(move.company_id).property_stock_subcontractor.id
+                'location_id': subcontracting_location.id
             })
         res = super()._action_confirm(merge=merge, merge_into=merge_into)
         for move in res:
@@ -230,6 +241,8 @@ class StockMove(models.Model):
         view = self.env.ref('mrp_subcontracting.mrp_production_subcontracting_form_view')
         if self.env.user.has_group('base.group_portal'):
             view = self.env.ref('mrp_subcontracting.mrp_production_subcontracting_portal_form_view')
+        context = dict(self._context)
+        context.pop('skip_consumption', False)
         return {
             'name': _('Subcontract'),
             'type': 'ir.actions.act_window',
@@ -239,7 +252,7 @@ class StockMove(models.Model):
             'view_id': view.id,
             'target': 'new',
             'res_id': production.id,
-            'context': self.env.context,
+            'context': context,
         }
 
     def _get_subcontract_bom(self):
@@ -276,18 +289,8 @@ class StockMove(models.Model):
 
     def _prepare_move_split_vals(self, qty):
         vals = super(StockMove, self)._prepare_move_split_vals(qty)
-        if self.is_subcontract:
-            vals['move_orig_ids'] = [] if not self.move_orig_ids else [(4, self.move_orig_ids[-1].id)]
         vals['location_id'] = self.location_id.id
         return vals
-
-    def _split(self, qty, restrict_partner_id=False):
-        self.ensure_one()
-        new_move_vals = super()._split(qty=qty, restrict_partner_id=restrict_partner_id)
-        # Update the origin moves to remove the split one
-        if self.move_orig_ids and self.is_subcontract:
-            self.move_orig_ids = (self.move_orig_ids - self.move_orig_ids[-1]).ids
-        return new_move_vals
 
     def _should_bypass_reservation(self, forced_location=False):
         """ If the move is subcontracted then ignore the reservation. """
@@ -311,7 +314,7 @@ class StockMove(models.Model):
         if wip_production:
             self.env['change.production.qty'].with_context(skip_activity=True).create({
                 'mo_id': wip_production.id,
-                'product_qty': wip_production.product_uom_qty + quantity_to_remove
+                'product_qty': wip_production.product_qty + quantity_to_remove
             }).change_prod_qty()
 
         # Cancel productions until reach new_quantity
@@ -320,9 +323,12 @@ class StockMove(models.Model):
                 quantity_to_remove -= production.product_qty
                 production.with_context(skip_activity=True).action_cancel()
             else:
+                if float_is_zero(quantity_to_remove, precision_rounding=production.product_uom_id.rounding):
+                    # No need to do change_prod_qty for no change at all.
+                    break
                 self.env['change.production.qty'].with_context(skip_activity=True).create({
                     'mo_id': production.id,
-                    'product_qty': production.product_uom_qty - quantity_to_remove
+                    'product_qty': production.product_qty - quantity_to_remove
                 }).change_prod_qty()
                 break
 

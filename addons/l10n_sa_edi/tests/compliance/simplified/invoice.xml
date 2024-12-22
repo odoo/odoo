@@ -72,7 +72,7 @@
           </cac:Country>
         </cac:RegistrationAddress>
         <cac:TaxScheme>
-          <cbc:ID>VAT</cbc:ID>
+          <cbc:ID>NOT_EU_VAT</cbc:ID>
         </cac:TaxScheme>
       </cac:PartyTaxScheme>
       <cac:PartyLegalEntity>
@@ -179,6 +179,7 @@
     <cbc:LineExtensionAmount currencyID="SAR">795.00</cbc:LineExtensionAmount>
     <cbc:TaxExclusiveAmount currencyID="SAR">795.00</cbc:TaxExclusiveAmount>
     <cbc:TaxInclusiveAmount currencyID="SAR">914.25</cbc:TaxInclusiveAmount>
+    <cbc:AllowanceTotalAmount currencyID="SAR">0.00</cbc:AllowanceTotalAmount>
     <cbc:PrepaidAmount currencyID="SAR">0.00</cbc:PrepaidAmount>
     <cbc:PayableAmount currencyID="SAR">914.25</cbc:PayableAmount>
   </cac:LegalMonetaryTotal>
@@ -189,18 +190,6 @@
     <cac:TaxTotal>
       <cbc:TaxAmount currencyID="SAR">119.25</cbc:TaxAmount>
       <cbc:RoundingAmount currencyID="SAR">914.25</cbc:RoundingAmount>
-      <cac:TaxSubtotal>
-        <cbc:TaxableAmount currencyID="SAR">795.00</cbc:TaxableAmount>
-        <cbc:TaxAmount currencyID="SAR">119.25</cbc:TaxAmount>
-        <cbc:Percent>15.0</cbc:Percent>
-        <cac:TaxCategory>
-          <cbc:ID>S</cbc:ID>
-          <cbc:Percent>15.0</cbc:Percent>
-          <cac:TaxScheme>
-            <cbc:ID>VAT</cbc:ID>
-          </cac:TaxScheme>
-        </cac:TaxCategory>
-      </cac:TaxSubtotal>
     </cac:TaxTotal>
     <cac:Item>
       <cbc:Description>Burger</cbc:Description>

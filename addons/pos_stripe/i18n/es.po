@@ -49,7 +49,7 @@ msgstr ""
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 #, python-format
 msgid "Failed to discover: %s"
-msgstr "No se ha descubierto:%s"
+msgstr "No se pudo descubrir: %s"
 
 #. module: pos_stripe
 #. odoo-javascript
@@ -66,14 +66,14 @@ msgstr ""
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 #, python-format
 msgid "No available Stripe readers."
-msgstr "No hay lectores de Stripe disponibles"
+msgstr "No hay lectores de Stripe disponibles."
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 #, python-format
 msgid "Payment canceled because not reader connected"
-msgstr "Se canceló el pago porque no hay ningún lector conectado"
+msgstr "Pago cancelado porque no hay ningún lector conectado"
 
 #. module: pos_stripe
 #: model:ir.model,name:pos_stripe.model_pos_payment_method
@@ -109,7 +109,7 @@ msgstr "Error de Stripe"
 #. module: pos_stripe
 #: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__stripe_serial_number
 msgid "Stripe Serial Number"
-msgstr "Número de serie"
+msgstr "Número de serie de Stripe"
 
 #. module: pos_stripe
 #. odoo-python
@@ -123,7 +123,7 @@ msgstr "Falta el proveedor de pago Stripe para la empresa %s "
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 #, python-format
 msgid "Stripe readers %s not listed in your account"
-msgstr "Los lectores de %sno aparecen en su cuenta"
+msgstr "Lectores de Stripe %s que no aparecen en su cuenta"
 
 #. module: pos_stripe
 #. odoo-python
@@ -138,11 +138,10 @@ msgstr "El terminal %s ya se usa en el método de pago %s."
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 #, python-format
 msgid "There are some issues between us and Stripe, try again later."
-msgstr ""
-"Hay algunos problemas entre nosotros y Stripe, por favor, inténtelo de nuevo"
-" más tarde."
+msgstr "Tenemos algunos problemas con Stripe, inténtelo de nuevo más tarde."
 
 #. module: pos_stripe
 #: model:ir.model.fields,help:pos_stripe.field_pos_payment_method__stripe_serial_number
 msgid "[Serial number of the stripe terminal], for example: WSC513105011295"
-msgstr "[Número de serie del terminal de banda], por ejemplo: WSC513105011295"
+msgstr ""
+"[Número de serie de la terminal de Stripe], por ejemplo: WSC513105011295"

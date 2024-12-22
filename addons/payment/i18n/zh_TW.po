@@ -4,14 +4,14 @@
 # 
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -134,7 +134,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
-msgstr ""
+msgstr "<span><i class=\"fa fa-lock\"/> 保安由</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
@@ -142,11 +142,6 @@ msgid ""
 "<span><i class=\"oi oi-arrow-right\"/> How to configure your PayPal "
 "account</span>"
 msgstr "<span><i class=\"oi oi-arrow-right\"/> 如何設定你的 PayPal 帳戶</span>"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.form
-msgid "<span>Your payment methods</span>"
-msgstr "<span>你的付款方式</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -497,9 +492,9 @@ msgid ""
 "Use this if you want to charge your customers cards only when\n"
 "you are sure you can ship the goods to them."
 msgstr ""
-"Capture the amount from Odoo, when the delivery is completed.\n"
-"Use this if you want to charge your customers cards only when\n"
-"you are sure you can ship the goods to them."
+"交付完成後，可從 Odoo 捕捉金額。\n"
+"如果只想在確定能夠將貨物運送給客戶時\n"
+"才以客戶的付款卡收費，請使用此選項。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
@@ -1427,7 +1422,7 @@ msgstr "引用必須唯一!"
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__refund
 #, python-format
 msgid "Refund"
-msgstr "折讓"
+msgstr "退款"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_refund
@@ -1439,7 +1434,7 @@ msgstr "「退款」功能讓你可直接從 Odoo 內的付款資料，向客戶
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Refunds"
-msgstr "折讓"
+msgstr "退款"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__refunds_count
@@ -1623,6 +1618,11 @@ msgstr "技術支援："
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Test Mode"
 msgstr "測試模式"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Thank you!"
+msgstr "謝謝！"
 
 #. module: payment
 #. odoo-python
@@ -2138,7 +2138,7 @@ msgstr "你沒有權限存取此付款權杖。"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
-msgstr "您應該在幾分鐘內收到一封確認付款的電子信件。"
+msgstr ""
 
 #. module: payment
 #. odoo-python
@@ -2238,6 +2238,11 @@ msgid "Your payment has not been processed yet."
 msgstr "你的付款仍未處理。"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Your payment methods"
+msgstr "你的付款方式"
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "ZIP"
 msgstr "郵遞區號"
@@ -2246,16 +2251,6 @@ msgstr "郵遞區號"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
 msgstr "郵遞區號"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "danger"
-msgstr "危險"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "info"
-msgstr "資訊"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -2274,11 +2269,6 @@ msgid "provider"
 msgstr "服務商"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "success"
-msgstr "成功"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid ""
 "to make this\n"
@@ -2286,8 +2276,3 @@ msgid ""
 msgstr ""
 "以進行此項\n"
 "                    付款。"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
-msgstr "警告"

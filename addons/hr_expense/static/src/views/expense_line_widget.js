@@ -10,16 +10,17 @@ export class ExpenseLinesListRenderer extends ListRenderer {
     setup() {
         super.setup();
         this.threadService = useService("mail.thread");
+
+        this.sheetId = this.env.model.root.resId;
+        this.sheetThread = this.threadService.getThread('hr.expense.sheet', this.sheetId);
     }
 
     /** @override **/
     async onCellClicked(record, column, ev) {
-        const sheetId = this.env.model.root.resId;
-        const sheetThread = this.threadService.getThread('hr.expense.sheet', sheetId);
-        const attachmentId = record.data.message_main_attachment_id[0]
+        const attachmentChecksum = record.data.message_main_attachment_checksum;
 
-        if (attachmentId) {
-            sheetThread.update({ mainAttachment: sheetThread.attachments.find((attachment) => attachment.id === attachmentId) });
+        if (attachmentChecksum && this.sheetThread.mainAttachment.checksum !== attachmentChecksum) {
+            this.sheetThread.update({ mainAttachment: this.sheetThread.attachments.find((attachment) => attachment.checksum === attachmentChecksum) });
         }
         super.onCellClicked(record, column, ev);
     }
@@ -45,6 +46,8 @@ export class ExpenseLinesWidget extends X2ManyField {
 export const expenseLinesWidget = {
     ...x2ManyField,
     component: ExpenseLinesWidget,
+    relatedFields: [{ name: "message_main_attachment_checksum", type: "char" }],
+    additionalClasses: ["o_field_many2many"],
 };
 
 registry.category("fields").add("expense_lines_widget", expenseLinesWidget);

@@ -4,7 +4,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 from odoo.tests.common import tagged, Form
-from odoo import fields
+from odoo import fields, Command
 
 class TestAccountMoveStockCommon(AccountTestInvoicingCommon):
     @classmethod
@@ -46,6 +46,8 @@ class TestAccountMoveStockCommon(AccountTestInvoicingCommon):
                 "property_account_expense_id": cls.company_data["default_account_expense"].id,
             }
         )
+
+        cls.branch_a = cls.setup_company_data("Branch A", parent_id=cls.env.company.id)
 
 
 @tagged("post_install", "-at_install")
@@ -232,3 +234,135 @@ class TestAccountMove(TestAccountMoveStockCommon):
 
             product_accounts = basic_product.product_tmpl_id.with_company(company.id).get_product_accounts()
             self.assertEqual(bill.invoice_line_ids.account_id, product_accounts['expense'])
+
+    def test_product_valuation_method_change_to_automated_negative_on_hand_qty(self):
+        """ We have a product whose category has manual valuation and on-hand quantity is negative:
+        Upon switching to an automated valuation method for the product category, the following
+        entries should be generated in the stock journal:
+            1. CREDIT to valuation account
+            2. DEBIT to stock output account
+        """
+        stock_location = self.env['stock.warehouse'].search([
+            ('company_id', '=', self.env.company.id),
+        ], limit=1).lot_stock_id
+        categ = self.env['product.category'].create({'name': 'categ'})
+        product = self.product_a
+        product.write({
+            'type': 'product',
+            'categ_id': categ.id,
+        })
+
+        out_picking = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'picking_type_id': stock_location.warehouse_id.out_type_id.id,
+        })
+        sm = self.env['stock.move'].create({
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom_qty': 1,
+            'product_uom': product.uom_id.id,
+            'location_id': out_picking.location_id.id,
+            'location_dest_id': out_picking.location_dest_id.id,
+            'picking_id': out_picking.id,
+        })
+        out_picking.action_confirm()
+        sm.quantity = 1
+        out_picking.button_validate()
+
+        categ.write({
+            'property_valuation': 'real_time',
+            'property_stock_account_input_categ_id': self.stock_input_account.id,
+            'property_stock_account_output_categ_id': self.stock_output_account.id,
+            'property_stock_valuation_account_id': self.stock_valuation_account.id,
+            'property_stock_journal': self.stock_journal.id,
+        })
+
+        amls = self.env['account.move.line'].search([('product_id', '=', product.id)])
+        if amls[0].account_id == self.stock_valuation_account:
+            stock_valuation_line = amls[0]
+            output_line = amls[1]
+        else:
+            output_line = amls[0]
+            stock_valuation_line = amls[1]
+
+        expected_valuation_line = {
+            'account_id': self.stock_valuation_account.id,
+            'credit': product.standard_price,
+            'debit': 0,
+        }
+        expected_output_line = {
+            'account_id': self.stock_output_account.id,
+            'credit': 0,
+            'debit': product.standard_price,
+        }
+        self.assertRecordValues(
+            [stock_valuation_line, output_line],
+            [expected_valuation_line, expected_output_line]
+        )
+
+    def test_stock_account_move_automated_not_standard_with_branch_company(self):
+        """
+        Test that the validation of a stock picking does not fail `_check_company`
+        at the creation of the account move with sub company
+        """
+        branch_a = self.branch_a['company']
+        self.env.user.company_id = branch_a
+
+        self.auto_categ.write({'property_cost_method': 'average', 'property_valuation': 'real_time'})
+        product = self.product_A
+        product.write({'categ_id': self.auto_categ.id, 'standard_price': 300, 'company_id': branch_a.id})
+
+        stock_location = self.env['stock.warehouse'].search([
+            ('company_id', '=', self.env.company.id),
+        ], limit=1).lot_stock_id
+
+        in_picking = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'picking_type_id': stock_location.warehouse_id.in_type_id.id,
+        })
+
+        sm = self.env['stock.move'].create({
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom_qty': 1,
+            'product_uom': product.uom_id.id,
+            'location_id': in_picking.location_id.id,
+            'location_dest_id': in_picking.location_dest_id.id,
+            'picking_id': in_picking.id,
+        })
+        in_picking.button_validate()
+        self.assertEqual(sm.state, 'done')
+        self.assertEqual(sm.account_move_ids.company_id, self.env.company)
+
+    def test_cogs_analytic_accounting(self):
+        """Check analytic distribution is correctly propagated to COGS lines"""
+        self.env.company.anglo_saxon_accounting = True
+        default_plan = self.env['account.analytic.plan'].create({
+            'name': 'Default',
+        })
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Account 1',
+            'plan_id': default_plan.id,
+            'company_id': False,
+        })
+
+        move = self.env['account.move'].create({
+            'move_type': 'out_refund',
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'analytic_distribution': {
+                        analytic_account.id: 100,
+                    },
+                }),
+            ]
+        })
+        move.action_post()
+
+        cogs_line = move.line_ids.filtered(lambda l: l.account_id == self.product_A.property_account_expense_id)
+        self.assertEqual(cogs_line.analytic_distribution, {str(analytic_account.id): 100})

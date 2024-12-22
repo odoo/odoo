@@ -5,7 +5,7 @@ import collections
 from datetime import timedelta
 from itertools import groupby
 import operator as py_operator
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 from odoo.tools import groupby
 from odoo.tools.float_utils import float_round, float_is_zero
 
@@ -30,18 +30,29 @@ class ProductTemplate(models.Model):
         compute='_compute_used_in_bom_count', compute_sudo=False)
     mrp_product_qty = fields.Float('Manufactured', digits='Product Unit of Measure',
         compute='_compute_mrp_product_qty', compute_sudo=False)
-    is_kits = fields.Boolean(compute='_compute_is_kits', compute_sudo=False)
+    is_kits = fields.Boolean(compute='_compute_is_kits', search='_search_is_kits')
 
     def _compute_bom_count(self):
         for product in self:
             product.bom_count = self.env['mrp.bom'].search_count(['|', ('product_tmpl_id', '=', product.id), ('byproduct_ids.product_id.product_tmpl_id', '=', product.id)])
 
+    @api.depends_context('company')
     def _compute_is_kits(self):
-        domain = [('product_tmpl_id', 'in', self.ids), ('type', '=', 'phantom')]
-        bom_mapping = self.env['mrp.bom'].search_read(domain, ['product_tmpl_id'])
+        domain = [('product_tmpl_id', 'in', self.ids), ('type', '=', 'phantom'), '|', ('company_id', '=', False), ('company_id', '=', self.env.company.id)]
+        bom_mapping = self.env['mrp.bom'].sudo().search_read(domain, ['product_tmpl_id'])
         kits_ids = set(b['product_tmpl_id'][0] for b in bom_mapping)
         for template in self:
             template.is_kits = (template.id in kits_ids)
+
+    def _search_is_kits(self, operator, value):
+        assert operator in ('=', '!='), 'Unsupported operator'
+        bom_tmpl_query = self.env['mrp.bom'].sudo()._search(
+            [('company_id', 'in', [False] + self.env.companies.ids),
+             ('type', '=', 'phantom'), ('active', '=', True)])
+        neg = ''
+        if (operator == '=' and not value) or (operator == '!=' and value):
+            neg = 'not '
+        return [('id', neg + 'inselect', bom_tmpl_query.subselect('product_tmpl_id'))]
 
     def _compute_show_qty_status_button(self):
         super()._compute_show_qty_status_button()
@@ -108,18 +119,21 @@ class ProductProduct(models.Model):
         compute='_compute_used_in_bom_count', compute_sudo=False)
     mrp_product_qty = fields.Float('Manufactured', digits='Product Unit of Measure',
         compute='_compute_mrp_product_qty', compute_sudo=False)
-    is_kits = fields.Boolean(compute="_compute_is_kits", compute_sudo=False)
+    is_kits = fields.Boolean(compute="_compute_is_kits", search='_search_is_kits')
 
     def _compute_bom_count(self):
         for product in self:
             product.bom_count = self.env['mrp.bom'].search_count(['|', '|', ('byproduct_ids.product_id', '=', product.id), ('product_id', '=', product.id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product.product_tmpl_id.id)])
 
+    @api.depends_context('company')
     def _compute_is_kits(self):
-        domain = ['&', ('type', '=', 'phantom'),
+        domain = ['&', '&', ('type', '=', 'phantom'),
+                       '|', ('company_id', '=', False),
+                            ('company_id', '=', self.env.company.id),
                        '|', ('product_id', 'in', self.ids),
                             '&', ('product_id', '=', False),
                                  ('product_tmpl_id', 'in', self.product_tmpl_id.ids)]
-        bom_mapping = self.env['mrp.bom'].search_read(domain, ['product_tmpl_id', 'product_id'])
+        bom_mapping = self.env['mrp.bom'].sudo().search_read(domain, ['product_tmpl_id', 'product_id'])
         kits_template_ids = set([])
         kits_product_ids = set([])
         for bom_data in bom_mapping:
@@ -129,6 +143,23 @@ class ProductProduct(models.Model):
                 kits_template_ids.add(bom_data['product_tmpl_id'][0])
         for product in self:
             product.is_kits = (product.id in kits_product_ids or product.product_tmpl_id.id in kits_template_ids)
+
+    def _search_is_kits(self, operator, value):
+        assert operator in ('=', '!='), 'Unsupported operator'
+        bom_tmpl_query = self.env['mrp.bom'].sudo()._search(
+            [('company_id', 'in', [False] + self.env.companies.ids),
+             ('active', '=', True),
+             ('type', '=', 'phantom'), ('product_id', '=', False)])
+        bom_product_query = self.env['mrp.bom'].sudo()._search(
+            [('company_id', 'in', [False] + self.env.companies.ids),
+             ('type', '=', 'phantom'), ('product_id', '!=', False)])
+        neg = ''
+        op = '|'
+        if (operator == '=' and not value) or (operator == '!=' and value):
+            neg = 'not '
+            op = '&'
+        return [op, ('product_tmpl_id', neg + 'inselect', bom_tmpl_query.subselect('product_tmpl_id')),
+                ('id', neg + 'inselect', bom_product_query.subselect('product_id'))]
 
     def _compute_show_qty_status_button(self):
         super()._compute_show_qty_status_button()
@@ -245,18 +276,18 @@ class ProductProduct(models.Model):
                         "free_qty": float_round(component.free_qty, precision_rounding=rounding),
                     }
                 )
-                ratios_virtual_available.append(component_res["virtual_available"] / qty_per_kit)
-                ratios_qty_available.append(component_res["qty_available"] / qty_per_kit)
-                ratios_incoming_qty.append(component_res["incoming_qty"] / qty_per_kit)
-                ratios_outgoing_qty.append(component_res["outgoing_qty"] / qty_per_kit)
-                ratios_free_qty.append(component_res["free_qty"] / qty_per_kit)
+                ratios_virtual_available.append(float_round(component_res["virtual_available"] / qty_per_kit, precision_rounding=rounding))
+                ratios_qty_available.append(float_round(component_res["qty_available"] / qty_per_kit, precision_rounding=rounding))
+                ratios_incoming_qty.append(float_round(component_res["incoming_qty"] / qty_per_kit, precision_rounding=rounding))
+                ratios_outgoing_qty.append(float_round(component_res["outgoing_qty"] / qty_per_kit, precision_rounding=rounding))
+                ratios_free_qty.append(float_round(component_res["free_qty"] / qty_per_kit, precision_rounding=rounding))
             if bom_sub_lines and ratios_virtual_available:  # Guard against all cnsumable bom: at least one ratio should be present.
                 res[product.id] = {
-                    'virtual_available': min(ratios_virtual_available) * bom_kits[product].product_qty // 1,
-                    'qty_available': min(ratios_qty_available) * bom_kits[product].product_qty // 1,
-                    'incoming_qty': min(ratios_incoming_qty) * bom_kits[product].product_qty // 1,
-                    'outgoing_qty': min(ratios_outgoing_qty) * bom_kits[product].product_qty // 1,
-                    'free_qty': min(ratios_free_qty) * bom_kits[product].product_qty // 1,
+                    'virtual_available': float_round(min(ratios_virtual_available) * bom_kits[product].product_qty, precision_rounding=rounding) // 1,
+                    'qty_available': float_round(min(ratios_qty_available) * bom_kits[product].product_qty, precision_rounding=rounding) // 1,
+                    'incoming_qty': float_round(min(ratios_incoming_qty) * bom_kits[product].product_qty, precision_rounding=rounding) // 1,
+                    'outgoing_qty': float_round(min(ratios_outgoing_qty) * bom_kits[product].product_qty, precision_rounding=rounding) // 1,
+                    'free_qty': float_round(min(ratios_free_qty) * bom_kits[product].product_qty, precision_rounding=rounding) // 1,
                 }
             else:
                 res[product.id] = {

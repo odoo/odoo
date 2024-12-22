@@ -7,6 +7,7 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Hanna Kheradroosta, 2023
 # Martin Trigaux, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,56 +28,71 @@ msgstr ""
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid " clicks"
-msgstr ""
+msgstr "کلیک‌ها"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid " countries"
-msgstr ""
+msgstr "کشورها"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid "# of clicks"
-msgstr ""
+msgstr "تعداد کلیک‌ها"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Campaign</strong>"
 msgstr ""
+"```html\n"
+"<strong>کمپین</strong>\n"
+"```"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Medium</strong>"
 msgstr ""
+"```html\n"
+"<strong>متوسط</strong>\n"
+"```"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Original URL</strong>"
 msgstr ""
+"```html\n"
+"<strong>آدرس اصلی</strong>\n"
+"```"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Redirected URL</strong>"
 msgstr ""
+"```html\n"
+"<strong>آدرس URL هدایت شده</strong>\n"
+"```"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Source</strong>"
 msgstr ""
+"```html\n"
+"<strong>منبع</strong>\n"
+"```"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Tracked Link</strong>"
-msgstr ""
+msgstr "<strong>لینک پیگیری شده</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "All Time"
-msgstr ""
+msgstr "تمام وقت"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -86,6 +102,10 @@ msgid ""
 "the context of your link. It might be an event you want to promote or a "
 "special promotion.\"/>"
 msgstr ""
+"کمپین <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"زمینه "
+"لینک شما را تعریف می‌کند. ممکن است یک رویداد باشد که می‌خواهید تبلیغ کنید یا"
+" یک تبلیغ ویژه.\"/>"
 
 #. module: website_links
 #. odoo-javascript
@@ -109,19 +129,19 @@ msgstr "کپی"
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "Edit code"
-msgstr ""
+msgstr "ویرایش کد"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "Generating link..."
-msgstr ""
+msgstr "در حال تولید لینک..."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Get tracked link"
-msgstr ""
+msgstr "دریافت لینک پیگیری شده"
 
 #. module: website_links
 #. odoo-javascript
@@ -156,11 +176,15 @@ msgid ""
 "the medium used to share your link. It might be an email, or a Facebook Ads "
 "for instance.\"/>"
 msgstr ""
+"متوسط <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"رسانه‌ای "
+"را تعریف می‌کند که برای به اشتراک‌گذاری لینک شما استفاده می‌شود. می‌تواند یک"
+" ایمیل، یا به عنوان مثال تبلیغات فیسبوک باشد.\"/>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Most Clicked"
-msgstr ""
+msgstr "بیشترین کلیک شده"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -177,7 +201,7 @@ msgstr "بدون داده"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Recently Used"
-msgstr ""
+msgstr "مورد استفاده اخیر"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -185,6 +209,8 @@ msgid ""
 "Share this page with a <strong>short link</strong> that includes "
 "<strong>analytics trackers</strong>."
 msgstr ""
+"این صفحه را با یک <strong>لینک کوتاه</strong> که شامل <strong>ردیاب های "
+"تحلیلی</strong> است به اشتراک بگذارید."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -194,6 +220,10 @@ msgid ""
 "the source from which your traffic will come from, Facebook or Twitter for "
 "instance.\"/>"
 msgstr ""
+"منبع <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" role=\"img\" aria-label=\"اطلاعات راهنما\" title=\"منبعی "
+"را تعریف می‌کند که ترافیک شما از آن خواهد آمد، برای مثال فیسبوک یا "
+"توییتر.\"/>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -206,7 +236,7 @@ msgstr "آمار"
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
 msgid "Stats"
-msgstr ""
+msgstr "آمار"
 
 #. module: website_links
 #. odoo-javascript
@@ -214,7 +244,7 @@ msgstr ""
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 #, python-format
 msgid "The code cannot be left empty"
-msgstr ""
+msgstr "کد نمی‌تواند خالی بماند"
 
 #. module: website_links
 #. odoo-javascript
@@ -223,7 +253,7 @@ msgstr ""
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid "There is no data to show"
-msgstr ""
+msgstr "داده‌ای برای نمایش وجود ندارد"
 
 #. module: website_links
 #. odoo-javascript
@@ -231,7 +261,7 @@ msgstr ""
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 #, python-format
 msgid "This code is already taken"
-msgstr ""
+msgstr "این کد قبلاً گرفته شده است"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -239,6 +269,9 @@ msgid ""
 "Those trackers can be used in Google Analytics to track clicks and visitors,"
 " or in Odoo reports to track opportunities and related revenues."
 msgstr ""
+"آن ردیاب‌ها می‌توانند در گوگل آنالیتیکس برای پیگیری کلیک‌ها و بازدیدکنندگان "
+"یا در گزارش‌های اودو برای پیگیری فرصت‌ها و درآمدهای مرتبط مورد استفاده قرار "
+"گیرند."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -250,7 +283,7 @@ msgstr "URL"
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "Unable to get recent links"
-msgstr ""
+msgstr "قادر به دریافت لینک‌های اخیر نیست"
 
 #. module: website_links
 #. odoo-javascript
@@ -264,19 +297,19 @@ msgstr "تعریف نشده"
 #: code:addons/website_links/models/link_tracker.py:0
 #, python-format
 msgid "Visit Webpage Statistics"
-msgstr ""
+msgstr "مشاهده آمار صفحه وب"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "You don't have any recent links."
-msgstr ""
+msgstr "شما هیچ لینک اخیر ندارید."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Your tracked links"
-msgstr ""
+msgstr "پیوندهای ردیابی شده شما"
 
 #. module: website_links
 #. odoo-javascript
@@ -291,38 +324,41 @@ msgstr "لغو"
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
 msgid "clicks"
-msgstr ""
+msgstr "کلیک‌ها"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "copy"
 msgstr ""
+"متن اصلی:\n"
+"\n"
+"کپی"
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. InMails, Ads, Social, ..."
-msgstr ""
+msgstr "به عنوان مثال: InMails، تبلیغات، شبکه های اجتماعی، ..."
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. June Sale, Paris Roadshow, ..."
-msgstr ""
+msgstr "به عنوان مثال فروش ژوئن، نمایشگاه پاریس، ..."
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. LinkedIn, Facebook, Leads, ..."
-msgstr ""
+msgstr "مثال: لینکدین، فیسبوک، سرنخ‌ها، ..."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "e.g. https://www.odoo.com/contactus"
-msgstr ""
+msgstr "e.g. https://www.odoo.com/contactus"
 
 #. module: website_links
 #. odoo-javascript
@@ -330,7 +366,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "ok"
-msgstr ""
+msgstr "باشه"
 
 #. module: website_links
 #. odoo-javascript

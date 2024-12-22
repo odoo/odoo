@@ -3,15 +3,15 @@
 # 	* website_sale
 # 
 # Translators:
-# Wil Odoo, 2023
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2024
+# Wil Odoo, 2024
 # Maitê Dietze, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Maitê Dietze, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -47,7 +47,6 @@ msgstr "%s avaliações"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "e Envio"
 
@@ -124,7 +123,6 @@ msgstr "<b>Lista de preços</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<b>Shipping: </b>"
 msgstr "<b>Envio: </b>"
 
@@ -530,11 +528,6 @@ msgstr ""
 "            "
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "<u class=\"h5\">Documents</u>"
-msgstr "<u class=\"h5\">Documentos</u>"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
 msgid "<u>Terms and Conditions</u>"
 msgstr "<u>Termos e Condições</u>"
@@ -864,14 +857,14 @@ msgstr "Fundo"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Badge"
-msgstr "Medalha"
+msgstr "Crachá"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:0
 #, python-format
 msgid "Badge Text"
-msgstr "Texto do emblema"
+msgstr "Texto do crachá"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_count
@@ -918,7 +911,6 @@ msgstr "Grande"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Billing"
 msgstr "Faturamento"
 
@@ -1023,22 +1015,6 @@ msgstr "A imagem 1024 pode ser ampliada"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
 msgid "Can Publish"
 msgstr "Pode publicar"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence a video at first position."
-msgstr "Não é possível ressequenciar um vídeo na primeira posição."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence embedded image/video with a non compatible image."
-msgstr ""
-"Não é possível ressequenciar um vídeo/imagem incorporado com uma imagem não "
-"compatível."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1293,6 +1269,11 @@ msgstr "Componentes"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping cost and ship with Easypost"
 msgstr "Calcular o custo de envio e envie com Easypost"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Compute shipping cost and ship with Shiprocket"
+msgstr "Calcular o custo de envio e enviar com a Shiprocket"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1626,7 +1607,7 @@ msgstr "Descrição"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on online quotations."
-msgstr "Descrição exibida no comércio eletrônico e nas cotações online."
+msgstr "Descrição exibida no e-Commerce e nas cotações online."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_description
@@ -1648,7 +1629,7 @@ msgstr "Mesas"
 #: model:ir.model.fields,help:website_sale.field_product_product__website_sequence
 #: model:ir.model.fields,help:website_sale.field_product_template__website_sequence
 msgid "Determine the display order in the Website E-commerce"
-msgstr "Determina a ordem de exibição no comércio eletrônico."
+msgstr "Determina a ordem de exibição no e-Commerce do site."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_digest_digest
@@ -1736,6 +1717,11 @@ msgstr ""
 #, python-format
 msgid "Do you wish to clear your cart before adding products to it?"
 msgstr "Deseja esvaziar o seu carrinho antes de adicionar produtos?"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "Documents"
+msgstr "Documentos"
 
 #. module: website_sale
 #. odoo-python
@@ -2616,6 +2602,13 @@ msgstr ""
 "de entrega. Entre em contato conosco para obter mais informações."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+#, python-format
+msgid "No shipping method is selected."
+msgstr "Nenhum método de envio foi selecionado."
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__none
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "None"
@@ -2832,11 +2825,6 @@ msgid "Pay now"
 msgstr "Pagar agora"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment
-msgid "Pay with"
-msgstr "Pagar com"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
@@ -2857,6 +2845,11 @@ msgstr "Formas de pagamento"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
 msgid "Payment Providers"
 msgstr "Provedores de serviços de pagamento"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_token
+msgid "Payment Token"
+msgstr "Token de pagamento"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
@@ -3679,6 +3672,16 @@ msgstr "Métodos de envio"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Shipping address"
 msgstr "Endereço de entrega"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket"
+msgstr "Shiprocket"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket Shipping Methods"
+msgstr "Métodos de envio do Shiprocket"
 
 #. module: website_sale
 #: model:website.menu,name:website_sale.menu_shop
@@ -4552,6 +4555,13 @@ msgstr ""
 "                                            Se você quer modificar seu endereço de entrega, crie um"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
+msgstr "Não é possível usar um vídeo como imagem principal do produto."
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -4598,6 +4608,18 @@ msgstr "Seu e-mail"
 #, python-format
 msgid "Your Name"
 msgstr "Seu nome"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid ""
+"Your account is not allowed to pay in company %s. Please log out and create "
+"a new account for this website, or contact the website administrator."
+msgstr ""
+"Sua conta não tem permissão para pagamentos na empresa %s. Encerre a sessão "
+"e crie uma nova conta nesse site ou entre em contato com o administrador do "
+"site."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -4678,7 +4700,7 @@ msgstr "Descrição do e-Commerce"
 #: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
 msgid "eCommerce Filter Visibility"
-msgstr "Visibilidade do filtro do e-Commerce"
+msgstr "Visibilidade do filtro no e-Commerce"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total

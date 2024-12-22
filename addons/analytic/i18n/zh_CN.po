@@ -3,19 +3,18 @@
 # 	* analytic
 # 
 # Translators:
-# Wil Odoo, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
 # Chloe Wang, 2023
-# 湘子 南 <1360857908@qq.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +46,7 @@ msgstr "<span class=\"o_stat_text\">毛利率</span>"
 msgid ""
 "A 'Project' plan needs to exist and its id needs to be set as "
 "`analytic.project_plan` in the system variables"
-msgstr "\"项目\" 计划必须存在，其 id 必须在系统变量中设置为 `analytic.project_plan` "
+msgstr "\"项目\" 计划必须存在，其 id 必须在系统变量中设置为 \"analytic.project_plan\""
 
 #. module: analytic
 #. odoo-javascript
@@ -550,9 +549,9 @@ msgid ""
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
-"在 ERP 中，使用\n"
-"                分析账户实施销售订单和项目。您可以跟踪成本和收入，轻松分析\n"
-"                您的利润."
+"在 Odoo 中，使用\n"
+"                分析会计实施销售订单和项目。您可以跟踪成本和收入，轻松分析\n"
+"                您的利润。"
 
 #. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_internal
@@ -628,6 +627,13 @@ msgstr "名称"
 #: model:account.analytic.account,name:analytic.analytic_nebula
 msgid "Nebula"
 msgstr "星云"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+#, python-format
+msgid "New Model"
+msgstr "新的模型"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
@@ -894,12 +900,19 @@ msgstr "您不能在您的分析帐户上设置不同的公司，因为有一些
 
 #. module: analytic
 #. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+#, python-format
+msgid "You cannot add a parent to the base plan '%s'"
+msgstr ""
+
+#. module: analytic
+#. odoo-python
 #: code:addons/analytic/models/analytic_distribution_model.py:0
 #, python-format
 msgid ""
 "You defined a distribution with analytic account(s) belonging to a specific "
 "company but a model shared between companies or with a different company"
-msgstr "您定义了属于特定公司的分析账户分布，但公司间或与其他公司共享模型"
+msgstr "您定义了属于特定公司的解析账户分布，但公司间或与其他公司共享模型"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

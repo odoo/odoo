@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: digitouch UAB <digitouchagencyeur@gmail.com>, 2023\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
@@ -37,16 +37,16 @@ msgstr ""
 
 #. module: hr_homeworking
 #. odoo-javascript
-#: code:addons/hr_homeworking/static/src/calendar/common/calender_common_renderer.xml:0
+#: code:addons/hr_homeworking/static/src/calendar/hr_homeworking_calendar_controller.js:0
 #, python-format
-msgid "Add Location"
+msgid "Are you sure you want to delete this exception?"
 msgstr ""
 
 #. module: hr_homeworking
 #. odoo-javascript
 #: code:addons/hr_homeworking/static/src/calendar/hr_homeworking_calendar_controller.js:0
 #, python-format
-msgid "Are you sure you want to delete this exception?"
+msgid "Are you sure you want to delete this location?"
 msgstr ""
 
 #. module: hr_homeworking
@@ -77,6 +77,7 @@ msgstr ""
 
 #. module: hr_homeworking
 #. odoo-javascript
+#: code:addons/hr_homeworking/static/src/calendar/hr_homeworking_calendar_controller.js:0
 #: code:addons/hr_homeworking/static/src/calendar/hr_homeworking_calendar_controller.js:0
 #, python-format
 msgid "Confirmation"
@@ -257,8 +258,11 @@ msgid "Set Homework Location Wizard"
 msgstr ""
 
 #. module: hr_homeworking
+#. odoo-javascript
+#: code:addons/hr_homeworking/static/src/calendar/common/calender_common_renderer.xml:0
 #: model:ir.actions.act_window,name:hr_homeworking.set_location_wizard_action
 #: model_terms:ir.ui.view,arch_db:hr_homeworking.homework_location_wizard_view_form
+#, python-format
 msgid "Set Location"
 msgstr ""
 
@@ -315,6 +319,14 @@ msgid "User"
 msgstr "Vartotojas"
 
 #. module: hr_homeworking
+#. odoo-javascript
+#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
+#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
+#, python-format
+msgid "User work at {{location}} and is {{status}}"
+msgstr ""
+
+#. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee__wednesday_location_id
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_base__wednesday_location_id
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_public__wednesday_location_id
@@ -343,4 +355,12 @@ msgstr ""
 #: code:addons/hr_homeworking/models/hr_work_location.py:0
 #, python-format
 msgid "You cannot delete locations that are being used by your employees"
+msgstr ""
+
+#. module: hr_homeworking
+#. odoo-javascript
+#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
+#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
+#, python-format
+msgid "{{status}}"
 msgstr ""

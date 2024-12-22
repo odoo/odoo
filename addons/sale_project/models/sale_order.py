@@ -150,16 +150,21 @@ class SaleOrder(models.Model):
 
         action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_task")
         if self.tasks_count > 1:  # cross project kanban task
-            action['views'] = [[kanban_view_id, 'kanban'], [list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot']]
+            for idx, (view_id, view_type) in enumerate(action['views']):
+                if view_type == 'kanban':
+                    action['views'][idx] = (kanban_view_id, 'kanban')
+                elif view_type == 'tree':
+                    action['views'][idx] = (list_view_id, 'tree')
+                elif view_type == 'form':
+                    action['views'][idx] = (form_view_id, 'form')
         else:  # 1 or 0 tasks -> form view
             action['views'] = [(form_view_id, 'form')]
             action['res_id'] = self.tasks_ids.id
         # set default project
         default_line = next((sol for sol in self.order_line if sol.product_id.detailed_type == 'service'), self.env['sale.order.line'])
-        default_project_id = default_line.project_id.id or self.project_id.id or self.project_ids[:1].id
+        default_project_id = default_line.project_id.id or self.project_id.id or self.project_ids[:1].id or self.tasks_ids.project_id[:1].id
 
         action['context'] = {
-            'search_default_sale_order_id': self.id,
             'default_sale_order_id': self.id,
             'default_sale_line_id': default_line.id,
             'default_partner_id': self.partner_id.id,
@@ -196,7 +201,7 @@ class SaleOrder(models.Model):
             return {'type': 'ir.actions.act_window_close'}
 
         sorted_line = self.order_line.sorted('sequence')
-        default_sale_line = next(sol for sol in sorted_line if sol.product_id.detailed_type == 'service')
+        default_sale_line = next((sol for sol in sorted_line if sol.product_id.detailed_type == 'service'), None)
         action = {
             'type': 'ir.actions.act_window',
             'name': _('Projects'),
@@ -207,7 +212,7 @@ class SaleOrder(models.Model):
             'context': {
                 **self._context,
                 'default_partner_id': self.partner_id.id,
-                'default_sale_line_id': default_sale_line.id,
+                'default_sale_line_id': default_sale_line.id if default_sale_line else False,
                 'default_allow_billable': 1,
             }
         }

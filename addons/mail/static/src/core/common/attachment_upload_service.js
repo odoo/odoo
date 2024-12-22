@@ -163,6 +163,9 @@ export class AttachmentUploadService {
         formData.append("thread_model", hooker.thread.model);
         formData.append("is_pending", Boolean(hooker.composer));
         formData.append("temporary_id", tmpId);
+        if (options?.activity) {
+            formData.append("activity_id", options.activity.id);
+        }
         return formData;
     }
 

@@ -400,3 +400,92 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         # Make sure the promotion is NOT added
         err_msg = "No reward lines should be created as the delivery line shouldn't be included in the promotion calculation"
         self.assertEqual(len(order.order_line.ids), 2, err_msg)
+
+    def test_free_shipping_should_be_removed_when_rules_are_not_met(self):
+        p_1 = self.env['loyalty.program'].create({
+            'name': 'Free shipping if > 872 tax excl',
+            'trigger': 'with_code',
+            'rule_ids': [(0, 0, {
+                'mode': 'with_code',
+                'code': 'free_shipping',
+                'minimum_amount': 872,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'shipping',
+            })],
+        })
+        programs = (p_1)
+        order = self.empty_order
+        self.iPadMini.taxes_id = self.tax_10pc_incl
+        sol1 = self.env['sale.order.line'].create({
+            'product_id': self.iPadMini.id,
+            'name': 'Large Cabinet',
+            'product_uom_qty': 3.0,
+            'order_id': order.id,
+        })
+
+        # I add delivery cost in Sales order
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': order.id,
+            'default_carrier_id': self.carrier.id
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
+        self._auto_rewards(order, programs)
+        self.assertEqual(len(order.order_line.ids), 2)
+        self.assertEqual(order.reward_amount, 0)
+        # Shipping is 20 + 15%tax
+        self.assertEqual(sum(line.price_total for line in order._get_no_effect_on_threshold_lines()), 23)
+        self.assertEqual(order.amount_untaxed, 872.73 + 20)
+
+        self._apply_promo_code(order, 'free_shipping')
+        self._auto_rewards(order, programs)
+        self.assertEqual(len(order.order_line.ids), 3, "We should get the delivery line and the free delivery since we are below 872.73$")
+        self.assertEqual(order.reward_amount, -20)
+        self.assertEqual(sum(line.price_total for line in order._get_no_effect_on_threshold_lines()), 0)
+        self.assertEqual(order.amount_untaxed, 872.73)
+
+        sol1.product_uom_qty = 1
+        self._auto_rewards(order, programs)
+        self.assertEqual(len(order.order_line.ids), 2, "We should loose the free delivery reward since we are above 872.73$")
+        self.assertEqual(order.reward_amount, 0)
+
+    def test_discount_reward_claimable_when_shipping_reward_already_claimed_from_same_coupon(self):
+        """
+        Check that a discount reward is still claimable after the shipping reward is claimed.
+        """
+        program = self.env['loyalty.program'].create({
+            'name': '10% Discount & Shipping',
+            'applies_on': 'current',
+            'trigger': 'with_code',
+            'program_type': 'promotion',
+            'rule_ids': [Command.create({'mode': 'with_code', 'code': '10PERCENT&SHIPPING'})],
+            'reward_ids': [
+                Command.create({
+                    'reward_type': 'shipping',
+                    'reward_product_qty': 1,
+                }),
+                Command.create({
+                    'reward_type': 'discount',
+                    'discount': 10,
+                    'discount_mode': 'percent',
+                    'discount_applicability': 'specific',
+                }),
+            ],
+        })
+
+        coupon = self.env['loyalty.card'].create({
+            'program_id': program.id, 'points': 20, 'code': 'GIFT_CARD'
+        })
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': self.product_B.id})]
+        })
+
+        ship_reward = program.reward_ids.filtered(lambda reward: reward.reward_type == 'shipping')
+        discount_reward = program.reward_ids - ship_reward
+        order._apply_program_reward(ship_reward, coupon)
+        rewards = order._get_claimable_rewards()[coupon]
+        msg = "The discount reward should still be applicable as only the shipping one was claimed."
+        self.assertEqual(rewards, discount_reward, msg)

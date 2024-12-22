@@ -513,7 +513,7 @@
             <field name="model">product.product</field>
             <field name="priority" eval="100"/>
             <field name="arch" type="xml">
-                <tree sample="1" js_class="stock_report_list_view">
+                <tree sample="1" js_class="stock_report_list_view" duplicate="0">
                     <field name="id" column_invisible="True"/>
                     <field name="display_name" string="Product"/>
                     <field name="categ_id" optional="hide"/>

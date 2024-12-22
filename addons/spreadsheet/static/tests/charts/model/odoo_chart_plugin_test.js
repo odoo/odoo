@@ -188,7 +188,7 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         model.dispatch("UPDATE_CHART", {
             definition: {
                 ...newDefinition,
-                type: "odoo_bar",
+                background: "#00FF00",
             },
             id: chartId,
             sheetId,
@@ -578,5 +578,58 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         assert.strictEqual(model.getters.getChartIds(sheetId).length, 0);
         insertChartInSpreadsheet(model);
         assert.strictEqual(model.getters.getChartIds(sheetId).length, 1);
+    });
+
+    QUnit.test("Remove odoo chart when sheet is deleted", async (assert) => {
+        const { model } = await createSpreadsheetWithChart({ type: "odoo_line" });
+        const sheetId = model.getters.getActiveSheetId();
+        model.dispatch("CREATE_SHEET", {
+            sheetId: model.uuidGenerator.uuidv4(),
+            position: model.getters.getSheetIds().length,
+        });
+        assert.strictEqual(model.getters.getOdooChartIds().length, 1);
+        model.dispatch("DELETE_SHEET", { sheetId });
+        assert.strictEqual(model.getters.getOdooChartIds().length, 0);
+    });
+
+    QUnit.test("Odoo chart legend color changes with background color update", async (assert) => {
+        const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+        const sheetId = model.getters.getActiveSheetId();
+        const chartId = model.getters.getChartIds(sheetId)[0];
+        const definition = model.getters.getChartDefinition(chartId);
+        const runtime = model.getters.getChartRuntime(chartId);
+        assert.strictEqual(runtime.chartJsConfig.options.plugins.legend.labels.color, "#000000");
+        model.dispatch("UPDATE_CHART", {
+            definition: {
+                ...definition,
+                background: "#000000",
+            },
+            id: chartId,
+            sheetId,
+        });
+        assert.strictEqual(
+            model.getters.getChartRuntime(chartId).chartJsConfig.options.plugins.legend.labels
+                .color,
+            "#FFFFFF"
+        );
+    });
+
+    QUnit.test("Chart data source is recreated when chart type is updated", async (assert) => {
+        const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+        const sheetId = model.getters.getActiveSheetId();
+        const chartId = model.getters.getChartIds(sheetId)[0];
+        const chartDataSource = model.getters.getChartDataSource(chartId);
+        model.dispatch("UPDATE_CHART", {
+            definition: {
+                ...model.getters.getChartDefinition(chartId),
+                type: "odoo_line",
+            },
+            id: chartId,
+            sheetId,
+        });
+        assert.ok(
+            chartDataSource !== model.getters.getChartDataSource(chartId),
+            "The data source should have been recreated"
+        );
     });
 });

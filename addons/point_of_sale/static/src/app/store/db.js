@@ -34,6 +34,7 @@ export class PosDB {
         this.product_by_barcode = {};
         this.product_by_category_id = {};
         this.product_packaging_by_barcode = {};
+        this.product_by_tmpl_id = {};
 
         this.attribute_by_id = {};
         this.attribute_value_by_id = {};
@@ -288,6 +289,11 @@ export class PosDB {
             if (product.barcode && product.active) {
                 this.product_by_barcode[product.barcode] = product;
             }
+            if (this.product_by_tmpl_id[product.product_tmpl_id]) {
+                this.product_by_tmpl_id[product.product_tmpl_id].push(product);
+            } else {
+                this.product_by_tmpl_id[product.product_tmpl_id] = [product];
+            }
         }
     }
     /**
@@ -365,27 +371,13 @@ export class PosDB {
     }
     _partner_search_string(partner) {
         var str = partner.name || "";
-        if (partner.barcode) {
-            str += "|" + partner.barcode;
-        }
-        if (partner.address) {
-            str += "|" + partner.address;
-        }
-        if (partner.phone) {
-            str += "|" + partner.phone.split(" ").join("");
-        }
-        if (partner.mobile) {
-            str += "|" + partner.mobile.split(" ").join("");
-        }
-        if (partner.email) {
-            str += "|" + partner.email;
-        }
-        if (partner.vat) {
-            str += "|" + partner.vat;
-        }
-        if (partner.parent_name) {
-            str += "|" + partner.parent_name;
-        }
+        str += "|" + (partner.barcode || "");
+        str += "|" + (partner.address || "");
+        str += "|" + (partner.phone || "").split(" ").join("");
+        str += "|" + (partner.mobile || "").split(" ").join("");
+        str += "|" + (partner.email || "");
+        str += "|" + (partner.vat || "");
+        str += "|" + (partner.parent_name || "");
         str = "" + partner.id + ":" + str.replace(":", "").replace(/\n/g, " ") + "\n";
         return str;
     }
@@ -489,7 +481,7 @@ export class PosDB {
             // eslint-disable-next-line no-useless-escape
             query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g, ".");
             query = query.replace(/ /g, ".+");
-            var re = RegExp("([0-9]+):.*?" + unaccent(query), "gi");
+            var re = RegExp("^([0-9]+):.*?" + unaccent(query), "gim");
         } catch {
             return [];
         }
@@ -498,7 +490,17 @@ export class PosDB {
         let searchString = searchStrings.pop();
         while (searchString && results.length < this.limit) {
             var r = re.exec(searchString);
+
             if (r) {
+                const barcode = r[0].split("|")[1];
+                if (query === barcode) {
+                    // In case of barcode exact match return only the partner with the barcode
+                    const partner = this.get_partner_by_barcode(barcode);
+                    if (partner) {
+                        return [partner];
+                    }
+                }
+
                 var id = Number(r[1]);
                 results.push(this.get_partner_by_id(id));
             } else {
@@ -563,11 +565,29 @@ export class PosDB {
      * - a name, package or barcode containing the query (case insensitive)
      */
     search_product_in_category(category_id, query) {
+        let filteredProducts = [];
+        let re;
         try {
-            // eslint-disable-next-line no-useless-escape
+            // Attempting to filter products based on template ID extracted from query
+            let reg = new RegExp(";product_tmpl_id:(\\d+)");
+            let match = reg.exec(query);
+            if (match) {
+                filteredProducts = this.product_by_tmpl_id[parseInt(match[1], 10)];
+                query = query.replace(reg, '');
+            }
+        } catch (e) {
+            console.error("Search on product template ID fails", e)
+        }
+        try {
             query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g, ".");
             query = query.replace(/ /g, ".+");
-            var re = RegExp("([0-9]+):.*?" + unaccent(query), "gi");
+            if (filteredProducts.length > 0) {
+                const filteredProductIds = filteredProducts.map(p => p.id);
+                const idsPattern = filteredProductIds.join('|');
+                re = new RegExp(`(${idsPattern}):.*?` + unaccent(query), "gi");
+            } else {
+                re = RegExp("([0-9]+):.*?" + unaccent(query), "gi");
+            }
         } catch {
             return [];
         }

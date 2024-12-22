@@ -69,7 +69,7 @@ export class CalendarCommonRenderer extends Component {
 
     get options() {
         return {
-            allDaySlot: this.props.model.hasAllDaySlot,
+            allDaySlot: true,
             allDayText: _t(""),
             columnHeaderFormat: this.env.isSmall
                 ? SHORT_SCALE_TO_HEADER_FORMAT[this.props.model.scale]
@@ -110,6 +110,7 @@ export class CalendarCommonRenderer extends Component {
             slotLabelFormat: is24HourFormat() ? HOUR_FORMATS[24] : HOUR_FORMATS[12],
             snapDuration: { minutes: 15 },
             timeZone: luxon.Settings.defaultZone.name,
+            timeGridEventMinHeight : 15,
             unselectAuto: false,
             weekLabel: this.props.model.scale === "month" && this.env.isSmall ? "" : _t("Week"),
             weekends: this.props.isWeekendVisible,
@@ -154,9 +155,9 @@ export class CalendarCommonRenderer extends Component {
             title: record.title,
             start: record.start.toISO(),
             end:
-                ["week", "month"].includes(this.props.model.scale) &&
-                (record.isAllDay ||
-                    (allDay && record.end.toMillis() !== record.end.startOf("day").toMillis()))
+                (["week", "month"].includes(this.props.model.scale) && allDay) ||
+                record.isAllDay ||
+                (allDay && record.end.toMillis() !== record.end.startOf("day").toMillis())
                     ? record.end.plus({ days: 1 }).toISO()
                     : record.end.toISO(),
             allDay: allDay,
@@ -195,7 +196,7 @@ export class CalendarCommonRenderer extends Component {
         this.highlightEvent(info.event, "o_cw_custom_highlight");
     }
     onDateClick(info) {
-        if (info.jsEvent.defaultPrevented) {
+        if (info?.jsEvent?.defaultPrevented) {
             return;
         }
         this.props.createRecord(this.fcEventToRecord(info));
@@ -294,7 +295,20 @@ export class CalendarCommonRenderer extends Component {
             }
         }
         if (id) {
-            res.id = this.props.model.records[id].id;
+            const existingRecord = this.props.model.records[id];
+            if (this.props.model.scale === "month") {
+                res.start = res.start?.set({
+                    hour: existingRecord.start.hour,
+                    minute: existingRecord.start.minute,
+                });
+                if (existingRecord.end) {
+                    res.end = res.end?.set({
+                        hour: existingRecord.end.hour,
+                        minute: existingRecord.end.minute,
+                    });
+                }
+            }
+            res.id = existingRecord.id;
         }
         return res;
     }

@@ -63,7 +63,7 @@ class SaleOrder(models.Model):
         string="Customer",
         required=True, change_default=True, index=True,
         tracking=1,
-        domain="[('company_id', 'in', (False, company_id))]")
+        check_company=True)
     state = fields.Selection(
         selection=SALE_ORDER_STATE,
         string="Status",
@@ -139,13 +139,15 @@ class SaleOrder(models.Model):
         string="Invoice Address",
         compute='_compute_partner_invoice_id',
         store=True, readonly=False, required=True, precompute=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        check_company=True,
+        index='btree_not_null')
     partner_shipping_id = fields.Many2one(
         comodel_name='res.partner',
         string="Delivery Address",
         compute='_compute_partner_shipping_id',
         store=True, readonly=False, required=True, precompute=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+        check_company=True,
+        index='btree_not_null')
 
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position',
@@ -154,7 +156,7 @@ class SaleOrder(models.Model):
         store=True, readonly=False, precompute=True, check_company=True,
         help="Fiscal positions are used to adapt taxes and accounts for particular customers or sales orders/invoices."
             "The default value comes from the customer.",
-        domain="[('company_id', '=', company_id)]")
+    )
     payment_term_id = fields.Many2one(
         comodel_name='account.payment.term',
         string="Payment Terms",
@@ -345,7 +347,9 @@ class SaleOrder(models.Model):
                 order.note = _('Terms & Conditions: %s', baseurl)
                 del context
             elif not is_html_empty(self.env.company.invoice_terms):
-                order.note = order.with_context(lang=order.partner_id.lang).env.company.invoice_terms
+                if order.partner_id.lang:
+                    order = order.with_context(lang=order.partner_id.lang)
+                order.note = order.env.company.invoice_terms
 
     @api.model
     def _get_note_url(self):
@@ -371,11 +375,14 @@ class SaleOrder(models.Model):
             if not order.partner_id:
                 order.fiscal_position_id = False
                 continue
+            fpos_id_before = order.fiscal_position_id.id
             key = (order.company_id.id, order.partner_id.id, order.partner_shipping_id.id)
             if key not in cache:
                 cache[key] = self.env['account.fiscal.position'].with_company(
                     order.company_id
-                )._get_fiscal_position(order.partner_id, order.partner_shipping_id)
+                )._get_fiscal_position(order.partner_id, order.partner_shipping_id).id
+            if fpos_id_before != cache[key] and order.order_line:
+                order.show_update_fpos = True
             order.fiscal_position_id = cache[key]
 
     @api.depends('partner_id')
@@ -407,7 +414,7 @@ class SaleOrder(models.Model):
                 from_currency=order.company_id.currency_id,
                 to_currency=order.currency_id,
                 company=order.company_id,
-                date=order.date_order.date(),
+                date=(order.date_order or fields.Datetime.now()).date(),
             )
 
     @api.depends('company_id')
@@ -452,10 +459,11 @@ class SaleOrder(models.Model):
     def _compute_amounts(self):
         """Compute the total amounts of the SO."""
         for order in self:
+            order = order.with_company(order.company_id)
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
 
             if order.company_id.tax_calculation_rounding_method == 'round_globally':
-                tax_results = self.env['account.tax']._compute_taxes([
+                tax_results = order.env['account.tax']._compute_taxes([
                     line._convert_to_tax_base_line_dict()
                     for line in order_lines
                 ])
@@ -531,20 +539,33 @@ class SaleOrder(models.Model):
         (self - confirmed_orders).invoice_status = 'no'
         if not confirmed_orders:
             return
+        lines_domain = [('is_downpayment', '=', False), ('display_type', '=', False)]
         line_invoice_status_all = [
             (order.id, invoice_status)
-            for order, invoice_status in self.env['sale.order.line']._read_group([
-                    ('order_id', 'in', confirmed_orders.ids),
-                    ('is_downpayment', '=', False),
-                    ('display_type', '=', False),
-                ],
-                ['order_id', 'invoice_status'])]
+            for order, invoice_status in self.env['sale.order.line']._read_group(
+                lines_domain + [('order_id', 'in', confirmed_orders.ids)],
+                ['order_id', 'invoice_status']
+            )
+        ]
         for order in confirmed_orders:
             line_invoice_status = [d[1] for d in line_invoice_status_all if d[0] == order.id]
             if order.state != 'sale':
                 order.invoice_status = 'no'
             elif any(invoice_status == 'to invoice' for invoice_status in line_invoice_status):
-                order.invoice_status = 'to invoice'
+                if any(invoice_status == 'no' for invoice_status in line_invoice_status):
+                    # If only discount/delivery/promotion lines can be invoiced, the SO should not
+                    # be invoiceable.
+                    invoiceable_domain = lines_domain + [('invoice_status', '=', 'to invoice')]
+                    invoiceable_lines = order.order_line.filtered_domain(invoiceable_domain)
+                    special_lines = invoiceable_lines.filtered(
+                        lambda sol: not sol._can_be_invoiced_alone()
+                    )
+                    if invoiceable_lines == special_lines:
+                        order.invoice_status = 'no'
+                    else:
+                        order.invoice_status = 'to invoice'
+                else:
+                    order.invoice_status = 'to invoice'
             elif line_invoice_status and all(invoice_status == 'invoiced' for invoice_status in line_invoice_status):
                 order.invoice_status = 'invoiced'
             elif line_invoice_status and all(invoice_status in ('invoiced', 'upselling') for invoice_status in line_invoice_status):
@@ -586,9 +607,13 @@ class SaleOrder(models.Model):
                 lambda line: not line.display_type and not line._is_delivery()
             ).mapped(lambda line: line and line._expected_date())
             if dates_list:
-                order.expected_date = min(dates_list)
+                order.expected_date = order._select_expected_date(dates_list)
             else:
                 order.expected_date = False
+
+    def _select_expected_date(self, expected_dates):
+        self.ensure_one()
+        return min(expected_dates)
 
     def _compute_is_expired(self):
         today = fields.Date.today()
@@ -613,18 +638,13 @@ class SaleOrder(models.Model):
             # If the invoice status is 'Fully Invoiced' force the amount to invoice to equal zero and return early.
             if order.invoice_status == 'invoiced':
                 order.amount_to_invoice = 0.0
-                return
+                continue
 
-            order.amount_to_invoice = order.amount_total
-            for invoice in order.invoice_ids.filtered(lambda x: x.state == 'posted'):
-                prices = sum(invoice.line_ids.filtered(lambda x: order in x.sale_line_ids.order_id).mapped('price_total'))
-                invoice_amount_currency = invoice.currency_id._convert(
-                    prices * -invoice.direction_sign,
-                    order.currency_id,
-                    invoice.company_id,
-                    invoice.date,
-                )
-                order.amount_to_invoice -= invoice_amount_currency
+            invoices = order.invoice_ids.filtered(lambda x: x.state == 'posted' or x.payment_state == 'invoicing_legacy')
+            # Note: A negative amount can happen, since we can invoice more than the sales order amount.
+            # Care has to be taken when summing amount_to_invoice of multiple orders.
+            # E.g. consider one invoiced order with -100 and one uninvoiced order of 100: 100 + -100 = 0
+            order.amount_to_invoice = order.amount_total - invoices._get_sale_order_invoiced_amount(order)
 
     @api.depends('amount_total', 'amount_to_invoice')
     def _compute_amount_invoiced(self):
@@ -640,7 +660,7 @@ class SaleOrder(models.Model):
                            order.company_id.account_use_credit_limit
             if show_warning:
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
-                    order,
+                    order.sudo(),  # ensure access to `credit` & `credit_limit` fields
                     current_amount=(order.amount_total / order.currency_rate),
                 )
 
@@ -648,8 +668,9 @@ class SaleOrder(models.Model):
     @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed', 'currency_id')
     def _compute_tax_totals(self):
         for order in self:
+            order = order.with_company(order.company_id)
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
-            order.tax_totals = self.env['account.tax']._prepare_tax_totals(
+            order.tax_totals = order.env['account.tax']._prepare_tax_totals(
                 [x._convert_to_tax_base_line_dict() for x in order_lines],
                 order.currency_id or order.company_id.currency_id,
             )
@@ -673,13 +694,16 @@ class SaleOrder(models.Model):
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
         for order in self:
-            product_company = order.order_line.product_id.company_id
-            companies = product_company and product_company._accessible_branches()
-            if companies and order.company_id not in companies:
-                bad_products = order.order_line.product_id.filtered(lambda p: p.company_id and p.company_id != order.company_id)
+            invalid_companies = order.order_line.product_id.company_id.filtered(
+                lambda c: order.company_id not in c._accessible_branches()
+            )
+            if invalid_companies:
+                bad_products = order.order_line.product_id.filtered(
+                    lambda p: p.company_id and p.company_id in invalid_companies
+                )
                 raise ValidationError(_(
                     "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n Please change the company of your quotation or remove the products from other companies (%(bad_products)s).",
-                    product_company=', '.join(companies.sudo().mapped('display_name')),
+                    product_company=', '.join(invalid_companies.sudo().mapped('display_name')),
                     quote_company=order.company_id.display_name,
                     bad_products=', '.join(bad_products.mapped('display_name')),
                 ))
@@ -785,6 +809,11 @@ class SaleOrder(models.Model):
                 for line in self.order_line.filtered(lambda l: not l.is_downpayment)
             ]
         return super().copy_data(default)
+
+    def write(self, values):
+        if 'pricelist_id' in values and any(so.state == 'sale' for so in self):
+            raise UserError(_("You cannot change the pricelist of a confirmed order !"))
+        return super().write(values)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_draft_or_cancel(self):
@@ -919,11 +948,18 @@ class SaleOrder(models.Model):
         context.pop('default_name', None)
 
         self.with_context(context)._action_confirm()
-        if self[:1].create_uid.has_group('sale.group_auto_done_setting'):
-            # Public user can confirm SO, so we check the group on any record creator.
-            self.action_lock()
+
+        self.filtered(lambda so: so._should_be_locked()).action_lock()
+
+        if self.env.context.get('send_email'):
+            self._send_order_confirmation_mail()
 
         return True
+
+    def _should_be_locked(self):
+        self.ensure_one()
+        # Public user can confirm SO, so we check the group on any record creator.
+        return self.create_uid.has_group('sale.group_auto_done_setting')
 
     def _can_be_confirmed(self):
         self.ensure_one()
@@ -997,11 +1033,6 @@ class SaleOrder(models.Model):
         )
 
     def action_lock(self):
-        for order in self:
-            tx = order.sudo().transaction_ids._get_last()
-            if tx and tx.state == 'pending' and tx.provider_id.code == 'custom' and tx.provider_id.custom_mode == 'wire_transfer':
-                tx._set_done()
-                tx.write({'is_post_processed': True})
         self.locked = True
 
     def action_unlock(self):
@@ -1230,6 +1261,12 @@ class SaleOrder(models.Model):
 
         return self.env['sale.order.line'].browse(invoiceable_line_ids + down_payment_line_ids)
 
+    def _create_account_invoices(self, invoice_vals_list, final):
+        """Small method to allow overriding the behavior right after an invoice is created."""
+        # Manage the creation of invoices in sudo because a salesperson must be able to generate an invoice from a
+        # sale order without "billing" access rights. However, he should not be able to create an invoice from scratch.
+        return self.env['account.move'].sudo().with_context(default_move_type='out_invoice').create(invoice_vals_list)
+
     def _create_invoices(self, grouped=False, final=False, date=None):
         """ Create invoice(s) for the given Sales Order(s).
 
@@ -1252,7 +1289,9 @@ class SaleOrder(models.Model):
         invoice_vals_list = []
         invoice_item_sequence = 0 # Incremental sequencing to keep the lines order on the invoice.
         for order in self:
-            order = order.with_company(order.company_id).with_context(lang=order.partner_invoice_id.lang)
+            if order.partner_invoice_id.lang:
+                order = order.with_context(lang=order.partner_invoice_id.lang)
+            order = order.with_company(order.company_id)
 
             invoice_vals = order._prepare_invoice()
             invoiceable_lines = order._get_invoiceable_lines(final)
@@ -1345,15 +1384,16 @@ class SaleOrder(models.Model):
                     line[2]['sequence'] = SaleOrderLine._get_invoice_line_sequence(new=sequence, old=line[2]['sequence'])
                     sequence += 1
 
-        # Manage the creation of invoices in sudo because a salesperson must be able to generate an invoice from a
-        # sale order without "billing" access rights. However, he should not be able to create an invoice from scratch.
-        moves = self.env['account.move'].sudo().with_context(default_move_type='out_invoice').create(invoice_vals_list)
+        moves = self._create_account_invoices(invoice_vals_list, final)
 
         # 4) Some moves might actually be refunds: convert them if the total amount is negative
         # We do this after the moves have been created since we need taxes, etc. to know if the total
         # is actually negative or not
         if final:
-            moves.sudo().filtered(lambda m: m.amount_total < 0).action_switch_move_type()
+            if moves_to_switch := moves.sudo().filtered(lambda m: m.amount_total < 0):
+                moves_to_switch.action_switch_move_type()
+                self.invoice_ids._set_reversed_entry(moves_to_switch)
+
         for move in moves:
             if final:
                 # Downpayment might have been determined by a fixed amount set by the user.
@@ -1369,14 +1409,15 @@ class SaleOrder(models.Model):
                         continue
                     inv_amt = order_amt = 0
                     for invoice_line in order_line.invoice_lines:
+                        sign = 1 if invoice_line.move_id.is_inbound() else -1
                         if invoice_line.move_id == move:
-                            inv_amt += invoice_line.price_total
+                            inv_amt += invoice_line.price_total * sign
                         elif invoice_line.move_id.state != 'cancel':  # filter out canceled dp lines
-                            order_amt += invoice_line.price_total
+                            order_amt += invoice_line.price_total * sign
                     if inv_amt and order_amt:
                         # if not inv_amt, this order line is not related to current move
                         # if no order_amt, dp order line was not invoiced
-                        delta_amount += (inv_amt * (1 if move.is_inbound() else -1)) + order_amt
+                        delta_amount += inv_amt + order_amt
 
                 if not move.currency_id.is_zero(delta_amount):
                     receivable_line = move.line_ids.filtered(
@@ -1421,7 +1462,8 @@ class SaleOrder(models.Model):
         if (len(self) == 1
             # The method _track_finalize is sometimes called too early or too late and it
             # might cause a desynchronization with the cache, thus this condition is needed.
-            and self.env.cache.contains(self, self._fields['state']) and self.state == 'draft'):
+            and self.env.cache.contains(self, self._fields['state']) and self.state == 'draft'
+            and not self.env['ir.config_parameter'].sudo().get_param('sale.track_draft_orders')):
             self.env.cr.precommit.data.pop(f'mail.tracking.{self._name}', {})
             self.env.flush_all()
             return
@@ -1484,7 +1526,7 @@ class SaleOrder(models.Model):
 
         return groups
 
-    def _notify_by_email_prepare_rendering_context(self, message, msg_vals, model_description=False,
+    def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False):
         render_context = super()._notify_by_email_prepare_rendering_context(
             message, msg_vals, model_description=model_description,
@@ -1628,6 +1670,7 @@ class SaleOrder(models.Model):
         - it requires a payment;
         - the last transaction's state isn't `done`;
         - the total amount is strictly positive.
+        - confirmation amount is not reached
 
         Note: self.ensure_one()
 
@@ -1635,13 +1678,12 @@ class SaleOrder(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        transaction = self.get_portal_last_transaction()
         return (
             self.state in ['draft', 'sent']
             and not self.is_expired
             and self.require_payment
-            and transaction.state != 'done'
             and self.amount_total > 0
+            and not self._is_confirmation_amount_reached()
         )
 
     def _get_portal_return_action(self):
@@ -1811,10 +1853,10 @@ class SaleOrder(models.Model):
             date=self.date_order,
             **kwargs,
         )
-        res = {}
+        res = super()._get_product_catalog_order_data(products, **kwargs)
         for product in products:
-            res[product.id] = {'price': pricelist.get(product.id)}
-            if product.sale_line_warn_msg:
+            res[product.id]['price'] = pricelist.get(product.id)
+            if product.sale_line_warn != 'no-message' and product.sale_line_warn_msg:
                 res[product.id]['warning'] = product.sale_line_warn_msg
             if product.sale_line_warn == "block":
                 res[product.id]['readOnly'] = True

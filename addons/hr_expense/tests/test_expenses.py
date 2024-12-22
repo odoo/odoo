@@ -4,9 +4,9 @@ import base64
 from datetime import date
 from freezegun import freeze_time
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged, Form
 from odoo.tools.misc import format_date
 
@@ -83,10 +83,10 @@ class TestExpenses(TestExpenseCommon):
             {'total_amount': 1160.00, 'untaxed_amount':  992.65, 'total_tax_amount': 167.35, 'state': 'draft', 'accounting_date': False},
         ])
         self.assertRecordValues(expense_sheets.expense_line_ids, [
-            {'total_amount_currency': 1600.00, 'untaxed_amount_currency': 1391.30, 'price_unit':  800.00, 'tax_amount': 208.70, 'state': 'reported'},
-            {'total_amount_currency':  160.00, 'untaxed_amount_currency':  123.08, 'price_unit':  160.00, 'tax_amount':  36.92, 'state': 'reported'},
-            {'total_amount_currency': 1000.00, 'untaxed_amount_currency':  869.57, 'price_unit': 1000.00, 'tax_amount': 130.43, 'state': 'reported'},
-            {'total_amount_currency':  160.00, 'untaxed_amount_currency':  123.08, 'price_unit':  160.00, 'tax_amount':  36.92, 'state': 'reported'},
+            {'total_amount_currency': 1600.00, 'untaxed_amount_currency': 1391.30, 'price_unit':  800.00, 'tax_amount_currency': 208.70, 'state': 'reported'},
+            {'total_amount_currency':  160.00, 'untaxed_amount_currency':  123.08, 'price_unit':  160.00, 'tax_amount_currency':  36.92, 'state': 'reported'},
+            {'total_amount_currency': 1000.00, 'untaxed_amount_currency':  869.57, 'price_unit': 1000.00, 'tax_amount_currency': 130.43, 'state': 'reported'},
+            {'total_amount_currency':  160.00, 'untaxed_amount_currency':  123.08, 'price_unit':  160.00, 'tax_amount_currency':  36.92, 'state': 'reported'},
         ])
 
         # Submitting properly change states
@@ -139,8 +139,8 @@ class TestExpenses(TestExpenseCommon):
         ])
         # One payment per expense if 'company_account'
         self.assertRecordValues(expense_sheet_by_company.account_move_ids, [
-            {'amount_total': 1000.00, 'ref': 'PC 1000 + 15%',    'date': date(2021, 10, 12), 'partner_id': False},
-            {'amount_total':  160.00, 'ref': 'PB 160 + 2*15% 2', 'date': date(2021, 10, 12), 'partner_id': False},
+            {'amount_total': 160.00,    'ref': 'PB 160 + 2*15% 2', 'date': date(2021, 10, 12), 'partner_id': False},
+            {'amount_total': 1000.00,   'ref': 'PC 1000 + 15%',    'date': date(2021, 10, 11), 'partner_id': False},
         ])
         tax_account_id = self.company_data['default_account_tax_purchase'].id
         default_account_payable_id = self.company_data['default_account_payable'].id
@@ -157,16 +157,16 @@ class TestExpenses(TestExpenseCommon):
             {'balance':   208.70, 'account_id': tax_account_id,             'name': '15%',                                'date': date(2021, 10, 10)},
             {'balance': -1760.00, 'account_id': default_account_payable_id, 'name': False,                                'date': date(2021, 10, 10)},
 
-            # company_account expense 1 move
-            {'balance':   869.57, 'account_id': product_c_account_id,       'name': 'expense_employee: PC 1000 + 15%',    'date': date(2021, 10, 12)},
-            {'balance':   130.43, 'account_id': tax_account_id,             'name': '15%',                                'date': date(2021, 10, 12)},
-            {'balance': -1000.00, 'account_id': company_payment_account_id, 'name': 'expense_employee: PC 1000 + 15%',    'date': date(2021, 10, 12)},
-
             # company_account expense 2 move
             {'balance':  123.08, 'account_id': product_b_account_id,        'name': 'expense_employee: PB 160 + 2*15% 2', 'date': date(2021, 10, 12)},
             {'balance':   18.46, 'account_id': tax_account_id,              'name': '15%',                                'date': date(2021, 10, 12)},
             {'balance':   18.46, 'account_id': tax_account_id,              'name': '15% (Copy)',                         'date': date(2021, 10, 12)},
             {'balance': -160.00, 'account_id': company_payment_account_id,  'name': 'expense_employee: PB 160 + 2*15% 2', 'date': date(2021, 10, 12)},
+
+            # company_account expense 1 move
+            {'balance':   869.57, 'account_id': product_c_account_id,       'name': 'expense_employee: PC 1000 + 15%',    'date': date(2021, 10, 11)},
+            {'balance':   130.43, 'account_id': tax_account_id,             'name': '15%',                                'date': date(2021, 10, 11)},
+            {'balance': -1000.00, 'account_id': company_payment_account_id, 'name': 'expense_employee: PC 1000 + 15%',    'date': date(2021, 10, 11)},
         ])
 
         # Own_account partial payment
@@ -219,6 +219,53 @@ class TestExpenses(TestExpenseCommon):
         expense_sheet_by_employee.expense_line_ids.unlink()
         # Only possible if no expense linked to the account
         self.analytic_account_1.unlink()
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'accounting_date': '2021-01-01',
+            'payment_method_line_id': self.outbound_payment_method_line.id,
+            'expense_line_ids': [
+                Command.create({
+                    'name': 'Car Travel Expenses',
+                    'employee_id': self.expense_employee.id,
+                    'product_id': self.product_c.id,
+                    'total_amount': 350.00,
+                    'payment_mode': 'company_account',
+                    'date': '2024-01-01',
+                }),
+                Command.create({
+                    'name': 'Lunch expense',
+                    'employee_id': self.expense_employee.id,
+                    'product_id': self.product_c.id,
+                    'total_amount': 90.00,
+                    'payment_mode': 'company_account',
+                    'date': '2024-01-12',
+                }),
+            ]
+        })
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
+        move_twelve_january, move_first_january = expense_sheet.account_move_ids
+
+        self.assertEqual(
+            move_twelve_january.date,
+            fields.Date.to_date('2024-01-12'),
+            'move date should be the same as the expense date'
+        )
+        self.assertEqual(
+            move_first_january.date,
+            fields.Date.to_date('2024-01-01'),
+            'move date should be the same as the expense date'
+        )
+        self.assertEqual(expense_sheet.state, 'done', 'sheet should be marked as done')
+        self.assertTrue(90 == move_twelve_january.amount_total == move_twelve_january.payment_id.amount)
+        self.assertTrue(350 == move_first_january.amount_total == move_first_january.payment_id.amount)
+        self.assertEqual(440, expense_sheet.total_amount)
+        self.assertEqual(expense_sheet.payment_state, 'paid', 'payment_state should be paid')
 
     def test_expense_split_flow(self):
         """ Check Split Expense flow. """
@@ -579,7 +626,7 @@ class TestExpenses(TestExpenseCommon):
         expense = expense_form.save()
         self.assertEqual(expense.name, product.display_name)
         self.assertEqual(expense.product_uom_id, product.uom_id)
-        self.assertEqual(expense.tax_ids, product.supplier_taxes_id)
+        self.assertEqual(expense.tax_ids, product.supplier_taxes_id.filtered(lambda t: t.company_id == expense.company_id))
         self.assertEqual(expense.account_id, product._get_product_accounts()['expense'])
 
     def test_attachments_in_move_from_own_expense(self):
@@ -984,3 +1031,153 @@ class TestExpenses(TestExpenseCommon):
         }])
         expense_state = Expense.get_expense_dashboard()
         self.assertEqual(expense_state['to_submit']['amount'], 3000.00)
+
+    def test_expense_mandatory_analytic_plan_product_category(self):
+        """
+        Check that when an analytic plan has a mandatory applicability matching
+        product category this is correctly triggered
+        """
+        self.env['account.analytic.applicability'].create({
+            'business_domain': 'expense',
+            'analytic_plan_id': self.analytic_plan.id,
+            'applicability': 'mandatory',
+            'product_categ_id': self.product_a.categ_id.id,
+        })
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'accounting_date': '2021-01-01',
+            'expense_line_ids': [Command.create({
+                'name': 'Car Travel Expenses',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'total_amount': 350.00,
+                'payment_mode': 'company_account',
+            })]
+        })
+
+        expense_sheet.action_submit_sheet()
+        with self.assertRaises(ValidationError, msg="One or more lines require a 100% analytic distribution."):
+            expense_sheet.with_context(validate_analytic=True).action_approve_expense_sheets()
+
+        expense_sheet.expense_line_ids.analytic_distribution = {self.analytic_account_1.id: 100.00}
+        expense_sheet.with_context(validate_analytic=True).action_approve_expense_sheets()
+
+    def test_expense_no_stealing_from_employees(self):
+        """
+        Test to check that the company doesn't steal their employee when the commercial_partner_id of the employee partner
+        is the company
+        """
+        self.expense_employee.user_partner_id.parent_id = self.env.company.partner_id
+        self.assertEqual(self.env.company.partner_id, self.expense_employee.user_partner_id.commercial_partner_id)
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Company Cash Basis Expense Report',
+            'employee_id': self.expense_employee.id,
+            'payment_mode': 'own_account',
+            'state': 'approve',
+            'expense_line_ids': [Command.create({
+                'name': 'Company Cash Basis Expense',
+                'product_id': self.product_c.id,
+                'payment_mode': 'own_account',
+                'total_amount': 20.0,
+                'employee_id': self.expense_employee.id,
+            })]
+        })
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+        move = expense_sheet.account_move_ids
+
+        self.assertNotEqual(move.commercial_partner_id, self.env.company.partner_id)
+        self.assertEqual(move.partner_id, self.expense_employee.user_partner_id)
+        self.assertEqual(move.commercial_partner_id, self.expense_employee.user_partner_id)
+
+    def test_expense_sheet_with_line_ids(self):
+        """
+        Test to create an expense sheet with no account date and having multiple expenses
+        in which one of the expense doesn't have date to get the account date from the max date of expenses.
+        """
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'payment_method_line_id': self.outbound_payment_method_line.id,
+            'expense_line_ids': [
+                Command.create({
+                    'name': 'Car Travel Expenses',
+                    'employee_id': self.expense_employee.id,
+                    'product_id': self.product_c.id,
+                    'total_amount': 350.00,
+                    'date': False,
+                }),
+                Command.create({
+                    'name': 'Lunch expense',
+                    'employee_id': self.expense_employee.id,
+                    'product_id': self.product_c.id,
+                    'total_amount': 90.00,
+                    'date': '2024-04-30',
+                }),
+            ]
+        })
+        # Validate the values before submitting and approving
+        self.assertRecordValues(expense_sheet, [
+            {'total_amount': 440.00, 'accounting_date': False, 'state': 'draft', 'employee_id': self.expense_employee.id}
+        ])
+        self.assertRecordValues(expense_sheet.expense_line_ids, [
+            {'name': 'Car Travel Expenses', 'total_amount': 350.00, 'date': False},
+            {'name': 'Lunch expense', 'total_amount': 90.00, 'date': date(2024, 4, 30)},
+        ])
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
+        # Validate the record values after submitting and approving
+        self.assertRecordValues(expense_sheet, [
+            {'total_amount': 440.00, 'accounting_date': date(2024, 4, 30), 'state': 'post', 'employee_id': self.expense_employee.id}
+        ])
+        self.assertRecordValues(expense_sheet.expense_line_ids, [
+            {'name': 'Car Travel Expenses', 'total_amount': 350.00, 'date': False},
+            {'name': 'Lunch expense', 'total_amount': 90.00, 'date': date(2024, 4, 30)},
+        ])
+
+        # Reset to draft to make the accounting_date to False and then recompute it
+        expense_sheet.action_reset_expense_sheets()
+
+        # Validate the accounting_date value to be false
+        self.assertFalse(expense_sheet.accounting_date)
+
+        # Update one of the expense sheet line date
+        expense_sheet.expense_line_ids[1].write({'date': '2024-05-30'})
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
+        # Validate the acction_date value after subitting and approving
+        self.assertTrue(expense_sheet.accounting_date, date(2024, 5, 30))
+
+    def test_expense_set_total_amount_to_0(self):
+        """Checks that amount fields are correctly updating when setting total_amount to 0"""
+        expense = self.env['hr.expense'].create({
+            'name': 'Expense with amount',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_c.id,
+            'total_amount_currency': 100.0,
+            'tax_ids': self.tax_purchase_a.ids,
+        })
+        expense.total_amount_currency = 0.0
+        self.assertTrue(expense.currency_id.is_zero(expense.tax_amount))
+        self.assertTrue(expense.company_currency_id.is_zero(expense.total_amount))
+
+    def test_expense_set_quantity_to_0(self):
+        """Checks that amount fields except for unit_amount are correctly updating when setting quantity to 0"""
+        expense = self.env['hr.expense'].create({
+            'name': 'Expense with amount',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_b.id,
+            'quantity': 10
+        })
+        expense.quantity = 0
+        self.assertTrue(expense.currency_id.is_zero(expense.total_amount_currency))
+        self.assertEqual(expense.company_currency_id.compare_amounts(expense.price_unit, self.product_b.standard_price), 0)

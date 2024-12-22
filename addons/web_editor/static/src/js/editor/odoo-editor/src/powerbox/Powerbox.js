@@ -278,11 +278,7 @@ export class Powerbox {
      * @private
      */
     _resetPosition() {
-        let options = {};
-        if (this.getContextFromParentRect) {
-            options['parentContextRect'] = this.getContextFromParentRect();
-        }
-        const position = getRangePosition(this.el, this.document, options);
+        const position = getRangePosition(this.el, this.document, { getContextFromParentRect: this.getContextFromParentRect });
         if (position) {
             let { left, top } = position;
             this.el.style.left = `${left}px`;
@@ -332,7 +328,7 @@ export class Powerbox {
                 this._context.initialTarget.textContent.split(''),
                 true,
             );
-            this._context.lastText = diff.bMove.join('');
+            this._context.lastText = diff.bMove.join('').replaceAll('\ufeff', '');
             const selection = this.document.getSelection();
             if (
                 this._context.lastText.match(/\s/) ||

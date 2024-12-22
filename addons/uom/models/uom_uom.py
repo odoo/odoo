@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import timedelta
 
 from odoo import api, fields, tools, models, _
@@ -23,7 +24,7 @@ class UoMCategory(models.Model):
             self.uom_ids[0].factor = 1
         else:
             reference_count = sum(uom.uom_type == 'reference' for uom in self.uom_ids)
-            if reference_count == 0 and self._origin.id:
+            if reference_count == 0 and self._origin.id and self.uom_ids:
                 raise UserError(_('UoM category %s must have at least one reference unit of measure.', self.name))
             if self.reference_uom_id:
                 new_reference = self.uom_ids.filtered(lambda o: o.uom_type == 'reference' and o._origin.id != self.reference_uom_id.id)
@@ -82,14 +83,24 @@ class UoM(models.Model):
     ]
 
     def _check_category_reference_uniqueness(self):
+        categ_res = self.read_group(
+            [("category_id", "in", self.category_id.ids)],
+            ["category_id", "uom_type"],
+            ["category_id", "uom_type"],
+            lazy=False,
+        )
+        uom_by_category = defaultdict(int)
+        ref_by_category = {}
+        for res in categ_res:
+            uom_by_category[res["category_id"][0]] += res["__count"]
+            if res["uom_type"] == "reference":
+                ref_by_category[res["category_id"][0]] = res["__count"]
+
         for category in self.category_id:
-            if not category.uom_ids:
-                continue
-            reference_count = sum(
-                uom.uom_type == 'reference' for uom in category.uom_ids)
+            reference_count = ref_by_category.get(category.id, 0)
             if reference_count > 1:
                 raise ValidationError(_("UoM category %s should only have one reference unit of measure.", category.name))
-            elif reference_count == 0:
+            elif reference_count == 0 and uom_by_category.get(category.id, 0) > 0:
                 raise ValidationError(_("UoM category %s should have a reference unit of measure.", category.name))
 
     @api.depends('factor')

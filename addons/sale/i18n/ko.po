@@ -3,17 +3,17 @@
 # 	* sale
 # 
 # Translators:
-# Daye Jeong, 2024
 # Sarah Park, 2024
 # Wil Odoo, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -737,6 +737,11 @@ msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
 msgstr "<i class=\"fa fa-fw fa-check\"/> 결제 완료"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
+msgstr "<i class=\"fa fa-fw fa-check\"/> 반전"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
 msgstr "<i class=\"fa fa-fw fa-clock-o\"/> 만료됨"
@@ -811,7 +816,7 @@ msgstr "<span class=\"flex-grow-1\">/ 월</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span class=\"mx-3\" invisible=\"not require_payment\">of</span>"
-msgstr ""
+msgstr "<span class=\"mx-3\" invisible=\"not require_payment\">의</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -1147,15 +1152,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"판매에서 고객과 문서를 공유할 수 있습니다.\n"
-"판매 고객과 해당 문서를 공유하지 않으려면 비워두세요.\n"
-"견적서: 언제든지 고객에게 문서를 전송하거나 고객이 액세스할 수 있습니다.\n"
-"예: 해당 옵션을 통해 품목에 대한 설명 파일을 편리하게 공유할 수 있습니다.\n"
-"주문 확정: 고객에게 문서를 전송하거나 고객이 액세스할 수 있습니다.\n"
-"예: 해당 옵션을 통해 사용자 매뉴얼이나 이커머스에서 구매한 디지털 콘텐츠를 편리하게 공유할 수 있습니다.\n"
-"내부 견적: 문서가 머릿말 페이지 및 견적표 사이의 견적서 PDF 안에 포함됩니다. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -4057,14 +4056,14 @@ msgid "Sales Analysis"
 msgstr "판매 분석"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis By Customers"
-msgstr "고객별 판매 분석"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
 msgstr "영업담당자별 판매 분석"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis Per Customers"
+msgstr "고객별 매출 분석"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -4150,7 +4149,6 @@ msgstr "판매 주문"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4866,7 +4864,6 @@ msgstr "견적서를 확정하기 위해 결제해야 하는 금액 비율입니
 
 #. module: sale
 #. odoo-python
-#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
@@ -4911,11 +4908,6 @@ msgid "The value of the down payment amount must be positive."
 msgstr "선결제 금액은 반드시 양수 값이어야 합니다."
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid "There are currently no orders for your account."
-msgstr "현재 귀하의 계정에 대한 주문이 없습니다."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
 msgstr "현재 귀하의 계정에 대한 견적이 없습니다."
@@ -4929,6 +4921,18 @@ msgstr "현재 계정에 판매주문서가 없습니다."
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
 msgstr "다음과 같은 기존"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
+"아직 이 회사에 대해 구성된 할인 상품이 없는 것 같습니다. 항목별 할인을 적용하거나 관리자에게 할인을 처음 부여해 달라고 요청할 수 "
+"있습니다."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5335,6 +5339,7 @@ msgstr "주의 사항"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
@@ -5416,6 +5421,13 @@ msgstr "잠겨있는 주문은 취소할 수 없습니다. 먼저 잠금을 해�
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid "You cannot change the pricelist of a confirmed order !"
+msgstr "확정된 주문의 가격표는 변경할 수 없습니다!"
+
+#. module: sale
+#. odoo-python
 #: code:addons/sale/models/product_product.py:0
 #: code:addons/sale/models/product_template.py:0
 #, python-format
@@ -5451,6 +5463,7 @@ msgstr ""
 "                저장 가능 품목이나 소모품, 서비스 중에서 지정하세요."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "내 주문"

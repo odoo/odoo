@@ -5,6 +5,7 @@ import ast
 import json
 
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 from odoo.osv import expression
 
 class LoyaltyReward(models.Model):
@@ -85,6 +86,7 @@ class LoyaltyReward(models.Model):
     multi_product = fields.Boolean(compute='_compute_multi_product')
     reward_product_ids = fields.Many2many(
         'product.product', string="Reward Products", compute='_compute_multi_product',
+        search='_search_reward_product_ids',
         help="These are the products that can be claimed with this rule.")
     reward_product_qty = fields.Integer(default=1)
     reward_product_uom_id = fields.Many2one('uom.uom', compute='_compute_reward_product_uom_id')
@@ -129,6 +131,22 @@ class LoyaltyReward(models.Model):
             domain = expression.AND([domain, ast.literal_eval(self.discount_product_domain)])
         return domain
 
+    @api.model
+    def _get_active_products_domain(self):
+        return [
+            '|',
+                ('reward_type', '!=', 'product'),
+                '&',
+                    ('reward_type', '=', 'product'),
+                    '|',
+                        '&',
+                            ('reward_product_tag_id', '=', False),
+                            ('reward_product_id.active', '=', True),
+                        '&',
+                            ('reward_product_tag_id', '!=', False),
+                            ('reward_product_ids.active', '=', True)
+        ]
+
     @api.depends('discount_product_domain')
     def _compute_reward_product_domain(self):
         compute_all_discount_product = self.env['ir.config_parameter'].sudo().get_param('loyalty.compute_all_discount_product_ids', 'enabled')
@@ -154,7 +172,16 @@ class LoyaltyReward(models.Model):
             reward.multi_product = reward.reward_type == 'product' and len(products) > 1
             reward.reward_product_ids = reward.reward_type == 'product' and products or self.env['product.product']
 
-    @api.depends('reward_type', 'reward_product_id', 'discount_mode',
+    def _search_reward_product_ids(self, operator, value):
+        if operator not in ('=', '!=', 'in'):
+            raise NotImplementedError("Unsupported search operator")
+        return [
+            '&', ('reward_type', '=', 'product'),
+            '|', ('reward_product_id', operator, value),
+            ('reward_product_tag_id.product_ids', operator, value)
+        ]
+
+    @api.depends('reward_type', 'reward_product_id', 'discount_mode', 'reward_product_tag_id',
                  'discount', 'currency_id', 'discount_applicability', 'all_discount_product_ids')
     def _compute_description(self):
         for reward in self:
@@ -212,6 +239,12 @@ class LoyaltyReward(models.Model):
     def _compute_user_has_debug(self):
         self.user_has_debug = self.user_has_groups('base.group_no_one')
 
+    @api.onchange('description')
+    def _ensure_reward_has_description(self):
+        for reward in self:
+            if not reward.description:
+                raise UserError(_("The reward description field cannot be empty."))
+
     def _create_missing_discount_line_products(self):
         # Make sure we create the product that will be used for our discounts
         rewards = self.filtered(lambda r: not r.discount_line_product_id)
@@ -234,9 +267,9 @@ class LoyaltyReward(models.Model):
                 reward.discount_line_product_id.write({'name': reward.description})
         if 'active' in vals:
             if vals['active']:
-                self.reward_product_id.action_unarchive()
+                self.discount_line_product_id.action_unarchive()
             else:
-                self.reward_product_id.action_archive()
+                self.discount_line_product_id.action_archive()
         return res
 
     def unlink(self):

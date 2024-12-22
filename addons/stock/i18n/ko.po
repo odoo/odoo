@@ -3,18 +3,18 @@
 # 	* stock
 # 
 # Translators:
-# Wil Odoo, 2024
 # Martin Trigaux, 2024
-# Daye Jeong, 2024
 # Sarah Park, 2024
+# Daye Jeong, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sarah Park, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1179,6 +1179,11 @@ msgid "Archived"
 msgstr "보관됨"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Are you sure you want to cancel this transfer?"
+msgstr "이 이송을 취소하시겠습니까?"
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
 msgid "As soon as possible"
 msgstr "가능한 빨리"
@@ -1234,7 +1239,7 @@ msgstr "확인 시"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 msgid "At Customer"
-msgstr ""
+msgstr "고객"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_attachment_count
@@ -1432,7 +1437,7 @@ msgstr "예정일 전"
 msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
-msgstr "아래는 참고용으로만 제시되는 내용이며, Odoo S.A.는 해당 내용에 대한 책임을 지지 않습니다."
+msgstr "아래의 내용은 참고용으로만 제시되는 내용이며 Odoo S.A.는 해당 내용에 대한 책임을 지지 않습니다."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
@@ -1598,6 +1603,15 @@ msgstr "연결된 이동이 있음"
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
 msgstr "품목 수량 변경"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr "다른 제품이 포함된 이동 라인의 로트/일련 번호 변경은 허용되지 않습니다."
 
 #. module: stock
 #. odoo-python
@@ -3471,6 +3485,13 @@ msgid "Generate Serials numbers"
 msgstr "일련번호 생성"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Generate Serials/Lots"
+msgstr "일련번호/로트 생성"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get a full traceability from vendors to customers"
 msgstr "공급업체에서 고객에 이르기까지 완벽한 추적 기능을 제공합니다."
@@ -3916,6 +3937,13 @@ msgid "Import Lots"
 msgstr "로트 번호 가져오기"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Import Serials/Lots"
+msgstr "일련번호 및 로트번호 가져오기"
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
@@ -3925,7 +3953,7 @@ msgstr "재고 조정용 서식 가져오기"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "In Stock"
-msgstr ""
+msgstr "재고 있음"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
@@ -4362,7 +4390,7 @@ msgstr "차이 유지"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "Keep current lines"
-msgstr ""
+msgstr "현재 라인 유지"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -4625,7 +4653,7 @@ msgstr "연결된 이동"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "List view of detailed operations"
-msgstr ""
+msgstr "세부 작업 목록 보기"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -4712,6 +4740,13 @@ msgid "Locations"
 msgstr "위치"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.server,name:stock.action_toggle_is_locked
 msgid "Lock/Unlock"
 msgstr "잠금/잠금 해제"
@@ -4732,6 +4767,11 @@ msgstr "LOT"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__lot_label_format
 msgid "Lot Label Format to auto-print"
 msgstr "자동 인쇄할 Lot 라벨 형식"
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_label_lot_template_view
+msgid "Lot Label Report"
+msgstr "로트 라벨 보고서"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
@@ -5332,6 +5372,13 @@ msgid "No operations found. Let's create a transfer!"
 msgstr "작업을 찾을 수 없습니다. 전송 내역을 생성합니다!"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "No product found to generate Serials/Lots for."
+msgstr "일련 번호/로트를 생성할 제품을 찾을 수 없습니다."
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
 msgstr "품목이 없습니다. 새로 작성해 주세요."
@@ -5901,6 +5948,11 @@ msgstr "패키지"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package A"
 msgstr "패키지 A"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "Package B"
+msgstr "패키지 B"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
@@ -8012,11 +8064,6 @@ msgid "Settings"
 msgstr "설정"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "Shelf 1"
-msgstr "선반 1"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "Shelf A"
 msgstr "선반 A"
@@ -8566,7 +8613,7 @@ msgstr "저장 공간"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Store To"
-msgstr ""
+msgstr "저장 위치"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_multi_locations
@@ -8657,6 +8704,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr "로트/일련 번호(%s)가 다른 제품에 연결되어 있습니다."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
@@ -8686,8 +8740,8 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
-"이와 같은 표준 판매 이용약관 이전 건에 대해서도, 고객은 자체 표준 이용약관 적용을 명시적으로 철회하게 됩니다. 내용이 효력을 "
-"가지려면, 모든 예외 사항에 대하여 사전에 명확히 서면 동의를 마쳐야 합니다. "
+"본 표준 판매 이용약관 이전에 작성되었다 하더라도, 고객의 자체 표준 약관은 명시적으로 철회하기로 합니다. 내용이 효력을 가지려면, 모든"
+" 수정 사항은 사전에 명확히 서면 동의가 있어야 합니다."
 
 #. module: stock
 #. odoo-python
@@ -9738,6 +9792,7 @@ msgid "Used to order the 'All Operations' kanban view"
 msgstr "'모든 작업'의 칸반뷰를 정리하는 데 사용됩니다"
 
 #. module: stock
+#: model:ir.model,name:stock.model_res_users
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__user_id
 #: model:res.groups,name:stock.group_stock_user
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -10312,6 +10367,14 @@ msgstr "이미 품목 유형을 사용한 경우에는 변경할 수 없습니�
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr "수동으로 실행시키지 않으면 일시 중지된 주문 지점을 생성할 수 없습니다."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You can not delete moves linked to another operation"
@@ -10364,6 +10427,16 @@ msgstr "단일 회사에서 사용하는 위치에 저장된 양의 수량만큼
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr "고유 Serial 번호가 있는 품목의 1.0 %s만 처리할 수 있습니다."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
+"주문 포인트는 수동 주문 포인트만 일시 중지할 수 있습니다. 자동 체결 주문 포인트를 활성화하지 않으려면 보관처리해야 합니다."
 
 #. module: stock
 #. odoo-python
@@ -10458,6 +10531,25 @@ msgstr "완료된 폐기건은 삭제할 수 없습니다."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
+"이 보기를 사용하여 서로 다른 전송의 수량을 동일한 패키지로 통합할 수 없습니다. 대신 일괄 피킹에 수량을 추가하고 그곳에서 포장할 수 "
+"있습니다."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr "재고량은 중복으로 사용할 수 없습니다."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "You cannot modify inventory loss quantity"
@@ -10471,6 +10563,15 @@ msgid ""
 "You cannot move the same package content more than once in the same transfer"
 " or split the same package into two location."
 msgstr "동일한 이송에서 동일한 패키지 내용을 두 번 이상 이동하거나 동일한 패키지를 두 위치로 분할할 수 없습니다."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr "서로 다른 작업 유형의 서로 다른 이송으로 출발한 제품은 함께 패키징할 수 없습니다."
 
 #. module: stock
 #. odoo-python
@@ -10635,14 +10736,7 @@ msgstr "내부 작업 유형을 수행하려면 저장 위치를 ​​활성화
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "You need to select a route to replenish your products"
-msgstr ""
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You need to set a Serial Number before generating more."
-msgstr "추가로 생성하기 전에 일련번호를 설정해야 합니다."
+msgstr "제품을 보충할 경로를 선택해야 합니다."
 
 #. module: stock
 #. odoo-python
@@ -10709,7 +10803,7 @@ msgid ""
 "Your lunch has been delivered.\n"
 "Enjoy your meal!"
 msgstr ""
-"점심 배송이 완료되었습니다.\n"
+"점심 식사가 배송되었습니다.\n"
 "맛있게 드세요!"
 
 #. module: stock

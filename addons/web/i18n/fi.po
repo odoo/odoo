@@ -6,7 +6,7 @@
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2023
 # Kari Lindgren <karisatu@gmail.com>, 2023
 # Teemu Ahonen <teemu.ahonen@web-veistamo.fi>, 2023
-# Richard Mouthier <rmo@odoo.com>, 2023
+# Richard Mouthier (RMO) <rmo@odoo.com>, 2023
 # Erno Iipponen <erno.iipponen@web-veistamo.fi>, 2023
 # Konsta Aavaranta, 2023
 # Mikko Salmela <salmemik@gmail.com>, 2023
@@ -34,17 +34,17 @@
 # Martin Trigaux, 2023
 # Miika Nissi <miika.nissi@tawasta.fi>, 2023
 # artol <arto.leskinen@tek.fi>, 2023
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:46+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -923,6 +923,7 @@ msgstr "Toiminnon ID:"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/action_menus/action_menus.xml:0
+#: code:addons/web/static/src/search/cog_menu/cog_menu.xml:0
 #, python-format
 msgid "Actions"
 msgstr "Toiminnot"
@@ -943,7 +944,6 @@ msgstr "Ota käyttöön Tests Assets Debugging"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_providers.js:0
 #: code:addons/web/static/src/core/debug/debug_providers.js:0
 #, python-format
 msgid "Activate debug mode (with assets)"
@@ -1050,6 +1050,7 @@ msgstr "Lisää haara"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_column_quick_create.xml:0
+#: code:addons/web/static/src/views/kanban/kanban_column_quick_create.xml:0
 #, python-format
 msgid "Add column"
 msgstr "Lisää sarake"
@@ -1081,6 +1082,15 @@ msgstr "Lisää qweb-direktiivin konteksti"
 #, python-format
 msgid "Add start date"
 msgstr "Lisää alkamispäivä"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#, python-format
+msgid "Add to Favorites"
+msgstr "Lisää suosikkeihin"
 
 #. module: web
 #. odoo-javascript
@@ -1154,7 +1164,7 @@ msgstr "Manteli"
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 #, python-format
 msgid "Always range"
-msgstr ""
+msgstr "Aina vaihteluvälilä"
 
 #. module: web
 #. odoo-javascript
@@ -1329,6 +1339,7 @@ msgstr "Oletustekstinä, kun mitään arvoa ei ole asetettu"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Ascending"
 msgstr "Nouseva"
@@ -1352,6 +1363,7 @@ msgstr "Vastuuta"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #, python-format
 msgid "Attach"
@@ -1436,6 +1448,13 @@ msgid "BACK arrow"
 msgstr "PALUU-nuoli"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#, python-format
+msgid "Back to “%s”"
+msgstr ""
+
+#. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__layout_background_image
 msgid "Background Image"
 msgstr "Taustakuva"
@@ -1463,6 +1482,7 @@ msgstr "Ansiomerkit"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Bar Chart"
@@ -1528,6 +1548,8 @@ msgid ""
 "Boolean field from the model used in the relation, which indicates whether "
 "the state is folded or not."
 msgstr ""
+"Boolean-kenttä relaatiossa käytetystä mallista, joka ilmaisee, onko tila "
+"taitettu vai ei."
 
 #. module: web
 #. odoo-javascript
@@ -1833,7 +1855,10 @@ msgstr "Joulupukki"
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector.xml:0
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #, python-format
@@ -1849,12 +1874,12 @@ msgstr "Klikattava"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/datetime/datetime_picker_popover.xml:0
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/dialog/dialog.xml:0
 #: code:addons/web/static/src/core/dialog/dialog.xml:0
 #: code:addons/web/static/src/core/domain_selector_dialog/domain_selector_dialog.xml:0
-#: code:addons/web/static/src/core/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
@@ -2269,6 +2294,7 @@ msgstr "Luonut käyttäjä:"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Cumulative"
 msgstr "Kumulatiivinen"
@@ -2538,6 +2564,7 @@ msgstr "Poista rivi"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Descending"
 msgstr "Laskeva"
@@ -2621,6 +2648,7 @@ msgstr "Hylkää"
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Discard changes"
 msgstr "Hylkää muutokset"
@@ -2668,6 +2696,13 @@ msgstr "Näytä verkkotunnus fasetti-älysuodattimen avulla"
 msgid "Displays a warning icon if the input dates are in the future."
 msgstr ""
 "Näyttää varoituskuvakkeen, jos syötetyt päivämäärät ovat tulevaisuudessa."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
+#, python-format
+msgid "Displays or hides the time in the datetime value."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2742,6 +2777,7 @@ msgstr "Älä lähde vielä,"
 #: code:addons/web/static/src/core/file_viewer/file_viewer.xml:0
 #: code:addons/web/static/src/core/file_viewer/file_viewer.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #, python-format
 msgid "Download"
@@ -2759,6 +2795,7 @@ msgstr "Lataa PDF-esikatselu"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Download xlsx"
@@ -2820,7 +2857,10 @@ msgstr "Varhaisin hyväksytty päivämäärä"
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_header.js:0
 #: code:addons/web/static/src/views/kanban/kanban_record_quick_create.xml:0
@@ -2983,6 +3023,7 @@ msgstr "Kaikki"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Expand all"
@@ -3163,7 +3204,7 @@ msgstr "Kentän tyyppi"
 #: code:addons/web/static/src/core/expression_editor/expression_editor.js:0
 #, python-format
 msgid "Field properties not supported"
-msgstr ""
+msgstr "Kentän ominaisuuksia ei tueta"
 
 #. module: web
 #. odoo-javascript
@@ -3207,6 +3248,7 @@ msgstr "Suotimet"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Flip axis"
@@ -3413,9 +3455,18 @@ msgstr ""
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/url/url_field.xml:0
+#: code:addons/web/static/src/views/fields/url/url_field.xml:0
 #, python-format
 msgid "Go to URL"
 msgstr "Siirry URL-osoitteeseen"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/google_slide_viewer.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer.xml:0
+#, python-format
+msgid "Google Slide Viewer"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3479,6 +3530,10 @@ msgid ""
 "click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
 "your work is saved before you exit this tab."
 msgstr ""
+"Varoitus! Viimeisimmät muutokset ovat liian suuria tallennettavaksi "
+"automaattisesti. Napsauta nyt <i class=\"fa fa-cloud-upload fa-fw\"></i> "
+"-painiketta varmistaaksesi, että työsi on tallennettu, ennen kuin poistut "
+"tältä välilehdeltä."
 
 #. module: web
 #. odoo-javascript
@@ -3585,8 +3640,8 @@ msgstr "ILY"
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 #, python-format
-msgid "ISO-formatted date (e.g. \"2018-12-31\") or \"today\"."
-msgstr "ISO-muotoinen päivämäärä (esim. \"2018-12-31\") tai \"tänään\"."
+msgid "ISO-formatted date (e.g. \"2018-12-31\") or \"%s\"."
+msgstr "ISO-muotoinen päivämäärä (esim. \"2018-12-31\") tai \"%s\"."
 
 #. module: web
 #. odoo-javascript
@@ -3707,6 +3762,8 @@ msgstr "Kokonaisluku"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
+#: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #, python-format
 msgid "Internal link"
@@ -4275,6 +4332,7 @@ msgstr "Vaaka"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Line Chart"
 msgstr "Viivadiagrammi"
@@ -4391,6 +4449,13 @@ msgstr "Poikkeava virhe sähköpostin lähetyksessä"
 #, python-format
 msgid "Main actions"
 msgstr "Päätoiminnot"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
+#, python-format
+msgid "Make this filter available to other users"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4600,6 +4665,13 @@ msgstr "Mallit"
 #, python-format
 msgid "Modify Condition"
 msgstr "Muokkaa ehtoa"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
+#, python-format
+msgid "Modify filter"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4837,6 +4909,7 @@ msgstr "Uusi: %s"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_viewer/file_viewer.xml:0
+#: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
@@ -5086,6 +5159,13 @@ msgstr "Ei aktiivista tilaa"
 #, python-format
 msgid "Not active state, click to change it"
 msgstr "Ei aktiivista tilaa, klikkaa muuttaaksesi"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.js:0
+#, python-format
+msgid "Number of files"
+msgstr "Tiedostojen määrä"
 
 #. module: web
 #. odoo-javascript
@@ -5505,7 +5585,7 @@ msgstr "Salasana"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "Payment Communication: <b><span>INV/2023/00003</span></b>"
-msgstr ""
+msgstr "Maksuviestintä: <b><span>INV/2023/00003</span></b>"
 
 #. module: web
 #. odoo-javascript
@@ -5545,6 +5625,7 @@ msgstr "Puhelin"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Pie Chart"
@@ -5721,6 +5802,7 @@ msgstr "Logon esikatselu"
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
 #: code:addons/web/static/src/core/pager/pager.xml:0
+#: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
@@ -5819,7 +5901,7 @@ msgstr "Edistymispalkki"
 #: code:addons/web/static/src/views/view_components/column_progress.xml:0
 #, python-format
 msgid "Progress bar"
-msgstr ""
+msgstr "Edistymispalkki"
 
 #. module: web
 #. odoo-javascript
@@ -5975,6 +6057,10 @@ msgid ""
 "\n"
 "Think twice before you click that 'Delete' button!"
 msgstr ""
+"Tämä toiminto poistaa tietueen lopullisesti. Oletko varma?\n"
+"Tietuetta ei voi palauttaa!\n"
+"\n"
+"Mieti kahdesti ennen kuin painat Poista-painiketta!"
 
 #. module: web
 #. odoo-javascript
@@ -6101,6 +6187,15 @@ msgstr "Poista ominaisuus"
 #, python-format
 msgid "Remove field"
 msgstr "Poista kenttä"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#, python-format
+msgid "Remove from Favorites"
+msgstr "Poista suosikeista"
 
 #. module: web
 #. odoo-javascript
@@ -6339,12 +6434,14 @@ msgstr "Tallenna oletusarvo"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Save manually"
 msgstr "Tallenna manuaalisesti"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #, python-format
@@ -6526,6 +6623,13 @@ msgstr "Valitse kaikki"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/list/list_controller.xml:0
+#, python-format
+msgid "Select all records matching the search"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 #, python-format
 msgid "Select century"
@@ -6592,6 +6696,7 @@ msgstr "Valinta:"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/email/email_field.xml:0
+#: code:addons/web/static/src/views/fields/email/email_field.xml:0
 #, python-format
 msgid "Send Email"
 msgstr "Lähetä sähköposti"
@@ -6647,6 +6752,8 @@ msgid ""
 "Set to true the full range input has to be display by default, even if "
 "empty."
 msgstr ""
+"Asetetaan arvoksi true, jolloin koko alueen syötteen on oltava "
+"oletusarvoisesti näkyvissä, vaikka se olisi tyhjä."
 
 #. module: web
 #. odoo-javascript
@@ -6702,11 +6809,25 @@ msgstr "Näytä %s näkymä"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
+#, python-format
+msgid "Show matching records"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "Show sub-fields"
 msgstr "Näytä alikentät"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
+#, python-format
+msgid "Show time"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6770,6 +6891,8 @@ msgstr "Erityinen:"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
@@ -6917,6 +7040,7 @@ msgstr "T-paita"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "TIP"
@@ -7112,19 +7236,10 @@ msgid ""
 "that must be fixed for the entire database before continuing working. See "
 "browser console or server logs for details."
 msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_dialogs.xml:0
-#, python-format
-msgid ""
-"The style compilation failed, see the error below. This is an administrator "
-"or developer error that must be fixed for the entire database before "
-"continuing working."
-msgstr ""
-"Tyylin kääntäminen epäonnistui, katso alla oleva virhe. Tämä on "
-"järjestelmänvalvojan tai kehittäjän virhe, joka on korjattava koko "
-"tietokannassa ennen työskentelyn jatkamista."
+"Tyylikokoelman muodostus epäonnistui. Tämä on järjestelmänvalvojan tai "
+"kehittäjän virhe, joka on korjattava koko tietokannassa ennen työskentelyn "
+"jatkamista. Katso lisätietoja selaimen konsolista tai palvelimen "
+"lokitiedoista."
 
 #. module: web
 #. odoo-python
@@ -7524,6 +7639,13 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
+#, python-format
+msgid "Unable to save. Correct the issue or discard changes"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 #, python-format
@@ -7696,6 +7818,13 @@ msgid ""
 msgstr ""
 "Käytä 'Käyttäjäystävällinen muoto' -vaihtoehdon kanssa muotoilun "
 "mukauttamiseksi."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
+#, python-format
+msgid "Use this filter by default when opening this view"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -8501,6 +8630,7 @@ msgstr "muukalaishirviö"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 #, python-format
@@ -8599,6 +8729,7 @@ msgstr "ankkuri"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/core/domain_selector/utils.js:0
 #: code:addons/web/static/src/core/tree_editor/utils.js:0
 #, python-format
@@ -22852,6 +22983,13 @@ msgstr "uusi välilehti"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
+#, python-format
+msgid "new_template"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
@@ -27477,6 +27615,13 @@ msgstr "valittu"
 #, python-format
 msgid "selected records,"
 msgstr "valitut tietueet,"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
+#, python-format
+msgid "self"
+msgstr "self"
 
 #. module: web
 #. odoo-javascript
@@ -33574,10 +33719,31 @@ msgstr "zombie"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/view_components/column_progress.xml:0
+#, python-format
+msgid "{{ bar.count }} {{ bar.string }}"
+msgstr "{{ bar.count }} {{ bar.string }}"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/kanban/kanban_column_quick_create.xml:0
+#, python-format
+msgid "{{ relatedFieldName }}..."
+msgstr "{{ relatedFieldName }}..."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "— press"
 msgstr "- lehdistö"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "— search for"
+msgstr "- etsi"
 
 #. module: web
 #. odoo-javascript

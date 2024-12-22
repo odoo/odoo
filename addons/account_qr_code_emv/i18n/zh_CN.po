@@ -3,21 +3,29 @@
 # 	* account_qr_code_emv
 # 
 # Translators:
-# Wil Odoo, 2023
+# Chloe Wang, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+#, python-format
+msgid "A bank account is required for EMV QR Code generation."
+msgstr "生成 EMV 二维码需要银行账户。"
 
 #. module: account_qr_code_emv
 #: model:ir.model,name:account_qr_code_emv.model_res_partner_bank
@@ -95,7 +103,7 @@ msgstr "未有代理值。"
 msgid ""
 "No EMV QR Code is available for the country of the account "
 "%(account_number)s."
-msgstr ""
+msgstr "账户所在国家没有 EMV 二维码 %(account_number)s."
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields.selection,name:account_qr_code_emv.selection__res_partner_bank__proxy_type__none

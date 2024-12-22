@@ -5,6 +5,7 @@
         <t t-set="_canSelectRecord" t-value="canSelectRecord"/>
         <div
             class="o_list_renderer o_renderer table-responsive"
+            t-att-class="uniqueRendererClass"
             tabindex="-1"
             t-ref="root"
         >
@@ -24,8 +25,8 @@
                                 t-on-pointerup="onColumnTitleMouseUp"
                                 t-on-click="() => this.onClickSortColumn(column)"
                                 t-on-keydown="(ev) => this.onCellKeydown(ev)"
-                                t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : false"
-                                t-att-data-tooltip-info="isDebugMode ? makeTooltip(column) : false"
+                                t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : 'web.ListHeaderTooltip'"
+                                t-att-data-tooltip-info="makeTooltip(column)"
                                 data-tooltip-delay="1000"
                                 tabindex="-1">
                                 <t t-if="column.hasLabel and column.widget !== 'handle'">
@@ -48,6 +49,7 @@
                                 class="'o_optional_columns_dropdown text-center border-top-0'"
                                 togglerClass="'btn p-0'"
                                 skipTogglerTabbing="true"
+                                listRendererClass="uniqueRendererClass"
                                 position="'bottom-end'">
                                 <t t-set-slot="toggler">
                                     <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
@@ -114,7 +116,7 @@
                             href="#"
                             role="button"
                             t-att-class="create_index !== 0 ? 'ml16' : ''"
-                            t-att-tabindex="props.list.editedRecord ? '-1' : '0'"
+                            t-att-tabindex="editedRecord ? '-1' : '0'"
                             t-on-click.stop.prevent="() => this.add({ context: create.context })"
                         >
                             <t t-esc="create.string"/>
@@ -127,7 +129,7 @@
                             record="props.list"
                             string="create.string"
                             title="create.title"
-                            tabindex="props.list.editedRecord ? '-1' : '0'"
+                            tabindex="editedRecord ? '-1' : '0'"
                         />
                     </t>
                 </td>
@@ -153,7 +155,7 @@
                         >
                             <a href="#"
                                 role="button"
-                                t-on-click.stop.prevent="() => group.addNewRecord({}, props.editable === 'top')"
+                                t-on-click.stop.prevent="() => this.addInGroup(group)"
                                 t-on-keydown="(ev) => this.onCellKeydown(ev)"
                             >
                                 Add a line
@@ -167,7 +169,7 @@
 
     <t t-name="web.ListRenderer.GroupRow">
         <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header {{!group.isFolded ? 'o_group_open' : ''}} cursor-pointer"
-            t-on-click="() => this.toggleGroup(group)"
+            t-on-click="(ev) => this.onGroupHeaderClicked(ev, group)"
         >
             <th t-on-keydown="(ev) => this.onCellKeydown(ev, group)"
                 tabindex="-1"
@@ -177,7 +179,7 @@
                     <span t-attf-class="o_group_caret fa fa-fw {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }} me-1"
                         t-attf-style="--o-list-group-level: {{getGroupLevel(group)}}"/>
                     <t t-esc="getGroupDisplayName(group)"/> (<t t-esc="group.count"/>)
-                    <div t-if="(groupByButtons[group.groupByField.name] and !group.isFolded)" class="o_group_buttons">
+                    <div t-if="(groupByButtons[group.groupByField.name] and !group.isFolded and group.record.resId)" class="o_group_buttons">
                         <t t-foreach="groupByButtons[group.groupByField.name]" t-as="button" t-key="button.id">
                             <t t-if="!evalInvisible(button.invisible, group.record)">
                                 <t t-if="button.clickParams.type === 'edit'">
@@ -199,7 +201,7 @@
                             </t>
                         </t>
                     </div>
-                    <div t-if="showGroupPager(group)" class="ms-auto">
+                    <div t-if="showGroupPager(group)" t-on-click.stop="" class="ms-auto">
                         <Pager t-props="getGroupPagerProps(group)"/>
                     </div>
                 </div>
@@ -256,7 +258,7 @@
                                 record="record"
                                 string="button.string"
                                 title="button.title"
-                                tabindex="props.list.editedRecord ? '-1' : '0'"
+                                tabindex="editedRecord ? '-1' : '0'"
                                 onClick="isX2Many and record.isNew ? displaySaveNotification.bind(this) : ''"
                             />
                         </t>
@@ -275,7 +277,7 @@
                     t-on-click.stop="() => isX2Many and record.isNew ? this.displaySaveNotification() : props.onOpenFormView(record)"
                     tabindex="-1"
                 >
-                    <button class="btn btn-link text-end"
+                    <button class="btn btn-link align-top text-end"
                         name="Open in form view"
                         aria-label="Open in form view"
                         tabindex="-1"
@@ -289,7 +291,7 @@
                 <t t-if="hasX2ManyAction">
                     <td class="o_list_record_remove text-center"
                         t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
-                        t-on-click.stop="() => this.onDeleteRecord(record)"
+                        t-on-click.stop="(ev) => this.onDeleteRecord(record, ev)"
                         tabindex="-1"
                     >
                         <button class="fa"
@@ -306,6 +308,18 @@
                 <td t-else="" tabindex="-1" />
             </t>
         </tr>
+    </t>
+
+    <t t-name="web.ListRenderer.OptionalFieldsDropdown" t-inherit="web.Dropdown" t-inherit-mode="primary">
+        <xpath expr="//div[@t-if='state.open']" position="attributes">
+            <attribute name="t-portal">`.${props.listRendererClass}`</attribute>
+            <attribute name="class" add="o_optional_columns_dropdown" separator=" "/>
+        </xpath>
+    </t>
+
+    <t t-name="web.ListHeaderTooltip">
+        <t t-esc="field.label"/>
+        <div t-if="field.help" class="mt-2" t-esc="field.help"/>
     </t>
 
 </templates>

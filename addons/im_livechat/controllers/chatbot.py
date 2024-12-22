@@ -17,12 +17,14 @@ class LivechatChatbotScriptController(http.Controller):
 
     @http.route('/chatbot/post_welcome_steps', type="json", auth="public", cors="*")
     def chatbot_post_welcome_steps(self, channel_uuid, chatbot_script_id):
-        discuss_channel = request.env['discuss.channel'].sudo().search([('uuid', '=', channel_uuid)], limit=1)
-        chatbot = request.env['chatbot.script'].sudo().browse(chatbot_script_id)
+        chatbot_language = self._get_chatbot_language()
+        discuss_channel = request.env['discuss.channel'].sudo().search(
+            [('uuid', '=', channel_uuid)], limit=1
+        ).with_context(lang=chatbot_language)
+        chatbot = request.env['chatbot.script'].sudo().browse(chatbot_script_id).with_context(lang=chatbot_language)
         if not discuss_channel or not chatbot.exists():
             return None
-        chatbot_language = self._get_chatbot_language()
-        return chatbot.with_context(lang=chatbot_language)._post_welcome_steps(discuss_channel).message_format()
+        return chatbot._post_welcome_steps(discuss_channel).message_format()
 
     @http.route('/chatbot/answer/save', type="json", auth="public", cors="*")
     def chatbot_save_answer(self, channel_uuid, message_id, selected_answer_id):
@@ -57,7 +59,7 @@ class LivechatChatbotScriptController(http.Controller):
                 user_answer = user_messages.sorted(lambda message: message.id)[-1]
             next_step = discuss_channel.chatbot_current_step_id._process_answer(discuss_channel, user_answer.body)
         elif chatbot_script_id:  # when restarting, we don't have a "current step" -> set "next" as first step of the script
-            chatbot = request.env['chatbot.script'].sudo().browse(chatbot_script_id)
+            chatbot = request.env['chatbot.script'].sudo().browse(chatbot_script_id).with_context(lang=chatbot_language)
             if chatbot.exists():
                 next_step = chatbot.script_step_ids[:1]
 
@@ -88,7 +90,8 @@ class LivechatChatbotScriptController(http.Controller):
         if not discuss_channel or not discuss_channel.chatbot_current_step_id:
             return None
 
-        chatbot = discuss_channel.chatbot_current_step_id.chatbot_script_id
+        chatbot_language = self._get_chatbot_language()
+        chatbot = discuss_channel.chatbot_current_step_id.chatbot_script_id.with_context(lang=chatbot_language)
         user_messages = discuss_channel.message_ids.filtered(
             lambda message: message.author_id != chatbot.operator_partner_id
         )
@@ -103,4 +106,6 @@ class LivechatChatbotScriptController(http.Controller):
         return result
 
     def _get_chatbot_language(self):
-        return request.httprequest.cookies.get('frontend_lang', request.env.user.lang or get_lang(request.env).code)
+        return get_lang(
+            request.env, lang_code=request.httprequest.cookies.get("frontend_lang")
+        ).code

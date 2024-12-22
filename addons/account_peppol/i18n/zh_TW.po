@@ -3,14 +3,14 @@
 # 	* account_peppol
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -19,6 +19,15 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid ""
+"<br/>\n"
+"                            If you need a Peppol compliant software, we recommend"
+msgstr ""
+"<br/>\n"
+"                            若需要能兼容 Peppol 標準的軟體，我們推薦"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -74,7 +83,7 @@ msgid ""
 "A participant with these details has already been registered on the network."
 " If you have previously registered to an alternative Peppol service, please "
 "deregister from that service, or request a migration key before trying "
-"again."
+"again. "
 msgstr "擁有相同詳情的參加者已透過網絡註冊。如果你之前已註冊其他 Peppol 服務，請從該服務取消註冊，或在再次嘗試之前要求遷移密鑰。"
 
 #. module: account_peppol
@@ -87,7 +96,7 @@ msgstr "接收 Peppol 文件必須使用採購日記賬。"
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
 msgid "Account EDI proxy user"
-msgstr "帳戶 Edi 代理帳號"
+msgstr "賬戶 EDI 代理使用者"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_move_send
@@ -184,6 +193,11 @@ msgid "Cannot cancel an entry that has already been sent to PEPPOL"
 msgstr "無法取消已傳送至 Peppol 的記項"
 
 #. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid_format
+msgid "Cannot receive this format"
+msgstr "未能接收此格式"
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
@@ -246,8 +260,8 @@ msgstr "聯絡資料已更新。"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
-msgid "Contact email and phone number are required."
-msgstr "必須填寫聯絡電郵和電話號碼。"
+msgid "Contact email and mobile number are required."
+msgstr "必須填寫聯絡電郵及流動電話號碼。"
 
 #. module: account_peppol
 #. odoo-python
@@ -301,6 +315,13 @@ msgid "Fetch from Peppol"
 msgstr "從 Peppol 獲取"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid ""
+"In Belgium, electronic invoicing will be <u>mandatory as of January "
+"2026</u>."
+msgstr "比利時將會<u>由 2026 年 1 月起強制採用</u>電子發票。"
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "In demo mode sending and receiving invoices is simulated. There will be no "
@@ -311,6 +332,12 @@ msgstr "在演示模式下，將模擬發送和接收發票。不會與 Peppol �
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Incoming Invoices Journal"
 msgstr "收到發票日記賬"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_partner__is_peppol_edi_format
+#: model:ir.model.fields,field_description:account_peppol.field_res_users__is_peppol_edi_format
+msgid "Is Peppol Edi Format"
+msgstr "是 Peppol Edi 格式"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_journal
@@ -353,6 +380,17 @@ msgid "Migration key"
 msgstr "遷移密鑰"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Mobile Number"
+msgstr "流動電話號碼"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_phone_number
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_phone_number
+msgid "Mobile number (for validation)"
+msgstr "流動電話號碼（用作驗證）"
+
+#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
 msgid "Not registered"
 msgstr "未設立"
@@ -371,6 +409,11 @@ msgstr "未驗證"
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_verified
 msgid "Not verified yet"
 msgstr "尚未驗證"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "Odoo"
+msgstr "Odoo"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
@@ -425,6 +468,21 @@ msgstr "Peppol：更新訊息狀態"
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_participant_status_ir_actions_server
 msgid "PEPPOL: update participant status"
 msgstr "Peppol：更新參與者狀態"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid ""
+"PS: <b style=\"color: $o-enterprise-action-color;\">We did not send your "
+"invoice on Peppol.</b>"
+msgstr ""
+"註：<b style=\"color: $o-enterprise-action-color;\">我們未有在 Peppol 傳送你的發票。</b>"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid ""
+"PS: This invoice has also been <b style=\"color: $o-enterprise-action-"
+"color\">sent on Peppol</b>."
+msgstr "註：此發票也已於 <b style=\"color: $o-enterprise-action-color\">Peppol 傳送</b>。"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__pending
@@ -527,17 +585,6 @@ msgstr "Peppol 狀態更新： %s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "Phone Number"
-msgstr "電話號碼"
-
-#. module: account_peppol
-#: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_phone_number
-#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_phone_number
-msgid "Phone number (for validation)"
-msgstr "電話號碼（用於驗證）"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "Please do not hesitate to contact our support if you need further "
 "assistance."
@@ -547,8 +594,8 @@ msgstr "如果需要進一步幫助，請隨時聯絡我們的支援人員。"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
-msgid "Please enter a phone number to verify your application."
-msgstr "請輸入電話號碼以驗證你的申請。"
+msgid "Please enter a mobile number to verify your application."
+msgstr "請輸入流動電話號碼，以驗證你的申請。"
 
 #. module: account_peppol
 #. odoo-python
@@ -562,13 +609,13 @@ msgstr "請輸入主要聯絡人的電子郵件，以驗證您的申請。"
 #: code:addons/account_peppol/models/res_company.py:0
 #, python-format
 msgid ""
-"Please enter the phone number in the correct international format.\n"
+"Please enter the mobile number in the correct international format.\n"
 "For example: +32123456789, where +32 is the country code.\n"
 "Currently, only European countries are supported."
 msgstr ""
-"請以正確的國際格式輸入電話號碼。\n"
+"請以正確的國際格式輸入流動電話號碼。\n"
 "例如：+32123456789，其中 +32 是國家/地區代碼。\n"
-"目前僅支援歐洲國家。"
+"目前只支援歐洲國家。"
 
 #. module: account_peppol
 #. odoo-python
@@ -576,6 +623,13 @@ msgstr ""
 #, python-format
 msgid "Please fill in the EAS code and the Participant ID code."
 msgstr "請填寫 EAS代碼及參與者 ID代碼。"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_company.py:0
+#, python-format
+msgid "Please install the phonenumbers library."
+msgstr "請安裝電話號碼程式庫。"
 
 #. module: account_peppol
 #. odoo-python
@@ -691,6 +745,13 @@ msgstr "Peppol 終端點識別號碼不正確。"
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "The Peppol service that is used is likely to be %s."
+msgstr "所使用的 Peppol 服務很可能是 %s。"
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "The document has been sent to the Peppol Access Point for processing"
@@ -777,6 +838,13 @@ msgid "This verification code has expired. Please request a new one."
 msgstr "此驗證碼已過期。請索取全新一個。"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
+msgid ""
+"To generate complete electronic invoices, also set a country for this "
+"partner."
+msgstr "要產生完整的電子發票，請亦為此合作夥伴設定國家/地區。"
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
@@ -853,16 +921,16 @@ msgid "Verify Peppol"
 msgstr "驗證 Peppol"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
-msgid "Verify partner's PEPPOL endpoint"
-msgstr "驗證合作夥伴的 Peppol 終端點"
-
-#. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
-msgid "Verify phone number"
-msgstr "驗證電話號碼"
+msgid "Verify mobile number"
+msgstr "驗證流動電話號碼"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
+msgid "Verify partner's PEPPOL endpoint"
+msgstr "驗證合作夥伴的 Peppol 終端點"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_move_send__peppol_warning
@@ -887,8 +955,8 @@ msgstr "你將無法再在 Odoo 中發送或接收 Peppol 文件。 確定要繼
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
-msgid "You will receive a verification code to this phone number"
-msgstr "你將收到發送至此電話號碼的驗證碼"
+msgid "You will receive a verification code to this mobile number"
+msgstr "你將收到發送至此流動電話號碼的驗證碼"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form

@@ -22,6 +22,7 @@ class TestEdiZatca(TestSaEdiCommon):
             expected_tree = self.get_xml_tree_from_string(standard_invoice)
             expected_tree = self.with_applied_xpath(expected_tree, self.invoice_applied_xpath)
 
+            self.partner_us.vat = 'US12345677'
             move = self._create_invoice(name='INV/2022/00014', date='2022-09-05', date_due='2022-09-22', partner_id=self.partner_us,
                                         product_id=self.product_a, price=320.0)
             move._l10n_sa_generate_unsigned_data()

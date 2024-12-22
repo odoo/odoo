@@ -6,6 +6,7 @@
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
+# Daniel Osser <danielosser@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2023\n"
+"Last-Translator: Daniel Osser <danielosser@gmail.com>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +36,8 @@ msgid ""
 "Check on the printer configuration for the 'Device ID' setting. It should be"
 " set to: "
 msgstr ""
+"Kontrollera skrivarens inställningar för 'Device ID'. Den bör vara ställd "
+"till:"
 
 #. module: pos_epson_printer
 #: model:ir.model,name:pos_epson_printer.model_res_config_settings
@@ -44,19 +47,19 @@ msgstr "Inställningar"
 #. module: pos_epson_printer
 #: model:ir.model.fields,field_description:pos_epson_printer.field_pos_config__epson_printer_ip
 msgid "Epson Printer IP"
-msgstr "Epson Printer IP"
+msgstr "Epsonskrivarens IP"
 
 #. module: pos_epson_printer
 #: model:ir.model.fields,field_description:pos_epson_printer.field_pos_printer__epson_printer_ip
 msgid "Epson Printer IP Address"
-msgstr ""
+msgstr "Epsonskrivarens IP-adress"
 
 #. module: pos_epson_printer
 #. odoo-python
 #: code:addons/pos_epson_printer/models/pos_printer.py:0
 #, python-format
 msgid "Epson Printer IP Address cannot be empty."
-msgstr ""
+msgstr "Epsonskrivarens IP-adress kan inte vara tom."
 
 #. module: pos_epson_printer
 #: model_terms:ir.ui.view,arch_db:pos_epson_printer.pos_iot_config_view_form
@@ -72,19 +75,21 @@ msgid ""
 "If you are on a secure server (HTTPS) please make sure you manually accepted"
 " the certificate by accessing %s. "
 msgstr ""
+"Om du använder en säker anslutning (HTTPS), se till att du accepterar "
+"certifikatet manuellt genom att besöka %s. "
 
 #. module: pos_epson_printer
 #: model:ir.model.fields,help:pos_epson_printer.field_pos_config__epson_printer_ip
 #: model:ir.model.fields,help:pos_epson_printer.field_pos_printer__epson_printer_ip
 msgid "Local IP address of an Epson receipt printer."
-msgstr "Lokal IP-adress till en Epson kvitto printer."
+msgstr "Lokal IP-adress till Epson kvittoskrivare."
 
 #. module: pos_epson_printer
 #. odoo-javascript
 #: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
 msgid "No paper was detected by the printer"
-msgstr ""
+msgstr "Papper upptäckes inte av skrivaren"
 
 #. module: pos_epson_printer
 #. odoo-javascript
@@ -103,7 +108,7 @@ msgstr "Kassakonfigurering"
 #. module: pos_epson_printer
 #: model:ir.model,name:pos_epson_printer.model_pos_printer
 msgid "Point of Sale Printer"
-msgstr ""
+msgstr "Kvittoskrivare till kassa"
 
 #. module: pos_epson_printer
 #: model:ir.model,name:pos_epson_printer.model_pos_session
@@ -113,7 +118,7 @@ msgstr "Kassasession"
 #. module: pos_epson_printer
 #: model:ir.model.fields,field_description:pos_epson_printer.field_res_config_settings__pos_epson_printer_ip
 msgid "Pos Epson Printer Ip"
-msgstr ""
+msgstr "Kassa Epsonskrivare IP-adress"
 
 #. module: pos_epson_printer
 #: model:ir.model.fields,field_description:pos_epson_printer.field_pos_printer__printer_type
@@ -134,7 +139,7 @@ msgid ""
 "The Epson receipt printer will be used instead of the receipt printer "
 "connected to the IoT Box."
 msgstr ""
-"Epson kvitto skrivare kommer att användas i stället för den som är ansluten "
+"Epson kvittoskrivare kommer att användas i stället för den som är ansluten "
 "till IoT lådan."
 
 #. module: pos_epson_printer
@@ -142,21 +147,21 @@ msgstr ""
 #: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
 msgid "The following error code was given by the printer:"
-msgstr ""
+msgstr "Felkod från skrivare:"
 
 #. module: pos_epson_printer
 #. odoo-javascript
 #: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
 msgid "The printer was successfully reached, but it wasn't able to print."
-msgstr ""
+msgstr "Kommunikation med skrivaren lyckades men den kunde inte skriva ut."
 
 #. module: pos_epson_printer
 #. odoo-javascript
 #: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
 msgid "To find more details on the error reason, please search online for:"
-msgstr ""
+msgstr "För mer information om felet, vänligen sök online efter:"
 
 #. module: pos_epson_printer
 #: model:ir.model.fields.selection,name:pos_epson_printer.selection__pos_printer__printer_type__epson_epos

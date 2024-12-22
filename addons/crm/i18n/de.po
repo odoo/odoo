@@ -3,17 +3,16 @@
 # 	* crm
 # 
 # Translators:
-# Wil Odoo, 2023
-# Felix Schubert <felix.schubert@go-erp.com>, 2024
 # Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1085,7 +1084,7 @@ msgid ""
 "based on their IP address"
 msgstr ""
 "Verwandeln Sie Besucher Ihrer Website in Leads und führen Sie eine "
-"Datenanreicherung basierend auf ihrer IP-Adresse durch"
+"Datenanreicherung basierend auf ihrer IP-Adresse durch."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__email_state__correct
@@ -1265,7 +1264,7 @@ msgstr "Kunden"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Date Closed"
-msgstr "Datum geschlossen"
+msgstr "Abschlussdatum"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_interval_type__days
@@ -1374,8 +1373,8 @@ msgstr "Anzeigename"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Keine Zugriffsberechtigung, überspringen Sie diese Daten für die E-Mail-"
-"Übersicht des Benutzers"
+"Keine Zugriffsberechtigung, überspringen dieser Daten für die E-Mail-"
+"Übersicht des Benutzers."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__nothing
@@ -1452,6 +1451,11 @@ msgid "Email cc:"
 msgstr "E-Mail-CC:"
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_crm_team__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "E-Mail-Domain z. B. 'example.com' in 'odoo@example.com'"
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Email:"
 msgstr "E-Mail:"
@@ -1490,7 +1494,7 @@ msgstr ""
 msgid "Enrich your leads with company data based on their email addresses"
 msgstr ""
 "Reichern Sie Ihre Leads mit Unternehmensdaten basierend auf ihrer E-Mail-"
-"Adresse an"
+"Adresse an."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -2111,7 +2115,7 @@ msgstr "Diesem Mitglied in den letzten 30 Tagen zugewiesene Leads"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Lead or Opportunity"
-msgstr "Lead oder Verkaufschance"
+msgstr "Lead oder Verkaufschance "
 
 #. module: crm
 #. odoo-python
@@ -2122,7 +2126,7 @@ msgid ""
 "administrators"
 msgstr ""
 "Die automatische Zuweisung von Leads/Verkaufschancen ist auf Manager oder "
-"Administratoren beschränkt"
+"Administratoren beschränkt."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
@@ -2260,7 +2264,7 @@ msgstr "Anzahl Leads/Verkaufschancen"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Let's <b>Schedule an Activity.</b>"
-msgstr "Lassen Sie uns <b>eine Aktivität planen</b>!"
+msgstr "Lassen Sie uns <b>eine Aktivität planen</b>."
 
 #. module: crm
 #. odoo-javascript
@@ -2633,7 +2637,7 @@ msgstr "Nächstes Meeting"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Next Run"
-msgstr "Nächster Lauf"
+msgstr "Nächster Lauf "
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__green
@@ -3008,7 +3012,7 @@ msgstr "Über 3 Jahre"
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_over_5_years
 msgid "Over 5 years "
-msgstr "Über 5 Jahre "
+msgstr "Über 5 Jahre"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
@@ -3112,7 +3116,7 @@ msgstr "Pipeline-Aktivitäten"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_graph
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot
 msgid "Pipeline Analysis"
-msgstr "Pipeline-Auswertung"
+msgstr "Pipeline-Analyse"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__name
@@ -3477,7 +3481,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Set a new stage in your opportunity pipeline"
 msgstr ""
-"Klicken Sie, um eine neue Phase in Ihrer Pipeline für Verkaufschancen zu "
+"Klicken Sie, um eine neue Phase in Ihrer Verkaufschancen-Pipeline zu "
 "erstellen."
 
 #. module: crm
@@ -3667,7 +3671,7 @@ msgstr "Straße2"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Subject: "
-msgstr "Betreff: "
+msgstr "Betreff:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__subtype_id
@@ -3752,8 +3756,8 @@ msgid ""
 "The name of the future partner company that will be created while converting"
 " the lead into opportunity"
 msgstr ""
-"Der Unternehmensname des Leads, der bei der Umwandlung des Leads zur "
-"Verkaufschance verwendet wird"
+"Der Unternehmensname des Leads, der bei der Umwandlung des Interessenten zur"
+" Verkaufschance verwendet wird."
 
 #. module: crm
 #: model:ir.model.constraint,message:crm.constraint_crm_recurring_plan_check_number_of_months
@@ -3801,14 +3805,14 @@ msgid ""
 "rules"
 msgstr ""
 "Dies kann dazu verwendet werden, Leads anhand von Regeln automatisch "
-"Vertriebsmitarbeitern zuzuweisen"
+"Vertriebsmitarbeitern zuzuweisen."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "This can be used to compute statistical probability to close a lead"
 msgstr ""
 "Dies kann verwendet werden, um die statistische Wahrscheinlichkeit zu "
-"berechnen, einen Lead zu gewinnen"
+"berechnen, einen Lead zu gewinnen."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -3873,7 +3877,7 @@ msgid ""
 "stage to display."
 msgstr ""
 "Diese Phase ist zugeklappt, wenn es keine anzuzeigenden Daten in dieser "
-"Phase gibt."
+"Phase gibt. "
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -3982,7 +3986,7 @@ msgstr "Typ"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_report__lead_type
 msgid "Type is used to separate Leads and Opportunities"
-msgstr "Typ wird zur Unterscheidung von Leads und Verkaufschancen verwendet"
+msgstr "Typ wird zur Unterscheidung von Leads und Verkaufschancen verwendet."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_decoration

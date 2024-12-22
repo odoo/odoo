@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,6 +61,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Values set here are "
 "company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Giá trị ở đây áp dụng "
+"cho công ty cụ thể.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -136,7 +138,7 @@ msgstr "Dựa trên mốc thời gian"
 #: model:ir.model.fields,field_description:sale_project.field_project_project__allow_billable
 #: model:ir.model.fields,field_description:sale_project.field_project_task__allow_billable
 msgid "Billable"
-msgstr "Có thể lập hóa đơn"
+msgstr "Có thể tính phí"
 
 #. module: sale_project
 #. odoo-python
@@ -472,12 +474,12 @@ msgstr "Không có đơn bán hàng"
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "Non-billable"
-msgstr "Không thể xuất hoá đơn"
+msgstr "Không thể tính phí"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "Not Billed"
-msgstr "Không được lập hoá đơn"
+msgstr "Không được tính phí"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
@@ -676,11 +678,11 @@ msgid ""
 msgstr ""
 "Hạng mục đơn bán hàng mà thời gian dành cho nhiệm vụ này sẽ được cộng vào để lập hóa đơn cho khách hàng của bạn.\n"
 "Theo mặc định, hạng mục đơn bán hàng thiết lập trên dự án sẽ được chọn. Trong trường hợp không có, hạng mục đơn bán hàng trả trước cuối cùng còn thời gian sẽ được sử dụng.\n"
-"Xóa hạng mục đơn bán hàng để ngăn việc lập hoá đơn thanh toán cho nhiệm vụ này. Bạn cũng có thể thay đổi hoặc xóa hạng mục đơn bán hàng của từng mục nhập bảng chấm công riêng lẻ."
+"Xóa hạng mục đơn bán hàng để không tính phí nhiệm vụ này. Bạn cũng có thể thay đổi hoặc xóa hạng mục đơn bán hàng của từng mục nhập bảng chấm công."
 
 #. module: sale_project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
@@ -737,13 +739,12 @@ msgstr "Tìm kiếm trong đơn bán hàng"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
-msgstr ""
-"Chọn một dự án không thể lập hóa đơn mà các nhiệm vụ có thể được tạo ra."
+msgstr "Chọn một dự án không thể tính phí mà từ đó có thể tạo nhiệm vụ."
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 msgid "Select who to bill..."
-msgstr "Chọn người để lập hoá đơn..."
+msgstr "Chọn người để tính phí..."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_policy
@@ -856,7 +857,7 @@ msgstr "Nhiệm vụ này đã được tạo từ: %s (%s)"
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "To Do"
-msgstr "Cần làm"
+msgstr "Việc cần làm"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
@@ -874,7 +875,7 @@ msgstr "Theo dõi dịch vụ"
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Track what you sold, delivered, and invoiced."
-msgstr ""
+msgstr "Theo dõi những gì bạn đã bán, giao và lập hóa đơn."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__product_uom

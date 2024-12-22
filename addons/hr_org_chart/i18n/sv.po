@@ -3,10 +3,11 @@
 # 	* hr_org_chart
 # 
 # Translators:
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Lasse L, 2023
 # Martin Trigaux, 2023
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Simon S, 2023
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # 
 msgid ""
@@ -26,7 +27,7 @@ msgstr ""
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
 msgid "<span class=\"o_stat_text\">Org Chart</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Organisation</span>"
 
 #. module: hr_org_chart
 #: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
@@ -43,27 +44,27 @@ msgstr "Grundläggande anställd"
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__department_color
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__department_color
 msgid "Department Color"
-msgstr ""
+msgstr "Avdelningens färg"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_count
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_count
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_count
 msgid "Direct Subordinates Count"
-msgstr ""
+msgstr "Direkt antal underordnade"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee_public__subordinate_ids
 msgid "Direct and indirect subordinates"
-msgstr ""
+msgstr "Direkt och indirekt underordnade"
 
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 #, python-format
 msgid "Direct subordinates"
-msgstr "Leda underordnade"
+msgstr "Direkt underordnade"
 
 #. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee
@@ -81,27 +82,28 @@ msgstr "Anställda"
 #, python-format
 msgid "In order to get an organigram, set a manager and save the record."
 msgstr ""
-"För att få ett organigram behöver du ställa in en chef och spara posten."
+"För att få ett organisationsschema behöver du ställa in en chef och spara "
+"posten."
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_all_count
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_all_count
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
 msgid "Indirect Subordinates Count"
-msgstr ""
+msgstr "Indirekta antalet underordnade"
 
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 #, python-format
 msgid "Indirect subordinates"
-msgstr ""
+msgstr "Indirekta underordnade"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__is_subordinate
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__is_subordinate
 msgid "Is Subordinate"
-msgstr ""
+msgstr "Är underordnad"
 
 #. module: hr_org_chart
 #. odoo-javascript
@@ -109,7 +111,7 @@ msgstr ""
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 #, python-format
 msgid "More managers"
-msgstr ""
+msgstr "Fler chefer"
 
 #. module: hr_org_chart
 #. odoo-javascript
@@ -129,7 +131,7 @@ msgstr "Åtgärd stöds inte"
 #: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_org_chart
 #: model:ir.ui.menu,name:hr_org_chart.menu_hr_employee_org_chart
 msgid "Org Chart"
-msgstr ""
+msgstr "Organisationsschema"
 
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
@@ -141,7 +143,7 @@ msgstr "Organisationsschema"
 #. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee_public
 msgid "Public Employee"
-msgstr "Offentlig-anställd"
+msgstr "Offentliganställd"
 
 #. module: hr_org_chart
 #. odoo-javascript
@@ -156,7 +158,7 @@ msgstr "Omdirigera"
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 #, python-format
 msgid "See All"
-msgstr ""
+msgstr "Se alla"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__subordinate_ids
@@ -169,7 +171,7 @@ msgstr "Underordnad"
 #: code:addons/hr_org_chart/static/src/fields/hooks.js:0
 #, python-format
 msgid "Team"
-msgstr "Team"
+msgstr "Lag"
 
 #. module: hr_org_chart
 #. odoo-javascript
@@ -194,11 +196,11 @@ msgid ""
 msgstr ""
 "Med bara en snabb blick på Odoos medarbetarskärm kan du\n"
 "                enkelt hitta all information du behöver för varje person;\n"
-"                kontaktuppgifter, befattning, tillgänglighet etc."
+"                kontaktuppgifter, befattning, tillgänglighet, etc."
 
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_card.xml:0
 #, python-format
 msgid "people"
-msgstr ""
+msgstr "människor"

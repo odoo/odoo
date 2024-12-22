@@ -188,7 +188,7 @@ class TestMailMail(MailCommon):
         # note that formatting is lost for cc
         self.assertSentEmail(mail.env.user.partner_id,
                              ['test.rec.1@example.com', '"Raoul" <test.rec.2@example.com>'],
-                             email_cc=['test.cc.1@example.com', 'test.cc.2@example.com'])
+                             email_cc=['test.cc.1@example.com', '"Herbert" <test.cc.2@example.com>'])
         # don't put CCs as copy of each outgoing email, only the first one (and never
         # with partner based recipients as those may receive specific links)
         self.assertSentEmail(mail.env.user.partner_id, [self.user_employee.email_formatted],
@@ -211,7 +211,7 @@ class TestMailMail(MailCommon):
         # note that formatting is lost for cc
         self.assertSentEmail('"Ignasse" <test.from@example.com>',
                              ['test.rec.1@example.com', '"Raoul" <test.rec.2@example.com>'],
-                             email_cc=['test.cc.1@example.com', 'test.cc.2@example.com'])
+                             email_cc=['test.cc.1@example.com', '"Herbert" <test.cc.2@example.com>'])
         self.assertEqual(len(self._mails), 1)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -285,6 +285,60 @@ class TestMailMail(MailCommon):
             self.env['mail.mail'].process_email_queue()
             for mail, expected_state in zip(mails, expected_states):
                 self.assertEqual(mail.state, expected_state)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
+    def test_mail_mail_send_configuration(self):
+        """ Test configuration and control of email queue """
+        self.env['mail.mail'].search([]).unlink()  # cleanup queue
+
+        # test 'mail.mail.queue.batch.size': cron fetch size
+        for queue_batch_size, exp_send_count in [
+            (3, 3),
+            (0, 10),  # maximum available
+            (False, 10),  # maximum available
+        ]:
+            with self.subTest(queue_batch_size=queue_batch_size), \
+                 self.mock_mail_gateway():
+                self.env['ir.config_parameter'].sudo().set_param('mail.mail.queue.batch.size', queue_batch_size)
+                mails = self.env['mail.mail'].create([
+                    {
+                        'auto_delete': False,
+                        'body_html': f'Batch Email {idx}',
+                        'email_from': 'test.from@mycompany.example.com',
+                        'email_to': 'test.outgoing@test.example.com',
+                        'state': 'outgoing',
+                    }
+                    for idx in range(10)
+                ])
+
+                self.env['mail.mail'].process_email_queue()
+                self.assertEqual(len(self._mails), exp_send_count)
+                mails.write({'state': 'sent'})  # avoid conflicts between batch
+
+        # test 'mail.session.batch.size': batch send size
+        self.env['ir.config_parameter'].sudo().set_param('mail.mail.queue.batch.size', False)
+        for session_batch_size, exp_call_count in [
+            (3, 4),  # 10 mails -> 4 iterations of 3
+            (0, 1),
+            (False, 1),
+        ]:
+            with self.subTest(session_batch_size=session_batch_size), \
+                 self.mock_mail_gateway():
+                self.env['ir.config_parameter'].sudo().set_param('mail.session.batch.size', session_batch_size)
+                mails = self.env['mail.mail'].create([
+                    {
+                        'auto_delete': False,
+                        'body_html': f'Batch Email {idx}',
+                        'email_from': 'test.from@mycompany.example.com',
+                        'email_to': 'test.outgoing@test.example.com',
+                        'state': 'outgoing',
+                    }
+                    for idx in range(10)
+                ])
+
+                self.env['mail.mail'].process_email_queue()
+                self.assertEqual(self.mail_mail_private_send_mocked.call_count, exp_call_count)
+                mails.write({'state': 'sent'})  # avoid conflicts between batch
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_mail_send_exceptions_origin(self):
@@ -742,7 +796,7 @@ class TestMailMailServer(MailCommon):
         # CC are added to first email
         self.assertEqual(
             [_mail['email_cc'] for _mail in self._mails],
-            [['test.cc.1@test.example.com'], [], []],
+            [['"Ignasse, le Poilu" <test.cc.1@test.example.com>'], [], []],
             'Mail: currently always removing formatting in email_cc'
         )
 
@@ -809,8 +863,27 @@ class TestMailMailServer(MailCommon):
             [['test.cc.1@test.example.com', 'test.cc.2@test.example.com'], [], []],
         )
 
+    def test_mail_mail_values_headers(self):
+        """ Test headers content, notably X-Odoo-Message-Id added to keep context
+        when going through exotic mail providers that change our message IDs. """
+        mail = self.env['mail.mail'].create({
+            'body_html': '<p>Test</p>',
+            'email_to': 'test.😊@example.com',
+        })
+        message_id = mail.message_id
+        with self.mock_mail_gateway():
+            mail.send()
+        self.assertEqual(len(self._mails), 1)
+        self.assertDictEqual(
+            self._mails[0]['headers'],
+            {
+                'Return-Path': f'{self.alias_bounce}@{self.alias_domain}',
+                'X-Odoo-Message-Id': message_id,
+            }
+        )
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
-    def test_mail_mail_values_unicode(self):
+    def test_mail_mail_values_email_unicode(self):
         """ Unicode should be fine. """
         mail = self.env['mail.mail'].create({
             'body_html': '<p>Test</p>',
@@ -822,6 +895,40 @@ class TestMailMailServer(MailCommon):
         self.assertEqual(len(self._mails), 1)
         self.assertEqual(self._mails[0]['email_cc'], ['test.😊.cc@example.com'])
         self.assertEqual(self._mails[0]['email_to'], ['test.😊@example.com'])
+
+    @users('admin')
+    def test_mail_mail_values_email_uppercase(self):
+        """ Test uppercase support when comparing emails, notably due to
+        'send_validated_to' introduction that checks emails before sending them. """
+        customer = self.env['res.partner'].create({
+            'name': 'Uppercase Partner',
+            'email': 'Uppercase.Partner.youpie@example.gov.uni',
+        })
+        for recipient_values, exp_recipients in zip(
+            [
+                {'email_to': 'Uppercase.Customer.to@example.gov.uni'},
+                {'email_to': '"Formatted Customer" <Uppercase.Customer.to@example.gov.uni>', 'email_cc': '"UpCc" <Uppercase.Customer.cc@example.gov.uni>'},
+                {'recipient_ids': [(4, customer.id)], 'email_cc': '"UpCc" <Uppercase.Customer.cc@example.gov.uni>'},
+            ], [
+                [(['uppercase.customer.to@example.gov.uni'], [])],
+                [(['"Formatted Customer" <uppercase.customer.to@example.gov.uni>'], ['"UpCc" <uppercase.customer.cc@example.gov.uni>'])],
+                # partner-based recipients are not mixed with emails-only, even if only CC
+                [
+                    (['"Uppercase Partner" <uppercase.partner.youpie@example.gov.uni>'], []),
+                    ([], ['"UpCc" <uppercase.customer.cc@example.gov.uni>']),
+                ],
+            ]
+        ):
+            with self.subTest(values=recipient_values):
+                mail = self.env['mail.mail'].create({
+                    'body_html': '<p>Test</p>',
+                    'email_from': '"Forced From" <Forced.From@test.example.com>',
+                    **recipient_values,
+                })
+                with self.mock_mail_gateway():
+                    mail.send()
+                for exp_to, exp_cc in exp_recipients:
+                    self.assertSentEmail('"Forced From" <forced.from@test.example.com>', exp_to, email_cc=exp_cc)
 
 
 @tagged('mail_mail')

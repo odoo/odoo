@@ -26,9 +26,8 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         "amount_authorized_diff",
         // TODO: set the props for all popups
         "id",
-        "keepBehind",
         "resolve",
-        "isActive",
+        "zIndex",
         "close",
         "confirmKey",
         "cancelKey",
@@ -118,9 +117,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         }
     }
     async downloadSalesReport() {
-        return this.report.doAction("point_of_sale.sale_details_report", [
-            this.pos.pos_session.id,
-        ]);
+        return this.report.doAction("point_of_sale.sale_details_report", [this.pos.pos_session.id]);
     }
     setManualCashInput(amount) {
         if (this.env.utils.isValidFloat(amount) && this.moneyDetails) {
@@ -206,7 +203,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
             if (!response.successful) {
                 return this.handleClosingError(response);
             }
-            window.location = "/web#action=point_of_sale.action_client_pos_menu";
+            this.pos.redirectToBackend();
         } catch (error) {
             if (error instanceof ConnectionLostError) {
                 // Cannot redirect to backend when offline, let error handlers show the offline popup
@@ -223,7 +220,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
                             "You will be redirected to the back-end to manually close the session."
                     ),
                 });
-                window.location = "/web#action=point_of_sale.action_client_pos_menu";
+                this.pos.redirectToBackend();
             }
         }
     }
@@ -234,7 +231,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
             sound: response.type !== "alert",
         });
         if (response.redirect) {
-            window.location = "/web#action=point_of_sale.action_client_pos_menu";
+            this.pos.redirectToBackend();
         }
     }
 }

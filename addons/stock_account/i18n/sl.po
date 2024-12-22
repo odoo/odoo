@@ -14,14 +14,15 @@
 # Tadej Lupšina <tadej@hbs.si>, 2023
 # Jasmina Macur <jasmina@hbs.si>, 2023
 # Katja Deržič, 2024
+# Gregor Flajs, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Katja Deržič, 2024\n"
+"Last-Translator: Gregor Flajs, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1052,6 +1053,15 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
+"You don't have any output valuation account defined on your product "
+"category. You must define one before processing this operation."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
 "You don't have any stock input account defined on your product category. You"
 " must define one before processing this operation."
 msgstr ""
@@ -1064,6 +1074,8 @@ msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts."
 msgstr ""
+"V kategoriji izdelkov nimate opredeljenega dnevnika zalog, preverite ali "
+"imate nameščen kontni načrt."
 
 #. module: stock_account
 #. odoo-python
@@ -1102,4 +1114,4 @@ msgstr "lokacije"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
-msgstr ""
+msgstr "enot"

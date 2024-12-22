@@ -20,7 +20,6 @@ class StockPicking(models.Model):
 
     def _action_done(self):
         res = super()._action_done()
-        self.move_ids.move_dest_ids._action_assign()
 
         # If needed, create a compensation layer, so we add the MO cost to the dropship one
         svls = self.env['stock.valuation.layer']
@@ -32,7 +31,16 @@ class StockPicking(models.Model):
             if not dropship_svls:
                 continue
 
-            subcontract_svls = move.move_orig_ids.stock_valuation_layer_ids
+            # In a backorder chain, only generate SVLs for the latest backorder, or else their
+            # value will be cumulative.
+            if any(move.move_orig_ids.production_id.mapped('backorder_sequence')):
+                moves_with_svls = move.move_orig_ids.filtered('stock_valuation_layer_ids')
+                subcontract_svls = max(
+                    moves_with_svls,
+                    key=lambda sm: sm.production_id.backorder_sequence
+                ).stock_valuation_layer_ids
+            else:
+                subcontract_svls = move.move_orig_ids.stock_valuation_layer_ids
             subcontract_value = sum(subcontract_svls.mapped('value'))
             dropship_value = abs(sum(dropship_svls.mapped('value')))
             diff = subcontract_value - dropship_value

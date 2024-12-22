@@ -60,15 +60,15 @@
                                 <field name="pos_auto_validate_terminal_payment"/>
                             </setting>
                             <setting string="Cash Rounding" invisible="is_kiosk_mode" documentation="/applications/sales/point_of_sale/pricing/cash_rounding.html" help="Define the smallest coinage of the currency used to pay by cash">
-                                <field name="pos_cash_rounding"/>
+                                <field name="pos_cash_rounding" readonly="pos_has_active_session"/>
                                 <div class="content-group mt16" invisible="not pos_cash_rounding">
                                     <div class="row mt16">
                                         <label string="Rounding Method" for="pos_rounding_method" class="col-lg-3 o_light_label" />
-                                        <field name="pos_rounding_method" required="pos_cash_rounding" domain="[('company_id', '=', company_id)]"/>
+                                        <field name="pos_rounding_method" required="pos_cash_rounding" domain="[('company_id', '=', company_id)]" readonly="pos_has_active_session"/>
                                     </div>
                                     <div class="row mt16">
                                         <div class="col">
-                                            <field name="pos_only_round_cash_method"/>
+                                            <field name="pos_only_round_cash_method" readonly="pos_has_active_session"/>
                                             <label string="Only on cash methods" for="pos_only_round_cash_method" class="o_light_label" />
                                         </div>
                                     </div>

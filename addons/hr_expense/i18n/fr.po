@@ -3,16 +3,17 @@
 # 	* hr_expense
 # 
 # Translators:
-# Wil Odoo, 2024
 # Jolien De Paepe, 2024
+# Manon Rondou, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,11 +101,6 @@ msgid "2023-08-11"
 msgstr "11-08-2023"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "50%"
-msgstr "50%"
-
-#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
 "<span class=\"d-inline-block\">\n"
@@ -112,7 +108,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"d-inline-block\">\n"
-"                                        <i class=\"text-muted\">Utilisez cette référence en tant que préfixe lorsque vous envoyez un email.</i>\n"
+"                                        <i class=\"text-muted\">Utilisez cette référence en tant que préfixe lorsque vous envoyez un e-mail.</i>\n"
 "                                    </span>"
 
 #. module: hr_expense
@@ -282,11 +278,6 @@ msgid "Analytic Account"
 msgstr "Compte analytique"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "Analytic Account Name"
-msgstr "Nom du compte analytique"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_distribution
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__analytic_distribution
 msgid "Analytic Distribution"
@@ -405,6 +396,11 @@ msgid "Attachments of expenses"
 msgstr "Pièces jointes de dépenses"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "Employé de base"
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
 msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
@@ -469,6 +465,11 @@ msgid "Category: not found"
 msgstr "Catégorie : introuvable"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_checksum
+msgid "Checksum/SHA1"
+msgstr "Somme de contrôle/SHA1"
+
+#. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_communication_product_template
 msgid "Communication"
 msgstr "Communication"
@@ -516,6 +517,7 @@ msgstr "Coût : "
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#: code:addons/hr_expense/static/src/views/kanban.xml:0
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 #, python-format
@@ -540,7 +542,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Create expenses from incoming emails"
-msgstr "Créer des notes de frais provenant des emails entrants"
+msgstr "Créer des notes de frais provenant des e-mails entrants"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
@@ -673,6 +675,17 @@ msgstr ""
 "Ne gardez plus vos tickets dans vos poches. Prenez simplement une photo de "
 "votre reçu et laissez Odoo le numériser pour vous. L'OCR et l'Intelligence "
 "Artificielle rempliront les données automatiquement."
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
+msgid ""
+"Do you really want to invoice your own company? Remove the \"Company Name\" "
+"from the partner to fix the configuration. Cancel this invoice and start "
+"again."
+msgstr ""
+"Voulez-vous vraiment facturer votre propre entreprise ? Supprimez le \"Nom "
+"de l'entreprise\" du partenaire pour modifier la configuration. Annulez "
+"cette facture et recommencez."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__business_domain
@@ -1027,6 +1040,8 @@ msgstr "Notes de frais à traiter"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__filter_for_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_employee_base__filter_for_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__filter_for_expense
 msgid "Filter For Expense"
 msgstr "Filtre pour les notes de frais"
 
@@ -1163,7 +1178,7 @@ msgstr "Taxes comprises"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Incoming Emails"
-msgstr "Emails entrants"
+msgstr "E-mails entrants"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_categories_tree_view
@@ -1284,7 +1299,7 @@ msgstr "Activités en retard"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_use_mailgateway
 msgid "Let your employees record expenses by email"
-msgstr "Laisser vos employés enregistrer des notes de frais par email"
+msgstr "Laisser vos employés enregistrer des notes de frais par e-mail"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1417,6 +1432,12 @@ msgid "New Expense Reports"
 msgstr "Nouveaux rapports de notes de frais"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Activité suivante de l'événement du calendrier"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -1519,6 +1540,13 @@ msgstr "Nombre de messages nécessitant une action"
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Nombre de messages avec des erreurs d'envoi"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/components/expense_dashboard.xml:0
+#, python-format
+msgid "Numbers computed from your personal expenses."
+msgstr "Chiffres calculés à partir de vos dépenses personnelles."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
@@ -1641,6 +1669,16 @@ msgid "Phone bills, postage, etc."
 msgstr "Factures de téléphone, frais de port, etc."
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid ""
+"Please specify an expense journal in order to generate accounting entries."
+msgstr ""
+"Veuillez indiquer un journal des notes de frais afin de générer des "
+"écritures comptables."
+
+#. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #, python-format
@@ -1708,6 +1746,12 @@ msgstr "Fonctionnaire"
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Quantity"
 msgstr "Quantité"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__rating_ids
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__rating_ids
+msgid "Ratings"
+msgstr "Évaluations"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1839,6 +1883,13 @@ msgid "Scan"
 msgstr "Scanner"
 
 #. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/components/qrcode_action.xml:0
+#, python-format
+msgid "Scan this QR code to get the Odoo app:"
+msgstr "Scannez ce QR code pour obtenir l'application Odoo :"
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
@@ -1862,7 +1913,7 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
-"Envoyez un email à cet alias avec le reçu en pièce jointe pour créer une "
+"Envoyez un e-mail à cet alias avec le reçu en pièce jointe pour créer une "
 "note de frais en un clic. Si le premier mot de l'objet du courrier contient "
 "la référence interne de la catégorie ou le nom de la catégorie, la catégorie"
 " correspondante sera automatiquement définie. Tapez le montant de la dépense"
@@ -1891,6 +1942,13 @@ msgid "Sheet"
 msgstr "Feuille"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__show_commercial_partner_warning
+#: model:ir.model.fields,field_description:hr_expense.field_account_move__show_commercial_partner_warning
+#: model:ir.model.fields,field_description:hr_expense.field_account_payment__show_commercial_partner_warning
+msgid "Show Commercial Partner Warning"
+msgstr "Afficher l'avertissement du partenaire commercial"
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Show all records which has next action date is before today"
@@ -1903,7 +1961,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 #, python-format
 msgid "Show missing work email employees"
-msgstr "Afficher les employés dont l'email professionnel manque"
+msgstr "Afficher les employés dont l'e-mail professionnel manque"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
@@ -2018,8 +2076,8 @@ msgstr "Taxe"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "Tax Name"
-msgstr "Nom de la taxe"
+msgid "Tax 15%"
+msgstr "Taxe 15%"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_amount
@@ -2078,7 +2136,7 @@ msgid ""
 "The first word of the email subject did not correspond to any category code."
 " You'll have to set the category manually on the expense."
 msgstr ""
-"Le premier mot de l'objet de l'email ne correspond à aucun code de "
+"Le premier mot de l'objet de l'e-mail ne correspond à aucun code de "
 "catégorie. Vous devrez définir la catégorie manuellement sur la note de "
 "frais."
 
@@ -2092,6 +2150,11 @@ msgstr ""
 "Les notes de frais approuvées suivantes ont un employé, un montant et une "
 "catégorie similaires à certaines dépenses de ce rapport. Veuillez vérifier "
 "que ce rapport ne contient pas de doublons."
+
+#. module: hr_expense
+#: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
+msgid "The journal must be set on posted expense"
+msgstr "Le journal doit être défini sur une note de frais comptabilisée"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__employee_journal_id
@@ -2125,8 +2188,29 @@ msgid ""
 "The work email of some employees is missing. Please add it on the employee "
 "form"
 msgstr ""
-"L'email professionnel de certains employés manque. Veuillez l'ajouter à la "
+"L'e-mail professionnel de certains employés manque. Veuillez l'ajouter à la "
 "fiche de l'employé"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "Employee(s) should have a bank account set."
+msgstr "Le(s) employé(s) doit(vent) disposer d'un compte bancaire."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "Go to Employee(s)"
+msgstr "Aller au(x) employé(s)"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "Employee(s)"
+msgstr "Employé(s)"
 
 #. module: hr_expense
 #. odoo-python
@@ -2258,6 +2342,7 @@ msgstr "Catégorie d'UdM"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/kanban.xml:0
+#: code:addons/hr_expense/static/src/views/list.xml:0
 #, python-format
 msgid "Upload"
 msgstr "Charger"
@@ -2274,11 +2359,6 @@ msgstr ""
 #: model:ir.model,name:hr_expense.model_res_users
 msgid "User"
 msgstr "Utilisateur"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "VAT"
-msgstr "TVA"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_approve_duplicate_action
@@ -2402,6 +2482,14 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas approuver :\n"
 " %s"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "You cannot cancel an expense sheet linked to a journal entry"
+msgstr ""
+"Vous ne pouvez pas annuler une note de frais liée à une écriture comptable."
 
 #. module: hr_expense
 #. odoo-python

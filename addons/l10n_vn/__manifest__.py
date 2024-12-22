@@ -3,7 +3,7 @@
     'name': 'Vietnam - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['vn'],
-    'version': '2.0.2',
+    'version': '2.0.3',
     'author': 'General Solutions',
     'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations/vietnam.html',
     'category': 'Accounting/Localizations/Account Charts',

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
@@ -504,3 +505,146 @@ class TestBatchPicking(TransactionCase):
             ('is_wave', '=', True)
         ])
         self.assertEqual(wave.picking_type_id, move_line.picking_type_id)
+
+    def test_validatation_of_partially_empty_picking(self):
+        """
+            Check that you can validate a wave transfer containing an empty picking,
+            that the picking stays unchanged (except for the 'picked' state of the move)
+            and is removed from the transfer
+        """
+        self.productA.tracking = 'none'
+        self.productB.tracking = 'none'
+        (picking_1, picking_2) = self.env['stock.picking'].create([
+            {
+            'picking_type_id': self.picking_type_in,
+            },
+            {
+            'picking_type_id': self.picking_type_in,
+            },
+        ])
+        self.env['stock.move'].create([
+            {
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_1.id,
+            'location_id': picking_1.location_id.id,
+            'location_dest_id': picking_1.location_dest_id.id,
+            },
+            {
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 3,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking_2.id,
+            'location_id': picking_2.location_id.id,
+            'location_dest_id': picking_2.location_dest_id.id,
+            },
+        ])
+        (picking_1 | picking_2).action_confirm()
+        wave = self.env['stock.picking.batch'].create({
+            'name': 'Wave transfer',
+            'picking_ids': [Command.link(picking_1.id), Command.link(picking_2.id)],
+            'is_wave': True,
+        })
+        wave.move_ids.filtered(lambda m: m.product_id == self.productB).quantity = 0.0
+        wave.move_ids.picked = True
+        wave.action_done()
+        self.assertEqual(wave.state, 'done')
+        self.assertEqual(wave.picking_ids, picking_1)
+        self.assertEqual([picking_1.state, picking_1.move_ids.quantity, picking_1.move_ids.picked], ['done', 2.0, True])
+        self.assertEqual([picking_2.state, picking_2.move_ids.quantity, picking_2.move_ids.picked], ['assigned', 0.0, False])
+
+    def test_add_partially_assigned_move_to_batch(self):
+        """
+            Checks that a picking is linked to the wave transfer in case all of its
+            moves are to be linked with the wave transfer.
+        """
+        picking = self.picking_internal
+        # update a move for the moved qty to be less than the initial demand
+        picking.move_ids[0].quantity = 10.0
+        self.assertRecordValues(picking.move_ids, [{'product_uom_qty': 15.0, 'quantity': 10.0}, {'product_uom_qty': 5.0, 'quantity': 5.0}])
+        lines = picking.move_ids.move_line_ids
+        res_dict = lines.action_open_add_to_wave()
+        res_dict['context'] = {'active_model': 'stock.move.line', 'active_ids': lines.ids}
+        wizard_form = Form(self.env[res_dict['res_model']].with_context(res_dict['context']))
+        wizard_form.mode = 'new'
+        wizard_form.save().attach_pickings()
+        # check that the picking was added to the wave transfer
+        wave = picking.batch_id.filtered(lambda b: b.is_wave)
+        self.assertTrue(wave)
+        # check that the lines are still linked to the original picking
+        self.assertEqual(lines.move_id.picking_id, picking)
+        # check that no other picking was added to the wave transfer
+        self.assertEqual(wave.move_ids, picking.move_ids)
+
+    def test_dont_add_empty_move_to_batch(self):
+        """
+            Checks that a picking is not linked to the wave transfer in case one
+            of its move is not to be linked with the wave transfer.
+        """
+        picking = self.picking_internal
+        move_1, move_2 = picking.move_ids
+        # update a move for the moved qty to 0
+        move_1.quantity = 0
+        self.assertRecordValues(picking.move_ids, [{'product_uom_qty': 15.0, 'quantity': 0.0}, {'product_uom_qty': 5.0, 'quantity': 5.0}])
+        lines = picking.move_ids.move_line_ids
+        res_dict = lines.action_open_add_to_wave()
+        res_dict['context'] = {'active_model': 'stock.move.line', 'active_ids': lines.ids}
+        wizard_form = Form(self.env[res_dict['res_model']].with_context(res_dict['context']))
+        wizard_form.mode = 'new'
+        wizard_form.save().attach_pickings()
+        # check that a new picking was added to the wave transfer
+        new_picking = move_2.picking_id
+        self.assertIsNot(picking, new_picking)
+        wave = new_picking.batch_id.filtered(lambda b: b.is_wave)
+        self.assertTrue(wave)
+        self.assertEqual(wave.move_ids, move_2)
+        # check that the original picking was not added to a wave transfer
+        self.assertFalse(picking.batch_id.filtered(lambda b: b.is_wave))
+        self.assertEqual(picking.move_ids, move_1)
+
+    def test_validate_wave_with_zero_qty_picking(self):
+        """
+            Check that we can validate a wave transfer containing a picking without quantity.
+            In that case, the picking remains unchanged and is removed from the wave
+        """
+        (self.productA | self.productB).tracking = 'none'
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
+        picking_1, picking_2 = self.env['stock.picking'].create([
+            {'picking_type_id': self.picking_type_out},
+            {'picking_type_id': self.picking_type_out},
+        ])
+        self.env['stock.move'].create([
+            {
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_1.id,
+            'location_id': picking_1.location_id.id,
+            'location_dest_id': picking_1.location_dest_id.id,
+            },
+            {
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 3,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking_2.id,
+            'location_id': picking_2.location_id.id,
+            'location_dest_id': picking_2.location_dest_id.id,
+            },
+        ])
+        (picking_1 | picking_2).action_confirm()
+        wave = self.env['stock.picking.batch'].create({
+            'name': 'Wave transfer',
+            'picking_ids': [Command.link(picking_1.id), Command.link(picking_2.id)],
+        })
+        self.assertEqual((picking_1 | picking_2).mapped('state'), ['assigned', 'assigned'])
+        picking_1.move_ids.quantity = 0.0
+        wave.action_done()
+        self.assertEqual(wave.state, 'done')
+        self.assertRecordValues(picking_1.move_ids, [{'state': 'confirmed', 'quantity': 0.0, 'picked': False}])
+        self.assertRecordValues(picking_2.move_ids, [{'state': 'done', 'quantity': 3.0, 'picked': True}])

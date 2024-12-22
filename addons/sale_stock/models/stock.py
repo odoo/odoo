@@ -43,7 +43,7 @@ class StockMove(models.Model):
 
     def _get_source_document(self):
         res = super()._get_source_document()
-        return self.sale_line_id.order_id or res
+        return self.sudo().sale_line_id.order_id or res
 
     def _get_sale_order_lines(self):
         """ Return all possible sale order lines for one stock move. """
@@ -64,6 +64,14 @@ class StockMove(models.Model):
 
     def _get_all_related_sm(self, product):
         return super()._get_all_related_sm(product) | self.filtered(lambda m: m.sale_line_id.product_id == product)
+
+
+class StockMoveLine(models.Model):
+    _inherit = "stock.move.line"
+
+    def _should_show_lot_in_invoice(self):
+        return 'customer' in {self.location_id.usage, self.location_dest_id.usage}
+
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'

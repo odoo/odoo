@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
@@ -105,7 +105,7 @@ msgstr "Atcelts"
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__capture_manually
 msgid "Capture Amount Manually"
-msgstr ""
+msgstr "Tvert summu manuāli"
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_transaction__capture_manually
@@ -138,7 +138,7 @@ msgstr "Apstiprināts"
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_provider__code__demo
 msgid "Demo"
-msgstr ""
+msgstr "Demo"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
@@ -158,11 +158,18 @@ msgid "Error"
 msgstr "Kļūda"
 
 #. module: payment_demo
+#. odoo-javascript
+#: code:addons/payment_demo/static/src/js/express_checkout_form.js:0
+#, python-format
+msgid "No delivery method is available."
+msgstr ""
+
+#. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Nav atrasts darījums ar šādu atsauci %s."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
@@ -182,7 +189,7 @@ msgstr "Maksājumu sniedzējs"
 #. module: payment_demo
 #: model:ir.model,name:payment_demo.model_payment_token
 msgid "Payment Token"
-msgstr ""
+msgstr "Maksājuma atslēgkods"
 
 #. module: payment_demo
 #: model:ir.model,name:payment_demo.model_payment_transaction
@@ -194,7 +201,7 @@ msgstr "Maksājuma darījums"
 #: code:addons/payment_demo/static/src/js/payment_demo_mixin.js:0
 #, python-format
 msgid "Payment processing failed"
-msgstr ""
+msgstr "Maksājuma apstrāde izgāzās"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
@@ -238,7 +245,7 @@ msgstr ""
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
 msgid "Test Mode"
-msgstr ""
+msgstr "Testēšanas režīms"
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_token__demo_simulated_state
@@ -248,19 +255,26 @@ msgstr ""
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Maksājumu sniedzēja tehniskais kodss."
 
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "Darījums nav saistīts ar atslēgkodu."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
 msgid "Unpublished"
 msgstr "Nepublicēts"
+
+#. module: payment_demo
+#. odoo-javascript
+#: code:addons/payment_demo/static/src/js/express_checkout_form.js:0
+#, python-format
+msgid "Validation Error"
+msgstr "Validācijas kļūda"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details

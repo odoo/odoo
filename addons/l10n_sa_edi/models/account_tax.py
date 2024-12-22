@@ -16,7 +16,8 @@ EXEMPTION_REASON_CODES = [
     ('VATEX-SA-35', 'VATEX-SA-35 Medicines and medical equipment.'),
     ('VATEX-SA-36', 'VATEX-SA-36 Qualifying metals.'),
     ('VATEX-SA-EDU', 'VATEX-SA-EDU Private education to citizen.'),
-    ('VATEX-SA-HEA', 'VATEX-SA-HEA Private healthcare to citizen.')
+    ('VATEX-SA-HEA', 'VATEX-SA-HEA Private healthcare to citizen.'),
+    ('VATEX-SA-OOS', 'VATEX-SA-OOS Not subject to VAT.')
 ]
 
 

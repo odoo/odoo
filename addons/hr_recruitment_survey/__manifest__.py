@@ -22,4 +22,6 @@ to allow you to define interviews for different jobs.
         'data/hr_job_demo.xml',
     ],
     'license': 'LGPL-3',
+    'post_init_hook': '_correct_survey_rule',
+    'uninstall_hook': 'uninstall_hook',
 }

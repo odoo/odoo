@@ -95,3 +95,23 @@ class TestRecruitmentProcess(TestHrCommon):
         self.assertTrue(
             user.partner_id in new_application_message.notified_partner_ids
         )
+
+    def test_blacklist_providers(self):
+        """Test blacklisting providers feature.
+           In case the mail comes from the blacklisted mails list,
+           we should not:
+           - set the email_from to the newly created applicant
+           - create an partner for the blaclisted mail and link it
+                with the newly created applicant
+        """
+        self.env['ir.config_parameter'].set_param('hr_recruitment.blacklisted_emails',
+                                                  'bla@com.com, mail-to-blacklist@gmail.com, bla1@odoo.com')
+        applicant = self.env['hr.applicant'].message_new({
+            'message_id': 'message_id_for_rec',
+            'email_from': '"Mail to Blacklist Name" <mail-to-blacklist@gmail.com>',
+            'from': '"Mail to Blacklist Name" <mail-to-blacklist@gmail.com>',
+            'subject': 'CV',
+            'body': 'I want to apply to your company',
+        })
+        self.assertFalse(applicant.email_from)
+        self.assertFalse(applicant.partner_id)

@@ -33,12 +33,24 @@ export class AbstractAwaitablePopup extends Component {
         useExternalListener(window, "keyup", this._onWindowKeyup);
     }
     _onWindowKeyup(event) {
-        if (!this.props.isActive || ["INPUT", "TEXTAREA"].includes(event.target.tagName)) {
+        // Little hack to avoid closing a popup in the background
+        const topPopupIndex = Object.values(this.env.services.popup.popups).pop()?.props.zIndex;
+        if (this.props.zIndex !== topPopupIndex) {
             return;
         }
+
+        // Always allow the user to close the popup with the escape key
+        // even if the current target is an input or textarea
         if (event.key === this.props.cancelKey) {
             this.cancel();
-        } else if (event.key === this.props.confirmKey) {
+            return;
+        }
+
+        // Only confirm the popup if the user is not typing in an input or textarea
+        if (["INPUT", "TEXTAREA"].includes(event.target.tagName)) {
+            return;
+        }
+        if (event.key === this.props.confirmKey) {
             this.confirm();
         }
     }

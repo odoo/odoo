@@ -470,6 +470,30 @@ class TestMrpByProduct(common.TransactionCase):
         mo.move_byproduct_ids.lot_ids = [(4, self.sn_1.id)]
         mo.move_byproduct_ids.lot_ids = [(4, self.sn_2.id)]
 
+        self.assertFalse(mo.move_byproduct_ids.show_lots_text)
+        self.assertTrue(mo.move_byproduct_ids.show_lots_m2o)
+        self.assertFalse(mo.move_byproduct_ids.show_quant)
+
         mo.button_mark_done()
         self.assertEqual(len(mo.move_byproduct_ids.move_line_ids), 2)
         self.assertEqual(mo.move_byproduct_ids.product_id, mo.move_byproduct_ids.move_line_ids.product_id)
+
+    def test_byproduct_qty_update(self):
+        """
+        Test that byproduct quantity is updated to the quantity set on the Mo when the Mo is marked as done.ee
+        """
+        self.bom_byproduct.byproduct_ids.product_qty = 0.0
+        self.warehouse.manufacture_steps = 'pbm_sam'
+        mo = self.env["mrp.production"].create({
+            'product_id': self.product_a.id,
+            'product_qty': 1.0,
+            'bom_id': self.bom_byproduct.id,
+        })
+        mo.action_confirm()
+        mo.move_byproduct_ids.quantity = 1.0
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        picking = mo.picking_ids.filtered(lambda p: p.location_dest_id == self.warehouse.lot_stock_id)
+        self.assertEqual(picking.state, 'assigned')
+        byproduct_move = picking.move_ids.filtered(lambda m: m.product_id == self.bom_byproduct.byproduct_ids.product_id)
+        self.assertEqual(byproduct_move.product_qty, 1.0)

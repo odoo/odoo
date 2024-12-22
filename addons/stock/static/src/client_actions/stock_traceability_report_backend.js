@@ -50,7 +50,7 @@ export class TraceabilityReport extends Component {
             lines: this.props.state?.lines || [],
         });
 
-        const { active_id, active_model, auto_unfold, context, lot_name, ttype, url } =
+        const { active_id, active_model, auto_unfold, context, lot_name, ttype, url, lang } =
             this.props.action.context;
         this.controllerUrl = url;
 
@@ -61,6 +61,7 @@ export class TraceabilityReport extends Component {
             model: active_model || false,
             lot_name: lot_name || false,
             ttype: ttype || false,
+            lang: lang || false,
         });
 
         this.display = {

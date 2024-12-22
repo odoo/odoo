@@ -2,11 +2,11 @@
 <odoo>
     <template id="report_delivery_document_inherit_sale_stock" inherit_id="stock.report_delivery_document">
         <xpath expr="//div[@name='div_sched_date']" position="after">
-            <div class="col-auto justify-content-end" t-if="o.sudo().sale_id.client_order_ref">
+            <div t-if="o.sudo().sale_id.client_order_ref" class="col-auto col-3 mw-100 mb-2">
                 <strong>Customer Reference:</strong>
-                <p t-field="o.sudo().sale_id.client_order_ref">Customer reference</p>
+                <p t-field="o.sudo().sale_id.client_order_ref" class="m-0">Customer reference</p>
             </div>
-            <div class="col-auto justify-content-end" t-if="o.sudo().sale_id.incoterm">
+            <div class="col-auto col-3 justify-content-end" t-if="o.sudo().sale_id.incoterm">
                 <strong>Incoterm:</strong>
                 <p t-if="o.sudo().sale_id.incoterm_location" t-out="'%s %s' % (o.sudo().sale_id.incoterm.code, o.sudo().sale_id.incoterm_location)">Incoterm details</p>
                 <p t-else="" t-field="o.sudo().sale_id.incoterm.display_name">Incoterm details</p>

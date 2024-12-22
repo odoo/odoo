@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -26,12 +26,14 @@ msgstr ""
 #, python-format
 msgid ""
 "Good, you can customize canned responses in the live chat "
-"application.<br/><br/><b>It's the end of this overview</b>, enjoy "
-"discovering Odoo!"
+"application.<br/><br/><b>It's the end of this overview</b>, you can now "
+"<b>close this conversation</b> or start the tour again with typing <span "
+"class=\"o_odoobot_command\">start the tour</span>. Enjoy discovering Odoo!"
 msgstr ""
-"Bien, puede personalizar las respuestas predefinidas en el chat en "
-"vivo.<br/><br/><b>Es el final de este resumen</b>, ¡disfrute descubriendo "
-"Odoo!"
+"Muy bien, puede personalizar las respuestas predefinidas en la aplicación "
+"Chat en vivo.<br/><br/><b>Hemos terminado</b>. Ya puede <b>cerrar esta "
+"conversación</b> o escriba <span class=\"o_odoobot_command\">empezar el "
+"recorrido</span> para volver a iniciar. Disfrute Odoo."
 
 #. module: im_livechat_mail_bot
 #: model:ir.model,name:im_livechat_mail_bot.model_mail_bot
@@ -60,15 +62,13 @@ msgid "Onboarding canned"
 msgstr "Integración predefinida"
 
 #. module: im_livechat_mail_bot
-#. odoo-python
-#: code:addons/im_livechat_mail_bot/models/mail_bot.py:0
-#, python-format
-msgid "That's me! 🎉<br/>Try typing %s to use canned responses."
-msgstr ""
-"¡Ese soy yo! 🎉<br/>Intente escribir %s para usar las respuestas "
-"predefinidas."
-
-#. module: im_livechat_mail_bot
 #: model:ir.model,name:im_livechat_mail_bot.model_res_users
 msgid "User"
 msgstr "Usuario"
+
+#. module: im_livechat_mail_bot
+#. odoo-python
+#: code:addons/im_livechat_mail_bot/models/mail_bot.py:0
+#, python-format
+msgid "Wonderful! 😇<br/>Try typing %s to use canned responses."
+msgstr "¡Excelente! 😇<br/>Escriba %s para usar las respuestas predefinidas."

@@ -40,7 +40,7 @@
                             <!-- Discount. -->
                             <ram:AppliedTradeAllowanceCharge t-if="line.discount">
                                 <ram:ChargeIndicator>
-                                    <udt:Indicator>false</udt:Indicator>
+                                    <udt:Indicator t-translation="off">false</udt:Indicator>
                                 </ram:ChargeIndicator>
                                 <ram:ActualAmount t-out="format_monetary(line_vals['price_discount_unit'], 2)"/>
                             </ram:AppliedTradeAllowanceCharge>
@@ -96,7 +96,7 @@
                 xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
                 xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100">
                 <!-- Contact. -->
-                <ram:Name t-out="partner.name"/>
+                <ram:Name t-out="partner.display_name"/>
                 <ram:SpecifiedLegalOrganization t-if="specified_legal_organization_val">
                     <ram:ID t-att-schemeID="str('0002')"
                             t-out="specified_legal_organization_val"/>
@@ -189,7 +189,7 @@
                         <ram:BuyerTradeParty>
                             <!-- Address. -->
                             <t t-call="account_edi_ubl_cii.account_invoice_partner_facturx_export_22">
-                                <t t-set="partner" t-value="record.commercial_partner_id"/>
+                                <t t-set="partner" t-value="record.partner_id"/>
                                 <t t-set="specified_legal_organization_val" t-value="buyer_specified_legal_organization"/>
                             </t>
 

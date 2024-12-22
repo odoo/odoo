@@ -7,18 +7,21 @@ FormEditorRegistry.add('create_mailing_contact', {
     formFields: [{
         name: 'name',
         required: true,
+        fillWith: "name",
         string: _t('Your Name'),
         type: 'char',
     }, {
         name: 'email',
-        required: true,
+        modelRequired: true,
+        fillWith: "email",
         string: _t('Your Email'),
         type: 'email',
     }, {
         name: 'list_ids',
         relation: 'mailing.list',
-        required: true,
+        modelRequired: true,
         string: _t('Subscribe to'),
         type: 'many2many',
+        fieldName: "name",
     }],
 });

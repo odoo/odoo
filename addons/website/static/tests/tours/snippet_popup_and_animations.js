@@ -115,4 +115,76 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
             }
         },
     },
+    {
+        content: "Close the Popup",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup') i.fa-eye",
+    },
+    {
+        content: "Check that the popup has been closed",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup') i.fa-eye-slash",
+        isCheck: true,
+    },
+    wTourUtils.clickOnElement("Last image of the 'Columns' snippet", "iframe .s_three_columns .o_animate_on_scroll img"),
+    wTourUtils.changeOption("WebsiteAnimate", 'we-toggler:contains("None")'),
+    wTourUtils.changeOption("WebsiteAnimate", 'we-button[data-animation-mode="onHover"]'),
+    {
+        content: "Check that the hover effect animation has been applied on the image",
+        trigger: "iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='overlay']",
+        extra_trigger: ".snippet-option-WebsiteAnimate we-row:contains('Animation') we-select[data-is-animation-type-selection] we-toggler:contains('On Hover')",
+        isCheck: true,
+    },
+    ...wTourUtils.clickOnSave(),
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    wTourUtils.clickOnElement("Image of the 'Columns' snippet with the overlay effect", "iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='overlay']"),
+    wTourUtils.changeOption("WebsiteAnimate", 'we-toggler:contains("Overlay")'),
+    wTourUtils.changeOption("WebsiteAnimate", 'we-button[data-select-data-attribute="outline"]'),
+    {
+        content: "Check that the outline effect has been applied on the image",
+        trigger: "iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']",
+        extra_trigger: ".snippet-option-WebsiteAnimate we-select[data-attribute-name='hoverEffect'] we-toggler:contains('Outline')",
+        isCheck: true,
+    },
+    ...wTourUtils.clickOnSave(),
+    {
+        content: "Check that the image src is not the raw data",
+        trigger: "iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']",
+        run: () => {
+            const imgEl = document.querySelector("iframe").contentDocument.querySelector(".s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']");
+            const src = imgEl.getAttribute("src");
+            if (src.startsWith("data:image")) {
+                console.error("The image source should not be raw data after the editor save");
+            }
+        },
+    },
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    wTourUtils.clickOnElement("Image of the 'Columns' snippet with the outline effect", "iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']"),
+    wTourUtils.changeOption("ImageTools", 'we-select:contains("Filter") we-toggler:contains("None")'),
+    wTourUtils.changeOption("ImageTools", 'we-button:contains("Blur")'),
+    {
+        content: "Check that the Blur filter has been applied on the image",
+        trigger: "iframe .s_three_columns .o_animate_on_scroll img[data-gl-filter='blur']",
+        extra_trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
+        isCheck: true,
+    },
+    {
+        content: "Click on the 'undo' button",
+        trigger: ".o_we_external_history_buttons button.fa-undo",
+    },
+    {
+        content: "Check that the Blur filter has been removed from the image",
+        trigger: "iframe .s_three_columns .o_animate_on_scroll img:not([data-gl-filter='blur'])",
+        isCheck: true,
+    },
+    ...wTourUtils.clickOnSave(),
+    {
+        content: "Check that the image src is not the raw data",
+        trigger: "iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']",
+        run: () => {
+            const imgEl = document.querySelector("iframe").contentDocument.querySelector(".s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']");
+            const src = imgEl.getAttribute("src");
+            if (src.startsWith("data:image")) {
+                console.error("The image source should not be raw data after the editor save");
+            }
+        },
+    },
 ]);

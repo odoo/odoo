@@ -10,15 +10,18 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2023
 # Marek Pontus, 2023
 # Triine Aavik <triine@avalah.ee>, 2023
+# Birgit Vijar, 2024
+# Stevin Lilla, 2024
 # Anna, 2024
+# Tairi Tiimann, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anna, 2024\n"
+"Last-Translator: Tairi Tiimann, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +41,9 @@ msgid ""
 "                                A password reset was requested for the Odoo account linked to this email.\n"
 "                                You may change your password by following this link which will remain valid during 24 hours:<br/>"
 msgstr ""
+",<br/><br/>\n"
+"Selle emailiga seotud Odoo kasutaja on soovinud parooli lähtestamist.\n"
+"Te võite muuta oma parooli vajutades sellele lingile järgneva 24 tunni jooksul:<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -46,6 +52,9 @@ msgid ""
 "                        A new device was used to sign in to your account. <br/><br/>\n"
 "                        Here are some details about the connection:<br/>"
 msgstr ""
+",<br/><br/>\n"
+"Teie kasutajasse logiti sisse uuelt seadmelt.<br/><br/>\n"
+"Siin on teavet selle ühenduse kohta:<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -60,7 +69,7 @@ msgstr "111.222.333.444"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "<span style=\"font-size: 10px;\">Your Account</span><br/>"
-msgstr ""
+msgstr "<span style=\"font-size: 10px;\">Teie kasutaja</span><br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -68,6 +77,8 @@ msgid ""
 "<span style=\"font-weight: bold;\">\n"
 "                                    Browser:</span>"
 msgstr ""
+"<span style=\"font-weight: bold;\">\n"
+"                                    Brauser: </span>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -75,6 +86,8 @@ msgid ""
 "<span style=\"font-weight: bold;\">\n"
 "                                    Location:</span>"
 msgstr ""
+"<span style=\"font-weight: bold;\">\n"
+"                                    Asukoht:</span>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -82,6 +95,8 @@ msgid ""
 "<span style=\"font-weight: bold;\">\n"
 "                                    Platform:</span>"
 msgstr ""
+"<span style=\"font-weight: bold;\">\n"
+"                                    Platvorm:</span>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -89,6 +104,8 @@ msgid ""
 "<span style=\"font-weight: bold;\">\n"
 "                                Date:</span>"
 msgstr ""
+"<span style=\"font-weight: bold;\">\n"
+"                                Kuupäev:</span>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -96,6 +113,8 @@ msgid ""
 "<span style=\"font-weight: bold;\">\n"
 "                                IP Address:</span>"
 msgstr ""
+"<span style=\"font-weight: bold;\">\n"
+"                                IP aadress:</span>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -158,6 +177,43 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"<!-- CONTENT -->\n"
+"<tr>\n"
+"<td align=\"center\" style=\"min-width: 590px;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"<t t-set=\"invited_users\" t-value=\"ctx.get('invited_users', [])\"></t>\n"
+"<td style=\"text-align : left\">\n"
+"<span style=\"font-size: 20px; font-weight: bold;\">\n"
+"Ootel kutsed\n"
+"</span><br><br>\n"
+"</td>\n"
+"<tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"<div>\n"
+"Lugupeetud<t t-out=\"object.name or ''\">Mitchell Admin</t>,<br><br>\n"
+"Te lisasite järgnevad kasutajad andmebaasi, aga nad ei ole veel registreerinud:\n"
+"<ul>\n"
+"<t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
+"<li t-out=\"invited_user or ''\">demo@example.com</li>\n"
+"</t>\n"
+"</ul>\n"
+"Küsi neilt üle, et nad saaksid ligipääsu Teie andmebaasi ja saaksite alustada koostööd.\n"
+"<br><br>Head päeva jätku!<br>\n"
+"--<br><t t-out=\"object.company_id.name or ''\">TeieEttevõtte</t> meeskond\n"
+"</div>\n"
+"</td></tr>\n"
+"<tr><td style=\"text-align:center;\">\n"
+"<hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"</td></tr>\n"
+"</table>\n"
+"</td>\n"
+"</tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -541,7 +597,7 @@ msgstr "Muuda parooli"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "City, Region, Country"
-msgstr ""
+msgstr "Linn, Maakond, Riik"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -576,6 +632,8 @@ msgid ""
 "Could not contact the mail server, please check your outgoing email server "
 "configuration"
 msgstr ""
+"Ei saa ühendust meiliserveriga, palun kontrollige väljamineva e-maili "
+"serveri seadistusi. "
 
 #. module: auth_signup
 #. odoo-python
@@ -634,6 +692,8 @@ msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "                                Thanks,"
 msgstr ""
+"Kui te ei ootanud seda, siis võite eirata seda ekirja.<br/><br/>\n"
+"Täname,"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -641,13 +701,14 @@ msgid ""
 "If you don't recognize it, you should change your password immediately via "
 "this link:<br/>"
 msgstr ""
+"Kui te ei tuvasta seda, peaksite muutma parooli selle lingi kaudu:<br/>"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "In %(country)s"
-msgstr ""
+msgstr "riigis %(country)s"
 
 #. module: auth_signup
 #. odoo-python
@@ -668,24 +729,25 @@ msgid "Marc Demo"
 msgstr "Marc Demo"
 
 #. module: auth_signup
+#. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Multiple accounts found for this login"
-msgstr ""
+msgstr "Selle sisselogimise jaoks leiti mitu kontot"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Near %(city)s, %(region)s, %(country)s"
-msgstr ""
+msgstr "Lähedal %(city)s,%(region)s,%(country)s"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Near %(region)s, %(country)s"
-msgstr ""
+msgstr "Lähedal %(region)s,%(country)s"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
@@ -697,14 +759,14 @@ msgstr "Pole sisse loginud"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "New Connection to your Account"
-msgstr ""
+msgstr "Uus ühendus teie kasutajaga"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "No account found for this login"
-msgstr ""
+msgstr "Selle kasutajanimega kontot ei leitud"
 
 #. module: auth_signup
 #. odoo-python
@@ -732,7 +794,7 @@ msgstr "Kutsel"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "Otherwise, you can safely ignore this email."
-msgstr ""
+msgstr "Vastasel juhul vältige seda e-maili."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -756,7 +818,7 @@ msgstr "Salasõna lähtestamine"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Password reset instructions sent to your email"
-msgstr ""
+msgstr "Parooli taastamise juhend on saadetud e-mailile"
 
 #. module: auth_signup
 #. odoo-python
@@ -774,7 +836,7 @@ msgstr "Tootja"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login_successful
 msgid "Registration successful."
-msgstr ""
+msgstr "Registreerimine oli edukas."
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
@@ -804,16 +866,18 @@ msgstr "Saada kutse e-kirjana"
 msgid ""
 "Sent automatically to admin if new user haven't responded to the invitation"
 msgstr ""
+"Saadetud automaatselt administraatorile kui uus kasutaja pole kutsele "
+"vastanud"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.set_password_email
 msgid "Sent to new user after you invited them"
-msgstr ""
+msgstr "Saadetud uuele kasutajale pärast kutset"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.mail_template_user_signup_account_created
 msgid "Sent to portal user who registered themselves"
-msgstr ""
+msgstr "Saadetud portaali kasutajale kes registeeris end ise"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
@@ -891,7 +955,7 @@ msgstr "Sisselogimise märgis '%s' ei ole kehtiv."
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: invalid template user"
-msgstr ""
+msgstr "Registreerimine: vigane kasutaja mall"
 
 #. module: auth_signup
 #. odoo-python
@@ -899,6 +963,8 @@ msgstr ""
 #, python-format
 msgid "Signup: no login given for new user"
 msgstr ""
+"Registreerimine: uuele kasutajale pole antud kasutajatunnus sisselogimiseks."
+" "
 
 #. module: auth_signup
 #. odoo-python
@@ -906,6 +972,7 @@ msgstr ""
 #, python-format
 msgid "Signup: no name or partner given for new user"
 msgstr ""
+"Registreerimine: uue kasutaja jaoks ei ole nime ega partnerit määratud"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
@@ -931,7 +998,7 @@ msgstr "Vorm ei ole täidetud nõuetekohaselt"
 msgid ""
 "There was an error when trying to deliver your Email, please check your "
 "configuration"
-msgstr ""
+msgstr "Tekkis viga Teile ekirja saatmisel, palun kontrollige enda seadistusi"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -952,7 +1019,7 @@ msgstr "Kasutaja"
 #. module: auth_signup
 #: model:ir.actions.server,name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder_ir_actions_server
 msgid "Users: Notify About Unregistered Users"
-msgstr ""
+msgstr "Kasutajad: teavita registreerimata kasutajatest"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
@@ -964,7 +1031,7 @@ msgstr "Tere tulemast {{ object.company_id.name }}!"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "You cannot perform this action on an archived user."
-msgstr ""
+msgstr "Seda toimingut ei saa teha arhiveeritud kasutajale. "
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -985,7 +1052,7 @@ msgstr "YourCompany"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
-msgstr ""
+msgstr "päev, kuu dd, yyyy - hh:mm:ss (GMT)"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -1008,3 +1075,5 @@ msgid ""
 "{{ object.create_uid.name }} from {{ object.company_id.name }} invites you "
 "to connect to Odoo"
 msgstr ""
+"{{ object.create_uid.name }} ettevõttest {{ object.company_id.name }} kutsub teid ühinema Odoos\n"
+" "

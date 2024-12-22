@@ -188,7 +188,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         const $tr = this.$(`tr[data-product-id="${productID}"]`);
         const productTrackingInfo = $tr.data('product-tracking-info');
         if (productTrackingInfo) {
-            productTrackingInfo.quantity = qty;
+            productTrackingInfo.quantity = parseFloat(qty);
             $tr.trigger('add_to_cart_event', [productTrackingInfo]);
         }
         const callService = this.call.bind(this)

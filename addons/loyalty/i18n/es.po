@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -31,8 +31,8 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Automático: Los clientes serán elegibles para una recompensa automáticamente en su carrito.\n"
-"        Usar un código: Los clientes serán elegibles para una recompensa si ingresan un código.\n"
+"        Automático: los clientes serán elegibles para obtener una recompensa automática en su cesta.\n"
+"        Con un código: los clientes serán elegibles para obtener una recompensa si ingresan un código.\n"
 "        "
 
 #. module: loyalty
@@ -54,7 +54,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        Mostrar en el portal web, factura del cliente en PdV, proceso de pago de comercio electrónico, el número de puntos disponibles y usados por recompensa.\n"
+"        Mostrar en el portal web, factura del cliente en TPV, proceso de pago de comercio electrónico, el número de puntos disponibles y usados por recompensa.\n"
 "        "
 
 #. module: loyalty
@@ -128,7 +128,7 @@ msgstr "Cupones de 10 % de descuento"
 #: model:loyalty.reward,description:loyalty.10_percent_coupon_reward
 #: model:loyalty.reward,description:loyalty.10_percent_with_code_reward
 msgid "10% on your order"
-msgstr "10% en su pedido"
+msgstr "10 % en su pedido"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
@@ -205,11 +205,11 @@ msgstr ""
 "                </div>\n"
 "                <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; text-align:center;\">\n"
 "                    <h3 style=\"margin:0px; line-height:48px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-style:normal; font-weight:normal; color:#333333; text-align:center\">\n"
-"                        <strong t-out=\"format_amount(object.points, object.currency_id) or ''\">$ 150.00</strong></h3>\n"
+"                        <strong t-out=\"format_amount(object.points, object.currency_id) or ''\">150,00 €</strong></h3>\n"
 "                </div>\n"
 "                <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; background-color:#efefef; text-align:center;\">\n"
 "                    <p style=\"margin:0px; font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333\">\n"
-"                        <strong>Código de Tarjeta de regalo</strong>\n"
+"                        <strong>Código de tarjeta de regalo</strong>\n"
 "                    </p>\n"
 "                    <p style=\"margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9\" t-out=\"object.code or ''\">4f10-15d6-41b7-b04c-7b3e</p>\n"
 "                </div>\n"
@@ -450,7 +450,7 @@ msgstr ""
 "            Enhorabuena <t t-out=\"object._get_mail_partner().name or ''\">Brandon Freeman</t>,<br>\n"
 "        </t>\n"
 "\n"
-"        Esta es la recompensa de <t t-out=\"object.program_id.company_id.name or ''\">SuEmpresa</t>.<br>\n"
+"        Esta es la recompensa de <t t-out=\"object.program_id.company_id.name or ''\">SuCompañía</t>.<br>\n"
 "\n"
 "        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
 "            <t t-if=\"reward.required_points &lt;= object.points\">\n"
@@ -462,7 +462,7 @@ msgstr ""
 "</tr>\n"
 "<tr style=\"margin-top: 16px\">\n"
 "    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
-"        Usar el código de promoción\n"
+"        Use el código de promoción\n"
 "        <t t-if=\"object.expiration_date\">\n"
 "            antes del <t t-out=\"object.expiration_date or ''\">16-06-2021</t>\n"
 "        </t>\n"
@@ -477,7 +477,7 @@ msgstr ""
 "            </t>\n"
 "            <t t-if=\"rule.minimum_amount != 0.00\">\n"
 "                <span style=\"font-size: 14px;\">\n"
-"                    Válido para compras mayores a <t t-out=\"rule.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % float(rule.minimum_amount) or ''\">10.00</t>\n"
+"                    Válido para compras mayores a <t t-out=\"'%0.2f' % float(rule.minimum_amount) or ''\">10.00</t> <t t-out=\"rule.company_id.currency_id.symbol or ''\">€</t>\n"
 "                </span><br>\n"
 "            </t>\n"
 "        </t>\n"
@@ -502,7 +502,7 @@ msgstr "Se encontró un cupón con el mismo código."
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_card_card_code_unique
 msgid "A coupon/loyalty card must have a unique code."
-msgstr "Un cupón/tarjeta de lealtad debe de tener un código único."
+msgstr "Un cupón/tarjeta de fidelidad debe de tener un código único."
 
 #. module: loyalty
 #. odoo-python
@@ -543,29 +543,29 @@ msgstr "Activo"
 #: model:ir.model.fields,field_description:loyalty.field_res_partner__loyalty_card_count
 #: model:ir.model.fields,field_description:loyalty.field_res_users__loyalty_card_count
 msgid "Active loyalty cards"
-msgstr "Tarjetas de lealtad activas "
+msgstr "Tarjetas de fidelidad activas "
 
 #. module: loyalty
 #. odoo-javascript
 #: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
 #, python-format
 msgid "Add"
-msgstr "Agregar"
+msgstr "Añadir"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Add a reward"
-msgstr "Agregar una recompensa"
+msgstr "Añadir una recompensa"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Add a rule"
-msgstr "Agregar una regla"
+msgstr "Añadir una regla"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__all_discount_product_ids
 msgid "All Discount Product"
-msgstr "Todos los productos con descuento"
+msgstr "Todos los productos de descuento"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
@@ -615,7 +615,7 @@ msgstr "Automático"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Automatic promo: 10% off on orders higher than $50"
-msgstr "Promoción automática: 10 % de descuento en órdenes mayores a 50 €"
+msgstr "Promoción automática: 10 % de descuento en pedidos mayores a 50 €"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__available_on
@@ -651,7 +651,7 @@ msgstr "Compre 2 productos y obtenga el tercero gratis"
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.3_cabinets_plus_1_free
 msgid "Buy 3 large cabinets, get one for free"
-msgstr "Compra 3 gabinetes grandes, recibe uno gratis"
+msgstr "Compre 3 gabinetes grandes, reciba uno gratis"
 
 #. module: loyalty
 #. odoo-python
@@ -676,7 +676,7 @@ msgstr "Cancelar"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
 msgid "Card expires"
-msgstr "La tarjeta caduca"
+msgstr "La tarjeta expira"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__product_category_id
@@ -706,7 +706,7 @@ msgstr "Código"
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.10_percent_with_code
 msgid "Code for 10% on orders"
-msgstr "Código para 10% en pedidos"
+msgstr "Código para 10 % en pedidos"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__communication_plan_ids
@@ -746,7 +746,7 @@ msgstr "Condiciones"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "Congratulations"
-msgstr "Felicitaciones"
+msgstr "¡Enhorabuena!"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_res_partner
@@ -1037,7 +1037,8 @@ msgid ""
 "Each rule can grant points to the customer he will be able to exchange "
 "against rewards"
 msgstr ""
-"Cada regla puede otorgar puntos al cliente que podrá canjear por recompensas"
+"Cada regla le otorgará puntos al cliente que después podrá intercambiar por "
+"recompensas."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__mail_template_id
@@ -1052,7 +1053,7 @@ msgstr "Plantillas de correo electrónico"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__date_to
 msgid "End date"
-msgstr "Fecha límite"
+msgstr "Fecha de finalización"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__excl
@@ -1069,21 +1070,21 @@ msgstr "Fecha de expiración"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Fidelity Card"
-msgstr "Tarjeta de lealtad"
+msgstr "Tarjeta de fidelidad"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Fidelity Cards"
-msgstr "Tarjetas de lealtad"
+msgstr "Tarjetas de fidelidad"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Fill in your eWallet, to pay future orders"
-msgstr "Recargue su monedero electrónico y úselo para pagar órdenes futuras"
+msgstr "Recargue su monedero electrónico y úselo para pagar pedidos futuras"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
@@ -1106,19 +1107,19 @@ msgstr "Para"
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__reward_type__product
 #, python-format
 msgid "Free Product"
-msgstr "Producto gratis"
+msgstr "Producto gratuito"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "Free Product - %s"
-msgstr "Producto gratis - %s"
+msgstr "Producto gratuito - %s"
 
 #. module: loyalty
 #: model:loyalty.reward,description:loyalty.3_cabinets_plus_1_free_reward
 msgid "Free Product - Large Cabinet"
-msgstr "Producto gratis - Gabinete grande"
+msgstr "Producto gratuito - Gabinete grande"
 
 #. module: loyalty
 #. odoo-python
@@ -1181,6 +1182,13 @@ msgid "Generate eWallet"
 msgstr "Generar monedero electrónico"
 
 #. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "Generate {{props.context.program_item_name}}"
+msgstr "Generar {{props.context.program_item_name}}"
+
+#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
@@ -1219,7 +1227,7 @@ msgstr "Valor de la tarjeta de regalo"
 #. module: loyalty
 #: model:mail.template,name:loyalty.mail_template_gift_card
 msgid "Gift Card: Gift Card Information"
-msgstr "Tarjeta de regalo: Información de tarjeta de regalo"
+msgstr "Tarjeta de regalo: información de tarjeta de regalo"
 
 #. module: loyalty
 #. odoo-python
@@ -1393,7 +1401,7 @@ msgstr "Logotipo"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Loyalty Card"
-msgstr "Tarjeta de lealtad "
+msgstr "Tarjeta de fidelidad "
 
 #. module: loyalty
 #. odoo-python
@@ -1403,12 +1411,12 @@ msgstr "Tarjeta de lealtad "
 #: model_terms:ir.ui.view,arch_db:loyalty.res_partner_form
 #, python-format
 msgid "Loyalty Cards"
-msgstr "Tarjetas de lealtad"
+msgstr "Tarjetas de fidelidad"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_mail
 msgid "Loyalty Communication"
-msgstr "Comunicación de Fidelización"
+msgstr "Comunicación de fidelización"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_card
@@ -1418,24 +1426,24 @@ msgstr "Cupón de fidelidad"
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_program
 msgid "Loyalty Program"
-msgstr "Programa de fidelidad"
+msgstr "Programa de fidelización"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_reward
 msgid "Loyalty Reward"
-msgstr "Recompensa"
+msgstr "Recompensa de fidelidad"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_rule
 msgid "Loyalty Rule"
-msgstr "Regla de Lealtad"
+msgstr "Regla de fidelidad"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Loyalty point(s)"
-msgstr "Punto(s) de lealtad"
+msgstr "Punto(s) de fidelidad"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_max_amount
@@ -1487,7 +1495,7 @@ msgstr "Productos múltiples"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Next Order Coupon"
-msgstr "Cupón de la próxima orden "
+msgstr "Cupón del próximo pedido"
 
 #. module: loyalty
 #. odoo-python
@@ -1505,7 +1513,7 @@ msgstr "No se encontraron cupones."
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
 msgid "No loyalty program found."
-msgstr "No se encontraron programas de fidelidad."
+msgstr "No se encontraron programas de fidelización."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_discount_loyalty_action
@@ -1562,7 +1570,7 @@ msgstr "Puntos"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__points_display
 msgid "Points Display"
-msgstr "Indicación de puntos"
+msgstr "Mostrar puntos"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1626,7 +1634,7 @@ msgid ""
 "Product used in the sales order to apply the discount. Each reward has its "
 "own product for reporting purpose"
 msgstr ""
-"Producto usado en órdenes de ventas para aplicar el descuento. Cada "
+"Producto usado en pedidos de venta para aplicar el descuento. Cada "
 "recompensa tiene su propio producto y propósito de informe."
 
 #. module: loyalty
@@ -1717,7 +1725,7 @@ msgstr "Cantidad a generar"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__rating_ids
 msgid "Ratings"
-msgstr "Valoraciones"
+msgstr "Calificaciones"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_amount
@@ -1738,7 +1746,7 @@ msgstr "Dominio del producto de recompensa"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_qty
 msgid "Reward Product Qty"
-msgstr "Cant. de productos de recompensa"
+msgstr "Ctd. de productos de recompensa"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_uom_id
@@ -1757,6 +1765,7 @@ msgstr "Tipo de recompensa"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rewards"
 msgstr "Recompensas"
 
@@ -1816,7 +1825,7 @@ msgid ""
 "Set up conditional rules on the order that will give access to rewards for "
 "customers"
 msgstr ""
-"Configurar reglas condicionales en la orden que le dará acceso a las "
+"Configurar reglas condicionales en el pedido que le dará acceso a las "
 "recompensas para clientes"
 
 #. module: loyalty
@@ -1840,7 +1849,7 @@ msgstr "Dividir por unidad"
 #, python-format
 msgid "Split per unit is not allowed for Loyalty and eWallet programs."
 msgstr ""
-"Dividir por unidad no está disponible para programas de fidelidad y de "
+"Divida por unidad no está disponible para programas de fidelización y de "
 "monedero electrónico."
 
 #. module: loyalty
@@ -1877,8 +1886,8 @@ msgstr ""
 msgid ""
 "The loyalty program's currency must be the same as all it's pricelists ones."
 msgstr ""
-"La moneda del programa de lealtad debe ser la misma que está establecida en "
-"todas las listas de precios. "
+"La moneda del programa de fidelización debe ser la misma que está "
+"establecida en todas las listas de precios. "
 
 #. module: loyalty
 #. odoo-python
@@ -1892,6 +1901,13 @@ msgstr "El código promocional debe ser único."
 msgid "The required points for a reward must be strictly positive."
 msgstr ""
 "Los puntos requeridos para una recompensa deben ser estrictamente positivos."
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+#, python-format
+msgid "The reward description field cannot be empty."
+msgstr "El campo con la descripción de la recompensa no puede estar vacío."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
@@ -1942,7 +1958,7 @@ msgid ""
 "program."
 msgstr ""
 "Este producto no se puede archivar ya que se está usando para un programa de"
-" promociones activas."
+" ofertas activo."
 
 #. module: loyalty
 #: model:product.template,name:loyalty.ewallet_product_50_product_template
@@ -1952,7 +1968,7 @@ msgstr "Recargar monedero electrónico"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__total_order_count
 msgid "Total Order Count"
-msgstr "Nª total de pedidos"
+msgstr "Número total de pedidos"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger
@@ -1983,7 +1999,7 @@ msgstr "Usa este código promocional antes de"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__user_has_debug
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__user_has_debug
 msgid "User Has Debug"
-msgstr "El usuario tiene debug"
+msgstr "El usuario tiene depuración"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__valid_until
@@ -2024,9 +2040,9 @@ msgid ""
 "Whether to separate reward coupons per matched unit, only applies to "
 "'future' programs and trigger mode per money spent or unit paid.."
 msgstr ""
-"Si se separan los cupones de recompensa por unidad igualada, sólo se aplica "
-"a los programas \"futuros\" y al modo de activación por dinero gastado o "
-"unidad pagada."
+"Si separar los cupones de recompensa por unidad emparejada solo se aplica "
+"para programas 'futuros' y activar el modo por dinero gastado o unidad "
+"pagada."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__will_send_mail
@@ -2061,13 +2077,13 @@ msgid ""
 "You cannot delete %(name)s as it is used in 'Coupons & Loyalty'. Please "
 "archive it instead."
 msgstr ""
-"No puede eliminar %(name)s ya que se utiliza en \"Cupones y lealtad\". Por "
-"favor, archívelo en su lugar."
+"No puede eliminar %(name)s ya que se utiliza en \"Cupones y fidelidad\". Por"
+" favor, archívelo en su lugar."
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_gift_card
 msgid "Your Gift Card at {{ object.company_id.name }}"
-msgstr "Su tarjeta de regalo en {{ object.company_id.name }}"
+msgstr "Su tarjeta de regalo de {{ object.company_id.name }}"
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_loyalty_card
@@ -2124,9 +2140,9 @@ msgid ""
 "                                    <br/>\n"
 "                                    Then, eWallets are proposed during the checkout, to pay orders."
 msgstr ""
-"Los monederos electrónicos se crean de forma manual o automática cuando el cliente pide un producto de billetera electrónica.\n"
+"Los monederos electrónicos se crean de forma manual o automática cuando el cliente pide un producto de monedero electrónico.\n"
 "                                    <br/>\n"
-"                                    Después, se propondrá la billetera electrónica como método de pago de los pedidos."
+"                                    Después, se propondrá el monedero electrónico como método de pago de los pedidos."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -2136,7 +2152,7 @@ msgstr "artículo(s) comprado(s)"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "loyalty Reward"
-msgstr "recompensa de lealtad"
+msgstr "recompensa de fidelidad"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -2192,7 +2208,7 @@ msgstr "productos específicos"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "spent"
-msgstr "gastado"
+msgstr "gastado(s)"
 
 #. module: loyalty
 #. odoo-python
@@ -2217,3 +2233,10 @@ msgstr "usos"
 #, python-format
 msgid "your order"
 msgstr "su pedido"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "{{loyalty_el_title}}"
+msgstr "{{loyalty_el_title}}"

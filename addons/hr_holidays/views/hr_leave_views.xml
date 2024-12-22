@@ -66,7 +66,7 @@
                     name="waiting_for_me_manager"
                     groups="hr_holidays.group_hr_holidays_user"/>
                 <separator/>
-                <filter domain="[('state','in',('confirm','validate1'))]" string="First Approval" name="approve"/>
+                <filter domain="[('state','=','confirm')]" string="First Approval" name="approve"/>
                 <filter domain="[('state', '=', 'validate1')]" string="Second Approval" name="second_approval"/>
                 <filter string="Approved" domain="[('state', '=', 'validate')]" name="validated"/>
                 <separator/>
@@ -245,7 +245,7 @@
             <field name="can_cancel" invisible="1"/>
             <field name="has_mandatory_day" invisible="1"/>
             <header>
-                <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" invisible="state != 'draft' or not active"/>
+                <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" invisible="id == False or state != 'draft' or not active"/>
                 <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="not active or not can_approve or state != 'confirm'"/>
                 <button string="Validate" name="action_validate" invisible="state != 'validate1'" type="object" groups="hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
                 <button string="Refuse" name="action_refuse" type="object" invisible="not active or not can_approve or state not in ('confirm', 'validate1', 'validate')"/>
@@ -271,7 +271,7 @@
                 <field name="tz_mismatch" invisible="1"/>
                 <field name="holiday_type" invisible="1" readonly="state not in ['confirm', 'draft']"/>
                 <field name="leave_type_request_unit" invisible="1"/>
-                <div class="o_hr_leave_content row my-n4">
+                <div class="o_hr_leave_content row">
                     <div class="o_hr_leave_column col_left col-md-6 col-12">
                         <div name="title" class="o_hr_leave_title" invisible="1">
                             <field name="employee_id" readonly="1" force_save="1" invisible="1"/>
@@ -279,9 +279,6 @@
                             <field name="display_name" invisible="not holiday_status_id"/>
                         </div>
                         <field name="leave_type_increases_duration" invisible="True"/>
-                        <div name="duration_warning" invisible="not leave_type_increases_duration" class="alert alert-warning mb-0" role="alert">
-                            <span >You can only take this time off in whole days, so if your schedule has half days, it won't be used efficiently.</span>
-                        </div><br />
                         <group name="col_left">
                             <field name="employee_company_id" invisible="1"/>
                             <field name="holiday_status_id" force_save="1"
@@ -290,13 +287,11 @@
                                         ('requires_allocation', '=', 'no'),
                                         '&amp;',
                                             ('has_valid_allocation', '=', True),
-                                            '&amp;',
-                                                ('max_leaves', '>', '0'),
-                                                '|',
-                                                    ('allows_negative', '=', True),
-                                                    '&amp;',
-                                                        ('virtual_remaining_leaves', '&gt;', 0),
-                                                        ('allows_negative', '=', False),
+                                            '|',
+                                                ('allows_negative', '=', True),
+                                                '&amp;',
+                                                    ('virtual_remaining_leaves', '&gt;', 0),
+                                                    ('allows_negative', '=', False),
                                 ]"
                                 context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
                                 options="{'no_create': True, 'no_open': True, 'request_type': 'leave'}"
@@ -310,7 +305,7 @@
                             <label for="request_date_from" invisible="request_unit_half or request_unit_hours" string="Dates" />
                             <div class="o_row" invisible="not request_unit_half and not request_unit_hours">
                                 <field name="request_date_from" class="oe_inline" string="Date" readonly="state not in ('draft', 'confirm')" />
-                                <field name="request_date_from_period" invisible="not request_unit_half" required="request_unit_half"/>
+                                <field name="request_date_from_period" invisible="not request_unit_half" required="request_unit_half" readonly="state not in ('draft', 'confirm')"/>
                             </div>
                             <!-- full days: show date start/end with daterange -->
                             <div class="o_row" invisible="request_unit_half or request_unit_hours">
@@ -355,6 +350,9 @@
                         </group>
                     </div>
                 </div>
+                <div name="duration_warning" invisible="not leave_type_increases_duration" class="alert alert-warning mb-0" role="alert">
+                    <span >You can only take this time off in whole days, so if your schedule has half days, it won't be used efficiently.</span>
+                </div>
             </sheet>
             <div class="o_attachment_preview"/>
             <div class="oe_chatter">
@@ -389,6 +387,9 @@
             <xpath expr="//group[@name='col_left']" position="attributes">
                 <attribute name="colspan">5</attribute>
             </xpath>
+            <xpath expr="//div[hasclass('o_hr_leave_content')]" position="attributes">
+                <attribute name="class" remove="row my-n4" separator=" "/>
+            </xpath>
             <xpath expr="//div[hasclass('o_hr_leave_column')]" position="attributes">
                 <attribute name="class" remove="col_left col-md-6" separator=" "/>
             </xpath>
@@ -413,8 +414,7 @@
                     show_unusual_days="True"
                     color="color"
                     hide_time="True"
-                    mode="year"
-                    all_day="last_several_days">
+                    mode="year">
                 <field name="display_name"/>
                 <field name="holiday_status_id" filters="1" invisible="1" color="color"/>
                 <field name="state" invisible="1"/>
@@ -439,8 +439,7 @@
                     quick_create="0"
                     show_unusual_days="True"
                     color="color"
-                    hide_time="True"
-                    all_day="last_several_days">
+                    hide_time="True">
                 <field name="display_name"/>
                 <field name="holiday_status_id" filters="1" invisible="1" color="color"/>
                 <field name="state" invisible="1"/>
@@ -489,15 +488,14 @@
         <field name="arch" type="xml">
             <calendar js_class="time_off_calendar"
                     string="Time Off Request"
-                    form_view_id="%(hr_holidays.hr_leave_view_form_dashboard)d"
+                    form_view_id="%(hr_holidays.hr_leave_view_form_dashboard_new_time_off)d"
                     event_open_popup="true"
                     date_start="date_from"
                     date_stop="date_to"
                     mode="month"
                     show_unusual_days="True"
                     quick_create="0"
-                    color="color"
-                    all_day="last_several_days">
+                    color="color">
                 <field name="display_name"/>
                 <field name="holiday_status_id" color="color" filters="1" invisible="1"/>
                 <field name="employee_id" filters="1" invisible="1"/>
@@ -817,6 +815,7 @@
         <field name="arch" type="xml">
             <graph string="Time Off Summary" sample="1">
                 <field name="employee_id"/>
+                <field name="number_of_hours" widget="float_time"/>
                 <field name="number_of_days" type="measure"/>
             </graph>
         </field>

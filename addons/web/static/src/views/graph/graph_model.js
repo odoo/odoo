@@ -6,7 +6,7 @@ import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { rankInterval } from "@web/search/utils/dates";
 import { getGroupBy } from "@web/search/utils/group_by";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
-import { Model } from "@web/model/model";
+import { addPropertyFieldDefs, Model } from "@web/model/model";
 import { computeReportMeasures, processMeasure } from "@web/views/utils";
 import { Domain } from "@web/core/domain";
 
@@ -119,6 +119,13 @@ export class GraphModel extends Model {
             this.initialGroupBy = searchParams.context.graph_groupbys || this.metaData.groupBy; // = arch groupBy --> change that
         }
         const metaData = this._buildMetaData();
+        await addPropertyFieldDefs(
+            this.orm,
+            metaData.resModel,
+            searchParams.context,
+            metaData.fields,
+            metaData.groupBy.map((gb) => gb.fieldName)
+        );
         await this._fetchDataPoints(metaData);
     }
 
@@ -171,8 +178,11 @@ export class GraphModel extends Model {
         metaData.groupBy = groupBy.length ? groupBy : this.initialGroupBy;
         if (metaData.mode !== "pie") {
             metaData.order = "graph_order" in context ? context.graph_order : metaData.order;
-            metaData.stacked =
-                "graph_stacked" in context ? context.graph_stacked : metaData.stacked;
+            if (comparison) {
+                metaData.stacked = false;
+            } else if ("graph_stacked" in context) {
+                metaData.stacked = context.graph_stacked;
+            }
             if (metaData.mode === "line") {
                 metaData.cumulated =
                     "graph_cumulated" in context ? context.graph_cumulated : metaData.cumulated;
@@ -585,14 +595,16 @@ export class GraphModel extends Model {
         const processedGroupBy = [];
         for (const gb of groupBy) {
             const { fieldName, interval } = gb;
-            const { sortable, type, store } = fields[fieldName];
-            if (
-                // many2many is groupable precisely when it is stored (cf. groupable in odoo/fields.py)
-                (type === "many2many" ? !store : !sortable) ||
-                ["id", "__count"].includes(fieldName) ||
-                !GROUPABLE_TYPES.includes(type)
-            ) {
-                continue;
+            if (!fieldName.includes(".")) {
+                const { sortable, type, store } = fields[fieldName];
+                if (
+                    // many2many is groupable precisely when it is stored (cf. groupable in odoo/fields.py)
+                    (type === "many2many" ? !store : !sortable) ||
+                    ["id", "__count"].includes(fieldName) ||
+                    !GROUPABLE_TYPES.includes(type)
+                ) {
+                    continue;
+                }
             }
             const index = processedGroupBy.findIndex((gb) => gb.fieldName === fieldName);
             if (index === -1) {

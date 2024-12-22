@@ -211,6 +211,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         price: line.price_unit,
                         tax_ids: orderFiscalPos ? undefined : line.tax_id,
                         price_manually_set: false,
+                        price_type: "automatic",
                         sale_order_origin_id: clickedOrder,
                         sale_order_line_id: line,
                         customer_note: line.customer_note,
@@ -255,6 +256,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         while (!floatIsZero(remaining_quantity, 6)) {
                             const splitted_line = new Orderline({ env: this.env }, line_values);
                             splitted_line.set_quantity(Math.min(remaining_quantity, 1.0), true);
+                            splitted_line.set_discount(line.discount);
                             this.pos.get_order().add_orderline(splitted_line);
                             remaining_quantity -= splitted_line.quantity;
                         }
@@ -265,15 +267,6 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
             } else {
                 // apply a downpayment
                 if (this.pos.config.down_payment_product_id) {
-                    const lines = sale_order.order_line.filter((line) => {
-                        return line.product_id[0] !== this.pos.config.down_payment_product_id[0];
-                    });
-                    const tab = lines.map((line) => ({
-                        product_name: line.product_id[1],
-                        product_uom_qty: line.product_uom_qty,
-                        price_unit: line.price_unit,
-                        total: line.price_total,
-                    }));
                     let down_payment_product = this.pos.db.get_product_by_id(
                         this.pos.config.down_payment_product_id[0]
                     );
@@ -283,20 +276,11 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                             this.pos.config.down_payment_product_id[0]
                         );
                     }
-                    const down_payment_tax =
-                        this.pos.taxes_by_id[down_payment_product.taxes_id] || false;
-                    let down_payment;
-                    if (down_payment_tax) {
-                        down_payment = down_payment_tax.price_include
-                            ? sale_order.amount_total
-                            : sale_order.amount_untaxed;
-                    } else {
-                        down_payment = sale_order.amount_total;
-                    }
 
+                    let down_payment;
                     let popupTitle = "";
                     let popupInputSuffix = "";
-                    const popupTotalDue = sale_order.amount_total;
+                    const popupTotalDue = sale_order.amount_unpaid;
                     let getInputBufferReminder = () => false;
                     const popupSubtitle = _t("Due balance: %s");
                     if (selectedOption == "dpAmount") {
@@ -323,7 +307,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         title: popupTitle,
                         subtitle: sprintf(
                             popupSubtitle,
-                            this.env.utils.formatCurrency(sale_order.amount_total)
+                            this.env.utils.formatCurrency(popupTotalDue)
                         ),
                         inputSuffix: popupInputSuffix,
                         startingValue: 0,
@@ -336,7 +320,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     if (selectedOption == "dpAmount") {
                         down_payment = parseFloat(payload);
                     } else {
-                        down_payment = (down_payment * parseFloat(payload)) / 100;
+                        down_payment = (popupTotalDue * parseFloat(payload)) / 100;
                     }
 
                     if (down_payment > sale_order.amount_unpaid) {
@@ -349,26 +333,17 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                                 : this.env.utils.formatCurrency(0)
                         );
                         await this.popup.add(ErrorPopup, {
-                            title: "Error amount too high",
+                            title: _t("Error amount too high"),
                             body: errorBody,
                         });
                         down_payment = sale_order.amount_unpaid > 0 ? sale_order.amount_unpaid : 0;
                     }
-
-                    const new_line = new Orderline(
-                        { env: this.env },
-                        {
-                            pos: this.pos,
-                            order: this.pos.get_order(),
-                            product: down_payment_product,
-                            price: down_payment,
-                            price_type: "automatic",
-                            sale_order_origin_id: clickedOrder,
-                            down_payment_details: tab,
-                        }
+                    this._createDownpaymentLines(
+                        sale_order,
+                        down_payment,
+                        clickedOrder,
+                        down_payment_product
                     );
-                    new_line.set_unit_price(down_payment);
-                    this.pos.get_order().add_orderline(new_line);
                 } else {
                     const title = _t("No down payment product");
                     const body = _t(
@@ -380,6 +355,64 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
 
             this.pos.closeScreen();
         }
+    }
+
+    _createDownpaymentLines(sale_order, total_down_payment, clickedOrder, down_payment_product) {
+        //This function will create all the downpaymentlines. We will create on downpayment line per unique tax combination
+
+        const grouped = {};
+        sale_order.order_line.forEach((obj) => {
+            const sortedTaxes = obj.tax_id.slice().sort((a, b) => a - b);
+            const key = sortedTaxes.join(",");
+            if (!grouped[key]) {
+                grouped[key] = [];
+            }
+            grouped[key].push(obj);
+        });
+        Object.keys(grouped).forEach((key) => {
+            const group = grouped[key];
+            const tab = group.map((line) => ({
+                product_name: line.product_id[1],
+                product_uom_qty: line.product_uom_qty,
+                price_unit: line.price_unit,
+                total: line.price_total,
+            }));
+
+            // Compute the part of the downpayment that should be assigned to this group
+            const total_price = group.reduce((total, line) => (total += line.price_total), 0);
+            const ratio = total_price / sale_order.amount_total;
+            const down_payment_line_price = total_down_payment * ratio;
+
+            // We apply the taxes and keep the same price
+            const taxes_to_apply = group[0].tax_id.filter(id => this.pos.taxes_by_id[id].amount_type !== "fixed").map((id) => {
+                return { ...this.pos.taxes_by_id[id], price_include: true };
+            });
+            const tax_res = this.pos.compute_all(
+                taxes_to_apply,
+                down_payment_line_price,
+                1,
+                this.pos.currency.rounding
+            );
+            let new_price = tax_res["total_excluded"];
+            new_price += tax_res.taxes
+                .filter((tax) => this.pos.taxes_by_id[tax.id].price_include)
+                .reduce((sum, tax) => (sum += tax.amount), 0);
+            this.pos.get_order().add_orderline(
+                new Orderline(
+                    { env: this.env },
+                    {
+                        pos: this.pos,
+                        order: this.pos.get_order(),
+                        product: down_payment_product,
+                        price: new_price,
+                        price_type: "automatic",
+                        sale_order_origin_id: clickedOrder,
+                        down_payment_details: tab,
+                        tax_ids: group[0].tax_id.filter(id => this.pos.taxes_by_id[id].amount_type !== "fixed"),
+                    }
+                )
+            );
+        });
     }
 
     async _getSaleOrder(id) {
@@ -402,15 +435,6 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
 
         const sale_lines = await this._getSOLines(sale_order.order_line);
         sale_order.order_line = sale_lines;
-
-        if (sale_order.picking_ids[0]) {
-            const [picking] = await this.orm.read(
-                "stock.picking",
-                [sale_order.picking_ids[0]],
-                ["scheduled_date"]
-            );
-            sale_order.shipping_date = picking.scheduled_date;
-        }
 
         return sale_order;
     }

@@ -90,7 +90,7 @@ class Http(models.AbstractModel):
         website_id = request.website_routing
         logger.debug("_generate_routing_rules for website: %s", website_id)
         rewrites = self._get_rewrites(website_id)
-        self._rewrite_len.cache.add_value(self, website_id, cache_value=len(rewrites))
+        self._rewrite_len.__cache__.add_value(self, website_id, cache_value=len(rewrites))
 
         for url, endpoint in super()._generate_routing_rules(modules, converters):
             if url in rewrites:
@@ -291,7 +291,17 @@ class Http(models.AbstractModel):
                 path += '?' + request.httprequest.query_string.decode('utf-8')
             return request.redirect(path, code=301)
 
-        if page and (request.env.user.has_group('website.group_website_designer') or page.is_visible):
+        if (
+            page
+            and (request.env.user.has_group('website.group_website_designer') or page.is_visible)
+            and (
+                # If a generic page (niche case) has been COWed and that COWed
+                # page received a URL change, it should not let you access the
+                # generic page anymore, despite having a different URL.
+                page.website_id
+                or not page.view_id._get_specific_views().filtered(lambda view: view.website_id == request.website)
+            )
+        ):
             _, ext = os.path.splitext(req_page)
             response = request.render(page.view_id.id, {
                 'main_object': page,
@@ -302,13 +312,14 @@ class Http(models.AbstractModel):
     @classmethod
     def _serve_redirect(cls):
         req_page = request.httprequest.path
+        req_page_with_qs = request.httprequest.environ['REQUEST_URI']
         domain = [
             ('redirect_type', 'in', ('301', '302')),
             # trailing / could have been removed by server_page
-            '|', ('url_from', '=', req_page.rstrip('/')), ('url_from', '=', req_page + '/')
+            ('url_from', 'in', [req_page_with_qs, req_page.rstrip('/'), req_page + '/'])
         ]
         domain += request.website.website_domain()
-        return request.env['website.rewrite'].sudo().search(domain, limit=1)
+        return request.env['website.rewrite'].sudo().search(domain, order='url_from DESC', limit=1)
 
     @classmethod
     def _serve_fallback(cls):

@@ -10,33 +10,36 @@
 # ilan kl <ilan@qaroads.co.il>, 2023
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2023
 # Adi Sharashov <Adi@laylinetech.com>, 2023
-# Netta Waizer, 2023
 # Jonathan Spier, 2023
 # MichaelHadar, 2023
 # Sagi Ahiel, 2023
-# Ha Ketem <haketem@gmail.com>, 2023
 # Moshe Flam <pashute@gmail.com>, 2023
 # Amit Spilman <amit@laylinetech.com>, 2023
 # david danilov, 2023
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2023
 # ExcaliberX <excaliberx@gmail.com>, 2023
 # Yihya Hugirat <hugirat@gmail.com>, 2023
 # דודי מלכה <Dudimalka6@gmail.com>, 2023
 # NoaFarkash, 2023
 # Martin Trigaux, 2023
-# hed shefer <hed@laylinetech.com>, 2023
+# Hed Shefer <hed@laylinetech.com>, 2023
 # שהאב חוסיין <shhab89@gmail.com>, 2023
-# yael terner, 2023
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
 # Roy Sayag, 2024
+# yael terner, 2024
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2024
+# Netta Waizer, 2024
+# Ha Ketem <haketem@gmail.com>, 2024
+# Uri Segman, 2024
+# Mendi Soudry, 2024
+# Yoram Lavi, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Roy Sayag, 2024\n"
+"Last-Translator: Yoram Lavi, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -332,7 +335,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "2023-01-01"
-msgstr ""
+msgstr "01/01/2023"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -344,7 +347,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "3.00"
-msgstr ""
+msgstr "3.00"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__print_format__4x12
@@ -533,7 +536,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
 msgid "<span class=\"o_stat_text\">Product Moves</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Product Moves</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -555,7 +558,7 @@ msgstr "<span class=\"o_stat_text\">תכולת אחסון</span>"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "<span class=\"o_stat_text\">Traceability</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Traceability</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -1140,6 +1143,11 @@ msgid "Archived"
 msgstr "בארכיון"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Are you sure you want to cancel this transfer?"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
 msgid "As soon as possible"
 msgstr "בהקדם האפשרי"
@@ -1163,7 +1171,7 @@ msgstr "שייך"
 #: code:addons/stock/static/src/xml/report_stock_reception.xml:0
 #, python-format
 msgid "Assign All"
-msgstr "שייך כל "
+msgstr "שייך הכל "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
@@ -1557,6 +1565,15 @@ msgstr "תנועה קשורה קיימת"
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
 msgstr "שנה את כמות המוצר "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -3251,7 +3268,7 @@ msgstr "חזוי"
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Forecasted Date"
-msgstr "צפי תאריך"
+msgstr " תאריך צפוי"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__out
@@ -3304,7 +3321,7 @@ msgstr "מלאי חזוי"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__forecast_weight
 msgid "Forecasted Weight"
-msgstr "תחזית משקל"
+msgstr "משקל חזוי"
 
 #. module: stock
 #. odoo-javascript
@@ -3421,6 +3438,13 @@ msgstr "הפק"
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 #, python-format
 msgid "Generate Serials numbers"
+msgstr ""
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Generate Serials/Lots"
 msgstr ""
 
 #. module: stock
@@ -3870,6 +3894,13 @@ msgstr "ייבא"
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 #, python-format
 msgid "Import Lots"
+msgstr ""
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Import Serials/Lots"
 msgstr ""
 
 #. module: stock
@@ -4347,7 +4378,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "Laptop"
-msgstr ""
+msgstr "מחשב נייד"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -4667,9 +4698,16 @@ msgid "Locations"
 msgstr "מיקומים"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.server,name:stock.action_toggle_is_locked
 msgid "Lock/Unlock"
-msgstr ""
+msgstr "נעל/הסר נעילה"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_category_form_view_inherit
@@ -4686,6 +4724,11 @@ msgstr "אצווה"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__lot_label_format
 msgid "Lot Label Format to auto-print"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_label_lot_template_view
+msgid "Lot Label Report"
 msgstr ""
 
 #. module: stock
@@ -5141,7 +5184,7 @@ msgstr "מלאי שלילי"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__net_weight
 msgid "Net Weight"
-msgstr ""
+msgstr "משקל נטו"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__never
@@ -5282,6 +5325,13 @@ msgid "No operations found. Let's create a transfer!"
 msgstr ""
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "No product found to generate Serials/Lots for."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
 msgstr "לא נמצאו מוצרים. בואו ניצור אחד!"
@@ -5407,7 +5457,7 @@ msgstr "מספר פעולות"
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial_count
 #, python-format
 msgid "Number of SN"
-msgstr "מספר סידורי"
+msgstr "כמות סיריאלים"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_has_error_counter
@@ -5427,7 +5477,7 @@ msgstr "מספר תנועות המלאי הנכנסות ב-12 החודשים ה�
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "מספר הודעות הדורשות פעולה"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__message_has_error_counter
@@ -5644,7 +5694,7 @@ msgstr "הזמן פעם אחת"
 #: code:addons/stock/static/src/views/stock_orderpoint_list_buttons.xml:0
 #, python-format
 msgid "Order To Max"
-msgstr ""
+msgstr "הזמן למקסימום"
 
 #. module: stock
 #. odoo-python
@@ -5844,6 +5894,11 @@ msgstr "חבילה"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package A"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "Package B"
 msgstr ""
 
 #. module: stock
@@ -7950,11 +8005,6 @@ msgid "Settings"
 msgstr "הגדרות"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "Shelf 1"
-msgstr ""
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "Shelf A"
 msgstr ""
@@ -8196,7 +8246,7 @@ msgstr "מסמך מקור"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #, python-format
 msgid "Source Location"
-msgstr "מקום המוצא"
+msgstr "מיקום מוצא"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_usage
@@ -8297,7 +8347,7 @@ msgstr "מיקום מלאי"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Stock Locations"
-msgstr "מיקום מלאי"
+msgstr "מיקומי מלאי"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
@@ -8593,6 +8643,13 @@ msgid ""
 msgstr ""
 "הערך 'מבצע ידני' יצור תנועת העברת מלאי לאחר המלאי הנוכח. עם הערך 'אוטומטי "
 "ללא הוספת צעד', המיקום יוחלף בתנועה המקורית."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -9668,6 +9725,7 @@ msgid "Used to order the 'All Operations' kanban view"
 msgstr "משמש לסידור את \"כל הפעולות\" בתצוגת הקנבן"
 
 #. module: stock
+#: model:ir.model,name:stock.model_res_users
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__user_id
 #: model:res.groups,name:stock.group_stock_user
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -10246,6 +10304,14 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You can not delete moves linked to another operation"
@@ -10300,6 +10366,15 @@ msgstr ""
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr "אתה יכול רק לעבד 1.0 %s של מוצרים עם מספר סידורי ייחודי."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10400,6 +10475,23 @@ msgstr "אתה לא יכול למחוק פסילה שבוצעה."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "You cannot modify inventory loss quantity"
@@ -10415,6 +10507,15 @@ msgid ""
 msgstr ""
 "אתה לא יכול להעביר את אותו תוכן החבילה יותר מפעם אחת באותו העברה או לפצל את "
 "אותה החבילה לשני מיקום."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10580,13 +10681,6 @@ msgstr "עליך להפעיל מיקומי אחסון בכדי להיות מסו
 #, python-format
 msgid "You need to select a route to replenish your products"
 msgstr ""
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You need to set a Serial Number before generating more."
-msgstr "עליך להגדיר מספר סידורי לפני שתייצר עוד."
 
 #. module: stock
 #. odoo-python

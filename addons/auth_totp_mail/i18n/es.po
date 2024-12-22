@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
@@ -43,14 +44,14 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Estimado/a <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
-"        <t t-out=\"user.name  or ''\"></t> pidió que activara la autenticación de dos pasos para proteger su cuenta.<br><br>\n"
-"        La autenticación de dos pasos (\"A2P\") es un sistema de dobe autenticación.\n"
-"        El primer paso se hace con su contraseña y el segundo con un código que obtendrá de una aplicación móvil especializada.\n"
-"        Las aplicaciones populares incluyen Authy, Google Authenticator o Microsoft Authenticator.\n"
+"        <t t-out=\"user.name  or ''\"></t> solicitó que active la autenticación en dos factores para proteger su cuenta.<br><br>\n"
+"        La autenticación de dos factores  (\"A2F\") es un sistema de doble autenticación.\n"
+"        El primer factor se hace con su contraseña y el segundo con un código que obtiene de una aplicación móvil. \n"
+"        Las más populares incluyen Authy, Google Authenticator e Microsoft Authenticator.\n"
 "\n"
 "        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
 "            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
-"                Activar mi autenticación de dos pasos\n"
+"                Activar mi autenticación de dos factores\n"
 "            </a>\n"
 "        </p>\n"
 "    </p>\n"
@@ -68,7 +69,7 @@ msgstr "<span>Considere</span>"
 #, python-format
 msgid "A trusted device has just been added to your account: %(device_name)s"
 msgstr ""
-"Se acaba de agregar un dispositivo de confianza a su cuenta: %(device_name)s"
+"Se acaba de añadir un dispositivo de confianza a su cuenta: %(device_name)s"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -106,7 +107,7 @@ msgid ""
 "Invitation to use two-factor authentication sent for the following user(s): "
 "%s"
 msgstr ""
-"Se envió la invitación a activar la autenticación de dos pasos a los "
+"Se envió la invitación a activar la autenticación de dos factores a los "
 "siguientes usuarios: %s"
 
 #. module: auth_totp_mail
@@ -127,7 +128,7 @@ msgstr "Nombre"
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
 msgid "Open two-factor authentication configuration"
-msgstr "Abrir la configuración de la identificación de 2 pasos"
+msgstr "Abrir la configuración de la autenticación de dos factores"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -148,7 +149,7 @@ msgstr "Actualización de seguridad: A2F desactivada "
 #: code:addons/auth_totp_mail/models/auth_totp_device.py:0
 #, python-format
 msgid "Security Update: Device Added"
-msgstr "Actualización de seguridad: dispositivo agregado"
+msgstr "Actualización de seguridad: dispositivo añadido"
 
 #. module: auth_totp_mail
 #. odoo-python

@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { TourError } from "@web_tour/tour_service/tour_utils";
 import wTourUtils from '@website/js/tours/tour_utils';
 
 wTourUtils.registerWebsitePreviewTour("website_media_dialog_undraw", {
@@ -12,12 +13,67 @@ wTourUtils.dragNDrop({
     name: 'Text - Image',
 }),
 {
-    trigger: '.s_text_image img',
+    content: "Open the media dialog from the snippet",
+    trigger: "iframe .s_text_image img",
     run: "dblclick",
-},
-{
+}, {
+    content: "Search for 'banner' to call the media library", // Mocked call
+    trigger: ".o_select_media_dialog .o_we_search",
+    run: "text banner",
+}, {
+    content: "Check that the media library is available",
     trigger: '.o_select_media_dialog:has(.o_we_search_select option[value="media-library"])',
+    run: () => null, // it's a check
 },
+]);
+
+wTourUtils.registerWebsitePreviewTour("website_media_dialog_external_library", {
+    test: true,
+    url: "/",
+    edition: true,
+}, () => [
+    wTourUtils.dragNDrop({
+        id: "s_text_image",
+        name: "Text - Image",
+    }),
+    {
+        content: "Open the media dialog from the snippet",
+        trigger: "iframe .s_text_image img",
+        run: "dblclick",
+    }, {
+        content: "Dummy search to call the media library",
+        trigger: ".o_select_media_dialog .o_we_search",
+        run: "text a",
+    }, {
+        content: "Choose the media library to only show its media",
+        trigger: ".o_select_media_dialog .o_we_search_select",
+        // This is a standard <select>: we can't simulate a click on the option
+        // directly.
+        run: function (actions) {
+            actions.click();
+            actions.text("Illustrations");
+            this.$anchor.trigger($.Event("keydown", {key: 'Enter', keyCode: 13}));
+        },
+    }, {
+        content: "Double click on the first image",
+        trigger: ".o_select_media_dialog img.o_we_attachment_highlight",
+        run: "dblclick",
+    }, {
+        content: "Reopen the media dialog",
+        trigger: "iframe .s_text_image img",
+        run: "dblclick",
+    }, {
+        content: "Check that the image was created only once",
+        trigger: ".o_select_media_dialog .o_we_existing_attachments",
+        run: function () {
+            const selector = ".o_existing_attachment_cell img[src^='/web_editor/shape/illustration/']";
+            const imgName = this.$anchor[0].querySelector(selector).title;
+            const uploadedImgs = this.$anchor[0].querySelectorAll(`${selector}[title='${imgName}']`);
+            if (uploadedImgs.length !== 1) {
+                throw new TourError(`${uploadedImgs.length} attachment(s) were found. Exactly 1 should have been created.`);
+            }
+        },
+    },
 ]);
 
 wTourUtils.registerWebsitePreviewTour('website_media_dialog_icons', {
@@ -91,6 +147,38 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_image_shape", {
     {
         content: "Checks that the icon doesn't have a shape",
         trigger: "iframe .s_text_image .fa-heart:not([data-shape])",
+        run: () => {}, //it's a check
+    },
+]);
+
+wTourUtils.registerWebsitePreviewTour("website_media_dialog_insert_media", {
+    test: true,
+    url: "/",
+    edition: true,
+}, () => [
+    wTourUtils.dragNDrop({
+        id: "s_text_block",
+        name: "Text",
+    }),
+    {
+        content: "Click on the first paragraph",
+        trigger: "iframe .s_text_block p",
+    },
+    {
+        content: "Click on the toolbar's 'insert media' button",
+        trigger: ".oe-toolbar #media-insert",
+    },
+    {
+        content: "Click on the 'Icons' tab",
+        trigger: ".o_select_media_dialog a.nav-link:contains('Icons')",
+    },
+    {
+        content: "Click on the first icon",
+        trigger: ".o_select_media_dialog .font-icons-icon",
+    },
+    {
+        content: "Verify that the icon was inserted",
+        trigger: "iframe .s_text_block p > span.fa",
         run: () => {}, //it's a check
     },
 ]);

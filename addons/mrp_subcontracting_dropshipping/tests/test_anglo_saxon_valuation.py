@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo import Command
 from odoo.tests import tagged, Form
 
 
@@ -18,6 +19,16 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         categ_form.property_cost_method = 'fifo'
         categ_form.property_valuation = 'real_time'
         cls.categ_fifo_auto = categ_form.save()
+
+        categ_form = Form(cls.env['product.category'])
+        categ_form.name = 'avco auto'
+        categ_form.parent_id = cls.env.ref('product.product_category_all')
+        categ_form.property_cost_method = 'average'
+        categ_form.property_valuation = 'real_time'
+        cls.categ_avco_auto = categ_form.save()
+
+        cls.dropship_route = cls.env.ref('stock_dropshipping.route_drop_shipping')
+        cls.dropship_subcontractor_route = cls.env.ref('mrp_subcontracting_dropshipping.route_subcontracting_dropshipping')
 
         (cls.product_a | cls.product_b).type = 'product'
 
@@ -135,3 +146,148 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             {'account_id': stock_out_acc_id,    'product_id': self.product_a.id,    'debit': 0.0,   'credit': 110.0},
             {'account_id': stock_valu_acc_id,   'product_id': self.product_a.id,    'debit': 110.0, 'credit': 0.0},
         ])
+
+    def test_avco_valuation_subcontract_and_dropshipped_and_backorder(self):
+        """ Splitting a dropship transfer via backorder and invoicing for delivered quantities
+        should result in SVL records which have accurate values based on the portion of the total
+        order-picking sequence for which they were generated.
+        """
+        final_product = self.product_a
+        final_product.write({
+            'categ_id': self.categ_avco_auto.id,
+            'invoice_policy': 'delivery',
+        })
+        comp_product = self.product_b
+        comp_product.write({
+            'categ_id': self.categ_avco_auto.id,
+            'route_ids': [(4, self.dropship_subcontractor_route.id)],
+        })
+
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': final_product.product_tmpl_id.id,
+            'partner_id': self.partner_a.id,
+            'price': 10,
+        })
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': comp_product.product_tmpl_id.id,
+            'partner_id': self.partner_a.id,
+            'price': 1,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': final_product.id,
+                'route_id': self.dropship_route.id,
+                'product_uom_qty': 100,
+            })],
+        })
+        sale_order.action_confirm()
+        purchase_order = sale_order._get_purchase_orders()[0]
+        purchase_order.button_confirm()
+        dropship_transfer = purchase_order.picking_ids[0]
+        dropship_transfer.move_ids[0].quantity = 50
+        dropship_transfer.with_context(cancel_backorder=False)._action_done()
+        account_move_1 = sale_order._create_invoices()
+        account_move_1.action_post()
+        dropship_backorder = dropship_transfer.backorder_ids[0]
+        dropship_backorder.move_ids[0].quantity = 50
+        dropship_backorder._action_done()
+        account_move_2 = sale_order._create_invoices()
+        account_move_2.action_post()
+
+        self.assertRecordValues(
+            self.env['stock.valuation.layer'].search([('product_id', '=', final_product.id)]),
+            [
+                # DS/01
+                {'reference': dropship_transfer.name, 'quantity': -50, 'value': -500},
+                {'reference': dropship_transfer.move_ids.move_orig_ids[0].name, 'quantity': 50, 'value': 8500},
+                {'reference': dropship_transfer.name, 'quantity': 0, 'value': -8000},
+                # DS/02 - backorder
+                {'reference': dropship_backorder.name, 'quantity': -50, 'value': -500},
+                {'reference': dropship_backorder.move_ids.move_orig_ids[1].name, 'quantity': 50, 'value': 8500},
+                {'reference': dropship_backorder.name, 'quantity': 0, 'value': -8000},
+            ]
+        )
+
+    def test_account_line_entry_kit_bom_dropship(self):
+        """ An order delivered via dropship for some kit bom product variant should result in
+        accurate journal entries in the expense and stock output accounts if the cost on the
+        purchase order line has been manually edited.
+        """
+        kit_final_prod = self.product_a
+        product_c = self.env['product.product'].create({
+            'name': 'product_c',
+            'uom_id': self.env.ref('uom.product_uom_dozen').id,
+            'uom_po_id': self.env.ref('uom.product_uom_dozen').id,
+            'lst_price': 120.0,
+            'standard_price': 100.0,
+            'property_account_income_id': self.copy_account(self.company_data['default_account_revenue']).id,
+            'property_account_expense_id': self.copy_account(self.company_data['default_account_expense']).id,
+            'taxes_id': [Command.set((self.tax_sale_a + self.tax_sale_b).ids)],
+            'supplier_taxes_id': [Command.set((self.tax_purchase_a + self.tax_purchase_b).ids)],
+        })
+        kit_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_final_prod.product_tmpl_id.id,
+            'product_uom_id': kit_final_prod.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+        })
+        kit_bom.bom_line_ids = [(0, 0, {
+            'product_id': self.product_b.id,
+            'product_qty': 4,
+        }), (0, 0, {
+            'product_id': product_c.id,
+            'product_qty': 2,
+        })]
+
+        self.env['product.supplierinfo'].create({
+            'product_id': self.product_b.id,
+            'partner_id': self.partner_a.id,
+            'price': 160,
+        })
+        self.env['product.supplierinfo'].create({
+            'product_id': product_c.id,
+            'partner_id': self.partner_a.id,
+            'price': 100,
+        })
+
+        (kit_final_prod + self.product_b).categ_id.write({
+            'property_cost_method': 'fifo',
+            'property_valuation': 'real_time',
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_b.id,
+            'order_line': [(0, 0, {
+                'price_unit': 900,
+                'product_id': kit_final_prod.id,
+                'route_id': self.dropship_route.id,
+                'product_uom_qty': 2.0,
+            })],
+        })
+        sale_order.action_confirm()
+        purchase_order = sale_order._get_purchase_orders()[0]
+        purchase_order.button_confirm()
+        dropship_transfer = purchase_order.picking_ids[0]
+        dropship_transfer.move_ids[0].quantity = 2.0
+        dropship_transfer.button_validate()
+
+        account_move = sale_order._create_invoices()
+        account_move.action_post()
+
+        # Each product_a should cost:
+        # 4x product_b = 160 * 4 = 640 +
+        # 2x product_c = 100 * 2 = 200
+        #                        = 840
+        self.assertRecordValues(
+            account_move.line_ids,
+            [
+                {'name': 'product_a',                       'debit': 0.0,       'credit': 1800.0},
+                {'name': '15% (Copy)',                      'debit': 0.0,       'credit': 270.0},
+                {'name': 'INV/2024/00001 installment #1',   'debit': 621.0,     'credit': 0.0},
+                {'name': 'INV/2024/00001 installment #2',   'debit': 1449.0,    'credit': 0.0},
+                {'name': 'product_a',                       'debit': 0.0,       'credit': 840 * 2},
+                {'name': 'product_a',                       'debit': 840 * 2,   'credit': 0.0},
+            ]
+        )

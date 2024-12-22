@@ -302,8 +302,10 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
         cls.company.account_default_pos_receivable_account_id = cls.old_account_default_pos_receivable_account_id
 
         # Restore dummy_provider values after the tests
-        cls.payment_provider.company_id = cls.payment_provider_old_company_id
-        cls.payment_provider.journal_id = cls.payment_provider_old_journal_id
+        cls.payment_provider.write({
+            'company_id': cls.payment_provider_old_company_id,
+            'journal_id': cls.payment_provider_old_journal_id,
+        })
 
         # The online payment method cannot be deleted because it is used by a payment in the database.
         # It would require to delete the paid orders of the tests, the corresponding accounting, the session data...

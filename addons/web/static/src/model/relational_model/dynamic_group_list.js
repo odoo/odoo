@@ -105,6 +105,11 @@ export class DynamicGroupList extends DynamicList {
         // step 1: move record to correct position
         const refIndex = targetGroup.list.records.findIndex((r) => r.id === refId);
         const oldIndex = sourceGroup.list.records.findIndex((r) => r.id === dataRecordId);
+
+        const sourceList = sourceGroup.list;
+        // if the source contains more records than what's loaded, reload it after moving the record
+        const mustReloadSourceList = sourceList.count > sourceList.offset + sourceList.limit;
+
         sourceGroup._removeRecords([record.id]);
         targetGroup._addRecord(record, refIndex + 1);
         // step 2: update record value
@@ -127,14 +132,18 @@ export class DynamicGroupList extends DynamicList {
             revert();
             throw e;
         }
-        if (!targetGroup.isFolded) {
-            await targetGroup.list._resequence(
-                targetGroup.list.records,
-                this.resModel,
-                dataRecordId,
-                refId
-            );
+
+        const proms = [];
+        if (mustReloadSourceList) {
+            const { offset, limit, orderBy, domain } = sourceGroup.list;
+            proms.push(sourceGroup.list._load(offset, limit, orderBy, domain));
         }
+        if (!targetGroup.isFolded) {
+            const targetList = targetGroup.list;
+            const records = targetList.records;
+            proms.push(targetList._resequence(records, this.resModel, dataRecordId, refId));
+        }
+        return Promise.all(proms);
     }
 
     async resequence(movedGroupId, targetGroupId) {
@@ -150,6 +159,13 @@ export class DynamicGroupList extends DynamicList {
                 targetGroupId
             );
         });
+    }
+
+    _selectDomain(value) {
+        for (const group of this.groups) {
+            group.list._selectDomain(value);
+        }
+        super._selectDomain(value);
     }
 
     async sortBy(fieldName) {

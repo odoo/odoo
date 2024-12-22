@@ -290,7 +290,7 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
     _onCopyToClipboardClick: async function (ev) {
         ev.preventDefault();
 
-        const textValue = ev.target.dataset["clipboard-text"];
+        const textValue = ev.target.dataset.clipboardText;
         await browser.navigator.clipboard.writeText(textValue);
 
         if (this.animating_copy) {

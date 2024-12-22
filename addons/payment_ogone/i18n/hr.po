@@ -1,73 +1,77 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_ingenico
-#
+# 	* payment_ogone
+# 
 # Translators:
-# Bole <bole@dajmi5.com>, 2019
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
-# Tina Milas, 2019
-#
+# Davor Bojkić <davor.bojkic@storm.hr>, 2024
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
+# Martin Trigaux, 2024
+# Bole <bole@dajmi5.com>, 2024
+# Servisi RAM d.o.o. <support@servisiram.hr>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:05+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Tina Milas, 2019\n"
-"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
-"Language: hr\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Servisi RAM d.o.o. <support@servisiram.hr>, 2024\n"
+"Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hr\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_userid
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_userid
 msgid "API User ID"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_password
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_password
 msgid "API User Password"
 msgstr ""
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment_acquirer.py:0
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__code
+msgid "Code"
+msgstr "Šifra"
+
+#. module: payment_ogone
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_provider.py:0
 #, python-format
 msgid "Could not establish the connection to the API."
 msgstr ""
 
 #. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_hash_function
+msgid "Hash function"
+msgstr ""
+
+#. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
 msgstr ""
 
 #. module: payment_ogone
-#: model:account.payment.method,name:payment_ogone.payment_method_ogone
-#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_acquirer__provider__ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__code__ogone
+#: model:payment.provider,name:payment_ogone.payment_provider_ogone
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone"
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_pspid
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_pspid
 msgid "PSPID"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr "Stjecatelj plaćanja"
-
-#. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_account_payment_method
-msgid "Payment Methods"
-msgstr ""
-
-#. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_payment_token
-msgid "Payment Token"
-msgstr "Token plaćanja"
+#: model:ir.model,name:payment_ogone.model_payment_provider
+msgid "Payment Provider"
+msgstr "Pružatelj usluge naplate"
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction
@@ -75,67 +79,104 @@ msgid "Payment Transaction"
 msgstr "Transakcija plaćanja"
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__provider
-msgid "Provider"
-msgstr "Davatelj "
-
-#. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_in
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_in
 msgid "SHA Key IN"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_out
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_out
 msgid "SHA Key OUT"
 msgstr ""
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment_token.py:0
-#, python-format
-msgid "Saved payment methods cannot be restored once they have been archived."
-msgstr ""
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha1
+msgid "SHA1"
+msgstr "SHA1"
 
 #. module: payment_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha256
+msgid "SHA256"
+msgstr "SHA256"
+
+#. module: payment_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha512
+msgid "SHA512"
+msgstr "SHA512"
+
+#. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Storing your payment details is necessary for future use."
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_userid
+#: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_userid
 msgid "The ID solely used to identify the API user with Ogone"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_pspid
+#: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_pspid
 msgid "The ID solely used to identify the account with Ogone"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__provider
-msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
-
-#. module: payment_ogone
-#: code:addons/payment_ogone/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_provider.py:0
 #, python-format
 msgid "The communication with the API failed."
 msgstr ""
 
 #. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The payment has been declined: %s"
 msgstr ""
 
 #. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr ""
+
+#. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
+msgid ""
+"This provider is deprecated.\n"
+"                    Consider disabling it and moving to <strong>Stripe</strong>."
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:payment.provider,auth_msg:payment_ogone.payment_provider_ogone
+msgid "Your payment has been authorized."
+msgstr "Vaše plaćanje je odobreno."
+
+#. module: payment_ogone
+#: model_terms:payment.provider,cancel_msg:payment_ogone.payment_provider_ogone
+msgid "Your payment has been cancelled."
+msgstr "Vaše plaćanje je otkazano."
+
+#. module: payment_ogone
+#: model_terms:payment.provider,pending_msg:payment_ogone.payment_provider_ogone
+msgid ""
+"Your payment has been successfully processed but is waiting for approval."
+msgstr "Vaše plaćanje je uspješno obrađeno, ali čeka na odobrenje."
+
+#. module: payment_ogone
+#: model_terms:payment.provider,done_msg:payment_ogone.payment_provider_ogone
+msgid "Your payment has been successfully processed."
 msgstr ""

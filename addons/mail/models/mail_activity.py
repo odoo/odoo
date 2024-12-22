@@ -674,7 +674,7 @@ class MailActivity(models.Model):
         activity_domain = [('res_model', '=', res_model)]
         is_filtered = domain or limit or offset
         if is_filtered:
-            activity_domain.append(('res_id', 'in', DocModel._search(domain or [], offset, limit) if is_filtered else []))
+            activity_domain.append(('res_id', 'in', DocModel._search(domain or [], offset, limit, DocModel._order) if is_filtered else []))
         all_activities = Activity.with_context(active_test=not fetch_done).search(
             activity_domain, order='date_done DESC, date_deadline ASC')
         all_ongoing = all_activities.filtered('active')

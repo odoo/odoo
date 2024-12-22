@@ -8,18 +8,18 @@
 # 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
 # Ákos Nagy <akos.nagy@oregional.hu>, 2023
-# Tamás Dombos, 2023
 # Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2023
 # sixsix six, 2023
 # krnkris, 2023
-# gezza <geza.nagy@oregional.hu>, 2023
+# gezza <geza.nagy@oregional.hu>, 2024
+# Tamás Dombos, 2024
 # Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
@@ -373,8 +373,8 @@ msgstr "Töröl"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Cards"
-msgstr "Kártyák"
+msgid "Card design"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
@@ -539,6 +539,13 @@ msgstr "E-mail"
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "End -"
 msgstr "Vége -"
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/website_event.js:0
+#, python-format
+msgid "Error"
+msgstr "Hiba"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -715,11 +722,6 @@ msgstr ""
 "kapcsolódjon be a beszélgetésbe!"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Fold Tickets Details"
-msgstr ""
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Follow Us"
@@ -750,7 +752,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Grid"
-msgstr "Tarifatáblázat"
+msgstr "Rács"
 
 #. module: website_event
 #. odoo-python
@@ -1044,7 +1046,7 @@ msgstr "Telefon"
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Photos"
-msgstr ""
+msgstr "Fotók"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_search
@@ -1148,6 +1150,7 @@ msgstr "Regisztráció megerősítve!"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registration failed! These tickets are not available anymore."
 msgstr ""
 
@@ -1207,11 +1210,6 @@ msgid "SEO optimized"
 msgstr "SEO optimalizált"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "SHARE"
-msgstr "Megosztás"
-
-#. module: website_event
 #: model:event.question.answer,name:website_event.event_7_question_0_answer_1
 msgid "Sales"
 msgstr "Értékesítések"
@@ -1263,6 +1261,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event.field_event_question_answer__sequence
 msgid "Sequence"
 msgstr "Sorszám"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Share"
+msgstr "Megosztás"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
@@ -1335,9 +1338,16 @@ msgid "Suggested answer"
 msgstr ""
 
 #. module: website_event
+#. odoo-python
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Templates"
-msgstr "Sablonok"
+msgid "Template badge"
+msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__text_box

@@ -1,24 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_event
-#
+# 	* website_event
+# 
 # Translators:
-# Martin Trigaux, 2018
-# Kostas Goutoudis <goutoudis@gmail.com>, 2018
-# Timos Zacharatos <kokkinopioupiou@hotmail.com>, 2018
-# George Tarasidis <george_tarasidis@yahoo.com>, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2024
+# Martin Trigaux, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2018-10-02 10:07+0000\n"
-"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
-"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
-"Language: el\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Martin Trigaux, 2024\n"
+"Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event
@@ -37,7 +36,7 @@ msgid "(Ref:"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "(only"
 msgstr ""
 
@@ -45,7 +44,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid ""
 ")\n"
-"                                <i class=\"fa fa-long-arrow-down d-block text-muted mx-3 my-2\" style=\"font-size: 1.5rem\"/>"
+"                                    <i class=\"fa fa-long-arrow-down d-block text-muted mx-3 my-2\" style=\"font-size: 1.5rem\"/>"
 msgstr ""
 
 #. module: website_event
@@ -67,16 +66,13 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_quotes
-msgid "<em>Write here a quote from one of your attendees. It gives confidence in your events.</em>"
+msgid ""
+"<em>Write here a quote from one of your attendees. It gives confidence in "
+"your events.</em>"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.template_intro
-msgid "<font style=\"font-size: 62px;\" class=\"o_default_snippet_text\">Introduction</font>"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "<i class=\"fa fa-ban me-2\"/>Sold Out"
 msgstr ""
 
@@ -86,14 +82,28 @@ msgid "<i class=\"fa fa-ban me-2\"/>Unpublished"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_details
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "<i class=\"fa fa-calendar me-2\"/>Add to Calendar"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "<i class=\"fa fa-check me-2\"/>Registered"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.navbar
+msgid ""
+"<i class=\"fa fa-chevron-left me-2\"/>\n"
+"            <span>Back to events</span>"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
-msgid "<i class=\"fa fa-facebook text-facebook\" aria-label=\"Facebook\" title=\"Facebook\"/>"
+msgid ""
+"<i class=\"fa fa-facebook text-facebook\" aria-label=\"Facebook\" "
+"title=\"Facebook\"/>"
 msgstr ""
 
 #. module: website_event
@@ -108,7 +118,9 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_configure_tickets_button
-msgid "<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" title=\"Configure event tickets\"/><em>Configure Tickets</em>"
+msgid ""
+"<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" "
+"title=\"Configure event tickets\"/><em>Configure Tickets</em>"
 msgstr ""
 
 #. module: website_event
@@ -123,19 +135,21 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
-msgid "<i class=\"fa fa-instagram text-instagram\" aria-label=\"Instagram\" title=\"Instagram\"/>"
+msgid ""
+"<i class=\"fa fa-instagram text-instagram\" aria-label=\"Instagram\" "
+"title=\"Instagram\"/>"
 msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
-msgid "<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" title=\"LinkedIn\"/>"
+msgid ""
+"<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" "
+"title=\"LinkedIn\"/>"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.layout
-msgid ""
-"<i class=\"fa fa-long-arrow-left me-2\"/>\n"
-"                            <span>All Events</span>"
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "<i class=\"fa fa-map-marker fa-fw\" role=\"img\"/>Get the direction"
 msgstr ""
 
 #. module: website_event
@@ -150,67 +164,62 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
-msgid "<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" title=\"Youtube\"/>"
+msgid ""
+"<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
+"title=\"Youtube\"/>"
 msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
-msgid "<span class=\"badge text-bg-secondary text-uppercase o_wevent_badge\">Speaker</span>"
+msgid ""
+"<span class=\"badge text-bg-secondary text-uppercase "
+"o_wevent_badge\">Speaker</span>"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-msgid "<span class=\"navbar-brand h4 my-0 me-auto pe-sm-4\">Events</span>"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
-msgid "<span class=\"o_countdown_remaining o_timer_days pe-1\">0</span><span class=\"o_countdown_metric pe-1\">days</span>"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
-msgid "<span class=\"o_countdown_remaining o_timer_hours\">00</span><span class=\"o_countdown_metric\">:</span>"
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "<span class=\"fa fa-plus me-1\"/> Create an Event"
 msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
-msgid "<span class=\"o_countdown_remaining o_timer_minutes\">00</span><span class=\"o_countdown_metric\">:</span>"
+msgid ""
+"<span class=\"o_countdown_remaining o_timer_days pe-1\">0</span><span "
+"class=\"o_countdown_metric pe-1\">days</span>"
 msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
-msgid "<span class=\"o_countdown_remaining o_timer_seconds\">00</span><span class=\"o_countdown_metric\"/>"
+msgid ""
+"<span class=\"o_countdown_remaining o_timer_hours\">00</span><span "
+"class=\"o_countdown_metric\">:</span>"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid "<span class=\"py-2 o_wevent_registration_title text-start\">Tickets</span>"
+#: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
+msgid ""
+"<span class=\"o_countdown_remaining o_timer_minutes\">00</span><span "
+"class=\"o_countdown_metric\">:</span>"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid "<span class=\"text-dark fw-bold align-middle px-2\">Qty</span>"
+#: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
+msgid ""
+"<span class=\"o_countdown_remaining o_timer_seconds\">00</span><span "
+"class=\"o_countdown_metric\"/>"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid ""
 "<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" class=\"text-danger\">\n"
-"                                    <i class=\"fa fa-ban me-2\"/>Sold Out\n"
-"                                </span>"
+"                                        <i class=\"fa fa-ban me-2\"/>Sold Out\n"
+"                                    </span>"
 msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
 msgid "<span>Online Events</span>"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid ""
-"<span>Tickets</span>\n"
-"                        <span class=\"btn p-0 close d-none\">×</span>"
 msgstr ""
 
 #. module: website_event
@@ -236,12 +245,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_about_us
 msgid "About us"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Add to Calendar"
-msgstr ""
+msgstr "Σχετικά με εμάς"
 
 #. module: website_event
 #. odoo-python
@@ -255,7 +259,7 @@ msgstr "Όλες οι χώρες"
 #: code:addons/website_event/models/event_event.py:0
 #, python-format
 msgid "All Events"
-msgstr "Όλες οι εκδηλώσεις"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
@@ -275,7 +279,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question_answer__name
 msgid "Answer"
-msgstr ""
+msgstr "Απάντηση"
 
 #. module: website_event
 #: model:ir.actions.act_window,name:website_event.action_event_registration_report
@@ -291,7 +295,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_question_view_form
 msgid "Answers"
-msgstr ""
+msgstr "Απαντήσεις"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__once_per_order
@@ -300,7 +304,11 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
-msgid "At just 13 years old, John DOE was already starting to develop his first business applications for customers. After mastering civil engineering, he founded TinyERP. This was the first phase of OpenERP which would later became Odoo, the most installed open-source business software worldwide."
+msgid ""
+"At just 13 years old, John DOE was already starting to develop his first "
+"business applications for customers. After mastering civil engineering, he "
+"founded TinyERP. This was the first phase of OpenERP which would later "
+"became Odoo, the most installed open-source business software worldwide."
 msgstr ""
 
 #. module: website_event
@@ -309,21 +317,26 @@ msgid "Attendee Answers"
 msgstr ""
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_registration__registration_answer_choice_ids
+msgid "Attendee Selection Answers"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Attendees"
-msgstr ""
+msgstr "Συμμετέχοντες"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_quotes
 msgid "Author"
-msgstr ""
+msgstr "Συντάκτης"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_1_question_0_answer_1
 #: model:event.question.answer,name:website_event.event_5_question_0_answer_1
 #: model:event.question.answer,name:website_event.event_type_data_sports_question_0_answer_1
 msgid "Blog Post"
-msgstr ""
+msgstr "Ανάρτηση ιστολογίου"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__partner_id
@@ -339,6 +352,7 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__can_publish
+#: model:ir.model.fields,field_description:website_event.field_event_tag__can_publish
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__can_publish
 msgid "Can Publish"
 msgstr ""
@@ -346,15 +360,17 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Cancel"
-msgstr ""
+msgstr "Ακύρωση"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Cards"
+msgid "Card design"
 msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Close"
 msgstr "Κλείσιμο"
@@ -389,7 +405,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__company_name
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
 msgid "Company"
-msgstr ""
+msgstr "Εταιρία"
 
 #. module: website_event
 #. odoo-python
@@ -399,9 +415,14 @@ msgid "Conference For Architects"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_configure_tickets_button
+msgid "Configure event tickets"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Confirm Registration"
-msgstr ""
+msgstr "Επιβεβαίωση Καταχώρισης"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_7_question_0_answer_0
@@ -409,14 +430,15 @@ msgid "Consumers"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_location
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Countries"
-msgstr ""
+msgstr "Χώρες"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__cover_properties
 msgid "Cover Properties"
-msgstr ""
+msgstr "Ιδιότητες εξωφύλλου"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__create_uid
@@ -424,7 +446,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__create_uid
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Δημιουργήθηκε από"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__create_date
@@ -432,17 +454,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__create_date
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Δημιουργήθηκε στις"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_time
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Date"
-msgstr ""
+msgstr "Ημερομηνία"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Date &amp; Time"
-msgstr ""
+msgstr "Ημερομηνία &amp; Ώρα"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
@@ -457,7 +480,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
 msgid "Description"
-msgstr ""
+msgstr "Περιγραφή"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__display_name
@@ -465,7 +488,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__display_name
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Εμφάνιση Ονόματος"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_type__website_menu
@@ -486,17 +509,34 @@ msgid "Don't forget to click <b>save</b> when you're done."
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "Download All Tickets"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
+msgstr ""
+
+#. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_type.py:0
 #: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__email
 #, python-format
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "End -"
 msgstr ""
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/website_event.js:0
+#, python-format
+msgid "Error"
+msgstr "Σφάλμα"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -514,7 +554,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
 msgid "Event Date"
-msgstr ""
+msgstr "Ημερομηνία Εκδήλωσης"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.template_location
@@ -568,8 +608,13 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
-#: model_terms:ir.ui.view,arch_db:website_event.event_details
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Event Subtitle"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_event_tag
+msgid "Event Tag"
 msgstr ""
 
 #. module: website_event
@@ -588,14 +633,14 @@ msgid "Event Template"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_details
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Event Title"
 msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__event_type_id
 msgid "Event Type"
-msgstr ""
+msgstr "Τύπος Εκδήλωσης"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
@@ -620,6 +665,7 @@ msgstr "Εκδήλωση Μη δημοσιοποιημένη"
 #: model:ir.ui.menu,name:website_event.menu_event_pages
 #: model:website.menu,name:website_event.menu_events
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
 #: model_terms:ir.ui.view,arch_db:website_event.snippets
 #, python-format
 msgid "Events"
@@ -631,7 +677,7 @@ msgid "Events Page"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "Expired"
 msgstr ""
 
@@ -643,13 +689,25 @@ msgid "Extra Register Button"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Find out what people see and say about this event, and join the conversation."
+#: model_terms:ir.ui.view,arch_db:website_event.event_location
+msgid "Filter by Country"
+msgstr "Φίλτρο ανά χώρα"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_time
+msgid "Filter by Date"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Fold Tickets Details"
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
+msgid "Filters"
+msgstr "Φίλτρα"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid ""
+"Find out what people see and say about this event, and join the "
+"conversation."
 msgstr ""
 
 #. module: website_event
@@ -666,12 +724,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__general_question_ids
 msgid "General Questions"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Get the direction"
-msgstr ""
+msgstr "Γενικές Ερωτήσεις"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -688,7 +741,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Grid"
-msgstr ""
+msgstr "Πλέγμα"
 
 #. module: website_event
 #. odoo-python
@@ -716,17 +769,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__id
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__id
 msgid "ID"
-msgstr ""
+msgstr "Κωδικός"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_question__once_per_order
-msgid "If True, this question will be asked only once and its value will be propagated to every attendees.If not it will be asked for every attendee of a reservation."
+msgid ""
+"If True, this question will be asked only once and its value will be "
+"propagated to every attendees.If not it will be asked for every attendee of "
+"a reservation."
 msgstr ""
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__introduction
+#: model_terms:ir.ui.view,arch_db:website_event.template_intro
 #, python-format
 msgid "Introduction"
 msgstr "Εισαγωγή"
@@ -758,6 +815,7 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_published
+#: model:ir.model.fields,field_description:website_event.field_event_tag__is_published
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__is_published
 msgid "Is Published"
 msgstr ""
@@ -773,7 +831,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__write_uid
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Τελευταία Ενημέρωση από"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__write_date
@@ -781,7 +839,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__write_date
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -791,7 +849,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "List"
-msgstr ""
+msgstr "Λίστα"
 
 #. module: website_event
 #. odoo-python
@@ -823,7 +881,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
-msgid "Looking great! Let's now <b>publish</b> this page so that it becomes <b>visible</b> on your website!"
+msgid ""
+"Looking great! Let's now <b>publish</b> this page so that it becomes "
+"<b>visible</b> on your website!"
 msgstr ""
 
 #. module: website_event
@@ -845,7 +905,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__menu_id
 msgid "Menu"
-msgstr ""
+msgstr "Μενού"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__menu_type
@@ -855,7 +915,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.actions.act_window,name:website_event.website_event_menu_action
 msgid "Menus"
-msgstr ""
+msgstr "Μενού"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_0_answer_0
@@ -895,7 +955,12 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
-msgid "No events found."
+msgid "No event matching your search criteria could be found."
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "No events scheduled yet"
 msgstr ""
 
 #. module: website_event
@@ -917,6 +982,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
 msgid "Once per Order"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_location
+msgid "Online Events"
 msgstr ""
 
 #. module: website_event
@@ -968,17 +1038,10 @@ msgid "Photos"
 msgstr ""
 
 #. module: website_event
-#. odoo-javascript
-#: code:addons/website_event/static/src/js/website_event.js:0
-#, python-format
-msgid "Please select at least one ticket."
-msgstr ""
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_search
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
 msgid "Published"
-msgstr ""
+msgstr "Δημοσιευμένο"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question_answer__question_id
@@ -986,7 +1049,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_question_view_form
 msgid "Question"
-msgstr ""
+msgstr "Ερώτηση"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__question_type
@@ -998,7 +1061,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_event/models/event_question.py:0
 #, python-format
-msgid "Question cannot belong to both the event category and itself."
+msgid "Question cannot be linked to both an Event and an Event Type."
 msgstr ""
 
 #. module: website_event
@@ -1028,12 +1091,13 @@ msgid "Ref:"
 msgstr ""
 
 #. module: website_event
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: code:addons/website_event/static/src/js/register_toaster_widget.js:0
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__register
-#: model_terms:ir.ui.view,arch_db:website_event.layout
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+#: model_terms:ir.ui.view,arch_db:website_event.navbar
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 #, python-format
 msgid "Register"
@@ -1063,7 +1127,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_event/controllers/main.py:0
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__registration_id
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 #, python-format
 msgid "Registration"
 msgstr ""
@@ -1071,6 +1135,12 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Registration confirmed!"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "Registration failed! These tickets are not available anymore."
 msgstr ""
 
 #. module: website_event
@@ -1113,6 +1183,8 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__website_id
+#: model:ir.model.fields,help:website_event.field_event_tag__website_id
+#: model:ir.model.fields,help:website_event.field_event_tag_category__website_id
 msgid "Restrict publishing to this website."
 msgstr ""
 
@@ -1127,22 +1199,17 @@ msgid "SEO optimized"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "SHARE"
-msgstr ""
-
-#. module: website_event
 #: model:event.question.answer,name:website_event.event_7_question_0_answer_1
 msgid "Sales"
-msgstr ""
+msgstr "Πωλήσεις"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "Sales end on"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "Sales start on"
 msgstr ""
 
@@ -1171,7 +1238,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__simple_choice
 msgid "Selection"
-msgstr ""
+msgstr "Επιλογή"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__seo_name
@@ -1182,7 +1249,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event.field_event_question__sequence
 #: model:ir.model.fields,field_description:website_event.field_event_question_answer__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Ακολουθία"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Share"
+msgstr "Κοινοποίηση"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
@@ -1200,13 +1272,14 @@ msgstr ""
 #: model:event.question.answer,name:website_event.event_5_question_0_answer_0
 #: model:event.question.answer,name:website_event.event_type_data_sports_question_0_answer_0
 msgid "Social Media"
-msgstr ""
+msgstr "Κοινωνικά Δίκτυα"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Sold Out"
-msgstr ""
+msgstr "Εξαντλήθηκε"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
@@ -1241,7 +1314,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Stats"
-msgstr ""
+msgstr "Στατιστικά"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -1254,8 +1327,15 @@ msgid "Suggested answer"
 msgstr ""
 
 #. module: website_event
+#. odoo-python
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Templates"
+msgid "Template badge"
 msgstr ""
 
 #. module: website_event
@@ -1270,8 +1350,17 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__website_url
+#: model:ir.model.fields,help:website_event.field_event_tag__website_url
 #: model:ir.model.fields,help:website_event.field_event_tag_category__website_url
 msgid "The full URL to access the document through the website."
+msgstr ""
+"Η πλήρης διεύθυνση (URL) για την πρόσβαση στο έγγραφο μέσω του ιστοτόπου."
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/models/event_event.py:0
+#, python-format
+msgid "The website must be from the same company as the event."
 msgstr ""
 
 #. module: website_event
@@ -1316,6 +1405,12 @@ msgid "Ticket Sales starting on"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "Tickets"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Tickets for this Event are <b>Sold Out</b>"
 msgstr ""
@@ -1323,7 +1418,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__title
 msgid "Title"
-msgstr ""
+msgstr "Τίτλος"
 
 #. module: website_event
 #. odoo-python
@@ -1333,9 +1428,9 @@ msgid "Today"
 msgstr "Σήμερα"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.layout
+#: model_terms:ir.ui.view,arch_db:website_event.navbar
 msgid "Toggle navigation"
-msgstr ""
+msgstr "Εναλλαγή περιήγησης"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -1346,7 +1441,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_form
 msgid "Type"
-msgstr ""
+msgstr "Τύπος"
 
 #. module: website_event
 #. odoo-python
@@ -1355,11 +1450,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.event_time
 #, python-format
 msgid "Upcoming Events"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
-msgid "Use the top button '<b>+ New</b>' to create an event."
 msgstr ""
 
 #. module: website_event
@@ -1387,10 +1477,11 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__view_id
 msgid "View"
-msgstr ""
+msgstr "Προβολή"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_published
+#: model:ir.model.fields,field_description:website_event.field_event_tag__website_published
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__website_published
 msgid "Visible on current website"
 msgstr ""
@@ -1398,13 +1489,26 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration__visitor_id
 msgid "Visitor"
+msgstr "Επισκέπτης"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "We couldn't find any event matching your search for:"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "We couldn't find any event scheduled at this moment."
 msgstr ""
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_website
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_id
+#: model:ir.model.fields,field_description:website_event.field_event_tag__website_id
+#: model:ir.model.fields,field_description:website_event.field_event_tag_category__website_id
+#: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
 msgid "Website"
-msgstr ""
+msgstr "Ιστότοπος"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_website_event_menu
@@ -1447,9 +1551,10 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_url
+#: model:ir.model.fields,field_description:website_event.field_event_tag__website_url
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__website_url
 msgid "Website URL"
-msgstr ""
+msgstr "Διεύθυνση URL Ιστότοπου"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_website_visitor
@@ -1459,17 +1564,17 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_description
 msgid "Website meta description"
-msgstr ""
+msgstr "Μετά περιγραφή ιστότοπου"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_keywords
 msgid "Website meta keywords"
-msgstr ""
+msgstr "Μετά λέξεις-κλειδιά ιστότοπου"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_title
 msgid "Website meta title"
-msgstr ""
+msgstr "Μετά-τίτλος Ιστότοπου"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_og_img
@@ -1500,32 +1605,37 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
-msgid "With the Edit button, you can <b>customize</b> the web page visitors will see when registering."
+msgid ""
+"With the Edit button, you can <b>customize</b> the web page visitors will "
+"see when registering."
 msgstr ""
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_question.py:0
 #, python-format
-msgid "You cannot change the question type of a question that already has answers!"
+msgid ""
+"You cannot change the question type of a question that already has answers!"
 msgstr ""
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_question.py:0
 #, python-format
-msgid "You cannot delete a question that has already been answered by attendees."
+msgid ""
+"You cannot delete a question that has already been answered by attendees."
 msgstr ""
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_question_answer.py:0
 #, python-format
-msgid "You cannot delete an answer that has already been selected by attendees."
+msgid ""
+"You cannot delete an answer that has already been selected by attendees."
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "available)"
 msgstr ""
 

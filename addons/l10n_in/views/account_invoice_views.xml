@@ -30,7 +30,7 @@
                     <field name="l10n_in_shipping_port_code_id" readonly="state != 'draft'"/>
                 </group>
             </xpath>
-            <xpath expr="//field[@name='partner_id']" position="after">
+            <xpath expr="//field[@name='partner_shipping_id']" position="before">
                 <field name="l10n_in_reseller_partner_id"
                        groups="l10n_in.group_l10n_in_reseller"
                        invisible="move_type not in ('out_invoice', 'out_refund') or country_code != 'IN' or move_type == 'entry'"

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
@@ -23,12 +24,12 @@ msgstr ""
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
 msgid "<span class=\"o_stat_text\">Debit Notes</span>"
-msgstr "<span class=\"o_stat_text\">Nota Débito</span>"
+msgstr "<span class=\"o_stat_text\">Notas de débito</span>"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_debit_note
 msgid "Add Debit Note wizard"
-msgstr "Asistente para agregar nota débito"
+msgstr "Asistente para añadir nota de débito"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
@@ -81,7 +82,7 @@ msgstr "Fecha de nota de débito"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_payment__debit_note_ids
 #, python-format
 msgid "Debit Notes"
-msgstr "Notas débito"
+msgstr "Notas de débito"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__display_name
@@ -105,9 +106,9 @@ msgid ""
 "In case you need to do corrections for every line, it can be in handy to "
 "copy them.  We won't copy them for debit notes from credit notes. "
 msgstr ""
-"En caso de que necesites hacer correcciones para cada línea, puedes hacerlo "
-"de forma sencilla al copiarlas. No las copiaremos para notas débito desde "
-"notas de crédito."
+"Puede ser útil copiarlas en caso de que haga correcciones para cada línea. "
+"No las copiaremos para las notas de débito desde las facturas "
+"rectificativas."
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_move
@@ -137,14 +138,14 @@ msgstr "Asiento"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__move_type
 msgid "Move Type"
-msgstr "Tipo de Movimiento"
+msgstr "Tipo de asiento"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_note_count
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_note_count
 #: model:ir.model.fields,field_description:account_debit_note.field_account_payment__debit_note_count
 msgid "Number of Debit Notes"
-msgstr "Número de notas débito"
+msgstr "Número de notas de débito"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_id
@@ -194,16 +195,16 @@ msgid ""
 "You can make a debit note only for a Customer Invoice, a Customer Credit "
 "Note, a Vendor Bill or a Vendor Credit Note."
 msgstr ""
-"Puede hacer una nota de débito solo para una factura del cliente, una nota "
-"de crédito del cliente, una factura del proveedor o una nota de crédito del "
-"proveedor."
+"Puede hacer una nota de débito solo para una factura del cliente, una "
+"factura rectificativa del cliente, una factura del proveedor o una factura "
+"rectificativa del proveedor."
 
 #. module: account_debit_note
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #, python-format
 msgid "You can only debit posted moves."
-msgstr "Solamente puedes debitar movimientos publicados."
+msgstr "Solo puede debitar asientos publicados."
 
 #. module: account_debit_note
 #. odoo-python

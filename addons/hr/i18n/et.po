@@ -21,16 +21,19 @@
 # Katrin Kampura, 2023
 # Mihkel avalah, 2023
 # Leaanika Randmets, 2023
-# Anna, 2024
 # Birgit Vijar, 2024
+# Siim Raasuke, 2024
+# Aveli Kannel <aveli@avalah.ee>, 2024
+# Anna, 2024
+# Stevin Lilla, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Birgit Vijar, 2024\n"
+"Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,7 +62,7 @@ msgstr "&amp;nbsp;"
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
 msgid "'Badge - %s' % (object.name).replace('/', '')"
-msgstr ""
+msgstr "'Märk - %s' % (object.name).replace('/', '')"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -141,13 +144,13 @@ msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"Email\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"Phone\"/>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -367,7 +370,7 @@ msgstr "Tegevusplaani mall"
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_schedule
 msgid "Activity schedule plan Wizard"
-msgstr ""
+msgstr "Tegevuste ajakava plaani viisard"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
@@ -910,7 +913,7 @@ msgstr "Loo uus töötamise tüüp"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
 msgid "Create a new work location"
-msgstr ""
+msgstr "Loo uus töökoht"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1002,6 +1005,8 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
@@ -1014,6 +1019,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+#, python-format
 msgid "Department"
 msgstr "Osakond"
 
@@ -1027,7 +1033,7 @@ msgstr "Osakonna nimi"
 #: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
 #, python-format
 msgid "Department Organization"
-msgstr ""
+msgstr "Osakonna organisatsioon"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_department_kanban_action
@@ -1249,7 +1255,7 @@ msgstr "Töötaja nimi"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__employee_properties_definition
 msgid "Employee Properties"
-msgstr ""
+msgstr "Töötaja omadused"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -1536,7 +1542,7 @@ msgstr "HR töötaja: kontrollige tööloa kehtivust"
 #: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
 #, python-format
 msgid "HR Presence Status"
-msgstr ""
+msgstr "Personaliosakonna kohaloleku staatus"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1667,7 +1673,7 @@ msgstr "Mitteaktiivset ressursi kirjet on võimalik peita ilma kustutamata."
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__private_car_plate
 msgid "If you have more than one car, just separate the plates by a space."
-msgstr ""
+msgstr "Kui teil on rohkem kui 1 auto, eraldage numbrimärgid tühikuga."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
@@ -1879,7 +1885,7 @@ msgstr "Asukoha number"
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_ltp
 msgid "Long Term Projects"
-msgstr ""
+msgstr "Pikaajalised projektid"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_hrm
@@ -1893,6 +1899,14 @@ msgid ""
 "Lorem Ipsum passages, and more recently with desktop publishing software "
 "like Aldus PageMaker including versions of Lorem Ipsum."
 msgstr ""
+"Lorem Ipsum on lihtsalt trükitehnika ja paigutuse tööstuse näidistekst. "
+"Lorem Ipsum on olnud tööstuse standardne näidistekst alates 1500. aastatest,"
+" kui tundmatu trükikoda võttis tüüposade galeriid ja segas selle, et "
+"koostada tüüpnäidiste raamat. See on ellu jäänud mitte ainult viis sajandit,"
+" vaid ka hüppe elektroonilisse paigutusse, jäädes sisuliselt muutumatuks. "
+"Seda populariseeriti 1960. aastatel, kui ilmusid Letraset'i lehed, mis "
+"sisaldasid Lorem Ipsum'i lõike, ja hiljem lauatrükkimise tarkvarade, nagu "
+"Aldus PageMaker, versioonidega, mis sisaldasid Lorem Ipsum'i lõike."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
@@ -2064,7 +2078,7 @@ msgstr "Läbirääkimised ja lepingud"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_graph
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_pivot
 msgid "New Employees Over Time"
-msgstr ""
+msgstr "Uued töötajad aja jooksul"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__newly_hired
@@ -2229,13 +2243,13 @@ msgstr "Büroo"
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
 msgid "Officer: Manage all employees"
-msgstr ""
+msgstr "Juht: halda kõiki töötajaid"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.mail_activity_plan_action
 #: model:ir.ui.menu,name:hr.menu_config_plan_plan
 msgid "On/Offboarding Plans"
-msgstr "On/Offboarding plaanid"
+msgstr "Töötaja tööleasumisel/-lahkumisel seadistatavad plaanid"
 
 #. module: hr
 #. odoo-javascript
@@ -2378,7 +2392,7 @@ msgstr "Isiklik areng:"
 #: code:addons/hr/models/res_users.py:0
 #, python-format
 msgid "Personal information update."
-msgstr ""
+msgstr "Isikuandmete uuendus."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2405,6 +2419,8 @@ msgid ""
 "Plan %(plan_names)s cannot use a department as it is used only for employee "
 "plans."
 msgstr ""
+"Plaanile %(plan_names)s ei saa lisada osakonda, kuna see on kasutusel ainult"
+" töötaja plaanides."
 
 #. module: hr
 #. odoo-python
@@ -2414,6 +2430,8 @@ msgid ""
 "Plan activities %(template_names)s cannot use coach, manager or employee "
 "responsible as it is used only for employee plans."
 msgstr ""
+"Plaani aktiviteedid %(template_names)sei saa kasutada treenerit, juhti või "
+"vastutavat töötajat, kuna see on mõeldud ainult töötajate plaanide jaoks."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -2454,7 +2472,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Control"
-msgstr ""
+msgstr "Kohalolekukontroll"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2498,7 +2516,7 @@ msgstr "Privaatne aadress"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_car_plate
 msgid "Private Car Plate"
-msgstr ""
+msgstr "Isikliku auto numbrimärk"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_city
@@ -2562,7 +2580,7 @@ msgstr "Postiindeks"
 #. module: hr
 #: model:hr.department,name:hr.dep_ps
 msgid "Professional Services"
-msgstr ""
+msgstr "Professionaalsed teenused "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_properties
@@ -2588,7 +2606,7 @@ msgstr "Täpsustage kliendi vajadused"
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_be
 msgid "R&D USA"
-msgstr ""
+msgstr "Teadus ja arendus USA"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__rating_ids
@@ -2621,7 +2639,7 @@ msgstr "Põhjus"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__reason_code
 msgid "Reason Code"
-msgstr ""
+msgstr "Põhjuse kood"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_recruitment
@@ -2838,6 +2856,13 @@ msgid "Software Developer"
 msgstr "Tarkvaraarendaja"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Some employee already have a work contact"
+msgstr "Mõnel töötajal on juba tööleping"
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2869,7 +2894,7 @@ msgstr "Alguskuupäev"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "State"
-msgstr "Staatus"
+msgstr "Maakond"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2992,6 +3017,10 @@ msgid ""
 "              He defines the products and customers portfolio according to the marketing plan.\n"
 "              This mission requires strong collaboration with Technical Service and Sales."
 msgstr ""
+"Turundusjuht määratleb oma hõlmatud turusegmentide keskmise ja pikaajalise turundusstrateegia kogu maailmas.\n"
+"              Ta koostab ja jälgib igaaastast eelarvet koostöös müügiga.\n"
+"              Ta määratleb tooted ja kliendiportaali vastavalt turundusplaanile.\n"
+"              See missioon nõuab tihedat koostööd tehnilise teeninduse ja müügiga."
 
 #. module: hr
 #. odoo-python
@@ -3058,7 +3087,7 @@ msgstr "Ametikoha nimetus peab olema ettevõtte osakondade lõikes unikaalne!"
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "The user of %s's coach is not set."
-msgstr ""
+msgstr "Kasutaja %s juhendaja ei ole määratud."
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
@@ -3103,7 +3132,7 @@ msgstr ""
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "Those responsible types are limited to Employee plans."
-msgstr ""
+msgstr "Need vastutustüübid on piiratud töötajate plaanidega."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -3243,7 +3272,7 @@ msgstr "Vaata profiili"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expiration Date"
-msgstr ""
+msgstr "Viisa aegumise kuupäev"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -3263,6 +3292,8 @@ msgstr "Hoiatus"
 msgid ""
 "We are currently looking for someone like that to join our Consultant team."
 msgstr ""
+"Oleme otsimas praegu kedagi sellist, kes liituks meie "
+"konsultatsioonimeeskonnaga."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_developer
@@ -3270,6 +3301,8 @@ msgid ""
 "We are currently looking for someone like that to join our Web team.\n"
 "                Someone who can snap out of coding and perform analysis or meet clients to explain the technical possibilities that can meet their needs."
 msgstr ""
+"Otsime praegu kedagi, kes liituks meie veebimeeskonnaga.\n"
+"                Keegi, kes suudab kiiresti koodi kirjutamisest üle minna analüüsile või kohtuda klientidega, et selgitada tehnilisi võimalusi, mis vastavad nende vajadustele."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3317,6 +3350,9 @@ msgid ""
 "                    can easily find all the information you need for each person;\n"
 "                    contact data, job position, availability, etc."
 msgstr ""
+"Odoo töötaja ekraanil kiire pilguheitmisega\n"
+"                    võite kiiresti leida kogu vajaliku teabe iga inimese kohta;\n"
+"                    kontaktandmed, ametikoht, kättesaadavus jne."
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
@@ -3481,6 +3517,18 @@ msgid ""
 "contributing to the set up of a new politic,\n"
 "being involved into satisfaction surveys in order to have a better knowledge of how the support given is seen by the customers."
 msgstr ""
+"Osalete meie õpetustööriistade ja eelmüügivahendite uuendamisel pärast uue Odoo versiooni turuletoomist. Tõepoolest, iga uus tarkvaraversioon toob kaasa märkimisväärseid täiustusi funktsionaalsuse, ergonoomika ja konfiguratsiooni osas.\n"
+"Peate tutvuma olemasolevate tööriistadega (raamatud, klassitöötlused, Odoo esitluste slaidid, ärilised tööriistad),\n"
+"et osaleda nende tööriistade uuendamisel, et need vastaksid uue tarkvaraversiooni nõudmistele.\n"
+"Samuti on teil kindlasti vaja soovitada täiustusi, et katta tarkvara uusi valdkondi.\n"
+"Liitute Rakendamise Abi osakonnaga. See kolmeliikmeline meeskond aitab Odoo klientidel tarkvara seadistamisel. Teie rolliks on\n"
+"korraldada veebinare, et näidata tarkvara erinevaid funktsioone.\n"
+"olla seotud klienditoega ja\n"
+"vastata nende küsimustele.\n"
+"Aitate tugijuhtidel uute tugiteenuste seadistamisel, osaledes:\n"
+"uute juhtumite käsitlemises,\n"
+"uue poliitika väljatöötamises,\n"
+"rahulolu-uuringutes, et saada parem ülevaade sellest, kuidas kliendid antud tuge tajuvad."
 
 #. module: hr
 #. odoo-python
@@ -3496,6 +3544,9 @@ msgid ""
 "\n"
 "The job is located in Grand-Rosière (1367), Belgium (between Louvain-La-Neuve and Namur)."
 msgstr ""
+"Osalete meie partneritele ja klientidele pakutavates konsultatsiooniteenustes: disain, analüüs, arendus, testimine, projektijuhtimine, tugi/mentorlus. Töötate iseseisvalt ning koordineerite ja juhite väikeseid hajutatud arendusmeeskondi mõnede projektide puhul. Soovi korral viite läbi Odoo koolitusi partneritele ja klientidele (8-10 inimest/sessioon). Raporteerite Professionaalteenuste juhile ja töötate tihedalt koos kõigi arendajate ja konsultantidega.\n"
+"\n"
+"Töökohaks on Grand-Rosière (1367), Belgium (Louvain-La-Neuve ja Namur vahel)."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile

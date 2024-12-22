@@ -35,7 +35,7 @@
         <div id="portal_client_category" position="inside">
             <t t-call="portal.portal_docs_entry">
                 <t t-set="icon" t-value="'/sale/static/src/img/bag.svg'"/>
-                <t t-set="title">Sales Orders</t>
+                <t t-set="title">Your Orders</t>
                 <t t-set="url" t-value="'/my/orders'"/>
                 <t t-set="text">Follow, view or pay your orders</t>
                 <t t-set="placeholder_count" t-value="'order_count'"/>
@@ -121,7 +121,6 @@
                     </tr>
                 </t>
             </t>
-            <p t-else="">There are currently no orders for your account.</p>
         </t>
     </template>
 
@@ -185,7 +184,7 @@
                                 <h6><small class="text-muted">Your contact</small></h6>
                                 <div class="o_portal_contact_details d-flex flex-column gap-2">
                                     <div class="d-flex justify-content-start align-items-center gap-2">
-                                        <img class="o_avatar o_portal_contact_img rounded" t-att-src="image_data_uri(sale_order.user_id.avatar_1024)" alt="Contact"/>
+                                        <img class="o_avatar o_portal_contact_img rounded" t-att-src="image_data_uri(sale_order.user_id.avatar_128)" alt="Contact"/>
                                         <div>
                                             <h6 class="mb-0" t-out="sale_order.user_id.name"/>
                                             <a href="#discussion" class="d-flex align-items-center gap-2 small fw-bold">
@@ -295,7 +294,7 @@
                                         If you believe that it is an error, please contact the website administrator.
                                     </div>
                                     <div t-else="" id="payment_method" class="text-start">
-                                        <h3>Pay with</h3>
+                                        <h3 class="mb-3">Pay with</h3>
                                         <t t-call="payment.form">
                                             <!-- Inject the order ID to allow Stripe to check if tokenization is required. -->
                                             <t t-set="sale_order_id" t-value="sale_order.id"/>
@@ -444,7 +443,7 @@
                                 <th t-else="" class="ps-0 pb-0">Date:</th>
                                 <td class="w-100 pb-0 text-wrap"><span t-field="sale_order.date_order" t-options='{"widget": "date"}'/></td>
                             </tr>
-                            <tr t-if="sale_order.validity_date">
+                            <tr t-if="sale_order.validity_date and sale_order.state in ['draft', 'sent']">
                                 <th class="ps-0 pb-0">Expiration Date:</th>
                                 <td class="w-100 pb-0 text-wrap"><span t-field="sale_order.validity_date" t-options='{"widget": "date"}'/></td>
                             </tr>
@@ -498,6 +497,9 @@
                                 </a>
                                 <div t-if="i.payment_state in ('paid', 'in_payment')" class="small badge text-bg-success orders_label_text_align">
                                     <i class="fa fa-fw fa-check"/> Paid
+                                </div>
+                                <div t-elif="i.payment_state == 'reversed'" class="small badge text-bg-success orders_label_text_align">
+                                    <i class="fa fa-fw fa-check"/> Reversed
                                 </div>
                                 <div t-elif="authorized_tx_ids" class="small badge text-bg-success orders_label_text_align">
                                     <i class="fa fa-fw fa-check"/> Authorized
@@ -659,7 +661,7 @@
             <section t-if="sale_order.payment_term_id" class="mt-4">
                 <h4 class="">Payment terms</h4>
                 <hr class="mt-0 mb-1"/>
-                <span t-field="sale_order.payment_term_id"/>
+                <span t-field="sale_order.payment_term_id.note"/>
             </section>
         </div>
     </template>

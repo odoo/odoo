@@ -25,7 +25,7 @@ class AccountMove(models.Model):
             ('special_economic_zone', 'Special Economic Zone'),
             ('deemed_export', 'Deemed Export'),
             ('uin_holders', 'UIN Holders'),
-        ], string="GST Treatment", compute="_compute_l10n_in_gst_treatment", store=True, readonly=False, copy=True)
+        ], string="GST Treatment", compute="_compute_l10n_in_gst_treatment", store=True, readonly=False, copy=True, precompute=True)
     l10n_in_state_id = fields.Many2one('res.country.state', string="Place of supply", compute="_compute_l10n_in_state_id", store=True, readonly=False)
     l10n_in_gstin = fields.Char(string="GSTIN")
     # For Export invoice this data is need in GSTR report
@@ -50,17 +50,22 @@ class AccountMove(models.Model):
                 record.l10n_in_gst_treatment = gst_treatment
         (self - indian_invoice).l10n_in_gst_treatment = False
 
-    @api.depends('partner_id', 'company_id')
+    @api.depends('partner_id', 'partner_shipping_id', 'company_id')
     def _compute_l10n_in_state_id(self):
         for move in self:
             if move.country_code == 'IN' and move.journal_id.type == 'sale':
-                country_code = move.partner_id.country_id.code
+                partner_state = (
+                    move.partner_id.commercial_partner_id == move.partner_shipping_id.commercial_partner_id
+                    and move.partner_shipping_id.state_id
+                    or move.partner_id.state_id
+                )
+                if not partner_state:
+                    partner_state = move.partner_id.commercial_partner_id.state_id or move.company_id.state_id
+                country_code = partner_state.country_id.code or move.country_code
                 if country_code == 'IN':
-                    move.l10n_in_state_id = move.partner_id.state_id
-                elif country_code:
-                    move.l10n_in_state_id = self.env.ref('l10n_in.state_in_oc', raise_if_not_found=False)
+                    move.l10n_in_state_id = partner_state
                 else:
-                    move.l10n_in_state_id = move.company_id.state_id
+                    move.l10n_in_state_id = self.env.ref('l10n_in.state_in_oc', raise_if_not_found=False)
             elif move.country_code == 'IN' and move.journal_id.type == 'purchase':
                 move.l10n_in_state_id = move.company_id.state_id
             else:
@@ -79,7 +84,7 @@ class AccountMove(models.Model):
         posted = super()._post(soft)
         gst_treatment_name_mapping = {k: v for k, v in
                              self._fields['l10n_in_gst_treatment']._description_selection(self.env)}
-        for move in posted.filtered(lambda m: m.country_code == 'IN'):
+        for move in posted.filtered(lambda m: m.country_code == 'IN' and m.is_sale_document()):
             if move.l10n_in_state_id and not move.l10n_in_state_id.l10n_in_tin:
                 raise UserError(_("Please set a valid TIN Number on the Place of Supply %s", move.l10n_in_state_id.name))
             if not move.company_id.state_id:
@@ -114,6 +119,10 @@ class AccountMove(models.Model):
         # Prevent deleting entries once it's posted for Indian Company only
         if any(m.country_code == 'IN' and m.posted_before for m in self) and not self._context.get('force_delete'):
             raise UserError(_("To keep the audit trail, you can not delete journal entries once they have been posted.\nInstead, you can cancel the journal entry."))
+
+    def _can_be_unlinked(self):
+        self.ensure_one()
+        return (self.country_code != 'IN' or not self.posted_before) and super()._can_be_unlinked()
 
     def unlink(self):
         # Add logger here becouse in api ondelete account.move.line is deleted and we can't get total amount

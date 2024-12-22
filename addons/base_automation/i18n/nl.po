@@ -3,8 +3,9 @@
 # 	* base_automation
 # 
 # Translators:
-# Wil Odoo, 2023
 # Jolien De Paepe, 2023
+# Wil Odoo, 2024
+# Manon Rondou, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
@@ -37,7 +38,7 @@ msgstr ""
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 #, python-format
 msgid "\"%s\" tag is added"
-msgstr "\"%s\" label is toegevoegd"
+msgstr "\"%s\"-label is toegevoegd"
 
 #. module: base_automation
 #. odoo-python
@@ -142,9 +143,9 @@ msgid ""
 "                                    <span invisible=\"trigger != 'on_time_updated'\">after last update</span>\n"
 "                                    <span invisible=\"trigger != 'on_time'\">after</span>"
 msgstr ""
-"na <span invisible=\"trigger != 'on_time_created'\">aanmaak</span> na <span invisible=\"trigger != 'on_time_updated'\">laatste update na</span><span invisible=\"trigger != 'on_time'\"></span>\n"
-"                                    \n"
-"                                    "
+"<span invisible=\"trigger != 'on_time_created'\">na aanmaken</span>\n"
+"                                    <span invisible=\"trigger != 'on_time_updated'\">na laatste update</span>\n"
+"                                    <span invisible=\"trigger != 'on_time'\">na</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -215,7 +216,7 @@ msgstr "Volgers toevoegen: %(partner_names)s"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_created
 msgid "After creation"
-msgstr "Na het aanmaken"
+msgstr "Na aanmaken"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_updated
@@ -531,10 +532,10 @@ msgstr ""
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
 msgid ""
 "If present, this condition must be satisfied before the update of the "
-"record."
+"record. Not checked on record creation."
 msgstr ""
-"Indien aanwezig, moet aan deze conditie zijn voldaan, voor het bijwerken van"
-" het record."
+"Indien aanwezig, moet deze conditie voldaan zijn voor het bijwerken van het "
+"record. Niet aangevinkt bij het aanmaken van records."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -683,7 +684,7 @@ msgstr "Bij uitgaand bericht"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
 msgid "On save"
-msgstr "Bij opslaan"
+msgstr "Bij het opslaan"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unarchive
@@ -840,7 +841,7 @@ msgstr "Specifieke gebruiker"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_stage_set
 msgid "Stage is set to"
-msgstr "Fase is ingesteld op"
+msgstr "De fase is ingesteld op"
 
 #. module: base_automation
 #. odoo-javascript
@@ -857,7 +858,7 @@ msgstr "Status is ingesteld op"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_tag_set
 msgid "Tag is added"
-msgstr "Label is toegevoegd"
+msgstr "Tag is toegevoegd"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form

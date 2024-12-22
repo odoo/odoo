@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -61,6 +61,13 @@ msgid "Enable Apple Pay"
 msgstr "Ota Apple Pay käyttöön"
 
 #. module: payment_stripe
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/express_checkout_form.js:0
+#, python-format
+msgid "Free Shipping"
+msgstr "Ilmainen toimitus"
+
+#. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Generate your webhook"
 msgstr "Luo webhook"
@@ -98,7 +105,7 @@ msgstr "Viitettä %s vastaavaa tapahtumaa ei löytynyt."
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Other Payment Providers"
-msgstr ""
+msgstr "Muut maksupalvelujen tarjoajat"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_provider
@@ -184,7 +191,7 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_mandate
 msgid "Stripe Mandate"
-msgstr ""
+msgstr "Stripe-mandaatti"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method

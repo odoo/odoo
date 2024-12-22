@@ -10,13 +10,13 @@
 # Anto Nilsson <anton.nilsson@vertel.se>, 2023
 # Haojun Zou <apollo_zhj@msn.com>, 2023
 # Robin Calvin, 2023
-# Martin Wilderoth <martin.wilderoth@linserv.se>, 2023
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +44,7 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
 msgid "<span class=\"o_stat_text\">Sale Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Säljorder</span>"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
@@ -104,7 +104,7 @@ msgstr "Deltagare"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Before updating the linked registrations of"
-msgstr ""
+msgstr "Innan uppdatering av de länkade registreringarna av"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -147,6 +147,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:event_sale.event_sale_report_action
 msgid "Come back once tickets have been sold to overview your sales income."
 msgstr ""
+"Kom tillbaka när biljetterna har sålts för att se över dina "
+"försäljningsintäkter."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__company_id
@@ -166,7 +168,7 @@ msgstr "Bekräftad"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Create/Update registrations"
-msgstr ""
+msgstr "Skapa/uppdatera registreringar"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__create_uid
@@ -260,12 +262,12 @@ msgstr "Anmälan"
 #. module: event_sale
 #: model:product.template,name:event_sale.product_product_event_standard_product_template
 msgid "Event Registration - Standard"
-msgstr ""
+msgstr "Registrering av evenemang - Standard"
 
 #. module: event_sale
 #: model:product.template,name:event_sale.product_product_event_vip_product_template
 msgid "Event Registration - VIP"
-msgstr ""
+msgstr "Registrering för evenemang - VIP"
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
@@ -275,7 +277,7 @@ msgstr "Anmälningar"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Event Sales Analysis"
-msgstr ""
+msgstr "Analys av försäljning av evenemang"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_sale_report
@@ -317,7 +319,7 @@ msgstr "Evenemangstyp"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Events that have ended"
-msgstr ""
+msgstr "Händelser som har avslutats"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
@@ -349,7 +351,7 @@ msgstr "ID"
 #: code:addons/event_sale/wizard/event_configurator.py:0
 #, python-format
 msgid "Invalid ticket choice \"%(ticket_name)s\" for event \"%(event_name)s\"."
-msgstr ""
+msgstr "Ogiltigt biljettval \"%(ticket_name)s\" för evenemang \"%(event_name)s\"."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__invoice_partner_id
@@ -359,7 +361,7 @@ msgstr "Fakturaadress"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__active
 msgid "Is registration active (not archived)?"
-msgstr ""
+msgstr "Är registreringen aktiv (inte arkiverad)?"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_uid
@@ -388,19 +390,19 @@ msgstr "Namn"
 #. module: event_sale
 #: model_terms:ir.actions.act_window,help:event_sale.event_sale_report_action
 msgid "No Event Revenues yet!"
-msgstr ""
+msgstr "Inga evenemangsinkomster ännu!"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Non-free tickets"
-msgstr ""
+msgstr "Inga gratisbiljetter"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__to_pay
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__to_pay
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
 msgid "Not Sold"
-msgstr ""
+msgstr "Ej såld"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
@@ -435,7 +437,7 @@ msgstr "Betalningsstatus"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Pending payment"
-msgstr ""
+msgstr "I väntan på betalning"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__phone
@@ -450,6 +452,8 @@ msgid ""
 "Please make sure all your event related lines are configured before "
 "confirming this order:%s"
 msgstr ""
+"Vänligen kontrollera att alla dina eventrelaterade rader är konfigurerade "
+"innan du bekräftar denna order:%s"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price
@@ -471,7 +475,7 @@ msgstr "Prisreduktion inkl moms"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_incl
 msgid "Price include"
-msgstr ""
+msgstr "Priset inkluderar"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_template
@@ -520,12 +524,12 @@ msgstr "Anmälningsdatum"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_state
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Registration Status"
-msgstr ""
+msgstr "Registreringsstatus"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
 msgid "Registration revenues"
-msgstr ""
+msgstr "Intäkter från registrering"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__registration_ids
@@ -552,7 +556,7 @@ msgstr "Intäkter"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
 msgid "Sale Order"
-msgstr "Order"
+msgstr "Kundorder"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_line_id
@@ -563,12 +567,12 @@ msgstr "Kundorderrad"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_state
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Sale Order Status"
-msgstr ""
+msgstr "Kundorderstatus"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_status
 msgid "Sale Status"
-msgstr ""
+msgstr "Försäljningsstatus"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
@@ -591,14 +595,14 @@ msgstr "Försäljning avslutad"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__sale_order_id
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__sale
 msgid "Sales Order"
-msgstr "Order"
+msgstr "Försäljningsorder"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order_line
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_line_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__sale_order_line_id
 msgid "Sales Order Line"
-msgstr "Orderrad"
+msgstr "Försäljningsorderrad"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_event_ticket_view_tree_from_event
@@ -646,12 +650,12 @@ msgstr "Biljett ändrad från"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_ticket_price
 msgid "Ticket price"
-msgstr ""
+msgstr "Biljettpris"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Total sales for this event"
-msgstr "Totalt försäljning för detta event"
+msgstr "Totalt försäljning för detta evenemang"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
@@ -671,11 +675,15 @@ msgid ""
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
+"Obekräftade: registreringar i vänteläge som väntar på en åtgärd (specialfall, särskilt med försäljningsstatus)\n"
+"Registrerade: registreringar som anses ha tagits av en kund\n"
+"Närvarade: registreringar för vilka deltagaren närvarade vid evenemanget\n"
+"Avbokade: registreringar som avbokats manuellt"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_price_untaxed
 msgid "Untaxed Revenues"
-msgstr ""
+msgstr "Oskattade intäkter"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -690,7 +698,7 @@ msgstr "Kommande/Pågående"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please give attendee details."
-msgstr ""
+msgstr "Vänligen ange uppgifter om deltagarna."
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception

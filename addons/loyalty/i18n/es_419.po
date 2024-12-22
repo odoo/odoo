@@ -6,13 +6,14 @@
 # Wil Odoo, 2023
 # Iran Villalobos López, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Martin Trigaux, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -117,7 +118,7 @@ msgstr "(si al menos"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "(tax excluded)"
-msgstr "(incluyendo impuestos)"
+msgstr "(sin impuestos)"
 
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.10_percent_coupon
@@ -731,7 +732,7 @@ msgstr "Empresa"
 #: code:addons/loyalty/models/loyalty_card.py:0
 #, python-format
 msgid "Compose Email"
-msgstr "Redactar un correo electrónico"
+msgstr "Redactar correo electrónico"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__rule_ids
@@ -864,7 +865,7 @@ msgstr "Crédito(s)"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__currency_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__currency_id
 msgid "Currency"
-msgstr "Divisa"
+msgstr "Moneda"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__currency_symbol
@@ -931,7 +932,7 @@ msgstr "Descuento"
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_discount_loyalty_action
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Discount & Loyalty"
-msgstr "Descuento y fidelidad"
+msgstr "Descuento y lealtad"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_applicability
@@ -1182,6 +1183,13 @@ msgid "Generate eWallet"
 msgstr "Genere monederos electrónicos"
 
 #. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "Generate {{props.context.program_item_name}}"
+msgstr "Generar {{props.context.program_item_name}}"
+
+#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
@@ -1290,19 +1298,17 @@ msgstr "ID"
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr ""
-"Si se encuentra seleccionado, hay nuevos mensajes que requieren de su "
-"atención."
+"Si se encuentra seleccionado, hay nuevos mensajes que requieren su atención."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Si se encuentra seleccionado, algunos mensajes presentan error de entrega."
+msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "If minimum"
-msgstr "si el mínimo"
+msgstr "Si hay un mínimo de"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
@@ -1317,7 +1323,7 @@ msgstr "Inactivo"
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__incl
 msgid "Included"
-msgstr "Incluyendo"
+msgstr "Incluido"
 
 #. module: loyalty
 #. odoo-python
@@ -1417,7 +1423,7 @@ msgstr "Comunicación de lealtad"
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
-msgstr "Cupón de fidelidad"
+msgstr "Cupón de lealtad"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_program
@@ -1432,7 +1438,7 @@ msgstr "Recompensa de lealtad"
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_rule
 msgid "Loyalty Rule"
-msgstr "Regla de fidelidad"
+msgstr "Regla de lealtad"
 
 #. module: loyalty
 #. odoo-python
@@ -1762,6 +1768,7 @@ msgstr "Tipo de recompensa"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rewards"
 msgstr "Recompensas"
 
@@ -1899,6 +1906,13 @@ msgstr "El código promocional debe ser único."
 msgid "The required points for a reward must be strictly positive."
 msgstr ""
 "Los puntos requeridos para una recompensa deben ser estrictamente positivos."
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+#, python-format
+msgid "The reward description field cannot be empty."
+msgstr "El campo con la descripción de la recompensa no puede estar vacío."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
@@ -2224,3 +2238,10 @@ msgstr "usos"
 #, python-format
 msgid "your order"
 msgstr "su orden"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "{{loyalty_el_title}}"
+msgstr "{{loyalty_el_title}}"

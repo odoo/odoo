@@ -295,11 +295,13 @@ actual arch.
             arch = False
             if mode == 'soft':
                 arch = view.arch_prev
+                write_dict = {'arch_db': arch}
             elif mode == 'hard' and view.arch_fs:
                 arch = view.with_context(read_arch_from_file=True, lang=None).arch
+                write_dict = {'arch_db': arch, 'arch_prev': False, 'arch_updated': False}
             if arch:
                 # Don't save current arch in previous since we reset, this arch is probably broken
-                view.with_context(no_save_prev=True, lang=None).write({'arch_db': arch})
+                view.with_context(no_save_prev=True, lang=None).write(write_dict)
 
     @api.depends('write_date')
     def _compute_model_data_id(self):
@@ -376,7 +378,7 @@ actual arch.
                 err = ValidationError(_(
                     "Error while parsing or validating view:\n\n%(error)s",
                     error=tools.ustr(e),
-                    view=self.key or self.id,
+                    view=view.key or view.id,
                 )).with_traceback(e.__traceback__)
                 err.context = getattr(e, 'context', None)
                 raise err from None
@@ -542,6 +544,7 @@ actual arch.
         # if in uninstall mode and has children views, emulate an ondelete cascade
         if self.env.context.get('_force_unlink', False) and self.inherit_children_ids:
             self.inherit_children_ids.unlink()
+        self.env.registry.clear_cache('templates')
         return super(View, self).unlink()
 
     def _update_field_translations(self, fname, translations, digest=None):
@@ -1657,13 +1660,13 @@ actual arch.
                     name_manager.must_have_fields(node, vnames, f"context ({expr})")
                 for key, val_ast in get_dict_asts(expr).items():
                     if key == 'group_by':  # only in context
-                        if not isinstance(val_ast, ast.Str):
+                        if not isinstance(val_ast, ast.Constant) or not isinstance(val_ast.value, str):
                             msg = _(
                                 '"group_by" value must be a string %(attribute)s=%(value)r',
                                 attribute=attr, value=expr,
                             )
                             self._raise_view_error(msg, node)
-                        group_by = val_ast.s
+                        group_by = val_ast.value
                         fname = group_by.split(':')[0]
                         if fname not in name_manager.model._fields:
                             msg = _(
@@ -1770,6 +1773,8 @@ actual arch.
             elif node.tag == 'input' and node.get('type') in ('button', 'submit', 'reset'):
                 pass
             elif any(klass in classes for klass in ('btn-group', 'btn-toolbar', 'btn-addr')):
+                pass
+            elif node.tag == 'field' and node.get('widget') == 'url':
                 pass
             else:
                 msg = ("A simili button must be in tag a/button/select or tag `input` "
@@ -2704,15 +2709,16 @@ class Model(models.AbstractModel):
         """ Return an action to open given records.
             If there's more than one record, it will be a List, otherwise it's a Form.
             Given keyword arguments will overwrite default ones. """
-        if len(self) == 0:
-            length_dependent = {'views': [(False, 'form')]}
-        elif len(self) == 1:
-            length_dependent = {'views': [(False, 'form')], 'res_id': self.id}
-        else:
-            length_dependent = {
-                'views': [(False, 'list'), (False, 'form')],
-                'domain': [('id', 'in', self.ids)]
-            }
+        match self.ids:  # `self.ids` will silently filter out new records (`NewId`s)
+            case []:
+                length_dependent = {'views': [(False, 'form')]}
+            case [res_id]:
+                length_dependent = {'views': [(False, 'form')], 'res_id': res_id}
+            case ids:
+                length_dependent = {
+                    'views': [(False, 'list'), (False, 'form')],
+                    'domain': [('id', 'in', ids)]
+                }
         return {
             'type': 'ir.actions.act_window',
             'res_model': self._name,

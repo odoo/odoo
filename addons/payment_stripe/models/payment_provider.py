@@ -340,18 +340,20 @@ class PaymentProvider(models.Model):
 
         return {
             'type': 'standard',
-            'country': self.company_id.country_id.code,
+            'country': self._stripe_get_country(self.company_id.country_id.code),
             'email': self.company_id.email,
             'business_type': 'individual',
             'company[address][city]': self.company_id.city or '',
-            'company[address][country]': self.company_id.country_id.code or '',
+            'company[address][country]': self._stripe_get_country(self.company_id.country_id.code),
             'company[address][line1]': self.company_id.street or '',
             'company[address][line2]': self.company_id.street2 or '',
             'company[address][postal_code]': self.company_id.zip or '',
             'company[address][state]': self.company_id.state_id.name or '',
             'company[name]': self.company_id.name,
             'individual[address][city]': self.company_id.city or '',
-            'individual[address][country]': self.company_id.country_id.code or '',
+            'individual[address][country]': self._stripe_get_country(
+                self.company_id.country_id.code
+            ),
             'individual[address][line1]': self.company_id.street or '',
             'individual[address][line2]': self.company_id.street2 or '',
             'individual[address][postal_code]': self.company_id.zip or '',
@@ -462,7 +464,9 @@ class PaymentProvider(models.Model):
 
         return stripe_utils.get_publishable_key(self.sudo())
 
-    def _stripe_get_inline_form_values(self, amount, currency, partner_id, is_validation, **kwargs):
+    def _stripe_get_inline_form_values(
+        self, amount, currency, partner_id, is_validation, payment_method_sudo=None, **kwargs
+    ):
         """ Return a serialized JSON of the required values to render the inline form.
 
         Note: `self.ensure_one()`
@@ -471,6 +475,8 @@ class PaymentProvider(models.Model):
         :param res.currency currency: The currency of the transaction.
         :param int partner_id: The partner of the transaction, as a `res.partner` id.
         :param bool is_validation: Whether the operation is a validation.
+        :param payment.method payment_method_sudo: The sudoed payment method record to which the
+                                                   inline form belongs.
         :return: The JSON serial of the required values to render the inline form.
         :rtype: str
         """
@@ -479,7 +485,9 @@ class PaymentProvider(models.Model):
         if not is_validation:
             currency_name = currency and currency.name.lower()
         else:
-            currency_name = self._get_validation_currency().name.lower()
+            currency_name = self.with_context(
+                validation_pm=payment_method_sudo  # Will be converted to a kwarg in master.
+            )._get_validation_currency().name.lower()
         partner = self.env['res.partner'].with_context(show_address=1).browse(partner_id).exists()
         inline_form_values = {
             'publishable_key': self._stripe_get_publishable_key(),
@@ -503,6 +511,18 @@ class PaymentProvider(models.Model):
             'payment_methods_mapping': const.PAYMENT_METHODS_MAPPING,
         }
         return json.dumps(inline_form_values)
+
+    def _stripe_get_country(self, country_code):
+        """ Return the mapped country code of the company.
+
+        Businesses in supported outlying territories should register for a Stripe account with the
+        parent territory selected as the Country.
+
+        :param str country_code: The country code of the company.
+        :return: The mapped country code.
+        :rtype: str
+        """
+        return const.COUNTRY_MAPPING.get(country_code, country_code)
 
     def _get_default_payment_method_codes(self):
         """ Override of `payment` to return the default payment method codes. """

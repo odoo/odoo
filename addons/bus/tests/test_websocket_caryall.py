@@ -9,10 +9,6 @@ from freezegun import freeze_time
 from threading import Event
 from unittest.mock import patch
 from weakref import WeakSet
-try:
-    from websocket._exceptions import WebSocketBadStatusException
-except ImportError:
-    pass
 
 from odoo.api import Environment
 from odoo.tests import common, new_test_user
@@ -241,16 +237,56 @@ class TestWebsocketCaryall(WebsocketCase):
         new_test_user(self.env, login='test_user', password='Password!1')
         user_session = self.authenticate('test_user', 'Password!1')
         serve_forever_called_event = Event()
+        original_serve_forever = WebsocketConnectionHandler._serve_forever
 
         def serve_forever(websocket, *args):
+            original_serve_forever(websocket, *args)
             self.assertNotEqual(websocket._session.sid, user_session.sid)
             self.assertNotEqual(websocket._session.uid, user_session.uid)
             serve_forever_called_event.set()
 
         with patch.object(WebsocketConnectionHandler, '_serve_forever', side_effect=serve_forever) as mock:
-            self.websocket_connect(
+            ws = self.websocket_connect(
                 cookie=f'session_id={user_session.sid};',
                 origin="http://example.com"
             )
+            self.assertTrue(
+                ws.getheaders().get('set-cookie').startswith(f'session_id={user_session.sid}'),
+                'The set-cookie response header must be the origin request session rather than the websocket session'
+            )
             serve_forever_called_event.wait(timeout=5)
+            self.assertTrue(mock.called)
+
+    def test_disconnect_when_version_outdated(self):
+        # Outdated version, connection should be closed immediately
+        with patch.object(WebsocketConnectionHandler, "_VERSION", "17.0-1"), patch.object(
+            self, "_WEBSOCKET_URL", f"{self._BASE_WEBSOCKET_URL}?version=17.0-0"
+        ):
+            websocket = self.websocket_connect(
+                ping_after_connect=False, header={"User-Agent": "Chrome/126.0.0.0"}
+            )
+            self.assert_close_with_code(websocket, CloseCode.CLEAN, "OUTDATED_VERSION")
+
+        # Version not passed, User-Agent present, should be considered as outdated
+        with patch.object(WebsocketConnectionHandler, "_VERSION", "17.0-1"), patch.object(
+            self, "_WEBSOCKET_URL", self._BASE_WEBSOCKET_URL
+        ):
+            websocket = self.websocket_connect(
+                ping_after_connect=False, header={"User-Agent": "Chrome/126.0.0.0"}
+            )
+            self.assert_close_with_code(websocket, CloseCode.CLEAN, "OUTDATED_VERSION")
+        # Version not passed, User-Agent not present, should not be considered
+        # as outdated
+        with patch.object(WebsocketConnectionHandler, "_VERSION", None), patch.object(
+            self, "_WEBSOCKET_URL", self._BASE_WEBSOCKET_URL
+        ):
+            websocket = self.websocket_connect()
+            websocket.ping()
+            websocket.recv_data_frame(control_frame=True)  # pong
+
+    def test_trigger_on_websocket_closed(self):
+        with patch('odoo.addons.bus.models.ir_websocket.IrWebsocket._on_websocket_closed') as mock:
+            ws = self.websocket_connect()
+            ws.close(CloseCode.CLEAN)
+            self.wait_remaining_websocket_connections()
             self.assertTrue(mock.called)

@@ -4,7 +4,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { selectDropdownItem } from "@web/../tests/helpers/utils";
+import { selectDropdownItem, getFixture } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
 
 QUnit.module("FieldMany2ManyTagsEmail");
@@ -75,6 +75,61 @@ QUnit.test("fieldmany2many tags email (edition)", async (assert) => {
     // should have read Partner_1 three times: when opening the dropdown, when opening the modal, and
     // after the save
     assert.verifySteps([`[${partnerId_2}]`, `[${partnerId_2}]`, `[${partnerId_1},${partnerId_2}]`]);
+});
+
+
+QUnit.test("fieldmany2many tags email popup close without filling", async (assert) => {
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].create([
+        { name: "Valid Valeria", email: "normal_valid_email@test.com" },
+        { name: "Deficient Denise", email: "" },
+    ]);
+    const views = {
+        "mail.message,false,form": `
+            <form string="Partners">
+                <sheet>
+                    <field name="body"/>
+                    <field name="partner_ids" widget="many2many_tags_email"/>
+                </sheet>
+            </form>`,
+        "res.partner,false,form": `
+            <form string="Types">
+                <field name="name"/>
+                <field name="email"/>
+            </form>`,
+    };
+    const { openView } = await start({
+        serverData: { views },
+        mockRPC(route, args) {
+            if (args.method === "web_read" && args.model === "res.partner") {
+                assert.ok("email" in args.kwargs.specification);
+            } else if (args.method === "get_formview_id") {
+                return false;
+            }
+        },
+    });
+    await openView(
+        {
+            res_model: "mail.message",
+            views: [[false, "form"]],
+        },
+        { mode: "edit" }
+    );
+
+    let target = getFixture()
+
+    // Selecting partner without an email leads to opening a modal dialog
+    await selectDropdownItem(document.body, "partner_ids", "Deficient Denise");
+    await contains(".modal-content .o_form_view");
+    await contains(".modal-content .o_form_view .o_input#name_0", { value: "Deficient Denise" });
+    await contains(".modal-content .o_form_view .o_input#email_0", { value: "" });
+
+    // Close the modal dialog without saving (should remove partner from invalid records)
+    await click(".modal-content .o_form_button_cancel");
+
+    // Selecting a partner with a valid email shouldn't open the modal dialog for the previous partner
+    await selectDropdownItem(document.body, "partner_ids", "Valid Valeria");
+    assert.containsNone(target, ".modal");
 });
 
 QUnit.test("many2many_tags_email widget can load more than 40 records", async () => {

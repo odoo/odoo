@@ -330,8 +330,7 @@ class ChatbotScriptStep(models.Model):
 
         if discuss_channel.livechat_channel_id:
             human_operator = discuss_channel.livechat_channel_id._get_operator(
-                lang=discuss_channel.livechat_visitor_id.lang_id.code,
-                country_id=discuss_channel.country_id.id
+                lang=self.env.context.get("lang"), country_id=discuss_channel.country_id.id
             )
 
         # handle edge case where we found yourself as available operator -> don't do anything

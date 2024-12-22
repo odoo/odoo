@@ -52,9 +52,11 @@ export class StaticList extends DataPoint {
 
         this._cache = markRaw({});
         this._commands = [];
+        this._initialCommands = [];
         this._savePoint = undefined;
         this._unknownRecordCommands = {}; // tracks update commands on records we haven't fetched yet
         this._currentIds = [...this.resIds];
+        this._initialCurrentIds = [...this.currentIds];
         this._needsReordering = false;
         this._tmpIncreaseLimit = 0;
         // In kanban and non editable list views, x2many records can be opened in a form view in
@@ -310,24 +312,23 @@ export class StaticList extends DataPoint {
             await this.model._askChanges(false);
         }
         return this.model.mutex.exec(async () => {
-            if (this.editedRecord) {
-                const isValid = this.editedRecord._checkValidity();
+            let editedRecord = this.editedRecord;
+            if (editedRecord) {
+                const isValid = editedRecord._checkValidity();
                 if (!isValid && validate) {
                     return false;
                 }
                 if (canAbandon !== false && !validate) {
-                    this._abandonRecords([this.editedRecord], { force: true });
+                    this._abandonRecords([editedRecord], { force: true });
                 }
                 // if we still have an editedRecord, it means it hasn't been abandonned
-                if (this.editedRecord) {
-                    if (isValid && !this.editedRecord.dirty && discard) {
+                editedRecord = this.editedRecord;
+                if (editedRecord) {
+                    if (isValid && !editedRecord.dirty && discard) {
                         return false;
                     }
-                    if (
-                        isValid ||
-                        (!this.editedRecord.dirty && !this.editedRecord._manuallyAdded)
-                    ) {
-                        this.editedRecord._switchMode("readonly");
+                    if (isValid || (!editedRecord.dirty && !editedRecord._manuallyAdded)) {
+                        editedRecord._switchMode("readonly");
                     }
                 }
             }
@@ -351,7 +352,8 @@ export class StaticList extends DataPoint {
 
     load({ limit, offset, orderBy } = {}) {
         return this.model.mutex.exec(async () => {
-            if (this.editedRecord && !(await this.editedRecord.checkValidity())) {
+            const editedRecord = this.editedRecord;
+            if (editedRecord && !(await editedRecord.checkValidity())) {
                 return;
             }
             limit = limit !== undefined ? limit : this.limit;
@@ -505,7 +507,6 @@ export class StaticList extends DataPoint {
         // For performance reasons, we accumulate removed ids (commands DELETE and UNLINK), and at
         // the end, we filter once this.records and this._currentIds to remove them.
         const removedIds = {};
-
         const recordsToLoad = [];
         for (const command of commands) {
             switch (command[0]) {
@@ -514,7 +515,11 @@ export class StaticList extends DataPoint {
                     const record = this._createRecordDatapoint(command[2], { virtualId });
                     this.records.push(record);
                     addOwnCommand([CREATE, virtualId]);
-                    this._currentIds.splice(this.offset + this.limit, 0, virtualId);
+                    const index = this.offset + this.limit + this._tmpIncreaseLimit;
+                    this._currentIds.splice(index, 0, virtualId);
+                    this._tmpIncreaseLimit = Math.max(this.records.length - this.limit, 0);
+                    const nextLimit = this.limit + this._tmpIncreaseLimit;
+                    this.model._updateConfig(this.config, { limit: nextLimit }, { reload: false });
                     this.count++;
                     break;
                 }
@@ -544,8 +549,12 @@ export class StaticList extends DataPoint {
                         const changes = {};
                         for (const fieldName in command[2]) {
                             if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
-                                const invisible = record.activeFields[fieldName].invisible;
-                                if (invisible === "True" || invisible === "1") {
+                                const invisible = record.activeFields[fieldName]?.invisible;
+                                if (
+                                    invisible === "True" ||
+                                    invisible === "1" ||
+                                    !(fieldName in record.activeFields) // this record hasn't been extended
+                                ) {
                                     if (!(command[1] in this._unknownRecordCommands)) {
                                         this._unknownRecordCommands[command[1]] = [];
                                     }
@@ -658,15 +667,12 @@ export class StaticList extends DataPoint {
             const lastRecordIndex = this.limit + this.offset;
             const firstRecordIndex = lastRecordIndex - nbMissingRecords;
             const nextRecordIds = this._currentIds.slice(firstRecordIndex, lastRecordIndex);
+            for (const id of this._getResIdsToLoad(nextRecordIds)) {
+                const record = this._createRecordDatapoint({ id }, { dontApplyCommands: true });
+                recordsToLoad.push(record);
+            }
             for (const id of nextRecordIds) {
-                if (this._cache[id]) {
-                    this.records.push(this._cache[id]);
-                } else {
-                    // id isn't in the cache, so we know it's not a virtual id
-                    const record = this._createRecordDatapoint({ id }, { dontApplyCommands: true });
-                    this.records.push(record);
-                    recordsToLoad.push(record);
-                }
+                this.records.push(this._cache[id]);
             }
         }
         if (recordsToLoad.length || reload) {
@@ -692,6 +698,12 @@ export class StaticList extends DataPoint {
                 }
             });
         }
+    }
+
+    _applyInitialCommands(commands) {
+        this._applyCommands(commands);
+        this._initialCommands = [...commands];
+        this._initialCurrentIds = [...this._currentIds];
     }
 
     async _createNewRecordDatapoint(params = {}) {
@@ -770,7 +782,8 @@ export class StaticList extends DataPoint {
         const options = {
             parentRecord: this._parent,
             onUpdate: async ({ withoutParentUpdate }) => {
-                if (!this.currentIds.includes(record.isNew ? record._virtualId : record.resId)) {
+                const id = record.isNew ? record._virtualId : record.resId;
+                if (!this.currentIds.includes(id)) {
                     // the record hasn't been added to the list yet (we're currently creating it
                     // from a dialog)
                     return;
@@ -821,7 +834,6 @@ export class StaticList extends DataPoint {
             this._commands = this._savePoint._commands;
             this._currentIds = this._savePoint._currentIds;
             this.count = this._savePoint.count;
-            this._savePoint = undefined;
         } else {
             this._commands = [];
             this._currentIds = [...this.resIds];
@@ -834,6 +846,10 @@ export class StaticList extends DataPoint {
         this.records = this._currentIds
             .slice(this.offset, this.limit)
             .map((resId) => this._cache[resId]);
+        if (!this._savePoint) {
+            this._applyCommands(this._initialCommands);
+        }
+        this._savePoint = undefined;
     }
 
     _getCommands({ withReadonly } = {}) {
@@ -849,7 +865,7 @@ export class StaticList extends DataPoint {
                         uCommand[2],
                         this.fields,
                         this.activeFields,
-                        { withReadonly }
+                        { withReadonly, context: this.context }
                     );
                     commands.push([uCommand[0], uCommand[1], values]);
                 }
@@ -960,12 +976,9 @@ export class StaticList extends DataPoint {
         let lastSequence = (asc ? -1 : 1) * Infinity;
         for (let index = 0; index < records.length; index++) {
             const sequence = getSequence(records[index]);
-            if (
-                ((index < firstIndex || index >= lastIndex) &&
-                    ((asc && lastSequence >= sequence) || (!asc && lastSequence <= sequence))) ||
-                (index >= firstIndex && index < lastIndex && lastSequence === sequence)
-            ) {
+            if ((asc && lastSequence >= sequence) || (!asc && lastSequence <= sequence)) {
                 reorderAll = true;
+                break;
             }
             lastSequence = sequence;
         }

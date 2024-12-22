@@ -3,16 +3,16 @@
 # 	* website_sale
 # 
 # Translators:
-# Wil Odoo, 2023
 # Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +46,6 @@ msgstr "%s Rezensionen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "&amp; Versand"
 
@@ -58,7 +57,7 @@ msgstr "&amp;nbsp;(<i>Um Ihre Versandadresse wird später gebeten)</i>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "&amp;nbsp;item(s)&amp;nbsp;-&amp;nbsp;"
-msgstr "&amp;nbsp;item(s)&amp;nbsp;-&amp;nbsp;"
+msgstr "&amp;nbsp;Artikel&amp;nbsp;-&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -123,7 +122,6 @@ msgstr "<b>Preisliste</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<b>Shipping: </b>"
 msgstr "<b>Versand: </b>"
 
@@ -332,7 +330,7 @@ msgid ""
 "name=\"price\">Select to compute delivery rate</span>"
 msgstr ""
 "<span class=\"o_wsale_delivery_badge_price float-end fw-bold\" "
-"name=\"price\">Auswählen, um Versandtarif berechnen</span>"
+"name=\"price\">Auswählen, um Versandtarif zu berechnen</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -529,11 +527,6 @@ msgstr ""
 "</tbody>\n"
 "</table>\n"
 "            "
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "<u class=\"h5\">Documents</u>"
-msgstr "<u class=\"h5\">Dokumente</u>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
@@ -922,7 +915,6 @@ msgstr "Groß"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Billing"
 msgstr "Abrechnung"
 
@@ -1028,22 +1020,6 @@ msgstr "Kann Bild 1024 gezoomt werden"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
 msgid "Can Publish"
 msgstr "Kann veröffentlichen"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence a video at first position."
-msgstr "An der ersten Stelle kann ein Video nicht neu geordnet werden."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence embedded image/video with a non compatible image."
-msgstr ""
-"Das eingebettete Bild/Video kann nicht mit einem nicht kompatiblen Bild "
-"resequenziert werden."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1167,7 +1143,7 @@ msgstr ""
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Checkout"
-msgstr "Kassiervorgang"
+msgstr "Zur Kasse"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1300,6 +1276,11 @@ msgstr "Komponenten"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping cost and ship with Easypost"
 msgstr "Versandkosten für Easypost berechnen und versenden"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Compute shipping cost and ship with Shiprocket"
+msgstr "Versandkosten für Shiprocket berechnen und versenden"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1743,6 +1724,11 @@ msgstr ""
 msgid "Do you wish to clear your cart before adding products to it?"
 msgstr ""
 "Möchten Sie Ihren Warenkorb leeren, bevor Sie ihm Produkte hinzufügen?"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "Documents"
+msgstr "Dokumente"
 
 #. module: website_sale
 #. odoo-python
@@ -2277,7 +2263,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/website_sale_utils.js:0
 #, python-format
 msgid "Item(s) added to your cart"
-msgstr "Artikel in den Warenkorb gelegt"
+msgstr "Artikel im Warenkorb"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
@@ -2627,6 +2613,13 @@ msgstr ""
 "für weitere Informationen."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+#, python-format
+msgid "No shipping method is selected."
+msgstr "Es wurde keine Versandmethode ausgewählt."
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__none
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "None"
@@ -2803,7 +2796,7 @@ msgstr "Auf der Website angezeigte Auftragspositionen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Order overview"
-msgstr "Auftragsübersicht"
+msgstr "Bestellübersicht"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
@@ -2845,11 +2838,6 @@ msgid "Pay now"
 msgstr "Jetzt bezahlen"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment
-msgid "Pay with"
-msgstr "Bezahlen mit"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
@@ -2870,6 +2858,11 @@ msgstr "Zahlungsmethoden"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
 msgid "Payment Providers"
 msgstr "Zahlungsanbieter"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_token
+msgid "Payment Token"
+msgstr "Zahlungs-Token"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
@@ -3692,6 +3685,16 @@ msgstr "Versandmethoden"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Shipping address"
 msgstr "Lieferadresse"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket"
+msgstr "Shiprocket"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket Shipping Methods"
+msgstr "Shiprocket-Versandmethoden"
 
 #. module: website_sale
 #: model:website.menu,name:website_sale.menu_shop
@@ -4571,6 +4574,13 @@ msgstr ""
 "                                          Wenn Sie Ihre Lieferadresse ändern möchten, erstellen Sie eine"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
+msgstr "Sie können kein Video als das Hauptbild des Produkts verwenden"
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -4617,6 +4627,18 @@ msgstr "Ihre E-Mail"
 #, python-format
 msgid "Your Name"
 msgstr "Ihr Name"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid ""
+"Your account is not allowed to pay in company %s. Please log out and create "
+"a new account for this website, or contact the website administrator."
+msgstr ""
+"Ihr Konto kann nicht zum Bezahlen im Unternehmen %s verwendet werden. Bitte "
+"melden Sie sich ab und erstellen Sie ein neues Konto für diese Website oder "
+"kontaktieren Sie den Website-Administrator."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

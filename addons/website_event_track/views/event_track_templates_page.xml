@@ -10,7 +10,7 @@
             <!-- Drag/Drop Area -->
             <div id="oe_structure_wesession_track_index_1" class="oe_structure"/>
             <!-- Content -->
-            <div t-att-class="'o_wevent_online_page_container %s' % ('container pb-3' if not option_widescreen else 'pb-3')">
+            <div t-att-class="'o_wevent_online_page_container py-3 %s' % ('container' if not option_widescreen else 'container-fluid')">
                 <div t-att-class="'row mb-5 mx-0 %s' % ('justify-content-center' if not tracks_other else '')">
                     <t t-if="tracks_other">
                         <t t-call="website_event_track.event_track_aside"/>
@@ -47,7 +47,7 @@
 </template>
 
 <template id="event_track_content" name="Track: Main Description">
-    <div name="o_wesession_track_main" t-attf-class="o_wesession_track_main col-12 border p-0 {{'col-md-9 col-xl-10' if option_widescreen else 'col-md-8 col-xl-9'}}">
+    <div name="o_wesession_track_main" t-attf-class="o_wesession_track_main col-12 p-0 ps-md-3 ps-lg-4 {{'col-md-9 col-xl-10' if option_widescreen else 'col-md-8 col-xl-9 ps-xl-5'}}">
         <!-- LIVE INFORMATIONS -->
         <div t-if="not track.event_id.is_ongoing and track.event_id.start_remaining" class="pt-3">
             <div class="mx-3 alert alert-warning">
@@ -75,13 +75,13 @@
         </div>
         <!-- TRACK DESCRIPTION -->
         <div class="o_wesession_track_main_description overflow-auto">
-            <div class="p-3 border-bottom">
-                <div class="d-flex flex-wrap justify-content-between align-items-center">
+            <div class="pb-3 border-bottom">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
                     <span class="h4 mb-0" t-out="track.name"/>
-                    <div>
+                    <div class="d-flex flex-wrap gap-1">
                         <t t-foreach="track.tag_ids" t-as="tag">
                             <span t-if="tag.color"
-                                t-att-class="'badge o_tag_color_hovered_%s' % (tag.color)"
+                                t-att-class="'badge o_tag_color_%s' % (tag.color)"
                                 t-out="tag.name"/>
                         </t>
                     </div>
@@ -123,7 +123,7 @@
             <t t-set="track_fields" t-value="['image', 'partner_name', 'partner_function', 'partner_email', 'partner_phone']"/>
             <!-- Avoid rendering a section for track information if we don't have anything to display -->
             <t t-if="any(track[track_field] for track_field in track_fields) or track.partner_id.website or not is_html_empty(track.partner_biography)">
-                <div class="mx-3">
+                <div>
                     <div class="mt-2 mb-2 d-flex">
                         <div t-if="track.image" t-field="track.image"
                              t-options="{'widget': 'image', 'class': 'rounded-circle me-2', 'max_width': '96'}"/>
@@ -143,13 +143,13 @@
             </t>
 
             <!-- Description -->
-            <div t-if="not is_html_empty(track.description)" t-field="track.description" class="my-2 mx-3 oe_no_empty"/>
+            <div t-if="not is_html_empty(track.description)" t-field="track.description" class="my-2 oe_no_empty"/>
             <t t-elif="env.user.has_group('event.group_event_user')">
-                <div t-field="track.description" class="my-2 mx-3"
+                <div t-field="track.description" class="my-2"
                      placeholder="e.g. &quot;This talk will be about...&quot;"/>
-                <div class="alert alert-info mx-3 mt-3 o_wesession_track_main_empty_descr_warning">
+                <div class="alert alert-info mt-3 o_wesession_track_main_empty_descr_warning">
                     This track does not have a description.
-                    <a t-attf-href="?{{ keep_query('*', enable_editor=1) }}">
+                    <a class="alert-link" t-attf-href="?{{ keep_query('*', enable_editor=1) }}">
                         <i class="oi oi-fw oi-arrow-right"></i>
                         Write one.
                     </a>
@@ -164,7 +164,7 @@
 <!-- ============================================================ -->
 
 <template id="event_track_aside" name="Track: Aside">
-    <div name="o_wevent_online_page_aside" t-attf-class="o_wevent_online_page_aside o_wesession_track_aside col-12 ps-0 pe-0 border {{'col-md-3 col-xl-2' if option_widescreen else 'col-md-4 col-xl-3'}}">
+    <div name="o_wevent_online_page_aside" t-attf-class="o_wevent_online_page_aside o_wesession_track_aside col-12 ps-0 pe-0 mb-3 border {{'col-md-3 col-xl-2' if option_widescreen else 'col-md-4 col-xl-3'}}">
         <div class="o_wevent_online_page_aside_content">
             <div class="mx-2" t-if="track.date and track.website_cta">
                 <t t-set="cta_coundown" t-value="bool(track.website_cta_start_remaining)"/>
@@ -187,7 +187,7 @@
                     </a>
                 </div>
             </div>
-            <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
+            <div class="position-relative d-flex align-items-center justify-content-between py-2 bg-light">
                 <ul class="nav nav-tabs o_wesession_track_aside_nav d-flex border-0" role="tablist">
                     <li class="nav-item flex-grow-1">
                         <a href="#track_list" aria-controls="track_list" class="nav-link active" role="tab" data-bs-toggle="tab">
@@ -195,7 +195,7 @@
                         </a>
                     </li>
                 </ul>
-                <a href="#collapse_track_aside" data-bs-toggle="collapse" class="d-md-none p-2 text-decoration-none o_wevent_online_page_aside_collapse collapsed">
+                <a href="#collapse_track_aside" data-bs-toggle="collapse" class="o_wevent_collapse_link stretched-link d-md-none px-3 text-decoration-none o_wevent_online_page_aside_collapse collapsed">
                     <i class="oi oi-chevron-down d-md-none"/>
                 </a>
             </div>
@@ -206,7 +206,7 @@
                         <li t-foreach="tracks_other" t-as="track_other" class="list-group-item list-group-item-action">
                             <a t-if="is_event_user or track_other.is_published"
                                 t-att-data-publish="track_other.website_published and 'on' or 'off'"
-                                class="d-flex flex-column flex-wrap flex-md-nowrap text-decoration-none text-dark"
+                                class="d-flex flex-column flex-wrap flex-md-nowrap text-decoration-none text-reset"
                                 t-att-href="track_other.website_url">
                                 <t t-call="website_event_track.event_track_aside_other_track"/>
                             </a>
@@ -225,8 +225,8 @@
 
 <template id="event_track_aside_other_track">
     <span t-out="track_other.name" class="fw-bold"/>
-    <div class="d-flex flex-column flex-lg-row flex-wrap justify-content-between align-items-start">
-        <small class="text-muted" t-out="track_other.partner_name"/>
+    <div class="d-flex flex-column flex-lg-row flex-wrap justify-content-between align-items-start mt-1">
+        <small class="opacity-75" t-out="track_other.partner_name"/>
         <div class="d-inline-block o_wesession_track_aside_info text-truncate">
             <small t-if="not track_other.website_published and user_event_manager"
                 class="badge text-bg-danger">Unpublished</small>

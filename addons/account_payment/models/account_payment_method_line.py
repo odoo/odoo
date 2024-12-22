@@ -12,49 +12,54 @@ class AccountPaymentMethodLine(models.Model):
     payment_provider_id = fields.Many2one(
         comodel_name='payment.provider',
         compute='_compute_payment_provider_id',
-        store=True
+        store=True,
+        readonly=False,
     )
     payment_provider_state = fields.Selection(
         related='payment_provider_id.state'
     )
 
+    @api.depends('payment_provider_id.name')
+    def _compute_name(self):
+        super()._compute_name()
+        for line in self:
+            if line.payment_provider_id and not line.name:
+                line.name = line.payment_provider_id.name
+
     @api.depends('payment_method_id')
     def _compute_payment_provider_id(self):
-        providers = self.env['payment.provider'].sudo().search([
-            *self.env['payment.provider']._check_company_domain(self.journal_id.company_id),
-            ('code', 'in', self.mapped('code')),
-        ])
-
-        # Make sure to pick the active provider, if any.
-        providers_map = dict()
-        for provider in providers:
-            current_value = providers_map.get((provider.code, provider.company_id), False)
-            if current_value and current_value.state != 'disabled':
-                continue
-
-            providers_map[(provider.code, provider.company_id)] = provider
+        results = self.journal_id._get_journals_payment_method_information()
+        manage_providers = results['manage_providers']
+        method_information_mapping = results['method_information_mapping']
+        providers_per_code = results['providers_per_code']
 
         for line in self:
-            code = line.payment_method_id.code
-            company = line.journal_id.company_id
-            line.payment_provider_id = False
-            while not line.payment_provider_id and company:
-                line.payment_provider_id = providers_map.get((code, company), False)
-                company = company.parent_id
+            journal = line.journal_id
+            company = journal.company_id
+            if (
+                company
+                and line.payment_method_id
+                and not line.payment_provider_id
+                and manage_providers
+                and method_information_mapping.get(line.payment_method_id.id, {}).get('mode') == 'electronic'
+            ):
+                provider_ids = providers_per_code.get(company.id, {}).get(line.code, set())
 
-    @api.model
-    def _get_payment_method_domain(self, code):
-        # OVERRIDE
-        domain = super()._get_payment_method_domain(code)
-        information = self._get_payment_method_information().get(code)
+                # Exclude the 'unique' / 'electronic' values that are already set on the journal.
+                protected_provider_ids = set()
+                for payment_type in ('inbound', 'outbound'):
+                    lines = journal[f'{payment_type}_payment_method_line_ids']
+                    for journal_line in lines:
+                        if journal_line.payment_method_id:
+                            if (
+                                manage_providers
+                                and method_information_mapping.get(journal_line.payment_method_id.id, {}).get('mode') == 'electronic'
+                            ):
+                                protected_provider_ids.add(journal_line.payment_provider_id.id)
 
-        unique = information.get('mode') == 'unique'
-        if unique:
-            company_ids = self.env['payment.provider'].sudo().search([('code', '=', code)]).mapped('company_id')
-            if company_ids:
-                domain = expression.AND([domain, self.env['payment.provider']._check_company_domain(company_ids)])
-
-        return domain
+                candidates_provider_ids = provider_ids - protected_provider_ids
+                if candidates_provider_ids:
+                    line.payment_provider_id = next(iter(candidates_provider_ids))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_provider(self):

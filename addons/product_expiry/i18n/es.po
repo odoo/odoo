@@ -76,7 +76,7 @@ msgstr "Fecha de consumo preferente"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__use_date
 msgid "Best before Date"
-msgstr "Consumir preferentemente antes de"
+msgstr "Fecha de consumo preferente"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_res_config_settings
@@ -139,7 +139,7 @@ msgstr "Descartar"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__group_expiry_date_on_delivery_slip
 msgid "Display Expiration Dates on Delivery Slips"
-msgstr "Mostrar fecha de caducidad en las notas de remisión"
+msgstr "Mostrar la fecha de caducidad en los albaranes de entrega"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
@@ -171,7 +171,7 @@ msgstr "Fecha de caducidad"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.res_config_settings_view_form_stock
 msgid "Expiration dates will appear on the delivery slip"
-msgstr "Se mostrarán las fechas de caducidad en la nota de remisión"
+msgstr "Las fechas de caducidad aparecerán en el albarán de entrega"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
@@ -186,7 +186,7 @@ msgstr "Lote(s) caducado(s)"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_reminded
 msgid "Expiry has been reminded"
-msgstr "Se ha recordado el vencimiento"
+msgstr "Se recordó la fecha de caducidad"
 
 #. module: product_expiry
 #: model:product.removal,name:product_expiry.removal_fefo
@@ -201,7 +201,7 @@ msgstr "ID"
 #. module: product_expiry
 #: model:res.groups,name:product_expiry.group_expiry_date_on_delivery_slip
 msgid "Include expiration dates on delivery slip"
-msgstr "Incluir las fechas de caducidad en la nota de remisión"
+msgstr "Incluir las fechas de caducidad en el albarán de entrega"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_uid
@@ -231,10 +231,10 @@ msgid ""
 "stock after production) after which the goods may become dangerous and must "
 "not be consumed. It will be computed on the lot/serial number."
 msgstr ""
-"Número de días después de la recepción de los productos (del proveedor o de "
-"las existencias después de la producción) después de los cuales los bienes "
-"pueden representar un riesgo y no se deben consumir. Se registrará sobre el "
-"número de lote/serie."
+"Número de días después de la recepción de los productos (del proveedor o del"
+" stock después de la producción) después de los cuales los bienes pueden "
+"representar un riesgo y no se deben consumir. Se registrará sobre el número "
+"de lote/serie."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
@@ -245,7 +245,7 @@ msgid ""
 "number."
 msgstr ""
 "Número de días antes de la fecha de caducidad después de los cuales se debe "
-"emitir una alarma para el número de lote/serie. Se registrará sobre el "
+"emitir una alerta para el número de lote/serie. Se registrará sobre el "
 "número de lote/serie."
 
 #. module: product_expiry
@@ -256,8 +256,7 @@ msgid ""
 "removed from the stock. It will be computed on the lot/serial number."
 msgstr ""
 "Número de días antes de la fecha de caducidad después de los cuales se deben"
-" retirar los bienes de las existencias. Se registrará sobre el número de "
-"lote/serie."
+" retirar los bienes del stock. Se registrará sobre el número de lote/serie."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
@@ -310,7 +309,7 @@ msgstr "Variante de producto"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
 msgid "Quants"
-msgstr "Quants"
+msgstr "Cuantos"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
@@ -323,7 +322,7 @@ msgstr "Fecha de eliminación"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
 msgid "Removal:"
-msgstr "Retirada:"
+msgstr "Eliminación:"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
@@ -339,7 +338,7 @@ msgstr "Movimiento de stock"
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__product_expiry_alert
 #: model:ir.model.fields,help:product_expiry.field_stock_move_line__is_expired
 msgid "The Expiration Date has been reached."
-msgstr "Se llegó a la fecha de caducidad."
+msgstr "Se ha llegado a la fecha de caducidad."
 
 #. module: product_expiry
 #. odoo-python
@@ -366,9 +365,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock. This date will be used in FEFO removal strategy."
 msgstr ""
-"Esta fecha indica que los bienes con este número de serie deben retirarse de"
-" las existencias. Se utilizará esta fecha para la estrategia de remoción en "
-"la FEFO."
+"Es la fecha en la que los productos con este número de serie deben salir del"
+" stock. Esta fecha se utilizará en la estrategia de salida FEFO."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__use_date

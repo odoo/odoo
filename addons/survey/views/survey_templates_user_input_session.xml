@@ -2,7 +2,7 @@
 <odoo>
 <data>
     <template id="user_input_session" name="Survey User Input Session" inherit_id="web.frontend_layout" primary="True">
-        <xpath expr="//div[@id='wrapwrap']" position="before">
+        <xpath expr="//head/*[1]" position="before">
             <!--TODO DBE Fix me : If one day, there is a survey_livechat bridge module, put this in that module-->
             <t t-set="no_livechat" t-value="True"/>
         </xpath>
@@ -107,14 +107,14 @@
                     </div>
                 </div>
             </div>
-            <div class="container px-4 pb-3 pt96 d-flex flex-column o_survey_session_manage_container">
-                <div class="o_survey_session_description_done d-none">
-                    <h1>Thank you!</h1>
+            <div class="px-sm-4 pb-3 pt96 d-flex flex-column o_survey_session_manage_container">
+                <div class="o_survey_session_description_done d-none o_container_small">
+                    <h1 class="fs-2">Thank you!</h1>
                     <div t-field="survey.description_done"/>
                 </div>
                 <a role="button"
                     class="o_survey_session_navigation o_survey_session_navigation_next p-2">
-                    <span class="o_survey_session_navigation_next_label me-2 fw-bold"/>
+                    <span class="o_survey_session_navigation_next_label me-2 fw-bold d-none d-md-inline"/>
                     <i class="fw-bold oi oi-chevron-right"/>
                 </a>
                 <a role="button"

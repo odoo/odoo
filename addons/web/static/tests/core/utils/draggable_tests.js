@@ -1,8 +1,15 @@
 /** @odoo-module **/
 
-import { drag, dragAndDrop, getFixture, mount, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { useDraggable } from "@web/core/utils/draggable";
+import {
+    drag,
+    dragAndDrop,
+    getFixture,
+    mount,
+    nextTick,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
+import { useDraggable } from "@web/core/utils/draggable";
 
 import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
 
@@ -239,7 +246,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                 useDraggable({
                     ref: useRef("root"),
                     elements: ".item",
-                    preventDrag: (el) => el.classList.contains('ignored'),
+                    preventDrag: (el) => el.classList.contains("ignored"),
                     onDragStart() {
                         assert.step("drag");
                     },
@@ -266,17 +273,11 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.verifySteps(["drag"]);
 
         // Drag ignored under ignored -> block
-        await dragAndDrop(
-            ".ignored.parent .ignored.child",
-            ".ignored.parent .not-ignored.child"
-        );
+        await dragAndDrop(".ignored.parent .ignored.child", ".ignored.parent .not-ignored.child");
         assert.verifySteps([]);
 
         // Drag not-ignored under ignored -> succeed
-        await dragAndDrop(
-            ".ignored.parent .not-ignored.child",
-            ".ignored.parent .ignored.child"
-        );
+        await dragAndDrop(".ignored.parent .not-ignored.child", ".ignored.parent .ignored.child");
         assert.verifySteps(["drag"]);
     });
 
@@ -294,7 +295,7 @@ QUnit.module("Draggable", ({ beforeEach }) => {
             setTimeout: (fn, delay) => {
                 assert.strictEqual(delay, 300, "touch drag has a default 300ms initiation delay");
                 fn();
-            }
+            },
         });
 
         class List extends Component {
@@ -304,7 +305,11 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                     elements: ".item",
                     onDragStart({ element }) {
                         assert.step("start");
-                        assert.hasClass(element, "o_touch_bounce", "element has the animation class applied");
+                        assert.hasClass(
+                            element,
+                            "o_touch_bounce",
+                            "element has the animation class applied"
+                        );
                     },
                     onDrag() {
                         assert.step("drag");
@@ -315,7 +320,11 @@ QUnit.module("Draggable", ({ beforeEach }) => {
                     async onDrop({ element }) {
                         assert.step("drop");
                         await nextTick();
-                        assert.doesNotHaveClass(element, "o_touch_bounce", "element no longer has the animation class applied");
+                        assert.doesNotHaveClass(
+                            element,
+                            "o_touch_bounce",
+                            "element no longer has the animation class applied"
+                        );
                     },
                 });
             }
@@ -339,41 +348,111 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         assert.verifySteps(["start", "drag", "drop", "end"]);
     });
 
-    QUnit.test("Dragging element with touch event: initiation delay can be overrided", async (assert) => {
-        patchWithCleanup(browser, {
-            matchMedia: (media) => {
-                if (media === "(pointer:coarse)") {
-                    return { matches: true };
-                } else {
-                    this._super();
+    QUnit.test(
+        "Dragging element with touch event: initiation delay can be overrided",
+        async (assert) => {
+            patchWithCleanup(browser, {
+                matchMedia: (media) => {
+                    if (media === "(pointer:coarse)") {
+                        return { matches: true };
+                    } else {
+                        this._super();
+                    }
+                },
+                setTimeout: (fn, delay) => {
+                    assert.strictEqual(delay, 1000, "touch drag has the custom initiation delay");
+                    fn();
+                },
+            });
+
+            class List extends Component {
+                setup() {
+                    useDraggable({
+                        ref: useRef("root"),
+                        delay: 1000,
+                        elements: ".item",
+                    });
                 }
-            },
-            setTimeout: (fn, delay) => {
-                assert.strictEqual(delay, 1000, "touch drag has the custom initiation delay");
-                fn();
             }
-        });
 
-        class List extends Component {
-            setup() {
-                useDraggable({
-                    ref: useRef("root"),
-                    delay: 1000,
-                    elements: ".item",
-                });
-            }
-        }
-
-        List.template = xml`
+            List.template = xml`
             <div t-ref="root" class="root">
                 <ul class="list">
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
                 </ul>
             </div>`;
 
+            await mount(List, target);
+            const { drop, moveTo } = await drag(".item:first-child", "touch");
+            await moveTo(".item:nth-child(2)");
+            await drop();
+        }
+    );
+
+    QUnit.test("Elements are confined within their container", async (assert) => {
+        /**
+         * @param {string} selector
+         */
+        const getRect = (selector) => document.querySelector(selector).getBoundingClientRect();
+
+        class List extends Component {
+            static template = xml`
+                <div t-ref="root" class="root">
+                    <ul class="list list-unstyled m-0 d-flex flex-column">
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item w-50" />
+                    </ul>
+                </div>
+            `;
+
+            setup() {
+                useDraggable({
+                    ref: useRef("root"),
+                    elements: ".item",
+                });
+            }
+        }
+
+        // Reset fixture style to test coordinates properly
+        Object.assign(target.style, {
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            "z-index": -1,
+        });
         await mount(List, target);
-        const { drop, moveTo } = await drag(".item:first-child", "touch");
-        await moveTo(".item:nth-child(2)");
+
+        const containerRect = getRect(".root");
+
+        const { moveTo, drop } = await drag(".item:first-child");
+
+        let itemRect = getRect(".item:first-child");
+
+        assert.strictEqual(itemRect.x, containerRect.x);
+        assert.strictEqual(itemRect.y, containerRect.y);
+        assert.strictEqual(itemRect.width, containerRect.width / 2);
+
+        await moveTo(".item:last-child", { y: 9999 });
+
+        itemRect = getRect(".item:first-child");
+
+        assert.strictEqual(itemRect.x, containerRect.x);
+        assert.strictEqual(itemRect.y, containerRect.y + containerRect.height - itemRect.height);
+
+        await moveTo(".item:last-child", { x: 9999, y: 9999 });
+
+        itemRect = getRect(".item:first-child");
+
+        assert.strictEqual(itemRect.x, containerRect.x + containerRect.width - itemRect.width);
+        assert.strictEqual(itemRect.y, containerRect.y + containerRect.height - itemRect.height);
+
+        await moveTo(".item:last-child", { x: -9999, y: -9999 });
+
+        itemRect = getRect(".item:first-child");
+
+        assert.strictEqual(itemRect.x, containerRect.x);
+        assert.strictEqual(itemRect.y, containerRect.y);
+
         await drop();
     });
 });

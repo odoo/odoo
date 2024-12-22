@@ -60,7 +60,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
 
     def assertTaxTotals(self, document, expected_values):
         main_keys_to_ignore = {'formatted_amount_total', 'formatted_amount_untaxed'}
-        group_keys_to_ignore = {'group_key', 'formatted_tax_group_amount', 'formatted_tax_group_base_amount'}
+        group_keys_to_ignore = {'group_key', 'formatted_tax_group_amount', 'formatted_tax_group_base_amount', 'hide_base_amount'}
         subtotals_keys_to_ignore = {'formatted_amount'}
 
         to_compare = document.tax_totals
@@ -795,6 +795,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
 
         self.assertTaxTotals(invoice, {
             'amount_total': 470,
+            'amount_total_company_currency': 2350,
             'amount_untaxed': 400,
             'display_tax_base': True,
             'groups_by_subtotal': {

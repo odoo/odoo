@@ -1,26 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* lunch
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-# Foldi Robert <foldirobert@nexterp.ro>, 2022
-# Hongu Cosmin <cosmin513@gmail.com>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2023
-# Cozmin Candea <office@terrabit.ro>, 2023
-#
+# Vacaru Adrian <adrian.vacaru@gmail.com>, 2024
+# Claudia Baisan, 2024
+# Cozmin Candea <office@terrabit.ro>, 2024
+# Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Hongu Cosmin <cosmin513@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2024
+# Corina Calin, 2024
+# Larisa_nexterp, 2024
+# Betty Keresztesi, 2024
+# Maria Muntean, 2024
+# Alin Miclea, 2024
+# Lyall Kindmurr, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2023\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Lyall Kindmurr, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
-"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ro\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: lunch
@@ -50,8 +58,12 @@ msgstr "6 Maki Salmon - 6 Maki Tuna - 6 Maki Shrimp/Avocado"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
-msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" title=\"Receive button\"/>"
-msgstr "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" title=\"Receive button\"/>"
+msgid ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
+"title=\"Receive button\"/>"
+msgstr ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
+"title=\"Receive button\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -62,7 +74,9 @@ msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Data\" title=\"Data
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
-msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Send notification\" title=\"Send notification\"/>"
+msgid ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Send notification\" "
+"title=\"Send notification\"/>"
 msgstr ""
 
 #. module: lunch
@@ -78,18 +92,28 @@ msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Money\" title=\"Money
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
-msgid "<i class=\"fa fa-paper-plane\" role=\"img\" aria-label=\"Send button\" title=\"Send button\"/>"
+msgid ""
+"<i class=\"fa fa-paper-plane\" role=\"img\" aria-label=\"Send button\" "
+"title=\"Send button\"/>"
 msgstr ""
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
-msgid "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" title=\"Order button\"/>"
-msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" title=\"Order button\"/>"
+msgid ""
+"<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" "
+"title=\"Order button\"/>"
+msgstr ""
+"<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" "
+"title=\"Order button\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
-msgid "<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" title=\"Cancel button\"/>"
-msgstr "<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" title=\"Cancel button\"/>"
+msgid ""
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
+"title=\"Cancel button\"/>"
+msgstr ""
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
+"title=\"Cancel button\"/>"
 
 #. module: lunch
 #: model:mail.template,body_html:lunch.lunch_order_mail_supplier
@@ -238,7 +262,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_statbutton
 msgid "A product is defined by its name, category, price and vendor."
-msgstr "Un produs este definit de numele, categoria, prețul și furnizorul său."
+msgstr ""
+"Un produs este definit de numele, categoria, prețul și furnizorul său."
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__am
@@ -318,10 +343,17 @@ msgid "Alerts"
 msgstr "Alerte"
 
 #. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+#, python-format
+msgid "Already Paid"
+msgstr "Deja plătit"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__amount
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__amount
 msgid "Amount"
-msgstr "Valoare"
+msgstr "Sumă"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
@@ -386,7 +418,8 @@ msgstr "Bacon"
 #: model_terms:lunch.product,description:lunch.product_bacon
 #: model_terms:lunch.product,description:lunch.product_bacon_0
 msgid "Beef, Bacon, Salad, Cheddar, Fried Onion, BBQ Sauce"
-msgstr "Carne de vita, bacon, salata, cheddar, ceapa prajita, sos pentru gratar"
+msgstr ""
+"Carne de vita, bacon, salata, cheddar, ceapa prajita, sos pentru gratar"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_cheese_burger_0
@@ -431,6 +464,13 @@ msgstr "Anulează"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Cancelled"
 msgstr "Anulat"
+
+#. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_supplier.py:0
+#, python-format
+msgid "Cannot send an email to this supplier!"
+msgstr ""
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
@@ -552,7 +592,7 @@ msgstr "Confirmă"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Confirm Orders"
-msgstr ""
+msgstr "Confirmare comandă"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_control_accounts
@@ -615,13 +655,13 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__create_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__create_date
 msgid "Created on"
-msgstr "Creat în"
+msgstr "Creat pe"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__cron_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__cron_id
 msgid "Cron"
-msgstr ""
+msgstr "Cron"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__currency_id
@@ -632,7 +672,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__currency_id
 #: model:ir.model.fields,field_description:lunch.field_res_config_settings__currency_id
 msgid "Currency"
-msgstr "Moneda"
+msgstr "Monedă"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
@@ -857,8 +897,13 @@ msgstr "Are mesaj"
 
 #. module: lunch
 #: model:ir.module.category,description:lunch.module_lunch_category
-msgid "Helps you handle your lunch needs, if you are a manager you will be able to create new products, cashmoves and to confirm or cancel orders."
-msgstr "Va ajuta sa gestionati necesarul pentru pranz, daca sunteti manager veti putea sa creati produse noi, miscari de numerar si sa confirmati sau sa anulati comenzi."
+msgid ""
+"Helps you handle your lunch needs, if you are a manager you will be able to "
+"create new products, cashmoves and to confirm or cancel orders."
+msgstr ""
+"Va ajuta sa gestionati necesarul pentru pranz, daca sunteti manager veti "
+"putea sa creati produse noi, miscari de numerar si sa confirmati sau sa "
+"anulati comenzi."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
@@ -961,7 +1006,7 @@ msgstr "Este afișat astăzi"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__is_favorite
 msgid "Is Favorite"
-msgstr ""
+msgstr "Este favorit"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_is_follower
@@ -1011,7 +1056,7 @@ msgstr "Ultima actualizare pe"
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__location_ids
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__available_location_ids
 msgid "Location"
-msgstr "Locație"
+msgstr "Locatie"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_location__name
@@ -1148,32 +1193,32 @@ msgid "Lunch: Supplier Order"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_234
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_217
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_235
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_218
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_230
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_213
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_236
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_219
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_221
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_220
 msgid "Lunch: send automatic email to The Corner"
 msgstr ""
 
@@ -1319,7 +1364,7 @@ msgstr "Sumarul următoarei activități"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_type_id
 msgid "Next Activity Type"
-msgstr "Tip de activitate urmatoare"
+msgstr "Tip de activitate următoare"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__delivery__no_delivery
@@ -1330,6 +1375,20 @@ msgstr "Fără livrare"
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_account
 msgid "No cash move yet"
 msgstr "Nicio mutare de numerar încă"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/views/no_content_helper.xml:0
+#, python-format
+msgid "No location found"
+msgstr ""
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+#, python-format
+msgid "No lunch location available."
+msgstr ""
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
@@ -1381,7 +1440,7 @@ msgstr "Timpul de notificare trebuie să fie între 0 și 12"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__notified
 msgid "Notified"
-msgstr ""
+msgstr "Notificat"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_needaction_counter
@@ -1391,12 +1450,12 @@ msgstr "Număr de acțiuni"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_has_error_counter
 msgid "Number of errors"
-msgstr "Numărul de erori"
+msgstr "Număr de erori"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Număr de mesaje ce necesită intervenție"
+msgid "Number of messages requiring action"
+msgstr "Numărul de mesaje care necesită acțiune"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_has_error_counter
@@ -1420,7 +1479,7 @@ msgstr "Doar una"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
 msgid "Order"
-msgstr "Comandă"
+msgstr "Ordonare"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__date
@@ -1474,7 +1533,7 @@ msgstr ""
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Overdraft"
-msgstr ""
+msgstr "Descoperire de cont"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__pm
@@ -1494,8 +1553,13 @@ msgstr "Plată"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
-msgid "Payments are used to register liquidity movements. You can process those payments by your own means or by using installed facilities."
-msgstr "Plățile sunt utilizate pentru înregistrarea mișcărilor de lichidități. Puteți efectua aceste plăți prin mijloace proprii sau prin utilizarea facilităților instalate."
+msgid ""
+"Payments are used to register liquidity movements. You can process those "
+"payments by your own means or by using installed facilities."
+msgstr ""
+"Plățile sunt utilizate pentru înregistrarea mișcărilor de lichidități. "
+"Puteți efectua aceste plăți prin mijloace proprii sau prin utilizarea "
+"facilităților instalate."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__phone
@@ -1528,6 +1592,13 @@ msgstr "Pizza Margherita"
 #: model:lunch.product,name:lunch.product_vege
 msgid "Pizza Vegetarian"
 msgstr "Pizza Vegetariană"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/views/no_content_helper.xml:0
+#, python-format
+msgid "Please create a location to start ordering."
+msgstr ""
 
 #. module: lunch
 #: model_terms:lunch.alert,message:lunch.alert_office_3
@@ -1659,7 +1730,7 @@ msgstr "Destinatari"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
 msgid "Register a payment"
-msgstr "Înregistrare plată"
+msgstr "Înregistrați o plată"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
@@ -1698,15 +1769,10 @@ msgid "Saturday"
 msgstr "Sâmbătă"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
-msgid "Save"
-msgstr "Salvează"
-
-#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Search"
-msgstr "Caută"
+msgstr "Căutare"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -1717,7 +1783,7 @@ msgstr "Trimite"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Send Notification"
-msgstr ""
+msgstr "Trimite notificare"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__send_by
@@ -1817,7 +1883,8 @@ msgstr "Strada2"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
 msgid "Summary of all lunch orders, grouped by vendor and by date."
-msgstr "Rezumatul tuturor comenzilor de prânz, grupate după furnizor și după dată."
+msgstr ""
+"Rezumatul tuturor comenzilor de prânz, grupate după furnizor și după dată."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__sun
@@ -1896,11 +1963,16 @@ msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__responsible_id
-msgid "The responsible is the person that will order lunch for everyone. It will be used as the 'from' when sending the automatic email."
-msgstr "Responsabilul este persoana care va comanda masa de prânz pentru toată lumea. Va fi folosit ca „de la” la trimiterea e-mailului automat."
+msgid ""
+"The responsible is the person that will order lunch for everyone. It will be"
+" used as the 'from' when sending the automatic email."
+msgstr ""
+"Responsabilul este persoana care va comanda masa de prânz pentru toată "
+"lumea. Va fi folosit ca „de la” la trimiterea e-mailului automat."
 
 #. module: lunch
 #. odoo-python
+#: code:addons/lunch/models/lunch_order.py:0
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "The vendor related to this order is not available today."
@@ -1908,8 +1980,12 @@ msgstr ""
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action
-msgid "There is no previous order recorded. Click on \"My Lunch\" and then create a new lunch order."
-msgstr "Nu există nicio comandă anterioară înregistrată. Faceți clic pe „Prânzul meu” și apoi creați o nouă comandă de prânz."
+msgid ""
+"There is no previous order recorded. Click on \"My Lunch\" and then create a"
+" new lunch order."
+msgstr ""
+"Nu există nicio comandă anterioară înregistrată. Faceți clic pe „Prânzul "
+"meu” și apoi creați o nouă comandă de prânz."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
@@ -1925,7 +2001,8 @@ msgstr "Acest câmp este utilizat pentru"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_today
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__available_today
 msgid "This is True when if the supplier is available today"
-msgstr "Acest lucru este adevărat atunci când furnizorul este disponibil astăzi"
+msgstr ""
+"Acest lucru este adevărat atunci când furnizorul este disponibil astăzi"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__thu
@@ -1950,9 +2027,18 @@ msgid "To Order"
 msgstr "A comanda"
 
 #. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+#, python-format
+msgid "To Pay"
+msgstr "De plătit"
+
+#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_payment_dialog
 msgid "To add some money to your wallet, please contact your lunch manager."
-msgstr "Pentru a adăuga niște bani la portofel, vă rugăm să contactați managerul de prânz."
+msgstr ""
+"Pentru a adăuga niște bani la portofel, vă rugăm să contactați managerul de "
+"prânz."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_location_action
@@ -1961,8 +2047,12 @@ msgstr "Pentru a vedea unele locații, creați una folosind butonul Creați"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
-msgid "To see some products, check if your vendors are available today and that you have configured some products"
-msgstr "Pentru a vedea unele produse, verificați dacă furnizorii dvs. sunt disponibili astăzi și dacă ați configurat unele produse"
+msgid ""
+"To see some products, check if your vendors are available today and that you"
+" have configured some products"
+msgstr ""
+"Pentru a vedea unele produse, verificați dacă furnizorii dvs. sunt "
+"disponibili astăzi și dacă ați configurat unele produse"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
@@ -1978,7 +2068,8 @@ msgstr "Comenzile de azi"
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_4formaggi
 msgid "Tomato sauce, Olive oil, Fresh Tomatoes, Onions, Vegetables, Parmesan"
-msgstr "Sos de roșii, ulei de măsline, roșii proaspete, ceapă, legume, parmezan"
+msgstr ""
+"Sos de roșii, ulei de măsline, roșii proaspete, ceapă, legume, parmezan"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_Napoli
@@ -2075,7 +2166,7 @@ msgstr "Până la"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__user_id
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "User"
-msgstr "Operator"
+msgstr "Utilizator"
 
 #. module: lunch
 #: model:res.groups,name:lunch.group_lunch_user
@@ -2119,8 +2210,12 @@ msgstr "Miercuri"
 #. odoo-python
 #: code:addons/lunch/controllers/main.py:0
 #, python-format
-msgid "You are trying to impersonate another user, but this can only be done by a lunch manager"
-msgstr "Încercați să identificați un alt utilizator, dar acest lucru poate fi făcut doar de un manager de prânz"
+msgid ""
+"You are trying to impersonate another user, but this can only be done by a "
+"lunch manager"
+msgstr ""
+"Încercați să identificați un alt utilizator, dar acest lucru poate fi făcut "
+"doar de un manager de prânz"
 
 #. module: lunch
 #. odoo-python
@@ -2168,8 +2263,13 @@ msgstr "Comandă dvs."
 #. odoo-python
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
-msgid "Your wallet does not contain enough money to order that. To add some money to your wallet, please contact your lunch manager."
-msgstr "Portofelul dvs. nu conține suficienți bani pentru a comanda acest lucru. Pentru a adăuga niște bani la portofel, vă rugăm să contactați managerul de prânz."
+msgid ""
+"Your wallet does not contain enough money to order that. To add some money "
+"to your wallet, please contact your lunch manager."
+msgstr ""
+"Portofelul dvs. nu conține suficienți bani pentru a comanda acest lucru. "
+"Pentru a adăuga niște bani la portofel, vă rugăm să contactați managerul de "
+"prânz."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form

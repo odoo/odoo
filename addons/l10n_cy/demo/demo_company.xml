@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="partner_demo_company_cy" model="res.partner">
+        <field name="name">CY Company</field>
+        <field name="vat">CY10259033P</field>
+        <field name="street">1 Agiou Dometriou</field>
+        <field name="city">Nicosia</field>
+        <field name="country_id" ref="base.cy"/>
+        <field name="zip">6013</field>
+        <field name="phone">+357 22123456</field>
+        <field name="email">info@company.cyexample.com</field>
+        <field name="website">www.cyexample.com</field>
+    </record>
+
+    <record id="demo_company_cy" model="res.company">
+        <field name="name">CY Company</field>
+        <field name="partner_id" ref="partner_demo_company_cy"/>
+    </record>
+
+    <record id="partner_demo_company_bank_account" model="res.partner.bank">
+        <field name="acc_number">CY05399527715561991181417425</field>
+        <field name="partner_id" ref="l10n_cy.partner_demo_company_cy"/>
+        <field name="company_id" ref="l10n_cy.demo_company_cy"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('l10n_cy.demo_company_cy')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('l10n_cy.demo_company_cy'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>cy</value>
+        <value model="res.company" eval="obj().env.ref('l10n_cy.demo_company_cy')"/>
+    </function>
+</odoo>

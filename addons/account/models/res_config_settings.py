@@ -25,7 +25,7 @@ class ResConfigSettings(models.TransientModel):
         string="Gain Exchange Rate Account",
         readonly=False,
         check_company=True,
-        domain="[('deprecated', '=', False), ('account_type', 'in', ('income', 'income_other'))]")
+        domain="[('deprecated', '=', False), ('internal_group', '=', 'income')]")
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name="account.account",
         related="company_id.expense_currency_exchange_account_id",
@@ -245,7 +245,7 @@ class ResConfigSettings(models.TransientModel):
                 'credit_limit',
                 'res.partner',
                 setting.account_default_credit_limit,
-                self.company_id.id
+                setting.company_id.id
             )
 
     @api.depends('company_id')

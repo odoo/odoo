@@ -84,6 +84,9 @@ class PublicPageController(http.Controller):
         return self._response_discuss_channel_invitation(channel_sudo.sudo(False), is_channel_token_secret=False)
 
     def _response_discuss_channel_invitation(self, channel, is_channel_token_secret=True):
+        # group restriction takes precedence over token
+        if channel.group_public_id and channel.group_public_id not in request.env.user.groups_id:
+            raise request.not_found()
         discuss_public_view_data = {
             "isChannelTokenSecret": is_channel_token_secret,
         }
@@ -95,6 +98,8 @@ class PublicPageController(http.Controller):
                 country_code=request.geoip.country_code,
                 timezone=request.env["mail.guest"]._get_timezone_from_request(request),
             )
+        if guest:
+            discuss_public_view_data["guest_name"] = guest.name
         if guest and not guest_already_known:
             discuss_public_view_data.update(
                 {
@@ -106,6 +111,9 @@ class PublicPageController(http.Controller):
 
     def _response_discuss_public_template(self, channel, discuss_public_view_data=None):
         discuss_public_view_data = discuss_public_view_data or {}
+        if "guest_name" not in discuss_public_view_data:
+            guest = request.env["mail.guest"]._get_guest_from_context()
+            discuss_public_view_data["guest_name"] = guest.name
         return request.render(
             "mail.discuss_public_channel_template",
             {

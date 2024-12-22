@@ -18,6 +18,7 @@ class ProductProduct(models.Model):
     _inherits = {'product.template': 'product_tmpl_id'}
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'priority desc, default_code, name, id'
+    _check_company_domain = models.check_company_domain_parent_of
 
     # price_extra: catalog extra value only, sum of variant extra attributes
     price_extra = fields.Float(
@@ -304,9 +305,12 @@ class ProductProduct(models.Model):
 
     def _compute_variant_item_count(self):
         for product in self:
-            domain = ['|',
-                '&', ('product_tmpl_id', '=', product.product_tmpl_id.id), ('applied_on', '=', '1_product'),
-                '&', ('product_id', '=', product.id), ('applied_on', '=', '0_product_variant')]
+            domain = [
+                ('pricelist_id.active', '=', True),
+                '|',
+                    '&', ('product_tmpl_id', '=', product.product_tmpl_id.id), ('applied_on', '=', '1_product'),
+                    '&', ('product_id', '=', product.id), ('applied_on', '=', '0_product_variant'),
+            ]
             product.pricelist_item_count = self.env['product.pricelist.item'].search_count(domain)
 
     def _compute_product_document_count(self):
@@ -372,25 +376,32 @@ class ProductProduct(models.Model):
         return res
 
     def unlink(self):
-        unlink_products = self.env['product.product']
-        unlink_templates = self.env['product.template']
-        for product in self:
+        unlink_products_ids = set()
+        unlink_templates_ids = set()
+
+        # Check if products still exists, in case they've been unlinked by unlinking their template
+        existing_products = self.exists()
+        product_ids_by_template_id = {template.id: set(ids) for template, ids in self._read_group(
+            domain=[('product_tmpl_id', 'in', existing_products.product_tmpl_id.ids)],
+            groupby=['product_tmpl_id'],
+            aggregates=['id:array_agg'],
+        )}
+        for product in existing_products:
             # If there is an image set on the variant and no image set on the
             # template, move the image to the template.
             if product.image_variant_1920 and not product.product_tmpl_id.image_1920:
                 product.product_tmpl_id.image_1920 = product.image_variant_1920
-            # Check if product still exists, in case it has been unlinked by unlinking its template
-            if not product.exists():
-                continue
             # Check if the product is last product of this template...
-            other_products = self.search([('product_tmpl_id', '=', product.product_tmpl_id.id), ('id', '!=', product.id)])
+            has_other_products = product_ids_by_template_id[product.product_tmpl_id.id] - {product.id}
             # ... and do not delete product template if it's configured to be created "on demand"
-            if not other_products and not product.product_tmpl_id.has_dynamic_attributes():
-                unlink_templates |= product.product_tmpl_id
-            unlink_products |= product
+            if not has_other_products and not product.product_tmpl_id.has_dynamic_attributes():
+                unlink_templates_ids.add(product.product_tmpl_id.id)
+            unlink_products_ids.add(product.id)
+        unlink_products = self.env['product.product'].browse(unlink_products_ids)
         res = super(ProductProduct, unlink_products).unlink()
         # delete templates after calling super, as deleting template could lead to deleting
         # products due to ondelete='cascade'
+        unlink_templates = self.env['product.template'].browse(unlink_templates_ids)
         unlink_templates.unlink()
         # `_get_variant_id_for_combination` depends on existing variants
         self.env.registry.clear_cache()
@@ -461,7 +472,7 @@ class ProductProduct(models.Model):
         return super()._search(domain, offset, limit, order, access_rights_uid)
 
     @api.depends('name', 'default_code', 'product_tmpl_id')
-    @api.depends_context('display_default_code', 'seller_id', 'company_id', 'partner_id')
+    @api.depends_context('display_default_code', 'seller_id', 'company_id', 'partner_id', 'use_partner_name')
     def _compute_display_name(self):
 
         def get_display_name(name, code):
@@ -469,7 +480,7 @@ class ProductProduct(models.Model):
                 return f'[{code}] {name}'
             return name
 
-        partner_id = self._context.get('partner_id')
+        partner_id = self._context.get('partner_id') if self.env.context.get('use_partner_name', True) else self.env['res.partner']
         if partner_id:
             partner_ids = [partner_id, self.env['res.partner'].browse(partner_id).commercial_partner_id.id]
         else:
@@ -551,7 +562,7 @@ class ProductProduct(models.Model):
                 domain2 = expression.AND([domain, domain2])
                 product_ids = list(self._search(domain2, limit=limit, order=order))
             if not product_ids and operator in positive_operators:
-                ptrn = re.compile('(\[(.*?)\])')
+                ptrn = re.compile(r'(\[(.*?)\])')
                 res = ptrn.search(name)
                 if res:
                     product_ids = list(self._search([('default_code', '=', res.group(2))] + domain, limit=limit, order=order))
@@ -592,7 +603,7 @@ class ProductProduct(models.Model):
         return {
             'name': _('Price Rules'),
             'view_mode': 'tree,form',
-            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'tree'), (False, 'form')],
+            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'tree')],
             'res_model': 'product.pricelist.item',
             'type': 'ir.actions.act_window',
             'target': 'current',
@@ -627,7 +638,8 @@ class ProductProduct(models.Model):
     #=== BUSINESS METHODS ===#
 
     def _prepare_sellers(self, params=False):
-        return self.seller_ids.filtered(lambda s: s.partner_id.active).sorted(lambda s: (s.sequence, -s.min_qty, s.price, s.id))
+        sellers = self.seller_ids.filtered(lambda s: s.partner_id.active and (not s.product_id or s.product_id == self))
+        return sellers.sorted(lambda s: (s.sequence, -s.min_qty, s.price, s.id))
 
     def _get_filtered_sellers(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
         self.ensure_one()
@@ -794,6 +806,7 @@ class ProductProduct(models.Model):
             pricelist.currency_id,
             self.env.company,
             fields.Datetime.now(),
+            round=False
         )
         if lst_price:
             return (lst_price - self._get_contextual_price()) / lst_price

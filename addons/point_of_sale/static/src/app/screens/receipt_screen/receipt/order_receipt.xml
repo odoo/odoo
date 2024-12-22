@@ -64,13 +64,14 @@
             </t>
             <div t-if="props.data.tax_details.length > 0" class="pos-receipt-taxes">
                 <span />
-                <span>TAX%</span>
                 <span>Tax</span>
+                <span>Amount</span>
                 <span>Base</span>
                 <span>Total</span>
                 <t t-foreach="props.data.tax_details" t-as="tax" t-key="tax.tax.id">
                     <span t-esc="tax.tax.letter || ''"/>
-                    <span><t t-esc="tax.tax.amount"/> %</span>
+                    <span t-if="tax.tax.amount_type != 'fixed'"><t t-esc="tax.tax.amount"/>%</span>
+                    <span t-else="" t-esc="tax.tax.name"/>
                     <span t-esc="props.formatCurrency(tax.amount, false)" />
                     <span t-esc="props.formatCurrency(tax.base, false)" />
                     <span t-esc="props.formatCurrency(tax.amount + tax.base, false)" />
@@ -91,7 +92,7 @@
                 <div class="pos-receipt-order-data mb-2">
                     Scan me to request an invoice for your purchase.
                 </div>
-                <img id="posqrcode" t-att-src="props.data.pos_qr_code" class="pos-receipt-logo"/>
+                <img id="posqrcode" t-att-src="props.data.pos_qr_code" class="pos-receipt-qrcode"/>
             </div>
 
             <div t-if="props.data.ticket_code">
@@ -124,18 +125,18 @@
             </div>
 
             <br/>
-            <t t-if="props.shippingDate">
+            <t t-if="props.data.shippingDate">
                 <div class="pos-receipt-order-data">
                     Expected delivery:
-                    <div><t t-esc="props.shippingDate" /></div>
+                    <div><t t-esc="props.data.shippingDate" /></div>
                 </div>
             </t>
 
             <br/>
             <div class="pos-receipt-order-data">
-                <p>Odoo Point of Sale</p>
+                <p>Powered by Odoo</p>
                 <div t-esc="props.data.name" />
-                <div t-esc="props.data.date" />
+                <div id="order-date" t-esc="props.data.date" />
             </div>
         </div>
     </t>

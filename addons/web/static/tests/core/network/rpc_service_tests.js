@@ -256,3 +256,25 @@ QUnit.test("trigger a ConnectionLostError when response isn't json parsable", as
         assert.ok(e instanceof ConnectionLostError);
     }
 });
+
+QUnit.test("rpc can send additional headers", async (assert) => {
+    assert.expect(1);
+    const MockXHR = makeMockXHR(null, function () {
+        assert.deepEqual(this._requestHeaders, {
+            "Content-Type": "application/json",
+            Hello: "World",
+        });
+    });
+    function HeaderCollectingMockXHR() {
+        const ret = MockXHR();
+        ret._requestHeaders = {};
+        ret.setRequestHeader = function(header, value) {
+            ret._requestHeaders[header] = value;
+        };
+        return ret;
+    }
+    patchWithCleanup(browser, { XMLHttpRequest: HeaderCollectingMockXHR }, { pure: true });
+
+    const env = await makeTestEnv({ serviceRegistry });
+    await env.services.rpc("/test/", null, { headers: { Hello: 'World' } });
+});

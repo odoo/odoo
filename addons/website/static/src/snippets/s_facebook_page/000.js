@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
 import { clamp } from "@web/core/utils/numbers";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { debounce } from "@web/core/utils/timing";
 
 const FacebookPageWidget = publicWidget.Widget.extend({
     selector: '.o_facebook_page',
@@ -14,8 +15,7 @@ const FacebookPageWidget = publicWidget.Widget.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-
-        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
+        this.previousWidth = 0;
 
         const params = pick(this.$el[0].dataset, 'href', 'id', 'height', 'tabs', 'small_header', 'hide_cover');
         if (!params.href) {
@@ -25,27 +25,11 @@ const FacebookPageWidget = publicWidget.Widget.extend({
             params.href = `https://www.facebook.com/${params.id}`;
         }
         delete params.id;
-        params.width = clamp(Math.floor(this.$el.width()), 180, 500);
 
-        const searchParams = new URLSearchParams(params);
-        const src = "https://www.facebook.com/plugins/page.php?" + searchParams;
+        this._renderIframe(params);
+        this.resizeObserver = new ResizeObserver(debounce(this._renderIframe.bind(this, params), 100));
+        this.resizeObserver.observe(this.el.parentElement);
 
-        this.$iframe = $('<iframe/>', {
-            src: src,
-            width: params.width,
-            height: params.height,
-            css: {
-                border: 'none',
-                overflow: 'hidden',
-            },
-            scrolling: 'no',
-            frameborder: '0',
-            allowTransparency: 'true',
-            "aria-label": _t("Facebook"),
-        });
-        this.$el.append(this.$iframe);
-
-        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
         return def;
     },
     /**
@@ -53,12 +37,61 @@ const FacebookPageWidget = publicWidget.Widget.extend({
      */
     destroy: function () {
         this._super.apply(this, arguments);
-
-        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
-        if (this.$iframe) {
-            this.$iframe.remove();
+        if (this.iframeEl) {
+            this._deactivateEditorObserver();
+            this.iframeEl.remove();
+            this._activateEditorObserver();
+            this.resizeObserver.disconnect();
         }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Prepare iframe element & replace it with existing iframe.
+     *
+     * @private
+     * @param {Object} params
+    */
+    _renderIframe(params) {
+        this._deactivateEditorObserver();
+
+        params.width = clamp(Math.floor(this.$el.width()), 180, 500);
+        if (this.previousWidth !== params.width) {
+            this.previousWidth = params.width;
+            const searchParams = new URLSearchParams(params);
+            const src = "https://www.facebook.com/plugins/page.php?" + searchParams;
+            this.iframeEl = Object.assign(document.createElement("iframe"), {
+                src: src,
+                scrolling: "no",
+            });
+            // TODO: remove, the "scrolling", "frameborder" and
+            // "allowTransparency" attributes in master as they are deprecated.
+            // Also put the width and height as iframe attribute.
+            this.iframeEl.setAttribute("frameborder", "0");
+            this.iframeEl.setAttribute("allowTransparency", "true");
+            this.iframeEl.setAttribute("style", `width: ${params.width}px; height: ${params.height}px; border: none; overflow: hidden;`);
+            this.iframeEl.setAttribute("aria-label", _t("Facebook"));
+            this.el.replaceChildren(this.iframeEl);
+        }
+
+        this._activateEditorObserver();
+    },
+
+    /**
+     * Activates the editor observer if it exists.
+     */
+    _activateEditorObserver() {
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
+    },
+
+    /**
+     * Deactivates the editor observer if it exists.
+     */
+    _deactivateEditorObserver() {
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
     },
 });
 

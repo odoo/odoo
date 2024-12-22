@@ -219,3 +219,69 @@ class TestTimesheetHolidays(TestCommonTimesheet):
 
         self.assertEqual(len(timesheets.filtered('holiday_id')), 4, "4 timesheet should be linked to employee's timeoff")
         self.assertEqual(len(timesheets.filtered('global_leave_id')), 1, '1 timesheet should be linked to global leave')
+
+    def test_delete_timesheet_after_new_holiday_covers_whole_timeoff(self):
+        """ User should be able to delete a timesheet created after a new public holiday is added,
+            covering the *whole* period of a existing time off.
+            Test Case:
+            =========
+            1) Create a Time off, approve and validate it.
+            2) Create a new Public Holiday, covering the whole time off created in step 1.
+            3) Delete the new timesheet associated with the public holiday.
+        """
+
+        leave_start_datetime = datetime(2022, 1, 31, 7, 0, 0, 0)    # Monday
+        leave_end_datetime = datetime(2022, 1, 31, 18, 0, 0, 0)
+
+        # (1) Create a timeoff and validate it
+        time_off = self.Requests.with_user(self.user_employee).create({
+            'name': 'Test Time off please',
+            'employee_id': self.empl_employee.id,
+            'holiday_status_id': self.hr_leave_type_with_ts.id,
+            'request_date_from': leave_start_datetime,
+            'request_date_to': leave_end_datetime,
+        })
+        time_off.with_user(SUPERUSER_ID).action_validate()
+
+        # (2) Create a public holiday
+        self.env['resource.calendar.leaves'].create({
+            'name': 'New Public Holiday',
+            'calendar_id': self.employee_working_calendar.id,
+            'date_from': datetime(2022, 1, 31, 5, 0, 0, 0),     # Covers the whole time off
+            'date_to': datetime(2022, 1, 31, 23, 0, 0, 0),
+        })
+
+        # The timeoff should have been force_cancelled and its associated timesheet unlinked.
+        self.assertFalse(time_off.timesheet_ids, '0 timesheet should remain for this time off.')
+
+        # (3) Delete the timesheet
+        timesheets = self.env['account.analytic.line'].search([
+            ('date', '>=', leave_start_datetime),
+            ('date', '<=', leave_end_datetime),
+            ('employee_id', '=', self.empl_employee.id),
+        ])
+
+        # timesheet should be unlinked to the timeoff, and be able to delete it
+        timesheets.with_user(SUPERUSER_ID).unlink()
+        self.assertFalse(timesheets.exists(), 'Timesheet should be deleted')
+
+    @freeze_time('2018-02-01 08:00:00')
+    def test_timesheet_when_archiving_employee(self):
+        number_of_days = (self.leave_end_datetime - self.leave_start_datetime).days
+        holiday = self.Requests.with_user(self.user_employee).create({
+            'name': 'Leave 1',
+            'employee_id': self.empl_employee.id,
+            'holiday_status_id': self.hr_leave_type_with_ts.id,
+            'date_from': self.leave_start_datetime,
+            'date_to': self.leave_end_datetime,
+            'number_of_days': number_of_days,
+        })
+        holiday.with_user(SUPERUSER_ID).action_validate()
+
+        wizard = self.env['hr.departure.wizard'].create({
+            'employee_id': self.empl_employee.id,
+            'departure_date': datetime(2018, 1, 30, 12),
+            'archive_allocation': False,
+        })
+        wizard.action_register_departure()
+        self.assertEqual(len(holiday.timesheet_ids), 0, 'Timesheets related to the archived employee should have been deleted')

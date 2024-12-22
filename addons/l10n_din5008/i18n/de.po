@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-15 13:26+0000\n"
+"POT-Creation-Date: 2024-10-15 12:05+0000\n"
 "PO-Revision-Date: 2024-02-15 15:59+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -78,14 +78,16 @@ msgid ""
 ";\n"
 "                            }\n"
 "                            .page {\n"
-"                                [name=invoice_line_table], [name=stock_move_table], .o_main_table {\n"
+"                                [name=invoice_line_table], "
+"[name=stock_move_table], .o_main_table {\n"
 "                                    th {\n"
 "                                        color:"
 msgstr ""
 ";\n"
 "                            }\n"
 "                            .page {\n"
-"                                [name=invoice_line_table], [name=stock_move_table], .o_main_table {\n"
+"                                [name=invoice_line_table], "
+"[name=stock_move_table], .o_main_table {\n"
 "                                    th {\n"
 "                                        color:"
 
@@ -108,6 +110,13 @@ msgstr "BIC:"
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__bank_ids
 msgid "Banks"
 msgstr "Banken"
+
+#. module: l10n_din5008
+#. odoo-python
+#: code:addons/l10n_din5008/models/account_move.py:0
+#, python-format
+msgid "Beneficiary:"
+msgstr "Leistungsempfänger:"
 
 #. module: l10n_din5008
 #. odoo-python
@@ -216,20 +225,6 @@ msgid "Invoice No."
 msgstr "Rechnungsnr."
 
 #. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
-#, python-format
-msgid "Invoicing Address:"
-msgstr "Rechnungsadresse:"
-
-#. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
-#, python-format
-msgid "Invoicing and Shipping Address:"
-msgstr "Rechnungs- und Lieferadresse:"
-
-#. module: l10n_din5008
 #: model:ir.model,name:l10n_din5008.model_account_move
 msgid "Journal Entry"
 msgstr "Journalbuchung"
@@ -257,7 +252,7 @@ msgstr "L10N Din5008 Dokumenttitel"
 #: model:ir.model.fields,field_description:l10n_din5008.field_account_payment__l10n_din5008_template_data
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_template_data
 msgid "L10N Din5008 Template Data"
-msgstr "L10N Din5008 Vorlagedaten"
+msgstr "L10N Din5008 Vorlagendaten"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
@@ -289,7 +284,7 @@ msgstr "Lieferadresse:"
 #: code:addons/l10n_din5008/models/account_move.py:0
 #, python-format
 msgid "Source"
-msgstr "Referenz"
+msgstr "Verweis"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__street
@@ -302,14 +297,26 @@ msgid "Street2"
 msgstr "Straße 2"
 
 #. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
+msgid "Tax ID"
+msgstr "USt-IdNr."
+
+#. module: l10n_din5008
 #: model:ir.model.fields,help:l10n_din5008.field_base_document_layout__account_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
-msgstr "Das Land, aus dem die Steuerberichte für dieses Unternehmen zu verwenden sind"
+msgstr ""
+"Das Land, aus dem die Steuerberichte für dieses Unternehmen zu verwenden sind"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,help:l10n_din5008.field_base_document_layout__company_registry
-msgid "The registry number of the company. Use it if it is different from the Tax ID. It must be unique across all partners of a same country"
-msgstr "Die Registernummer des Unternehmens. Verwenden Sie diese, wenn sie sich von der Steuer-ID unterscheidet. Sie muss für alle Partner desselben Landes eindeutig sein."
+msgid ""
+"The registry number of the company. Use it if it is different from the Tax "
+"ID. It must be unique across all partners of a same country"
+msgstr ""
+"Die Registernummer des Unternehmens. Verwenden Sie diese, wenn sie sich von "
+"der USt-IdNr. unterscheidet. Sie muss für alle Partner desselben Landes "
+"eindeutig sein."
 
 #. module: l10n_din5008
 #. odoo-python

@@ -25,7 +25,7 @@
     <div class="mb-3">
         <div class="container d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-center">
             <t t-set="active_submenu" t-value="event.menu_id.child_id.filtered(lambda sm: sm._is_active())"></t>
-            <h6 t-field="event.name" t-attf-class="flex-grow-1 #{'my-3' if active_submenu else 'mb-0'}"/>
+            <h6 t-field="event.name" t-attf-class="flex-grow-1 #{'my-2' if active_submenu else 'mb-0'}"/>
             <div class="d-flex flex-grow-1 align-items-center justify-content-end gap-2">
                 <nav t-if="active_submenu" class="navbar navbar-light navbar-expand-md p-0 d-md-none">
                     <div class="container align-items-baseline">
@@ -33,7 +33,7 @@
                             <button class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown">
                                 <t t-out="active_submenu.name if len(active_submenu) == 1 else ''"/>
                             </button>
-                            <ul class="dropdown-menu flex-md-wrap w-100" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id">
+                            <ul class="dropdown-menu flex-md-wrap w-100 overflow-x-hidden" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id">
                                 <t t-foreach="event.menu_id.child_id" t-as="submenu">
                                     <t t-call="website.submenu">
                                         <t t-set="link_class" t-value="'dropdown-item'"/>

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Marta Wacławek, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Marta Wacławek, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,7 +68,7 @@ msgstr "Uczestnicy są tworzeni"
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__confirm
 msgid "Attendees are registered"
-msgstr ""
+msgstr "Uczestnicy są zarejestrowani"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__done
@@ -116,7 +117,7 @@ msgstr "Utwórz regułę generowania szans"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_ids
 msgid "Created Leads"
-msgstr "Utworzone sygnały"
+msgstr "Utworzone leady"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_uid
@@ -140,6 +141,9 @@ msgid ""
 "Registered: at attendee registration, manually or automatically;\n"
 "Attended: when attendance is confirmed and registration set to done;"
 msgstr ""
+"Tworzenie: podczas tworzenia uczestnika;\n"
+"Rejestracja: podczas rejestracji uczestnika, manualnie lub automatycznie;\n"
+"Uczestnictwo: kiedy uczestnik został potwierdzony a rejestracja oznaczona jako dokonana;"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_type
@@ -250,18 +254,18 @@ msgstr "Typ tworzenia szansy"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "Lead Default Values"
-msgstr "Domyślne wartości sygnału"
+msgstr "Domyślne wartości leadu"
 
 #. module: event_crm
 #: model:ir.ui.menu,name:event_crm.event_lead_rule_menu
 msgid "Lead Generation"
-msgstr "Generacja sygnałów"
+msgstr "Generacja leadów"
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.event_lead_rule_action
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "Lead Generation Rule"
-msgstr "Reguła tworzenia sygnałów"
+msgstr "Reguła tworzenia leadów"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
@@ -271,7 +275,7 @@ msgstr "Zasady generowania szans"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_type
 msgid "Lead Type"
-msgstr "Typ sygnału"
+msgstr "Typ leadu"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_crm_lead
@@ -307,7 +311,7 @@ msgstr "Nowe rejestracje"
 #: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_event
 #: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_registration
 msgid "No leads found"
-msgstr "Nie odnaleziono sygnałów"
+msgstr "Nie odnaleziono leadów"
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_registration_action_from_lead
@@ -338,6 +342,8 @@ msgid ""
 "Per Attendee: A Lead is created for each Attendee (B2C).\n"
 "Per Order: A single Lead is created per Ticket Batch/Sale Order (B2B)"
 msgstr ""
+"Według uczestnika: Lead jest tworzony dla każdego uczestnika (B2C).\n"
+"Według zamówienia: Pojedynczy lead jest tworzony na partię biletów/zamówienie sprzedaży (B2B)."
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__order
@@ -362,7 +368,7 @@ msgstr "Rejestracje Domena"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__registration_ids
 msgid "Registrations triggering the rule that created this lead"
-msgstr "Rejestracje uruchamiające regułę, która utworzyła ten sygnał"
+msgstr "Rejestracje uruchamiające regułę, która utworzyła ten lead"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__company_id
@@ -386,7 +392,7 @@ msgstr "Reguła na @example.com"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__event_lead_rule_id
 msgid "Rule that created this lead"
-msgstr "Reguła, która stworzyła ten sygnał"
+msgstr "Reguła, która stworzyła ten lead"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_sales_team_id
@@ -401,7 +407,7 @@ msgstr "Sprzedawca"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
 msgid "Search Lead Generation Rules"
-msgstr "Wyszukiwanie zasad generowania sygnałów"
+msgstr "Wyszukiwanie zasad generowania leadów"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
@@ -421,7 +427,7 @@ msgstr "Tagi"
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
 msgid "Those automatically create leads when attendees register."
-msgstr "Automatycznie tworzą one sygnały, gdy uczestnicy się zarejestrują."
+msgstr "Automatycznie tworzą one leady, gdy uczestnicy się zarejestrują."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search

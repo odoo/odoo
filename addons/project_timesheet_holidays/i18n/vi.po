@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,12 +62,12 @@ msgstr "Nhân viên"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
 msgid "Generate Timesheets"
-msgstr ""
+msgstr "Tạo bảng chấm công"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
 msgid "Generate timesheets when validating time off requests of this type"
-msgstr ""
+msgstr "Tạo bảng chấm công khi xác thực đơn nghỉ phép thuộc loại này"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__global_leave_id
@@ -84,8 +85,8 @@ msgstr ""
 
 #. module: project_timesheet_holidays
 #. odoo-python
-#: code:addons/project_timesheet_holidays/models/res_company.py:0
-#: code:addons/project_timesheet_holidays/models/res_company.py:0
+#: code:addons/project_timesheet_holidays/__init__.py:0
+#: code:addons/project_timesheet_holidays/__init__.py:0
 #, python-format
 msgid "Internal"
 msgstr "Nội bộ"
@@ -98,7 +99,7 @@ msgstr "Dự án nội bộ"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__is_timeoff_task
 msgid "Is Time off Task"
-msgstr ""
+msgstr "Là nhiệm vụ nghỉ phép"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -133,6 +134,8 @@ msgid ""
 "off requests. You can specify another project on each time off type "
 "individually."
 msgstr ""
+"Dự án mặc định được sử dụng khi tự động tạo bảng chấm công thông qua đơn "
+"nghỉ phép. Bạn có thể chỉ định một dự án khác cho từng loại nghỉ phép."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
@@ -140,11 +143,13 @@ msgid ""
 "The default task used when automatically generating timesheets via time off "
 "requests. You can specify another task on each time off type individually."
 msgstr ""
+"Nhiệm vụ mặc định được sử dụng khi tự động tạo bảng chấm công thông qua đơn "
+"nghỉ phép. Bạn có thể chỉ định một nhiệm vụ khác cho từng loại nghỉ phép."
 
 #. module: project_timesheet_holidays
 #. odoo-python
+#: code:addons/project_timesheet_holidays/__init__.py:0
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
-#: code:addons/project_timesheet_holidays/models/res_company.py:0
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave
 #, python-format
@@ -178,7 +183,7 @@ msgstr "Loại Nghỉ phép"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
 msgid "Time Off Types Count"
-msgstr ""
+msgstr "Số loại nghỉ phép"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
@@ -190,7 +195,7 @@ msgstr "Bảng chấm công"
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, python-format
 msgid "View Time Off"
-msgstr ""
+msgstr "Xem nghỉ phép"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -200,6 +205,9 @@ msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
 msgstr ""
+"Bạn không thể tạo bảng chấm công cho một nhiệm vụ được liên kết với một loại"
+" nghỉ phép. Thay vào đó, hãy sử dụng ứng dụng Nghỉ phép để tạo đơn nghỉ phép"
+" mới."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -220,6 +228,8 @@ msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
+"Bạn không thể xoá các bảng chấm công được liên kết với đơn nghỉ phép. Thay "
+"vào đó, hãy sử dụng ứng dụng Nghỉ phép để huỷ đơn nghỉ phép của bạn."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -229,3 +239,5 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
+"Bạn không thể chỉnh sửa các bảng chấm công được liên kết với đơn nghỉ phép. "
+"Thay vào đó, hãy sử dụng ứng dụng Nghỉ phép để sửa đơn nghỉ phép của bạn."

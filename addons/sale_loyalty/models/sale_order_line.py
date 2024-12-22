@@ -47,6 +47,9 @@ class SaleOrderLine(models.Model):
             return self.price_unit
         return super()._get_display_price()
 
+    def _can_be_invoiced_alone(self):
+        return super()._can_be_invoiced_alone() and not self.is_reward_line
+
     def _is_not_sellable_line(self):
         return self.is_reward_line or super()._is_not_sellable_line()
 
@@ -117,3 +120,6 @@ class SaleOrderLine(models.Model):
         res = super(SaleOrderLine, self | related_lines).unlink()
         coupons_to_unlink.sudo().unlink()
         return res
+
+    def _sellable_lines_domain(self):
+        return super()._sellable_lines_domain() + [('reward_id', '=', False)]

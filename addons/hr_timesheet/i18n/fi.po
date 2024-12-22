@@ -15,22 +15,27 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Mikko Salmela <salmemik@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+msgid "#{timesheet.employee_id.name}"
+msgstr "#{timesheet.employee_id.name}"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -127,7 +132,7 @@ msgstr "<i class=\"fa fa-print\"/> Näytä yksityiskohdat"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
 msgid "<span class=\"o_stat_text\">Timesheets</span>"
-msgstr "<span class=\"o_stat_text\">Tuntikirjaukset</span>"
+msgstr "<span class=\"o_stat_text\">Työaikakirjaukset</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -249,7 +254,7 @@ msgstr "Kaikki"
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_all
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_all
 msgid "All Timesheets"
-msgstr "Kaikki tuntikirjaukset"
+msgstr "Kaikki työaikakirjaukset"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__allocated_hours
@@ -265,7 +270,7 @@ msgstr "Varattu aika"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__allow_timesheets
 msgid "Allow timesheets"
-msgstr "Ota käyttöön tuntikirjaukset"
+msgstr "Ota käyttöön työaikakirjaukset"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__amount
@@ -331,7 +336,7 @@ msgstr "Arkistoi työntekijät"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_ids
 msgid "Associated Timesheets"
-msgstr "Liittyvät tuntikirjaukset"
+msgstr "Liittyvät työaikakirjaukset"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -757,7 +762,7 @@ msgstr "Oman tiimini päivitykset"
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_user
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "My Timesheets"
-msgstr "Omat tuntikirjaukset"
+msgstr "Omat työaikakirjaukset"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -863,7 +868,7 @@ msgstr "Projekti ylityönä"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_project
 msgid "Project's Timesheets"
-msgstr "Projektin tuntikirjaukset"
+msgstr "Projektin työaikakirjaukset"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__readonly_timesheet
@@ -975,7 +980,7 @@ msgstr "Katso työaikakirjauksia"
 #: code:addons/hr_timesheet/models/project_task.py:0
 #, python-format
 msgid "See timesheet entries"
-msgstr "Näe tuntikirjaukset"
+msgstr "Näe työaikakirjaukset"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -1028,7 +1033,7 @@ msgstr "Tehtävä"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_task
 msgid "Task's Timesheets"
-msgstr "Tehtävän tuntikirjaukset"
+msgstr "Tehtävän työaikakirjaukset"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_report_project_task_user
@@ -1045,7 +1050,7 @@ msgstr "Yrityksen sisäisen hankkeen tulisi olla kyseisessä yrityksessä."
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "There are no timesheets."
-msgstr "Tuntikirjauksia ei ole."
+msgstr "Työaikakirjauksia ei ole."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1055,8 +1060,8 @@ msgid ""
 "These projects have some timesheet entries referencing them. Before removing"
 " these projects, you have to remove these timesheet entries."
 msgstr ""
-"Näillä projekteilla on liittyviä tuntikirjauksia. Ennen kuin poistat nämä "
-"projektit, poista tuntikirjaukset."
+"Näillä projekteilla on liittyviä työaikakirjauksia. Ennen kuin poistat nämä "
+"projektit, poista työaikakirjaukset."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1066,8 +1071,8 @@ msgid ""
 "These tasks have some timesheet entries referencing them. Before removing "
 "these tasks, you have to remove these timesheet entries."
 msgstr ""
-"Näillä tehtävillä on liittyviä tuntikirjauksia. Ennen kuin poistat nämä "
-"tehtävät, poista tuntikirjaukset."
+"Näillä tehtävillä on liittyviä työaikakirjauksia. Ennen kuin poistat nämä "
+"tehtävät, poista työaikakirjaukset."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1098,8 +1103,8 @@ msgid ""
 "This project has some timesheet entries referencing it. Before removing this"
 " project, you have to remove these timesheet entries."
 msgstr ""
-"Tällä projekteilla on liittyviä tuntikirjauksia. Ennen kuin poistat tämän "
-"projektin, poista tuntikirjaukset."
+"Tällä projekteilla on liittyviä työaikakirjauksia. Ennen kuin poistat tämän "
+"projektin, poista työaikakirjaukset."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1119,8 +1124,8 @@ msgid ""
 "This task has some timesheet entries referencing it. Before removing this "
 "task, you have to remove these timesheet entries."
 msgstr ""
-"Tällä tehtävällä on liittyviä tuntikirjauksia. Ennen kuin poistat tämän "
-"tehtävän, poista tuntikirjaukset."
+"Tällä tehtävällä on liittyviä työaikakirjauksia. Ennen kuin poistat tämän "
+"tehtävän, poista työaikakirjaukset."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1137,7 +1142,7 @@ msgid ""
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
 "Tässä asetetaan projekteilla ja tehtävillä käytettävä ajan yksikkö.\n"
-"Jos käytät projektiin liittyivä tuntikirjauksia, älä unohda asettaa myös työntekijöille oikeaa ajan yksikköä."
+"Jos käytät projektiin liittyivä työaikakirjauksia, älä unohda asettaa myös työntekijöille oikeaa ajan yksikköä."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1177,21 +1182,21 @@ msgstr "Tähän tehtävään ja sen alitehtäviin käytetty aika."
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time unit used to record your timesheets"
-msgstr "Tuntikirjauksiin käytettävä ajan yksikkö"
+msgstr "Työaikakirjauksiin käytettävä ajan yksikkö"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph_all
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph_my
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
 msgid "Timesheet"
-msgstr "Tuntikirjaus"
+msgstr "Työaikakirjaus"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Timesheet Activities"
-msgstr "Tuntikirjausaktiviteetit"
+msgstr "Työaikakirjausaktiviteetit"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_graph_employee
@@ -1206,7 +1211,7 @@ msgstr "Tuntikirjausaktiviteetit"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
 msgid "Timesheet Costs"
-msgstr "Tuntikirjauksen kulut"
+msgstr "Työaikakirjauksen kulut"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_encode_uom_id
@@ -1216,7 +1221,7 @@ msgstr "Työaikakirjausten koodausten mittayksikkö"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr "Tuntikirjauksen aikayksikkö"
+msgstr "Työaikakirjauksen aikayksikkö"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_update__timesheet_percentage
@@ -1270,7 +1275,7 @@ msgstr "Työtuntilistan aika"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #, python-format
 msgid "Timesheets"
-msgstr "Tuntikirjaukset"
+msgstr "Työaikakirjaukset"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1325,7 +1330,7 @@ msgstr "Työaikakirjaukset tehtävittäin"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__allow_timesheets
 msgid "Timesheets can be logged on this task."
-msgstr "Tehtävälle voi tehdä tuntikirjauksia."
+msgstr "Tehtävälle voi tehdä työaikakirjauksia."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1395,12 +1400,16 @@ msgstr "Päiviä yhteensä"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
-#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Hours"
 msgstr "Tunnit yhteensä"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
+msgid "Hours By Task (Including Subtasks)"
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
@@ -1410,7 +1419,7 @@ msgstr "Jäljellä olevat tunnit yhteensä"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__total_timesheet_time
 msgid "Total Timesheet Time"
-msgstr "Tuntikirjausten kokonaisaika"
+msgstr "Työaikakirjausten kokonaisaika"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__total_timesheet_time
@@ -1500,7 +1509,7 @@ msgstr "Sovelma"
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "You cannot access timesheets that are not yours."
-msgstr "Et voi tarkastella tuntikirjauksia jotka eivät ole omiasi."
+msgstr "Et voi tarkastella työaikakirjauksia jotka eivät ole omiasi."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1525,7 +1534,7 @@ msgstr ""
 #, python-format
 msgid "You cannot set an archived employee to the existing timesheets."
 msgstr ""
-"Et voi käyttää arkistoitua työntekijää olemassaolevilla tuntikirjauksilla."
+"Et voi käyttää arkistoitua työntekijää olemassaolevilla työaikakirjauksilla."
 
 #. module: hr_timesheet
 #. odoo-python

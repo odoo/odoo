@@ -17,3 +17,5 @@ Raul Martin raul.martin@braintec.com https://github.com/BT-rmartin
 Frédéric Garbely frederic.garbely@braintec.com https://github.com/BT-fgarbely
 Carlos Serra Toro carlos.serra@braintec.com https://github.com/BT-cserra
 Cristian Rodriguez Navarro cristian.rodriguez@braintec.com https://github.com/BT-crodriguez
+Olivier Jossen olivier.jossen@braintec.com https://github.com/BT-ojossen
+Alberto Nieto alberto.nieto@braintec.com https://github.com/BT-anieto

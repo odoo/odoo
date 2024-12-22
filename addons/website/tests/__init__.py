@@ -3,7 +3,6 @@
 from . import test_assets
 from . import test_attachment
 from . import test_auth_signup_uninvited
-from . import test_automatic_editor
 from . import test_base_url
 from . import test_client_action
 from . import test_configurator
@@ -24,7 +23,9 @@ from . import test_page
 from . import test_page_manager
 from . import test_performance
 from . import test_qweb
+from . import test_redirect
 from . import test_res_users
+from . import test_skip_website_configurator
 from . import test_snippets
 from . import test_theme
 from . import test_ui

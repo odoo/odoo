@@ -20,6 +20,9 @@
         'google_recaptcha',
         'utm',
     ],
+    'external_dependencies': {
+        'python': ['geoip2'],
+    },
     'installable': True,
     'data': [
         # security.xml first, data.xml need the group to exist (checking it)
@@ -115,6 +118,8 @@
         'views/neutralize_views.xml',
         'wizard/base_language_install_views.xml',
         'wizard/website_robots.xml',
+        # Replaces a post_init_hook that should be run on upgrade too.
+        'data/update_theme_images.xml',
     ],
     'demo': [
         'data/website_demo.xml',
@@ -197,6 +202,7 @@
             'website/static/src/components/fields/*',
             'website/static/src/components/fullscreen_indication/fullscreen_indication.js',
             'website/static/src/components/fullscreen_indication/fullscreen_indication.scss',
+            'website/static/src/components/fullscreen_indication/fullscreen_indication.xml',
             'website/static/src/components/website_loader/website_loader.js',
             'website/static/src/components/website_loader/website_loader.scss',
             'website/static/src/components/views/*',
@@ -228,6 +234,7 @@
             'website/static/src/js/editor/editor.js',
             '/website/static/src/components/wysiwyg_adapter/toolbar_patch.js',
             'website/static/src/xml/web_editor.xml',
+            'website/static/src/js/editor/widget_link.js',
         ],
         'website.assets_wysiwyg': [
             ('include', 'web._assets_helpers'),

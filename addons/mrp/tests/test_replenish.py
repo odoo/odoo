@@ -40,6 +40,38 @@ class TestMrpReplenish(TestMrpCommon):
             wizard3 = self._create_wizard(product, wh)
             self.assertEqual(fields.Datetime.from_string('2023-01-06 00:00:00'), wizard3.date_planned)
 
+    def test_mrp_orderpoint_leadtime(self):
+        self.warehouse = self.env.ref('stock.warehouse0')
+        route_manufacture = self.warehouse.manufacture_pull_id.route_id
+        route_manufacture.supplied_wh_id = self.warehouse
+        route_manufacture.supplier_wh_id = self.warehouse
+        route_manufacture.rule_ids.delay = 2
+        product_1 = self.env['product.product'].create({
+            'name': 'Cake',
+            'type': 'product',
+            'route_ids': [(6, 0, [route_manufacture.id])]
+        })
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product_1.product_tmpl_id.id,
+            'produce_delay': 4,
+            'product_qty': 1,
+        })
+
+        # setup orderpoint (reordering rule)
+        rr = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Cake RR',
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': product_1.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
+        })
+
+        info = self.env['stock.replenishment.info'].create({'orderpoint_id': rr.id})
+
+        # for manufacturing delay should be taken from the bom
+        self.assertEqual("4.0 days", info.wh_replenishment_option_ids.lead_time)
+
     def test_mrp_delay_bom(self):
         route = self.env.ref('mrp.route_warehouse0_manufacture')
         product = self.product_4

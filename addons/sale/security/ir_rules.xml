@@ -11,13 +11,13 @@
     <record id="sale_order_line_comp_rule" model="ir.rule">
         <field name="name">Sales Order Line multi-company</field>
         <field name="model_id" ref="model_sale_order_line"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record id="sale_order_report_comp_rule" model="ir.rule">
         <field name="name">Sales Order Analysis multi-company</field>
         <field name="model_id" ref="model_sale_report"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <!-- Portal Access Rules -->

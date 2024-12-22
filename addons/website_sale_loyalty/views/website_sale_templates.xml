@@ -39,7 +39,7 @@
                                         <input type="hidden" name="code" t-att-value="coupon.code"/>
                                         <div class="alert alert-success text-start mt16" role="alert">
                                             <div class="d-flex flex-row">
-                                                <div class="flex-grow-1">
+                                                <div class="flex-grow-1 text-break">
                                                     <t t-set="program" t-value="reward.program_id"/>
                                                     <t t-set="points" t-value="coupon._format_points(website_sale_order._get_real_points_for_coupon(coupon))"/>
                                                     <t t-if="program.program_type not in ['ewallet', 'promo_code'] and (program.trigger == 'with_code' or (program.trigger == 'auto' and program.applies_on == 'future'))">
@@ -50,6 +50,9 @@
                                                         </t>
                                                         <t t-elif="program.program_type == 'coupons'">
                                                             <strong>Coupons - </strong><strong t-esc="reward.description"/>
+                                                        </t>
+                                                        <t t-elif="program.trigger == 'auto' and program.applies_on == 'future'">
+                                                            <strong t-esc="reward.description"/>
                                                         </t>
                                                         <div class="text-muted d-md-block small">
                                                             <span t-if="coupon and not coupon.program_id.is_nominative">
@@ -84,6 +87,19 @@
                                                             </t>
                                                         </div>
                                                     </t>
+                                                    <select
+                                                        t-if="reward.multi_product"
+                                                        class="o_select w-100 form-select form-select-sm css_attribute_select"
+                                                        name="product_id"
+                                                    >
+                                                        <option
+                                                            t-foreach="reward.reward_product_ids"
+                                                            t-as="product"
+                                                            t-att-value="product.id"
+                                                        >
+                                                            <t t-out="product.display_name"/>
+                                                        </option>
+                                                    </select>
                                                 </div>
                                                 <div class="justify-content-end">
                                                     <a class="btn btn-primary a-submit" href="#" role="button">
@@ -154,8 +170,13 @@
     </template>
 
     <template id="cart_summary" name="Payment" inherit_id="website_sale.checkout_layout">
+        <!-- `tax_excluded` line price -->
         <xpath expr="//td[@name='website_sale_cart_summary_line_price']/child::*" position="attributes">
-            <attribute name="t-att-style">'display: None;' if line.reward_id.reward_type == 'shipping' else ''</attribute>
+            <attribute name="t-att-data-reward-type">line.reward_id.reward_type</attribute>
+        </xpath>
+        <!-- `tax_included` line price -->
+        <xpath expr="//td[@name='website_sale_cart_summary_line_price']/*[2]" position="attributes">
+            <attribute name="t-att-data-reward-type">line.reward_id.reward_type</attribute>
         </xpath>
     </template>
 

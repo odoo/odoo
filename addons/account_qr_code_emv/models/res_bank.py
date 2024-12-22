@@ -57,7 +57,7 @@ class ResPartnerBank(models.Model):
         merchant_name = self.partner_id.name and self._remove_accents(self.partner_id.name)[:25] or 'NA'
         merchant_city = self.partner_id.city and self._remove_accents(self.partner_id.city)[:15] or ''
         comment = structured_communication or free_communication or ''
-        comment = re.sub(r'/[^ A-Za-z0-9_@.\/#&+-]+/g', '', remove_accents(comment))
+        comment = re.sub(r'/[^ A-Za-z0-9_@.\/#&+-]+/g', '', self._remove_accents(comment))
         additional_data_field = self._get_additional_data_field(comment) if self.include_reference else None
         return [
             (0, '01'),                                                              # Payload Format Indicator
@@ -115,6 +115,8 @@ class ResPartnerBank(models.Model):
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
         """ Return an error for emv_qr if the account's country does no match any methods found in inheriting modules."""
         if qr_method == 'emv_qr':
+            if not self:
+                return _("A bank account is required for EMV QR Code generation.")
             return _("No EMV QR Code is available for the country of the account %(account_number)s.", account_number=self.acc_number)
 
         return super()._get_error_messages_for_qr(qr_method, debtor_partner, currency)

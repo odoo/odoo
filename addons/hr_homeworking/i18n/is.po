@@ -2,12 +2,17 @@
 # This file contains the translation of the following modules:
 # 	* hr_homeworking
 # 
+# Translators:
+# jonasyngvi, 2024
+# Kristófer Arnþórsson, 2024
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Kristófer Arnþórsson, 2024\n"
 "Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,7 +80,7 @@ msgstr ""
 #. module: hr_homeworking
 #: model:ir.model,name:hr_homeworking.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Hafa samband"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__work_location_type
@@ -94,13 +99,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__create_uid
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Búið til af"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__create_date
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Búið til þann"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee__exceptional_location_id
@@ -113,7 +118,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__date
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__date
 msgid "Date"
-msgstr ""
+msgstr "Dagsetning"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__day_week_string
@@ -125,7 +130,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__display_name
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Birtingarnafn"
 
 #. module: hr_homeworking
 #. odoo-javascript
@@ -170,19 +175,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__id
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__id
 msgid "ID"
-msgstr ""
+msgstr "Auðkenni (ID)"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__write_uid
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Síðast uppfært af"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__write_date
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Síðast uppfært þann"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__work_location_id
@@ -305,6 +310,14 @@ msgstr ""
 #. module: hr_homeworking
 #: model:ir.model,name:hr_homeworking.model_res_users
 msgid "User"
+msgstr "Notandi"
+
+#. module: hr_homeworking
+#. odoo-javascript
+#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
+#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
+#, python-format
+msgid "User work at {{location}} and is {{status}}"
 msgstr ""
 
 #. module: hr_homeworking
@@ -336,4 +349,12 @@ msgstr ""
 #: code:addons/hr_homeworking/models/hr_work_location.py:0
 #, python-format
 msgid "You cannot delete locations that are being used by your employees"
+msgstr ""
+
+#. module: hr_homeworking
+#. odoo-javascript
+#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
+#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
+#, python-format
+msgid "{{status}}"
 msgstr ""

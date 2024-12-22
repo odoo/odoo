@@ -43,7 +43,10 @@ class PurchaseOrderLine(models.Model):
             moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self._context['accrual_entry_date'])
         return moves
 
-    @api.depends('move_ids.state', 'move_ids.product_uom_qty', 'move_ids.product_uom')
+    def _get_po_line_invoice_lines_su(self):
+        return self.sudo().invoice_lines
+
+    @api.depends('move_ids.state', 'move_ids.product_uom', 'move_ids.quantity')
     def _compute_qty_received(self):
         from_stock_lines = self.filtered(lambda order_line: order_line.qty_received_method == 'stock_moves')
         super(PurchaseOrderLine, self - from_stock_lines)._compute_qty_received()
@@ -55,7 +58,7 @@ class PurchaseOrderLine(models.Model):
                 for move in line._get_po_line_moves():
                     if move.state == 'done':
                         if move._is_purchase_return():
-                            if move.to_refund:
+                            if not move.origin_returned_move_id or move.to_refund:
                                 total -= move.product_uom._compute_quantity(move.quantity, line.product_uom, rounding_method='HALF-UP')
                         elif move.origin_returned_move_id and move.origin_returned_move_id._is_dropshipped() and not move._is_dropshipped_returned():
                             # Edge case: the dropship is returned to the stock, no to the supplier.
@@ -92,7 +95,8 @@ class PurchaseOrderLine(models.Model):
         if values.get('date_planned'):
             new_date = fields.Datetime.to_datetime(values['date_planned'])
             self.filtered(lambda l: not l.display_type)._update_move_date_deadline(new_date)
-        lines = self.filtered(lambda l: l.order_id.state == 'purchase')
+        lines = self.filtered(lambda l: l.order_id.state == 'purchase'
+                                        and not l.display_type)
 
         if 'product_packaging_id' in values:
             self.move_ids.filtered(
@@ -159,12 +163,13 @@ class PurchaseOrderLine(models.Model):
     def _create_or_update_picking(self):
         for line in self:
             if line.product_id and line.product_id.type in ('product', 'consu'):
+                rounding = line.product_uom.rounding
                 # Prevent decreasing below received quantity
-                if float_compare(line.product_qty, line.qty_received, line.product_uom.rounding) < 0:
+                if float_compare(line.product_qty, line.qty_received, precision_rounding=rounding) < 0:
                     raise UserError(_('You cannot decrease the ordered quantity below the received quantity.\n'
                                       'Create a return first.'))
 
-                if float_compare(line.product_qty, line.qty_invoiced, line.product_uom.rounding) == -1:
+                if float_compare(line.product_qty, line.qty_invoiced, precision_rounding=rounding) < 0 and line.invoice_lines:
                     # If the quantity is now below the invoiced quantity, create an activity on the vendor bill
                     # inviting the user to create a refund.
                     line.invoice_lines[0].move_id.activity_schedule(
@@ -172,8 +177,13 @@ class PurchaseOrderLine(models.Model):
                         note=_('The quantities on your purchase order indicate less than billed. You should ask for a refund.'))
 
                 # If the user increased quantity of existing line or created a new line
-                pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
-                picking = pickings and pickings[0] or False
+                # Give priority to the pickings related to the line
+                line_pickings = line.move_ids.picking_id.filtered(lambda p: p.state not in ('done', 'cancel') and p.location_dest_id.usage in ('internal', 'transit', 'customer'))
+                if line_pickings:
+                    picking = line_pickings[0]
+                else:
+                    pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
+                    picking = pickings and pickings[0] or False
                 if not picking:
                     if not line.product_qty > line.qty_received:
                         continue
@@ -201,6 +211,11 @@ class PurchaseOrderLine(models.Model):
                 price_unit, order.company_id.currency_id, self.company_id, self.date_order or fields.Date.today(), round=False)
         return float_round(price_unit, precision_digits=price_unit_prec)
 
+    def _get_move_dests_initial_demand(self, move_dests):
+        return self.product_id.uom_id._compute_quantity(
+            sum(move_dests.filtered(lambda m: m.state != 'cancel' and m.location_dest_id.usage != 'supplier').mapped('product_qty')),
+            self.product_uom, rounding_method='HALF-UP')
+
     def _prepare_stock_moves(self, picking):
         """ Prepare the stock moves data for one order line. This function returns a list of
         dictionary ready to be used in stock.move's create()
@@ -220,9 +235,7 @@ class PurchaseOrderLine(models.Model):
             qty_to_attach = 0
             qty_to_push = self.product_qty - qty
         else:
-            move_dests_initial_demand = self.product_id.uom_id._compute_quantity(
-                sum(move_dests.filtered(lambda m: m.state != 'cancel' and m.location_dest_id.usage != 'supplier').mapped('product_qty')),
-                self.product_uom, rounding_method='HALF-UP')
+            move_dests_initial_demand = self._get_move_dests_initial_demand(move_dests)
             qty_to_attach = move_dests_initial_demand - qty
             qty_to_push = self.product_qty - move_dests_initial_demand
 
@@ -268,7 +281,9 @@ class PurchaseOrderLine(models.Model):
             'date': date_planned,
             'date_deadline': date_planned,
             'location_id': self.order_id.partner_id.property_stock_supplier.id,
-            'location_dest_id': (self.orderpoint_id and not (self.move_ids | self.move_dest_ids)) and self.orderpoint_id.location_id.id or self.order_id._get_destination_location(),
+            'location_dest_id': (self.orderpoint_id and not (self.move_ids | self.move_dest_ids)
+                and (picking.location_dest_id.parent_path in self.orderpoint_id.location_id.parent_path))
+                and self.orderpoint_id.location_id.id or self.order_id._get_destination_location(),
             'picking_id': picking.id,
             'partner_id': self.order_id.dest_address_id.id,
             'move_dest_ids': [(4, x) for x in self.move_dest_ids.ids],
@@ -352,7 +367,7 @@ class PurchaseOrderLine(models.Model):
         incoming_moves = self.env['stock.move']
 
         for move in self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped and self.product_id == r.product_id):
-            if move._is_purchase_return() and move.to_refund:
+            if move._is_purchase_return() and (move.to_refund or not move.origin_returned_move_id):
                 outgoing_moves |= move
             elif move.location_dest_id.usage != "supplier":
                 if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):

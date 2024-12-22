@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -827,16 +827,16 @@ msgid ""
 "                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
-"當電子信件被被發送時，申請人及其附上的簡歷會被自動建立。\n"
-"如果您安裝了文件管理模組，所有的簡歷會自動建立索引，\n"
-"所您可以通過他們的內容輕鬆地搜尋。"
+"收到應徵者電郵時，系統會自動為申請人及隨附的履歷，建立記錄。\n"
+"                若有安裝文件管理模組，所有履歷更會自動編製索引，\n"
+"                以便你可輕鬆搜尋其內容。"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid ""
 "Applicants can send resume to this email address,<br/>it will create an "
 "application automatically"
-msgstr "申請人可以將簡歷發送到這個電子信件地址，<br/>它將自動建立一個新申請"
+msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -862,7 +862,7 @@ msgstr "申請摘要"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Application email"
-msgstr "申請電子信件"
+msgstr "申請電郵"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_applications
@@ -912,7 +912,7 @@ msgstr "已分派"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件數"
+msgstr "附件數目"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__attachment_ids
@@ -1206,7 +1206,7 @@ msgid ""
 "Define a specific contact address for this job position. If you keep it "
 "empty, the default email address will be used which is in human resources "
 "settings"
-msgstr "為這個工作職缺定義一個特定的聯繫地址。如果為空，將預設使用人事部門預設的電子信件地址"
+msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -1316,7 +1316,7 @@ msgstr "顯示名稱"
 #: code:addons/hr_recruitment/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "無權存取，跳過使用者摘要電子信件的此資料"
+msgstr "沒有存取權限，使用者摘要電郵將跳過此數據"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
@@ -1377,19 +1377,24 @@ msgstr "郵箱別名"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__template_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__template_id
 msgid "Email Template"
-msgstr "電子信件範本"
+msgstr "電郵範本"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_id
 msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
-msgstr "這個職位的電子信件別名。新信件會自動為此職位建立新申請人。"
+msgstr "此職位的電郵別名。收到新電郵時，會自動為此職位建立新申請人。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_cc
 msgid "Email cc"
 msgstr "電郵副本抄送"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "電子郵件網域，例如 odoo@example.com 之內的「example.com」"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1408,7 +1413,7 @@ msgstr "通過電子郵件發送的申請的電子郵件主題"
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
 msgid "Email template must be selected to send a mail"
-msgstr "必須選擇電子信件範本才能發送郵件"
+msgstr "必須選擇電郵範本，才可傳送郵件"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1699,7 +1704,7 @@ msgstr "如果啟用欄位設為否，它允許您對資料進行隱藏但不刪
 msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
-msgstr "存在於黑名單的電子信件表示收件者不會再收到任何列表的群發信件"
+msgstr "若電郵地址在黑名單中，相關聯絡人不會再收到任何清單的群發郵件"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__phone_sanitized_blacklisted
@@ -2254,7 +2259,9 @@ msgstr "有發送錯誤的郵件數量"
 msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "                process and follow up all operations: meetings, interviews, etc."
-msgstr "Odoo幫助您在招募過程追蹤申請人及跟進所有操作：會議、面試等。"
+msgstr ""
+"Odoo 協助你在招聘過程中追蹤申請人，\n"
+"                以及跟進所有操作：會議、面試等。"
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
@@ -2398,7 +2405,7 @@ msgstr "在網站上發佈空缺職位"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__rating_ids
 msgid "Ratings"
-msgstr "點評"
+msgstr "評分"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2731,7 +2738,7 @@ msgstr "向申請人發送郵件"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Send texts to your contacts"
-msgstr "向連絡人發送連結"
+msgstr "向你的聯絡人發送文字訊息"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -2949,7 +2956,7 @@ msgstr "應聘者學歷的名稱必須唯一！"
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr "信件別名的名稱，例如，如果您要收取 <jobs@example.odoo.com> 的電子信件,別名就要被設為：\"jobs\""
+msgstr "郵箱別名，例如填寫 jobs 表示你想捕捉寄往 jobs@example.com 的電郵。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_normalized
@@ -2968,14 +2975,14 @@ msgstr "這是一個幫助您追蹤不同行銷活動的名稱，例如，Fall_D
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "這是傳達方法，例如，明信片、電子信件或橫幅廣告"
+msgstr "傳遞方式，例：明信片、電子郵件、橫幅廣告"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__source_id
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
-msgstr "這是連結來源，例如，搜尋引擎、其他域名或電子信件列表名稱"
+msgstr "連結的來源，例：搜尋引擎、其他網站，或電郵清單的名稱"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__fold
@@ -3084,7 +3091,7 @@ msgstr "使用者"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_email
 msgid "User Email"
-msgstr "使用者Email"
+msgstr "使用者電郵"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__2
@@ -3162,9 +3169,10 @@ msgstr ""
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "You must define a Contact Name for this applicant."
-msgstr "您必須為此申請人定義連絡人姓名。"
+msgstr "你必須為此申請人定義一個聯絡人姓名。"
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations

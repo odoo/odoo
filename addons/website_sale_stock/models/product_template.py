@@ -42,6 +42,7 @@ class ProductTemplate(models.Model):
                 'free_qty': free_qty,
                 'cart_qty': product._get_cart_qty(website),
                 'uom_name': product.uom_id.name,
+                'uom_rounding': product.uom_id.rounding,
                 'show_availability': product_or_template.show_availability,
                 'out_of_stock_message': product_or_template.out_of_stock_message,
                 'has_stock_notification': has_stock_notification,

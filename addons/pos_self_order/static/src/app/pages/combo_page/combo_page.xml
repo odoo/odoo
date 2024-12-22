@@ -104,7 +104,7 @@
             </div>
             <t t-if="state.showResume">
                 <div class="bg-view p-3 text-end">
-                    <div class="o_self_order_incr_button btn-group" role="group" aria-label="Quantity select">
+                    <div t-if="selfOrder.ordering" class="o_self_order_incr_button btn-group" role="group" aria-label="Quantity select">
                         <button type="button"
                             t-on-click = "() => this.changeQuantity(false)"
                             t-attf-class="btn btn-secondary btn-lg"><span class="fs-2 lh-1 fa-fw d-inline-block">－</span></button>
@@ -120,7 +120,7 @@
             t-if="state.showResume || (!state.showResume and showQtyButtons)"
             class="page-buttons d-flex justify-content-end gap-3 p-3 border-top bg-view">
             <button t-if="!state.showResume and showQtyButtons" class="btn btn-primary btn-lg" t-on-click="next">Next</button>
-            <button t-if="state.showResume" class="btn btn-primary btn-lg" t-on-click="addToCart">Add to cart</button>
+            <button t-if="state.showResume and selfOrder.ordering" class="btn btn-primary btn-lg" t-on-click="addToCart">Add to cart</button>
         </div>
     </t>
 </templates>

@@ -72,7 +72,7 @@ class AccountReconcileModelLine(models.Model):
     amount_string = fields.Char(string="Amount", default='100', required=True, help="""Value for the amount of the writeoff line
     * Percentage: Percentage of the balance, between 0 and 100.
     * Fixed: The fixed value of the writeoff. The amount will count as a debit if it is negative, as a credit if it is positive.
-    * From Label: There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\nR:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\nYou could enter\nBRT: ([\d,]+)""")
+    * From Label: There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\nR:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\nYou could enter\nBRT: ([\\d,]+)""")
     tax_ids = fields.Many2many('account.tax', string='Taxes', ondelete='restrict', check_company=True)
 
     @api.onchange('tax_ids')
@@ -93,7 +93,7 @@ class AccountReconcileModelLine(models.Model):
         if self.amount_type in ('percentage', 'percentage_st_line'):
             self.amount_string = '100'
         elif self.amount_type == 'regex':
-            self.amount_string = '([\d,]+)'
+            self.amount_string = r'([\d,]+)'
 
     @api.depends('amount_string')
     def _compute_float_amount(self):

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import logging
+import time
 
 from odoo.tests import standalone
 from odoo.addons.account.models.chart_template import AccountChartTemplate
 from unittest.mock import patch
-
 
 _logger = logging.getLogger(__name__)
 
@@ -27,6 +27,7 @@ def test_all_l10n(env):
     assert env.ref('base.module_account').demo, "Need the demo to test with data"
 
     # Install the requiriments
+    _logger.info('Installing all l10n modules')
     l10n_mods = env['ir.module.module'].search([
         ('name', '=like', 'l10n_%'),
         ('state', '=', 'uninstalled'),
@@ -47,11 +48,14 @@ def test_all_l10n(env):
     env = env()     # get an environment that refers to the new registry
 
     # Install Charts of Accounts
+    _logger.info('Loading chart of account')
     already_loaded_codes = set(env['res.company'].search([]).mapped('chart_template'))
     not_loaded_codes = [
         (template_code, template)
         for template_code, template in env['account.chart.template']._get_chart_template_mapping().items()
         if template_code not in already_loaded_codes
+        # We can't make it disappear from the list, but we raise a UserError if it's not already the COA
+        and template_code not in ('syscohada', 'syscebnl')
     ]
     companies = env['res.company'].create([
         {
@@ -60,14 +64,20 @@ def test_all_l10n(env):
         }
         for template_code, template in not_loaded_codes
     ])
+    env.cr.commit()
 
     # Install the CoAs
+    start = time.time()
+    env.cr.execute('ANALYZE')
+    logger = logging.getLogger('odoo.loading')
+    logger.runbot('ANALYZE took %s seconds', time.time() - start)  # not sure this one is usefull
     for (template_code, _template), company in zip(not_loaded_codes, companies):
         env.user.company_ids += company
         env.user.company_id = company
         _logger.info('Testing COA: %s (company: %s)', template_code, company.name)
         try:
-            with env.cr.savepoint():
-                env['account.chart.template'].with_context(l10n_check_fields_complete=True).try_loading(template_code, company, install_demo=True)
+            env['account.chart.template'].with_context(l10n_check_fields_complete=True).try_loading(template_code, company, install_demo=True)
+            env.cr.commit()
         except Exception:
             _logger.error("Error when creating COA %s", template_code, exc_info=True)
+            env.cr.rollback()

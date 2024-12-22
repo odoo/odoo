@@ -310,15 +310,16 @@ class WithContext(HttpCase):
         website = self.env['website'].browse([1])
         self.assertFalse(website.homepage_url)
 
-        test_page = self.env['website.page'].create({
+        test_page = self.env['website.page'].with_context(website_id=website.id).create({
             'name': 'HomepageUrlTest',
             'type': 'qweb',
             'arch': '<div>HomepageUrlTest</div>',
             'key': 'test.homepage_url_test',
             'url': '/homepage_url_test',
             'is_published': True,
+            'website_id': website.id
         })
-        self.assertEqual(test_page.url, '/homepage_url_test')
+        self.assertURLEqual(test_page.url, '/homepage_url_test')
 
         # If one has set the `homepage_url` to a specific page URL..
         website.write({
@@ -329,7 +330,7 @@ class WithContext(HttpCase):
         home_url_full = website.domain + '/'
         r = self.url_open('/')
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(r.url, home_url_full)
+        self.assertURLEqual(r.url, home_url_full)
         self.assertIn(b"HomepageUrlTest", r.content)
 
         # .. and then change that page URL ..
@@ -354,7 +355,7 @@ class WithContext(HttpCase):
         self.assertEqual(website.homepage_url, '/url-changed-two')
         r = self.url_open('/')
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(r.url, home_url_full)
+        self.assertURLEqual(r.url, home_url_full)
         self.assertIn(b"HomepageUrlTest", r.content)
 
     def test_06_homepage_url(self):
@@ -388,7 +389,7 @@ class WithContext(HttpCase):
         # -------------------------------------------
         r = self.url_open(home_url)
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(r.url, home_url_full)
+        self.assertURLEqual(r.url, home_url_full)
         self.assertIn(home_content, r.content)
 
         # Case 2: Another page as homepage
@@ -400,7 +401,7 @@ class WithContext(HttpCase):
         # -------------------------------------------
         r = self.url_open(home_url)
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(r.url, home_url_full)
+        self.assertURLEqual(r.url, home_url_full)
         self.assertIn(contactus_content, r.content)
 
         # Case 3: Check we don't fallback on first menu if there is a / page
@@ -413,7 +414,7 @@ class WithContext(HttpCase):
         # -------------------------------------------
         r = self.url_open(home_url)
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(r.url, home_url_full)
+        self.assertURLEqual(r.url, home_url_full)
         self.assertIn(home_content, r.content)
 
         # Case 6: Wrong URL should fallback on first non "/" menu
@@ -430,7 +431,7 @@ class WithContext(HttpCase):
         self.assertEqual(r.status_code, 404, "The website homepage_url should be a 404")
         r = self.url_open(home_url)
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(r.url, contactus_url_full, "Menu fallback should be a redirect, not a reroute")
+        self.assertURLEqual(r.url, contactus_url_full, "Menu fallback should be a redirect, not a reroute")
         self.assertIn(contactus_content, r.content)
 
         # Case 4: Check first menu fallback is a redirect (and not a reroute)
@@ -444,7 +445,7 @@ class WithContext(HttpCase):
         r = self.url_open(home_url)
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r.history[0].status_code, 303)
-        self.assertEqual(r.url, contactus_url_full)
+        self.assertURLEqual(r.url, contactus_url_full)
         self.assertIn(contactus_content, r.content)
 
         # Case 5: Check controller redirect and make sure it is a reroute
@@ -456,7 +457,7 @@ class WithContext(HttpCase):
         # -------------------------------------------
         r = self.url_open(home_url)
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(r.url, home_url_full)
+        self.assertURLEqual(r.url, home_url_full)
         self.assertIn(b'o_website_info', r.content)
 
         # Case 6: Check controller redirect which has different `auth` method
@@ -468,9 +469,9 @@ class WithContext(HttpCase):
         # -------------------------------------------
         r = self.url_open(home_url)
         self.assertEqual(r.status_code, 200)
-        self.assertNotIn(b'<title> My Portal', r.content)
-        self.assertIn(b'<title> Contact Us', r.content)
-        self.assertEqual(r.url, contactus_url_full)
+        self.assertNotIn(b'<title>My Portal', r.content)
+        self.assertIn(b'<title>Contact Us', r.content)
+        self.assertURLEqual(r.url, contactus_url_full)
         self.assertEqual(r.history[0].status_code, 303)
         # Now with /contactus which is a public content
         self.env['website.menu'].create({
@@ -482,8 +483,8 @@ class WithContext(HttpCase):
         })
         r = self.url_open(home_url)
         self.assertEqual(r.status_code, 200)
-        self.assertNotIn(b'<title> My Portal', r.content)
-        self.assertIn(b'<title> Login', r.content)
+        self.assertNotIn(b'<title>My Portal', r.content)
+        self.assertIn(b'<title>Login', r.content)
         self.assertIn('/web/login?redirect', r.url)
         self.assertEqual(r.history[0].status_code, 303)
 
@@ -541,7 +542,34 @@ class WithContext(HttpCase):
         self.assertEqual(r.status_code, 200, "Reaching page URL, common case")
         r2 = self.url_open('/Page_1', allow_redirects=False)
         self.assertEqual(r2.status_code, 303, "URL exists only in different casing, should redirect to it")
-        self.assertTrue(r2.headers.get('Location').endswith('/page_1'), "Should redirect /Page_1 to /page_1")
+        self.assertURLEqual(r2.headers.get('Location'), '/page_1', "Should redirect /Page_1 to /page_1")
+
+    def test_page_generic_diverged_url(self):
+        """ When a generic page is COW and the new COW has its url changed, the
+        generic should not be reachable anymore even if the COW page has a
+        different URL. Note that they will both still share the same key.
+        """
+        Page = self.env['website.page']
+        specific_arch = '<div>website 1 content</div>'
+        generic_page = self.page
+        generic_page.arch = '<div>content</div>'
+
+        specific_page = Page.search([('url', '=', self.page.url), ('website_id', '=', 1)])
+        self.assertFalse(specific_page, "For this test, the specific page should not exist yet")
+
+        # COW a generic page
+        generic_page.view_id.with_context(website_id=1).save(specific_arch, xpath='/div')
+        specific_page = Page.search([('url', '=', self.page.url), ('website_id', '=', 1)])
+        self.assertEqual(specific_page.arch.replace('\n', ''), specific_arch)
+        self.assertEqual(generic_page.arch, '<div>content</div>')
+        # Change the URL of the specific page
+        specific_page.url = '/page_1_specific'
+        # Check that the generic page is not reachable anymore
+        r = self.url_open(specific_page.url)
+        self.assertEqual(r.status_code, 200, "Specific should be reachable")
+        r = self.url_open(generic_page.url)
+        self.assertEqual(r.status_code, 404, "Generic should not be reachable")
+
 
 @tagged('-at_install', 'post_install')
 class TestNewPage(common.TransactionCase):

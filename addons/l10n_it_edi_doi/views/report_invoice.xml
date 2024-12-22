@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <div name="comment" position="before">
+            <div t-if="o.l10n_it_edi_doi_id">
+                <span>Your Declaration of Intent number <span t-field="o.l10n_it_edi_doi_id"/> from <span t-field="o.l10n_it_edi_doi_id.issue_date"/>.</span>
+            </div>
+        </div>
+    </template>
+</odoo>

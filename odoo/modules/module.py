@@ -348,7 +348,8 @@ def load_manifest(module, mod_path=None):
     try:
         manifest['version'] = adapt_version(manifest['version'])
     except ValueError as e:
-        raise ValueError(f"Module {module}: invalid manifest") from e
+        if manifest.get("installable", True):
+            raise ValueError(f"Module {module}: invalid manifest") from e
     manifest['addons_path'] = normpath(opj(mod_path, os.pardir))
 
     return manifest

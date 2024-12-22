@@ -37,7 +37,7 @@ class HrEmployeePrivate(models.Model):
     # resource and user
     # required on the resource, make sure required="True" set in the view
     name = fields.Char(string="Employee Name", related='resource_id.name', store=True, readonly=False, tracking=True)
-    user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id', store=True, readonly=False)
+    user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id', store=True, readonly=False, ondelete='restrict')
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
     resource_calendar_id = fields.Many2one(tracking=True)
@@ -285,6 +285,14 @@ class HrEmployeePrivate(models.Model):
         return self.env['hr.employee.public'].get_view(view_id, view_type, **options)
 
     @api.model
+    def get_views(self, views, options=None):
+        if self.check_access_rights('read', raise_exception=False):
+            return super().get_views(views, options)
+        res = self.env['hr.employee.public'].get_views(views, options)
+        res['models'].update({'hr.employee': res['models']['hr.employee.public']})
+        return res
+
+    @api.model
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
         """
             We override the _search because it is the method that checks the access rights
@@ -310,7 +318,7 @@ class HrEmployeePrivate(models.Model):
         else:
             self_sudo = self
 
-        if self_sudo.check_access_rights('read', raise_exception=False):
+        if self_sudo.user_has_groups('hr.group_hr_user'):
             return super(HrEmployeePrivate, self).get_formview_id(access_uid=access_uid)
         # Hardcode the form view for public employee
         return self.env.ref('hr.hr_employee_public_view_form').id
@@ -323,7 +331,7 @@ class HrEmployeePrivate(models.Model):
         else:
             self_sudo = self
 
-        if not self_sudo.check_access_rights('read', raise_exception=False):
+        if not self_sudo.user_has_groups('hr.group_hr_user'):
             res['res_model'] = 'hr.employee.public'
 
         return res
@@ -351,9 +359,20 @@ class HrEmployeePrivate(models.Model):
         if self.resource_calendar_id and not self.tz:
             self.tz = self.resource_calendar_id.tz
 
+    def _remove_work_contact_id(self, user, employee_company):
+        """ Remove work_contact_id for previous employee if the user is assigned to a new employee """
+        employee_company = employee_company or self.company_id.id
+        # For employees with a user_id, the constraint (user can't be linked to multiple employees) is triggered
+        old_partner_employee_ids = user.partner_id.employee_ids.filtered(lambda e:
+            not e.user_id
+            and e.company_id.id == employee_company
+            and e != self
+        )
+        old_partner_employee_ids.work_contact_id = None
+
     def _sync_user(self, user, employee_has_image=False):
         vals = dict(
-            work_contact_id=user.partner_id.id,
+            work_contact_id=user.partner_id.id if user else self.work_contact_id.id,
             user_id=user.id,
         )
         if not employee_has_image:
@@ -382,6 +401,7 @@ class HrEmployeePrivate(models.Model):
                 user = self.env['res.users'].browse(vals['user_id'])
                 vals.update(self._sync_user(user, bool(vals.get('image_1920'))))
                 vals['name'] = vals.get('name', user.name)
+                self._remove_work_contact_id(user, vals.get('company_id'))
         employees = super().create(vals_list)
         # Sudo in case HR officer doesn't have the Contact Creation group
         employees.filtered(lambda e: not e.work_contact_id).sudo()._create_work_contacts()
@@ -426,10 +446,11 @@ class HrEmployeePrivate(models.Model):
             self.message_unsubscribe(self.work_contact_id.ids)
             if vals['work_contact_id']:
                 self._message_subscribe([vals['work_contact_id']])
-        if 'user_id' in vals:
+        if vals.get('user_id'):
             # Update the profile pictures with user, except if provided
-            vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']),
-                                        (bool(all(emp.image_1920 for emp in self)))))
+            user = self.env['res.users'].browse(vals['user_id'])
+            vals.update(self._sync_user(user, (bool(all(emp.image_1920 for emp in self)))))
+            self._remove_work_contact_id(user, vals.get('company_id'))
         if 'work_permit_expiration_date' in vals:
             vals['work_permit_scheduled_activity'] = False
         res = super(HrEmployeePrivate, self).write(vals)
@@ -520,6 +541,14 @@ class HrEmployeePrivate(models.Model):
         # Returns a dict {employee_id: tz}
         return {emp.id: emp._get_tz() for emp in self}
 
+    def _employee_attendance_intervals(self, start, stop, lunch=False):
+        self.ensure_one()
+        calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
+        if not lunch:
+            return self._get_expected_attendances(start, stop)
+        else:
+            return calendar._attendance_intervals_batch(start, stop, self.resource_id, lunch=True)[self.resource_id.id]
+
     def _get_expected_attendances(self, date_from, date_to):
         self.ensure_one()
         employee_timezone = timezone(self.tz) if self.tz else None
@@ -529,8 +558,9 @@ class HrEmployeePrivate(models.Model):
                                 date_to,
                                 tz=employee_timezone,
                                 resources=self.resource_id,
+                                compute_leaves=True,
                                 domain=[('company_id', 'in', [False, self.company_id.id])])[self.resource_id.id]
-        return calendar._get_attendance_intervals_days_data(calendar_intervals)
+        return calendar_intervals
 
     def _get_calendar_attendances(self, date_from, date_to):
         self.ensure_one()

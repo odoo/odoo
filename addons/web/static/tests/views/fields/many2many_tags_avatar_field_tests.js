@@ -445,7 +445,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             o_kanban_record.querySelector("img.o_m2m_avatar").dataset.src,
-            "/web/image/partner/4/avatar_128",
+            "/web/image/partner/5/avatar_128",
             "should have correct avatar image"
         );
         await click(

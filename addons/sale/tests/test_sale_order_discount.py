@@ -44,7 +44,7 @@ class TestSaleOrderDiscount(SaleCommon):
         self.wizard.action_apply_discount()
 
         discount_line = self.sale_order.order_line[-1]
-        self.assertAlmostEqual(discount_line.price_unit, -amount_before_discount*0.5)
+        self.assertAlmostEqual(discount_line.price_unit, -amount_before_discount * 0.5)
         self.assertFalse(discount_line.tax_id)
         self.assertEqual(discount_line.product_uom_qty, 1.0)
 
@@ -56,7 +56,7 @@ class TestSaleOrderDiscount(SaleCommon):
 
         discount_line = self.sale_order.order_line - solines
         discount_line.ensure_one()
-        self.assertAlmostEqual(discount_line.price_unit, -amount_before_discount*0.5)
+        self.assertAlmostEqual(discount_line.price_unit, -amount_before_discount * 0.5)
         self.assertEqual(discount_line.tax_id, dumb_tax)
         self.assertEqual(discount_line.product_uom_qty, 1.0)
 

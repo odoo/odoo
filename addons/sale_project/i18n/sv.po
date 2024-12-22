@@ -9,19 +9,19 @@
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2023
 # Martin Trigaux, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
 # lynnliuying <lynn.liu1971@gmail.com>, 2023
 # Lasse L, 2024
 # Wil Odoo, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,9 +44,9 @@ msgid ""
 msgstr ""
 "\n"
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
-"                    Inga milstolpar hittade. Låt oss skapa en!\n"
+"                    Inga delmål hittade. Låt oss skapa en!\n"
 "                </p><p>\n"
-"                    Spåra viktiga framstegspunkter som måste uppnås för att nå framgång.\n"
+"                    Spåra viktiga delmål som måste uppnås för att nå framgång.\n"
 "                </p>\n"
 "            "
 
@@ -55,14 +55,14 @@ msgstr ""
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "%(name)s's Sales Order Items"
-msgstr ""
+msgstr "%(name)s försäljningsorderposter"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "%(name)s's Sales Orders"
-msgstr ""
+msgstr "%(name)s försäljningsorder"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
@@ -83,6 +83,12 @@ msgid ""
 "                            Make Billable\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            <span class=\"o_stat_value\">0</span> Försäljningsorder\n"
+"                        </span>\n"
+"                        <span class=\"o_stat_text\">\n"
+"                            Gör fakturerbar\n"
+"                        </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -91,18 +97,21 @@ msgid ""
 "                            Sales Orders\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Försäljningsorder\n"
+"                        </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Säljorder</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 msgid "<span>)</span>"
-msgstr ""
+msgstr "<span>)</span>"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -113,6 +122,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Enligt produktkonfigurationen kan den levererade kvantiteten beräknas automatiskt av en mekanism:\n"
+"  - Manuell: kvantiteten ställs in manuellt på linjen\n"
+"  - Objekt Från kostnader: kvantiteten är kvantitetssumman från bokförda kostnader\n"
+"  - Timesheet: kvantiteten är summan av timmar som registrerats på uppgifter kopplade till denna försäljningsrad\n"
+"  - Lagerförflyttningar: kvantiteten kommer från bekräftade plockningar\n"
 
 #. module: sale_project
 #. odoo-python
@@ -126,7 +140,7 @@ msgstr "Baserat på levererad kvantitet (manuell)"
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Based on Milestones"
-msgstr "Baserat på milstolpar"
+msgstr "Baserat på delmål"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__allow_billable
@@ -150,7 +164,7 @@ msgstr "Inställningar"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "Create Project"
-msgstr ""
+msgstr "Skapa projekt"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
@@ -186,7 +200,7 @@ msgstr "Visa försäljningsorder"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__display_sales_stat_buttons
 msgid "Display Sales Stat Buttons"
-msgstr ""
+msgstr "Visa knappar för försäljningsstatistik"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
@@ -255,6 +269,9 @@ msgid ""
 " for the order with a task for each sales order line to track the time "
 "spent."
 msgstr ""
+"Fakturera beställda kvantiteter så snart denna tjänst är såld. Skapa ett "
+"projekt för ordern med en uppgift för varje försäljningsorderrad för att "
+"spåra den tid som lagts ned."
 
 #. module: sale_project
 #. odoo-python
@@ -264,6 +281,8 @@ msgid ""
 "Invoice ordered quantities as soon as this service is sold. Create a task in"
 " an existing project to track the time spent."
 msgstr ""
+"Fakturera beställda kvantiteter så snart denna tjänst är såld. Skapa en "
+"uppgift i ett befintligt projekt för att spåra den tid som lagts ned."
 
 #. module: sale_project
 #. odoo-python
@@ -273,6 +292,8 @@ msgid ""
 "Invoice ordered quantities as soon as this service is sold. Create an empty "
 "project for the order to track the time spent."
 msgstr ""
+"Fakturera beställda kvantiteter så snart denna tjänst är såld. Skapa ett "
+"tomt projekt för ordern för att spåra den nedlagda tiden."
 
 #. module: sale_project
 #. odoo-python
@@ -282,6 +303,8 @@ msgid ""
 "Invoice this service when it is delivered (set the quantity by hand on your "
 "sales order lines). "
 msgstr ""
+"Fakturera denna tjänst när den levereras (ange kvantiteten för hand på "
+"orderraderna). "
 
 #. module: sale_project
 #. odoo-python
@@ -292,6 +315,9 @@ msgid ""
 "sales order lines). Create a project for the order with a task for each "
 "sales order line to track the time spent."
 msgstr ""
+"Fakturera den här tjänsten när den levereras (ange kvantiteten för hand på "
+"dina orderrader). Skapa ett projekt för ordern med en uppgift för varje "
+"orderrad för att spåra tidsåtgången."
 
 #. module: sale_project
 #. odoo-python
@@ -302,6 +328,9 @@ msgid ""
 "sales order lines). Create a task in an existing project to track the time "
 "spent."
 msgstr ""
+"Fakturera den här tjänsten när den levereras (ange kvantiteten för hand på "
+"raderna i försäljningsordern). Skapa en uppgift i ett befintligt projekt för"
+" att spåra den tid som lagts ned."
 
 #. module: sale_project
 #. odoo-python
@@ -312,13 +341,16 @@ msgid ""
 "sales order lines). Create an empty project for the order to track the time "
 "spent."
 msgstr ""
+"Fakturera den här tjänsten när den levereras (ange kvantiteten för hand på "
+"dina orderrader). Skapa ett tomt projekt för ordern för att spåra den tid "
+"som lagts ned."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice your milestones when they are reached."
-msgstr ""
+msgstr "Fakturera dina delmål när de är uppnådda."
 
 #. module: sale_project
 #. odoo-python
@@ -328,6 +360,9 @@ msgid ""
 "Invoice your milestones when they are reached. Create a project for the "
 "order with a task for each sales order line to track the time spent."
 msgstr ""
+"Fakturera dina delmål när de är uppnådda. Skapa ett projekt för ordern med "
+"en uppgift för varje försäljningsorderrad för att spåra den tid som "
+"spenderas."
 
 #. module: sale_project
 #. odoo-python
@@ -337,6 +372,8 @@ msgid ""
 "Invoice your milestones when they are reached. Create a task in an existing "
 "project to track the time spent."
 msgstr ""
+"Fakturera dina delmål när de är uppnådda. Skapa en uppgift i ett befintligt "
+"projekt för att spåra den tid som lagts ned."
 
 #. module: sale_project
 #. odoo-python
@@ -346,6 +383,8 @@ msgid ""
 "Invoice your milestones when they are reached. Create an empty project for "
 "the order to track the time spent."
 msgstr ""
+"Fakturera dina delmål när de är uppnådda. Skapa ett tomt projekt för ordern "
+"för att spåra den nedlagda tiden."
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
@@ -376,7 +415,7 @@ msgstr "Faktureringspolicy"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__is_product_milestone
 msgid "Is Product Milestone"
-msgstr ""
+msgstr "Är delmål för produkt"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_account_move_line
@@ -398,7 +437,7 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"Ställ in kvantiteter manuellt på order: Fakturera baserat på den manuellt inmatade kvantiteten, utan att skapa ett analytiskt konto.\n"
+"Ställ in kvantiteter manuellt på order: Fakturera baserat på den manuellt inmatade kvantiteten, utan att skapa ett objektkonto.\n"
 "Tidrapporter på kontrakt: Fakturera baserat på de loggade timmarna på den relaterade tidrapporten.\n"
 "Skapa en uppgift och spåra timmar: Skapa en uppgift vid validering av försäljningsordern och spåra arbetstimmar."
 
@@ -407,7 +446,7 @@ msgstr ""
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Materials"
-msgstr ""
+msgstr "Material"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
@@ -417,7 +456,7 @@ msgstr "Sätt att uppdatera levererat antal"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__milestone_count
 msgid "Milestone Count"
-msgstr "Milstolpsräkning"
+msgstr "Delmålsräkning"
 
 #. module: sale_project
 #. odoo-python
@@ -426,19 +465,19 @@ msgstr "Milstolpsräkning"
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 #, python-format
 msgid "Milestones"
-msgstr "Milstolpar"
+msgstr "Delmål"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "New Sales Order Item"
-msgstr ""
+msgstr "Ny artikel för försäljningsorder"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "No Sales Order"
-msgstr ""
+msgstr "Ingen försäljningsorder"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -450,7 +489,7 @@ msgstr "Kan inte faktureras"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "Not Billed"
-msgstr ""
+msgstr "Ej fakturerad"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
@@ -460,7 +499,7 @@ msgstr "Inget"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
 msgid "Number of Projects"
-msgstr ""
+msgstr "Antal projekt"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_tracking
@@ -469,6 +508,8 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
+"Vid bekräftelse av försäljningsorder kan den här produkten generera ett projekt och/eller en uppgift.         Från dessa kan du spåra den tjänst du säljer.\n"
+"         \"I försäljningsorderns projekt\": Använder försäljningsorderns konfigurerade projekt om ett sådant har definierats, eller skapar ett nytt projekt baserat på den valda mallen."
 
 #. module: sale_project
 #. odoo-python
@@ -490,13 +531,15 @@ msgid ""
 "Percentage of the ordered quantity that will automatically be delivered once"
 " the milestone is reached."
 msgstr ""
+"Procentandel av den beställda kvantiteten som automatiskt kommer att "
+"levereras när delmålet har uppnåtts."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Prepaid/Fixed Price"
-msgstr ""
+msgstr "Förskottsbetalning/Fast pris"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_template
@@ -520,17 +563,17 @@ msgstr "Projekt"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr ""
+msgstr "Projekt & uppgift"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_milestone
 msgid "Project Milestone"
-msgstr "Milstolpsprojekt"
+msgstr "Delmålsprojekt"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
 msgid "Project Milestones"
-msgstr ""
+msgstr "Delmål i projektet"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -555,7 +598,7 @@ msgstr "Projekt"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_ids
 msgid "Projects used in this sales order."
-msgstr ""
+msgstr "Projekt som används i denna försäljningsorder."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__product_uom_qty
@@ -566,7 +609,7 @@ msgstr "Antal"
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__quantity_percentage
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "Quantity (%)"
-msgstr ""
+msgstr "Kvantitet (%)"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_template_line
@@ -576,12 +619,12 @@ msgstr "Offertmallrad"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__reached_milestones_ids
 msgid "Reached Milestones"
-msgstr ""
+msgstr "Nått delmål"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__sale_line_display_name
 msgid "Sale Line Display Name"
-msgstr ""
+msgstr "Försäljningsrad Displaynamn"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_count
@@ -591,7 +634,7 @@ msgstr "Antal säljordrar"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_line_count
 msgid "Sale Order Line Count"
-msgstr ""
+msgstr "Antal rader för försäljningsorder"
 
 #. module: sale_project
 #. odoo-javascript
@@ -603,7 +646,7 @@ msgstr "Försäljning"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales & Invoicing"
-msgstr ""
+msgstr "Försäljning & fakturering"
 
 #. module: sale_project
 #. odoo-python
@@ -635,6 +678,8 @@ msgstr "Säljorderobjekt"
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
 msgid "Sales Order Item that will be updated once the milestone is reached."
 msgstr ""
+"Artikel på försäljningsorder som kommer att uppdateras när delmålet har "
+"uppnåtts."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
@@ -643,10 +688,13 @@ msgid ""
 "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
 "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
 msgstr ""
+"Försäljningsorderpost till vilken den tid som spenderats på denna uppgift kommer att läggas till för att faktureras till din kund.\n"
+"Som standard väljs den försäljningsorderpost som angetts för projektet. Om det inte finns någon sådan används den senast förbetalda orderposten som har återstående tid.\n"
+"Ta bort försäljningsorderposten för att göra den här uppgiften icke-fakturerbar. Du kan också ändra eller ta bort försäljningsorderposten för varje tidrapportpost individuellt."
 
 #. module: sale_project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
@@ -672,6 +720,8 @@ msgid ""
 "Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
 "It can be modified on each task and timesheet entry individually if necessary."
 msgstr ""
+"Försäljningsorderpost som kommer att väljas som standard för uppgifter och tidrapporter i det här projektet, förutom om den anställda som anges på tidrapporterna uttryckligen är kopplad till en annan försäljningsorderpost i projektet.\n"
+"Den kan ändras individuellt för varje uppgift och tidrapport om det behövs."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
@@ -682,21 +732,21 @@ msgstr "Kundorder som projektet är kopplat till."
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr ""
+msgstr "Försäljningsorder som uppgiften är kopplad till."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr ""
+msgstr "Sök i faktura"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr ""
+msgstr "Sök i försäljningsorder"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -706,7 +756,7 @@ msgstr "Välj ett ej fakturerbart projekt där aktiviteter kan skapas."
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 msgid "Select who to bill..."
-msgstr ""
+msgstr "Välj vem som ska faktureras..."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_policy
@@ -717,17 +767,17 @@ msgstr "Tjänstens faktureringspolicy"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__show_create_project_button
 msgid "Show Create Project Button"
-msgstr ""
+msgstr "Visa knappen Skapa projekt"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__show_project_button
 msgid "Show Project Button"
-msgstr ""
+msgstr "Visa projektknapp"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__show_task_button
 msgid "Show Task Button"
-msgstr ""
+msgstr "Visa uppgiftsknapp"
 
 #. module: sale_project
 #. odoo-javascript
@@ -747,7 +797,7 @@ msgstr "Aktivitet"
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "Task Created (%s): %s"
-msgstr ""
+msgstr "Uppgift skapad (%s): %s"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
@@ -768,7 +818,7 @@ msgstr "Aktivietetsanalys"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__tasks_ids
 msgid "Tasks associated to this sale"
-msgstr ""
+msgstr "Uppgifter i samband med denna försäljning"
 
 #. module: sale_project
 #. odoo-python
@@ -778,6 +828,8 @@ msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
 msgstr ""
+"Produkten %s bör inte ha ett globalt projekt eftersom den kommer att "
+"generera ett projekt."
 
 #. module: sale_project
 #. odoo-python
@@ -787,6 +839,8 @@ msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
+"Produkten %s ska inte ha ett projekt eller en projektmall eftersom den inte "
+"kommer att generera något projekt."
 
 #. module: sale_project
 #. odoo-python
@@ -796,6 +850,8 @@ msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
+"Produkten %s ska inte ha någon projektmall eftersom den kommer att generera "
+"en uppgift i ett globalt projekt."
 
 #. module: sale_project
 #. odoo-python
@@ -803,13 +859,15 @@ msgstr ""
 #, python-format
 msgid "This Sales Order must contain at least one product of type \"Service\"."
 msgstr ""
+"Denna försäljningsorder måste innehålla minst en produkt av typen "
+"\"Service\"."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "This task has been created from: %s (%s)"
-msgstr ""
+msgstr "Denna uppgift har skapats från: %s (%s)"
 
 #. module: sale_project
 #. odoo-python
@@ -834,7 +892,7 @@ msgstr "Spårtjänst"
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Track what you sold, delivered, and invoiced."
-msgstr ""
+msgstr "Spåra vad du har sålt, levererat och fakturerat."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__product_uom
@@ -857,7 +915,7 @@ msgstr "Leverantörsfakturor"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "View Sales Order"
-msgstr ""
+msgstr "Visa försäljningsorder"
 
 #. module: sale_project
 #. odoo-python
@@ -867,3 +925,5 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"Du kan inte koppla orderartikeln %(order_id)s - %(product_id)s till den här "
+"uppgiften eftersom det är en vidarefakturerad kostnad."

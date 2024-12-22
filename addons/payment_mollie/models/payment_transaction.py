@@ -8,9 +8,9 @@ from werkzeug import urls
 from odoo import _, models
 from odoo.exceptions import ValidationError
 
+from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 from odoo.addons.payment_mollie import const
 from odoo.addons.payment_mollie.controllers.main import MollieController
-
 
 _logger = logging.getLogger(__name__)
 
@@ -57,12 +57,15 @@ class PaymentTransaction(models.Model):
         base_url = self.provider_id.get_base_url()
         redirect_url = urls.url_join(base_url, MollieController._return_url)
         webhook_url = urls.url_join(base_url, MollieController._webhook_url)
+        decimal_places = CURRENCY_MINOR_UNITS.get(
+            self.currency_id.name, self.currency_id.decimal_places
+        )
 
         return {
             'description': self.reference,
             'amount': {
                 'currency': self.currency_id.name,
-                'value': f"{self.amount:.2f}",
+                'value': f"{self.amount:.{decimal_places}f}",
             },
             'locale': user_lang if user_lang in const.SUPPORTED_LOCALES else 'en_US',
             'method': [const.PAYMENT_METHODS_MAPPING.get(

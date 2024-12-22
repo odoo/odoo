@@ -3,14 +3,14 @@
 # 	* im_livechat
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -72,8 +72,8 @@ msgid ""
 "%(new_line)sType %(bold_start)s:shortcut%(bold_end)s to insert a canned "
 "response in your message."
 msgstr ""
-"%(new_line)sEscriba %(bold_start)s:atajo%(bold_end)s para insertar una "
-"respuesta predefinida en su mensaje."
+"%(new_line)sEscriba %(bold_start)s:acceso rápido%(bold_end)s para insertar "
+"una respuesta predefinida en su mensaje."
 
 #. module: im_livechat
 #. odoo-python
@@ -104,7 +104,7 @@ msgid ""
 msgstr ""
 "* \"Mostrar\" muestra el botón de chat en todas las páginas.\n"
 "* \"Mostrar con notificación\" es similar a \"Mostrar\" pero cuenta con un texto flotante junto al botón.\n"
-"* \"Abrir de forma automática\" muestra el botón y abre la ventana de conversación de forma automática.\n"
+"* \"Abrir automáticamente\" muestra el botón y abre automáticamente la ventana de conversación.\n"
 "* \"Ocultar\" oculta el botón de chat en las páginas.\n"
 
 #. module: im_livechat
@@ -269,7 +269,7 @@ msgstr "Archivado"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__are_you_inside
 msgid "Are you inside the matrix?"
-msgstr "¿Estás dentro de la matrix?"
+msgstr "¿Está dentro de la matrix?"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_attachment_count
@@ -316,7 +316,7 @@ msgstr "Calificación promedio"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__rating
 msgid "Average rating given by the visitor"
-msgstr "Calificación media otorgada por el visitante"
+msgstr "Calificación promedio otorgada por el visitante"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__time_to_answer
@@ -327,12 +327,12 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__time_to_answer
 msgid "Average time to give the first answer to the visitor"
-msgstr "Tiempo promedio para dar la primera respuesta al visitante"
+msgstr "Tiempo promedio para proporcionar la primera respuesta al visitante"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
 msgid "Bad Ratings"
-msgstr "Malas valoraciones"
+msgstr "Malas calificaciones"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__operator_partner_id
@@ -342,7 +342,7 @@ msgstr "Operador de bot"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_background_color
 msgid "Button Background Color"
-msgstr "Color de fondo del botón"
+msgstr "Color del fondo del botón"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_text_color
@@ -407,7 +407,7 @@ msgstr "Canales"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__input_placeholder
 msgid "Chat Input Placeholder"
-msgstr "Entrada de texto"
+msgstr "Marcador de posición de entrada de texto"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__channel_type
@@ -531,14 +531,15 @@ msgstr "Conversación con %s"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations
 msgid "Conversations handled"
-msgstr "Conversaciones manejadas"
+msgstr "Conversaciones gestionadas"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "Copy and paste this code into your website, within the &lt;head&gt; tag:"
 msgstr ""
-"Copia y pega este código en tu sitio web, en la etiqueta HTML &lt;head&gt;:"
+"Copie y pegue este código en la etiqueta &lt;head&gt; del HTML de su sitio "
+"web:"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__country_id
@@ -621,8 +622,7 @@ msgstr "Color de fondo por defecto del botón de Chat en vivo"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__header_background_color
 msgid "Default background color of the channel header once open"
-msgstr ""
-"Color predeterminado de fondo del encabezado del canal una vez abierto"
+msgstr "Color de fondo por defecto del encabezado del canal una vez abierto"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_text_color
@@ -653,7 +653,7 @@ msgid ""
 "taken into account."
 msgstr ""
 "Defina reglas para su canal de soporte en vivo. Puede aplicar una acción "
-"para el URL dado y por país.<br/>Para identificar el país, GeoIP debe estar "
+"para la URL dada y por país.<br/>Para identificar el país, GeoIP debe estar "
 "instalado en su servidor, de lo contrario, los países de la regla no se "
 "tomarán en cuenta."
 
@@ -791,12 +791,12 @@ msgid ""
 msgstr ""
 "Para los sitios creados con el creador de sitios web de Odoo, vaya a Sitio "
 "web &gt; Configuración &gt; Ajustes y seleccione el canal de chat en vivo "
-"del sitio web que desea agregar a su sitio web."
+"del sitio web que desea añadir a su sitio web."
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__forward_operator
 msgid "Forward to Operator"
-msgstr "Reenviar al operador"
+msgstr "Enviar al operador"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__free_input_single
@@ -814,8 +814,8 @@ msgid ""
 "Given the order to find a matching rule. If 2 rules are matching for the "
 "given url/country, the one with the lowest sequence will be chosen."
 msgstr ""
-"Dada la orden de encontrar una regla que coincida. Si 2 reglas coinciden "
-"para el país o url dado, la regla con la menor secuencia será elegida."
+"Dada el orden de encontrar una regla que coincida. Si 2 reglas coinciden "
+"para el país o URL dada, la regla con la menor secuencia será elegida."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -976,7 +976,7 @@ msgstr "Es un seguidor"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__is_forward_operator_child
 msgid "Is Forward Operator Child"
-msgstr "Es un operador transmitido inferior"
+msgstr "Es hijo de transmisión del operador"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__is_discuss_sidebar_category_livechat_open
@@ -1006,17 +1006,17 @@ msgstr "Unirse al canal"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations_value
 msgid "Kpi Livechat Conversations Value"
-msgstr "Valor KPI de las conversaciones del Chat en vivo"
+msgstr "Valor KPI de las conversaciones del chat en vivo"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_rating_value
 msgid "Kpi Livechat Rating Value"
-msgstr "Valor de calificación de KPI del Chat en vivo"
+msgstr "Valor de calificación de KPI del chat en vivo"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_response_value
 msgid "Kpi Livechat Response Value"
-msgstr "Valor de respuesta de KPI en el Chat en vivo"
+msgstr "Valor de respuesta de KPI en el chat en vivo"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1077,7 +1077,7 @@ msgstr "Botón de chat en vivo"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
 msgid "LiveChat Channel Search"
-msgstr "Búsqueda del canal de Chat en vivo"
+msgstr "Búsqueda del canal de chat en vivo"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1092,38 +1092,38 @@ msgstr "Chat en vivo"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Livechat Button"
-msgstr "Botón de Chat en vivo"
+msgstr "Botón de chat en vivo"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Livechat Button Color"
-msgstr "Color del botón de Chat en vivo"
+msgstr "Color del botón de chat en vivo"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel
 #: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
 msgid "Livechat Channel"
-msgstr "Canal de Chat en vivo"
+msgstr "Canal de chat en vivo"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__livechat_channel_count
 msgid "Livechat Channel Count"
-msgstr "Número de canales de Chat en vivo"
+msgstr "Número de canales de chat en vivo"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
 msgid "Livechat Channel Rules"
-msgstr "Reglas del canal de Chat en vivo"
+msgstr "Reglas del canal de chat en vivo"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__channel_type__livechat
 msgid "Livechat Conversation"
-msgstr "Conversación de Chat en vivo"
+msgstr "Conversación de chat en vivo"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.qunit_embed_suite
 msgid "Livechat External Tests"
-msgstr "Pruebas externas de Chat en vivo"
+msgstr "Pruebas externas de chat en vivo"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_lang_ids
@@ -1133,14 +1133,12 @@ msgstr "Idiomas del chat en vivo"
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_operator_id
 msgid "Livechat Operator ID is required for a channel of type livechat."
-msgstr ""
-"Se requiere la identificación del operador del chat para un canal de tipo "
-"chat."
+msgstr "Se requiere el ID del operador del chat para un canal de tipo chat."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
 msgid "Livechat Support Channel Report"
-msgstr "Informe del canal de asistencia del Chat en vivo"
+msgstr "Informe del canal de asistencia del chat en vivo"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
@@ -1150,7 +1148,7 @@ msgid ""
 "your company livechat session performance. Extract information about the "
 "missed sessions, the audience, the duration of a session, etc."
 msgstr ""
-"Las estadísticas del canal de asistencia del Chat en vivo le permiten "
+"Las estadísticas del canal de asistencia del chat en vivo le permiten "
 "revisar y analizar con facilidad el rendimiento de la sesión en chat en vivo"
 " de su empresa. Obtenga información sobre las sesiones perdidas, el público,"
 " la duración de una sesión, etc."
@@ -1158,7 +1156,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_operator
 msgid "Livechat Support Operator Report"
-msgstr "Informe del operador de asistencia del Chat en vivo"
+msgstr "Informe del operador de asistencia del chat en vivo"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
@@ -1166,18 +1164,18 @@ msgstr "Informe del operador de asistencia del Chat en vivo"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_graph
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_pivot
 msgid "Livechat Support Statistics"
-msgstr "Estadísticas de asistencia del Chat en vivo"
+msgstr "Estadísticas de asistencia del chat en vivo"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_username
 #: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__livechat_username
 msgid "Livechat Username"
-msgstr "Nombre de usuario del chat"
+msgstr "Nombre de usuario del chat en vivo"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Livechat Window"
-msgstr "Ventana de Chat en vivo"
+msgstr "Ventana del chat en vivo"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__livechat_lang_ids
@@ -1239,7 +1237,7 @@ msgstr "Nombre"
 #: code:addons/im_livechat/static/src/embed/common/livechat_service.js:0
 #, python-format
 msgid "No available collaborator, please try again later."
-msgstr "No hay ningún colaborador disponible, intenta más tarde."
+msgstr "No hay ningún colaborador disponible, vuelva a intentarlo más tarde."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat_report
@@ -1257,7 +1255,7 @@ msgstr "¡Todavía no hay información!!"
 #: code:addons/im_livechat/models/discuss_channel.py:0
 #, python-format
 msgid "No history found"
-msgstr "No se ha encontrado historial"
+msgstr "No se encontró ningún historial"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -1386,13 +1384,13 @@ msgstr "Opciones"
 #: model:ir.model.fields,field_description:im_livechat.field_mail_mail__parent_author_name
 #: model:ir.model.fields,field_description:im_livechat.field_mail_message__parent_author_name
 msgid "Parent Author Name"
-msgstr "Nombre del autor principal"
+msgstr "Nombre del autor padre"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_mail__parent_body
 #: model:ir.model.fields,field_description:im_livechat.field_mail_message__parent_body
 msgid "Parent Body"
-msgstr "Cuerpo principal"
+msgstr "Cuerpo padre"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_search
@@ -1408,7 +1406,7 @@ msgstr "Participantes"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr "Porcentaje de valoraciones positivas"
+msgstr "Porcentaje de calificaciones positivas"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__question_phone
@@ -1432,7 +1430,7 @@ msgstr "Por favor, contácteme por:"
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_just_looking
 msgid "Please do! If there is anything we can help with, let us know"
-msgstr "Por favor, ¡hágalo! Si hay algo en lo que podamos ayudarle, díganos"
+msgstr "Díganos si hay algo en lo que podamos ayudarle."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -1462,23 +1460,23 @@ msgstr "Texto de calificación promedio"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Clasificación de la última retroalimentación"
+msgstr "Última retroalimentación de la calificación"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_last_image
 msgid "Rating Last Image"
-msgstr "Clasificación de la última imagen"
+msgstr "Última imagen de la calificación"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_last_value
 msgid "Rating Last Value"
-msgstr "Calificar último valor"
+msgstr "Último valor de la calificación"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_percentage_satisfaction
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
-msgstr "Calificación de satisfacción"
+msgstr "Satisfacción de calificación"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_last_text
@@ -1488,7 +1486,7 @@ msgstr "Texto de calificación"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_count
 msgid "Rating count"
-msgstr "Cuenta de calificación"
+msgstr "Número de calificaciones"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__rating_ids
@@ -1512,7 +1510,7 @@ msgstr "Reciba una copia de esta conversación."
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__redirect_link
 msgid "Redirect Link"
-msgstr "Enlace de redireccionamiento"
+msgstr "Enlace de redirección"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__regex_url
@@ -1543,7 +1541,7 @@ msgstr "Informe"
 #: code:addons/im_livechat/static/src/js/colors_reset_button/colors_reset_button.xml:0
 #, python-format
 msgid "Reset to default colors"
-msgstr "Restablecer a los colores predeterminados"
+msgstr "Restablecer a los colores por defecto"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1578,31 +1576,31 @@ msgstr "Tasa de satisfacción"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Save your Channel to get your configuration widget."
-msgstr "Guarda tu canal para obtener tu widget de configuración."
+msgstr "Guarde su canal para obtener su widget de configuración."
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
 #, python-format
 msgid "Say something"
-msgstr "Di algo"
+msgstr "Diga algo"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/composer_patch.js:0
 #, python-format
 msgid "Say something..."
-msgstr "Di algo..."
+msgstr "Diga algo..."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
 msgid "Script"
-msgstr "Script"
+msgstr "Guion"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__script_external
 msgid "Script (external)"
-msgstr "Script (externo)"
+msgstr "Guion (externo)"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__script_step_id
@@ -1806,9 +1804,9 @@ msgid ""
 "The visitor will be redirected to this link upon clicking the option (note "
 "that the script will end if the link is external to the livechat website)."
 msgstr ""
-"Se redirigirá al visitante a este enlace cuando haga clic en la opción (tome"
-" en cuenta que el guion terminará si el enlace es externo al sitio web del "
-"chat en vivo)."
+"Se redireccionará al visitante a este enlace cuando haga clic en la opción "
+"(tome en cuenta que el guion terminará si el enlace es externo al sitio web "
+"del chat en vivo)."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat
@@ -1887,7 +1885,7 @@ msgstr "Sesiones tratadas"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
 msgid "URL Regex"
-msgstr "URL Regex"
+msgstr "Expresión regular de URL"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__web_page
@@ -1895,7 +1893,7 @@ msgid ""
 "URL to a static page where you client can discuss with the operator of the "
 "channel."
 msgstr ""
-"URL a una página estática donde tu cliente podrá conversar con el operador "
+"URL a una página estática donde su cliente podrá conversar con el operador "
 "del canal."
 
 #. module: im_livechat
@@ -1978,7 +1976,7 @@ msgstr "Página web"
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
 msgid "Website Live Chat Channels"
-msgstr "Canales de Chat en vivo del sitio web"
+msgstr "Canales de chat en vivo del sitio web"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__website_message_ids
@@ -2024,6 +2022,11 @@ msgstr ""
 "contactarle?"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "You"
+msgstr "Usted"
+
+#. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/controllers/attachment.py:0
 #, python-format
@@ -2046,9 +2049,9 @@ msgid ""
 "                to integrate the website live chat widget, allowing your website\n"
 "                visitors to talk in real time with your operators."
 msgstr ""
-"Puedes crear canales para cada sitio web en el que quieras\n"
-"                integrar el widget de Chat en vivo del sitio web, permitiendo a los visitantes\n"
-"                de tu sitio web hablar en tiempo real con tus operadores."
+"Puede crear canales para cada sitio web en el que desee\n"
+"                integrar el widget de chat en vivo del sitio web, lo que permite a los visitantes\n"
+"                de su sitio web hablar en tiempo real con sus operadores."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action
@@ -2065,27 +2068,27 @@ msgstr "país"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
 msgid "e.g. \"Meeting Scheduler Bot\""
-msgstr "Por ejemplo, \"Bot para programar reuniones\""
+msgstr "p. ej. \"Bot para programar reuniones\""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
 msgid "e.g. 'How can I help you?'"
-msgstr "por ejemplo, \"¿Cómo puedo ayudarle?\""
+msgstr "p. ej. \"¿Cómo puedo ayudarle?\""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "e.g. /contactus"
-msgstr "ej. /contactus"
+msgstr "p. ej. /contactus"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. Hello, how may I help you?"
-msgstr "Por ejemplo, Hola, ¿cómo podemos ayudarte?"
+msgstr "p. ej. Hola, ¿cómo puedo ayudarle?"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. YourWebsite.com"
-msgstr "ej. TuSitioWeb.com"
+msgstr "p. ej. TuSitioWeb.com"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2098,7 +2101,7 @@ msgstr "mail@example.com"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "or copy this url and send it by email to your customers or suppliers:"
 msgstr ""
-"o copia este URL y envíala por correo electrónico a tus clientes y "
+"o copie esta URL y envíela por correo electrónico a sus clientes o "
 "proveedores:"
 
 #. module: im_livechat

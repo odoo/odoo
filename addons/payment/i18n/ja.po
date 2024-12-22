@@ -3,16 +3,16 @@
 # 	* payment
 # 
 # Translators:
-# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
-# Wil Odoo, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
+# Wil Odoo, 2024
 # Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -148,11 +148,6 @@ msgid ""
 msgstr "<span><i class=\"oi oi-arrow-right\"/> PayPalアカウント設定方法 </span>"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.form
-msgid "<span>Your payment methods</span>"
-msgstr "<span>お客様の支払方法</span>"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 msgid ""
@@ -197,9 +192,7 @@ msgstr ""
 msgid ""
 "<strong>Warning</strong> Make sure you are logged in as the\n"
 "                                    correct partner before making this payment."
-msgstr ""
-"<strong>警告</strong> この支払を行う前に正しいパートナー\n"
-"　　　　　　　　　にログインしているか確認して下さい。"
+msgstr "<strong>警告</strong> この支払を行う前に正しいパートナーでログインしていることを確認してください。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -795,7 +788,7 @@ msgstr "支払リンクを作成してコピーする"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Go to my Account <i class=\"oi oi-arrow-right ms-2\"/>"
-msgstr "自分のアカウントへ移動<i class=\"oi oi-arrow-right ms-2\"/>"
+msgstr "マイアカウントへ移動<i class=\"oi oi-arrow-right ms-2\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -1160,7 +1153,7 @@ msgstr "取引先名"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Pay"
-msgstr "お支払い"
+msgstr "支払"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__paypal
@@ -1193,7 +1186,7 @@ msgstr "支払フォーム"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr "お支払い方法"
+msgstr "支払方法"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
@@ -1628,6 +1621,11 @@ msgstr "以下によりサポート:"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Test Mode"
 msgstr "テストモード"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Thank you!"
+msgstr "回答にご協力頂き、誠に有難う御座います！"
 
 #. module: payment
 #. odoo-python
@@ -2212,7 +2210,7 @@ msgstr "お支払は取消されました。"
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
-msgstr "お支払いは無事処理されましたが、承認待ちとなっています。"
+msgstr "お支払いは正常に処理されましたが、承認待ちです。"
 
 #. module: payment
 #. odoo-python
@@ -2235,12 +2233,17 @@ msgstr "お支払いは無事処理されましたが、承認待ちとなって
 #: model_terms:payment.provider,done_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been successfully processed."
-msgstr "お支払いは無事処理されました。"
+msgstr "お支払いは正常に処理されました。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "Your payment has not been processed yet."
 msgstr "支払はまだ処理されていません。"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Your payment methods"
+msgstr "あなたの支払方法"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2251,16 +2254,6 @@ msgstr "郵便番号"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
 msgstr "郵便番号"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "danger"
-msgstr "危険"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "info"
-msgstr "情報"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -2279,11 +2272,6 @@ msgid "provider"
 msgstr "プロバイダ"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "success"
-msgstr "成功"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid ""
 "to make this\n"
@@ -2291,8 +2279,3 @@ msgid ""
 msgstr ""
 "この支払\n"
 "                    をするために。"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
-msgstr "警告"

@@ -143,11 +143,13 @@
         <field name="model_id" ref="model_hr_leave_allocation"/>
         <field name="domain_force">[
             '|',
-                ('employee_id', '=', False),
+                '&amp;',
+                    ('employee_id', '=', False),
+                    '|',
+                        ('employee_ids', '=', False),
+                        ('employee_ids.company_id', 'in', company_ids),
                 ('employee_id.company_id', 'in', company_ids),
-            '|',
-                ('holiday_status_id.company_id', '=', False),
-                ('holiday_status_id.company_id', 'in', company_ids)
+            ('holiday_status_id.company_id', 'in', company_ids + [False])
         ]</field>
     </record>
 
@@ -247,26 +249,32 @@
     <record id="hr_holidays_status_rule_multi_company" model="ir.rule">
         <field name="name">Time Off multi company rule</field>
         <field name="model_id" ref="model_hr_leave_type"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="hr_leave_accrual_plan_rule_multi_company" model="ir.rule">
         <field name="name">Accrual plan multi company rule</field>
         <field name="model_id" ref="model_hr_leave_accrual_plan"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="hr_leave_mandatory_day_rule_multi_company" model="ir.rule">
         <field name="name">Mandatory Day: multi company rule</field>
         <field name="model_id" ref="model_hr_leave_mandatory_day"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="hr_leave_report_calendar_rule_multi_company" model="ir.rule">
         <field name="name">Time Off Report Calendar: multi company global rule</field>
         <field name="model_id" ref="model_hr_leave_report_calendar"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+    <record id="hr_leave_report_rule_multi_company" model="ir.rule">
+        <field name="name">Time Off Report: multi company global rule</field>
+        <field name="model_id" ref="model_hr_leave_report"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="hr_leave_report_rule_group_user" model="ir.rule">

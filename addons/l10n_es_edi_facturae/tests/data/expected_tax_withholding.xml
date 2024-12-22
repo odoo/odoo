@@ -144,24 +144,13 @@
       </InvoiceTotals>
       <Items>
         <InvoiceLine>
+          <FileDate>2023-01-01</FileDate>
           <ItemDescription>product_a</ItemDescription>
           <Quantity>1.0</Quantity>
           <UnitOfMeasure>01</UnitOfMeasure>
           <UnitPriceWithoutTax>100.00</UnitPriceWithoutTax>
           <TotalCost>100.00</TotalCost>
           <GrossAmount>100.00</GrossAmount>
-          <TaxesOutputs>
-            <Tax>
-              <TaxTypeCode>01</TaxTypeCode>
-              <TaxRate>21.000</TaxRate>
-              <TaxableBase>
-                <TotalAmount>100.00</TotalAmount>
-              </TaxableBase>
-              <TaxAmount>
-                <TotalAmount>21.00</TotalAmount>
-              </TaxAmount>
-            </Tax>
-          </TaxesOutputs>
           <TaxesWithheld>
             <Tax>
               <TaxTypeCode>01</TaxTypeCode>
@@ -174,14 +163,6 @@
               </TaxAmount>
             </Tax>
           </TaxesWithheld>
-        </InvoiceLine>
-        <InvoiceLine>
-          <ItemDescription>product_a</ItemDescription>
-          <Quantity>1.0</Quantity>
-          <UnitOfMeasure>01</UnitOfMeasure>
-          <UnitPriceWithoutTax>100.00</UnitPriceWithoutTax>
-          <TotalCost>100.00</TotalCost>
-          <GrossAmount>100.00</GrossAmount>
           <TaxesOutputs>
             <Tax>
               <TaxTypeCode>01</TaxTypeCode>
@@ -194,6 +175,15 @@
               </TaxAmount>
             </Tax>
           </TaxesOutputs>
+        </InvoiceLine>
+        <InvoiceLine>
+          <FileDate>2023-01-01</FileDate>
+          <ItemDescription>product_a</ItemDescription>
+          <Quantity>1.0</Quantity>
+          <UnitOfMeasure>01</UnitOfMeasure>
+          <UnitPriceWithoutTax>100.00</UnitPriceWithoutTax>
+          <TotalCost>100.00</TotalCost>
+          <GrossAmount>100.00</GrossAmount>
           <TaxesWithheld>
             <Tax>
               <TaxTypeCode>01</TaxTypeCode>
@@ -206,26 +196,27 @@
               </TaxAmount>
             </Tax>
           </TaxesWithheld>
+          <TaxesOutputs>
+            <Tax>
+              <TaxTypeCode>01</TaxTypeCode>
+              <TaxRate>21.000</TaxRate>
+              <TaxableBase>
+                <TotalAmount>100.00</TotalAmount>
+              </TaxableBase>
+              <TaxAmount>
+                <TotalAmount>21.00</TotalAmount>
+              </TaxAmount>
+            </Tax>
+          </TaxesOutputs>
         </InvoiceLine>
         <InvoiceLine>
+          <FileDate>2023-01-01</FileDate>
           <ItemDescription>product_a</ItemDescription>
           <Quantity>1.0</Quantity>
           <UnitOfMeasure>01</UnitOfMeasure>
           <UnitPriceWithoutTax>200.00</UnitPriceWithoutTax>
           <TotalCost>200.00</TotalCost>
           <GrossAmount>200.00</GrossAmount>
-          <TaxesOutputs>
-            <Tax>
-              <TaxTypeCode>01</TaxTypeCode>
-              <TaxRate>21.000</TaxRate>
-              <TaxableBase>
-                <TotalAmount>200.00</TotalAmount>
-              </TaxableBase>
-              <TaxAmount>
-                <TotalAmount>42.00</TotalAmount>
-              </TaxAmount>
-            </Tax>
-          </TaxesOutputs>
           <TaxesWithheld>
             <Tax>
               <TaxTypeCode>01</TaxTypeCode>
@@ -238,6 +229,18 @@
               </TaxAmount>
             </Tax>
           </TaxesWithheld>
+          <TaxesOutputs>
+            <Tax>
+              <TaxTypeCode>01</TaxTypeCode>
+              <TaxRate>21.000</TaxRate>
+              <TaxableBase>
+                <TotalAmount>200.00</TotalAmount>
+              </TaxableBase>
+              <TaxAmount>
+                <TotalAmount>42.00</TotalAmount>
+              </TaxAmount>
+            </Tax>
+          </TaxesOutputs>
         </InvoiceLine>
       </Items>
       <PaymentDetails>

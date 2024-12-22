@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
+
 from odoo.tests import common, Form
 from odoo.tools import mute_logger
 
@@ -87,6 +89,7 @@ class TestDropship(common.TransactionCase):
         self.assertAlmostEqual(pol2.product_qty, sol2.product_uom_qty)
 
     def test_00_dropship(self):
+        self.dropship_product.description_purchase = "description_purchase"
         # Required for `route_id` to be visible in the view
         self.env.user.groups_id += self.env.ref('stock.group_adv_location')
 
@@ -113,6 +116,7 @@ class TestDropship(common.TransactionCase):
         # Check a quotation was created to a certain vendor and confirm so it becomes a confirmed purchase order
         purchase = self.env['purchase.order'].search([('partner_id', '=', self.supplier.id)])
         self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
+        self.assertIn("description_purchase", purchase.order_line.name)
         purchase.button_confirm()
         self.assertEqual(purchase.state, 'purchase', 'Purchase order should be in the approved state')
 
@@ -125,6 +129,7 @@ class TestDropship(common.TransactionCase):
         # Send the 200 pieces
         purchase.picking_ids.move_ids.quantity = purchase.picking_ids.move_ids.product_qty
         purchase.picking_ids.move_ids.picked = True
+        self.assertNotIn("description_purchase", purchase.picking_ids.move_ids.description_picking)
         purchase.picking_ids.button_validate()
 
         # Check one move line was created in Customers location with 200 pieces
@@ -207,3 +212,88 @@ class TestDropship(common.TransactionCase):
         self.assertEqual(sale_order.picking_ids.state, 'done')
         self.assertEqual(sale_order.picking_ids.move_line_ids.lot_id.name, '123')
         self.assertEqual(sale_order.picking_ids.move_line_ids.lot_id.last_delivery_partner_id, self.customer)
+
+    def test_sol_reserved_qty_wizard_dropship(self):
+        """
+        Check that the reserved qty wizard related to a sol is computed from
+        the PO if the product is dropshipped.
+        """
+        product = self.dropship_product
+        product.route_ids = self.dropshipping_route
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 3.0,
+            })]
+        })
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.order_line.qty_available_today, 0.0)
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.supplier.id)])
+        purchase_order.button_confirm()
+        picking_dropship = sale_order.picking_ids.filtered(lambda p: p.picking_type_id)
+        self.assertTrue(picking_dropship)
+        self.assertEqual(sale_order.order_line.qty_available_today, 3.0)
+        self.assertRecordValues(sale_order.order_line, [{'qty_available_today': 3.0, 'qty_delivered': 0.0}])
+        picking_dropship.move_ids.quantity = 3.0
+        picking_dropship.move_ids.picked = True
+        picking_dropship.button_validate()
+        self.assertEqual(sale_order.order_line.qty_delivered, 3.0)
+
+    def test_correct_vendor_dropship(self):
+        self.supplier_2 = self.env['res.partner'].create({'name': 'Vendor 2'})
+        # dropship route to be added in test
+        self.dropship_product = self.env['product.product'].create({
+            'name': "Pen drive",
+            'type': "product",
+            'categ_id': self.env.ref('product.product_category_1').id,
+            'lst_price': 100.0,
+            'standard_price': 0.0,
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'uom_po_id': self.env.ref('uom.product_uom_unit').id,
+            'seller_ids': [
+                (0, 0, {
+                    'delay': 10,
+                    'partner_id': self.supplier.id,
+                    'min_qty': 2.0,
+                    'price': 4
+                }),
+                (0, 0, {
+                    'delay': 5,
+                    'partner_id': self.supplier_2.id,
+                    'min_qty': 1.0,
+                    'price': 10
+                })
+            ],
+        })
+        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.customer
+        with mute_logger('odoo.tests.common.onchange'):
+            with so_form.order_line.new() as line:
+                line.product_id = self.dropship_product
+                line.product_uom_qty = 1
+                line.route_id = self.dropshipping_route
+        sale_order_drp_shpng = so_form.save()
+        sale_order_drp_shpng.action_confirm()
+
+        purchase = self.env['purchase.order'].search([('partner_id', '=', self.supplier_2.id)])
+        self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
+        self.assertTrue((purchase.date_planned - purchase.date_order).days == 5, "The second supplier has a delay of 5 days")
+        self.assertTrue(purchase.amount_untaxed == 10, "the suppliers sells the item for 10$")
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.customer
+        with mute_logger('odoo.tests.common.onchange'):
+            with so_form.order_line.new() as line:
+                line.product_id = self.dropship_product
+                line.product_uom_qty = 2
+                line.route_id = self.dropshipping_route
+        sale_order_drp_shpng = so_form.save()
+        sale_order_drp_shpng.action_confirm()
+
+        purchase = self.env['purchase.order'].search([('partner_id', '=', self.supplier.id)])
+        self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
+        self.assertTrue((purchase.date_planned - purchase.date_order).days == 10, "The first supplier has a delay of 10 days")
+        self.assertTrue(purchase.amount_untaxed == 8, "The price should be 4 * 2")

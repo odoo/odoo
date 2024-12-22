@@ -3,14 +3,14 @@
 # 	* stock_account
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -94,7 +94,7 @@ msgstr "<span>序號/批次</span>"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "項目表範本"
+msgstr "賬目總表範本"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_ids
@@ -1039,7 +1039,16 @@ msgstr "您無法在自動評價中更新產品成本，因為這會導致建立
 msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
-msgstr "您沒有在產品類別上定義任何輸入估價項目。在處理此操作之前，必須定義一個。"
+msgstr "你的產品類別未設定任何輸入估值賬戶。處理此操作前，必須先定義相關賬戶。"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"You don't have any output valuation account defined on your product "
+"category. You must define one before processing this operation."
+msgstr "你的產品類別未設定任何輸出估值賬戶。處理此操作前，必須先定義相關賬戶。"
 
 #. module: stock_account
 #. odoo-python
@@ -1069,7 +1078,7 @@ msgstr "您沒有在產品類別上定義的任何庫存日記帳, 請檢查是�
 msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
-msgstr "您沒有在您的產品類別中定義任何庫存評估帳戶。 處理此操作之前，您必須定義一個。"
+msgstr "你的產品類別未設定任何庫存估值賬戶。處理此操作前，必須先定義相關賬戶。"
 
 #. module: stock_account
 #. odoo-python

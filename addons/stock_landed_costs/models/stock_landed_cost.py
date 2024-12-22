@@ -131,7 +131,8 @@ class StockLandedCost(models.Model):
                 linked_layer = line.move_id.stock_valuation_layer_ids[:1]
 
                 # Prorate the value at what's still in stock
-                cost_to_add = (remaining_qty / line.move_id.quantity) * line.additional_landed_cost
+                move_qty = line.move_id.product_uom._compute_quantity(line.move_id.quantity, line.move_id.product_id.uom_id)
+                cost_to_add = (remaining_qty / move_qty) * line.additional_landed_cost
                 if not cost.company_id.currency_id.is_zero(cost_to_add):
                     valuation_layer = self.env['stock.valuation.layer'].create({
                         'value': cost_to_add,
@@ -188,7 +189,8 @@ class StockLandedCost(models.Model):
                 for product in cost.cost_lines.product_id:
                     accounts = product.product_tmpl_id.get_product_accounts()
                     input_account = accounts['stock_input']
-                    all_amls.filtered(lambda aml: aml.account_id == input_account and not aml.reconciled).reconcile()
+                    all_amls.filtered(lambda aml: aml.account_id == input_account and not aml.reconciled\
+                         and not aml.display_type in ('line_section', 'line_note')).reconcile()
 
     def get_valuation_lines(self):
         self.ensure_one()

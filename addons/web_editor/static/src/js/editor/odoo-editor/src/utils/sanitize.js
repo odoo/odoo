@@ -3,10 +3,8 @@ import {
     closestBlock,
     closestElement,
     startPos,
-    fillEmpty,
     getListMode,
     isBlock,
-    isEmptyBlock,
     isSelfClosingElement,
     moveNodes,
     preserveCursor,
@@ -22,6 +20,10 @@ import {
     PHONE_REGEX,
     URL_REGEX,
     unwrapContents,
+    padLinkWithZws,
+    getTraversedNodes,
+    ZERO_WIDTH_CHARS_REGEX,
+    isVisible,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -94,7 +96,11 @@ export function areSimilarElements(node, node2) {
 * @returns {String|null}
 */
 export function deduceURLfromText(text, link) {
-   const label = text.replace(/\u200b/g, '').trim();
+    // Skip modifying the href for Bootstrap tabs.
+    if (link && link.getAttribute("role") === "tab") {
+        return;
+    }
+   const label = text.replace(ZERO_WIDTH_CHARS_REGEX, '').trim();
    // Check first for e-mail.
    let match = label.match(EMAIL_REGEX);
    if (match) {
@@ -116,7 +122,7 @@ export function deduceURLfromText(text, link) {
    // Check for telephone url.
    match = label.match(PHONE_REGEX);
    if (match) {
-       return match[1] ? match[0] : 'tel://' + match[0];
+        return (match[1] ? match[0] : "tel://" + match[0]).replace(/\s+/g, "");
    }
    return null;
 }
@@ -149,7 +155,13 @@ function sanitizeNode(node, root) {
         }
     }
 
-    if (['SPAN', 'FONT'].includes(node.nodeName) && !node.hasAttributes()) {
+    if (
+        ['SPAN', 'FONT'].includes(node.nodeName)
+        && !node.hasAttributes()
+        && !hasPseudoElementContent(node, "::before")
+        && !hasPseudoElementContent(node, "::after")
+        && !node.querySelector(".oe_currency_value")
+    ) {
         // Unwrap the contents of SPAN and FONT elements without attributes.
         getDeepRange(root, { select: true });
         const restoreCursor = shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
@@ -180,24 +192,36 @@ function sanitizeNode(node, root) {
         node = parent; // The node has been removed, update the reference.
     } else if (
         node.nodeName === 'P' && // Note: not sure we should limit to <p>.
-        node.parentElement.nodeName === 'LI' &&
+        ['LI', 'A'].includes(node.parentElement.nodeName) &&
         !node.parentElement.classList.contains('nav-item')
     ) {
         // Remove empty paragraphs in <li>.
-        const classes = node.classList;
+        const previous = node.previousSibling;
+        const attributes = node.attributes;
         const parent = node.parentElement;
         const restoreCursor = shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
-        if (isEmptyBlock(node)) {
-            node.remove();
-        } else if (classes.length) {
+        if (attributes.length) {
             const spanEl = document.createElement('span');
-            spanEl.setAttribute('class', classes);
+            for (const attribute of attributes) {
+                spanEl.setAttribute(attribute.name, attribute.value);
+            }
+            if (spanEl.style.textAlign) {
+                // This is a tradeoff. Ideally, the state of the html
+                // after this function should be reachable by standard
+                // edition means and a span with display block is not.
+                // However, this is required in order to not break the
+                // design of already existing snippets.
+                spanEl.style.display = 'block';
+            }
             spanEl.append(...node.childNodes);
             node.replaceWith(spanEl);
         } else {
             unwrapContents(node);
         }
-        fillEmpty(parent);
+        if (previous && isVisible(previous) && !isBlock(previous) && previous.nodeName !== 'BR') {
+            const br = document.createElement('br');
+            previous.after(br);
+        }
         restoreCursor && restoreCursor(new Map([[node, parent]]));
         node = parent; // The node has been removed, update the reference.
     } else if (node.nodeName === 'LI' && !node.closest('ul, ol')) {
@@ -206,6 +230,17 @@ function sanitizeNode(node, root) {
         paragraph.replaceChildren(...node.childNodes);
         node.replaceWith(paragraph);
         node = paragraph; // The node has been removed, update the reference.
+    } else if (
+        ['UL', 'OL'].includes(node.nodeName) &&
+        ['UL', 'OL'].includes(node.parentNode.nodeName)
+    ) {
+        const restoreCursor = shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
+        const li = document.createElement('li');
+        node.parentNode.insertBefore(li, node);
+        li.appendChild(node);
+        li.classList.add('oe-nested');
+        node = li;
+        restoreCursor && restoreCursor();
     } else if (isFontAwesome(node) && node.textContent !== '\u200B') {
         // Ensure a zero width space is present inside the FA element.
         node.textContent = '\u200B';
@@ -230,6 +265,43 @@ function sanitizeNode(node, root) {
                     node.style.width = (40 - width) + 'px';
                 }
             }
+        }
+    } else if (node.nodeName === 'A') {
+        // Ensure links have ZWNBSPs so the selection can be set at their edges.
+        padLinkWithZws(root, node);
+    } else if (
+        node.nodeType === Node.TEXT_NODE &&
+        node.textContent.includes('\uFEFF') &&
+        !closestElement(node, 'a') &&
+        !(
+            closestElement(root, '[contenteditable=true]') &&
+            getTraversedNodes(closestElement(root, '[contenteditable=true]')).includes(node)
+        )
+    ) {
+        const startsWithLegitZws = node.textContent.startsWith('\uFEFF') && node.previousSibling && node.previousSibling.nodeName === 'A';
+        const endsWithLegitZws = node.textContent.endsWith('\uFEFF') && node.nextSibling && node.nextSibling.nodeName === 'A';
+        let newText = node.textContent.replace(/\uFEFF/g, '');
+        if (startsWithLegitZws) {
+            newText = '\uFEFF' + newText;
+        }
+        if (endsWithLegitZws) {
+            newText = newText + '\uFEFF';
+        }
+        if (newText !== node.textContent) {
+            // We replace the text node with a new text node with the
+            // update text rather than just changing the text content of
+            // the node because these two methods create different
+            // mutations and at least the tour system breaks if all we
+            // send here is a text content change.
+            let replacement;
+            if (newText.length) {
+                replacement = document.createTextNode(newText);
+                node.before(replacement);
+            } else {
+                replacement = node.parentElement;
+            }
+            node.remove();
+            node = replacement; // The node has been removed, update the reference.
         }
     }
     return node;

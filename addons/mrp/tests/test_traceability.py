@@ -682,3 +682,193 @@ class TestTraceability(TestMrpCommon):
             production.qty_producing = 1
             production.button_mark_done()
             self.assertEqual(production.move_finished_ids.date, datetime(2024, 1, 15), "Stock move should be availbale after the production is done.")
+
+    def test_use_lot_already_consumed(self):
+        """
+        Tracked-by-sn product
+        Produce SN
+        Consume SN
+        Consume SN -> Should raise an error as it has already been consumed
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+        component = self.bom_4.bom_line_ids.product_id
+        component.write({
+            'type': 'product',
+            'tracking': 'serial',
+        })
+
+        sn_lot01, sn_lot02 = self.env['stock.lot'].create([{
+            'product_id': component.id,
+            'name': name,
+            'company_id': self.env.company.id,
+        } for name in ['SN01', 'SN02']])
+        self.env['stock.quant']._update_available_quantity(component, stock_location, 1, lot_id=sn_lot02)
+
+        mo = self.env['mrp.production'].create({
+            'product_id': component.id,
+            'product_qty': 1,
+            'product_uom_id': component.uom_id.id,
+            'company_id': self.env.company.id,
+        })
+        mo.action_confirm()
+        mo.qty_producing = 1
+        mo.lot_producing_id = sn_lot01
+        mo.button_mark_done()
+        self.assertRecordValues(mo.move_finished_ids.move_line_ids, [
+            {'product_id': component.id, 'lot_id': sn_lot01.id, 'quantity': 1.0, 'state': 'done'},
+        ])
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_4
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.qty_producing = 1
+        mo.move_raw_ids.move_line_ids.quantity = 1
+        mo.move_raw_ids.move_line_ids.lot_id = sn_lot01
+        mo.move_raw_ids.move_line_ids.picked = True
+        mo.button_mark_done()
+        self.assertRecordValues(mo.move_raw_ids.move_line_ids, [
+            {'product_id': component.id, 'lot_id': sn_lot01.id, 'quantity': 1.0, 'state': 'done'},
+        ])
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_4
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.qty_producing = 1
+        mo.move_raw_ids.move_line_ids.quantity = 1
+        mo.move_raw_ids.move_line_ids.lot_id = sn_lot01
+        mo.move_raw_ids.move_line_ids.picked = True
+        with self.assertRaises(UserError):
+            mo.button_mark_done()
+
+    def test_produce_consume_unbuild_and_consume(self):
+        """
+        (1) Produce SN
+        (2) Consume SN
+        Unbuild (2)
+        Consume SN
+        -> We should not raise any UserError
+        """
+        component = self.bom_4.bom_line_ids.product_id
+        component.write({
+            'type': 'product',
+            'tracking': 'serial',
+        })
+
+        sn = self.env['stock.lot'].create({
+            'product_id': component.id,
+            'name': "SN",
+            'company_id': self.env.company.id,
+        })
+
+        mo_produce_sn = self.env['mrp.production'].create({
+            'product_id': component.id,
+            'product_qty': 1,
+            'product_uom_id': component.uom_id.id,
+            'company_id': self.env.company.id,
+        })
+        mo_produce_sn.action_confirm()
+        mo_produce_sn.qty_producing = 1
+        mo_produce_sn.lot_producing_id = sn
+        mo_produce_sn.button_mark_done()
+
+        mo_consume_sn_form = Form(self.env['mrp.production'])
+        mo_consume_sn_form.bom_id = self.bom_4
+        mo_consume_sn = mo_consume_sn_form.save()
+        mo_consume_sn.action_confirm()
+        mo_consume_sn.qty_producing = 1
+        mo_consume_sn.move_raw_ids.move_line_ids.quantity = 1
+        mo_consume_sn.move_raw_ids.move_line_ids.lot_id = sn
+        mo_consume_sn.move_raw_ids.move_line_ids.picked = True
+        mo_consume_sn.button_mark_done()
+        self.assertRecordValues(mo_consume_sn.move_raw_ids.move_line_ids, [
+            {'product_id': component.id, 'lot_id': sn.id, 'quantity': 1.0, 'state': 'done'},
+        ])
+
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo_consume_sn
+        unbuild_form.save().action_unbuild()
+
+        mo_consume_sn_form = Form(self.env['mrp.production'])
+        mo_consume_sn_form.bom_id = self.bom_4
+        mo_consume_sn = mo_consume_sn_form.save()
+        mo_consume_sn.action_confirm()
+        mo_consume_sn.qty_producing = 1
+        mo_consume_sn.move_raw_ids.move_line_ids.quantity = 1
+        mo_consume_sn.move_raw_ids.move_line_ids.lot_id = sn
+        mo_consume_sn.move_raw_ids.move_line_ids.picked = True
+        mo_consume_sn.button_mark_done()
+        self.assertRecordValues(mo_consume_sn.move_raw_ids.move_line_ids, [
+            {'product_id': component.id, 'lot_id': sn.id, 'quantity': 1.0, 'state': 'done'},
+        ])
+
+    def test_produce_consume_unbuild_all_and_consume(self):
+        """
+        (1) Produce SN
+        (2) Consume SN
+        Unbuild (2)
+        Unbuild (1)
+        Update stock with 1 SN
+        Consume SN
+        -> We should not raise any UserError
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+        component = self.bom_4.bom_line_ids.product_id
+        component.write({
+            'type': 'product',
+            'tracking': 'serial',
+        })
+
+        sn = self.env['stock.lot'].create({
+            'product_id': component.id,
+            'name': "SN",
+            'company_id': self.env.company.id,
+        })
+
+        mo_produce_sn = self.env['mrp.production'].create({
+            'product_id': component.id,
+            'product_qty': 1,
+            'product_uom_id': component.uom_id.id,
+            'company_id': self.env.company.id,
+        })
+        mo_produce_sn.action_confirm()
+        mo_produce_sn.qty_producing = 1
+        mo_produce_sn.lot_producing_id = sn
+        mo_produce_sn.button_mark_done()
+
+        mo_consume_sn_form = Form(self.env['mrp.production'])
+        mo_consume_sn_form.bom_id = self.bom_4
+        mo_consume_sn = mo_consume_sn_form.save()
+        mo_consume_sn.action_confirm()
+        mo_consume_sn.qty_producing = 1
+        mo_consume_sn.move_raw_ids.move_line_ids.quantity = 1
+        mo_consume_sn.move_raw_ids.move_line_ids.lot_id = sn
+        mo_consume_sn.move_raw_ids.move_line_ids.picked = True
+        mo_consume_sn.button_mark_done()
+        self.assertRecordValues(mo_consume_sn.move_raw_ids.move_line_ids, [
+            {'product_id': component.id, 'lot_id': sn.id, 'quantity': 1.0, 'state': 'done'},
+        ])
+
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo_consume_sn
+        unbuild_form.save().action_unbuild()
+
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo_produce_sn
+        unbuild_form.save().action_unbuild()
+
+        self.env['stock.quant']._update_available_quantity(component, stock_location, 1, lot_id=sn)
+
+        mo_consume_sn_form = Form(self.env['mrp.production'])
+        mo_consume_sn_form.bom_id = self.bom_4
+        mo_consume_sn = mo_consume_sn_form.save()
+        mo_consume_sn.action_confirm()
+        mo_consume_sn.qty_producing = 1
+        mo_consume_sn.move_raw_ids.move_line_ids.quantity = 1
+        mo_consume_sn.move_raw_ids.move_line_ids.lot_id = sn
+        mo_consume_sn.move_raw_ids.move_line_ids.picked = True
+        mo_consume_sn.button_mark_done()
+        self.assertRecordValues(mo_consume_sn.move_raw_ids.move_line_ids, [
+            {'product_id': component.id, 'lot_id': sn.id, 'quantity': 1.0, 'state': 'done'},
+        ])

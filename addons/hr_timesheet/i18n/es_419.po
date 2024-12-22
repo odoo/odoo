@@ -298,10 +298,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
-"Cuenta analítica a la que están vinculados este proyecto, sus tareas y sus hojas de horas. \n"
-"Lleve el seguimiento de los costos e ingresos de su proyecto al establecer esta cuenta analítica en sus documentos relacionados (por ejemplo, órdenes de venta, facturas, órdenes de compra, facturas de proveedor, gastos, etc.).\n"
+"La cuenta analítica a la que están vinculados este proyecto, sus tareas y sus hojas de horas. \n"
+"Lleve seguimiento de los costos e ingresos de su proyecto al establecer esta cuenta analítica en sus documentos relacionados (por ejemplo, órdenes de venta, facturas, órdenes de compra, facturas de proveedor, gastos, etc.).\n"
 "Esta cuenta analítica se puede cambiar en cada tarea de forma individual si es necesario.\n"
-"Se necesita una cuenta analítica para usar hojas de horas."
+"Necesita una cuenta analítica para usar hojas de horas."
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
@@ -404,7 +404,7 @@ msgstr "Creado el"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__currency_id
 msgid "Currency"
-msgstr "Divisa"
+msgstr "Moneda"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -716,7 +716,7 @@ msgstr "Año pasado"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_project_view_form_simplified_inherit_timesheet
 msgid "Log time on tasks"
-msgstr "Registrar el tiempo en las tareas"
+msgstr "Registre el tiempo en las tareas"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__manager_id
@@ -796,7 +796,7 @@ msgstr "De acuerdo"
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__overtime
 msgid "Overtime"
-msgstr "Horas adicionales"
+msgstr "Horas extra"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__parent_task_id
@@ -1390,12 +1390,16 @@ msgstr "Días totales"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
-#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Hours"
 msgstr "Horas totales"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
+msgid "Hours By Task (Including Subtasks)"
+msgstr "Horas por tarea (incluyendo subtareas)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
@@ -1456,7 +1460,7 @@ msgid ""
 "\n"
 "        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
-"Utilice estas palabras clave en el título para establecer nuevas tareas:\n"
+"Utilice estas palabras clave en el título para configurar nuevas tareas:\n"
 "\n"
 "        30h asigna 30 horas a la tarea\n"
 "        #etiquetas asigna etiquetas a la tarea\n"

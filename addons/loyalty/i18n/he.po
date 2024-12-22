@@ -5,31 +5,34 @@
 # Translators:
 # NoaFarkash, 2023
 # Netta Waizer, 2023
-# hed shefer <hed@laylinetech.com>, 2023
+# Hed Shefer <hed@laylinetech.com>, 2023
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2023
 # ExcaliberX <excaliberx@gmail.com>, 2023
 # Martin Trigaux, 2023
 # שהאב חוסיין <shhab89@gmail.com>, 2023
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2023
 # דודי מלכה <Dudimalka6@gmail.com>, 2023
 # Roy Sayag, 2023
 # Yihya Hugirat <hugirat@gmail.com>, 2023
-# Ha Ketem <haketem@gmail.com>, 2023
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
+# Orel Nahmany, 2024
+# Ha Ketem <haketem@gmail.com>, 2024
+# tomerlayline, 2024
+# yael terner, 2024
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__trigger
@@ -253,7 +256,7 @@ msgstr ""
 msgid ""
 "<span class=\"fw-bold text-decoration-underline\">In exchange of</span>\n"
 "                                    <br/>"
-msgstr ""
+msgstr "<span class=\"fw-bold text-decoration-underline\">בתמורה ל</span><br/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -394,7 +397,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_card_card_code_unique
 msgid "A coupon/loyalty card must have a unique code."
-msgstr ""
+msgstr "קופון/כרטיס מועדון חייב להיות בעל קוד ייחודי."
 
 #. module: loyalty
 #. odoo-python
@@ -434,7 +437,7 @@ msgstr "פעיל"
 #: model:ir.model.fields,field_description:loyalty.field_res_partner__loyalty_card_count
 #: model:ir.model.fields,field_description:loyalty.field_res_users__loyalty_card_count
 msgid "Active loyalty cards"
-msgstr ""
+msgstr "כרטיסי נאמנות פעילים"
 
 #. module: loyalty
 #. odoo-javascript
@@ -462,7 +465,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 msgid "Among"
-msgstr ""
+msgstr "בין"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__anonymous
@@ -577,7 +580,7 @@ msgstr "קטגוריות"
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__cheapest
 msgid "Cheapest Product"
-msgstr ""
+msgstr "המוצר הזול ביותר"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__clear_wallet
@@ -587,7 +590,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Clear all promo point(s)"
-msgstr ""
+msgstr "נקה את כל הנקודות"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__code
@@ -807,7 +810,7 @@ msgstr "תיאור"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Description on order"
-msgstr ""
+msgstr "תיאור המוצר בהזמנה "
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount
@@ -830,7 +833,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__promo_code
 msgid "Discount Code"
-msgstr ""
+msgstr "קוד הנחה"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_line_product_id
@@ -850,7 +853,7 @@ msgstr "מוצר הנחה"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_domain
 msgid "Discount Product Domain"
-msgstr ""
+msgstr "תחום מוצר הנחה"
 
 #. module: loyalty
 #. odoo-python
@@ -859,7 +862,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 #, python-format
 msgid "Discount code"
-msgstr ""
+msgstr "קוד הנחה"
 
 #. module: loyalty
 #. odoo-python
@@ -867,27 +870,27 @@ msgstr ""
 #: model:loyalty.program,portal_point_name:loyalty.10_percent_with_code
 #, python-format
 msgid "Discount point(s)"
-msgstr ""
+msgstr "נקודה(ות) הנחה"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Discount product"
-msgstr ""
+msgstr "מוצר הנחה"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_category_id
 msgid "Discounted Prod. Categories"
-msgstr ""
+msgstr "קטגוריית מוצרים"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_tag_id
 msgid "Discounted Prod. Tag"
-msgstr ""
+msgstr "תגית מוצר"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_ids
 msgid "Discounted Products"
-msgstr ""
+msgstr "מוצרים"
 
 #. module: loyalty
 #. odoo-python
@@ -1065,6 +1068,13 @@ msgid "Generate eWallet"
 msgstr ""
 
 #. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "Generate {{props.context.program_item_name}}"
+msgstr ""
+
+#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
@@ -1185,7 +1195,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "In exchange of"
-msgstr ""
+msgstr "בתמורה ל"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_search
@@ -1290,12 +1300,12 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_mail
 msgid "Loyalty Communication"
-msgstr ""
+msgstr "תקשורת חברי מועדון"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
-msgstr ""
+msgstr "קופון loyalty"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_program
@@ -1322,7 +1332,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_max_amount
 msgid "Max Discount"
-msgstr ""
+msgstr "הנחה מקסימלית"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__max_usage
@@ -1352,7 +1362,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_amount
 msgid "Minimum Purchase"
-msgstr ""
+msgstr "מינימום רכישה"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_qty
@@ -1407,7 +1417,7 @@ msgstr "מספר השגיאות"
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "מספר הודעות הדורשות פעולה"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_error_counter
@@ -1432,7 +1442,7 @@ msgstr "לקוח/ספק"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 msgid "Point(s)"
-msgstr ""
+msgstr "נקודה(ות)"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__points
@@ -1490,7 +1500,7 @@ msgstr "תחום מוצר"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_tag_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__product_tag_id
 msgid "Product Tag"
-msgstr ""
+msgstr "תגית מוצר"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_product_product
@@ -1587,7 +1597,7 @@ msgstr "כמות"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Quantity rewarded"
-msgstr ""
+msgstr "כמות מתוגמלת"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
@@ -1637,6 +1647,7 @@ msgstr "סוג הטבה"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rewards"
 msgstr "הטבות"
 
@@ -1764,6 +1775,13 @@ msgid "The required points for a reward must be strictly positive."
 msgstr ""
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+#, python-format
+msgid "The reward description field cannot be empty."
+msgstr ""
+
+#. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
 msgid "The reward product quantity must be strictly positive."
 msgstr ""
@@ -1795,7 +1813,7 @@ msgstr ""
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__discount_max_amount
 msgid ""
 "This is the max amount this reward may discount, leave to 0 for no limit."
-msgstr ""
+msgstr "מקסימום סכום הנחה להטבה, השאר 0 אם אין הגבלה"
 
 #. module: loyalty
 #. odoo-python
@@ -1814,7 +1832,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__total_order_count
 msgid "Total Order Count"
-msgstr "סך ההזמנות"
+msgstr "סה\"כ הזמנות"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger
@@ -1984,7 +2002,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "item(s) bought"
-msgstr ""
+msgstr "מוצר(ים) שנקנו"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -1997,6 +2015,8 @@ msgid ""
 "on the cheapest product\n"
 "                                        <br/>"
 msgstr ""
+"על המוצר הזול ביותר\n"
+"<br/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -2015,21 +2035,21 @@ msgstr "על ההזמנה שלך"
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "per %s spent"
-msgstr ""
+msgstr "לפי %s הוצאה"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "per order"
-msgstr ""
+msgstr "לפי הזמנה"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "per unit paid"
-msgstr ""
+msgstr "לפי כמות ששולמה"
 
 #. module: loyalty
 #. odoo-python
@@ -2048,7 +2068,7 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "the cheapest product"
-msgstr ""
+msgstr "המוצר הזול ביותר"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -2065,4 +2085,11 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "your order"
+msgstr ""
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "{{loyalty_el_title}}"
 msgstr ""

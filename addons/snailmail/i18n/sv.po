@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Haojun Zou <apollo_zhj@msn.com>, 2023
-# Mikael Holm <mikael.holm@vertel.se>, 2023
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
+# Robin Calvin, 2023
+# Mikael Holm <mikael.holm@vertel.se>, 2023
 # Simon S, 2023
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
 # Lasse L, 2023
-# Robin Calvin, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
+"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +33,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__attachment_error
 msgid "ATTACHMENT_ERROR"
-msgstr ""
+msgstr "FEL PÅ BIFOGAD FIL"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
@@ -53,28 +53,28 @@ msgstr "Adress"
 #: code:addons/snailmail/static/src/core/failure_model_patch.js:0
 #, python-format
 msgid "An error occurred when sending a letter with Snailmail."
-msgstr ""
+msgstr "Ett fel inträffade när du skickade ett brev med Snailmail."
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "An error occurred when sending the document by post.<br>Error: %s"
-msgstr ""
+msgstr "Ett fel inträffade när dokumentet skickades med post.<br>Fel: %s"
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "An unknown error happened. Please contact the support."
-msgstr ""
+msgstr "Ett okänt fel har inträffat. Vänligen kontakta support."
 
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #, python-format
 msgid "An unknown error occurred. Please contact our"
-msgstr ""
+msgstr "Ett okänt fel har inträffat. Vänligen kontakta vår"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
@@ -91,17 +91,17 @@ msgstr "Filnamn på Bilaga"
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #, python-format
 msgid "Awaiting Dispatch"
-msgstr ""
+msgstr "Väntar på avsändning"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__duplex
 msgid "Both side"
-msgstr ""
+msgstr "Båda sidor"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_duplex
 msgid "Both sides"
-msgstr ""
+msgstr "Båda sidor"
 
 #. module: snailmail
 #. odoo-javascript
@@ -114,7 +114,7 @@ msgstr "Köp krediter"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__credit_error
 msgid "CREDIT_ERROR"
-msgstr ""
+msgstr "CREDIT_ERROR"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
@@ -124,7 +124,7 @@ msgstr "Avbryt"
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid "Cancel Letter"
-msgstr ""
+msgstr "Annullera brev"
 
 #. module: snailmail
 #. odoo-javascript
@@ -132,7 +132,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 #, python-format
 msgid "Cancel letter"
-msgstr ""
+msgstr "Avboka brev"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
@@ -198,7 +198,7 @@ msgstr "Land"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__cover
 msgid "Cover Page"
-msgstr ""
+msgstr "Försättsblad"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_uid
@@ -249,7 +249,7 @@ msgstr "Fel"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__format_error
 msgid "FORMAT_ERROR"
-msgstr ""
+msgstr "FORMAT_ERROR"
 
 #. module: snailmail
 #. odoo-javascript
@@ -257,7 +257,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_missing_required_fields_action
 #, python-format
 msgid "Failed letter"
-msgstr ""
+msgstr "Misslyckat brev"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__failure_type
@@ -267,12 +267,12 @@ msgstr "Typ av fel"
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_format_error_action
 msgid "Format Error"
-msgstr ""
+msgstr "Formatfel"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter_format_error
 msgid "Format Error Sending a Snailmail Letter"
-msgstr ""
+msgstr "Formatfel när du skickar ett brev med snigelpost"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__id
@@ -296,7 +296,7 @@ msgstr "Information"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Invalid recipient name."
-msgstr ""
+msgstr "Ogiltigt mottagarnamn."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
@@ -317,14 +317,14 @@ msgstr "Senast uppdaterad den"
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__letter_ids
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__letter_id
 msgid "Letter"
-msgstr ""
+msgstr "Brev"
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Letter sent by post with Snailmail"
-msgstr ""
+msgstr "Brev skickat per post med Snailmail"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
@@ -334,7 +334,7 @@ msgstr "Brev"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__missing_required_fields
 msgid "MISSING_REQUIRED_FIELDS"
-msgstr ""
+msgstr "SAKNADE_KRÄVDA_FÄLT"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_mail_message
@@ -355,14 +355,14 @@ msgstr "Modell"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__no_price_available
 msgid "NO_PRICE_AVAILABLE"
-msgstr ""
+msgstr "INGET_PRIS_TILLGÄNGLIGT"
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Not enough credits for Snail Mail"
-msgstr ""
+msgstr "Inte tillräckligt med krediter för Snail Mail"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__notification_type
@@ -379,7 +379,7 @@ msgstr "Aviseringar"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "One or more required fields are empty."
-msgstr ""
+msgstr "Ett eller flera obligatoriska fält är tomma."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__report_template
@@ -393,18 +393,21 @@ msgid ""
 "                Please modify the format of the template or update your settings\n"
 "                to automatically add a blank cover page to all letters."
 msgstr ""
+"Vår tjänst kan inte läsa ditt brev på grund av dess format.<br/>\n"
+"                Ändra formatet på mallen eller uppdatera dina inställningar\n"
+"                för att automatiskt lägga till ett tomt försättsblad i alla brev."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__partner_id
 msgid "Partner"
-msgstr "Partner"
+msgstr "Kontakt"
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Please use an A4 Paper format."
-msgstr ""
+msgstr "Vänligen använd ett A4-papper."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
@@ -421,7 +424,7 @@ msgstr "Skriv ut i färg"
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #, python-format
 msgid "Re-send letter"
-msgstr ""
+msgstr "Skicka brevet på nytt"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -431,7 +434,7 @@ msgstr "Mottagare"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__reference
 msgid "Related Record"
-msgstr ""
+msgstr "Relaterad post"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_actions_report
@@ -461,7 +464,7 @@ msgstr "Skickad av"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Snail Mails are successfully sent"
-msgstr ""
+msgstr "Snail Mails skickas framgångsrikt"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_message__message_type__snailmail
@@ -472,79 +475,79 @@ msgstr "Snailmail"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
 msgid "Snailmail Color"
-msgstr ""
+msgstr "Snailmail färg"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
 msgid "Snailmail Credit Error"
-msgstr ""
+msgstr "Snailmail kreditfel"
 
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/messaging_menu/messaging_menu_patch.js:0
 #, python-format
 msgid "Snailmail Failures"
-msgstr ""
+msgstr "Misslyckanden med snigelpost"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_format
 msgid "Snailmail Format Error"
-msgstr ""
+msgstr "Snailmail Format Error"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__letter_id
 msgid "Snailmail Letter"
-msgstr ""
+msgstr "Brev med snigelpost"
 
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.action_mail_letters
 #: model:ir.ui.menu,name:snailmail.menu_snailmail_letters
 msgid "Snailmail Letters"
-msgstr ""
+msgstr "Brev från snigelpost"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_fields
 msgid "Snailmail Missing Required Fields"
-msgstr ""
+msgstr "Snailmail saknar obligatoriska fält"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_price
 msgid "Snailmail No Price Available"
-msgstr ""
+msgstr "Snailmail Inget pris tillgängligt"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__message_id
 msgid "Snailmail Status Message"
-msgstr ""
+msgstr "Snailmail statusmeddelande"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_trial
 msgid "Snailmail Trial Error"
-msgstr ""
+msgstr "Snailmail Försök Fel"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_error
 msgid "Snailmail Unknown Error"
-msgstr ""
+msgstr "Okänt fel i Snailmail"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__snailmail_error
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__snailmail_error
 msgid "Snailmail message in error"
-msgstr ""
+msgstr "Snailmail-meddelande i fel"
 
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
 msgid "Snailmail: process letters queue"
-msgstr ""
+msgstr "Snailmail: bearbeta brev kö"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state_id
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__state_id
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "State"
-msgstr "Etapp"
+msgstr "Region"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
@@ -576,14 +579,14 @@ msgstr "Gata 2"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__trial_error
 msgid "TRIAL_ERROR"
-msgstr ""
+msgstr "TRIAL_ERROR"
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "The address of the recipient is not complete"
-msgstr ""
+msgstr "Mottagarens adress är inte fullständig"
 
 #. module: snailmail
 #. odoo-python
@@ -593,13 +596,15 @@ msgid ""
 "The attachment of the letter could not be sent. Please check its content and"
 " contact the support if the problem persists."
 msgstr ""
+"Bilagan till brevet kunde inte skickas. Kontrollera innehållet och kontakta "
+"supporten om problemet kvarstår."
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
-msgstr ""
+msgstr "Partnerns land omfattas inte av Snailmail."
 
 #. module: snailmail
 #. odoo-javascript
@@ -608,7 +613,7 @@ msgstr ""
 msgid ""
 "The country to which you want to send the letter is not supported by our "
 "service."
-msgstr ""
+msgstr "Det land som du vill skicka brevet till stöds inte av vår tjänst."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
@@ -616,13 +621,15 @@ msgid ""
 "The customer address is not complete. Update the address here and re-send "
 "the letter."
 msgstr ""
+"Kundens adress är inte fullständig. Uppdatera adressen här och skicka brevet"
+" på nytt."
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "The document was correctly sent by post.<br>The tracking id is %s"
-msgstr ""
+msgstr "Dokumentet skickades korrekt med post.<br> Spårningsnumret är %s"
 
 #. module: snailmail
 #. odoo-javascript
@@ -632,6 +639,8 @@ msgid ""
 "The letter could not be sent due to insufficient credits on your IAP "
 "account."
 msgstr ""
+"Brevet kunde inte skickas på grund av otillräckliga krediter på ditt IAP-"
+"konto."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
@@ -642,22 +651,22 @@ msgstr "Typ"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__unknown_error
 msgid "UNKNOWN_ERROR"
-msgstr ""
+msgstr "OKÄNT FEL (UNKNOWN_ERROR)"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid "Update Config and Re-send"
-msgstr ""
+msgstr "Uppdatera konfiguration och skicka på nytt"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "Update address and re-send"
-msgstr ""
+msgstr "Uppdatera adress och skicka på nytt"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter_missing_required_fields
 msgid "Update address of partner"
-msgstr ""
+msgstr "Uppdatering av adress till partner"
 
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
@@ -671,6 +680,13 @@ msgid ""
 "'auto_comment': generated by automated notification mechanism e.g. acknowledgment\n"
 "'user_notification': generated for a specific recipient"
 msgstr ""
+"Används för att kategorisera meddelandegeneratorn\n"
+"'email': genereras av ett inkommande e-postmeddelande, t.ex. mailgateway\n"
+"'comment': genereras av användarens input, t.ex. genom discuss eller composer\n"
+"'email_outgoing': genereras av ett utskick\n"
+"'notification': genereras av systemet, t.ex. spårningsmeddelanden\n"
+"\"auto_comment\": genereras av en automatiserad meddelandemekanism, t.ex. bekräftelse\n"
+"'user_notification': genereras för en specifik mottagare"
 
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
@@ -679,6 +695,9 @@ msgid ""
 "If the letter is correctly sent, the status goes in 'Sent',\n"
 "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
 msgstr ""
+"När ett brev skapas är statusen \"Pending\".\n"
+"Om brevet skickas på rätt sätt får det statusen \"Skickat\",\n"
+"Om så inte är fallet blir statusen \"Error\" och felmeddelandet visas i fältet \"Error Message\"."
 
 #. module: snailmail
 #. odoo-python
@@ -688,6 +707,9 @@ msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
+"Du har inget IAP-konto registrerat för denna tjänst.<br> Vänligen gå till <a"
+" href=%s target=\"new\">iap.odoo.com</a> för att ta del av dina fria "
+"krediter."
 
 #. module: snailmail
 #. odoo-python
@@ -697,13 +719,15 @@ msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
 msgstr ""
+"Du har inte tillräckligt med krediter för att utföra denna "
+"åtgärden.<br>Vänligen gå till <a href=%s target=\"new\">iap kontot</a>."
 
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #, python-format
 msgid "You need credits on your IAP account to send a letter."
-msgstr ""
+msgstr "Du behöver krediter på ditt IAP-konto för att skicka ett brev."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
@@ -721,11 +745,11 @@ msgstr "Postnummer"
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #, python-format
 msgid "for further assistance."
-msgstr ""
+msgstr "för ytterligare hjälp."
 
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #, python-format
 msgid "support"
-msgstr ""
+msgstr "stöd"

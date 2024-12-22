@@ -1,7 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+import base64
+
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+
+from odoo.addons.sale_pdf_quote_builder import utils
 
 
 class ProductDocument(models.Model):
@@ -16,15 +20,17 @@ class ProductDocument(models.Model):
              "Confirmed order: the document will be sent to and accessible by customers.\n"
              "e.g. this option can be useful to share User Manual or digital content bought"
              " on ecommerce. \n"
-             "Inside quote: The document will be included in the pdf of the quotation between the "
-             "header pages and the quote table. ",
+             "Inside quote: The document will be included in the pdf of the quotation \n"
+             "and sale order between the header pages and the quote table. ",
     )
 
-    def write(self, vals):
-        res = super().write(vals)
-        if vals.keys() & {'attached_on', 'mimetype'}:
-            if any(
-                doc.attached_on == 'inside' and not doc.mimetype.endswith('pdf') for doc in self
-            ):
+    @api.constrains('attached_on', 'datas', 'type')
+    def _check_attached_on_and_datas_compatibility(self):
+        for doc in self.filtered(lambda doc: doc.attached_on == 'inside'):
+            if doc.type != 'binary':
+                raise ValidationError(_(
+                    "When attached inside a quote, the document must be a file, not a URL."
+                ))
+            if doc.datas and not doc.mimetype.endswith('pdf'):
                 raise ValidationError(_("Only PDF documents can be attached inside a quote."))
-        return res
+            utils._ensure_document_not_encrypted(base64.b64decode(doc.datas))

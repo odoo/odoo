@@ -27,44 +27,58 @@ export function batched(callback, synchronize = () => Promise.resolve()) {
  * which will postpone its execution until after 'delay' milliseconds
  * have elapsed since the last time it was invoked. The debounced function
  * will return a Promise that will be resolved when the function (func)
- * has been fully executed. If `immediate` is passed, trigger the function
- * on the leading edge, instead of the trailing.
+ * has been fully executed.
+ *
+ * If both `options.trailing` and `options.leading` are true, the function
+ * will only be invoked at the trailing edge if the debounced function was
+ * called at least once more during the wait time.
  *
  * @template {Function} T the return type of the original function
  * @param {T} func the function to debounce
  * @param {number | "animationFrame"} delay how long should elapse before the function
  *      is called. If 'animationFrame' is given instead of a number, 'requestAnimationFrame'
  *      will be used instead of 'setTimeout'.
- * @param {boolean} [immediate=false] whether the function should be called on
- *      the leading edge instead of the trailing edge.
+ * @param {boolean} [options] if true, equivalent to exclusive leading. If false, equivalent to exclusive trailing.
+ * @param {object} [options]
+ * @param {boolean} [options.leading=false] whether the function should be invoked at the leading edge of the timeout
+ * @param {boolean} [options.trailing=true] whether the function should be invoked at the trailing edge of the timeout
  * @returns {T & { cancel: () => void }} the debounced function
  */
-export function debounce(func, delay, immediate = false) {
+export function debounce(func, delay, options) {
     let handle;
     const funcName = func.name ? func.name + " (debounce)" : "debounce";
     const useAnimationFrame = delay === "animationFrame";
     const setFnName = useAnimationFrame ? "requestAnimationFrame" : "setTimeout";
     const clearFnName = useAnimationFrame ? "cancelAnimationFrame" : "clearTimeout";
     let lastArgs;
+    let leading = false;
+    let trailing = true;
+    if (typeof options === "boolean") {
+        leading = options;
+        trailing = !options;
+    } else if (options) {
+        leading = options.leading ?? leading;
+        trailing = options.trailing ?? trailing;
+    }
+
     return Object.assign(
         {
             /** @type {any} */
             [funcName](...args) {
-                lastArgs = args;
                 return new Promise((resolve) => {
-                    const callNow = immediate && !handle;
+                    if (leading && !handle) {
+                        Promise.resolve(func.apply(this, args)).then(resolve);
+                    } else {
+                        lastArgs = args;
+                    }
                     browser[clearFnName](handle);
                     handle = browser[setFnName](() => {
                         handle = null;
-                        if (!immediate) {
-                            lastArgs = undefined;
-                            Promise.resolve(func.apply(this, args)).then(resolve);
+                        if (trailing && lastArgs) {
+                            Promise.resolve(func.apply(this, lastArgs)).then(resolve);
+                            lastArgs = null;
                         }
                     }, delay);
-                    if (callNow) {
-                        lastArgs = undefined;
-                        Promise.resolve(func.apply(this, args)).then(resolve);
-                    }
                 });
             },
         }[funcName],
@@ -107,6 +121,9 @@ export function setRecurringAnimationFrame(callback) {
  * Creates a version of the function where only the last call between two
  * animation frames is executed before the browser's next repaint. This
  * effectively throttles the function to the display's refresh rate.
+ * Note that the throttled function can be any callback. It is not
+ * specifically an event handler, no assumption is made about its
+ * signature.
  * NB: The first call is always called immediately (leading edge).
  *
  * @template {Function} T

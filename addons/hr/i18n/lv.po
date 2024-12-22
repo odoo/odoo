@@ -8,18 +8,18 @@
 # Konstantins Zabogonskis <inculin4ik@gmail.com>, 2023
 # Anzelika Adejanova, 2023
 # Martin Trigaux, 2023
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
 # Arnis Putniņš <arnis@allegro.lv>, 2023
-# ievaputnina <ievai.putninai@gmail.com>, 2023
 # Will Sensors, 2024
+# ievaputnina <ievai.putninai@gmail.com>, 2024
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Will Sensors, 2024\n"
+"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -457,7 +457,7 @@ msgstr "Atļaut darbiniekiem atjaunināt savus datus."
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Application Settings"
-msgstr "Lietojumprogrammas iestatījumi"
+msgstr "Lietotnes iestatījumi"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -504,7 +504,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__responsible_type
 msgid "Assignment"
-msgstr ""
+msgstr "Uzdevums"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
@@ -987,6 +987,8 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
@@ -999,6 +1001,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+#, python-format
 msgid "Department"
 msgstr "Struktūrvienība"
 
@@ -1735,7 +1738,7 @@ msgstr "Amats"
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_view_hr_job
 msgid "Job Positions"
-msgstr "Pieejamie Amati"
+msgstr "Pieejamie amati"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1841,7 +1844,7 @@ msgstr "Likumīgais dzīvesbiedrs"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
-msgstr "Izveidojiet amatu"
+msgstr "Laiks izveidot darba pozīciju."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -2569,7 +2572,7 @@ msgstr "Reitingi"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Ready to recruit more efficiently?"
-msgstr "Vai esat gatavs efektīvākai personāla atlasei?"
+msgstr "Vai esat gatavi efektīvākai personāla atlasei?"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2757,8 +2760,8 @@ msgstr "Sekvence"
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Set default company schedule to manage your employees working time"
 msgstr ""
-"Norādiet kompānijas noklusējuma grafiku, lai pārvaldīt Jūsu darbinieku darba"
-" laiku"
+"Norādiet uzņēmuma noklusējuma grafiku, lai pārvaldīt Jūsu darbinieku darba "
+"laiku"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
@@ -2804,6 +2807,13 @@ msgstr "Sociālās apdrošināšanas Nr."
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Software Developer"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Some employee already have a work contact"
 msgstr ""
 
 #. module: hr
@@ -2895,7 +2905,7 @@ msgstr "Birkas nosaukums"
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_category_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Iezīmes nosaukums jau pastāv!"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__category_ids

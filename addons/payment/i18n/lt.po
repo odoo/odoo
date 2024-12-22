@@ -6,25 +6,27 @@
 # Arminas Grigonis <arminas@versada.lt>, 2023
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2023
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2023
-# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023
 # Aleksandr Jadov <a.jadov@tata.lt>, 2023
 # Arunas V. <arunas@devoro.com>, 2023
 # Vytautas Stanaitis <vytautas@basas.lt>, 2023
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2023
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2023
 # Donatas <donatasvaliulis16@gmail.com>, 2023
 # Linas Versada <linaskrisiukenas@gmail.com>, 2023
 # Silvija Butko <silvija.butko@gmail.com>, 2023
 # Jonas Zinkevicius <jozi@odoo.com>, 2023
 # Martin Trigaux, 2023
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2024
+# Aurelija Vitkauskiene, 2024
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024
+# Greta Šeštokė, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-14 13:53+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Greta Šeštokė, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -138,11 +140,6 @@ msgid ""
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.form
-msgid "<span>Your payment methods</span>"
-msgstr ""
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 msgid ""
@@ -183,7 +180,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> The currency is missing or incorrect."
-msgstr ""
+msgstr "<strong>Įspėjimas</strong> Trūksta valiutos arba ji yra neteisinga."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1047,7 +1044,7 @@ msgstr ""
 #. module: payment
 #: model:onboarding.onboarding.step,title:payment.onboarding_onboarding_step_payment_provider
 msgid "Online Payments"
-msgstr ""
+msgstr "Mokėjimai internetu"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
@@ -1153,7 +1150,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
 msgid "Payment Details"
-msgstr ""
+msgstr "Mokėjimo detalės"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1203,13 +1200,13 @@ msgstr "Mokėjimo būdai"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Mokėjimo paslaugos tiekėjas"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_provider
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_list
 msgid "Payment Providers"
-msgstr ""
+msgstr "Mokėjimo paslaugos tiekėjas"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1603,6 +1600,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Test Mode"
 msgstr "Testinis režimas"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Thank you!"
+msgstr "Ačiū!"
 
 #. module: payment
 #. odoo-python
@@ -2069,6 +2071,20 @@ msgid "Wire Transfer"
 msgstr "Mokėjimas bankiniu pavedimu"
 
 #. module: payment
+#: model:payment.provider,name:payment.payment_provider_xendit
+msgid "Xendit"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"You cannot change the company of a payment provider with existing "
+"transactions."
+msgstr ""
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
@@ -2117,6 +2133,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_stripe
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_transfer
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been authorized."
 msgstr "Jūsų mokėjimas buvo patvirtintas."
@@ -2139,6 +2156,7 @@ msgstr "Jūsų mokėjimas buvo patvirtintas."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_stripe
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_transfer
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been cancelled."
 msgstr "Jūsų mokėjimas buvo atšauktas."
@@ -2160,6 +2178,7 @@ msgstr "Jūsų mokėjimas buvo atšauktas."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_xendit
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
@@ -2183,13 +2202,19 @@ msgstr ""
 #: model_terms:payment.provider,done_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,done_msg:payment.payment_provider_stripe
 #: model_terms:payment.provider,done_msg:payment.payment_provider_transfer
+#: model_terms:payment.provider,done_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been successfully processed."
-msgstr ""
+msgstr "Jūsų mokėjimas sėkmingai apdorotas."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "Your payment has not been processed yet."
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Your payment methods"
 msgstr ""
 
 #. module: payment
@@ -2201,16 +2226,6 @@ msgstr "Pašto kodas"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
 msgstr "Pašto kodas"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "danger"
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "info"
-msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -2229,18 +2244,8 @@ msgid "provider"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "success"
-msgstr ""
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid ""
 "to make this\n"
 "                    payment."
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
 msgstr ""

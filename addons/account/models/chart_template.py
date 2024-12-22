@@ -14,10 +14,10 @@ from psycopg2.extras import Json
 
 from odoo import Command, _, models, api
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
-from odoo.addons.account import SYSCOHADA_LIST
 from odoo.exceptions import AccessError, UserError
-from odoo.tools import file_open, groupby
-from odoo.tools.translate import TranslationImporter
+from odoo.modules import get_resource_from_path
+from odoo.tools import file_open, float_compare, get_lang, groupby, SQL
+from odoo.tools.translate import code_translations, TranslationImporter
 
 _logger = logging.getLogger(__name__)
 
@@ -49,7 +49,15 @@ def template(template=None, model='template_data'):
                 # remove the template code argument as we already know it from the decorator
                 args, kwargs = args[:1], {}
             return func(*args, **kwargs)
-        return api.attrsetter('_l10n_template', (template, model))(wrapper)
+
+        # the module the function originates from is used for code translations
+        path = func.__globals__['__file__']
+        path_info = get_resource_from_path(path)
+        module = path_info[0] if path_info else 'account'
+
+        wrapper._module = module
+        wrapper._l10n_template = (template, model)
+        return wrapper
     return decorator
 
 
@@ -90,7 +98,7 @@ class AccountChartTemplate(models.AbstractModel):
         field = self.env['ir.module.module']._fields['account_templates']
         modules = (
             self.env.cache.get_records(self.env['ir.module.module'], field)
-            or self.env['ir.module.module'].search([])
+            or self.env['ir.module.module'].sudo().search([])
         )
 
         return {
@@ -108,7 +116,6 @@ class AccountChartTemplate(models.AbstractModel):
             (template_code, template['name'])
             for template_code, template in sorted(chart_template_mapping.items(), key=(lambda t: (
                 t[1]['name'] != 'generic_coa' if not country
-                else t[1]['name'] != 'syscohada' if country.code in SYSCOHADA_LIST
                 else t[1]['country_id'] != country.id
             )))
         ]
@@ -133,12 +140,17 @@ class AccountChartTemplate(models.AbstractModel):
             chart template.
         :type install_demo: bool
         """
+        if not self.env.registry.loaded and not install_demo:
+            _logger.warning('Incorrect usage of try_loading without a fully loaded registry. This could lead to issues.')
         if not company:
-            company = self.env.company
+            return
         if isinstance(company, int):
             company = self.env['res.company'].browse([company])
 
         template_code = template_code or company and self._guess_chart_template(company.country_id)
+
+        if template_code in {'syscohada', 'syscebnl'} and template_code != company.chart_template:
+            raise UserError(_("The %s chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country.", template_code))
 
         return self._load(template_code, company, install_demo)
 
@@ -155,18 +167,27 @@ class AccountChartTemplate(models.AbstractModel):
         if not self.env.is_system():
             raise AccessError(_("Only administrators can install chart templates"))
 
-        module_name = self._get_chart_template_mapping()[template_code].get('module')
+        chart_template_mapping = self._get_chart_template_mapping()[template_code]
+        if not company.country_id:
+            company.country_id = chart_template_mapping.get('country_id')
+
+        module_name = chart_template_mapping.get('module')
         module = self.env['ir.module.module'].search([('name', '=', module_name), ('state', '=', 'uninstalled')])
         if module:
             module.button_immediate_install()
             self.env.reset()  # clear the envs with an old registry
             self = self.env()['account.chart.template']  # create a new env with the new registry
 
+        # To be able to use code translation we load everything in 'en_US'
+        # The demo data is still loaded "normally" since code translations cannot be used for them reliably.
+        # (Since we rely on the "@template functions" to determine the module to take the code translations from.)
+        original_context_lang = self.env.context.get('lang')
         self = self.with_context(
             default_company_id=company.id,
             allowed_company_ids=[company.id],
             tracking_disable=True,
             delay_account_group_sync=True,
+            lang='en_US',
         )
         company = company.with_env(self.env)
 
@@ -190,25 +211,33 @@ class AccountChartTemplate(models.AbstractModel):
             install_demo = False
         data = self._pre_load_data(template_code, company, template_data, data)
         self._load_data(data)
-        self._load_translations(companies=company)
         self._post_load_data(template_code, company, template_data)
+        self._load_translations(companies=company)
 
         # Manual sync because disable above (delay_account_group_sync)
         AccountGroup = self.env['account.group'].with_context(delay_account_group_sync=False)
-        AccountGroup._adapt_accounts_for_account_groups(self.env['account.account'].search([]))
-        AccountGroup.search([])._adapt_parent_account_group()
+        AccountGroup._adapt_accounts_for_account_groups(company=company)
+        AccountGroup._adapt_parent_account_group(company=company)
 
         # Install the demo data when the first localization is instanciated on the company
         if install_demo and self.ref('base.module_account').demo and not reload_template:
             try:
                 with self.env.cr.savepoint():
-                    self.sudo()._load_data(self._get_demo_data(company))
-                    self._post_load_demo_data(company)
+                    self = self.with_context(lang=original_context_lang)
+                    self._install_demo(company.with_env(self.env))
             except Exception:
                 # Do not rollback installation of CoA if demo data failed
                 _logger.exception('Error while loading accounting demo data')
         for subsidiary in company.child_ids:
             self._load(template_code, subsidiary, install_demo)
+
+    @api.model
+    def _install_demo(self, companies):
+        if not isinstance(companies, models.BaseModel):
+            companies = self.env['res.company'].browse(companies)
+        for company in companies:
+            self.sudo()._load_data(self._get_demo_data(company))
+            self._post_load_demo_data(company)
 
     def _pre_reload_data(self, company, template_data, data):
         """Pre-process the data in case of reloading the chart of accounts.
@@ -228,17 +257,21 @@ class AccountChartTemplate(models.AbstractModel):
                 del data['account.journal'][xmlid]
             else:
                 journal = None
+                lang = self._get_untranslatable_fields_target_language(company.chart_template, company)
+                translated_code = self._get_field_translation(journal_data, 'code', lang)
                 if 'code' in journal_data:
+                    journal_code = translated_code or journal_data['code']
                     journal = self.env['account.journal'].with_context(active_test=False).search([
                         *self.env['account.journal']._check_company_domain(company),
-                        ('code', '=', journal_data['code']),
+                        ('code', '=', journal_code),
                     ])
                 # Try to match by journal name to avoid conflict in the unique constraint on the mail alias
+                translated_name = self._get_field_translation(journal_data, 'name', lang)
                 if not journal and 'name' in journal_data and 'type' in journal_data:
                     journal = self.env['account.journal'].with_context(active_test=False).search([
                         *self.env['account.journal']._check_company_domain(company),
                         ('type', '=', journal_data['type']),
-                        ('name', '=', journal_data['name']),
+                        ('name', 'in', (journal_data['name'], translated_name)),
                     ], limit=1)
                 if journal:
                     del data['account.journal'][xmlid]
@@ -259,17 +292,15 @@ class AccountChartTemplate(models.AbstractModel):
         unique_tax_name_keys = set(current_taxes.mapped(unique_tax_name_key))
         xmlid2tax = {
             xml_id.split('.')[1].split('_', maxsplit=1)[1]: self.env['account.tax'].browse(record)
-            for record, xml_id in current_taxes.get_external_id().items() if xml_id
+            for record, xml_id in current_taxes.get_external_id().items() if xml_id.startswith('account.')
         }
         def tax_template_changed(tax, template):
+            template_line_ids = [x for x in template.get('repartition_line_ids', []) if x[0] != Command.CLEAR]
             return (
                 tax.amount_type != template.get('amount_type', 'percent')
-                or tax.amount != template.get('amount', 0)
-                or (
-                    len(tax.repartition_line_ids) != len(template.get('repartition_line_ids', []))
-                    # Taxes that don't have repartition lines in their templates get theirs created by default
-                    and len(template.get('repartition_line_ids', [])) != 0
-                )
+                or float_compare(tax.amount, template.get('amount', 0), precision_digits=4) != 0
+                # Taxes that don't have repartition lines in their templates get theirs created by default
+                or len(template_line_ids) not in (0, len(tax.repartition_line_ids))
             )
 
         obsolete_xmlid = set()
@@ -278,17 +309,18 @@ class AccountChartTemplate(models.AbstractModel):
             for xmlid, values in records.items():
                 if model_name == 'account.fiscal.position':
                     # Only add tax mappings containing new taxes
-                    values['tax_ids'] = [
-                        (command, id, vals)
-                        for command, id, vals in values.get('tax_ids', [])
-                        if (
-                            command not in (Command.UPDATE, Command.CREATE)
-                            or not self.ref(vals['tax_src_id'], raise_if_not_found=False)
-                            or (vals.get('tax_dest_id') and not self.ref(vals['tax_dest_id'], raise_if_not_found=False))
-                        )
-                    ]
-                    if not values['tax_ids']:
-                        del values['tax_ids']
+                    if old_tax_ids := values.pop('tax_ids', []):
+                        new_tax_ids = []
+                        for element in old_tax_ids:
+                            match element:
+                                case Command.CREATE, _, {'tax_src_id': src_id, 'tax_dest_id': dest_id} if (
+                                    not self.ref(src_id, raise_if_not_found=False)
+                                    or (dest_id and not self.ref(dest_id, raise_if_not_found=False))
+                                ):
+                                    new_tax_ids.append(element)
+                        if new_tax_ids:
+                            values['tax_ids'] = new_tax_ids
+
                 elif model_name == 'account.tax':
                     # Only update the tags of existing taxes
                     if xmlid not in xmlid2tax or tax_template_changed(xmlid2tax[xmlid], values):
@@ -297,17 +329,28 @@ class AccountChartTemplate(models.AbstractModel):
                         if xmlid in xmlid2tax:
                             obsolete_xmlid.add(xmlid)
                             oldtax = xmlid2tax[xmlid]
-                            if unique_tax_name_key(oldtax) in unique_tax_name_keys:
-                                oldtax.name = f"[old] {oldtax.name}"
+                        else:
+                            oldtax = current_taxes.filtered(
+                                lambda t: t.name == values.get('name')\
+                                      and t.type_tax_use == values.get('type_tax_use')\
+                                      and t.tax_scope == values.get('tax_scope', False)
+                            )
+                        uniq_key = unique_tax_name_key(oldtax[0] if len(oldtax) > 1 else oldtax)
+                        matching_names = len(list(filter(lambda t: re.match(fr"^(?:\[old\d*\] |){uniq_key[0]}$", t[0]) and t[1:] == uniq_key[1:], unique_tax_name_keys)))
+                        for index, tax_to_rename in enumerate(oldtax):
+                            rename_idx = index + matching_names
+                            if rename_idx:
+                                tax_to_rename.name = f"[old{rename_idx - 1 if rename_idx > 1 else ''}] {tax_to_rename.name}"
                     else:
                         repartition_lines = values.get('repartition_line_ids')
                         values.clear()
                         if repartition_lines:
                             values['repartition_line_ids'] = repartition_lines
-                            for _c, _id, repartition_line in values.get('repartition_line_ids', []):
-                                tags = repartition_line.get('tag_ids')
-                                repartition_line.clear()
-                                repartition_line['tag_ids'] = tags or [Command.clear()]
+                            for element in values.get('repartition_line_ids', []):
+                                match element:
+                                    case int() as command, _, {'tag_ids': tags} as repartition_line_values if command in tuple(Command):
+                                        repartition_line_values.clear()
+                                        repartition_line_values['tag_ids'] = tags or [Command.clear()]
                 elif model_name == 'account.account':
                     # Point or create xmlid to existing record to avoid duplicate code
                     account = self.ref(xmlid, raise_if_not_found=False)
@@ -316,14 +359,17 @@ class AccountChartTemplate(models.AbstractModel):
                         query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
                         query.add_where("account_account.code SIMILAR TO %s", [f'{values["code"]}0*'])
                         accounts = self.env['account.account'].browse(query)
-                        account = accounts.sorted(key=lambda x: x.code != normalized_code)[0] if accounts else None
-                        if account:
+                        existing_account = accounts.sorted(key=lambda x: x.code != normalized_code)[0] if accounts else None
+                        if existing_account:
                             self.env['ir.model.data']._update_xmlids([{
                                 'xml_id': f"account.{company.id}_{xmlid}",
-                                'record': account,
+                                'record': existing_account,
                                 'noupdate': True,
                             }])
+                            account = existing_account
 
+                    # Prevents overriding user setting & raising a partial reconcile error.
+                    values.pop('reconcile', None)
                     # on existing accounts, only tag_ids are to be updated using default data
                     if account and 'tag_ids' in data[model_name][xmlid]:
                         data[model_name][xmlid] = {'tag_ids': data[model_name][xmlid]['tag_ids']}
@@ -354,7 +400,10 @@ class AccountChartTemplate(models.AbstractModel):
                     and isinstance(values[fname], (list, tuple))
                 ]
                 if x2manyfields:
-                    rec = self.ref(xmlid, raise_if_not_found=False)
+                    if isinstance(xmlid, int):
+                        rec = self.env[model_name].browse(xmlid).exists()
+                    else:
+                        rec = self.ref(xmlid, raise_if_not_found=False)
                     if rec:
                         for fname in x2manyfields:
                             for i, (line, (command, _id, vals)) in enumerate(zip(rec[fname], values[fname])):
@@ -390,6 +439,9 @@ class AccountChartTemplate(models.AbstractModel):
         if not company.country_id:
             vals['country_id'] = fiscal_country.id
 
+        # Ensure that we write on 'anglo_saxon_accounting' when changing to a CoA that relies on the default of `False`.
+        vals.setdefault('anglo_saxon_accounting', False)
+
         # This write method is important because it's overridden and has additional triggers
         # e.g it activates the currency
         company.write(vals)
@@ -411,6 +463,21 @@ class AccountChartTemplate(models.AbstractModel):
                 if fname not in company._fields:
                     del data['res.company'][company.id][fname]
 
+        # Translate the untranslatable fields we want to translate anyway
+        untranslatable_model_fields = self._get_untranslatable_fields_to_translate()
+        untranslatable_target_lang = self._get_untranslatable_fields_target_language(template_code, company)
+        for model_name, records in data.items():
+            untranslatable_fields = untranslatable_model_fields.get(model_name, [])
+            if not untranslatable_fields:
+                continue
+            for _xmlid, record in records.items():
+                for field in untranslatable_fields:
+                    if field not in record:
+                        continue
+                    translation = self._get_field_translation(record, field, untranslatable_target_lang)
+                    if translation:
+                        record[field] = translation
+
         return data
 
     def _load_data(self, data):
@@ -424,8 +491,8 @@ class AccountChartTemplate(models.AbstractModel):
                      of accounts. It is a mapping {model: {xml_id: values}}.
         :type data: dict[str, dict[(str, int), dict]]
         """
-        def deref(values, model):
-            """Replace xml_id references by database ids.
+        def deref_values(values, model):
+            """Replace xml_id references by database ids in all provided values.
 
             This allows to define all the data before the records even exist in the database.
             """
@@ -439,16 +506,24 @@ class AccountChartTemplate(models.AbstractModel):
                 ):
                     try:
                         values[fname] = self.ref(value).id if value not in ('', 'False', 'None') else False
-                    except ValueError as e:
-                        _logger.warning("Failed when trying to recover %s for field=%s", value, field)
-                        raise e
+                    except ValueError:
+                        if model != self.env['res.company']:
+                            _logger.warning("Failed when trying to recover %s for field=%s", value, field)
+                            raise
+
+                        # We can't find the record referenced in the chart template in our database.
+                        # This might happen when we're creating a branch and the parent company has deleted the
+                        # referenced record and replaced it with something else.
+                        #
+                        # In this case, we try looking for the record already set on the company or its root.
+                        values[fname] = self.env.company[fname] or self.env.company.parent_ids[0][fname] or False
                 elif field.type in ('one2many', 'many2many') and isinstance(value[0], (list, tuple)):
                     for i, (command, _id, *last_part) in enumerate(value):
                         if last_part:
                             last_part = last_part[0]
                         # (0, 0, {'test': 'account.ref_name'}) -> Command.Create({'test': 13})
                         if command in (Command.CREATE, Command.UPDATE):
-                            deref(last_part, self.env[field.comodel_name])
+                            deref_values(last_part, self.env[field.comodel_name])
                         # (6, 0, ['account.ref_name']) -> Command.Set([13])
                         elif command == Command.SET:
                             for subvalue_idx, subvalue in enumerate(last_part):
@@ -464,33 +539,49 @@ class AccountChartTemplate(models.AbstractModel):
                     ])]
             return values
 
-        def defer(all_data):
+        def delay(all_data):
             """Defer writing some relations if the related records don't exist yet."""
+
+            def should_delay(created_models, yet_to_be_created_models, model, field_name, field_val, parent_models=None):
+                parent_models = (parent_models or []) + [model]
+                field = self.env[model]._fields.get(field_name)
+                if not field or not field.relational or field.comodel_name in created_models:
+                    return False
+                field_yet_to_be_created = field.comodel_name in parent_models + yet_to_be_created_models
+                if not isinstance(field_val, list | tuple):
+                    return field_yet_to_be_created
+                # Check recursively if there are subfields that should be delayed
+                for element in field_val:
+                    match element:
+                        case Command.CREATE, _, dict() as values:
+                            for subkey, subvalue in values.items():
+                                if should_delay(created_models, yet_to_be_created_models, field.comodel_name, subkey, subvalue, parent_models):
+                                    return True
+                        case int() as command, *_ if command in tuple(Command):
+                            if field_yet_to_be_created:
+                                return True
+                return False
+
             created_models = set()
             while all_data:
                 (model, data), *all_data = all_data
+                yet_to_be_created_models = [model for model, _data in all_data]
                 to_delay = defaultdict(dict)
                 for xml_id, vals in data.items():
                     to_be_removed = []
                     for field_name, field_val in vals.items():
-                        field = self.env[model]._fields.get(field_name, None)
-                        if (
-                            field
-                            and field.relational
-                            and field_val
-                            and (  # allow create commands but delay all other related fields
-                                not isinstance(field_val, (list, tuple))
-                                or (
-                                    isinstance(field_val[0], (list, tuple))
-                                    and {command for command, *dummy in field_val} != {Command.CREATE}
+                        if should_delay(created_models, yet_to_be_created_models, model, field_name, field_val):
+                            # Default repartition lines will be created when we create account.tax
+                            # If we delay the creation of repartition_line_ids, then we must get rid of the defaults
+                            if (
+                                model == 'account.tax' and 'repartition_line_ids' in field_name
+                                and not self.ref(xml_id, raise_if_not_found=False)
+                                and all(
+                                    isinstance(x, tuple | list) and len(x)
+                                    and isinstance(x[0], Command | int) for x in field_val
                                 )
-                            )
-                            and field.comodel_name not in created_models
-                            and (
-                                field.comodel_name in dict(all_data)
-                                or field.comodel_name == model
-                            )
-                        ):
+                            ):
+                                field_val = [Command.clear()] + field_val
                             to_be_removed.append(field_name)
                             to_delay[xml_id][field_name] = field_val
                     for field_name in to_be_removed:
@@ -500,29 +591,29 @@ class AccountChartTemplate(models.AbstractModel):
                 yield model, data
                 created_models.add(model)
 
-        created_vals = {}
-        for model, data in defer(list(deepcopy(data).items())):
-            create_vals = []
-            for xml_id, record in data.items():
+        created_records = {}
+        for model, model_data in delay(list(deepcopy(data).items())):
+            all_records_vals = []
+            for xml_id, record_vals in model_data.items():
                 # Extract the translations from the values
-                for key in list(record):
-                    if '@' in key:
-                        del record[key]
+                for key in list(record_vals):
+                    if '@' in key or key == '__translation_module__':
+                        del record_vals[key]
 
                 # Manage ids given as database id or xml_id
                 if isinstance(xml_id, int):
-                    record['id'] = xml_id
+                    record_vals['id'] = xml_id
                     xml_id = False
                 else:
                     xml_id = f"{('account.' + str(self.env.company.id) + '_') if '.' not in xml_id else ''}{xml_id}"
 
-                create_vals.append({
+                all_records_vals.append({
                     'xml_id': xml_id,
-                    'values': deref(record, self.env[model]),
+                    'values': deref_values(record_vals, self.env[model]),
                     'noupdate': True,
                 })
-            created_vals[model] = self.with_context(lang='en_US').env[model]._load_records(create_vals)
-        return created_vals
+            created_records[model] = self.with_context(lang='en_US').env[model]._load_records(all_records_vals)
+        return created_records
 
     def _post_load_data(self, template_code, company, template_data):
         company = (company or self.env.company)
@@ -542,9 +633,9 @@ class AccountChartTemplate(models.AbstractModel):
 
         # Set newly created journals as defaults for the company
         if not company.tax_cash_basis_journal_id:
-            company.tax_cash_basis_journal_id = self.ref('caba')
+            company.tax_cash_basis_journal_id = self.ref('caba', raise_if_not_found=False)
         if not company.currency_exchange_journal_id:
-            company.currency_exchange_journal_id = self.ref('exch')
+            company.currency_exchange_journal_id = self.ref('exch', raise_if_not_found=False)
 
         # Setup default Income/Expense Accounts on Sale/Purchase journals
         sale_journal = self.ref("sale", raise_if_not_found=False)
@@ -563,6 +654,20 @@ class AccountChartTemplate(models.AbstractModel):
             company.account_purchase_tax_id = self.env['account.tax'].search([
                 *self.env['account.tax']._check_company_domain(company),
                 ('type_tax_use', 'in', ('purchase', 'all'))], limit=1).id
+        # Set default taxes on products (only on products having already a tax set in another company, as some flows require no tax at all (e.g TIPS in PoS))
+        # We need to browse the product in sudo to check for the taxes_id and supplier_taxes_id fields regardless of the companies record rules
+        # that would, otherwise, just look empty all the time for the current user/company
+        sudoed_products = self.env['product.template'].sudo().search(self.env['product.template']._check_company_domain(company))
+
+        if company.account_sale_tax_id:
+            sudoed_products_sale = sudoed_products.filtered(
+                lambda p: p.taxes_id and not p.taxes_id.filtered_domain(p.taxes_id._check_company_domain(company)))
+            sudoed_products_sale._force_default_sale_tax(company)
+        if company.account_purchase_tax_id:
+            sudoed_products_purchase = sudoed_products.filtered(
+                lambda p: p.supplier_taxes_id and not p.supplier_taxes_id.filtered_domain(p.taxes_id._check_company_domain(company)))
+            sudoed_products_purchase._force_default_purchase_tax(company)
+
         # Display caba fields if there are caba taxes
         if not company.parent_id and self.env['account.tax'].search([('tax_exigibility', '=', 'on_payment')]):
             company.tax_exigibility = True
@@ -582,11 +687,15 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_chart_template_data(self, template_code):
         template_data = defaultdict(lambda: defaultdict(dict))
         template_data['res.company']  # ensure it's the first property when iterating
+        translatable_model_fields = self._get_translatable_template_model_fields()
+        untranslatable_model_fields = self._get_untranslatable_fields_to_translate()
         for code in [None] + self._get_parent_template(template_code):
             for model, funcs in sorted(
                 self._template_register[code].items(),
                 key=lambda i: TEMPLATE_MODELS.index(i[0]) if i[0] in TEMPLATE_MODELS else 1000
             ):
+                translatable_fields = translatable_model_fields.get(model, [])
+                untranslatable_fields = untranslatable_model_fields.get(model, [])
                 for func in funcs:
                     data = func(self, template_code)
                     if data is not None:
@@ -594,6 +703,13 @@ class AccountChartTemplate(models.AbstractModel):
                             template_data[model].update(data)
                         else:
                             for xmlid, record in data.items():
+                                # Store information about which module each field value originates from (for code translations).
+                                # The final value of different fields may be determined by different functions.
+                                # The last function to modify the record may not modify all or any of the translatable fields.
+                                for field in translatable_fields + untranslatable_fields:
+                                    if field in record:
+                                        record.setdefault('__translation_module__', {})[field] = func._module
+
                                 template_data[model][xmlid].update(record)
         return template_data
 
@@ -669,7 +785,14 @@ class AccountChartTemplate(models.AbstractModel):
             for company_attr_name in accounts_data:
                 company[company_attr_name] = company.parent_ids[0][company_attr_name]
         else:
-            accounts = self.env['account.account'].create(accounts_data.values())
+            accounts = self.env['account.account']._load_records([
+                {
+                    'xml_id': f"account.{company.id}_{xml_id}",
+                    'values': values,
+                    'noupdate': True,
+                }
+                for xml_id, values in accounts_data.items()
+            ])
             for company_attr_name, account in zip(accounts_data.keys(), accounts):
                 company[company_attr_name] = account
 
@@ -960,7 +1083,7 @@ class AccountChartTemplate(models.AbstractModel):
         return parents
 
     def _get_tag_mapper(self, template_code):
-        tags = {x.name: x.id for x in self.env['account.account.tag'].with_context(active_test=False).search([
+        tags = {x.name: x.id for x in self.env['account.account.tag'].with_context(active_test=False, lang='en_US').search([
             ('applicability', '=', 'taxes'),
             ('country_id', '=', self._get_chart_template_mapping()[template_code]['country_id']),
         ])}
@@ -982,13 +1105,12 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _deref_account_tags(self, template_code, tax_data):
         mapper = self._get_tag_mapper(template_code)
-        for tax in tax_data.values():
-            for fname in ('invoice_repartition_line_ids', 'refund_repartition_line_ids', 'repartition_line_ids'):
-                if tax.get(fname):
-                    for _command, _id, repartition in tax[fname]:
-                        tags = repartition.get('tag_ids')
-                        if isinstance(tags, str):
-                            repartition['tag_ids'] = [Command.set(mapper(*tags.split(TAX_TAG_DELIMITER)))]
+        for tax_values in tax_data.values():
+            for field_name in ('repartition_line_ids', 'invoice_repartition_line_ids', 'refund_repartition_line_ids'):
+                for element in tax_values.get(field_name, []):
+                    match element:
+                        case int() as command, _, {'tag_ids': str() as tags} as values if command in tuple(Command):
+                            values['tag_ids'] = [Command.set(mapper(*tags.split(TAX_TAG_DELIMITER)))]
 
     def _parse_csv(self, template_code, model, module=None):
         Model = self.env[model]
@@ -998,6 +1120,20 @@ class AccountChartTemplate(models.AbstractModel):
             module = self._get_chart_template_mapping().get(template_code)['module']
         assert re.fullmatch(r"[a-z0-9_]+", module)
 
+        def evaluate(key, value, model_fields):
+            if not value:
+                return value
+            if '@' in key:
+                return value
+            if '/' in key:
+                return []
+            if model_fields:
+                if model_fields[key].type in ('boolean', 'int', 'float'):
+                    return ast.literal_eval(value)
+                if model_fields[key].type == 'char':
+                    return value.strip()
+            return value
+
         res = {}
         for template in self._get_parent_template(template_code)[::-1] or ['']:
             try:
@@ -1006,32 +1142,152 @@ class AccountChartTemplate(models.AbstractModel):
                         if row['id']:
                             last_id = row['id']
                             res[row['id']] = {
-                                key.split('/')[0]: (
-                                    value if '@' in key
-                                    else [] if '/' in key
-                                    else (value and ast.literal_eval(value) or False) if model_fields[key].type in ('boolean', 'int', 'float')
-                                    else value
-                                )
+                                key.split('/')[0]: evaluate(key, value, model_fields)
                                 for key, value in row.items()
-                                if key != 'id' and value != "" and ('@' in key or '/' in key or key in model_fields)
+                                if key != 'id' and value and ('@' in key or key in model_fields)
                             }
                         create_added = set()
                         for key, value in row.items():
                             if '/' in key and value:
-                                sub = [Command.create(res[last_id])]
-                                path = key.split('/')
-                                for p in path[:-1]:
-                                    if p not in create_added:
-                                        create_added.add(p)
-                                        sub[-1][2].setdefault(p, [])
-                                        sub[-1][2][p].append(Command.create({}))
-                                    sub = sub[-1][2][p]
-                                sub[-1][2][path[-1]] = value
+                                CurrentModel = Model
+                                sub = res[last_id]
+                                *model_path, fname = key.split('/')
+                                path_str = "/".join(model_path)
+                                for path_component in model_path:
+                                    if path_str not in create_added:
+                                        create_added.add(path_str)
+                                        sub.setdefault(path_component, [])
+                                        sub[path_component].append(Command.create({}))
+                                    sub = sub[path_component][-1][2]
+                                    CurrentModel = self.env[CurrentModel[path_component]._name]
+                                sub[fname] = evaluate(fname, value, CurrentModel._fields)
+
             except FileNotFoundError:
                 _logger.debug("No file %s found for template '%s'", model, module)
         return res
 
-    def _load_translations(self, langs=None, companies=None):
+    def _get_untranslatable_fields_target_language(self, template_code, company):
+        """Return the code of the language we want to translate the untranslatable fields into.
+        """
+        # Note: In case this function is called during module installation
+        #   * The active user is the super user.
+        #   * There is no 'lang' in the context.
+        return company.partner_id.lang or get_lang(self.env).code
+
+    def _get_untranslatable_fields_to_translate(self):
+        """Return information about the untranslatable fields we want to translate anyway.
+
+        :param langs: The codes of the languages into which we want to translate the records.
+        :type langs: list[str]
+        :param companies: Records belonging to these companies will be considered.
+        :type companies: Model<res.company>
+        :return: Dictionary (model -> list of fields) where the list of fields contains
+                 all the untranslatable fields of the model we want to translate anyway
+        :rtype: dict[str, list[str]]
+        """
+        return {
+            'account.journal': [
+                'code',
+            ],
+        }
+
+    def _get_translatable_template_model_fields(self):
+        return {
+            model: [fieldname for (fieldname, field) in self.env[model]._fields.items() if field.translate]
+            for model in TEMPLATE_MODELS
+        }
+
+    def _get_untranslated_translatable_template_model_records(self, langs, companies):
+        """Return information about the records of any model in TEMPLATE_MODELS (and belonging to companies) that need to be translated.
+        Records are in need of translation if they have a translatable field which is missing a translation (into any of the languages given in langs).
+
+        :param langs: The codes of the languages into which we want to translate the records.
+        :type langs: list[str]
+        :param companies: Records belonging to these companies will be considered.
+        :type companies: Model<res.company>
+        :return: The records which information will be returned are those records that have at least 1 untranslated translatable field.
+                 A field is 'untranslated' if it does not have a translation for all languages in langs.
+                 The returned value is a List of tuples:
+                     (model, xmlid (without module prefix), module, dictionary from name to value for each translatable field)
+        :rtype: list[tuple(str, str, str, dict[str, str])]
+        """
+        if not langs or not companies:
+            return []
+
+        company_ids = tuple(companies.ids)
+
+        translatable_model_fields = self._get_translatable_template_model_fields()
+
+        # Generate a list of queries; exactly 1 per model
+        queries = []
+        for model in TEMPLATE_MODELS:
+            translatable_fields = translatable_model_fields[model]
+            if not translatable_fields:
+                continue
+
+            self.env[model].flush_model(['id', 'company_id'] + translatable_model_fields[model])
+
+            # We only want records that have at least 1 missing translation in any of its translatable fields
+            missing_translation_clauses = [
+                SQL("(%s ->> %s) IS NULL", SQL.identifier('model', field), lang)
+                for field in translatable_fields
+                for lang in langs
+            ]
+
+            translatable_field_column_args = []
+            for field in translatable_fields:
+                translatable_field_column_args.extend((SQL("%s", field), SQL.identifier('model', field)))
+
+            queries.append(SQL(
+                """
+                 SELECT %(model)s AS model,
+                        model_data.name AS xmlid,
+                        model_data.module AS module,
+                        json_build_object(%(translatable_field_column_args)s) AS fields
+                   FROM %(table)s model
+                   JOIN ir_model_data model_data ON model_data.model = %(model)s
+                                                AND model.id = model_data.res_id
+                  WHERE (%(missing_translation_clauses)s)
+                    AND model.company_id IN %(company_ids)s
+                """,
+                model=model,
+                translatable_field_column_args=SQL(", ").join(translatable_field_column_args),
+                table=SQL.identifier(self.env[model]._table),
+                company_ids=company_ids,
+                missing_translation_clauses=SQL(" OR ").join(missing_translation_clauses),
+            ))
+
+        query = (SQL(' UNION ALL ').join(queries))
+        # the queried models have been flushed already as part of the loop building the queries per model
+        self.env['ir.model.data'].flush_model(['res_id', 'model', 'name'])
+
+        self._cr.execute(query)
+        return self._cr.fetchall()
+
+    def _get_field_translation(self, record, fname, lang):
+        """Return the value for language lang for field with fname from record (or None if none exists).
+
+        :param record: record formatted like in the template data (generated by _get_chart_template_data)
+        :type record: dict
+        :param fname: the name of a field (in record) as string
+        :type str
+        :param lang: the code of a res.lang
+        :type str
+        :return record[fname] translated into lang (or None)
+        :rtype str
+        """
+        generic_lang = lang.split('_')[0]  # manage generic locale (i.e. `fr` instead of `fr_BE`)
+        translation_module = record.get('__translation_module__', {}).get(fname, 'account')
+        translation = record.get(f"{fname}@{lang}") or record.get(f"{fname}@{generic_lang}")
+        if translation or fname not in record:
+            return translation
+        else:
+            return (
+                code_translations.get_python_translations(translation_module, lang).get(record[fname])
+                or code_translations.get_python_translations(translation_module, generic_lang).get(record[fname])
+            )
+
+    def _load_translations(self, langs=None, companies=None, template_data=None):
         """Load the translations of the chart template.
 
         :param langs: the lang code to load the translations for. If one of the codes is not present,
@@ -1045,19 +1301,43 @@ class AccountChartTemplate(models.AbstractModel):
         companies = companies or self.env['res.company'].search([('chart_template', 'in', available_template_codes)])
 
         translation_importer = TranslationImporter(self.env.cr, verbose=False)
+
+        # Gather translations for records that are created from the chart_template data
         for chart_template, chart_companies in groupby(companies, lambda c: c.chart_template):
-            template_data = self.env['account.chart.template']._get_chart_template_data(chart_template)
+            template_data = template_data or self.env['account.chart.template']._get_chart_template_data(chart_template)
             template_data.pop('template_data', None)
             for mname, data in template_data.items():
                 for _xml_id, record in data.items():
-                    fnames = {fname.split('@')[0] for fname in record}
+                    fnames = {fname.split('@')[0] for fname in record if fname != '__translation_module__'}
                     for lang in langs:
                         for fname in fnames:
-                            value = record.get(f"{fname}@{lang}")
-                            if not value:  # manage generic locale (i.e. `fr` instead of `fr_BE`)
-                                value = record.get(f"{fname}@{lang.split('_')[0]}")
-                            if value:
+                            field = self.env[mname]._fields.get(fname)
+                            if not field or not field.translate:
+                                continue
+                            field_translation = self._get_field_translation(record, fname, lang)
+                            if field_translation:
                                 for company in chart_companies:
-                                    xml_id = f"account.{company.id}_{_xml_id}"
-                                    translation_importer.model_translations[mname][fname][xml_id][lang] = value
+                                    xml_id = _xml_id if '.' in _xml_id else f"account.{company.id}_{_xml_id}"
+                                    translation_importer.model_translations[mname][fname][xml_id][lang] = field_translation
+
+        # Gather translations for the TEMPLATE_MODELS records that are not created from the chart_template data
+        translation_langs = [lang for lang in langs if lang != 'en_US']  # there are no code translations for 'en_US' (original language)
+        for (mname, _xml_id, module, fields) in self._get_untranslated_translatable_template_model_records(translation_langs, companies):
+            for (field, value) in fields.items():
+                if not value or 'en_US' not in value:
+                    continue
+                value_en_US = value['en_US']
+                xml_id = f"{module}.{_xml_id}"
+                for lang in [lang for lang in translation_langs if lang not in value]:
+                    if lang in translation_importer.model_translations[mname][field][xml_id]:
+                        continue
+                    value_translated = None
+                    for code_module in ([module, 'account'] if module != 'account' else ['account']):
+                        value_translated = code_translations.get_python_translations(code_module, lang).get(value_en_US)
+                        if not value_translated:  # manage generic locale (i.e. `fr` instead of `fr_BE`)
+                            value_translated = code_translations.get_python_translations(code_module, lang.split('_')[0]).get(value_en_US)
+                        if value_translated:
+                            translation_importer.model_translations[mname][field][xml_id][lang] = value_translated
+                            break
+
         translation_importer.save(overwrite=False)

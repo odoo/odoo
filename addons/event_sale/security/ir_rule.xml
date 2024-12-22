@@ -5,7 +5,7 @@
     <record id="event_sale_report_comp_rule" model="ir.rule">
         <field name="name">Event Sales Report multi-company</field>
         <field name="model_id" ref="model_event_sale_report"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
 </odoo>

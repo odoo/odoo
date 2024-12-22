@@ -3,6 +3,8 @@
 
 import ast
 
+from textwrap import dedent
+
 from odoo import Command
 from odoo.tests.common import TransactionCase, BaseCase
 from odoo.tools import mute_logger
@@ -16,12 +18,44 @@ class TestSafeEval(BaseCase):
         expected = (1, {"a": {2.5}}, [None, u"foo"])
         actual = const_eval('(1, {"a": {2.5}}, [None, u"foo"])')
         self.assertEqual(actual, expected)
+        # Test RETURN_CONST
+        self.assertEqual(const_eval('10'), 10)
 
     def test_expr(self):
         # NB: True and False are names in Python 2 not consts
         expected = 3 * 4
         actual = expr_eval('3 * 4')
         self.assertEqual(actual, expected)
+
+    def test_expr_eval_opcodes(self):
+        for expr, expected in [
+            ('3', 3),  # RETURN_CONST
+            ('[1,2,3,4][1:3]', [2, 3]),  # BINARY_SLICE
+        ]:
+            self.assertEqual(expr_eval(expr), expected)
+
+    def test_safe_eval_opcodes(self):
+        for expr, locals_dict, expected in [
+            ('[x for x in (1,2)]', {}, [1, 2]),  # LOAD_FAST_AND_CLEAR
+            ('list(x for x in (1,2))', {}, [1, 2]),  # END_FOR, CALL_INTRINSIC_1
+            ('v if v is None else w', {'v': False, 'w': 'foo'}, 'foo'),  # POP_JUMP_IF_NONE
+            ('v if v is not None else w', {'v': None, 'w': 'foo'}, 'foo'),  # POP_JUMP_IF_NOT_NONE
+            ('{a for a in (1, 2)}', {}, {1, 2}),  # RERAISE
+        ]:
+            self.assertEqual(safe_eval(expr, locals_dict=locals_dict), expected)
+
+    def test_safe_eval_exec_opcodes(self):
+        for expr, locals_dict, expected in [
+            ("""
+                def f(v):
+                    if v:
+                        x = 1
+                    return x
+                result = f(42)
+            """, {}, 1),  # LOAD_FAST_CHECK
+        ]:
+            safe_eval(dedent(expr), locals_dict=locals_dict, mode="exec", nocopy=True)
+            self.assertEqual(locals_dict['result'], expected)
 
     def test_01_safe_eval(self):
         """ Try a few common expressions to verify they work with safe_eval """

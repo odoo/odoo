@@ -299,7 +299,7 @@ img, .media_iframe_video, .o_image {
     @if ($o-portal-mobile-toolbar) {
         #o_portal_navbar_content {
             @include media-breakpoint-down(lg) {
-                margin: $navbar-padding-y (-$navbar-padding-x) 0;
+                margin: $navbar-padding-y 0 0;
                 padding: $navbar-padding-y $navbar-padding-x ;
                 border-top: $border-width solid $o-portal-mobile-toolbar-border;
                 background-color: $o-portal-mobile-toolbar-bg;
@@ -360,6 +360,7 @@ img, .media_iframe_video, .o_image {
     .o_portal_sidebar_content {
         @include media-breakpoint-up(lg) {
             @include o-position-sticky($top: $spacer * 5);
+            z-index: 1;
         }
     }
 }

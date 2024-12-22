@@ -3,14 +3,14 @@
 # 	* sms
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -51,6 +51,13 @@ msgstr "%s無效的收件人"
 msgid ""
 "%s out of the %s selected SMS Text Messages have successfully been resent."
 msgstr "%s 條選定的 SMS 文本消息中有 %s 條已成功重新發送。"
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+#, python-format
+msgid ", fits in"
+msgstr "，需要"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -170,7 +177,7 @@ msgstr "確定要將這些短訊範本重設為原始配置？所有變更及翻
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件數"
+msgstr "附件數目"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
@@ -383,7 +390,7 @@ msgstr "編輯夥伴"
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
 msgid "Email Thread"
-msgstr "電子郵件行程"
+msgstr "電郵對話串"
 
 #. module: sms
 #. odoo-javascript
@@ -828,7 +835,7 @@ msgstr "加入佇列"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__rating_ids
 msgid "Ratings"
-msgstr "點評"
+msgstr "評分"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -1408,10 +1415,10 @@ msgstr ""
 "用於對訊息生成器進行分類\n"
 "email(電子郵件)：由接收到的電子郵件生成，如 mailgateway\n"
 "comment(評論)：由用戶輸入生成，例如通過討論或編輯器\n"
-"email_outgoing(外寄郵件)：由郵寄生成\n"
+"email_outgoing(外寄郵件)：由郵寄產生\n"
 "notification(通知)：由系統生成，例如追蹤訊息\n"
 "auto_comment(自動評論)：由自動通知機制生成，例如確認\n"
-"user_notification(用戶通知)：為特定收件人生成"
+"user_notification(用戶通知)：為特定收件人產生"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids_count
@@ -1486,8 +1493,8 @@ msgstr "您的 SMS 文本消息必須包含至少一個非空白字符"
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 #, python-format
-msgid "characters, fits in"
-msgstr "個字元，需使用"
+msgid "characters"
+msgstr "字元"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

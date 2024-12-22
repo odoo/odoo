@@ -3,18 +3,17 @@
 # 	* account_payment
 # 
 # Translators:
-# fah_odoo <fah@odoo.com>, 2023
 # Patrik Lermon <patrik.lermon@gmail.com>, 2023
 # Daniel Forslund <daniel.forslund@gmail.com>, 2023
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Robin Calvin, 2023
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Simon S, 2023
 # Lasse L, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -22,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +32,7 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
 msgid "<b>Communication: </b>"
-msgstr "<b>Meddelande: </b>"
+msgstr "<b>Kommunikation: </b>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -42,12 +41,12 @@ msgid ""
 "Pay Now</span>"
 msgstr ""
 "<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
-"Betala direkt</span>"
+"Betala nu</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-fw fa-arrow-circle-right\"/> Pay Now"
-msgstr "<i class=\"fa fa-fw fa-arrow-circle-right\"/> Betala direkt"
+msgstr "<i class=\"fa fa-fw fa-arrow-circle-right\"/> Betala nu"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -55,6 +54,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\"/>\n"
 "                <span class=\"d-none d-md-inline\"> Authorized</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-kontroll\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Godkänd</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -62,6 +63,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-check\"/>\n"
 "                <span class=\"d-none d-md-inline\"> Paid</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-kontroll\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Betald</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -71,17 +74,17 @@ msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Betald"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-fw fa-check-circle\"/> Pending"
-msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Utestående"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Väntande"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "<span class=\"d-none d-md-inline\"> Pending</span>"
-msgstr ""
+msgstr "<span class=\"d-none d-md-inline\"> Väntande</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "<span class=\"o_stat_text\">Payment Transaction</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Betalningstransaktion</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -90,6 +93,9 @@ msgid ""
 "                                If you believe that it is an error, please contact the website\n"
 "                                administrator."
 msgstr ""
+"<strong>Ingen lämplig betalningsmetod kunde hittas.</strong><br/>\n"
+"                                Om du tror att det är ett fel, vänligen kontakta webbplatsens\n"
+"                                administratör."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -98,8 +104,8 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment provider configuration."
 msgstr ""
-"<strong>Varning!</strong> Det finns en återbetalning som väntar på detta betalning.\n"
-"                        Vänta en stund för att den ska behandlas. Om återbetalningen fortfarande är avvaktande om\n"
+"<strong>Varning!</strong> Det finns en återbetalning som väntar på denna betalning.\n"
+"                        Vänta en stund för att den ska behandlas. Om återbetalningen fortfarande är väntande om\n"
 "                        några minuter, vänligen kontrollera din betalningsleverantörs konfiguration."
 
 #. module: account_payment
@@ -119,7 +125,7 @@ msgstr "En pollett krävs för att skapa en ny betalningstransaktion."
 #. module: account_payment
 #: model:onboarding.onboarding.step,button_text:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Activate Stripe"
-msgstr ""
+msgstr "Aktivera Stripe"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
@@ -195,17 +201,19 @@ msgstr "Visningsnamn"
 msgid ""
 "Done, your online payment has been successfully processed. Thank you for "
 "your order."
-msgstr "Klart, din onlinebetalning har behandlats. Tack för din beställning."
+msgstr ""
+"Klart, din onlinebetalning har gått igenom framgångsrikt. Tack för din "
+"beställning."
 
 #. module: account_payment
 #: model:onboarding.onboarding.step,description:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Enable credit & debit card payments supported by Stripe."
-msgstr ""
+msgstr "Aktivera kredit- och betalkortsbetalningar som stöds av Stripe."
 
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
 msgid "Full Only"
-msgstr ""
+msgstr "Endast hela"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_link_wizard
@@ -220,7 +228,7 @@ msgstr "Generera betallänk"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
 msgid "Has a pending refund"
-msgstr "Har en pågående återbetalning"
+msgstr "Har en väntande återbetalning"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__id
@@ -267,7 +275,7 @@ msgstr "Journal"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move
 msgid "Journal Entry"
-msgstr "Journalanteckning"
+msgstr "Verifikat"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__write_uid
@@ -290,7 +298,7 @@ msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
 msgstr ""
-"Observera att endast tokens från leverantörer som kan ta emot beloppet är "
+"Observera att endast poletter från leverantörer som kan ta emot beloppet är "
 "tillgängliga."
 
 #. module: account_payment
@@ -299,19 +307,19 @@ msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
-"Observera att tokens från leverantörer som är inställda på att endast "
+"Observera att poletter från leverantörer som är inställda på att endast "
 "godkänna transaktioner (istället för att registrera beloppet) inte är "
 "tillgängliga."
 
 #. module: account_payment
 #: model:onboarding.onboarding.step,step_image_alt:account_payment.onboarding_onboarding_step_payment_provider
 msgid "Onboarding Online Payments"
-msgstr ""
+msgstr "Introduktion av onlinebetalningar"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_onboarding_onboarding_step
 msgid "Onboarding Step"
-msgstr "Steg för introduktion"
+msgstr "Introduktionssteg"
 
 #. module: account_payment
 #: model:onboarding.onboarding.step,title:account_payment.onboarding_onboarding_step_payment_provider
@@ -336,7 +344,7 @@ msgstr "Betala nu"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Pay now"
-msgstr "Betala direkt"
+msgstr "Betala nu"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -380,7 +388,7 @@ msgstr "Betalningsleverantörer"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
-msgstr "Guiden för återbetalning av betalning"
+msgstr "Guiden för återbetalning"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_token_menu
@@ -454,22 +462,22 @@ msgstr "INSTÄLLNING"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_token_id
 msgid "Saved Payment Token"
-msgstr "Sparat betalningstoken"
+msgstr "Sparad betalningspolett"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_token_id
 msgid "Saved payment token"
-msgstr "Sparad betalningstoken"
+msgstr "Sparad betalningspolett"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr "Källa Betalning"
+msgstr "Betalningskälla"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
 msgid "State"
-msgstr "Etapp"
+msgstr "Läge"
 
 #. module: account_payment
 #: model:onboarding.onboarding.step,done_text:account_payment.onboarding_onboarding_step_payment_provider
@@ -480,14 +488,14 @@ msgstr "Steg slutfört!"
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
-msgstr "Lämplig betalningstoken"
+msgstr "Lämplig betalningspolett"
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr "Åtkomsttoken är ogiltig."
+msgstr "Åtkomstpoletten är ogiltig."
 
 #. module: account_payment
 #. odoo-python
@@ -578,7 +586,7 @@ msgstr "Använd elektronisk betalningsmetod"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Void Transaction"
-msgstr "Annullera transaktion"
+msgstr "Ogiltig transaktion"
 
 #. module: account_payment
 #. odoo-python
@@ -588,8 +596,8 @@ msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Du kan inte ta bort en betalningsmetod som är kopplad till en provider i aktiverat eller testat tillstånd.\n"
-"Länkade leverantörer: %s"
+"Du kan inte ta bort en betalningsmetod som är kopplad till en leverantör i aktiverat eller testat tillstånd.\n"
+"Länkade leverantör(er): %s"
 
 #. module: account_payment
 #. odoo-python
@@ -599,6 +607,8 @@ msgid ""
 "You cannot uninstall this module as payments using this payment method "
 "already exist."
 msgstr ""
+"Du kan inte avinstallera denna modul eftersom betalningar som använder denna"
+" betalningsmetod redan finns."
 
 #. module: account_payment
 #. odoo-python

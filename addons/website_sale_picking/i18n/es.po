@@ -3,16 +3,16 @@
 # 	* website_sale_picking
 # 
 # Translators:
-# Wil Odoo, 2023
 # Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,13 +26,13 @@ msgid ""
 "<i>Your order has been saved.</i> Please come to the store to pay for your "
 "products"
 msgstr ""
-"<i>Se guardó su orden.</i> Por favor, venga a la tienda para pagar sus "
-"productos"
+"<i>Se ha guardado su pedido.</i> Por favor, venga a la tienda para pagar sus"
+" productos"
 
 #. module: website_sale_picking
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.payment_confirmation_status
 msgid "<span class=\"text-muted\"> (On site picking)</span>"
-msgstr "<span class=\"text-muted\"> (Recolección en las instalaciones)</span>"
+msgstr "<span class=\"text-muted\"> (Recogida en el sitio)</span>"
 
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_res_config_settings
@@ -47,7 +47,7 @@ msgstr "Modo personalizado"
 #. module: website_sale_picking
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.res_config_settings_view_form
 msgid "Customize Pickup Sites"
-msgstr "Personalizar sitios de recolección"
+msgstr "Personalizar sitios de recogida"
 
 #. module: website_sale_picking
 #. odoo-javascript
@@ -74,7 +74,7 @@ msgstr "En el sitio"
 #. module: website_sale_picking
 #: model:product.template,name:website_sale_picking.onsite_delivery_product_product_template
 msgid "On site picking"
-msgstr "Recolección en las instalaciones"
+msgstr "Recogida en el sitio"
 
 #. module: website_sale_picking
 #: model:payment.provider,name:website_sale_picking.payment_provider_onsite
@@ -92,17 +92,22 @@ msgstr "Proveedor de pago"
 #: model:ir.model.fields,field_description:website_sale_picking.field_website__picking_site_ids
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.res_config_settings_view_form
 msgid "Picking sites"
-msgstr "Sitios de recolección"
+msgstr "Sitios de recogida"
 
 #. module: website_sale_picking
 #: model:ir.model.fields.selection,name:website_sale_picking.selection__delivery_carrier__delivery_type__onsite
 msgid "Pickup in store"
-msgstr "Recoger en tienda"
+msgstr "Recogida en tienda"
 
 #. module: website_sale_picking
 #: model:ir.model.fields,field_description:website_sale_picking.field_delivery_carrier__delivery_type
 msgid "Provider"
 msgstr "Proveedor"
+
+#. module: website_sale_picking
+#: model:ir.model,name:website_sale_picking.model_sale_order
+msgid "Sales Order"
+msgstr "Pedido de venta"
 
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_delivery_carrier
@@ -114,7 +119,7 @@ msgstr "Métodos de envío"
 #: code:addons/website_sale_picking/models/delivery_carrier.py:0
 #, python-format
 msgid "The picking site and warehouse must share the same company"
-msgstr "El sitio de recolección y el almacén deben ser de la misma empresa"
+msgstr "El sitio de recogida y el almacén deben ser de la misma compañía"
 
 #. module: website_sale_picking
 #: model:ir.model.fields,field_description:website_sale_picking.field_delivery_carrier__warehouse_id
@@ -131,8 +136,7 @@ msgstr "Sitio web"
 #: code:addons/website_sale_picking/controllers/main.py:0
 #, python-format
 msgid "You cannot pay onsite if the delivery is not onsite"
-msgstr ""
-"No puede pagar en las instalaciones si la entrega no es en las instalaciones"
+msgstr "No puede pagar en el sitio si la entrega no es en las en el sitio"
 
 #. module: website_sale_picking
 #: model_terms:payment.provider,auth_msg:website_sale_picking.payment_provider_onsite
@@ -152,4 +156,4 @@ msgstr "Su pago ha sido procesado con éxito."
 #. module: website_sale_picking
 #: model:delivery.carrier,name:website_sale_picking.default_onsite_carrier
 msgid "[On Site Pick] My Shop 1"
-msgstr "[Recolección en instalaciones] Mi tienda 1"
+msgstr "[Recogida en el sitio] Mi tienda 1"

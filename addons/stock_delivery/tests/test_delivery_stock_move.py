@@ -237,3 +237,25 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
         done_delivery = sale_order.picking_ids.filtered(lambda p: p.state == "done")
         self.assertFalse(done_delivery.carrier_id.id, "The shipping method should not be set in done deliveries.")
         self.assertFalse(return_picking.carrier_id.id, "The shipping method should not set in return pickings")
+
+    def test_picking_weight(self):
+        """Test if the picking weight is correctly computed when the product of the move changes."""
+        self.product_cable_management_box.weight = 1.0
+        self.product_a.weight = 2.0
+        so = self.SaleOrder.create({
+            "partner_id": self.partner_18.id,
+            "order_line": [(0, 0, {
+                "name": "Cable Management Box",
+                "product_id": self.product_cable_management_box.id,
+                "product_uom_qty": 1,
+                "product_uom": self.product_uom_unit.id,
+                "price_unit": 750.00,
+            })],
+        })
+        so.action_confirm()
+        picking = so.picking_ids
+        self.assertEqual(picking.weight, 1.0, "The weight of the picking should be 1.0")
+        self.product_cable_management_box.weight = 2.0
+        self.assertEqual(picking.weight, 1.0, "The weight of the picking should not change")
+        picking.move_ids.product_id = self.product_a
+        self.assertEqual(picking.weight, 2.0, "The weight of the picking should be 2.0")

@@ -35,16 +35,8 @@ class MrpBom(models.Model):
     def _onchange_analytic_distribution(self):
         for record in self:
             if record.product_id:
-                record.analytic_distribution = record.env['account.analytic.distribution.model']._get_distribution({
+                record.analytic_distribution = record.env['account.analytic.distribution.model'].sudo()._get_distribution({
                     "product_id": record.product_id.id,
                     "product_categ_id": record.product_id.categ_id.id,
                     "company_id": record.company_id.id,
                 })
-
-    @api.constrains('analytic_distribution')
-    def _check_analytic(self):
-        for record in self:
-            record.with_context({'validate_analytic': True})._validate_distribution(**{
-                'product': record.product_id.id,
-                'company_id': record.company_id.id,
-            })

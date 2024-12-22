@@ -54,6 +54,17 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
         self.env.company.email = 'after.change@mail.com'
         self.start_tour('/contactus', 'website_form_contactus_check_changed_email', login="portal")
 
+    def test_website_form_editable_content(self):
+        self.start_tour('/', 'website_form_editable_content', login="admin")
+
+    def test_website_form_special_characters(self):
+        self.start_tour('/', 'website_form_special_characters', login='admin')
+        mail = self.env['mail.mail'].search([], order='id desc', limit=1)
+        self.assertIn('Test1&#34;&#39;', mail.body_html, 'The single quotes and double quotes characters should be visible on the received mail')
+        self.assertIn('Test2`\\', mail.body_html, 'The backtick and backslash characters should be visible on the received mail')
+
+    def test_website_form_nested_forms(self):
+        self.start_tour('/my/account', 'website_form_nested_forms', login='admin')
 
 @tagged('post_install', '-at_install')
 class TestWebsiteForm(TransactionCase):

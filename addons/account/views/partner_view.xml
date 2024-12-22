@@ -40,9 +40,9 @@
                             <field name="auto_apply"/>
                             <field name="vat_required" invisible="not auto_apply"/>
                             <field name="foreign_vat"/>
-                            <field name="country_group_id" invisible="not auto_apply"/>
+                            <field name="country_group_id" invisible="not auto_apply and not foreign_vat" required="foreign_vat and not country_id"/>
                             <field name="country_id"
-                                required="foreign_vat"
+                                required="foreign_vat and not country_group_id"
                                 options="{'no_open': True, 'no_create': True}"/>
                             <field name="state_ids" widget="many2many_tags" domain="[('country_id', '=', country_id)]"
                                 invisible="(not auto_apply and not foreign_vat) or not country_id or states_count == 0"/>
@@ -66,7 +66,7 @@
                                         domain="[
                                             ('type_tax_use', '!=', 'none'),
                                             ('country_id', '=', parent.company_country_id),
-                                            '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
+                                            '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)
                                         ]"
                                         context="{'append_type_to_tax_name': True}"
                                     />
@@ -75,7 +75,7 @@
                                         domain="[
                                             ('type_tax_use', '!=', 'none'),
                                             ('country_id', '=', parent.country_id if parent.foreign_vat else parent.company_country_id),
-                                            '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
+                                            '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)]"
                                         context="{'append_type_to_tax_name': True}"
                                     />
                                 </tree>
@@ -209,9 +209,10 @@
                                 </field>
                             </group>
                             <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_readonly">
+                                <field name="is_coa_installed" invisible="1"/>
                                 <field name="currency_id" invisible="1"/>
-                                <field name="property_account_receivable_id"/>
-                                <field name="property_account_payable_id"/>
+                                <field name="property_account_receivable_id" required="is_coa_installed"/>
+                                <field name="property_account_payable_id" required="is_coa_installed"/>
                             </group>
                             <group string="Credit Limits"
                                    name="credit_limits"

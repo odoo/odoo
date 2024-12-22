@@ -51,18 +51,35 @@ class User(models.Model):
             status = "sync_stopped"
         return status
 
+    def _check_pending_odoo_records(self):
+        """ Returns True if sync is active and there are records to be synchronized to Google. """
+        if self._get_google_sync_status() != "sync_active":
+            return False
+        pending_events = self.env['calendar.event']._check_any_records_to_sync()
+        pending_recurrences = self.env['calendar.recurrence']._check_any_records_to_sync()
+        return pending_events or pending_recurrences
+
     def _sync_google_calendar(self, calendar_service: GoogleCalendarService):
         self.ensure_one()
         results = self._sync_request(calendar_service)
-        if not results or not results.get('events'):
+        if not results or (not results.get('events') and not self._check_pending_odoo_records()):
             return False
         events, default_reminders, full_sync = results.values()
         # Google -> Odoo
         send_updates = not full_sync
         events.clear_type_ambiguity(self.env)
         recurrences = events.filter(lambda e: e.is_recurrence())
-        synced_recurrences = self.env['calendar.recurrence']._sync_google2odoo(recurrences)
-        synced_events = self.env['calendar.event']._sync_google2odoo(events - recurrences, default_reminders=default_reminders)
+
+        # We apply Google updates only if their write date is later than the write date in Odoo.
+        # It's possible that multiple updates affect the same record, maybe not directly.
+        # To handle this, we preserve the write dates in Odoo before applying any updates,
+        # and use these dates instead of the current live dates.
+        odoo_events = self.env['calendar.event'].browse((events - recurrences).odoo_ids(self.env))
+        odoo_recurrences = self.env['calendar.recurrence'].browse(recurrences.odoo_ids(self.env))
+        recurrences_write_dates = {r.id: r.write_date for r in odoo_recurrences}
+        events_write_dates = {e.id: e.write_date for e in odoo_events}
+        synced_recurrences = self.env['calendar.recurrence'].with_context(write_dates=recurrences_write_dates)._sync_google2odoo(recurrences)
+        synced_events = self.env['calendar.event'].with_context(write_dates=events_write_dates)._sync_google2odoo(events - recurrences, default_reminders=default_reminders)
 
         # Odoo -> Google
         recurrences = self.env['calendar.recurrence']._get_records_to_sync(full_sync=full_sync)
@@ -73,7 +90,7 @@ class User(models.Model):
         events = self.env['calendar.event']._get_records_to_sync(full_sync=full_sync)
         (events - synced_events).with_context(send_updates=send_updates)._sync_odoo2google(calendar_service)
 
-        return bool(events | synced_events) or bool(recurrences | synced_recurrences)
+        return bool(results) and (bool(events | synced_events) or bool(recurrences | synced_recurrences))
 
     def _sync_single_event(self, calendar_service: GoogleCalendarService, odoo_event, event_id):
         self.ensure_one()

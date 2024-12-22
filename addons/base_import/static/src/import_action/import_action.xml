@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="ImportAction">
         <div class="h-100 d-flex flex-column">
-            <Layout className="'o_import_action d-flex h-100 overflow-auto bg-white'" display="display">
+            <Layout className="'o_import_action d-flex h-100 overflow-auto'" display="display">
                 <t t-set-slot="control-panel-create-button">
                     <t t-if="isPreviewing">
                         <button t-if="!state.isPaused" type="button" class="btn btn-primary" t-on-click="() => this.handleImport(false)">Import</button>

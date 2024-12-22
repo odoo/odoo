@@ -159,7 +159,7 @@ class AccountEdiFormat(models.Model):
                 odoobot = self.env.ref("base.partner_root")
                 invoices.message_post(author_id=odoobot.id, body=
                     Markup("%s<br/>%s:<br/>%s") %(
-                        _("Somehow this E-waybill has been canceled in the government portal before. You can verify by checking the details into the government (https://ewaybillgst.gov.in/Others/EBPrintnew.asp)"),
+                        _("Somehow this E-waybill has been canceled in the government portal before. You can verify by checking the details into the government (https://ewaybillgst.gov.in/Others/EBPrintnew.aspx)"),
                         _("Error"),
                         error_message
                     )
@@ -194,6 +194,12 @@ class AccountEdiFormat(models.Model):
             res[invoices] = inv_res
         return res
 
+    def _l10n_in_edi_ewaybill_handle_zero_distance_alert_if_present(self, invoice, response):
+        if invoice.l10n_in_distance == 0 and (alert := response.get("data", {}).get('alert')):
+            pattern = r", Distance between these two pincodes is \d+, "
+            if re.fullmatch(pattern, alert) and (distance := int(re.search(r'\d+', alert).group())) > 0:
+                invoice.l10n_in_distance = distance
+
     def _l10n_in_edi_ewaybill_irn_post_invoice_edi(self, invoices):
         response = {}
         res = {}
@@ -220,7 +226,7 @@ class AccountEdiFormat(models.Model):
                     error = []
                     odoobot = self.env.ref("base.partner_root")
                     invoices.message_post(author_id=odoobot.id, body=
-                        _("Somehow this E-waybill has been generated in the government portal before. You can verify by checking the invoice details into the government (https://ewaybillgst.gov.in/Others/EBPrintnew.asp)")
+                        _("Somehow this E-waybill has been generated in the government portal before. You can verify by checking the invoice details into the government (https://ewaybillgst.gov.in/Others/EBPrintnew.aspx)")
                     )
 
             if "no-credit" in error_codes:
@@ -251,6 +257,22 @@ class AccountEdiFormat(models.Model):
             })
             inv_res = {"success": True, "attachment": attachment}
             res[invoices] = inv_res
+            body = Markup("""
+                <b>{}</b><br/>
+                <ul>
+                    <li>{}<i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"></i>{}</li>
+                    <li>{}<i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"></i>{}</li>
+                </ul>
+            """).format(
+                _('E-wayBill Sent'),
+                _('Number'),
+                str(response.get("data", {}).get('EwbNo')),
+                _('Validity'),
+                str(response.get("data", {}).get('EwbValidTill'))
+            )
+
+            invoices.message_post(body=body)
+            self._l10n_in_edi_ewaybill_handle_zero_distance_alert_if_present(invoices, response)
         return res
 
     def _l10n_in_edi_irn_ewaybill_generate_json(self, invoice):
@@ -305,7 +327,7 @@ class AccountEdiFormat(models.Model):
                     error = []
                     odoobot = self.env.ref("base.partner_root")
                     invoices.message_post(author_id=odoobot.id, body=
-                        _("Somehow this E-waybill has been generated in the government portal before. You can verify by checking the invoice details into the government (https://ewaybillgst.gov.in/Others/EBPrintnew.asp)")
+                        _("Somehow this E-waybill has been generated in the government portal before. You can verify by checking the invoice details into the government (https://ewaybillgst.gov.in/Others/EBPrintnew.aspx)")
                     )
             if "no-credit" in error_codes:
                 res[invoices] = {
@@ -335,6 +357,21 @@ class AccountEdiFormat(models.Model):
             })
             inv_res = {"success": True, "attachment": attachment}
             res[invoices] = inv_res
+            body = Markup("""
+                <b>{}</b><br/>
+                <ul>
+                    <li>{}<i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"></i>{}</li>
+                    <li>{}<i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"></i>{}</li>
+                </ul>
+            """).format(
+                _('E-wayBill Sent'),
+                _('Number'),
+                str(response.get("data", {}).get('ewayBillNo')),
+                _('Validity'),
+                str(response.get("data", {}).get('validUpto'))
+            )
+            invoices.message_post(body=body)
+            self._l10n_in_edi_ewaybill_handle_zero_distance_alert_if_present(invoices, response)
         return res
 
     def _l10n_in_edi_ewaybill_get_error_message(self, code):
@@ -343,7 +380,7 @@ class AccountEdiFormat(models.Model):
 
     def _get_l10n_in_edi_saler_buyer_party(self, move):
         res = super()._get_l10n_in_edi_saler_buyer_party(move)
-        if move.is_purchase_document(include_receipts=True):
+        if move.is_outbound():
             res = {
                 "seller_details":  move.partner_id,
                 "dispatch_details": move.partner_shipping_id or move.partner_id,
@@ -380,7 +417,10 @@ class AccountEdiFormat(models.Model):
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
         invoice_line_tax_details = tax_details.get("tax_details_per_record")
         json_payload = {
-            "supplyType": invoices.is_purchase_document(include_receipts=True) and "I" or "O",
+            # Note:
+            # Customer Invoice, Sales Receipt and Vendor Credit Note are Outgoing
+            # Vendor Bill, Purchase Receipt, and Customer Credit Note are Incoming
+            "supplyType": invoices.is_outbound() and "I" or "O",
             "subSupplyType": invoices.l10n_in_type_id.sub_type_code,
             "docType": invoices.l10n_in_type_id.code,
             "transactionType": get_transaction_type(seller_details, dispatch_details, buyer_details, ship_to_details),
@@ -419,7 +459,7 @@ class AccountEdiFormat(models.Model):
             "totInvValue": self._l10n_in_round_value((tax_details.get("base_amount") + tax_details.get("tax_amount"))),
         }
         is_overseas = invoices.l10n_in_gst_treatment in ("overseas", "special_economic_zone")
-        if invoices.is_purchase_document(include_receipts=True):
+        if invoices.is_outbound():
             if is_overseas:
                 json_payload.update({"fromStateCode": 99})
             if is_overseas and dispatch_details.state_id.country_id.code != "IN":
@@ -477,13 +517,15 @@ class AccountEdiFormat(models.Model):
             "qtyUnit": line.product_id.uom_id.l10n_in_code and line.product_id.uom_id.l10n_in_code.split("-")[0] or "OTH",
             "taxableAmount": self._l10n_in_round_value(line.balance * sign),
         }
-        if tax_details_by_code.get("igst_rate") or (line.move_id.l10n_in_state_id.l10n_in_tin != line.company_id.state_id.l10n_in_tin):
-            line_details.update({"igstRate": self._l10n_in_round_value(tax_details_by_code.get("igst_rate", 0.00))})
-        else:
-            line_details.update({
-                "cgstRate": self._l10n_in_round_value(tax_details_by_code.get("cgst_rate", 0.00)),
-                "sgstRate": self._l10n_in_round_value(tax_details_by_code.get("sgst_rate", 0.00)),
-            })
+        gst_types = {'cgst', 'sgst', 'igst'}
+        gst_tax_rates = {
+            f"{gst_type}Rate": self._l10n_in_round_value(tax_details_by_code[f"{gst_type}_rate"])
+            for gst_type in gst_types
+            if tax_details_by_code.get(f"{gst_type}_rate")
+        }
+        line_details.update(
+            gst_tax_rates or dict.fromkeys({f"{gst_type}Rate" for gst_type in gst_types}, 0.00)
+        )
         if tax_details_by_code.get("cess_rate"):
             line_details.update({"cessRate": self._l10n_in_round_value(tax_details_by_code.get("cess_rate"))})
         return line_details

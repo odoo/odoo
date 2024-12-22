@@ -14,13 +14,15 @@
 # Martin Trigaux, 2023
 # Alena Vlasova, 2023
 # ILMIR <karamov@it-projects.info>, 2024
+# Collex100, 2024
+# Nadia Martynova, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -155,11 +157,6 @@ msgid ""
 "account</span>"
 msgstr ""
 "<span><i class=\"oi oi-arrow-right\"/> Как настроить свой счет PayPal</span>"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.form
-msgid "<span>Your payment methods</span>"
-msgstr "<span>Ваши способы оплаты</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1661,6 +1658,11 @@ msgid "Test Mode"
 msgstr "Тестовый режим"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Thank you!"
+msgstr "Спасибо!"
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
@@ -1959,7 +1961,7 @@ msgstr "Платить ничего не нужно."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "There is nothing to pay."
-msgstr "Не нужно ничего платить."
+msgstr "Нет ничего, что нужно было бы оплатить. "
 
 #. module: payment
 #. odoo-python
@@ -2193,6 +2195,8 @@ msgid ""
 "You cannot change the company of a payment provider with existing "
 "transactions."
 msgstr ""
+"Вы не можете изменить компанию поставщика платежей в существующих "
+"транзакциях."
 
 #. module: payment
 #. odoo-python
@@ -2326,6 +2330,11 @@ msgid "Your payment has not been processed yet."
 msgstr "Ваш платеж еще не обработан."
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Your payment methods"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "ZIP"
 msgstr "ИНДЕКС"
@@ -2334,16 +2343,6 @@ msgstr "ИНДЕКС"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
 msgstr "Индекс"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "danger"
-msgstr "опасно"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "info"
-msgstr "информация"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -2362,20 +2361,10 @@ msgid "provider"
 msgstr "исполнитель"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "success"
-msgstr "успешно"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid ""
 "to make this\n"
 "                    payment."
 msgstr ""
-"чтобы сделать этот\n"
+"чтобы произвести\n"
 "                    оплату."
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
-msgstr "предупреждение"

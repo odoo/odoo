@@ -6,14 +6,15 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from odoo import Command
+from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.event.tests.common import EventCase
 from odoo.addons.mail.tests.common import MockEmail
-from odoo.tests import tagged, users
+from odoo.tests import tagged, users, warmup
 from odoo.tools import formataddr, mute_logger
 
 
 @tagged('event_mail', 'post_install', '-at_install')
-class TestMailSchedule(EventCase, MockEmail):
+class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
 
     @classmethod
     def setUpClass(cls):
@@ -27,6 +28,8 @@ class TestMailSchedule(EventCase, MockEmail):
 
         # deactivate other schedulers to avoid messing with crons
         cls.env['event.mail'].search([]).unlink()
+        # consider asynchronous sending as default sending
+        cls.env["ir.config_parameter"].set_param("event.event_mail_async", False)
 
         # freeze some datetimes, and ensure more than 1D+1H before event starts
         # to ease time-based scheduler check
@@ -37,9 +40,7 @@ class TestMailSchedule(EventCase, MockEmail):
         cls.event_date_begin = datetime(2021, 3, 22, 8, 0, 0)
         cls.event_date_end = datetime(2021, 3, 24, 18, 0, 0)
 
-        cls.template_subscription_id = cls.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')
-        cls.template_reminder_id = cls.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')
-
+        cls._setup_test_reports()
         with cls.mock_datetime_and_now(cls, cls.reference_now):
             # create with admin to force create_date
             cls.test_event = cls.env['event.event'].create({
@@ -52,28 +53,28 @@ class TestMailSchedule(EventCase, MockEmail):
                         'interval_unit': 'now',
                         'interval_type': 'after_sub',
                         'notification_type': 'mail',
-                        'template_ref': f'mail.template,{cls.template_subscription_id}',
+                        'template_ref': f'mail.template,{cls.template_subscription.id}',
                     }),
                     (0, 0, {  # one hour after subscription
                         'interval_nbr': 1,
                         'interval_unit': 'hours',
                         'interval_type': 'after_sub',
                         'notification_type': 'mail',
-                        'template_ref': f'mail.template,{cls.template_subscription_id}',
+                        'template_ref': f'mail.template,{cls.template_subscription.id}',
                     }),
                     (0, 0, {  # 1 days before event
                         'interval_nbr': 1,
                         'interval_unit': 'days',
                         'interval_type': 'before_event',
                         'notification_type': 'mail',
-                        'template_ref': f'mail.template,{cls.template_reminder_id}',
+                        'template_ref': f'mail.template,{cls.template_reminder.id}',
                     }),
                     (0, 0, {  # immediately after event
                         'interval_nbr': 1,
                         'interval_unit': 'hours',
                         'interval_type': 'after_event',
                         'notification_type': 'mail',
-                        'template_ref': f'mail.template,{cls.template_reminder_id}',
+                        'template_ref': f'mail.template,{cls.template_reminder.id}',
                     }),
                 ]
             })
@@ -137,35 +138,50 @@ class TestMailSchedule(EventCase, MockEmail):
                 'name': 'Reg2',
                 'email': 'reg2@example.com',
             })
+            reg3_draft = self.env['event.registration'].with_user(self.user_eventuser).create({
+                'event_id': test_event.id,
+                'name': 'Reg3',
+                'email': 'reg3_draft@example.com',
+            })
+            reg4_cancel = self.env['event.registration'].with_user(self.user_eventuser).create({
+                'event_id': test_event.id,
+                'name': 'Reg4',
+                'email': 'reg4_cancel@example.com',
+            })
+
+        reg3_draft.action_set_draft()
+        reg4_cancel.action_cancel()
+        registrations = reg1 + reg2 + reg3_draft + reg4_cancel
 
         # REGISTRATIONS / PRE SCHEDULERS
         # --------------------------------------------------
 
         # check registration state
-        self.assertTrue(all(reg.state == 'open' for reg in reg1 + reg2), 'Registrations: should be auto-confirmed')
-        self.assertTrue(all(reg.create_date == now for reg in reg1 + reg2), 'Registrations: should have open date set to confirm date')
+        self.assertListEqual(registrations.mapped('state'), ['open', 'open', 'draft', 'cancel'], 'Registrations: should be auto-confirmed')
+        self.assertListEqual(registrations.mapped('create_date'), [now] * 4, 'Registrations: should have open date set to confirm date')
 
         # verify that subscription scheduler was auto-executed after each registration
-        self.assertEqual(len(after_sub_scheduler.mail_registration_ids), 2, 'event: should have 2 scheduled communication (1 / registration)')
+        self.assertEqual(len(after_sub_scheduler.mail_registration_ids), 4, 'event: should have 4 scheduled communication (1 / registration)')
         for mail_registration in after_sub_scheduler.mail_registration_ids:
             self.assertEqual(mail_registration.scheduled_date, now.replace(microsecond=0))
             self.assertTrue(mail_registration.mail_sent, 'event: registration mail should be sent at registration creation')
         self.assertTrue(after_sub_scheduler.mail_done, 'event: all subscription mails should have been sent')
         self.assertEqual(after_sub_scheduler.mail_state, 'running')
-        self.assertEqual(after_sub_scheduler.mail_count_done, 2)
+        self.assertEqual(after_sub_scheduler.mail_count_done, 4)
 
         # check emails effectively sent
-        self.assertEqual(len(self._new_mails), 2, 'event: should have 2 scheduled emails (1 / registration)')
+        self.assertEqual(len(self._new_mails), 4, 'event: should have 4 scheduled emails (1 / registration)')
         self.assertMailMailWEmails(
             [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email))],
             'outgoing',
             content=None,
-            fields_values={'subject': 'Your registration at %s' % test_event.name,
-                           'email_from': self.user_eventmanager.company_id.email_formatted,
-                          })
+            fields_values={
+                'email_from': self.user_eventmanager.company_id.email_formatted,
+                'subject': f'Confirmation for {test_event.name}',
+            })
 
         # same for second scheduler: scheduled but not sent
-        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 2, 'event: should have 2 scheduled communication (1 / registration)')
+        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 4, 'event: should have 4 scheduled communication (1 / registration)')
         for mail_registration in after_sub_scheduler_2.mail_registration_ids:
             self.assertEqual(mail_registration.scheduled_date, now.replace(microsecond=0) + relativedelta(hours=1))
             self.assertFalse(mail_registration.mail_sent, 'event: registration mail should be scheduled, not sent')
@@ -186,21 +202,22 @@ class TestMailSchedule(EventCase, MockEmail):
             after_sub_scheduler_2.execute()
 
         # verify that subscription scheduler was auto-executed after each registration
-        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 2, 'event: should have 2 scheduled communication (1 / registration)')
-        self.assertTrue(all(mail_reg.mail_sent for mail_reg in after_sub_scheduler_2.mail_registration_ids))
+        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 4, 'event: should have 4 scheduled communication (1 / open registration)')
+        self.assertListEqual(after_sub_scheduler_2.mail_registration_ids.mapped('mail_sent'), [True, True, False, False])
         self.assertTrue(after_sub_scheduler_2.mail_done, 'event: all subscription mails should have been sent')
         self.assertEqual(after_sub_scheduler_2.mail_state, 'running')
         self.assertEqual(after_sub_scheduler_2.mail_count_done, 2)
 
         # check emails effectively sent
-        self.assertEqual(len(self._new_mails), 2, 'event: should have 2 scheduled emails (1 / registration)')
+        self.assertEqual(len(self._new_mails), 2, 'event: should have 2 scheduled emails (1 / open registration)')
         self.assertMailMailWEmails(
             [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email))],
             'outgoing',
             content=None,
-            fields_values={'subject': 'Your registration at %s' % test_event.name,
-                           'email_from': self.user_eventmanager.company_id.email_formatted,
-                          })
+            fields_values={
+                'email_from': self.user_eventmanager.company_id.email_formatted,
+                'subject': f'Confirmation for {test_event.name}',
+            })
 
         # PRE SCHEDULERS (MOVE FORWARD IN TIME)
         # --------------------------------------------------
@@ -233,9 +250,10 @@ class TestMailSchedule(EventCase, MockEmail):
             [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email))],
             'outgoing',
             content=None,
-            fields_values={'subject': '%s: tomorrow' % test_event.name,
-                           'email_from': self.user_eventmanager.company_id.email_formatted,
-                          })
+            fields_values={
+                'email_from': self.user_eventmanager.company_id.email_formatted,
+                'subject': f'Reminder for {test_event.name}: tomorrow',
+            })
 
         # NEW REGISTRATION EFFECT ON SCHEDULERS
         # --------------------------------------------------
@@ -264,14 +282,14 @@ class TestMailSchedule(EventCase, MockEmail):
             reg3.action_confirm()
 
         # verify that subscription scheduler was auto-executed after new registration confirmed
-        self.assertEqual(len(after_sub_scheduler.mail_registration_ids), 3, 'event: should have 3 scheduled communication (1 / registration)')
+        self.assertEqual(len(after_sub_scheduler.mail_registration_ids), 5, 'event: should have 5 scheduled communication (1 / registration)')
         new_mail_reg = after_sub_scheduler.mail_registration_ids.filtered(lambda mail_reg: mail_reg.registration_id == reg3)
         self.assertEqual(new_mail_reg.scheduled_date, now_start.replace(microsecond=0))
         self.assertTrue(new_mail_reg.mail_sent, 'event: registration mail should be sent at registration creation')
         self.assertTrue(after_sub_scheduler.mail_done, 'event: all subscription mails should have been sent')
-        self.assertEqual(after_sub_scheduler.mail_count_done, 3)
+        self.assertEqual(after_sub_scheduler.mail_count_done, 5)
         # verify that subscription scheduler was auto-executed after new registration confirmed
-        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 3, 'event: should have 3 scheduled communication (1 / registration)')
+        self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 5, 'event: should have 5 scheduled communication (1 / registration)')
         new_mail_reg = after_sub_scheduler_2.mail_registration_ids.filtered(lambda mail_reg: mail_reg.registration_id == reg3)
         self.assertEqual(new_mail_reg.scheduled_date, now_start.replace(microsecond=0) + relativedelta(hours=1))
         self.assertTrue(new_mail_reg.mail_sent, 'event: registration mail should be sent at registration creation')
@@ -283,7 +301,7 @@ class TestMailSchedule(EventCase, MockEmail):
         # manual check because 2 identical mails are sent and mail tools do not support it easily
         for mail in self._new_mails:
             self.assertEqual(mail.email_from, self.user_eventmanager.company_id.email_formatted)
-            self.assertEqual(mail.subject, 'Your registration at %s' % test_event.name)
+            self.assertEqual(mail.subject, f'Confirmation for {test_event.name}')
             self.assertEqual(mail.state, 'outgoing')
             self.assertEqual(mail.email_to, formataddr((reg3.name, reg3.email)))
 
@@ -308,12 +326,14 @@ class TestMailSchedule(EventCase, MockEmail):
             [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email)), formataddr((reg3.name, reg3.email))],
             'outgoing',
             content=None,
-            fields_values={'subject': '%s: today' % test_event.name,
-                           'email_from': self.user_eventmanager.company_id.email_formatted,
-                          })
+            fields_values={
+                'email_from': self.user_eventmanager.company_id.email_formatted,
+                'subject': f"Reminder for {test_event.name}: today",
+            })
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     @users('user_eventmanager')
+    @warmup
     def test_event_mail_schedule_on_subscription(self):
         """ Test emails sent on subscription, notably to avoid bottlenecks """
         test_event = self.test_event.with_env(self.env)
@@ -327,8 +347,8 @@ class TestMailSchedule(EventCase, MockEmail):
         # consider having hanging registrations, still not processed (e.g. adding
         # a new scheduler after)
         self.env.invalidate_all()
-        # com 58, event 36
-        with self.assertQueryCount(61), self.mock_datetime_and_now(reference_now), \
+        # event 19
+        with self.assertQueryCount(32), self.mock_datetime_and_now(reference_now), \
              self.mock_mail_gateway():
             _existing = self.env['event.registration'].create([
                 {
@@ -347,12 +367,12 @@ class TestMailSchedule(EventCase, MockEmail):
                 'interval_unit': 'now',
                 'interval_type': 'after_sub',
                 'notification_type': 'mail',
-                'template_ref': f'mail.template,{self.template_subscription_id}',
+                'template_ref': f'mail.template,{self.template_subscription.id}',
             }),
         ]})
         self.env.invalidate_all()
-        # com 148, event 134
-        with self.assertQueryCount(153), \
+        # event 50
+        with self.assertQueryCount(63), \
              self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \
              self.mock_mail_gateway():
             _new = self.env['event.registration'].create([
@@ -362,12 +382,48 @@ class TestMailSchedule(EventCase, MockEmail):
                     'name': f'New Attendee {idx}',
                 } for idx in range(2)
             ])
-        # self.assertEqual(len(self._new_mails), 2)
-        # self.assertEqual(self.mail_mail_create_mocked.call_count, 2)
-        self.assertEqual(len(self._new_mails), 7,
-                         'EventMail: TODO: should be limited to new registrations')
-        self.assertEqual(self.mail_mail_create_mocked.call_count, 7,
-                         'EventMail: TODO: should create one mail / new registration')
+        self.assertEqual(len(self._new_mails), 2,
+                         'EventMail: should be limited to new registrations')
+        self.assertEqual(self.mail_mail_create_mocked.call_count, 2,
+                         'EventMail: should create one mail / new registration')
+
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @users('user_eventmanager')
+    def test_event_mail_schedule_on_subscription_async(self):
+        """ Async mode for schedulers activated, should not send communication
+        in the same transaction. """
+        test_event = self.test_event.with_env(self.env)
+        cron = self.env.ref('event.event_mail_scheduler')
+        reference_now = self.reference_now
+
+        self.env['ir.config_parameter'].sudo().set_param('event.event_mail_async', True)
+        with self.capture_triggers(cron.id) as capt, \
+             self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \
+             self.mock_mail_gateway():
+            existing = self.env['event.registration'].create([
+                {
+                    'email': f'new.async.attendee.{idx}@test.example.com',
+                    'event_id': test_event.id,
+                    'name': f'New Async Attendee {idx}',
+                } for idx in range(5)
+            ])
+        self.assertEqual(len(self._new_mails), 0)
+        self.assertEqual(self.mail_mail_create_mocked.call_count, 0)
+        capt.records.ensure_one()
+        self.assertEqual(capt.records.call_at, reference_now.replace(microsecond=0) + relativedelta(minutes=10))
+
+        # run cron: emails should be send for registrations
+        with self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \
+             self.mock_mail_gateway():
+            cron.sudo().method_direct_trigger()
+        self.assertMailMailWEmails(
+            [formataddr((reg.name, reg.email)) for reg in existing],
+            "outgoing",
+            content=f"Hello your registration to {test_event.name} is confirmed",
+            fields_values={
+                'email_from': self.user_eventmanager.company_id.email_formatted,
+                'subject': f'Confirmation for {test_event.name}',
+            })
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_unique_event_mail_ids(self):

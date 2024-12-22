@@ -525,6 +525,7 @@ class TestStockLot(TestStockCommon):
         the latter should be applied on the SML
         """
         exp_date = fields.Datetime.today() + relativedelta(days=15)
+        sml_exp_date = fields.Datetime.today() + relativedelta(days=10)
 
         lot = self.env['stock.lot'].create({
             'name': 'Lot 1',
@@ -533,16 +534,26 @@ class TestStockLot(TestStockCommon):
             'company_id': self.env.company.id,
         })
 
+        move = self.env['stock.move'].create({
+            'name': 'move_test',
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'product_id': self.apple_product.id,
+            'product_uom': self.apple_product.uom_id.id,
+        })
         sml = self.env['stock.move.line'].create({
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
             'product_id': self.apple_product.id,
             'quantity': 3,
             'product_uom_id': self.apple_product.uom_id.id,
-            'lot_id': lot.id,
+            'expiration_date': fields.Datetime.to_string(sml_exp_date),
             'company_id': self.env.company.id,
+            'move_id': move.id,
         })
+        self.assertEqual(sml.expiration_date, sml_exp_date)
 
+        sml.lot_id = lot
         self.assertEqual(sml.expiration_date, exp_date)
 
     def test_apply_same_date_on_expiry_fields(self):
@@ -651,3 +662,26 @@ class TestStockLot(TestStockCommon):
 
         picking_out.action_assign()
         self.assertEqual(picking_out.move_line_ids.lot_id, apple_lot)
+
+    def test_compute_expiration_date_from_scheduled_date(self):
+        partner = self.env['res.partner'].create({
+            'name': 'Apple\'s Joe',
+            'company_id': self.env.ref('base.main_company').id,
+        })
+
+        delta = timedelta(seconds=10)
+        new_date = datetime.today() + timedelta(days=42)
+        expiration_date = new_date + timedelta(days=self.apple_product.expiration_time)
+
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.partner_id = partner
+        picking_form.scheduled_date = new_date
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.apple_product
+            move.product_uom_qty = 4
+        delivery = picking_form.save()
+        delivery.action_confirm()
+
+        self.assertAlmostEqual(delivery.move_line_ids[0].expiration_date, expiration_date, delta=delta)

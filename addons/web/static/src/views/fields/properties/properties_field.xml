@@ -21,7 +21,7 @@
                             class="o_field_property_open_popover fa fa-pencil ms-3"
                             t-on-click.prevent.stop="(event) => this.onPropertyEdit(event, propertiesListGroup.name)"/>
                         <i t-if="state.canChangeDefinition and !props.readonly"
-                            class="oi oi-draggable ms-1"/>
+                            class="oi oi-draggable ms-1 d-none d-sm-block"/>
                         <div t-if="foldable" class="ms-auto">
                             <i class="fa me-1" t-att-class="isFolded ? 'fa-caret-right' : 'fa-caret-down'"/>
                         </div>
@@ -54,7 +54,7 @@
                                 class="o_field_property_open_popover fa fa-pencil ms-2"
                                 t-on-click="(event) => this.onPropertyEdit(event, propertyConfiguration.name)"/>
                             <i t-if="state.canChangeDefinition and !props.readonly"
-                                class="oi oi-draggable ms-1"/>
+                                class="oi oi-draggable ms-1 d-none d-sm-block"/>
                         </label>
                         <div class="o_property_field_value w-100">
                             <PropertyValue
@@ -77,7 +77,7 @@
                     </div>
                     <div
                         t-if="propertiesListGroup_index === _groupedPropertiesList.length - 1 and state.showAddButton"
-                        class="o_field_property_add"
+                        class="o_field_property_add d-none d-sm-block"
                         t-att-class="{'g-col-2': props.columns !== 1}">
                         <button
                             t-if="!props.readonly and state.canChangeDefinition and definitionRecordId"

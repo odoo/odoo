@@ -112,16 +112,16 @@
                     <record id="tax_report_rub_3b" model="account.report.line">
                         <field name="name">3b. Deliveries to/services in countries within the EU and A-B-C supply chain transactions (turnover)</field>
                         <field name="code">3B_OMZET</field>
-                        <field name="aggregation_formula">3BL_OMZET.balance + 3BT_OMZET.balance</field>
+                        <field name="aggregation_formula">3BG_OMZET.balance + 3BT_OMZET.balance + 3BS_OMZET.balance</field>
                         <field name="children_ids">
-                            <record id="tax_report_rub_3bl" model="account.report.line">
-                                <field name="name">3bl. Deliveries to/services in countries within the EU (turnover)</field>
-                                <field name="code">3BL_OMZET</field>
+                            <record id="tax_report_rub_3bg" model="account.report.line">
+                                <field name="name">3bg. Deliveries of products to countries within the EU (turnover).</field>
+                                <field name="code">3BG_OMZET</field>
                                 <field name="expression_ids">
-                                    <record id="tax_report_rub_3b_tag" model="account.report.expression">
+                                    <record id="tax_report_rub_3bg_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">3bl (omzet)</field>
+                                        <field name="formula">3bg (omzet)</field>
                                     </record>
                                 </field>
                             </record>
@@ -133,6 +133,17 @@
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">3bt (omzet)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_rub_3bs" model="account.report.line">
+                                <field name="name">3bs. Services in countries within the EU (revenue)</field>
+                                <field name="code">3BS_OMZET</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_rub_3bs_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">3bs (omzet)</field>
                                     </record>
                                 </field>
                             </record>

@@ -6,6 +6,7 @@ import logging
 from lxml import etree
 from markupsafe import escape
 import uuid
+from operator import itemgetter
 
 from odoo import _, api, Command, fields, models
 from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
@@ -84,7 +85,7 @@ class AccountMove(models.Model):
         depends=['l10n_it_edi_attachment_file'],
     )
     l10n_it_edi_is_self_invoice = fields.Boolean(compute="_compute_l10n_it_edi_is_self_invoice")
-    l10n_it_stamp_duty = fields.Float(default=0, string="Dati Bollo")
+    l10n_it_stamp_duty = fields.Float(string="Dati Bollo")
     l10n_it_ddt_id = fields.Many2one('l10n_it.ddt', string='DDT', copy=False)
 
     l10n_it_origin_document_type = fields.Selection(
@@ -116,7 +117,7 @@ class AccountMove(models.Model):
     def _compute_l10n_it_partner_pa(self):
         for move in self:
             partner = move.commercial_partner_id
-            move.l10n_it_partner_pa = partner and partner._l10n_it_edi_is_public_administration()
+            move.l10n_it_partner_pa = partner and (partner._l10n_it_edi_is_public_administration() or len(partner.l10n_it_pa_index or '') == 7)
 
     @api.depends('move_type', 'line_ids.tax_tag_ids')
     def _compute_l10n_it_edi_is_self_invoice(self):
@@ -130,7 +131,7 @@ class AccountMove(models.Model):
         for move in others:
             move.l10n_it_edi_is_self_invoice = False
         if purchases:
-            it_tax_report_vj_lines = self.env['account.report.line'].search([
+            it_tax_report_vj_lines = self.env['account.report.line'].sudo().search([
                 ('report_id.country_id.code', '=', 'IT'),
                 ('code', '=like', 'VJ%')
             ])
@@ -242,20 +243,46 @@ class AccountMove(models.Model):
         """
         invoice_lines = []
         lines = self.invoice_line_ids.filtered(lambda l: l.display_type not in ('line_note', 'line_section'))
-        for num, line in enumerate(lines):
-            sign = -1 if line.move_id.is_inbound() else 1
-            price_subtotal = (line.balance * sign) if convert_to_euros else line.price_subtotal
-            # The price_subtotal should be inverted when the line is a reverse charge refund.
-            if reverse_charge_refund:
-                price_subtotal = -price_subtotal
-
-            # Unit price
-            price_unit = 0
-            if line.quantity and line.discount != 100.0:
-                price_unit = price_subtotal / ((1 - (line.discount or 0.0) / 100.0) * abs(line.quantity))
+        base_lines = [invl._convert_to_tax_base_line_dict() for invl in lines]
+        inverse_factor = (-1 if reverse_charge_refund else 1)
+        for num, line in enumerate(base_lines):
+            sign = -1 if line['record'].move_id.is_inbound() else 1
+            line['sequence'] = num
+            line['price_subtotal'] = line['record'].balance * sign if convert_to_euros else line['price_subtotal']
+            line['price_subtotal'] = line['price_subtotal'] * inverse_factor
+            if line['discount'] != 100.0 and line['quantity']:
+                gross_price = line['price_subtotal'] / (1 - line['discount'] / 100.0)
+                line['discount_amount_before_dispatching'] = (gross_price - line['price_subtotal']) * inverse_factor
+                line['gross_price_subtotal'] = line['currency'].round(gross_price * inverse_factor)
+                line['price_unit'] = gross_price / abs(line['quantity'])
             else:
-                price_unit = line.price_unit
+                line['gross_price_subtotal'] = line['currency'].round(line['price_unit'] * line['quantity'])
+                line['discount_amount_before_dispatching'] = line['gross_price_subtotal']
 
+        template = self.env['ir.qweb']._load('l10n_it_edi.account_invoice_line_it_FatturaPA')[0]
+        flat_discount_element = template.find('.//ScontoMaggiorazione/Percentuale')
+        if flat_discount_element is not None:
+            downpayment_lines = []
+            if not is_downpayment:
+                # Negative lines linked to down payment should stay negative
+                for line_dict in base_lines:
+                    line = line_dict['record']
+                    if line.price_subtotal < 0 and line._get_downpayment_lines():
+                        downpayment_lines.append(line_dict)
+                        base_lines.remove(line_dict)
+            dispatch_result = self.env['account.tax']._dispatch_negative_lines(base_lines)
+            base_lines = sorted(
+                dispatch_result['result_lines'] + dispatch_result['orphan_negative_lines'] + dispatch_result['nulled_candidate_lines']
+                + downpayment_lines,
+                key=itemgetter('sequence')
+            )
+        else:
+            # The template needs to be updated to be able to handle negative lines
+            if any(line['price_subtotal'] < 0 for line in base_lines):
+                raise UserError(_("To handle negative lines, we need you to update your module 'Italy - E-invoicing'"))
+
+        for num, line_dict in enumerate(base_lines):
+            line = line_dict['record']
             description = line.name
 
             # Down payment lines:
@@ -273,8 +300,10 @@ class AccountMove(models.Model):
                 'line': line,
                 'line_number': num + 1,
                 'description': description or 'NO NAME',
-                'unit_price': price_unit,
-                'subtotal_price': price_subtotal,
+                'subtotal_price_eur': (line_dict['gross_price_subtotal'] - line_dict.get('discount_amount', 0.0)) * inverse_factor,
+                'subtotal_price': (line_dict['gross_price_subtotal'] - line_dict.get('discount_amount', 0.0)) * inverse_factor * line_dict['rate'],
+                'unit_price': line_dict['price_unit'],
+                'discount_amount': ((line_dict.get('discount_amount', 0.0) - line_dict['discount_amount_before_dispatching']) / line.quantity) if line.quantity else 0,
                 'vat_tax': line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t._l10n_it_filter_kind('vat') and t.amount >= 0),
                 'downpayment_moves': downpayment_moves,
                 'discount_type': (
@@ -329,10 +358,13 @@ class AccountMove(models.Model):
     def _get_l10n_it_amount_split_payment(self):
         self.ensure_one()
         amount = 0.0
-        if self.is_invoice(True):
-            for line in [line for line in self.line_ids if line.tax_line_id]:
-                if line.tax_line_id._l10n_it_is_split_payment() and line.credit > 0.0:
-                    amount += line.credit
+        if self.is_sale_document(False):
+            for line in self.line_ids:
+                if line.tax_line_id and line.tax_line_id._l10n_it_is_split_payment():
+                    if self.move_type  == 'out_invoice':
+                        amount += line.credit
+                    else:
+                        amount += line.debit
         return amount
 
     def _l10n_it_edi_get_values(self, pdf_values=None):
@@ -415,8 +447,10 @@ class AccountMove(models.Model):
             'partner_bank': self.partner_bank_id,
             'formato_trasmissione': formato_trasmissione,
             'document_type': document_type,
+            'payment_method': 'MP05',
             'tax_details': tax_details,
             'downpayment_moves': downpayment_moves,
+            'reconciled_moves': self._get_reconciled_invoices(),
             'rc_refund': reverse_charge_refund,
             'invoice_lines': invoice_lines,
             'tax_lines': tax_lines,
@@ -440,7 +474,7 @@ class AccountMove(models.Model):
             if tax_ids_with_tax_scope:
                 scopes += tax_ids_with_tax_scope.mapped('tax_scope')
             else:
-                scopes.append(line.product_id and line.product_id.type or 'consu')
+                scopes.append(line.product_id and line.product_id.type == 'service' and 'service' or 'consu')
 
         if set(scopes) == {'consu', 'service'}:
             return "both"
@@ -484,6 +518,22 @@ class AccountMove(models.Model):
             and self.amount_total <= 400
         )
 
+    def _l10n_it_edi_is_professional_fees(self):
+        """
+            This function returns a boolean value based on the comparison of the lines values with a product.
+            If one line has the tag for professional fee then we return True
+        """
+        self.ensure_one()
+        professional_fee_tag = self.env.ref('l10n_it_edi.l10n_it_edi_professional_fees_tag', raise_if_not_found=False)
+        if not professional_fee_tag:
+            return False
+
+        return any(
+            professional_fee_tag.id in line.account_id.tag_ids.ids
+            for line in self.invoice_line_ids
+            if line.display_type not in ('line_note', 'line_section')
+        )
+
     def _l10n_it_edi_features_for_document_type_selection(self):
         """ Returns a dictionary of features to be compared with the TDxx FatturaPA
             document type requirements. """
@@ -499,6 +549,7 @@ class AccountMove(models.Model):
             'downpayment': self._is_downpayment(),
             'services_or_goods': services_or_goods,
             'goods_in_italy': services_or_goods == 'consu' and self._l10n_it_edi_goods_in_italy(),
+            'professional_fees': self._l10n_it_edi_is_professional_fees(),
         }
 
     def _l10n_it_edi_document_type_mapping(self):
@@ -508,16 +559,34 @@ class AccountMove(models.Model):
                      'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False,
-                     'downpayment': False},
+                     'downpayment': False,
+                     'professional_fees': False},
             'TD02': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False,
-                     'downpayment': True},
+                     'downpayment': True,
+                     'professional_fees': False},
+            'TD03': {'move_types': ['out_invoice'],
+                     'import_type': 'in_invoice',
+                     'self_invoice': False,
+                     'simplified': False,
+                     'downpayment': True,
+                     'professional_fees': True},
             'TD04': {'move_types': ['out_refund'],
                      'import_type': 'in_refund',
                      'self_invoice': False,
                      'simplified': False},
+            'TD05': {'move_types': ['out_refund'],
+                     'import_type': 'in_refund',
+                     'self_invoice': False,
+                     'simplified': False},
+            'TD06': {'move_types': ['out_invoice'],
+                     'import_type': 'in_invoice',
+                     'self_invoice': False,
+                     'simplified': False,
+                     'downpayment': False,
+                     'professional_fees': True},
             'TD07': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
@@ -588,6 +657,25 @@ class AccountMove(models.Model):
     def _l10n_it_edi_is_simplified_document_type(self, document_type):
         mapping = self._l10n_it_edi_document_type_mapping()
         return mapping.get(document_type, {}).get('simplified', False)
+
+    @api.model
+    def _l10n_it_buyer_seller_info(self):
+        return {
+            'buyer': {
+                'role': 'buyer',
+                'section_xpath': '//CessionarioCommittente',
+                'vat_xpath': '//CessionarioCommittente//IdCodice',
+                'codice_fiscale_xpath': '//CessionarioCommittente//CodiceFiscale',
+                'type_tax_use_domain': [('type_tax_use', '=', 'purchase')],
+            },
+            'seller': {
+                'role': 'seller',
+                'section_xpath': '//CedentePrestatore',
+                'vat_xpath': '//CedentePrestatore//IdCodice',
+                'codice_fiscale_xpath': '//CedentePrestatore//CodiceFiscale',
+                'type_tax_use_domain': [('type_tax_use', '=', 'sale')],
+            },
+        }
 
     # -------------------------------------------------------------------------
     # EDI: Import
@@ -669,7 +757,7 @@ class AccountMove(models.Model):
             ):
                 self.env.cr.commit()
                 moves |= move
-                proxy_acks.append(id_transaction)
+            proxy_acks.append(id_transaction)
 
         # Extend created moves with the related attachments and commit
         for move in moves:
@@ -687,12 +775,13 @@ class AccountMove(models.Model):
             :param proxy_user:     the AccountEdiProxyClientUser to use for decrypting the file
         """
 
-        # Name should be unique, the invoice already exists
-        Attachment = self.env['ir.attachment']
+        # Name should be unique per company, the invoice already exists
+        Attachment = self.env['ir.attachment'].sudo().with_company(proxy_user.company_id)
         if Attachment.search_count([
             ('name', '=', filename),
             ('res_model', '=', 'account.move'),
             ('res_field', '=', 'l10n_it_edi_attachment_file'),
+            ('company_id', '=', proxy_user.company_id.id),
         ], limit=1):
             _logger.warning('E-invoice already exists: %s', filename)
             return False
@@ -705,7 +794,7 @@ class AccountMove(models.Model):
             return False
 
         # Create the attachment, an empty move, then attach the two and commit
-        move = self.create({})
+        move = self.with_company(proxy_user.company_id).create({})
         attachment = Attachment.create({
             'name': filename,
             'raw': decrypted_content,
@@ -737,7 +826,6 @@ class AccountMove(models.Model):
         domain = [
             *self.env['account.tax']._check_company_domain(company),
             ('amount_type', '=', 'percent'),
-            ('type_tax_use', '=', 'purchase'),
         ] + (extra_domain or [])
 
         # We suppose we're importing a file that comes in as a customer invoice where the sale tax will be 0%.
@@ -757,10 +845,13 @@ class AccountMove(models.Model):
 
         return taxes[0] if taxes else taxes
 
-    def _l10n_it_edi_get_extra_info(self, company, document_type, body_tree):
+    def _l10n_it_edi_get_extra_info(self, company, document_type, body_tree, incoming=True):
         """ This function is meant to collect other information that has to be inserted on the invoice lines by submodules.
             :return extra_info, messages_to_log"""
-        return {'simplified': self.env['account.move']._l10n_it_edi_is_simplified_document_type(document_type)}, []
+        return {
+            'simplified': self.env['account.move']._l10n_it_edi_is_simplified_document_type(document_type),
+            'type_tax_use_domain': [('type_tax_use', '=', 'purchase' if incoming else 'sale')],
+        }, []
 
     def _l10n_it_edi_import_invoice(self, invoice, data, is_new):
         """ Decodes a l10n_it_edi move into an Odoo move.
@@ -770,184 +861,220 @@ class AccountMove(models.Model):
         :param is_new: whether the move is newly created or to be updated
         :returns:      the imported move
         """
-        tree = data['xml_tree']
-        company = self.company_id
+        with self._get_edi_creation() as self:
+            buyer_seller_info = self._l10n_it_buyer_seller_info()
 
-        # For unsupported document types, just assume in_invoice, and log that the type is unsupported
-        document_type = get_text(tree, '//DatiGeneraliDocumento/TipoDocumento')
-        move_type = self._l10n_it_edi_document_type_mapping().get(document_type, {}).get('import_type')
-        if not move_type:
-            move_type = "in_invoice"
-            _logger.info('Document type not managed: %s. Invoice type is set by default.', document_type)
+            tree = data['xml_tree']
+            company = self.company_id
 
-        self.move_type = move_type
+            # There are 2 cases:
+            # - cron:
+            #     * Move direction (incoming / outgoing) flexible (no 'default_move_type')
+            #     * I.e. used for import from tax agency
+            # - "Upload" button (invoices / bills view)
+            #     * Fixed move direction; the button sets the 'default_move_type'
+            default_move_type = self.env.context.get('default_move_type')
+            if default_move_type is None:
+                incoming_possibilities = [True, False]
+            elif default_move_type in invoice.get_purchase_types(include_receipts=True):
+                incoming_possibilities = [True]
+            elif default_move_type in invoice.get_sale_types(include_receipts=True):
+                incoming_possibilities = [False]
+            else:
+                _logger.warning("Cannot handle default_move_type '%s'.", default_move_type)
+                return
 
-        if self.name and self.name != '/':
-            # the journal might've changed, so we need to recompute the name in case it was set (first entry in journal)
-            self.name = False
-            self._compute_name()
+            for incoming in incoming_possibilities:
+                company_role, partner_role = ('buyer', 'seller') if incoming else ('seller', 'buyer')
+                company_info = buyer_seller_info[company_role]
+                vat = get_text(tree, company_info['vat_xpath'])
+                if vat and vat .casefold() in (company.vat or '').casefold():
+                    break
+                codice_fiscale = get_text(tree, company_info['codice_fiscale_xpath'])
+                if codice_fiscale and codice_fiscale.casefold() in (company.l10n_it_codice_fiscale or '').casefold():
+                    break
+            else:
+                invoice.message_post(body=_("Your company's VAT number and Fiscal Code haven't been found in the buyer and/or seller sections inside the document."))
+                return
 
-        # Collect extra info from the XML that may be used by submodules to further put information on the invoice lines
-        extra_info, message_to_log = self._l10n_it_edi_get_extra_info(company, document_type, tree)
+            # For unsupported document types, just assume in_invoice, and log that the type is unsupported
+            document_type = get_text(tree, '//DatiGeneraliDocumento/TipoDocumento')
+            move_type = self._l10n_it_edi_document_type_mapping().get(document_type, {}).get('import_type')
+            if not move_type:
+                move_type = "in_invoice"
+                _logger.info('Document type not managed: %s. Invoice type is set by default.', document_type)
+            if not incoming and move_type.startswith('in_'):
+                move_type = 'out' + move_type[2:]
 
-        # Partner
-        vat = get_text(tree, '//CedentePrestatore//IdCodice')
-        codice_fiscale = get_text(tree, '//CedentePrestatore//CodiceFiscale')
-        email = get_text(tree, '//DatiTrasmissione//Email')
-        if partner := self._l10n_it_edi_search_partner(company, vat, codice_fiscale, email):
-            self.partner_id = partner
-        else:
-            message = Markup("<br/>").join((
-                _("Vendor not found, useful informations from XML file:"),
-                self._compose_info_message(tree, '//CedentePrestatore')
-            ))
-            message_to_log.append(message)
+            self.move_type = move_type
 
-        # Numbering attributed by the transmitter
-        if progressive_id := get_text(tree, '//ProgressivoInvio'):
-            self.payment_reference = progressive_id
+            if self.name and self.name != '/':
+                # the journal might've changed, so we need to recompute the name in case it was set (first entry in journal)
+                self.name = False
+                self._compute_name()
 
-        # Document Number
-        if number := get_text(tree, './/DatiGeneraliDocumento//Numero'):
-            self.ref = number
+            # Collect extra info from the XML that may be used by submodules to further put information on the invoice lines
+            extra_info, message_to_log = self._l10n_it_edi_get_extra_info(company, document_type, tree, incoming=incoming)
 
-        # Currency
-        if currency_str := get_text(tree, './/DatiGeneraliDocumento/Divisa'):
-            currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
-            if currency != self.env.company.currency_id and currency.active:
-                self.currency_id = currency
-
-        # Date
-        if document_date := get_date(tree, './/DatiGeneraliDocumento/Data'):
-            self.invoice_date = document_date
-        else:
-            message_to_log.append(_("Document date invalid in XML file: %s", document_date))
-
-        # Stamp Duty
-        if stamp_duty := get_text(tree, './/DatiGeneraliDocumento/DatiBollo/ImportoBollo'):
-            self.l10n_it_stamp_duty = float(stamp_duty)
-
-        # Comment
-        for narration in get_text(tree, './/DatiGeneraliDocumento//Causale', many=True):
-            self.narration = '%s%s<br/>' % (self.narration or '', narration)
-
-        # Informations relative to the purchase order, the contract, the agreement,
-        # the reception phase or invoices previously transmitted
-        # <2.1.2> - <2.1.6>
-        for document_type in ['DatiOrdineAcquisto', 'DatiContratto', 'DatiConvenzione', 'DatiRicezione', 'DatiFattureCollegate']:
-            for element in tree.xpath('.//DatiGenerali/' + document_type):
-                message = Markup("{} {}<br/>{}").format(document_type, _("from XML file:"), self._compose_info_message(element, '.'))
+            # Partner
+            partner_info = buyer_seller_info[partner_role]
+            vat = get_text(tree, partner_info['vat_xpath'])
+            codice_fiscale = get_text(tree, partner_info['codice_fiscale_xpath'])
+            email = get_text(tree, '//DatiTrasmissione//Email') if partner_info['role'] == 'seller' else ''
+            if partner := self._l10n_it_edi_search_partner(company, vat, codice_fiscale, email):
+                self.partner_id = partner
+            else:
+                message = Markup("<br/>").join((
+                    _("Partner not found, useful informations from XML file:"),
+                    self._compose_info_message(tree, partner_info['section_xpath'])
+                ))
                 message_to_log.append(message)
 
-        #  Dati DDT. <2.1.8>
-        if elements := tree.xpath('.//DatiGenerali/DatiDDT'):
-            message = Markup("<br/>").join((
-                _("Transport informations from XML file:"),
-                self._compose_info_message(tree, './/DatiGenerali/DatiDDT')
-            ))
-            message_to_log.append(message)
+            # Numbering attributed by the transmitter
+            if progressive_id := get_text(tree, '//ProgressivoInvio'):
+                self.payment_reference = progressive_id
 
-        # Due date. <2.4.2.5>
-        if due_date := get_date(tree, './/DatiPagamento/DettaglioPagamento/DataScadenzaPagamento'):
-            self.invoice_date_due = fields.Date.to_string(due_date)
-        else:
-            message_to_log.append(_("Payment due date invalid in XML file: %s", str(due_date)))
+            # Document Number
+            if number := get_text(tree, './/DatiGeneraliDocumento//Numero'):
+                self.ref = number
 
-        # Information related to the purchase order <2.1.2>
-        if (po_refs := get_text(tree, '//DatiGenerali/DatiOrdineAcquisto/IdDocumento', many=True)):
-            self.invoice_origin = ", ".join(po_refs)
+            # Currency
+            if currency_str := get_text(tree, './/DatiGeneraliDocumento/Divisa'):
+                currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
+                if currency != self.env.company.currency_id and currency.active:
+                    self.currency_id = currency
 
-        # Total amount. <2.4.2.6>
-        if amount_total := sum([float(x) for x in get_text(tree, './/ImportoPagamento', many=True) if x]):
-            message_to_log.append(_("Total amount from the XML File: %s", amount_total))
+            # Date
+            if document_date := get_date(tree, './/DatiGeneraliDocumento/Data'):
+                self.invoice_date = document_date
+            else:
+                message_to_log.append(_("Document date invalid in XML file: %s", document_date))
 
-        # Bank account. <2.4.2.13>
-        if self.move_type not in ('out_invoice', 'in_refund'):
-            if acc_number := get_text(tree, './/DatiPagamento/DettaglioPagamento/IBAN'):
-                if self.partner_id and self.partner_id.commercial_partner_id:
-                    bank = self.env['res.partner.bank'].search([
-                        ('acc_number', '=', acc_number),
-                        ('partner_id', '=', self.partner_id.commercial_partner_id.id),
-                        ('company_id', 'in', [self.company_id.id, False])
-                    ], order='company_id', limit=1)
-                else:
-                    bank = self.env['res.partner.bank'].search([
-                        ('acc_number', '=', acc_number),
-                        ('company_id', 'in', [self.company_id.id, False])
-                    ], order='company_id', limit=1)
-                if bank:
-                    self.partner_bank_id = bank
-                else:
-                    message = Markup("<br/>").join((
-                        _("Bank account not found, useful informations from XML file:"),
-                        self._compose_info_message(tree, [
-                            './/DatiPagamento//Beneficiario',
-                            './/DatiPagamento//IstitutoFinanziario',
-                            './/DatiPagamento//IBAN',
-                            './/DatiPagamento//ABI',
-                            './/DatiPagamento//CAB',
-                            './/DatiPagamento//BIC',
-                            './/DatiPagamento//ModalitaPagamento'
-                        ])
-                    ))
+            # Stamp Duty
+            if stamp_duty := get_text(tree, './/DatiGeneraliDocumento/DatiBollo/ImportoBollo'):
+                self.l10n_it_stamp_duty = float(stamp_duty)
+
+            # Comment
+            for narration in get_text(tree, './/DatiGeneraliDocumento//Causale', many=True):
+                self.narration = '%s%s<br/>' % (self.narration or '', narration)
+
+            # Informations relative to the purchase order, the contract, the agreement,
+            # the reception phase or invoices previously transmitted
+            # <2.1.2> - <2.1.6>
+            for document_type in ['DatiOrdineAcquisto', 'DatiContratto', 'DatiConvenzione', 'DatiRicezione', 'DatiFattureCollegate']:
+                for element in tree.xpath('.//DatiGenerali/' + document_type):
+                    message = Markup("{} {}<br/>{}").format(document_type, _("from XML file:"), self._compose_info_message(element, '.'))
                     message_to_log.append(message)
-        elif elements := tree.xpath('.//DatiPagamento/DettaglioPagamento'):
-            message = Markup("<br/>").join((
-                _("Bank account not found, useful informations from XML file:"),
-                self._compose_info_message(tree, './/DatiPagamento')
-            ))
-            message_to_log.append(message)
 
-        # Invoice lines. <2.2.1>
-        tag_name = './/DettaglioLinee' if not extra_info['simplified'] else './/DatiBeniServizi'
-        for element in tree.xpath(tag_name):
-            move_line = self.invoice_line_ids.create({
-                'move_id': self.id,
-                'tax_ids': [fields.Command.clear()]})
-            if move_line:
-                message_to_log += self._l10n_it_edi_import_line(element, move_line, extra_info)
+            #  Dati DDT. <2.1.8>
+            if elements := tree.xpath('.//DatiGenerali/DatiDDT'):
+                message = Markup("<br/>").join((
+                    _("Transport informations from XML file:"),
+                    self._compose_info_message(tree, './/DatiGenerali/DatiDDT')
+                ))
+                message_to_log.append(message)
 
-        # Global discount summarized in 1 amount
-        if discount_elements := tree.xpath('.//DatiGeneraliDocumento/ScontoMaggiorazione'):
-            taxable_amount = float(self.tax_totals['amount_untaxed'])
-            discounted_amount = taxable_amount
-            for discount_element in discount_elements:
-                discount_sign = 1
-                if (discount_type := discount_element.xpath('.//Tipo')) and discount_type[0].text == 'MG':
-                    discount_sign = -1
-                if discount_amount := get_text(discount_element, './/Importo'):
-                    discounted_amount -= discount_sign * float(discount_amount)
-                    continue
-                if discount_percentage := get_text(discount_element, './/Percentuale'):
-                    discounted_amount *= 1 - discount_sign * float(discount_percentage) / 100
+            # Due date. <2.4.2.5>
+            if due_date := get_date(tree, './/DatiPagamento/DettaglioPagamento/DataScadenzaPagamento'):
+                self.invoice_date_due = fields.Date.to_string(due_date)
+            else:
+                message_to_log.append(_("Payment due date invalid in XML file: %s", str(due_date)))
 
-            general_discount = discounted_amount - taxable_amount
-            sequence = len(elements) + 1
+            # Information related to the purchase order <2.1.2>
+            if (po_refs := get_text(tree, '//DatiGenerali/DatiOrdineAcquisto/IdDocumento', many=True)):
+                self.invoice_origin = ", ".join(po_refs)
 
-            self.invoice_line_ids = [Command.create({
-                'sequence': sequence,
-                'name': 'SCONTO' if general_discount < 0 else 'MAGGIORAZIONE',
-                'price_unit': general_discount,
-            })]
+            # Total amount. <2.4.2.6>
+            if amount_total := sum(float(x) for x in get_text(tree, './/ImportoPagamento', many=True) if x):
+                message_to_log.append(_("Total amount from the XML File: %s", amount_total))
 
-        for element in tree.xpath('.//Allegati'):
-            attachment_64 = self.env['ir.attachment'].create({
-                'name': get_text(element, './/NomeAttachment'),
-                'datas': str.encode(get_text(element, './/Attachment')),
-                'type': 'binary',
-                'res_model': 'account.move',
-                'res_id': self.id,
-            })
+            # Bank account. <2.4.2.13>
+            if self.move_type not in ('out_invoice', 'in_refund'):
+                if acc_number := get_text(tree, './/DatiPagamento/DettaglioPagamento/IBAN'):
+                    if self.partner_id and self.partner_id.commercial_partner_id:
+                        bank = self.env['res.partner.bank'].search([
+                            ('acc_number', '=', acc_number),
+                            ('partner_id', '=', self.partner_id.commercial_partner_id.id),
+                            ('company_id', 'in', [self.company_id.id, False])
+                        ], order='company_id', limit=1)
+                    else:
+                        bank = self.env['res.partner.bank'].search([
+                            ('acc_number', '=', acc_number),
+                            ('company_id', 'in', [self.company_id.id, False])
+                        ], order='company_id', limit=1)
+                    if bank:
+                        self.partner_bank_id = bank
+                    else:
+                        message = Markup("<br/>").join((
+                            _("Bank account not found, useful informations from XML file:"),
+                            self._compose_info_message(tree, [
+                                './/DatiPagamento//Beneficiario',
+                                './/DatiPagamento//IstitutoFinanziario',
+                                './/DatiPagamento//IBAN',
+                                './/DatiPagamento//ABI',
+                                './/DatiPagamento//CAB',
+                                './/DatiPagamento//BIC',
+                                './/DatiPagamento//ModalitaPagamento'
+                            ])
+                        ))
+                        message_to_log.append(message)
+            elif elements := tree.xpath('.//DatiPagamento/DettaglioPagamento'):
+                message = Markup("<br/>").join((
+                    _("Bank account not found, useful informations from XML file:"),
+                    self._compose_info_message(tree, './/DatiPagamento')
+                ))
+                message_to_log.append(message)
 
-            # no_new_invoice to prevent from looping on the.message_post that would create a new invoice without it
-            self.with_context(no_new_invoice=True).sudo().message_post(
-                body=(_("Attachment from XML")),
-                attachment_ids=[attachment_64.id],
-            )
+            # Invoice lines. <2.2.1>
+            tag_name = './/DettaglioLinee' if not extra_info['simplified'] else './/DatiBeniServizi'
+            for element in tree.xpath(tag_name):
+                move_line = self.invoice_line_ids.create({
+                    'move_id': self.id,
+                    'tax_ids': [fields.Command.clear()]})
+                if move_line:
+                    message_to_log += self._l10n_it_edi_import_line(element, move_line, extra_info)
 
-        for message in message_to_log:
-            self.sudo().message_post(body=message)
-        return self
+            # Global discount summarized in 1 amount
+            if discount_elements := tree.xpath('.//DatiGeneraliDocumento/ScontoMaggiorazione'):
+                taxable_amount = float(self.tax_totals['amount_untaxed'])
+                discounted_amount = taxable_amount
+                for discount_element in discount_elements:
+                    discount_sign = 1
+                    if (discount_type := discount_element.xpath('.//Tipo')) and discount_type[0].text == 'MG':
+                        discount_sign = -1
+                    if discount_amount := get_text(discount_element, './/Importo'):
+                        discounted_amount -= discount_sign * float(discount_amount)
+                        continue
+                    if discount_percentage := get_text(discount_element, './/Percentuale'):
+                        discounted_amount *= 1 - discount_sign * float(discount_percentage) / 100
+
+                general_discount = discounted_amount - taxable_amount
+                sequence = len(elements) + 1
+
+                self.invoice_line_ids = [Command.create({
+                    'sequence': sequence,
+                    'name': 'SCONTO' if general_discount < 0 else 'MAGGIORAZIONE',
+                    'price_unit': general_discount,
+                })]
+
+            for element in tree.xpath('.//Allegati'):
+                attachment_64 = self.env['ir.attachment'].create({
+                    'name': get_text(element, './/NomeAttachment'),
+                    'datas': str.encode(get_text(element, './/Attachment')),
+                    'type': 'binary',
+                    'res_model': 'account.move',
+                    'res_id': self.id,
+                })
+
+                # no_new_invoice to prevent from looping on the.message_post that would create a new invoice without it
+                self.with_context(no_new_invoice=True).sudo().message_post(
+                    body=(_("Attachment from XML")),
+                    attachment_ids=[attachment_64.id],
+                )
+
+            for message in message_to_log:
+                self.sudo().message_post(body=message)
+            return self
 
     @api.model
     def _is_prediction_enabled(self):
@@ -1022,7 +1149,8 @@ class AccountMove(models.Model):
         move_line.tax_ids = []
         if percentage is not None:
             l10n_it_exempt_reason = get_text(element, './/Natura').upper() or False
-            if tax := self._l10n_it_edi_search_tax_for_import(company, percentage, None, l10n_it_exempt_reason=l10n_it_exempt_reason):
+            extra_domain = extra_info.get('type_tax_use_domain', [('type_tax_use', '=', 'purchase')])
+            if tax := self._l10n_it_edi_search_tax_for_import(company, percentage, extra_domain, l10n_it_exempt_reason=l10n_it_exempt_reason):
                 move_line.tax_ids += tax
             else:
                 message = Markup("<br/>").join((
@@ -1039,9 +1167,9 @@ class AccountMove(models.Model):
 
         # Discounts
         if elements := element.xpath('.//ScontoMaggiorazione'):
-            element = elements[0]
             # Special case of only 1 percentage discount
             if len(elements) == 1:
+                element = elements[0]
                 if discount_percentage := get_float(element, './/Percentuale'):
                     discount_type = get_text(element, './/Tipo')
                     discount_sign = -1 if discount_type == 'MG' else 1
@@ -1110,13 +1238,17 @@ class AccountMove(models.Model):
             errors['move_reverse_charge_with_mixed_services_and_goods'] = build_error(
                 message=_("Cannot apply Reverse Charge to bills which contains both services and goods."),
                 records=moves)
-        if pa_moves := self.filtered(lambda move: move.company_id.partner_id._l10n_it_edi_is_public_administration()):
-            if moves := pa_moves.filtered(lambda move: move.l10n_it_origin_document_type):
-                message = _("Your company belongs to the Public Administration, please fill out Origin Document Type field in the Electronic Invoicing tab.")
+        if pa_moves := self.filtered(lambda move: move.commercial_partner_id._l10n_it_edi_is_public_administration()):
+            if moves := pa_moves.filtered(lambda move: not move.l10n_it_origin_document_type):
+                message = _("Partner(s) belongs to the Public Administration, please fill out Origin Document Type field in the Electronic Invoicing tab.")
                 errors['move_missing_origin_document'] = build_error(message=message, records=moves)
             if moves := pa_moves.filtered(lambda move: move.l10n_it_origin_document_date and move.l10n_it_origin_document_date > fields.Date.today()):
                 message = _("The Origin Document Date cannot be in the future.")
                 errors['move_future_origin_document_date'] = build_error(message=message, records=moves)
+        if pa_moves := self.filtered(lambda move: len(move.commercial_partner_id.l10n_it_pa_index or '') == 7):
+            if moves := pa_moves.filtered(lambda move: not move.l10n_it_origin_document_type and move.l10n_it_cig and move.l10n_it_cup):
+                message = _("CIG/CUP fields of partner(s) are present, please fill out Origin Document Type field in the Electronic Invoicing tab.")
+                errors['move_missing_origin_document_field'] = build_error(message=message, records=moves)
         return errors
 
     def _l10n_it_edi_export_taxes_check(self):

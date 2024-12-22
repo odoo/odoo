@@ -48,6 +48,7 @@ class PosSelfOrderController(http.Controller):
                 'amount_return': 0,
                 'table_stand_number': order.get('table_stand_number'),
                 'ticket_code': order.get('ticket_code'),
+                'pricelist_id': pos_config.pricelist_id.id if pos_config.pricelist_id else False
             },
             'to_invoice': False,
             'session_id': pos_session.id,
@@ -224,7 +225,8 @@ class PosSelfOrderController(http.Controller):
             product = pos_config.env['product.product'].browse(int(line.get('product_id')))
             lst_price = pricelist._get_product_price(product, quantity=line_qty) if pricelist else product.lst_price
             selected_attributes = fetched_attributes.browse(line.get('attribute_value_ids', []))
-            lst_price += sum([attr.price_extra for attr in selected_attributes])
+            price_extra = sum(attr.price_extra for attr in selected_attributes)
+            lst_price += price_extra
 
             children = [l for l in lines if l.get('combo_parent_uuid') == line.get('uuid')]
             pos_combo_lines = combo_lines.browse([child.get('combo_line_id') for child in children])
@@ -243,7 +245,8 @@ class PosSelfOrderController(http.Controller):
                         price_unit += remaining_total
 
                     selected_attributes = fetched_attributes.browse(child.get('attribute_value_ids', []))
-                    price_unit += pos_combo_line.combo_price + sum([attr.price_extra for attr in selected_attributes])
+                    price_extra_child = sum(attr.price_extra for attr in selected_attributes)
+                    price_unit += pos_combo_line.combo_price + price_extra_child
 
                     price_unit_fp = child_product._get_price_unit_after_fp(price_unit, pos_config.currency_id, fiscal_pos)
                     taxes = fiscal_pos.map_tax(child_product.taxes_id) if fiscal_pos else child_product.taxes_id
@@ -265,6 +268,7 @@ class PosSelfOrderController(http.Controller):
                         'full_product_name': child.get('full_product_name'),
                         'combo_parent_uuid': child.get('combo_parent_uuid'),
                         'combo_id': child.get('combo_id'),
+                        'price_extra': price_extra_child
                     })
                     appended_uuid.append(child.get('uuid'))
 
@@ -290,6 +294,7 @@ class PosSelfOrderController(http.Controller):
                 'full_product_name': line.get('full_product_name'),
                 'combo_parent_uuid': line.get('combo_parent_uuid'),
                 'combo_id': line.get('combo_id'),
+                'price_extra': price_extra
             })
             appended_uuid.append(line.get('uuid'))
 
@@ -322,7 +327,7 @@ class PosSelfOrderController(http.Controller):
         if not pos_config_sudo or (not pos_config_sudo.self_ordering_mode == 'mobile' and not pos_config_sudo.self_ordering_mode == 'kiosk') or not pos_config_sudo.has_active_session:
             raise Unauthorized("Invalid access token")
         company = pos_config_sudo.company_id
-        user = pos_config_sudo.current_session_id.user_id or pos_config_sudo.self_ordering_default_user_id
+        user = pos_config_sudo.self_ordering_default_user_id
         return pos_config_sudo.sudo(False).with_company(company).with_user(user).with_context(allowed_company_ids=company.ids)
 
     def _verify_authorization(self, access_token, table_identifier, take_away):
@@ -337,6 +342,6 @@ class PosSelfOrderController(http.Controller):
             raise Unauthorized("Table not found")
 
         company = pos_config.company_id
-        user = pos_config.current_session_id.user_id or pos_config.self_ordering_default_user_id
+        user = pos_config.self_ordering_default_user_id
         table = table_sudo.sudo(False).with_company(company).with_user(user).with_context(allowed_company_ids=company.ids)
         return pos_config, table

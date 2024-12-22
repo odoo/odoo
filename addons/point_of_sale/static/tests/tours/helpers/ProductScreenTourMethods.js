@@ -121,6 +121,26 @@ export function clickCustomer(name) {
         },
     ];
 }
+export function inputCustomerSearchbar(value) {
+    return [
+        {
+            trigger: ".pos-search-bar input",
+            run: `text ${value}`,
+        },
+        {
+            /**
+             * Manually trigger keyup event to show the search field list
+             * because the previous step do not trigger keyup event.
+             */
+            trigger: ".pos-search-bar input",
+            run: function () {
+                document
+                    .querySelector(".pos-search-bar input")
+                    .dispatchEvent(new KeyboardEvent("keyup", { key: "" }));
+            },
+        },
+    ];
+}
 export function clickRefund() {
     return [
         clickReview(),
@@ -390,6 +410,24 @@ export function addCustomerNote(note) {
     );
 }
 
+export function addInternalNote(note) {
+    return inLeftSide(
+        [
+            {
+                content: "click more button",
+                trigger: ".mobile-more-button",
+                mobile: true,
+            },
+            {
+                content: "click internal note button",
+                trigger: '.control-buttons .control-button span:contains("Internal Note")',
+            },
+            ...( note ?  TextAreaPopup.inputText(note) : []),
+            TextAreaPopup.clickConfirm(),
+        ].flat()
+    );
+}
+
 export function checkOrderlinesNumber(number) {
     return [
         {
@@ -403,4 +441,13 @@ export function checkOrderlinesNumber(number) {
             },
         },
     ];
+}
+
+export function checkTaxAmount(number) {
+    return inLeftSide([
+        {
+            content: `check order tax amount`,
+            trigger: `.subentry:contains("${number}")`,
+        },
+    ]);
 }

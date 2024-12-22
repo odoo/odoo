@@ -3,16 +3,16 @@
 # 	* hr_expense
 # 
 # Translators:
-# Wil Odoo, 2024
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,11 +96,6 @@ msgstr "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "2023-08-11"
 msgstr "2023-08-11"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "50%"
-msgstr "50%"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -276,11 +271,6 @@ msgid "Analytic Account"
 msgstr "บัญชีวิเคราะห์"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "Analytic Account Name"
-msgstr "ชื่อบัญชีวิเคราะห์"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_distribution
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__analytic_distribution
 msgid "Analytic Distribution"
@@ -399,6 +389,11 @@ msgid "Attachments of expenses"
 msgstr "เอกสารแนบค่าใช้จ่าย"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "พนักงานทั่วไป"
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
 msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
@@ -462,6 +457,11 @@ msgid "Category: not found"
 msgstr "หมวดหมู่: ไม่พบ"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_checksum
+msgid "Checksum/SHA1"
+msgstr "ตรวจสอบ/SHA1"
+
+#. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_communication_product_template
 msgid "Communication"
 msgstr "การติดต่อสื่อสาร"
@@ -508,6 +508,7 @@ msgstr "ต้นทุน:"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#: code:addons/hr_expense/static/src/views/kanban.xml:0
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 #, python-format
@@ -661,6 +662,16 @@ msgid ""
 msgstr ""
 "อย่าเก็บตั๋วค่าใช้จ่ายไว้ในกระเป๋าของคุณอีกต่อไป เพียงถ่ายภาพใบเสร็จและให้ "
 "Odoo แปลงเป็นดิจิทัลให้กับคุณ OCR และปัญญาประดิษฐ์จะกรอกข้อมูลโดยอัตโนมัติ"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
+msgid ""
+"Do you really want to invoice your own company? Remove the \"Company Name\" "
+"from the partner to fix the configuration. Cancel this invoice and start "
+"again."
+msgstr ""
+"คุณต้องการออกใบแจ้งหนี้บริษัทของคุณเองจริงหรือ ลบ \"ชื่อบริษัท\" "
+"ออกจากคู่ค้าเพื่อแก้ไขการกำหนดค่า ยกเลิกใบแจ้งหนี้นี้แล้วเริ่มใหม่อีกครั้ง"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__business_domain
@@ -1007,6 +1018,8 @@ msgstr "รายจ่ายที่จะดำเนินการ"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__filter_for_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_employee_base__filter_for_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__filter_for_expense
 msgid "Filter For Expense"
 msgstr "กรองค่าใช้จ่าย"
 
@@ -1396,6 +1409,12 @@ msgid "New Expense Reports"
 msgstr "รายงานค่าใช้จ่ายใหม่"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "ปฏิทินอีเวนต์กิจกรรมถัดไป"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -1496,6 +1515,13 @@ msgstr "จำนวนข้อความที่ต้องดำเนิ
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "จํานวนข้อความที่มีข้อผิดพลาดในการส่ง"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/components/expense_dashboard.xml:0
+#, python-format
+msgid "Numbers computed from your personal expenses."
+msgstr "ตัวเลขคำนวณจากค่าใช้จ่ายส่วนตัวของคุณ"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
@@ -1613,6 +1639,14 @@ msgid "Phone bills, postage, etc."
 msgstr "ค่าโทรศัพท์ ค่าไปรษณีย์ ฯลฯ"
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid ""
+"Please specify an expense journal in order to generate accounting entries."
+msgstr "โปรดระบุสมุดรายวันค่าใช้จ่ายเพื่อสร้างรายการบัญชี"
+
+#. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #, python-format
@@ -1680,6 +1714,12 @@ msgstr "ข้าราชการ"
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Quantity"
 msgstr "ปริมาณ"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__rating_ids
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__rating_ids
+msgid "Ratings"
+msgstr "การให้คะแนน"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1810,6 +1850,13 @@ msgid "Scan"
 msgstr "สแกน"
 
 #. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/components/qrcode_action.xml:0
+#, python-format
+msgid "Scan this QR code to get the Odoo app:"
+msgstr "สแกนโค้ด QR นี้เพื่อดาวน์โหลดแอป Odoo:"
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
@@ -1859,6 +1906,13 @@ msgstr "ตั้งค่าโดเมนนามแฝงของคุณ
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__sheet_ids
 msgid "Sheet"
 msgstr "ชีต"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__show_commercial_partner_warning
+#: model:ir.model.fields,field_description:hr_expense.field_account_move__show_commercial_partner_warning
+#: model:ir.model.fields,field_description:hr_expense.field_account_payment__show_commercial_partner_warning
+msgid "Show Commercial Partner Warning"
+msgstr "แสดงคำเตือนสำหรับพาร์ทเนอร์ทางการค้า"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1984,8 +2038,8 @@ msgstr "ภาษี"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "Tax Name"
-msgstr "ชื่อภาษี"
+msgid "Tax 15%"
+msgstr "ภาษี 15%"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_amount
@@ -2057,6 +2111,11 @@ msgstr ""
 "โปรดตรวจสอบว่ารายงานนี้ไม่มีรายการที่ซ้ำกัน"
 
 #. module: hr_expense
+#: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
+msgid "The journal must be set on posted expense"
+msgstr "สมุดรายวันจะต้องตั้งค่าเป็นรายจ่ายที่ลงบันทึก"
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__employee_journal_id
 msgid "The journal used when the expense is paid by employee."
 msgstr "สมุดรายวันที่ใช้เมื่อมีการชำระค่าใช้จ่ายโดยพนักงาน"
@@ -2089,6 +2148,27 @@ msgstr "อีเมลที่ทำงานของพนักงานบ
 
 #. module: hr_expense
 #. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "Employee(s) should have a bank account set."
+msgstr "พนักงานควรต้องมีบัญชีธนาคาร"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "Go to Employee(s)"
+msgstr "ไปที่พนักงาน"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "Employee(s)"
+msgstr "พนักงาน"
+
+#. module: hr_expense
+#. odoo-python
 #: code:addons/hr_expense/models/product_product.py:0
 #, python-format
 msgid ""
@@ -2096,6 +2176,9 @@ msgid ""
 "category cost will change expense amounts. Make sure it is what you want to "
 "do."
 msgstr ""
+"มีค่าใช้จ่ายที่ยังไม่ได้ส่งที่เชื่อมโยงกับหมวดหมู่นี้ "
+"การอัปเดตต้นทุนหมวดหมู่จะเปลี่ยนจำนวนค่าใช้จ่าย "
+"ตรวจสอบให้แน่ใจว่าเป็นสิ่งที่คุณต้องการดำเนินการ"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2212,6 +2295,7 @@ msgstr "หมวดหมู่ UoM"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/kanban.xml:0
+#: code:addons/hr_expense/static/src/views/list.xml:0
 #, python-format
 msgid "Upload"
 msgstr "อัปโหลด"
@@ -2227,11 +2311,6 @@ msgstr "ใช้เบรดครัมบ์เพื่อกลับไป
 #: model:ir.model,name:hr_expense.model_res_users
 msgid "User"
 msgstr "ผู้ใช้"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "VAT"
-msgstr "ภาษีมูลค่าเพิ่ม (VAT)"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_approve_duplicate_action
@@ -2352,6 +2431,13 @@ msgid ""
 msgstr ""
 "คุณไม่สามารถอนุมัติ:\n"
 " %s"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "You cannot cancel an expense sheet linked to a journal entry"
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python

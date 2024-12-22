@@ -1829,8 +1829,9 @@ QUnit.test("Message shows up even if channel data is incomplete", async () => {
         ],
         channel_type: "chat",
     });
+    const subscribeProm = waitUntilSubscribe();
     env.services["bus_service"].forceUpdateChannels();
-    await waitUntilSubscribe();
+    await subscribeProm;
     await pyEnv.withUser(correspondentUserId, () =>
         env.services.rpc("/discuss/channel/notify_typing", {
             is_typing: true,
@@ -1971,13 +1972,13 @@ QUnit.test("Notification settings: basic rendering", async () => {
     await contains("button", { text: "All Messages" });
     await contains("button", { text: "Mentions Only" });
     await contains("button", { text: "Nothing" });
-    await click("[title='Mute Channel']");
-    await contains("[title='For 15 minutes']");
-    await contains("[title='For 1 hour']");
-    await contains("[title='For 3 hours']");
-    await contains("[title='For 8 hours']");
-    await contains("[title='For 24 hours']");
-    await contains("[title='Until I turn it back on']");
+    await click("button.dropdown-toggle", { text: "Mute Channel" });
+    await contains("button", { text: "For 15 minutes" });
+    await contains("button", { text: "For 1 hour" });
+    await contains("button", { text: "For 3 hours" });
+    await contains("button", { text: "For 8 hours" });
+    await contains("button", { text: "For 24 hours" });
+    await contains("button", { text: "Until I turn it back on" });
 });
 
 QUnit.test("Notification settings: mute channel will change the style of sidebar", async () => {
@@ -1994,8 +1995,8 @@ QUnit.test("Notification settings: mute channel will change the style of sidebar
         count: 0,
     });
     await click("[title='Notification Settings']");
-    await click("[title='Mute Channel']");
-    await click("[title='For 15 minutes']");
+    await click("button.dropdown-toggle", { text: "Mute Channel" });
+    await click("button", { text: "For 15 minutes" });
     await contains(".o-mail-DiscussSidebar-item", { text: "Mario Party" });
     await contains(".o-mail-DiscussSidebar-item[class*='opacity-50']", { text: "Mario Party" });
 });
@@ -2009,13 +2010,13 @@ QUnit.test("Notification settings: mute/unmute channel works correctly", async (
     const { openDiscuss } = await start();
     openDiscuss(channelId);
     await click("[title='Notification Settings']");
-    await click("[title='Mute Channel']");
-    await click("[title='For 15 minutes']");
+    await click("button.dropdown-toggle", { text: "Mute Channel" });
+    await click("button", { text: "For 15 minutes" });
     await click("[title='Notification Settings']");
-    await contains("span", { text: "Unmute Channel" });
+    await contains("button", { text: "Unmute Channel" });
     await click("button", { text: "Unmute Channel" });
     await click("[title='Notification Settings']");
-    await contains("span", { text: "Unmute Channel" });
+    await contains("button", { text: "Unmute Channel" });
 });
 
 QUnit.test("Newly created chat should be at the top of the direct message list", async () => {
@@ -2055,4 +2056,42 @@ QUnit.test("Newly created chat should be at the top of the direct message list",
         text: "Jerry Golay",
         before: [".o-mail-DiscussSidebar-item", { text: "Albert" }],
     });
+});
+
+QUnit.test("Read of unread chat where new message is deleted should mark as read.", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "Heyo",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", pyEnv.currentPartnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], {
+        seen_message_id: messageId,
+        message_unread_counter: 1,
+    });
+    const { env, openDiscuss } = await start();
+    await openDiscuss();
+    await contains("button", { text: "Marc Demo", contains: [".badge", { text: "1" }] });
+    // simulate deleted message
+    await env.services.rpc("/mail/message/update_content", {
+        message_id: messageId,
+        body: "",
+        attachment_ids: [],
+    });
+    await click("button", { text: "Marc Demo" });
+    await contains("button", { text: "Marc Demo", contains: [".badge", { count: 0 }] });
 });

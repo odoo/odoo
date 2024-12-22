@@ -9,7 +9,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
+class TestFrontendCommon(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
@@ -250,6 +250,9 @@ class TestFrontend(AccountTestInvoicingCommon, HttpCaseWithUserDemo):
             ],
         })
         cls.pos_admin.partner_id.email = 'pos_admin@test.com'
+
+
+class TestFrontend(TestFrontendCommon):
 
     def test_01_pos_restaurant(self):
 

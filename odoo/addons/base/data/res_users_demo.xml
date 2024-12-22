@@ -16,18 +16,21 @@
             <field name="phone">(441)-695-2334</field>
         </record>
 
-        <record id="main_partner" model="res.partner">
-            <field name="name">YourCompany</field>
-            <field name="company_name">YourCompany</field>
-            <field name="street">250 Executive Park Blvd, Suite 3400</field>
-            <field name="city">San Francisco</field>
-            <field name="zip">94134</field>
-            <field name='country_id' ref='base.us'/>
-            <field name='state_id' ref='state_us_5'/>
-            <field name="phone">+1 (650) 555-0111 </field>
-            <field name="email">info@yourcompany.example.com</field>
-            <field name="website">www.example.com</field>
-        </record>
+        <!-- Only update if we don't have information coming from the database manager -->
+        <function model="res.partner" name="write">
+            <value eval="[ref('base.main_partner')]"/>
+            <value eval="{
+                'name': 'YourCompany',
+                'street': '250 Executive Park Blvd, Suite 3400',
+                'city': 'San Francisco',
+                'zip': '94134',
+                'country_id': ref('base.us'),
+                'state_id': ref('base.state_us_5'),
+                'phone': '+1 555-555-5556',
+                'website': 'www.example.com',
+                'email': 'info@yourcompany.com',
+            } if obj(ref('base.main_partner')).name == 'My Company' else {}" model="res.partner"/>
+        </function>
 
         <record id="user_demo" model="res.users">
             <field name="partner_id" ref="base.partner_demo"/>

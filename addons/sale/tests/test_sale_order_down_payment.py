@@ -99,7 +99,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         }
         downpayment = cls.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
         downpayment.create_invoices()
-        cls.sale_order.action_confirm()
+        if cls.sale_order.state == 'draft':
+            cls.sale_order.action_confirm()
 
     def _assert_invoice_lines_values(self, lines, expected):
         return self.assertRecordValues(lines, [dict(zip(expected[0], x)) for x in expected[1:]])
@@ -124,6 +125,30 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.tax_account.id,        self.env['account.tax'],         -15,          0            ],
             # receivable
             [self.receivable_account.id, self.env['account.tax'],         down_pay_amt, 0            ],
+        ]
+        self._assert_invoice_lines_values(invoice.line_ids, expected)
+
+    def test_tax_with_diff_tax_on_invoice_breakdown(self):
+        # if a generated invoice has it's taxes changed, this should not affect the next downpayment on an SO
+        self.sale_order.order_line[0].tax_id = self.tax_15
+        (self.sale_order.order_line - self.sale_order.order_line[0]).unlink()
+        self.make_downpayment(amount=25)
+        first_invoice = self.sale_order.invoice_ids
+        first_invoice.invoice_line_ids.tax_ids = None
+        first_invoice.action_post()
+        self.make_downpayment(amount=25)
+        invoice = self.sale_order.invoice_ids - first_invoice
+        down_pay_amt = self.sale_order.amount_total / 4
+        # ruff: noqa: E202
+        expected = [
+            # keys
+            ['account_id',               'tax_ids',               'balance',   'price_total'],
+            # base lines
+            [self.revenue_account.id,    self.tax_15.ids,         -50,          57.5        ],
+            # taxes
+            [self.tax_account.id,        self.env['account.tax'], -7.5,         0           ],
+            # receivable
+            [self.receivable_account.id, self.env['account.tax'], down_pay_amt, 0           ],
         ]
         self._assert_invoice_lines_values(invoice.line_ids, expected)
 
@@ -343,6 +368,42 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         ]
         self._assert_invoice_lines_values(invoice.line_ids, expected)
 
+    def test_tax_fixed_amount_price_include(self):
+        tax_fix = self.create_tax(5, {'amount_type': 'fixed', 'include_base_amount': True, 'price_include': True})
+        tax_percentage = self.create_tax(21, {'amount_type': 'percent', 'price_include': True})
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': 'line1',
+                    'product_id': self.company_data['product_order_no'].id,
+                    'product_uom_qty': 1,
+                    'price_unit': 1210,
+                    'tax_id': [Command.set((tax_fix + tax_percentage).ids)],
+                }),
+            ],
+        })
+
+        downpayment = self.env['sale.advance.payment.inv']\
+            .with_context(active_ids=sale_order.ids, active_model=sale_order._name)\
+            .create({
+                'advance_payment_method': 'fixed',
+                'fixed_amount': 200.0,
+                'deposit_account_id': self.revenue_account.id,
+            })
+        downpayment.create_invoices()
+        sale_order.action_confirm()
+        invoice = sale_order.invoice_ids
+
+        self.assertRecordValues(invoice.invoice_line_ids, [{'price_unit': 200.0, 'tax_ids': tax_percentage.ids}])
+        self.assertRecordValues(invoice.line_ids, [
+            {'balance': -165.29},
+            {'balance': -34.71},
+            {'balance': 200},
+        ])
+
     def test_analytic_distribution(self):
         analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         an_acc_01 = str(self.env['account.analytic.account'].create({'name': 'Account 01', 'plan_id': analytic_plan.id}).id)
@@ -362,14 +423,43 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             ['account_id',               'tax_ids',                      'balance',     'price_total', 'analytic_distribution'       ],
             # base lines
             [self.revenue_account.id,    (self.tax_15 + self.tax_10).ids, -100,         125,           {an_acc_01: 100}              ],
-            [self.revenue_account.id,    self.tax_10.ids,                 -100,         110,           {an_acc_01: 50, an_acc_02: 50}],
-            [self.revenue_account.id,    self.tax_10.ids,                 -100,         110,           {an_acc_01: 100}],
+            [self.revenue_account.id,    self.tax_10.ids,                 -200,         220,           {an_acc_01: 75, an_acc_02: 25}],
             [self.revenue_account.id,    self.env['account.tax'],         -100,         100 ,          False                         ],
             # taxes
             [self.tax_account.id,        self.env['account.tax'],         -30,          0,             False                         ],
             [self.tax_account.id,        self.env['account.tax'],         -15,          0,             False                         ],
             # receivable
             [self.receivable_account.id, self.env['account.tax'],         down_pay_amt, 0,             False                         ],
+        ]
+
+        self._assert_invoice_lines_values(invoice.line_ids, expected)
+
+    def test_analytic_distribution_zero_line(self):
+        # do not add 0 price_unit lines and do not create analytic distributions for them
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
+        an_acc_01 = str(self.env['account.analytic.account'].create({'name': 'Account 01', 'plan_id': analytic_plan.id}).id)
+        an_acc_02 = str(self.env['account.analytic.account'].create({'name': 'Account 02', 'plan_id': analytic_plan.id}).id)
+        self.sale_order.order_line[0].tax_id = self.tax_15
+        self.sale_order.order_line[0].analytic_distribution = {an_acc_01: 50, an_acc_02: 50}
+        self.sale_order.order_line[1].tax_id = self.tax_10
+        self.sale_order.order_line[1].analytic_distribution = {an_acc_01: 50, an_acc_02: 50}
+        self.sale_order.order_line[2].tax_id = self.tax_10
+        self.sale_order.order_line[2].analytic_distribution = {an_acc_01: 50, an_acc_02: 50}
+        self.sale_order.order_line[2].price_unit = - self.sale_order.order_line[1].price_unit
+        self.make_downpayment()
+        invoice = self.sale_order.invoice_ids
+        down_pay_amt = self.sale_order.amount_total / 2
+        # ruff: noqa: E271, E272
+        expected = [
+            # keys
+            ['account_id',               'tax_ids',               'balance',    'price_total', 'analytic_distribution'       ],
+            # base lines
+            [self.revenue_account.id,    self.tax_15.ids,         -100,         115,           {an_acc_01: 50, an_acc_02: 50}],
+            [self.revenue_account.id,    self.env['account.tax'], -100,         100,           False                         ],
+            # taxes
+            [self.tax_account.id,        self.env['account.tax'], -15,          0,             False                         ],
+            # receivable
+            [self.receivable_account.id, self.env['account.tax'], down_pay_amt, 0,             False                         ],
         ]
 
         self._assert_invoice_lines_values(invoice.line_ids, expected)
@@ -811,3 +901,175 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.receivable_account.id, [],           5550.0,   0.0          ],
         ]
         self._assert_invoice_lines_values(invoice.line_ids, expected)
+
+    def test_so_with_multiple_line_rounding(self):
+        """Test downpayment fixed amount rounding when the sale order has
+           multiple lines that would create a sensible difference in rounding.
+        """
+        tax_20 = self.create_tax(20)
+
+        for i, price_unit in enumerate((10000, 10000, 10000, 50)):
+            self.sale_order.order_line[i].product_id = self.company_data['product_delivery_no'].id
+            self.sale_order.order_line[i].product_uom_qty = 1
+            self.sale_order.order_line[i].qty_delivered = 1
+            self.sale_order.order_line[i].tax_id = tax_20
+            self.sale_order.order_line[i].price_unit = price_unit
+
+        self.sale_order.order_line.qty_delivered_method = 'manual'
+        self.sale_order.action_confirm()
+
+        so_context = {
+            'active_model': 'sale.order',
+            'active_ids': [self.sale_order.id],
+            'active_id': self.sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        payment_params = {
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 840.0,  # with 20% tax applied, amount tax excluded is 700.0
+            'deposit_account_id': self.revenue_account.id,
+        }
+        downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
+        action = downpayment.create_invoices()
+        invoice = self.env['account.move'].browse(action['res_id'])
+        expected = [
+            # keys
+            ['account_id',              'tax_ids',   'balance', 'price_total'],
+            # base lines
+            [self.revenue_account.id,    tax_20.ids, -700,      840.0],
+            # taxes
+            [self.tax_account.id,        [],         -140,      0.0],
+            # receivable
+            [self.receivable_account.id, [],         840.0,     0.0],
+        ]
+        self._assert_invoice_lines_values(invoice.line_ids, expected)
+
+    def test_so_downpayment_invoice_credited_reinvoiced(self):
+        """
+        Test that, after a downpayment, if the rest has been invoiced, credited and re-invoiced
+        The amount of the downpayment is subtracted (not added)
+        """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+        })
+        # the tax is needed
+        self.env['sale.order.line'].create({
+            'name': self.company_data['product_order_no'].name,
+            'product_id': self.company_data['product_order_no'].id,
+            'product_uom_qty': 1,
+            'price_unit': 100,
+            'tax_id': self.tax_15.ids,
+            'order_id': sale_order.id,
+        })
+        sale_order.action_confirm()
+
+        so_context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        payment_params = {
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 50.0,
+        }
+        downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
+        action = downpayment.create_invoices()
+        downpayment_invoice = self.env['account.move'].browse(action['res_id'])
+        downpayment_invoice.action_post()
+
+        payment_params = {
+            'advance_payment_method': 'delivered',
+        }
+
+        invoice_to_be_refund = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
+        action = invoice_to_be_refund.create_invoices()
+        invoice_to_be_refund = self.env['account.move'].browse(action['res_id'])
+        invoice_to_be_refund.action_post()
+
+        credit_note_wizard = self.env['account.move.reversal'].with_context(
+            {'active_ids': [invoice_to_be_refund.id], 'active_id': invoice_to_be_refund.id,
+             'active_model': 'account.move'}).create({
+            'reason': 'reason test create',
+            'journal_id': invoice_to_be_refund.journal_id.id,
+        })
+        action = credit_note_wizard.reverse_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        credit_note.action_post()
+
+        final_invoice = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
+        action = final_invoice.create_invoices()
+        final_invoice = self.env['account.move'].browse(action['res_id'])
+
+        # pylint: disable=C0326
+        expected = [
+            # keys
+            ['account_id',              'tax_ids',          'balance',          'price_total'],
+            # base lines
+            [self.revenue_account.id,   self.tax_15.ids,    -100.0,             115.0],
+            # line section
+            [[],                        [],                 0.0,                0.0],
+            # down payment
+            [self.revenue_account.id,   self.tax_15.ids,    43.48,              -50.0],
+            # taxes
+            [self.tax_account.id,       [],                 -8.48,              0.0],
+            # receivable
+            [self.receivable_account.id, [],                 65.0,               0.0],
+        ]
+
+        self._assert_invoice_lines_values(final_invoice.line_ids, expected)
+
+    def test_downpayment_description(self):
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.company_data['product_order_no'].id,
+                })
+            ]
+        })
+        sale_order.action_confirm()
+        invoicing_wizard = self.env['sale.advance.payment.inv'].create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': sale_order.amount_total / 2.0,
+            'sale_order_ids': [Command.link(sale_order.id)],
+        })
+
+        # Down payment invoice
+        action = invoicing_wizard.create_invoices()
+        so_dp_line = sale_order.order_line.filtered(
+            lambda sol: sol.is_downpayment and not sol.display_type)
+        self.assertTrue(so_dp_line)
+        self.assertIn('Draft', so_dp_line.name)
+        dp_invoice = self.env['account.move'].browse(action['res_id'])
+        self.assertEqual(dp_invoice.move_type, 'out_invoice')
+        dp_invoice.action_post()
+        self.assertIn('ref', so_dp_line.name)
+
+        # Full Invoice
+        invoicing_wizard = self.env['sale.advance.payment.inv'].create({
+            'sale_order_ids': [Command.link(sale_order.id)],
+            'advance_payment_method': 'delivered',
+        })
+        self.assertEqual(sale_order.invoice_status, 'to invoice')
+        action = invoicing_wizard.create_invoices()
+        full_invoice = self.env['account.move'].browse(action['res_id'])
+        self.assertEqual(full_invoice.move_type, 'out_invoice')
+        full_invoice.action_post()
+        self.assertIn('ref', so_dp_line.name)
+
+        # Credit Note
+        action = dp_invoice.action_reverse()
+        reversal_wizard = self.env[action['res_model']].with_context(
+            active_ids=dp_invoice.ids,
+            active_model='account.move',
+        ).create({
+            'journal_id': dp_invoice.journal_id.id,  # Field is not precompute but required
+        })
+        action = reversal_wizard.reverse_moves()
+        reversal_move = self.env['account.move'].browse(action['res_id'])
+        reversal_move.action_post()
+        self.assertEqual(reversal_move.move_type, 'out_refund')
+        self.assertIn('ref', so_dp_line.name)

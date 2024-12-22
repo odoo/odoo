@@ -6,8 +6,8 @@
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Mikko Salmela <salmemik@gmail.com>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Mikko Salmela <salmemik@gmail.com>, 2023\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,11 +29,13 @@ msgid ""
 "<small class=\"text-center text-wrap lh-sm\">Scan me in your banking "
 "app</small>"
 msgstr ""
+"<small class=\"text-center text-wrap lh-sm\">Skannaa minut "
+"pankkisovelluksessasi</small>"
 
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
 msgid "<strong class=\"mt-auto\">Communication: </strong>"
-msgstr ""
+msgstr "<strong class=\"mt-auto\">Viestintä: </strong>"
 
 #. module: payment_custom
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__code
@@ -53,17 +55,17 @@ msgstr "Mukautettu tila"
 #. module: payment_custom
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__qr_code
 msgid "Enable QR Codes"
-msgstr ""
+msgstr "Ota QR-koodit käyttöön"
 
 #. module: payment_custom
 #: model:ir.model.fields,help:payment_custom.field_payment_provider__qr_code
 msgid "Enable the use of QR-codes when paying by wire transfer."
-msgstr ""
+msgstr "Ota QR-koodien käyttö käyttöön tilisiirrolla maksettaessa."
 
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.custom_transaction_status
 msgid "Finalize your payment"
-msgstr ""
+msgstr "Viimeistele maksusi"
 
 #. module: payment_custom
 #. odoo-python
@@ -80,7 +82,7 @@ msgstr "TAI"
 #. module: payment_custom
 #: model:ir.model.constraint,message:payment_custom.constraint_payment_provider_custom_providers_setup
 msgid "Only custom providers should have a custom mode."
-msgstr ""
+msgstr "Vain mukautetuilla palveluntarjoajilla pitäisi olla mukautettu tila."
 
 #. module: payment_custom
 #: model:ir.model,name:payment_custom.model_payment_provider
@@ -95,14 +97,14 @@ msgstr "Maksutapahtuma"
 #. module: payment_custom
 #: model_terms:ir.ui.view,arch_db:payment_custom.payment_provider_form
 msgid "Reload Pending Message"
-msgstr ""
+msgstr "Lataa odottava viesti uudelleen"
 
 #. module: payment_custom
 #. odoo-python
 #: code:addons/payment_custom/models/payment_transaction.py:0
 #, python-format
 msgid "The customer has selected %(provider_name)s to make the payment."
-msgstr ""
+msgstr "Asiakas on valinnut %(provider_name)s maksun suorittamiseksi."
 
 #. module: payment_custom
 #: model:ir.model.fields,help:payment_custom.field_payment_provider__code

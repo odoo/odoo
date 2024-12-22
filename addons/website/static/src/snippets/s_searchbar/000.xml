@@ -16,7 +16,7 @@
     </t>
     <a t-foreach="results" t-as="result" t-key="result_index"
         t-att-href="result['website_url']" class="dropdown-item p-2 text-wrap">
-        <div class="d-flex align-items-center o_search_result_item">
+        <div class="d-flex align-items-center flex-wrap o_search_result_item">
             <t t-if="widget.displayImage">
                 <img t-if="result['image_url']" t-att-src="result['image_url']" class="flex-shrink-0 o_image_64_contain"/>
                 <i t-else="" t-attf-class="o_image_64_contain text-center pt16 fa #{result['_fa']}" style="font-size: 34px;"/>
@@ -30,7 +30,7 @@
                 <button t-if="extra_link" class="extra_link btn btn-link btn-sm" t-att-data-target="result['extra_link_url']" t-out="extra_link"/>
                 <t t-if="extra_link_html" t-out="extra_link_html"/>
             </div>
-            <div t-if="parts['detail'] and widget.displayDetail" class="flex-shrink-0">
+            <div t-if="parts['detail'] and widget.displayDetail" class="flex-shrink-0 ms-auto">
                 <t t-if="result['detail_strike']">
                     <span class="text-danger text-nowrap" style="text-decoration: line-through;">
                         <t t-out="result['detail_strike']"/>

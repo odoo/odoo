@@ -8,6 +8,7 @@ import {
     mount,
     nextTick,
     editInput,
+    triggerEvents,
 } from "@web/../tests/helpers/utils";
 
 import { Component, markup, useState, xml } from "@odoo/owl";
@@ -184,7 +185,8 @@ QUnit.module("Web Components", (hooks) => {
         const codeEditor = await mount(Parent, target, { env });
         await nextTick();
         assert.equal(getDomValue(), textA, "Default value correctly set");
-
+        const aceEditor = window.ace.edit(target.querySelector(".ace_editor"));
+        aceEditor.selectAll();
         await edit(textB);
         assert.equal(
             getDomValue(),
@@ -260,5 +262,39 @@ QUnit.module("Web Components", (hooks) => {
         await codeEditor.setTheme("monokai");
         await nextTick();
         assert.verifySteps(["ace/theme/monokai"], "Monokai theme should be loaded");
+    });
+
+    QUnit.test("initial value cannot be undone", async (assert) => {
+        class Parent extends Component {
+            static components = { CodeEditor };
+            static template = xml`<CodeEditor mode="'xml'" value="'some value'" />`;
+        }
+        await mount(Parent, target, { env });
+        await nextTick();
+        assert.containsOnce(target, ".ace_editor", "Code editor is rendered");
+        assert.strictEqual(
+            target.querySelector(".ace_editor .ace_content").textContent,
+            "some value"
+        );
+        const editor = window.ace.edit(target.querySelector(".ace_editor"));
+        const undo = editor.session.$undoManager.undo.bind(editor.session.$undoManager);
+        editor.session.$undoManager.undo = (...args) => {
+            assert.step("ace undo");
+            return undo(...args);
+        };
+        await triggerEvents(target, ".ace_editor textarea.ace_text-input", [
+            ["keydown", { key: "Control", keyCode: 17, which: 17 }],
+            ["keypress", { key: "Control", ctrlKey: true, keyCode: 17, which: 17 }],
+            ["keydown", { key: "z", ctrlKey: true, keyCode: 90, which: 90 }],
+            ["keypress", { key: "z", ctrlKey: true, keyCode: 90, which: 90 }],
+            ["keyup", { key: "z", ctrlKey: true, keyCode: 90, which: 90 }],
+            ["keyup", { key: "Control", keyCode: 17, which: 17 }],
+        ]);
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector(".ace_editor .ace_content").textContent,
+            "some value"
+        );
+        assert.verifySteps(["ace undo"]);
     });
 });

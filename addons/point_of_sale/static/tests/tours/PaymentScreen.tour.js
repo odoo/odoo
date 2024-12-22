@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
+import * as ErrorPopup from "@point_of_sale/../tests/tours/helpers/ErrorPopupTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
@@ -276,20 +277,23 @@ registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", 
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("InvoiceShipLaterAccessRight", {
+registry.category("web_tour.tours").add("CashRoundingPayment", {
     test: true,
-    url: "/pos/ui",
     steps: () =>
         [
             ProductScreen.confirmOpeningPopup(),
             ProductScreen.clickHomeCategory(),
-            ProductScreen.addOrderline("Whiteboard Pen", "1"),
-            ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.addOrderline("Magnetic Board", "1"),
             ProductScreen.clickPayButton(),
 
+            // Check the popup error is shown when selecting another payment method
+            PaymentScreen.totalIs("1.90"),
             PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.clickShipLaterButton(),
+            PaymentScreen.pressNumpad("1 ."),
+            PaymentScreen.pressNumpad("9 4"),
+            PaymentScreen.fillPaymentLineAmountMobile("Cash", "1.94"),
+            PaymentScreen.selectedPaymentlineHas("Cash", "1.94"),
             PaymentScreen.clickValidate(),
+            ErrorPopup.isShown(),
         ].flat(),
 });

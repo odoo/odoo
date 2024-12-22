@@ -8,13 +8,13 @@ from datetime import datetime, timedelta
 from operator import itemgetter
 from pytz import timezone
 
+from odoo.http import request
 from odoo import models, fields, api, exceptions, _
 from odoo.addons.resource.models.utils import Intervals
-from odoo.tools import format_datetime
 from odoo.osv.expression import AND, OR
 from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import AccessError
-from odoo.tools import format_duration
+from odoo.tools import format_duration, format_time, format_datetime
 
 def get_google_maps_url(latitude, longitude):
     return "https://maps.google.com?q=%s,%s" % (latitude, longitude)
@@ -75,19 +75,32 @@ class HrAttendance(models.Model):
             self.env['hr.attendance'].flush_model(['worked_hours'])
             self.env['hr.attendance.overtime'].flush_model(['duration'])
             self.env.cr.execute('''
-                SELECT att.id as att_id,
-                       att.worked_hours as att_wh,
-                       ot.id as ot_id,
-                       ot.duration as ot_d,
-                       ot.date as od,
-                       att.check_in as ad
+                WITH employee_time_zones AS (
+                    SELECT employee.id AS employee_id,
+                           calendar.tz AS timezone
+                      FROM hr_employee employee
+                INNER JOIN resource_calendar calendar
+                        ON calendar.id = employee.resource_calendar_id
+                )
+                SELECT att.id AS att_id,
+                       att.worked_hours AS att_wh,
+                       ot.id AS ot_id,
+                       ot.duration AS ot_d,
+                       ot.date AS od,
+                       att.check_in AS ad
                   FROM hr_attendance att
-             INNER JOIN hr_attendance_overtime ot
-                    ON date_trunc('day',att.check_in) = date_trunc('day', ot.date)
-                    AND date_trunc('day',att.check_out) = date_trunc('day', ot.date)
-                    AND att.employee_id IN %s
-                    AND att.employee_id = ot.employee_id
-                    ORDER BY att.check_in DESC
+            INNER JOIN employee_time_zones etz
+                    ON att.employee_id = etz.employee_id
+            INNER JOIN hr_attendance_overtime ot
+                    ON date_trunc('day',
+                                  CAST(att.check_in
+                                           AT TIME ZONE 'utc'
+                                           AT TIME ZONE etz.timezone
+                                  as date)) = date_trunc('day', ot.date)
+                   AND att.employee_id = ot.employee_id
+                   AND att.employee_id IN %s
+                   AND ot.adjustment IS false
+              ORDER BY att.check_in DESC
             ''', (tuple(self.employee_id.ids),))
             a = self.env.cr.dictfetchall()
             grouped_dict = dict()
@@ -116,18 +129,19 @@ class HrAttendance(models.Model):
 
     @api.depends('employee_id', 'check_in', 'check_out')
     def _compute_display_name(self):
+        tz = request.httprequest.cookies.get('tz') if request else None
         for attendance in self:
             if not attendance.check_out:
                 attendance.display_name = _(
                     "From %s",
-                    format_datetime(self.env, attendance.check_in, dt_format="HH:mm"),
+                    format_time(self.env, attendance.check_in, time_format=None, tz=tz, lang_code=self.env.lang),
                 )
             else:
                 attendance.display_name = _(
                     "%s : (%s-%s)",
                     format_duration(attendance.worked_hours),
-                    format_datetime(self.env, attendance.check_in, dt_format="HH:mm"),
-                    format_datetime(self.env, attendance.check_out, dt_format="HH:mm"),
+                    format_time(self.env, attendance.check_in, time_format=None, tz=tz, lang_code=self.env.lang),
+                    format_time(self.env, attendance.check_out, time_format=None, tz=tz, lang_code=self.env.lang),
                 )
 
     def _get_employee_calendar(self):
@@ -143,9 +157,8 @@ class HrAttendance(models.Model):
                 tz = timezone(calendar.tz)
                 check_in_tz = attendance.check_in.astimezone(tz)
                 check_out_tz = attendance.check_out.astimezone(tz)
-                lunch_intervals = calendar._attendance_intervals_batch(
-                    check_in_tz, check_out_tz, resource, lunch=True)
-                attendance_intervals = Intervals([(check_in_tz, check_out_tz, attendance)]) - lunch_intervals[resource.id]
+                lunch_intervals = attendance.employee_id._employee_attendance_intervals(check_in_tz, check_out_tz, lunch=True)
+                attendance_intervals = Intervals([(check_in_tz, check_out_tz, attendance)]) - lunch_intervals
                 delta = sum((i[1] - i[0]).total_seconds() for i in attendance_intervals)
                 attendance.worked_hours = delta / 3600.0
             else:
@@ -259,17 +272,7 @@ class HrAttendance(models.Model):
 
             # Retrieve expected attendance intervals
             calendar = emp.resource_calendar_id or emp.company_id.resource_calendar_id
-            expected_attendances = calendar._attendance_intervals_batch(
-                start, stop, emp.resource_id
-            )[emp.resource_id.id]
-            # Substract Global Leaves and Employee's Leaves
-            leave_intervals = calendar._leave_intervals_batch(
-                start, stop, emp.resource_id, domain=AND([
-                    self._get_overtime_leave_domain(),
-                    [('company_id', 'in', [False, emp.company_id.id])],
-                ])
-            )
-            expected_attendances -= leave_intervals[False] | leave_intervals[emp.resource_id.id]
+            expected_attendances = emp._employee_attendance_intervals(start, stop)
 
             # working_times = {date: [(start, stop)]}
             working_times = defaultdict(lambda: [])
@@ -302,55 +305,8 @@ class HrAttendance(models.Model):
                         overtime_duration_real = overtime_duration
                     # The employee usually work on that day
                     else:
-                        # Compute start and end time for that day
-                        planned_start_dt, planned_end_dt = False, False
-                        planned_work_duration = 0
-                        for calendar_attendance in working_times[attendance_date]:
-                            planned_start_dt = min(planned_start_dt, calendar_attendance[0]) if planned_start_dt else calendar_attendance[0]
-                            planned_end_dt = max(planned_end_dt, calendar_attendance[1]) if planned_end_dt else calendar_attendance[1]
-                            planned_work_duration += (calendar_attendance[1] - calendar_attendance[0]).total_seconds() / 3600.0
                         # Count time before, during and after 'working hours'
-                        pre_work_time, work_duration, post_work_time = 0, 0, 0
-
-                        for attendance in attendances:
-                            # consider check_in as planned_start_dt if within threshold
-                            # if delta_in < 0: Checked in after supposed start of the day
-                            # if delta_in > 0: Checked in before supposed start of the day
-                            local_check_in = pytz.utc.localize(attendance.check_in)
-                            delta_in = (planned_start_dt - local_check_in).total_seconds() / 3600.0
-
-                            # Started before or after planned date within the threshold interval
-                            if (delta_in > 0 and delta_in <= company_threshold) or\
-                                (delta_in < 0 and abs(delta_in) <= employee_threshold):
-                                local_check_in = planned_start_dt
-                            local_check_out = pytz.utc.localize(attendance.check_out)
-
-                            # same for check_out as planned_end_dt
-                            delta_out = (local_check_out - planned_end_dt).total_seconds() / 3600.0
-                            # if delta_out < 0: Checked out before supposed start of the day
-                            # if delta_out > 0: Checked out after supposed start of the day
-
-                            # Finised before or after planned date within the threshold interval
-                            if (delta_out > 0 and delta_out <= company_threshold) or\
-                                (delta_out < 0 and abs(delta_out) <= employee_threshold):
-                                local_check_out = planned_end_dt
-
-                            # There is an overtime at the start of the day
-                            if local_check_in < planned_start_dt:
-                                pre_work_time += (min(planned_start_dt, local_check_out) - local_check_in).total_seconds() / 3600.0
-                            # Interval inside the working hours -> Considered as working time
-                            if local_check_in <= planned_end_dt and local_check_out >= planned_start_dt:
-                                start_dt = max(planned_start_dt, local_check_in)
-                                stop_dt = min(planned_end_dt, local_check_out)
-                                work_duration += (stop_dt - start_dt).total_seconds() / 3600.0
-                                # remove lunch time from work duration
-                                lunch_intervals = calendar._attendance_intervals_batch(start_dt, stop_dt, emp.resource_id, lunch=True)
-                                work_duration -= sum((i[1] - i[0]).total_seconds() / 3600.0 for i in lunch_intervals[emp.resource_id.id])
-
-                            # There is an overtime at the end of the day
-                            if local_check_out > planned_end_dt:
-                                post_work_time += (local_check_out - max(planned_end_dt, local_check_in)).total_seconds() / 3600.0
-
+                        pre_work_time, work_duration, post_work_time, planned_work_duration = attendances._get_pre_post_work_time(emp, working_times, attendance_date)
                         # Overtime within the planned work hours + overtime before/after work hours is > company threshold
                         overtime_duration = work_duration - planned_work_duration
                         if pre_work_time > company_threshold:
@@ -387,6 +343,57 @@ class HrAttendance(models.Model):
         overtime_to_unlink.sudo().unlink()
         self.env.add_to_compute(self._fields['overtime_hours'],
                                 self.search([('employee_id', 'in', employees_worked_hours_to_compute)]))
+
+    def _get_pre_post_work_time(self, employee, working_times, attendance_date):
+        pre_work_time, work_duration, post_work_time = 0, 0, 0
+        company_threshold = employee.company_id.overtime_company_threshold / 60.0
+        employee_threshold = employee.company_id.overtime_employee_threshold / 60.0
+        # Compute start and end time for that day
+        planned_start_dt, planned_end_dt = False, False
+        planned_work_duration = 0
+        for calendar_attendance in working_times[attendance_date]:
+            planned_start_dt = min(planned_start_dt, calendar_attendance[0]) if planned_start_dt else calendar_attendance[0]
+            planned_end_dt = max(planned_end_dt, calendar_attendance[1]) if planned_end_dt else calendar_attendance[1]
+            planned_work_duration += (calendar_attendance[1] - calendar_attendance[0]).total_seconds() / 3600.0
+        for attendance in self:
+            # consider check_in as planned_start_dt if within threshold
+            # if delta_in < 0: Checked in after supposed start of the day
+            # if delta_in > 0: Checked in before supposed start of the day
+            local_check_in = pytz.utc.localize(attendance.check_in)
+            delta_in = (planned_start_dt - local_check_in).total_seconds() / 3600.0
+
+            # Started before or after planned date within the threshold interval
+            if (delta_in > 0 and delta_in <= company_threshold) or\
+                (delta_in < 0 and abs(delta_in) <= employee_threshold):
+                local_check_in = planned_start_dt
+            local_check_out = pytz.utc.localize(attendance.check_out)
+
+            # same for check_out as planned_end_dt
+            delta_out = (local_check_out - planned_end_dt).total_seconds() / 3600.0
+            # if delta_out < 0: Checked out before supposed start of the day
+            # if delta_out > 0: Checked out after supposed start of the day
+
+            # Finised before or after planned date within the threshold interval
+            if (delta_out > 0 and delta_out <= company_threshold) or\
+                (delta_out < 0 and abs(delta_out) <= employee_threshold):
+                local_check_out = planned_end_dt
+
+            # There is an overtime at the start of the day
+            if local_check_in < planned_start_dt:
+                pre_work_time += (min(planned_start_dt, local_check_out) - local_check_in).total_seconds() / 3600.0
+            # Interval inside the working hours -> Considered as working time
+            if local_check_in <= planned_end_dt and local_check_out >= planned_start_dt:
+                start_dt = max(planned_start_dt, local_check_in)
+                stop_dt = min(planned_end_dt, local_check_out)
+                work_duration += (stop_dt - start_dt).total_seconds() / 3600.0
+                # remove lunch time from work duration
+                lunch_intervals = employee._employee_attendance_intervals(start_dt, stop_dt, lunch=True)
+                work_duration -= sum((i[1] - i[0]).total_seconds() / 3600.0 for i in lunch_intervals)
+
+            # There is an overtime at the end of the day
+            if local_check_out > planned_end_dt:
+                post_work_time += (local_check_out - max(planned_end_dt, local_check_in)).total_seconds() / 3600.0
+        return pre_work_time, work_duration, post_work_time, planned_work_duration
 
     @api.model_create_multi
     def create(self, vals_list):

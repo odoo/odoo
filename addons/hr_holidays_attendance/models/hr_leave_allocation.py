@@ -57,7 +57,7 @@ class HolidaysAllocation(models.Model):
             employee = allocation.employee_id
             duration = allocation.number_of_hours_display
             overtime_duration = allocation.overtime_id.sudo().duration
-            if overtime_duration != duration:
+            if overtime_duration != -1 * duration:
                 if duration > employee.total_overtime - overtime_duration:
                     raise ValidationError(_('The employee does not have enough extra hours to extend this allocation.'))
                 allocation.overtime_id.sudo().duration = -1 * duration

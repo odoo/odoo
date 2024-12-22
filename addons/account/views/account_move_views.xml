@@ -181,7 +181,7 @@
                     <field name="currency_id" groups="base.group_multi_currency" optional="hide" string="Currency" readonly="1" invisible="is_same_currency"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
-                    <field name="tax_tag_ids" string="Tax Grids" widget="many2many_tags" optional="hide"/>
+                    <field name="tax_tag_ids" string="Tax Grids" options="{'no_create': True, 'no_create_edit': True}" domain="[('applicability', '=', 'taxes')]" widget="many2many_tags" optional="hide"/>
                     <field name="discount_date" string="Discount Date" optional="hide" />
                     <field name="discount_amount_currency" string="Discount Amount" optional="hide" />
                     <field name="tax_line_id" string="Originator Tax" optional="hide" readonly="1"/>
@@ -346,7 +346,7 @@
                     <filter string="Non Trade Payable" domain="[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', True)]" help="From Non Trade Receivable accounts" name="non_trade_payable" invisible="1"/>
                     <filter string="Non Trade Receivable" domain="[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', True)]" help="From Non Trade Receivable accounts" name="non_trade_receivable" invisible="1"/>
                     <filter string="P&amp;L Accounts" domain="[('account_id.internal_group', 'in', ('income', 'expense'))]" help="From P&amp;L accounts" name="pl_accounts"/>
-                    <filter string="No Bank Transaction" domain="[('statement_line_id', '=', False)]" name="no_st_line_id" invisible="1"/>
+                    <filter string="No Bank Transaction" domain="[('statement_line_id', '=', False), ('payment_id', '=', False)]" name="no_st_line_id" invisible="1"/>
                     <separator/>
                     <filter string="Date" name="date" date="date"/>
                     <filter string="Invoice Date" name="invoice_date" date="invoice_date"/>
@@ -354,6 +354,7 @@
                     <filter string="Report Dates" name="date_between" domain="[('date', '&gt;=', context.get('date_from')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
                     <filter string="Report Dates" name="date_before" domain="[('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
                     <separator/>
+                    <filter string="Analytic Accounts" name="analytic_accounts" domain="[('analytic_distribution', 'in', context.get('analytic_ids'))]" invisible="1"/>
                     <group expand="0" string="Group By">
                         <filter string="Journal Entry" name="group_by_move" domain="[]" context="{'group_by': 'move_name'}"/>
                         <filter string="Account" name="group_by_account" domain="[]" context="{'group_by': 'account_id'}"/>
@@ -365,7 +366,7 @@
                         <filter string="Tax Grid" name="group_by_tax_tags" domain="[]" context="{'group_by': 'tax_tag_ids'}"/>
                         <filter string="Matching #" name="group_by_matching" domain="[]" context="{'group_by': 'matching_number'}"/>
                     </group>
-                    <searchpanel class="account_root">
+                    <searchpanel class="account_root w-auto">
                         <field name="account_root_id" icon="fa-filter" groupby="account_id" limit="0"/>
                     </searchpanel>
                 </search>
@@ -640,7 +641,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
-                                        <span><field name="amount_total" widget='monetary'/></span>
+                                        <span><field name="amount_total_in_currency_signed" widget='monetary'/></span>
                                         <span><field name="currency_id" invisible="1" readonly="state in ['cancel', 'posted']"/></span>
                                     </div>
                                     <div class="col-6">
@@ -693,7 +694,7 @@
                         <!-- Preview (only customer invoices) -->
                         <button name="preview_invoice" type="object" string="Preview" data-hotkey="o"
                                 title="Preview invoice"
-                                invisible="move_type not in ('out_invoice', 'out_refund')"/>
+                                invisible="move_type not in ('out_invoice', 'out_refund') or state == 'cancel'"/>
                         <!-- Reverse -->
                         <button name="%(action_view_account_move_reversal)d" string="Reverse Entry"
                                 type="action" groups="account.group_account_invoice" data-hotkey="z"
@@ -866,6 +867,7 @@
                         <field name="quick_encoding_vals" invisible="1"/>
                         <field name="show_delivery_date" invisible="1"/>
                         <field name="is_being_sent" invisible="1"/>
+                        <field name="show_update_fpos" invisible="1"/>
 
                         <div class="oe_title">
                             <span class="o_form_label"><field name="move_type" readonly="1" invisible="move_type == 'entry'" nolabel="1"/></span>
@@ -885,14 +887,22 @@
                                        invisible="move_type not in ('out_invoice', 'out_refund', 'out_receipt')"/>
                                 <label for="partner_id" string="Vendor" style="font-weight:bold;"
                                        invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"/>
-                                <field name="partner_id" widget="res_partner_many2one" nolabel="1"
-                                       context="{
+                                <div class="o_col" invisible="move_type not in ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund', 'in_receipt')">
+                                    <field name="partner_id" widget="res_partner_many2one" nolabel="1"
+                                           context="{
                                             'res_partner_search_mode': (context.get('default_move_type', 'entry') in ('out_invoice', 'out_refund', 'out_receipt') and 'customer') or (context.get('default_move_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') and 'supplier') or False,
                                             'show_address': 1, 'default_is_company': True, 'show_vat': True}"
-                                       domain="[('company_id', 'in', (False, company_id))]"
-                                       options='{"no_quick_create": True}'
-                                       invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"
-                                       readonly="state != 'draft'"/>
+                                           domain="[('company_id', 'in', (False, company_id))]"
+                                           options='{"no_quick_create": True}'
+                                           invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"
+                                           readonly="state != 'draft'"/>
+                                    <button name="action_update_fpos_values" type="object"
+                                            string="Update Taxes and Accounts"
+                                            help="Recompute all taxes and accounts based on this fiscal position"
+                                            class="btn-link mb-1 px-0" icon="fa-refresh"
+                                            confirm="This will update all taxes and accounts based on the currently selected fiscal position."
+                                            invisible="not show_update_fpos or state in ['cancel', 'posted']"/>
+                                </div>
 
                                 <field name="partner_shipping_id"
                                        groups="account.group_delivery_invoice_address"
@@ -926,7 +936,7 @@
                                        readonly="state != 'draft'"/>
 
                                 <field name="date" string="Accounting Date"
-                                       invisible="move_type in ('out_invoice', 'out_refund', 'out_receipt') and not quick_edit_mode"
+                                       invisible="move_type in ('out_invoice', 'out_refund', 'out_receipt') and not quick_edit_mode and not (state == 'posted' and date != invoice_date)"
                                        readonly="state != 'draft'"/>
                                 <field name="payment_reference"
                                        invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"
@@ -965,7 +975,7 @@
                                      invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'">
                                     <field name="journal_id"
                                         options="{'no_create': True, 'no_open': True}"
-                                        readonly="posted_before"/>
+                                        readonly="posted_before and name not in (False, '', '/')"/>
                                     <span class="oe_inline o_form_label mx-3"
                                           groups="base.group_multi_currency"
                                           invisible="move_type == 'entry'"> in </span>
@@ -1032,6 +1042,9 @@
                                         <field name="quantity" optional="show"/>
                                         <field name="product_uom_category_id" column_invisible="True"/>
                                         <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
+                                        <!-- /l10n_in_edi.test_edi_json -->
+                                        <!-- required for @api.onchange('product_id') -->
+                                        <field name="product_uom_id" column_invisible="True"/>
                                         <field name="price_unit" string="Price"/>
                                         <field name="discount" string="Disc.%" optional="hide"/>
                                         <field name="tax_ids" widget="many2many_tags"
@@ -1052,9 +1065,6 @@
                                         <field name="company_id" column_invisible="True"/>
                                         <field name="company_currency_id" column_invisible="True"/>
                                         <field name="display_type" force_save="1" column_invisible="True"/>
-                                        <!-- /l10n_in_edi.test_edi_json -->
-                                        <!-- required for @api.onchange('product_id') -->
-                                        <field name="product_uom_id" column_invisible="True"/>
                                     </tree>
                                     <kanban class="o_kanban_mobile">
                                         <!-- Displayed fields -->
@@ -1310,7 +1320,7 @@
                                         <field name="invoice_origin" string="Source Document" force_save="1" invisible="1"/>
                                         <field name="partner_bank_id"
                                                context="{'default_partner_id': bank_partner_id, 'display_account_trust': True}"
-                                               domain="[('partner_id', '=', bank_partner_id)]"
+                                               domain="[('partner_id.ref_company_ids', 'parent_of', company_id)]"
                                                readonly="state != 'draft'"/>
                                         <field name="qr_code_method"
                                                invisible="not display_qr_code"/>
@@ -1368,7 +1378,7 @@
                     <div class="oe_chatter">
                         <field name="message_follower_ids" groups="base.group_user"/>
                         <field name="activity_ids"/>
-                        <field name="message_ids"/>
+                        <field name="message_ids" options="{'post_refresh': 'always'}"/>
                     </div>
                 </form>
             </field>
@@ -1450,6 +1460,9 @@
                                 ('name', 'ilike', self), ('invoice_origin', 'ilike', self),
                                 ('ref', 'ilike', self), ('payment_reference', 'ilike', self),
                                 ('partner_id', 'child_of', self)]"/>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="payment_reference"/>
                     <field name="journal_id"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="invoice_user_id" string="Salesperson" domain="[('share', '=', False)]"/>
@@ -1467,6 +1480,8 @@
                     <filter name="open" string="Unpaid" domain="[('state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial'))]"/>
                     <!-- in_payment & paid -->
                     <filter name="closed" string="Paid" domain="[('state', '=', 'posted'), ('payment_state', 'in', ('in_payment', 'paid'))]"/>
+                    <!-- reversed -->
+                    <filter name="reversed" string="Reversed" domain="[('state', '=', 'posted'), ('payment_state', '=', 'reversed')]"/>
                     <!-- overdue -->
                     <filter name="late" string="Overdue" domain="[
                         ('invoice_date_due', '&lt;', time.strftime('%Y-%m-%d')),
@@ -1487,10 +1502,14 @@
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'invoice_user_id'}"/>
-                        <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                        <filter string="Partner" name="groupy_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Status" name="status" context="{'group_by':'state'}"/>
+                        <filter string="Journal" name="groupy_by_journal" domain="[]" context="{'group_by': 'journal_id'}"/>
                         <separator/>
                         <filter string="Invoice Date" name="invoicedate" context="{'group_by': 'invoice_date'}"/>
                         <filter string="Due Date" name="duedate" context="{'group_by': 'invoice_date_due'}"/>
+                        <filter string="Date" name="group_by_date" context="{'group_by': 'date'}"/>
+                        <filter string="Company" name="group_by_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Sequence Prefix" name="group_by_sequence_prefix" context="{'group_by': 'sequence_prefix'}" invisible="1"/>
                     </group>
                </search>
@@ -1700,7 +1719,7 @@
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_move_line_payment_tree"/>
             <field name="search_view_id" ref="view_account_move_line_payment_filter"/>
-            <field name="domain">[('parent_state', '=', 'posted'), ('date_maturity', '!=', False), ('amount_residual', '&lt;', 0), ('account_id.reconcile', '=', True), ('journal_id.type', '=', 'sale')]</field>
+            <field name="domain">[('parent_state', '=', 'posted'), ('date_maturity', '!=', False), ('amount_residual', '&gt;', 0), ('account_id.reconcile', '=', True), ('journal_id.type', '=', 'sale')]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Amounts to settle

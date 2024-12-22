@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Iran Villalobos López, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -86,9 +87,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"De acuerdo con la configuración del proyecto, la cantidad recibida se puede calcular en automático con el mecanismo:\n"
-"- Manual: la cantidad se establece de manera manual en la línea\n"
-"- Movimientos del inventario: la cantidad se establece según los productos que ha recibido\n"
+"La cantidad recibida se puede calcular en automático con el mecanismo según la configuración del producto:\n"
+"- Manual: la cantidad se establece de forma manual en la línea\n"
+"- Movimientos de inventario: la cantidad corresponde a las recolecciones confirmadas\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -150,7 +151,7 @@ msgstr "No se encontró el recibo correspondiente."
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_ids
 msgid "Created Purchase Order Lines"
-msgstr "Líneas de la orden de compra creada"
+msgstr "Líneas de la orden de compra creadas"
 
 #. module: purchase_stock
 #. odoo-python
@@ -299,12 +300,12 @@ msgstr "ID"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoming_picking_count
 msgid "Incoming Shipment count"
-msgstr "Cuenta de envíos entrantes"
+msgstr "Número de envíos entrantes"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Incoming Shipments"
-msgstr "Envíos a recibir"
+msgstr "Envíos entrantes"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_location
@@ -344,7 +345,7 @@ msgstr "Logística"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_lot
 msgid "Lot/Serial"
-msgstr "Lote/serie"
+msgstr "Número de serie/lote"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -359,8 +360,8 @@ msgid ""
 " to cope with unexpected vendor delays."
 msgstr ""
 "Margen de error para los plazos de entrega del proveedor. Cuando el sistema "
-"genera órdenes de compra para abastecer productos, se programarán muchos "
-"días antes para hacer frente a las demoras inesperadas de los proveedores."
+"genera órdenes de compra para reordenar productos, se programarán con estos "
+"días de anticipación en caso de que haya demoras inesperadas."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
@@ -375,7 +376,7 @@ msgstr "Adelantar las fechas de creación previstas por"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Next transfer(s) impacted:"
-msgstr "Siguientes traslados afectados:"
+msgstr "Siguiente(s) traslado(s) afectado(s):"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -443,7 +444,7 @@ msgid ""
 msgstr ""
 "Durante los últimos x días; el número de productos recibidos a tiempo divido"
 " entre el número de products.x ordenados es el parámetro "
-"purchase_stock.on_time_delivery_days del sistema o 365."
+"purchase_stock.on_time_delivery_days del sistema o el predeterminado 365."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
@@ -542,7 +543,7 @@ msgstr "Reporte de compras"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Purchase Security Lead Time"
-msgstr "Plazo de entrega seguro para la compra"
+msgstr "Plazo de seguridad para compras"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__purchase_visibility_days
@@ -552,7 +553,7 @@ msgstr "Días de visibilidad de compras"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_count
 msgid "Purchase order count"
-msgstr "Contador de orden de compra"
+msgstr "Número de órdenes de compra"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__dest_address_id
@@ -589,7 +590,7 @@ msgstr "Recibir los productos ordenados"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
 msgid "Received Qty Method"
-msgstr "Método de cantidad entregada"
+msgstr "Método de cantidad recibida"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids
@@ -653,13 +654,13 @@ msgstr "Mostrar la columna del proveedor"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Movimiento de existencias"
+msgstr "Movimiento de stock"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_line__qty_received_method__stock_moves
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
 msgid "Stock Moves"
-msgstr "Movimientos de inventario"
+msgstr "Movimientos de stock"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_forecasted_product_product
@@ -694,7 +695,7 @@ msgstr "Opción de reabastecimiento de almacén de existencias"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "Tarifa de proveedor"
+msgstr "Lista de precios del proveedor"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_ids
@@ -711,7 +712,7 @@ msgstr "Campo técnico utilizado para mostrar la dirección de envío directo"
 #: code:addons/purchase_stock/models/stock.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
-msgstr "Se ha generado la siguiente orden de reabastecimiento"
+msgstr "Se generó la siguiente orden de reabastecimiento"
 
 #. module: purchase_stock
 #. odoo-python
@@ -880,8 +881,8 @@ msgid ""
 "created to fulfill the need.<br/>Note: This rule will be used in combination"
 " with the rules<br/>of the reception route(s)"
 msgstr ""
-"Cuando se necesiten productos en <b>%s</b>, <br/> se generará una  solicitud"
-" de cotización para satisfacer dicha necesidad.<br/>Nota: Esta regla se "
+"Cuando se necesiten productos en <b>%s</b>, <br/> se generará una solicitud "
+"de cotización para satisfacer la necesidad.<br/>Nota: esta regla se "
 "utilizará en combinación con las reglas<br/>de las rutas de recepción"
 
 #. module: purchase_stock

@@ -1,10 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import timedelta
 
-from odoo import fields
+from odoo import fields, http
 from odoo.exceptions import ValidationError
-from odoo.tests import HttpCase, tagged, TransactionCase
-from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
+from odoo.fields import Command
+from odoo.tests import HttpCase, tagged
+
+from odoo.addons.sale.tests.test_sale_product_attribute_value_config import (
+    TestSaleProductAttributeValueCommon,
+)
+from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
 
 @tagged('post_install', '-at_install')
@@ -211,6 +217,38 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
         self.assertEqual(len(gift_card_program.coupon_ids), 2, 'There should be two coupons, one with points, one without')
         self.assertEqual(len(gift_card_program.coupon_ids.filtered('points')), 1, 'There should be two coupons, one with points, one without')
 
+    def test_03_admin_shop_ewallet_tour(self):
+        public_category = self.env['product.public.category'].create({'name': 'Public Category'})
+        self.env['product.product'].create({
+            'name': 'TEST - Small Drawer',
+            'list_price': 50,
+            'type': 'consu',
+            'is_published': True,
+            'sale_ok': True,
+            'public_categ_ids': [(4, public_category.id)],
+            'taxes_id': False,
+        })
+        # Disable any other program
+        self.env['loyalty.program'].search([]).write({'active': False})
+        ewallet_programs = self.env['loyalty.program'].create([{
+            'name': f"ewallet - test - {ecommerce_ok=}",
+            'applies_on': 'future',
+            'trigger': 'auto',
+            'program_type': 'ewallet',
+            'ecommerce_ok': ecommerce_ok,
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount_mode': 'per_point',
+                'discount': 1,
+            })],
+        } for ecommerce_ok in (True, False)])
+        self.env['loyalty.card'].create([{
+            'partner_id': self.env.ref('base.partner_admin').id,
+            'program_id': program_id,
+            'points': 1000,
+        } for program_id in ewallet_programs.ids])
+        self.start_tour('/', 'shop_sale_ewallet', login='admin')
+
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleCoupon(HttpCase):
@@ -366,3 +404,187 @@ class TestWebsiteSaleCoupon(HttpCase):
 
         msg = "The coupon should've been removed from the order"
         self.assertEqual(len(order.applied_coupon_ids), 0, msg=msg)
+
+    def test_04_apply_coupon_code_twice(self):
+        """This test ensures that applying a coupon with code twice will:
+            1. Raise an error
+            2. Not delete the coupon
+        """
+        website = self.env['website'].browse(1)
+
+        # Create product
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'list_price': 100,
+            'sale_ok': True,
+            'taxes_id': [],
+        })
+
+        order = self.empty_order
+        order.write({
+            'website_id': website.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product.id,
+                }),
+            ]
+        })
+
+        WebsiteSaleController = WebsiteSale()
+
+        installed_modules = set(self.env['ir.module.module'].search([
+            ('state', '=', 'installed'),
+        ]).mapped('name'))
+        for _ in http._generate_routing_rules(installed_modules, nodb_only=False):
+            pass
+
+        with MockRequest(self.env, website=website, sale_order_id=order.id) as request:
+            # Check the base cart value
+            self.assertEqual(order.amount_total, 100.0, "The base cart value is incorrect.")
+
+            # Apply coupon for the first time
+            WebsiteSaleController.pricelist(promo=self.coupon.code)
+
+            # Check that the coupon has been applied
+            self.assertEqual(order.amount_total, 90.0, "The coupon is not applied.")
+
+            # Apply the coupon again
+            WebsiteSaleController.pricelist(promo=self.coupon.code)
+            WebsiteSaleController.cart()
+            error_msg = request.session.get('error_promo_code')
+
+            # Check that the coupon stay applied
+            self.assertEqual(bool(error_msg), True, "Apply a coupon twice should display an error message")
+            self.assertEqual(order.amount_total, 90.0, "Apply a coupon twice shouldn't delete it")
+
+    def test_03_remove_coupon_with_different_taxes_on_products(self):
+        """
+        Tests the removal of a coupon from an order containing products with various tax rates,
+        ensuring that the system correctly handles multiple coupon lines created
+        for each unique tax scenario.
+
+        Background:
+            An order may include products with different tax implications,
+            such as non-taxed products, products with a single tax rate,
+            and products with multiple tax rates. When a coupon is applied,
+            it creates separate coupon lines for each distinct tax situation
+            (non-taxed, individual taxes, and combinations of taxes).
+            This test verifies that the coupon deletion process accurately removes
+            all associated coupon lines, maintaining the financial accuracy of the order.
+
+        Steps:
+            1. Create an order with products subject to different tax scenarios:
+            - Non-taxed product 'Product A'
+            - Product 'Product B' with Tax A
+            - Product 'Product C' with Tax B
+            - Product 'Product D' subject to both Tax A and Tax B
+            2. Apply a coupon, which generates four distinct coupon lines
+                to reflect each tax scenario.
+            3. Remove the coupon and verify that all coupon lines are removed and
+                that no coupons remain applied.
+        """
+        # Create 2 Taxes
+        tax_a = self.env['account.tax'].create({
+            'name': 'Tax A',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 15,
+        })
+        tax_b = tax_a.copy({'name': 'Tax B'})
+
+        # Create 4 products subject to different tax
+        products_data = [
+            ('Product A', []),
+            ('Product B', [tax_a.id]),
+            ('Product C', [tax_b.id]),
+            ('Product D', [tax_a.id, tax_b.id]),
+        ]
+
+        products = self.env['product.product'].create(
+            [{
+                'name': name,
+                'list_price': 100,
+                'sale_ok': True,
+                'taxes_id': [Command.set(taxes_id)],
+            } for name, taxes_id in products_data]
+        )
+
+        order = self.empty_order
+        order.write({
+            'website_id': self.env['website'].browse(1),
+            'order_line': [Command.create({'product_id': product.id}) for product in products],
+        })
+
+        msg = "There should only be 4 lines for the 4 products."
+        self.assertEqual(len(order.order_line), 4, msg=msg)
+
+        # 2. Apply the coupon
+        self._apply_promo_code(order, self.coupon.code)
+
+        msg = (
+            "4 additional lines should have been added to the sale orders"
+            "after application of the coupon for each separate tax situation."
+        )
+        self.assertEqual(len(order.order_line), 8, msg=msg)
+
+        # 3. Remove the coupon
+        coupon_line = order.website_order_line.filtered(
+            lambda line: line.coupon_id and line.coupon_id.id == self.coupon.id
+        )
+        order._cart_update(
+            line_id=None,
+            product_id=coupon_line.product_id.id,
+            add_qty=None,
+            set_qty=0,
+        )
+
+        msg = "All coupon lines should have been removed from the order."
+        self.assertEqual(len(order.applied_coupon_ids), 0, msg=msg)
+        self.assertEqual(len(order.order_line), 4, msg=msg)
+
+    def test_confirm_points_as_public_user(self):
+        test_product = self.env['product.product'].create({
+            'name': "Test Product",
+            'list_price': 100,
+            'sale_ok': True,
+        })
+        test_partner = self.env['res.partner'].create({
+            'name': 'Test Partner'
+        })
+
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': "Loyalty Program",
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [Command.create({
+                'reward_point_mode': 'unit',
+                'reward_point_amount': 1,
+                'product_ids': [test_product.id],
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 1.5,
+                'discount_mode': 'per_point',
+                'discount_applicability': 'order',
+                'required_points': 3,
+            })],
+        })
+
+        order = self.env['sale.order'].create({
+            'partner_id': test_partner.id,
+            'order_line': [Command.create({
+                'product_id': test_product.id,
+                'product_uom_qty': 1,
+            })]
+        })
+
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': test_partner.id,
+            'points': 0,
+        })
+        public_user = self.env.ref('base.public_user')
+        order.action_quotation_send()
+        order.with_context(access_token=order.access_token, user=public_user).action_confirm()
+        self.assertEqual(loyalty_card.points, 1)

@@ -151,12 +151,14 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                     },
                     x: {
                         ticks: {
-                            maxRotation: 0,
+                            minRotation: 20,
+                            maxRotation: 90,
                             font: {
                                 size :"35",
                                 weight:"bold"
                             },
-                            color : '#212529'
+                            color : '#212529',
+                            autoSkip: false,
                         },
                         grid: {
                             drawOnChartArea: false,
@@ -208,13 +210,13 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                     const nbrCol = chart.data.labels.length;
                     const minRatio = 0.4;
                     // Numbers of maximum characters per line to print based on the number of columns and default ratio for the font size
-                    // Between 1 and 2 -> 25, 3 and 4 -> 20, 5 and 6 -> 15, ...
+                    // Between 1 and 2 -> 35, 3 and 4 -> 30, 5 and 6 -> 30, ...
                     const charPerLineBreakpoints = [
-                        [1, 2, 25, minRatio],
-                        [3, 4, 20, minRatio],
-                        [5, 6, 15, 0.45],
-                        [7, 8, 10, 0.65],
-                        [9, null, 7, 0.7],
+                        [1, 2, 35, minRatio],
+                        [3, 4, 30, minRatio],
+                        [5, 6, 30, 0.45],
+                        [7, 8, 30, 0.65],
+                        [9, null, 30, 0.7],
                     ];
 
                     let charPerLine;
@@ -227,7 +229,7 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                     });
 
                     // Adapt font size if the number of characters per line is under the maximum
-                    if (charPerLine < 25) {
+                    if (charPerLine < 35) {
                         const allWords = chart.data.labels.reduce((accumulator, words) => accumulator.concat(' '.concat(words)));
                         const maxWordLength = Math.max(...allWords.split(' ').map((word) => word.length));
                         fontRatio = maxWordLength > charPerLine ? minRatio : fontRatio;
@@ -310,7 +312,8 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                 opacity = '0.2';
             }
         }
-        var rgb = SESSION_CHART_COLORS[metaData.dataIndex];
+        // If metaData.dataIndex is greater than SESSION_CHART_COLORS.length, it should start from the beginning
+        var rgb = SESSION_CHART_COLORS[metaData.dataIndex % SESSION_CHART_COLORS.length];
         return `rgba(${rgb},${opacity})`;
     },
 

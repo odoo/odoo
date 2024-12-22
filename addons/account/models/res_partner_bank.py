@@ -93,6 +93,7 @@ class ResPartnerBank(models.Model):
         }
 
     @api.depends('acc_number')
+    @api.depends_context('uid')
     def _compute_user_has_group_validate_bank_account(self):
         user_has_group_validate_bank_account = self.user_has_groups('account.group_validate_bank_account')
         for bank in self:

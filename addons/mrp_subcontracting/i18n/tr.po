@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
@@ -139,6 +139,7 @@ msgid "Detail Component"
 msgstr "Detail Component"
 
 #. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Details"
 msgstr "Detaylar"
@@ -187,10 +188,8 @@ msgstr "Gizle"
 #, python-format
 msgid ""
 "In order to manage stock accurately, subcontracting locations must be type "
-"Internal, linked to the appropriate company and not specific to a warehouse."
+"Internal, linked to the appropriate company."
 msgstr ""
-"Stokları doğru bir şekilde yönetmek için, fason konumları Dahili tipinde "
-"olmalı, uygun şirkete bağlı olmalı ve bir depoya özgü olmamalıdır."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_filter
@@ -220,6 +219,13 @@ msgid ""
 msgstr ""
 "BoM'de kullanılan Ürünlerin Listesi, alt yüklenici portalı görünümündeki "
 "ürün listesini filtrelemek için kullanılır"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
@@ -388,6 +394,7 @@ msgstr "İkmal Fasoncu"
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#: code:addons/mrp_subcontracting/wizard/product_replenish.py:0
 #: model:stock.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 #, python-format
 msgid "Resupply Subcontractor on Order"
@@ -655,6 +662,13 @@ msgstr "Şirketin fason konumunu değiştiremezsiniz"
 #, python-format
 msgid "You cannot write on fields %s in mrp.production."
 msgstr "mrp.production içindeki %s alanlarına yazamazsınız."
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid "You might want to update the locations of this transfer's operations"
+msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python

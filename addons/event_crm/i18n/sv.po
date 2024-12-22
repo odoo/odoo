@@ -5,15 +5,14 @@
 # Translators:
 # Moa Nicklasson <Moa.nicklasson@hotmail.se>, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Lasse L, 2023
 # Simon S, 2023
 # Martin Trigaux, 2023
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Zou Haojun <haojunzou84@gmail.com>, 2023
 # Robin Calvin, 2023
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -21,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,19 +32,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_crm.field_event_event__lead_count
 #: model:ir.model.fields,field_description:event_crm.field_event_registration__lead_count
 msgid "# Leads"
-msgstr "# leads"
+msgstr "# Kundämnen"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_count
 msgid "# Registrations"
-msgstr "# anmälningar"
+msgstr "# Anmälningar"
 
 #. module: event_crm
 #. odoo-python
 #: code:addons/event_crm/models/event_registration.py:0
 #, python-format
 msgid "(updated)"
-msgstr ""
+msgstr "(uppdaterad)"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_view_form
@@ -72,32 +71,32 @@ msgstr "Arkiverad"
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__create
 msgid "Attendees are created"
-msgstr ""
+msgstr "Deltagare är skapad"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__confirm
 msgid "Attendees are registered"
-msgstr ""
+msgstr "Deltagarna är registrerade"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__done
 msgid "Attendees attended"
-msgstr ""
+msgstr "Deltagare närvarade"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_tag_ids
 msgid "Automatically add these tags to the created leads."
-msgstr ""
+msgstr "Lägg automatiskt till dessa taggar till de skapade kundämnena."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_sales_team_id
 msgid "Automatically assign the created leads to this Sales Team."
-msgstr ""
+msgstr "Tilldela automatiskt de skapade kundämnena till detta säljlag."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_user_id
 msgid "Automatically assign the created leads to this Salesperson."
-msgstr ""
+msgstr "Tilldela automatiskt de skapade kundämnen till denna säljare."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__company_id
@@ -107,22 +106,22 @@ msgstr "Bolag"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__registration_count
 msgid "Counter for the registrations linked to this lead"
-msgstr ""
+msgstr "Räknare för registreringar kopplade till detta kundämne"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_basis
 msgid "Create"
-msgstr "Skapa "
+msgstr "Skapa"
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
 msgid "Create a Lead Generation Rule"
-msgstr ""
+msgstr "Skapa en regel för kundämnegenerering"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_ids
 msgid "Created Leads"
-msgstr ""
+msgstr "Skapade kundämne"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_uid
@@ -137,7 +136,7 @@ msgstr "Skapad den"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
 msgid "Creation Type"
-msgstr ""
+msgstr "Typ av skapande"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_creation_trigger
@@ -146,11 +145,14 @@ msgid ""
 "Registered: at attendee registration, manually or automatically;\n"
 "Attended: when attendance is confirmed and registration set to done;"
 msgstr ""
+"Skapande: vid skapande av deltagare;\n"
+"Registrerad: vid registrering av deltagare, manuellt eller automatiskt;\n"
+"Närvarande: när närvaro bekräftas och registreringen markeras som klar;"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_type
 msgid "Default lead type when this rule is applied."
-msgstr ""
+msgstr "Standard kundämnestyp när denna regel tillämpas."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__display_name
@@ -171,7 +173,7 @@ msgstr "Eventkategorier"
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_rule
 msgid "Event Lead Rules"
-msgstr ""
+msgstr "Regler för ledande evenemang"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_registration
@@ -186,17 +188,17 @@ msgstr "Anmälningar"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__event_id
 msgid "Event triggering the rule that created this lead"
-msgstr ""
+msgstr "Händelse som utlöser den regel som skapade detta kundämne"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_merge_summary_inherit_event_crm
 msgid "Event:"
-msgstr ""
+msgstr "Händelse:"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_registration_filter
 msgid "Filter the attendees that will or not generate leads."
-msgstr ""
+msgstr "Filtrera de deltagare som kommer att generera kundämne eller inte."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_type_ids
@@ -204,6 +206,9 @@ msgid ""
 "Filter the attendees to include those of this specific event category. If "
 "not set, no event category restriction will be applied."
 msgstr ""
+"Filtrera deltagarna för att inkludera de som tillhör denna specifika "
+"evenemangskategori. Om inget anges kommer ingen begränsning för "
+"evenemangskategori att tillämpas."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_id
@@ -211,11 +216,13 @@ msgid ""
 "Filter the attendees to include those of this specific event. If not set, no"
 " event restriction will be applied."
 msgstr ""
+"Filtrera deltagarna så att de inkluderar deltagarna i detta specifika "
+"evenemang. Om inget anges kommer ingen evenemangsbegränsning att tillämpas."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "For any of these Events"
-msgstr ""
+msgstr "För någon av dessa händelser"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__id
@@ -225,7 +232,7 @@ msgstr "ID"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "If the Attendees meet these Conditions"
-msgstr ""
+msgstr "Om deltagarna uppfyller dessa villkor"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__write_uid
@@ -245,12 +252,12 @@ msgstr "Kundämne"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
 msgid "Lead Creation Type"
-msgstr ""
+msgstr "Typ av skapande av kundämne"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "Lead Default Values"
-msgstr ""
+msgstr "Kundämne standardvärden"
 
 #. module: event_crm
 #: model:ir.ui.menu,name:event_crm.event_lead_rule_menu
@@ -261,22 +268,22 @@ msgstr "Kundämnesgenerering"
 #: model:ir.actions.act_window,name:event_crm.event_lead_rule_action
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "Lead Generation Rule"
-msgstr "Regel för leadgenerering"
+msgstr "Regel för kundämnesgenerering"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
 msgid "Lead Generation Rules"
-msgstr "Regler för leadgenerering"
+msgstr "Regler för kundämnesgenerering"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_type
 msgid "Lead Type"
-msgstr ""
+msgstr "Kundämnestyp"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Affärsmöjlighet/Möjlighet"
+msgstr "Kundämne/Möjlighet"
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.crm_lead_action_from_event
@@ -289,7 +296,7 @@ msgstr "Kundämnen"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_event__lead_ids
 msgid "Leads generated from this event"
-msgstr ""
+msgstr "Kundämnen som genererats från detta evenemang"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
@@ -301,18 +308,18 @@ msgstr "Namn"
 #: code:addons/event_crm/models/event_lead_rule.py:0
 #, python-format
 msgid "New registrations"
-msgstr ""
+msgstr "Nya registreringar"
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_event
 #: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_registration
 msgid "No leads found"
-msgstr ""
+msgstr "Inga kundämnen hittades"
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_registration_action_from_lead
 msgid "No registration found"
-msgstr ""
+msgstr "Ingen registrering hittades"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__opportunity
@@ -330,7 +337,7 @@ msgstr "Deltagare"
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__attendee
 msgid "Per Attendee"
-msgstr ""
+msgstr "Per deltagare"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_creation_basis
@@ -338,31 +345,33 @@ msgid ""
 "Per Attendee: A Lead is created for each Attendee (B2C).\n"
 "Per Order: A single Lead is created per Ticket Batch/Sale Order (B2B)"
 msgstr ""
+"Per deltagare: Ett kundämne skapas för varje deltagare (B2C).\n"
+"Per order: Ett kundämne skapas per biljettparti/försäljningsorder (B2B)"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__order
 msgid "Per Order"
-msgstr ""
+msgstr "Per order"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_lead_rule_id
 msgid "Registration Rule"
-msgstr ""
+msgstr "Regel för registrering"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_merge_summary_inherit_event_crm
 msgid "Registration Rule:"
-msgstr ""
+msgstr "Regel för registrering:"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_registration_filter
 msgid "Registrations Domain"
-msgstr ""
+msgstr "Registreringar Domän"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__registration_ids
 msgid "Registrations triggering the rule that created this lead"
-msgstr ""
+msgstr "Registreringar som utlöser den regel som skapade detta kundämne"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__company_id
@@ -370,6 +379,8 @@ msgid ""
 "Restrict the trigger of this rule to events belonging to a specific company.\n"
 "If not set, no company restriction will be applied."
 msgstr ""
+"Begränsa utlösningen av denna regel till händelser som tillhör ett specifikt företag.\n"
+"Om den inte anges kommer ingen företagsrestriktion att tillämpas."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__name
@@ -379,17 +390,17 @@ msgstr "Regelnamn"
 #. module: event_crm
 #: model:event.lead.rule,name:event_crm.event_lead_rule_0
 msgid "Rule on @example.com"
-msgstr ""
+msgstr "Regel för @example.com"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__event_lead_rule_id
 msgid "Rule that created this lead"
-msgstr ""
+msgstr "Regel som skapade detta kundämne"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_sales_team_id
 msgid "Sales Team"
-msgstr "Säljteam"
+msgstr "Säljlag"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_user_id
@@ -399,17 +410,17 @@ msgstr "Säljare"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
 msgid "Search Lead Generation Rules"
-msgstr ""
+msgstr "Regler för generering av kundämne genom sökningar"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
 msgid "Source Event"
-msgstr ""
+msgstr "Källa Händelse"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_ids
 msgid "Source Registrations"
-msgstr ""
+msgstr "Källregistreringar"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_tag_ids
@@ -419,12 +430,12 @@ msgstr "Etiketter"
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
 msgid "Those automatically create leads when attendees register."
-msgstr ""
+msgstr "Dessa skapar automatiskt kundämnen när deltagarna registrerar sig."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
 msgid "Trigger Type"
-msgstr ""
+msgstr "Typ av avtryckare"
 
 #. module: event_crm
 #. odoo-python
@@ -432,7 +443,7 @@ msgstr ""
 #: code:addons/event_crm/models/event_registration.py:0
 #, python-format
 msgid "Updated registrations"
-msgstr ""
+msgstr "Uppdaterade registreringar"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_trigger
@@ -442,4 +453,4 @@ msgstr "När"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "e.g. B2B Fairs"
-msgstr ""
+msgstr "t.ex. B2B-mässor"

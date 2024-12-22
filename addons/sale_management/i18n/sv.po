@@ -10,12 +10,11 @@
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
 # Robin Calvin, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
 # Simon S, 2023
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
-# Stephen Schmidt <stephen.schmidt@linserv.se>, 2023
 # Martin Trigaux, 2023
-# Lasse L, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Lasse L, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -23,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:30+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Lasse L, 2023\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +33,7 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "1.5"
-msgstr ""
+msgstr "1.5"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -42,11 +41,13 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
 "company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
+"company-specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "<span invisible=\"not require_payment\">of</span>"
-msgstr ""
+msgstr "<span invisible=\"not require_payment\">av</span>"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -183,6 +184,8 @@ msgid ""
 "Default values will be overwritten by values provided by the quotation "
 "template."
 msgstr ""
+"Standardvärdena kommer att skrivas över av de värden som anges i "
+"offertmallen."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__name
@@ -235,7 +238,7 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "Extra Chips"
-msgstr ""
+msgstr "Extra chips"
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
@@ -271,6 +274,8 @@ msgid ""
 "If set, SO with this template will invoice in this journal; otherwise the "
 "sales journal with the lowest sequence is used."
 msgstr ""
+"Om den är inställd kommer SO med denna mall att fakturera i denna journal, "
+"annars används försäljningsjournalen med den lägsta sekvensen."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
@@ -284,12 +289,12 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__journal_id
 msgid "Invoicing Journal"
-msgstr ""
+msgstr "Journal för fakturering"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
 msgid "Kpi All Sale Total Value"
-msgstr ""
+msgstr "Kpi Alla försäljningar Totalt värde"
 
 #. module: sale_management
 #: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
@@ -375,14 +380,14 @@ msgstr "Alternativ"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
 msgid "Prepayment percentage"
-msgstr ""
+msgstr "Procentuell förskottsbetalning"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 #, python-format
 msgid "Prepayment percentage must be a valid percentage."
-msgstr ""
+msgstr "Förskottsbetalningsprocenten måste vara en giltig procentsats."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
@@ -456,7 +461,7 @@ msgstr "Offertmallar"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation Validity"
-msgstr ""
+msgstr "Giltighet för offert"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -577,6 +582,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
 msgstr ""
+"Den procentandel av beloppet som måste betalas för att bekräfta offerter."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
@@ -657,7 +663,9 @@ msgstr "Du kan inte utöka en bekräftad order."
 msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
-msgstr "Du kan inte ändra typ på en offert rad"
+msgstr ""
+"Du kan inte ändra typen på en rad för en säljoffert. Istället bör du ta bort"
+" den aktuella raden och skapa en ny rad av rätt typ."
 
 #. module: sale_management
 #. odoo-python

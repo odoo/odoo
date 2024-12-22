@@ -23,15 +23,15 @@ cellMenuRegistry.add("move_lines_see_records", {
         const { args } = getFirstAccountFunction(cell.compiledFormula.tokens);
         let [codes, date_range, offset, companyId, includeUnposted] = args
             .map(astToFormula)
-            .map((arg) => env.model.getters.evaluateFormula(sheetId, arg));
-        codes = toString(codes).split(",");
+            .map((arg) => env.model.getters.evaluateFormulaResult(sheetId, arg));
+        codes = toString(codes?.value).split(",");
         const locale = env.model.getters.getLocale();
         const dateRange = parseAccountingDate(date_range, locale);
-        offset = parseInt(offset) || 0;
+        offset = parseInt(offset?.value) || 0;
         dateRange.year += offset || 0;
-        companyId = parseInt(companyId) || null;
+        companyId = parseInt(companyId?.value) || null;
         try {
-            includeUnposted = toBoolean(includeUnposted);
+            includeUnposted = toBoolean(includeUnposted.value);
         } catch {
             includeUnposted = false;
         }

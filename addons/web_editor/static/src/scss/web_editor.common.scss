@@ -90,6 +90,7 @@
     @include print-variable('h5-font-size', $h5-font-size);
     @include print-variable('h6-font-size', $h6-font-size);
     @include print-variable('font-size-base', $font-size-base);
+    @include print-variable('small-font-size', $small-font-size);
 }
 
 html, body {
@@ -182,11 +183,18 @@ ul.o_checklist {
         }
     }
 }
-ul.o_checklist[dir="rtl"] > li:not(.oe-nested)::before {
+/*rtl:begin:ignore*/
+ul.o_checklist[dir="rtl"] li:not(.oe-nested)::before {
     left: auto;
     right: - $o-checklist-margin-left;
     text-align: right;
 }
+ul.o_checklist[dir="ltr"] li:not(.oe-nested)::before {
+    right: auto;
+    left: - $o-checklist-margin-left;
+    text-align: left;
+}
+/*rtl:end:ignore*/
 ol > li.o_indent, ul > li.o_indent {
     margin-left: 0;
     list-style: none;
@@ -292,7 +300,7 @@ img.ms-auto, img.mx-auto {
 // "o_small" class currently also changes the font-size only but this is to stay
 // consistent with the other classes which act that way (as display-x).
 .o_small-fs {
-    @extend %o-small-font-size;
+    @include font-size($small-font-size);
 }
 
 div.media_iframe_video {
@@ -550,6 +558,14 @@ blockquote {
     font-style: italic;
 }
 
+pre {
+    white-space: pre-wrap;
+
+    p {
+        margin-bottom: 0px;
+    }
+}
+
 // Extend bootstrap to create background and text utilities for some colors
 // outside of the $theme-colors too (but not btn-, alert-, etc).
 @for $index from 1 through 5 {
@@ -595,10 +611,6 @@ blockquote {
             }
         }
         .dropdown-menu .dropdown-item-text .text-muted {
-            // Search autocomplete messages are shown as text-muted entries.
-            // These need to be reset in case a dark palette is applied.
-            color: $text-muted !important;
-
             a {
                 // Search autocomplete's fuzzy matched term is shown as a link
                 // within an information message.
@@ -981,7 +993,13 @@ section, .oe_img_bg, [data-oe-shape-data] {
 
 .o_editor_banner {
     // force margin to ensure vertical center alignment in correlation with icon
-    p, h1, h2, h3 {
+    p, h1, h2, h3, ul, ol {
         margin-bottom: 1rem;
+    }
+    ol ol, ul ul, ol ul, ul ol {
+        margin-bottom: 0;
+    }
+    ul.o_checklist>li:not(.oe-nested)::before {
+        top: 0px!important;
     }
 }

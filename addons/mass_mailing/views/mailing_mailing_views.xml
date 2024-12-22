@@ -197,6 +197,7 @@
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <group class="o_mass_mailing_mailing_group">
                             <field name="active" invisible="1"/>
+                            <field name="create_uid" invisible="1"/>
                             <field name="mailing_type" widget="radio" options="{'horizontal': true}"
                                 invisible="1"
                                 readonly="state != 'draft'" force_save="1"/>
@@ -260,6 +261,7 @@
                             <page string="Mail Body" name="mail_body">
                                 <div class="position-relative">
                                     <field name="body_arch" class="o_mail_body" widget="mass_mailing_html"
+                                        iframeHtmlClass="o_mass_mailing_iframe"
                                         options="{
                                             'snippets': 'mass_mailing.email_designer_snippets',
                                             'cssEdit': 'mass_mailing.iframe_css_assets_edit',

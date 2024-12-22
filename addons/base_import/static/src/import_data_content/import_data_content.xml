@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="ImportDataContent">
         <div class="o_import_data_content flex-grow-1 overflow-auto border-start">
-            <div t-if="props.previewError" class="border-bottom p-2 bg-light">
+            <div t-if="props.previewError" class="border-bottom p-2">
                 <div class="alert alert-danger mb-0">
                     <p>
                         Import preview failed due to: "
@@ -13,7 +13,7 @@
                     <p t-if="props.columns.length > 0">Here is the start of the file we could not import:</p>
                 </div>
             </div>
-            <div t-if="!props.options.has_headers" class="border-bottom p-0 bg-light">
+            <div t-if="!props.options.has_headers" class="border-bottom p-2">
                 <p class="alert alert-info mb-0">
                     If the file contains
                     the column names, Odoo can try auto-detecting the
@@ -21,7 +21,7 @@
                     simpler especially when the file has many columns.
                 </p>
             </div>
-            <div t-if="props.importMessages.length > 0" class="border-bottom p-2 bg-light">
+            <div t-if="props.importMessages.length > 0" class="border-bottom p-2">
                 <t t-foreach="props.importMessages" t-as="message" t-key="`${message.lines[0]}-${message_index}`">
                     <p t-att-class="getErrorMessageClass(props.importMessages, message.type, message_index)">
                         <t t-foreach="message.lines" t-as="line" t-key="`${line}-${line_index}`">
@@ -30,7 +30,7 @@
                     </p>
                 </t>
             </div>
-            <table t-if="!props.previewError" class="table table-borderless w-100">
+            <table t-if="!props.previewError" class="table table-borderless w-100 bg-view">
                 <thead>
                     <tr class="border-bottom">
                         <th scope="col" style="width: 20%;">File Column</th>
@@ -101,8 +101,9 @@
     </t>
 
     <t t-name="ImportDataContent.tooltip">
-        <h5 class="border-bottom p-2">Preview</h5>
-        <div class="p-2 pt-0 pe-3">
+        <h5 class="text-reset p-2 m-0">Preview</h5>
+        <hr class="m-0"/>
+        <div class="p-2 pe-3">
             <p
                 t-foreach="lines"
                 t-as="line"

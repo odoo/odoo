@@ -3,16 +3,16 @@
 # 	* website_event
 # 
 # Translators:
-# Wil Odoo, 2024
 # Tony Ng, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,6 +100,8 @@ msgid ""
 "<i class=\"fa fa-chevron-left me-2\"/>\n"
 "            <span>Back to events</span>"
 msgstr ""
+"<i class=\"fa fa-chevron-left me-2\"/>\n"
+"            <span>返回活動</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -242,6 +244,9 @@ msgid ""
 "                                        <i class=\"fa fa-ban me-2\"/>Sold Out\n"
 "                                    </span>"
 msgstr ""
+"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" class=\"text-danger\">\n"
+"                                        <i class=\"fa fa-ban me-2\"/>售罄\n"
+"                                    </span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
@@ -347,7 +352,7 @@ msgstr "與會者回應"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration__registration_answer_choice_ids
 msgid "Attendee Selection Answers"
-msgstr ""
+msgstr "參加者選擇答案"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -392,8 +397,8 @@ msgstr "取消"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Cards"
-msgstr "卡片"
+msgid "Card design"
+msgstr "卡片設計"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
@@ -445,7 +450,7 @@ msgstr "建築師會議"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_configure_tickets_button
 msgid "Configure event tickets"
-msgstr ""
+msgstr "配置活動門票"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -539,12 +544,12 @@ msgstr "完成後不要忘記<b>儲存</b>。"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Download All Tickets"
-msgstr ""
+msgstr "下載所有門票"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
-msgstr ""
+msgstr "下載門票 <i class=\"ms-1 fa fa-download\"/>"
 
 #. module: website_event
 #. odoo-python
@@ -558,6 +563,13 @@ msgstr "電郵"
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "End -"
 msgstr "結束 -"
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/website_event.js:0
+#, python-format
+msgid "Error"
+msgstr "錯誤"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -730,11 +742,6 @@ msgid ""
 "Find out what people see and say about this event, and join the "
 "conversation."
 msgstr "了解其他人對本活動正談論甚麼，加入對話。"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Fold Tickets Details"
-msgstr "收起門票詳情"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -1088,7 +1095,7 @@ msgstr "問題類型"
 #: code:addons/website_event/models/event_question.py:0
 #, python-format
 msgid "Question cannot be linked to both an Event and an Event Type."
-msgstr ""
+msgstr "問題不可同時連結至事件及事件類型。"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__question_ids
@@ -1165,8 +1172,9 @@ msgstr "活動報名確認！"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registration failed! These tickets are not available anymore."
-msgstr ""
+msgstr "登記失敗。這些門票已不再可用。"
 
 #. module: website_event
 #: model:ir.actions.act_window,name:website_event.event_registration_action_from_visitor
@@ -1224,11 +1232,6 @@ msgid "SEO optimized"
 msgstr "SEO 已最佳化"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "SHARE"
-msgstr "分享"
-
-#. module: website_event
 #: model:event.question.answer,name:website_event.event_7_question_0_answer_1
 msgid "Sales"
 msgstr "銷售"
@@ -1280,6 +1283,11 @@ msgstr "SEO 名稱"
 #: model:ir.model.fields,field_description:website_event.field_event_question_answer__sequence
 msgid "Sequence"
 msgstr "序列號"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Share"
+msgstr "分享"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
@@ -1352,9 +1360,16 @@ msgid "Suggested answer"
 msgstr "建議答案"
 
 #. module: website_event
+#. odoo-python
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "Google reCaptcha 檢測到的可疑活動."
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Templates"
-msgstr "範本"
+msgid "Template badge"
+msgstr "範本識別證"
 
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__text_box
@@ -1506,7 +1521,7 @@ msgstr "在當前網站可見"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration__visitor_id
 msgid "Visitor"
-msgstr "訪問者"
+msgstr "訪客"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list

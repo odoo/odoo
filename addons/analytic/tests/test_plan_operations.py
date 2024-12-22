@@ -72,23 +72,29 @@ class TestAnalyticPlanOperations(TransactionCase):
         company_2 = self.env['res.company'].create({
             'name': 'company_2',
         })
-        mandatory_plan = self.env['account.analytic.plan'].create([{
-            'name': 'Mandatory Plan',
+        plan = self.env['account.analytic.plan'].create([{
+            'name': 'Plan',
             'default_applicability': 'optional',
         }])
-        mandatory_plan.with_company(company_2).write({'default_applicability': 'mandatory'})
-        self.env['account.analytic.applicability'].create({
+        applicability = self.env['account.analytic.applicability'].create({
             'business_domain': 'general',
-            'analytic_plan_id': mandatory_plan.id,
+            'analytic_plan_id': plan.id,
             'applicability': 'mandatory',
             'company_id': company_2.id,
         })
         self.env['account.analytic.account'].create([{
             'name': 'Mandatory Account',
             'code': 'manda',
-            'plan_id': mandatory_plan.id,
+            'plan_id': plan.id,
         }])
         distribution_model = self.env['account.analytic.distribution.model'].create({}).with_context(validate_analytic=True)
 
-        # only mandatory applicability is in company_2, should not raise
-        distribution_model._validate_distribution(business_domain='general')
+        # mandatory applicability is only in company_2, should not raise for company_1
+        distribution_model._validate_distribution(business_domain='general', company_id=self.env.company.id)
+
+        applicability.company_id = False
+        # It should apply for all companies now
+        with self.assertRaisesRegex(UserError, r'require a 100% analytic distribution'):
+            distribution_model._validate_distribution(business_domain='general', company_id=self.env.company.id)
+        with self.assertRaisesRegex(UserError, r'require a 100% analytic distribution'):
+            distribution_model._validate_distribution(business_domain='general')

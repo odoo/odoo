@@ -199,7 +199,7 @@ msgstr "以下產品目前已到貨"
 #: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "The item has not been added to your cart since it is not available."
-msgstr ""
+msgstr "項目未加入至你的購物車，因為它目前不可用。"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -273,8 +273,16 @@ msgstr "你的購物車已有 %s 件商品。"
 
 #. module: website_sale_stock
 #. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr "你要求 %(desired_qty)s 件 %(product_name)s，但只有 %(new_qty)s 件可供出售。"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr "你要求 %(desired_qty)s 件產品，但只有 %(new_qty)s 件可供出售。"

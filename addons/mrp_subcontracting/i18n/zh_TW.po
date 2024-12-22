@@ -3,14 +3,14 @@
 # 	* mrp_subcontracting
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -123,6 +123,7 @@ msgid "Detail Component"
 msgstr "組件細項"
 
 #. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Details"
 msgstr "詳細資訊"
@@ -171,8 +172,8 @@ msgstr "隱藏"
 #, python-format
 msgid ""
 "In order to manage stock accurately, subcontracting locations must be type "
-"Internal, linked to the appropriate company and not specific to a warehouse."
-msgstr "為準確管理庫存，分判地點必須為「內部」類型，並連結至適當的公司而不是特定於倉庫。"
+"Internal, linked to the appropriate company."
+msgstr "為準確管理庫存，分判地點必須為「內部」類型，並連結至適當的公司。"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_filter
@@ -200,6 +201,13 @@ msgid ""
 "List of Products used in the BoM, used to filter the list of products in the"
 " subcontracting portal view"
 msgstr "BoM中使用的產品列表，用於在分判商頁面檢視中篩選產品列表"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr "待更新位置"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
@@ -364,6 +372,7 @@ msgstr "補充生產原料給委外生產商"
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#: code:addons/mrp_subcontracting/wizard/product_replenish.py:0
 #: model:stock.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 #, python-format
 msgid "Resupply Subcontractor on Order"
@@ -550,7 +559,7 @@ msgstr "調撥單據是委外生產收據"
 msgid ""
 "The stock location used as source and destination when sending        goods "
 "to this contact during a subcontracting process."
-msgstr "在委外生產過程中向此連絡人發送貨物時用作來源和目的地的庫存位置。"
+msgstr "分判流程中向此聯絡人發送貨物時，用作來源及目的地之庫存位置。"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -623,6 +632,13 @@ msgstr "不可更改公司的分判地點"
 #, python-format
 msgid "You cannot write on fields %s in mrp.production."
 msgstr "你不可在 mrp.product 中的欄位 %s 寫入。"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid "You might want to update the locations of this transfer's operations"
+msgstr "你可能想更新此轉移操作的位置。"
 
 #. module: mrp_subcontracting
 #. odoo-python

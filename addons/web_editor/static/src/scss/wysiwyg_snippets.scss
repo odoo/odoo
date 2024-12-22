@@ -524,6 +524,10 @@
                 display: none; // remove ballon
             }
 
+            .fa {
+                font-size: $o-we-sidebar-font-size;
+            }
+
             .btn {
                 @extend %we-generic-button;
                 display: flex;
@@ -550,6 +554,10 @@
                 &:hover, &:focus {
                     background: $o-we-dropdown-item-bg-hover;
                     color: $o-we-dropdown-item-hover-color;
+                }
+                &.active {
+                    background: $o-we-dropdown-item-active-bg;
+                    color: $o-we-dropdown-item-active-color;
                 }
             }
 
@@ -605,11 +613,11 @@
                 }
                 .dropdown {
                     position: unset;
-                    width: -webkit-fill-available;
+                    width: 100%;
 
                     .dropdown-toggle {
                         padding: 0;
-                        width: inherit;
+                        width: 100%;
 
                         &::after {
                             display: none;
@@ -618,8 +626,17 @@
                     .dropdown-menu.show {
                         position: absolute !important;
                         padding: 0;
+                        width: 100%;
+                        border-color: $o-we-dropdown-border-color;
+
+                        &[data-popper-placement$="start"] {
+                            left: -$o-we-sidebar-content-padding-base !important;
+                        }
 
                         we-button:not(.fa) {
+                            display: flex;
+                            align-items: center;
+                            height: $o-we-sidebar-content-field-dropdown-item-height;
                             text-align: left;
                             font-family: $o-we-font-family;
                             font-size: 12px;
@@ -628,6 +645,10 @@
                             div {
                                 width: 100%;
                             }
+                        }
+
+                        .dropdown-item::before {
+                            display: none;
                         }
                     }
                 }
@@ -708,6 +729,8 @@
                     justify-content: space-between;
 
                     span {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
                         color: white;
 
                         pre, blockquote {
@@ -1985,7 +2008,11 @@
             // does not make a scrollbar appear for no reason
             flex: 1 1 auto;
 
-            &::after {
+            // The backdrop is not added for "o_we_select_pager". This is
+            // because it covers the entire panel, making it unnecessary.
+            // Additionally, using the backdrop with an "o_we_select_pager"
+            // causes a CSS bug on Safari.
+            &:not(:has(.o_we_select_pager.o_we_widget_opened))::after {
                 content: "";
                 // We use a "sticky" position because it ensures that the
                 // backdrop covers the entire "customize panel" element, even
@@ -2420,6 +2447,7 @@ we-select.o_we_border_preview_aligned_select {
 
                 &.readonly {
                     cursor: default;
+                    pointer-events: none;
 
                     &.o_column_handle.o_side_y {
                         border: none;

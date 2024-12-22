@@ -6,12 +6,11 @@
 # Peter Wickenberg <peter@wickenberg.nu>, 2023
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2023
 # Haojun Zou <apollo_zhj@msn.com>, 2023
+# Björn Hayer, 2023
 # Mikael Carlsson <mikael.carlsson@vertel.se>, 2023
 # 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2023
 # Robin Chatfield <robin.chatfield@gmail.com>, 2023
-# Björn Hayer, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Frida E, 2023
 # Victor Ekström, 2023
@@ -20,18 +19,19 @@
 # Daniel Löfgren, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2023
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
 # Simon S, 2023
 # Martin Trigaux, 2023
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
+"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,7 +60,7 @@ msgstr "&amp;nbsp;"
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
 msgid "'Badge - %s' % (object.name).replace('/', '')"
-msgstr ""
+msgstr "'Badge - %s' % (object.name).replace('/', '')"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -98,7 +98,7 @@ msgstr "12 dagar / år, inklusive <br>6 av ditt val."
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "12345678901"
-msgstr ""
+msgstr "12345678901"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -142,13 +142,13 @@ msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Företag\" title
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"Email\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"Phone\"/>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -225,7 +225,7 @@ msgstr "<span class=\"o_stat_text\">Ansluten sedan</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
 msgid "<span class=\"o_stat_text\">Employee</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Anställd</span>"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -279,7 +279,7 @@ msgstr "<span>Nya anställda</span>"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "A full-time position <br>Attractive salary package."
-msgstr "En heltidsposition <br>Atraktivt löneavtal."
+msgstr "En heltidsposition <br>Attraktivt löneavtal."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
@@ -337,7 +337,7 @@ msgstr "Aktivitet undantaget dekoration"
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_plan
 msgid "Activity Plan"
-msgstr ""
+msgstr "Aktivitetsplan"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_plan
@@ -362,12 +362,12 @@ msgstr "Aktivitet efter"
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_plan_template
 msgid "Activity plan template"
-msgstr ""
+msgstr "Mall för verksamhetsplan"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_schedule
 msgid "Activity schedule plan Wizard"
-msgstr ""
+msgstr "Guiden Aktivitetsschema plan"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
@@ -395,6 +395,8 @@ msgid ""
 "Additional Information: \n"
 " %(description)s"
 msgstr ""
+"Ytterligare information:\n"
+" %(beskrivning)s"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
@@ -518,7 +520,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__responsible_type
 msgid "Assignment"
-msgstr ""
+msgstr "Uppdrag"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
@@ -839,7 +841,7 @@ msgstr "Kontaktnamn"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_phone
 #: model:ir.model.fields,field_description:hr.field_res_users__emergency_phone
 msgid "Contact Phone"
-msgstr "%(activity)s, tilldelad till %(name)s, förfaller den %(deadline)s"
+msgstr "Telefon till Kontakt"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_contract_type
@@ -1001,8 +1003,19 @@ msgid ""
 "Building strong relationships with clients / customers for business growth profitability.\n"
 "Keep regular interaction with key clients for better extraction and expansion."
 msgstr ""
+"Demonstration av olika Odoo-tjänster för varje kund och övertyga kunden om applikationens funktionalitet.\n"
+"Kandidaten bör ha utmärkta kommunikationsfärdigheter.\n"
+"Förmåga att bygga relationer och påverka\n"
+"Expertis inom nykundsanskaffning (NCA) och relationshantering.\n"
+"Insamling av marknads- och kundinformation.\n"
+"Samordna med försäljnings- och supportteamet för att anta olika strategier\n"
+"Granska framsteg och identifiera möjligheter och nya områden för utveckling.\n"
+"Bygga starka relationer med kunder / kunder för affärstillväxt lönsamhet.\n"
+"Hålla regelbunden kontakt med nyckelkunder för bättre utvinning och expansion."
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
@@ -1015,6 +1028,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+#, python-format
 msgid "Department"
 msgstr "Avdelning"
 
@@ -1028,7 +1042,7 @@ msgstr "Avdelningsnamn"
 #: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
 #, python-format
 msgid "Department Organization"
-msgstr ""
+msgstr "Avdelning Organisation"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_department_kanban_action
@@ -1061,7 +1075,7 @@ msgstr "Anledning för avgång"
 #: model:ir.actions.act_window,name:hr.hr_departure_reason_action
 #: model:ir.ui.menu,name:hr.menu_hr_departure_reason_tree
 msgid "Departure Reasons"
-msgstr "Skäl till avresa"
+msgstr "Skäl till avslutad tjänst"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_departure_wizard
@@ -1124,6 +1138,8 @@ msgid ""
 "Display remote work settings for each employee and dedicated reports. "
 "Presence icons will be updated with remote work location."
 msgstr ""
+"Visa inställningar för distansarbete för varje anställd och dedikerade "
+"rapporter. Närvaro-ikoner uppdateras med distansarbetsplats."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__divorced
@@ -1248,7 +1264,7 @@ msgstr "Namn anställd"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__employee_properties_definition
 msgid "Employee Properties"
-msgstr ""
+msgstr "Egenskaper för anställda"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -1413,7 +1429,7 @@ msgstr "Studieområde"
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_fired
 msgid "Fired"
-msgstr "Avfyrat"
+msgstr "Avskedad"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
@@ -1464,7 +1480,7 @@ msgstr "Frukt, kaffe och <br>snacks tillhandahålls."
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_full_time
 msgid "Full-Time"
-msgstr ""
+msgstr "Heltid"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1485,7 +1501,7 @@ msgstr "Skapa"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Give more details about the reason of archiving the employee."
-msgstr ""
+msgstr "Ge mer information om anledningen till att arkivera den anställde."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1536,7 +1552,7 @@ msgstr "HR-anställd: kontrollera arbetstillståndets giltighet"
 #: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
 #, python-format
 msgid "HR Presence Status"
-msgstr ""
+msgstr "HR Närvarostatus"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1670,6 +1686,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee__private_car_plate
 msgid "If you have more than one car, just separate the plates by a space."
 msgstr ""
+"Om du har mer än en bil, separera bara registreringsskyltarna med ett "
+"mellanslag."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
@@ -1881,7 +1899,7 @@ msgstr "1 Telefonsamtal"
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_ltp
 msgid "Long Term Projects"
-msgstr ""
+msgstr "Långsiktiga projekt"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_hrm
@@ -1895,6 +1913,14 @@ msgid ""
 "Lorem Ipsum passages, and more recently with desktop publishing software "
 "like Aldus PageMaker including versions of Lorem Ipsum."
 msgstr ""
+"Lorem Ipsum är helt enkelt tryck- och sättindustrins blindtext. Lorem Ipsum "
+"har varit branschens standardtext ända sedan 1500-talet, då en okänd "
+"tryckare tog en galley med typsnitt och förvrängde den för att göra en "
+"typprovsbok. Den har överlevt inte bara fem århundraden, utan även "
+"övergången till elektronisk sättning och förblivit i stort sett oförändrad. "
+"Det blev populärt på 1960-talet när Letraset-ark med Lorem Ipsum-passager "
+"släpptes, och på senare tid när desktop publishing-program som Aldus "
+"PageMaker innehöll versioner av Lorem Ipsum."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
@@ -1933,7 +1959,7 @@ msgstr "Chef för anställd %s saknas."
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
@@ -2066,7 +2092,7 @@ msgstr "Förhandla och ingå avtal"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_graph
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_pivot
 msgid "New Employees Over Time"
-msgstr ""
+msgstr "Nya medarbetare över tid"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__newly_hired
@@ -2080,7 +2106,7 @@ msgstr "Nyligen anställd"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Nästa Kalenderhändelse för Aktivitet"
+msgstr "Nästa Kalenderhändelse för aktivitet"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
@@ -2106,12 +2132,12 @@ msgstr "Nästa aktivitetstyp"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Nice to have"
-msgstr "<liten><b>LÄS</b></liten>"
+msgstr "Villhöver"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
 msgid "No Tags found ! Let's create one"
-msgstr ""
+msgstr "Inga taggar hittades! Låt oss skapa en"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2204,7 +2230,7 @@ msgstr "Antal meddelanden med leveransfel"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
 msgid "Number of new employees you expect to recruit."
-msgstr "Antal nya personer som väntas anställas"
+msgstr "Antal nya personer som väntas anställas."
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
@@ -2231,12 +2257,12 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__office
 msgid "Office"
-msgstr ""
+msgstr "Kontor"
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
 msgid "Officer: Manage all employees"
-msgstr ""
+msgstr "Officer: Leda alla anställda"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.mail_activity_plan_action
@@ -2249,7 +2275,7 @@ msgstr "Planer för ombordstigning/avstigning"
 #: code:addons/hr/static/src/core/web/thread_actions.js:0
 #, python-format
 msgid "Open Profile"
-msgstr ""
+msgstr "Öppen profil"
 
 #. module: hr
 #. odoo-python
@@ -2312,7 +2338,7 @@ msgstr "Överordnads sökväg"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_part_time
 msgid "Part-Time"
-msgstr ""
+msgstr "Deltid"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_partner_id
@@ -2385,7 +2411,7 @@ msgstr "Personlig utveckling"
 #: code:addons/hr/models/res_users.py:0
 #, python-format
 msgid "Personal information update."
-msgstr ""
+msgstr "Uppdatering av personlig information."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2412,6 +2438,8 @@ msgid ""
 "Plan %(plan_names)s cannot use a department as it is used only for employee "
 "plans."
 msgstr ""
+"Planer %(plan_names)s kan inte använda en avdelning eftersom den endast "
+"används för anställdas planer."
 
 #. module: hr
 #. odoo-python
@@ -2421,6 +2449,8 @@ msgid ""
 "Plan activities %(template_names)s cannot use coach, manager or employee "
 "responsible as it is used only for employee plans."
 msgstr ""
+"Planaktiviteter %(template_names)s kan inte använda coach, chef eller "
+"anställd ansvarig eftersom det endast används för anställdas planer."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -2460,7 +2490,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Control"
-msgstr ""
+msgstr "Kontroll av närvaro"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2504,7 +2534,7 @@ msgstr "Privatadress"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_car_plate
 msgid "Private Car Plate"
-msgstr ""
+msgstr "Privat bilskylt"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_city
@@ -2568,7 +2598,7 @@ msgstr "Företagsanställd"
 #. module: hr
 #: model:hr.department,name:hr.dep_ps
 msgid "Professional Services"
-msgstr ""
+msgstr "Professionella tjänster"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_properties
@@ -2594,7 +2624,7 @@ msgstr "Kontaktnummer"
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_be
 msgid "R&D USA"
-msgstr ""
+msgstr "FOU USA"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__rating_ids
@@ -2627,7 +2657,7 @@ msgstr "Anledning"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__reason_code
 msgid "Reason Code"
-msgstr ""
+msgstr "Orsak Kod"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_recruitment
@@ -2675,7 +2705,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_homeworking
 msgid "Remote Work"
-msgstr ""
+msgstr "Arbete på distans"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.hr_menu_hr_reports
@@ -2772,7 +2802,7 @@ msgstr "Skola"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_seasonal
 msgid "Seasonal"
-msgstr ""
+msgstr "Säsongsbetonad"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__coach_id
@@ -2817,7 +2847,7 @@ msgstr "Visa Hr ikon display"
 #: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
 #, python-format
 msgid "Show employees"
-msgstr ""
+msgstr "Visa anställda"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__single
@@ -2843,7 +2873,14 @@ msgstr "Personnummer"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Software Developer"
-msgstr ""
+msgstr "Programvaruutvecklare"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Some employee already have a work contact"
+msgstr "Vissa medarbetare har redan en arbetskontakt"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2877,7 +2914,7 @@ msgstr "Startdatum"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "State"
-msgstr "Etapp"
+msgstr "Läge"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -3000,6 +3037,10 @@ msgid ""
 "              He defines the products and customers portfolio according to the marketing plan.\n"
 "              This mission requires strong collaboration with Technical Service and Sales."
 msgstr ""
+"Marknadschefen definierar marknadsföringsstrategin på medellång till lång sikt för sina marknadssegment i världen.\n"
+"              Han utvecklar och övervakar den årliga budgeten i samarbete med Sales.\n"
+"              Han definierar produkt- och kundportföljen i enlighet med marknadsplanen.\n"
+"              Detta uppdrag kräver ett starkt samarbete med teknisk service och försäljning."
 
 #. module: hr
 #. odoo-python
@@ -3042,13 +3083,15 @@ msgid ""
 "The fields %r you try to read is not available on the public employee "
 "profile."
 msgstr ""
+"De fält %r som du försöker läsa finns inte tillgängliga i den offentliga "
+"medarbetarprofilen."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_users.py:0
 #, python-format
 msgid "The following fields were modified by %s"
-msgstr ""
+msgstr "Följande fält ändrades av %s"
 
 #. module: hr
 #. odoo-python
@@ -3112,7 +3155,7 @@ msgstr ""
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "Those responsible types are limited to Employee plans."
-msgstr ""
+msgstr "Dessa ansvariga typer är begränsade till Employee-planer."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -3202,7 +3245,7 @@ msgstr "Olästa meddelanden"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
 msgid "Use tags to categorize your Employees."
-msgstr ""
+msgstr "Använd taggar för att kategorisera dina anställda."
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -3222,7 +3265,7 @@ msgstr "Användarens partner"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies:"
-msgstr ""
+msgstr "Lediga befattningar:"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_ip_list
@@ -3246,7 +3289,7 @@ msgstr "Giltigt arbetstillstånd för Belgien"
 #: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #, python-format
 msgid "View profile"
-msgstr ""
+msgstr "Visa profil"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
@@ -3271,7 +3314,7 @@ msgstr "Varning"
 #: model_terms:hr.job,description:hr.job_consultant
 msgid ""
 "We are currently looking for someone like that to join our Consultant team."
-msgstr ""
+msgstr "Vi letar för närvarande efter en sådan person till vårt konsultteam."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_developer
@@ -3279,6 +3322,8 @@ msgid ""
 "We are currently looking for someone like that to join our Web team.\n"
 "                Someone who can snap out of coding and perform analysis or meet clients to explain the technical possibilities that can meet their needs."
 msgstr ""
+"Vi letar just nu efter någon som vill ansluta sig till vårt webbteam.\n"
+"                Någon som kan ta sig ur kodandet och utföra analyser eller träffa kunder för att förklara de tekniska möjligheter som kan uppfylla deras behov."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3326,6 +3371,9 @@ msgid ""
 "                    can easily find all the information you need for each person;\n"
 "                    contact data, job position, availability, etc."
 msgstr ""
+"Med bara en snabb blick på Odoos medarbetarskärm kan du\n"
+"                    enkelt hitta all information du behöver för varje person;\n"
+"                    kontaktuppgifter, befattning, tillgänglighet etc."
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
@@ -3440,7 +3488,7 @@ msgstr "Arbetstid"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_resource_calendar_view
 msgid "Working Schedules"
-msgstr ""
+msgstr "Arbetsscheman"
 
 #. module: hr
 #. odoo-python
@@ -3490,6 +3538,18 @@ msgid ""
 "contributing to the set up of a new politic,\n"
 "being involved into satisfaction surveys in order to have a better knowledge of how the support given is seen by the customers."
 msgstr ""
+"Du deltar i uppdateringen av våra handledningsverktyg och förköpsverktyg efter lanseringen av en ny version av Odoo. Faktum är att varje ny version av programvaran ger betydande förbättringar när det gäller funktionalitet, ergonomi och konfiguration.\n"
+"Du måste bli bekant med de befintliga verktygen (böcker, klassstöd, Odoo-presentationsbilder, kommersiella verktyg),\n"
+"att delta i uppdateringen av dessa verktyg för att göra dem lämpliga för den nya versionen av programvaran och, förvisso,\n"
+"att föreslå förbättringar för att täcka programvarans nya domäner.\n"
+"Du går in på avdelningen Implementation Assistance. Detta team på 3 personer följer med Odoos klienter i installationen av programvaran. Din roll kommer att vara\n"
+"att animera webbseminarier för att visa programvarans olika funktioner.\n"
+"att vara delaktig i supporten av kunderna och\n"
+"att svara på deras frågor.\n"
+"Du hjälper supportansvarig att sätta upp nya supporttjänster genom att\n"
+"vara involverad i behandlingen av nya fall,\n"
+"bidra till att skapa en ny politik,\n"
+"involveras i nöjdhetsundersökningar för att få bättre kunskap om hur det stöd som ges ses av kunderna."
 
 #. module: hr
 #. odoo-python
@@ -3505,6 +3565,9 @@ msgid ""
 "\n"
 "The job is located in Grand-Rosière (1367), Belgium (between Louvain-La-Neuve and Namur)."
 msgstr ""
+"Du kommer att delta i de konsulttjänster som vi tillhandahåller våra partner och kunder: utformning, analys, utveckling, testning, projektledning, stöd/coachning. Du kommer att arbeta självständigt samt samordna och övervaka små distribuerade utvecklingsteam för vissa projekt. Alternativt kommer du att leverera Odoo-utbildningssessioner till partners och kunder (8-10 personer/session). Du kommer att rapportera till Head of Professional Services och arbeta nära alla utvecklare och konsulter.\n"
+"\n"
+"Jobbet finns i Grand-Rosière (1367), Belgien (mellan Louvain-La-Neuve och Namur)."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile

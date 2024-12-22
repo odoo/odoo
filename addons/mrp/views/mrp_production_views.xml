@@ -137,7 +137,6 @@
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders">
                 <header>
-                    <field name="confirm_cancel" invisible="1"/>
                     <field name="show_lock" invisible="1"/>
                     <field name="show_produce" invisible="1"/>
                     <field name="show_produce_all" invisible="1"/>
@@ -159,10 +158,8 @@
                     <field name="show_serial_mass_produce" invisible="1"/>
                     <button name="action_serial_mass_produce_wizard" invisible="not show_serial_mass_produce" string="Mass Produce" type="object"/>
                     <button name="action_cancel" type="object" string="Cancel" data-hotkey="x"
-                            invisible="not id or state in ('done', 'cancel') or confirm_cancel"/>
-                    <button name="action_cancel" type="object" string="Cancel" data-hotkey="x"
-                            invisible="not id or state in ('done', 'cancel') or not confirm_cancel"
-                            confirm="Some product moves have already been confirmed, this manufacturing order can't be completely cancelled. Are you still sure you want to process?"/>
+                            invisible="not id or state in ('done', 'cancel')"
+                            confirm="Are you sure you want to cancel this manufacturing order?"/>
                     <button name="button_unbuild" type="object" string="Unbuild" invisible="state != 'done'" data-hotkey="shift+v"/>
                     <button string="Print Labels" type="object" name="action_open_label_type"/>
                 </header>
@@ -251,11 +248,11 @@
                             <field name="product_description_variants" invisible="product_description_variants in (False, '')" readonly="state != 'draft'"/>
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row g-0 d-flex">
-                                <div invisible="state == 'draft'" class="o_row flex-grow-0">
-                                    <field name="qty_producing" class="text-start" readonly="state == 'cancel' or (state == 'done' and is_locked)"/>
+                                <div invisible="state == 'draft'" class="o_row flex-grow-1">
+                                    <field name="qty_producing" class="text-start text-truncate" readonly="state == 'cancel' or (state == 'done' and is_locked)"/>
                                     /
                                 </div>
-                                <field name="product_qty" class="oe_inline text-start" invisible="state not in ('draft', 'done')" readonly="state != 'draft'"/>
+                                <field name="product_qty" class="oe_inline text-start text-truncate" invisible="state not in ('draft', 'done')" readonly="state != 'draft'"/>
                                 <button type="action" name="%(mrp.action_change_production_qty)d"
                                     context="{'default_mo_id': id}" class="oe_link oe_inline" style="margin: 0px; padding: 0px;" invisible="state in ('draft', 'done', 'cancel') or not id">
                                     <field name="product_qty" class="oe_inline" readonly="state != 'draft'"/>
@@ -263,8 +260,8 @@
                                 <label for="product_uom_id" string="" class="oe_inline"/>
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="product_uom_id" groups="!uom.group_uom" invisible="1"/>
-                                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" readonly="state != 'draft'"/>
-                                <span class='fw-bold'>To Produce</span>
+                                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" readonly="state != 'draft'" class="flex-grow-0" style="width:auto!important"/>
+                                <span class='fw-bold text-nowrap'>To Produce</span>
                                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="forecasted_issue"/>
                                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not forecasted_issue" class="text-danger"/>
                             </div>
@@ -363,7 +360,7 @@
                         <page string="Components" name="components">
                             <field name="move_raw_ids"
                                 widget="mrp_production_components_x2many"
-                                context="{'default_date': date_start, 'default_date_deadline': date_start, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_warehouse_id': warehouse_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'form_view_ref': 'stock.view_stock_move_operations'}"
+                                context="{'default_date': date_start, 'default_date_deadline': date_start, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_warehouse_id': warehouse_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'form_view_ref': 'stock.view_stock_move_operations', 'active_mo_id': id}"
                                 readonly="state == 'cancel' or (state == 'done' and is_locked)" options="{'delete': [('state', '=', 'draft')]}">
                                 <tree default_order="is_done, manual_consumption desc, sequence" editable="bottom">
                                     <field name="product_id" force_save="1" context="{'default_detailed_type': 'product'}" required="1" readonly="move_lines_count &gt; 0 or state == 'cancel' or (state != 'draft' and not additional)" domain="['&amp;', ('type', 'in', ['product', 'consu']), ('id', '!=', parent.product_id)]"/>

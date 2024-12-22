@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -661,6 +661,16 @@ msgid "All"
 msgstr "ทั้งหมด"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_ids
+msgid "All Move"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_raw_ids
+msgid "All Move Raw"
+msgstr ""
+
+#. module: mrp
 #. odoo-python
 #: code:addons/mrp/controller/main.py:0
 #, python-format
@@ -793,6 +803,11 @@ msgstr "การดำเนินการเก็บถาวร"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
 msgstr "เก็บถาวรแล้ว"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Are you sure you want to cancel this manufacturing order?"
+msgstr "คุณแน่ใจหรือไม่ว่าต้องการยกเลิกใบสั่งผลิตนี้"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -1278,6 +1293,17 @@ msgstr "ยกเลิก"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Cancelled"
 msgstr "ยกเลิก"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"Cannot compute days to prepare due to missing route info for at least 1 "
+"component or for the final product."
+msgstr ""
+"ไม่สามารถคำนวณวันในการเตรียมการได้เนื่องจากขาดข้อมูลเส้นทางสำหรับส่วนประกอบอย่างน้อย"
+" 1 ชิ้นหรือสำหรับผลิตภัณฑ์ขั้นสุดท้าย"
 
 #. module: mrp
 #. odoo-python
@@ -2819,6 +2845,7 @@ msgstr "มันถูกปลดล็อกแล้ว"
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_workorder.py:0
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -4622,6 +4649,11 @@ msgid "Quantity that can be produced with the current stock of components"
 msgstr "ปริมาณที่สามารถผลิตได้ด้วยสต็อกส่วนประกอบในปัจจุบัน"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_quant
+msgid "Quants"
+msgstr "วิเคราะห์เชิงปริมาณ"
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
 msgid "RAM"
 msgstr "RAM"
@@ -4827,6 +4859,13 @@ msgstr "ผู้ใช้ที่รับผิดชอบ"
 #, python-format
 msgid "Resupply lead time."
 msgstr "ระยะเวลาในการเติมสินค้า"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr "กลับไปที่สินค้าคงคลัง"
 
 #. module: mrp
 #. odoo-javascript
@@ -5158,15 +5197,6 @@ msgid ""
 msgstr ""
 "มีการติดตามส่วนประกอบบางส่วนของคุณ "
 "คุณต้องระบุใบสั่งผลิตเพื่อเรียกส่วนประกอบที่ถูกต้อง"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid ""
-"Some product moves have already been confirmed, this manufacturing order "
-"can't be completely cancelled. Are you still sure you want to process?"
-msgstr ""
-"การเคลื่อนย้ายสินค้าบางอย่างได้รับการยืนยันแล้ว "
-"ใบสั่งผลิตนี้ไม่สามารถยกเลิกได้ทั้งหมด คุณแน่ใจหรือไม่ว่าต้องการดำเนินการ"
 
 #. module: mrp
 #. odoo-python
@@ -6878,6 +6908,13 @@ msgstr "คุณไม่สามารถใช้หมายเลขซี
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "You cannot start a work order that is already done or cancelled"
+msgstr "คุณไม่สามารถเริ่มใบสั่งงานที่เสร็จสิ้นหรือถูกยกเลิกไปแล้วได้"
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
@@ -6998,6 +7035,16 @@ msgstr "คุณผลิตได้น้อยกว่าจำนวนค
 #, python-format
 msgid "You should provide a lot number for the final product."
 msgstr "คุณควรระบุหมายเลขล็อตสำหรับสินค้าขั้นสุดท้าย"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid ""
+"You should update the components quantity instead of directly updating the "
+"quantity of the kit product."
+msgstr ""
+"คุณควรอัปเดตปริมาณส่วนประกอบแทนที่จะอัปเดตปริมาณของผลิตภัณฑ์ชุดอุปกรณ์โดยตรง"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__zpl
@@ -7125,3 +7172,31 @@ msgstr "แยก"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
 msgstr "คำสั่งงาน"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.xml:0
+#, python-format
+msgid "{{ foldButtonTitle }}"
+msgstr "{{ foldButtonTitle }}"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
+#, python-format
+msgid "{{ props.isFolded ? 'Unfold' : 'Fold' }}"
+msgstr "{{ props.isFolded ? 'Unfold' : 'Fold' }}"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview_byproducts_block/mrp_mo_overview_byproducts_block.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_byproducts_block/mrp_mo_overview_byproducts_block.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_operations_block/mrp_mo_overview_operations_block.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_operations_block/mrp_mo_overview_operations_block.xml:0
+#, python-format
+msgid "{{ state.isFolded ? 'Unfold' : 'Fold' }}"
+msgstr "{{ state.isFolded ? 'Unfold' : 'Fold' }}"

@@ -20,7 +20,7 @@
             run: `text ${application.email}`,
         }, {
             content: "Complete phone number",
-            trigger: "input[name=partner_mobile]",
+            trigger: "input[name=partner_phone]",
             run: `text ${application.phone}`,
         }, {
             content: "Complete LinkedIn profile",
@@ -128,6 +128,31 @@
             }
         }
     },
+]);
+
+    // This tour addresses an issue that occurred in a website form containing
+    // the 'hide-change-model' attribute. Specifically, when a model-required
+    // field is selected, the alert message should not display an undefined
+    // action name.
+    wTourUtils.registerWebsitePreviewTour('model_required_field_should_have_action_name', {
+        test: true,
+        url: '/jobs',
+    }, () => [{
+        content: "Select Job",
+        trigger: "iframe h3:contains('Guru')",
+    }, {
+        content: "Apply",
+        trigger: "iframe a:contains('Apply')",
+    },
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    {
+        content: "click on the your name field",
+        trigger: "iframe #hr_recruitment_form div.s_website_form_model_required",
+    }, {
+        content: "Select model-required field",
+        trigger: "we-customizeblock-options we-alert > span:not(:contains(undefined))",
+        isCheck: true,
+    }
 ]);
 
 export default {};

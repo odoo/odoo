@@ -724,6 +724,27 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.assertFalse(self.test_record.message_follower_ids)
         self.assertFalse(self.test_record.message_partner_ids)
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_manual_send_user_notification_email_from_queue(self):
+        """ Test sending a mail from the queue that is not related to the admin user sending it.
+        Will throw a security error not having access to the mail."""
+
+        with self.mock_mail_gateway():
+            new_notification = self.test_record.message_notify(
+                subject='This should be a subject',
+                body='<p>You have received a notification</p>',
+                partner_ids=[self.partner_1.id],
+                subtype_xmlid='mail.mt_note',
+                force_send=False
+            )
+
+        self.assertNotIn(self.user_admin.partner_id, new_notification.mail_ids.partner_ids, "Our admin user should not be within the partner_ids")
+
+        with self.mock_mail_gateway():
+            new_notification.mail_ids.with_user(self.user_admin).send()
+
+        self.assertEqual(new_notification.mail_ids.state, 'exception', 'Email will be sent but with exception state - write access denied')
+
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('employee')
     def test_message_post(self):

@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import psycopg2
+
 from odoo.tests import Form, users
 from odoo.addons.hr.tests.common import TestHrCommon
+from odoo.tools import mute_logger
 
 
 class TestHrEmployee(TestHrCommon):
@@ -20,6 +23,28 @@ class TestHrEmployee(TestHrCommon):
             'user_id': self.user_without_image.id,
             'image_1920': False
         })
+
+    def test_employee_smart_button_multi_company(self):
+        partner = self.env['res.partner'].create({'name': 'Partner Test'})
+        company_A = self.env['res.company'].create({'name': 'company_A'})
+        company_B = self.env['res.company'].create({'name': 'company_B'})
+        self.env['hr.employee'].create({
+            'name': 'employee_A',
+            'work_contact_id': partner.id,
+            'company_id': company_A.id,
+        })
+        self.env['hr.employee'].create({
+            'name': 'employee_B',
+            'work_contact_id': partner.id,
+            'company_id': company_B.id
+        })
+
+        partner.with_company(company_A)._compute_employees_count()
+        self.assertEqual(partner.employees_count, 1)
+        partner.with_company(company_B)._compute_employees_count()
+        self.assertEqual(partner.employees_count, 1)
+        partner.with_company(company_A).with_company(company_B)._compute_employees_count()
+        self.assertEqual(partner.employees_count, 2)
 
     def test_employee_linked_partner(self):
         user_partner = self.user_without_image.partner_id
@@ -185,7 +210,7 @@ class TestHrEmployee(TestHrCommon):
     def test_employee_update_work_contact_id(self):
         """
             Check that the `work_contact_id` information is no longer
-            updated when an employee's `user_id` is removed.
+            updated when an employee's `user_id` is added to another employee.
         """
         user = self.env['res.users'].create({
             'name': 'Test',
@@ -209,6 +234,8 @@ class TestHrEmployee(TestHrCommon):
         employee_B.work_email = 'new_email@example.com'
         self.assertEqual(employee_A.work_email, 'employee_A@example.com')
         self.assertEqual(employee_B.work_email, 'new_email@example.com')
+        self.assertFalse(employee_A.work_contact_id)
+        self.assertEqual(employee_B.work_contact_id, user.partner_id)
 
     @users('admin')
     def test_change_user_on_employee(self):
@@ -242,6 +269,87 @@ class TestHrEmployee(TestHrCommon):
         # change user back -> check that there is no company error
         with Form(test_employee) as employee_form:
             employee_form.user_id = test_user
+
+    def test_change_user_on_employee_keep_partner(self):
+        """
+            Check that removing user from employee keeps the link in
+            work_contact_id until the user is assigned to another employee.
+        """
+        user = self.env['res.users'].create({
+            'name': 'Test User',
+            'login': 'test_user',
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Test User - employee',
+            'user_id': user.id,
+        })
+        # remove user
+        employee.user_id = None
+        self.assertEqual(employee.work_contact_id, user.partner_id)
+        self.assertFalse(employee.user_id)
+        # create new employee from user
+        user.action_create_employee()
+        self.assertTrue(len(user.employee_ids) == 1, "Test user should have exactly one employee associated with it")
+        # previous employee shouldn't have a work_contact_id anymore, as the partner is reassigned
+        self.assertFalse(employee.work_contact_id)
+        # the new employee should be associated to both the user and its partner
+        new_employee = user.employee_ids
+        self.assertEqual(new_employee.work_contact_id, user.partner_id)
+        self.assertEqual(new_employee.user_id, user)
+
+    def test_change_user_on_employee_multi_company(self):
+        """
+            Removing user from employee keeps the link in work_contact_id in the correct company until the user
+            is assigned to another employee, and does not affect employees in other companies. When the unique
+            constraint of one employee per user in one company is triggered, the work_contact_id for the
+            existing employee is nor removed, and employees in other companies are not affected.
+        """
+        company_A = self.env['res.company'].create({'name': 'company_A'})
+        company_B = self.env['res.company'].create({'name': 'company_B'})
+        user = self.env['res.users'].create({
+            'name': 'Test User',
+            'login': 'test_user',
+        })
+        partner = user.partner_id
+        employee_A = self.env['hr.employee'].create({
+            'name': 'employee_A',
+            'user_id': user.id,
+            'company_id': company_A.id,
+        })
+        employee_B = self.env['hr.employee'].create({
+            'name': 'employee_B',
+            'user_id': user.id,
+            'company_id': company_B.id
+        })
+        # Creating an employee in one company does not remove the link with employee in the other company
+        self.assertEqual(user.with_company(company_A).employee_id, employee_A)
+        self.assertEqual(user.with_company(company_B).employee_id, employee_B)
+        # Partner is linked to both employees
+        partner.with_company(company_A).with_company(company_B)._compute_employees_count()
+        self.assertEqual(partner.employees_count, 2)
+        # Remove user from employee in one company does not affect link user-employee in the other company
+        employee_A.user_id = None
+        self.assertEqual(user.with_company(company_A).employee_id.ids, [])
+        self.assertEqual(user.with_company(company_B).employee_id, employee_B)
+        # Partner still linked to both employees
+        partner.with_company(company_A).with_company(company_B)._compute_employees_count()
+        self.assertEqual(partner.employees_count, 2)
+        # Creating a new employee for a user in company A does not affect link user-employee in the other company
+        new_employee_A = self.env['hr.employee'].create({
+            'name': 'new_employee_A',
+            'user_id': user.id,
+            'company_id': company_A.id,
+        })
+        # User cannot be assigned to more than one employee in the same company. work_contact_id should not be removed.
+        with mute_logger('odoo.sql_db'), self.assertRaises(psycopg2.errors.UniqueViolation), self.cr.savepoint():
+            self.env['hr.employee'].create({
+                'name': 'new_employee_B',
+                'user_id': user.id,
+                'company_id': company_B.id,
+            })
+        self.assertEqual(user.with_company(company_A).employee_id, new_employee_A)
+        self.assertEqual(user.with_company(company_B).employee_id, employee_B)
+        self.assertEqual(partner.employee_ids, employee_B + new_employee_A)
 
     def test_avatar(self):
         # Check simple employee has a generated image (initials)

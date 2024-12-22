@@ -57,7 +57,8 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Contacts" sample="1" multi_edit="1">
-                    <field name="display_name" string="Name"/>
+                    <field name="display_name" string="Name" invisible="1"/>
+                    <field name="complete_name" string="Name"/>
                     <field name="function" column_invisible="True"/>
                     <field name="phone" class="o_force_ltr" optional="show"/>
                     <field name="mobile" optional="hide"/>
@@ -167,10 +168,10 @@
             <field name="arch" type="xml">
                 <form string="Partners">
                 <div class="alert alert-warning oe_edit_only" role="alert" name="warning_tax" invisible="not same_vat_partner_id">
-                  A partner with the same <span><span class="o_vat_label">Tax ID</span></span> already exists (<field name="same_vat_partner_id"/>), are you sure to create a new one?
+                  A partner with the same <span><span class="o_vat_label">Tax ID</span></span> already exists (<field name="same_vat_partner_id" context="{'show_address': False, 'show_vat': False}"/>), are you sure to create a new one?
                 </div>
                 <div class="alert alert-warning oe_edit_only" role="alert" name="warning_company" invisible="not same_company_registry_partner_id">
-                  A partner with the same <span><span class="o_vat_label">Company Registry</span></span> already exists (<field name="same_company_registry_partner_id"/>), are you sure to create a new one?
+                  A partner with the same <span><span class="o_vat_label">Company Registry</span></span> already exists (<field name="same_company_registry_partner_id" context="{'show_address': False, 'show_vat': False}"/>), are you sure to create a new one?
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
@@ -427,7 +428,7 @@
             <field name="arch" type="xml">
                 <search string="Search Partner">
                     <field name="name"
-                       filter_domain="['|', '|', '|', '|', ('complete_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self), ('vat', 'ilike', self), ('company_registry', 'ilike', self)]"/>
+                       filter_domain="['|', '|', '|', '|', ('complete_name', 'ilike', self), ('ref', 'ilike', self), ('email', 'ilike', self), ('vat', 'ilike', self), ('company_registry', 'ilike', self)]"/>
                     <field name="parent_id" domain="[('is_company', '=', True)]" operator="child_of"/>
                     <field name="email" filter_domain="[('email', 'ilike', self)]"/>
                     <field name="phone" filter_domain="['|', ('phone', 'ilike', self), ('mobile', 'ilike', self)]"/>

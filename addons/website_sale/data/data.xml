@@ -59,7 +59,7 @@
             <field name="salesteam_id" ref="sales_team.salesteam_website_sales"/>
         </record>
 
-        <record id="delivery.free_delivery_carrier" model="delivery.carrier">
+        <record id="delivery.free_delivery_carrier" model="delivery.carrier" forcecreate="False">
             <field name="is_published" eval="True"/>
         </record>
 
@@ -72,7 +72,7 @@
             <field name="user_id" eval="False" />
             <field name="domain">[('website_published', '=', True)]</field>
             <field name="context">{'display_default_code': False, 'add2cart_rerender': False}</field>
-            <field name="sort">['create_date desc']</field>
+            <field name="sort">["create_date desc"]</field>
             <field name="action_id" ref="website.action_website"/>
         </record>
         <!-- Action Server for Dynamic Filter -->

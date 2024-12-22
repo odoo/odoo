@@ -6,7 +6,7 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2023
 # eriiikgt, 2023
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2023
-# Óscar Fonseca <tecnico@pyming.com>, 2023
+# Jonatan Gk, 2023
 # Susanna Pujol, 2023
 # Albert Parera, 2023
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2023
@@ -16,12 +16,12 @@
 # Eric Antones <eantones@users.noreply.github.com>, 2023
 # Josep Anton Belchi, 2023
 # Martin Trigaux, 2023
-# Jonatan Gk, 2023
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
 # Ivan Espinola, 2023
 # marcescu, 2023
 # Quim - eccit <quim@eccit.com>, 2024
 # Arnau Ros, 2024
+# Óscar Fonseca <tecnico@pyming.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Arnau Ros, 2024\n"
+"Last-Translator: Óscar Fonseca <tecnico@pyming.com>, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -153,7 +153,7 @@ msgstr "Afegir a"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree_detailed_wave
 #, python-format
 msgid "Add to Wave"
-msgstr "Afegeix a L'ona"
+msgstr "Afegeix a una onada"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
@@ -163,7 +163,7 @@ msgstr "Afegir al lot"
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_add_to_wave_action_stock_picking
 msgid "Add to wave"
-msgstr "Afegeix a l'ona"
+msgstr "Afegeix a una onada"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -302,7 +302,7 @@ msgstr "Cancel·lat"
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "Cannot create wave transfers"
-msgstr "No es poden crear transferències d'ona"
+msgstr "No es poden crear transferències per onades"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -349,7 +349,7 @@ msgstr "Compta el lot de recollida"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_wave
 msgid "Count Picking Wave"
-msgstr "Compta l'ona de selecció"
+msgstr "Número de transferències per onada"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
@@ -359,7 +359,7 @@ msgstr "Crea una transferència per lots nova"
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 msgid "Create a new wave transfer"
-msgstr "Crea una transferència d'ona nova"
+msgstr "Crear una nova transferència per onades"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__create_uid
@@ -889,10 +889,10 @@ msgid ""
 "                    It may also be useful to assign jobs (one person = one batch) or\n"
 "                    help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"L'objectiu de la transferència d'ona és fer operacions de grup des d'una transferència diferent\n"
-"                    junts per a augmentar la seva eficiència.\n"
-"                    També pot ser útil assignar treballs (una persona = un lot) o\n"
-"                    ajuda a la gestió del temps de les operacions (tasques que es faran a les 13:00)."
+"L'objectiu de les transferències per onades és agrupar les operacions de diferents transferències\n"
+"                    juntes per tal d'augmentar l'eficiència.\n"
+"                    També podria ser útil per assignar les tasques (una persona = un lot) o \n"
+"millorar la gestió del temps de les operacions (les tasques que s'han de fer a les 13:00)."
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -1003,18 +1003,18 @@ msgstr "Magatzem"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__wave_id
 msgid "Wave Transfer"
-msgstr "Transferència d'ona"
+msgstr "Transferència per onada"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_add_to_wave
 msgid "Wave Transfer Lines"
-msgstr "Línies de transferència d'ona"
+msgstr "Línies de transferència per onades"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.action_picking_tree_wave
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_wave_menu
 msgid "Wave Transfers"
-msgstr "Transferències d' ona"
+msgstr "Transferències per onades"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -1058,7 +1058,7 @@ msgstr "una transferència de lots nova"
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__new
 msgid "a new wave transfer"
-msgstr "una transferència d'ona nova"
+msgstr "una nova transferència per onada"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
@@ -1068,4 +1068,4 @@ msgstr "una transferència de lots existent"
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing
 msgid "an existing wave transfer"
-msgstr "una transferència d'ona existent"
+msgstr "una transferència per onada existent"

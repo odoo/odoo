@@ -10,13 +10,28 @@ class ResCompany(models.Model):
     l10n_fr_closing_sequence_id = fields.Many2one('ir.sequence', 'Sequence to use to build sale closings', readonly=True)
     siret = fields.Char(related='partner_id.siret', string='SIRET', size=14, readonly=False)
     ape = fields.Char(string='APE')
+    is_france_country = fields.Boolean(
+        compute="_compute_is_france_country",
+        string="Is Part of DOM-TOM",
+    )
+
+    @api.depends('country_code')
+    def _compute_is_france_country(self):
+        for company in self:
+            company.is_france_country = company.country_code in self._get_france_country_codes()
 
     l10n_fr_rounding_difference_loss_account_id = fields.Many2one('account.account', check_company=True)
     l10n_fr_rounding_difference_profit_account_id = fields.Many2one('account.account', check_company=True)
 
     @api.model
+    def _get_france_country_codes(self):
+        """Returns every country code that can be used to represent France
+        """
+        return ['FR', 'MF', 'MQ', 'NC', 'PF', 'RE', 'GF', 'GP', 'TF', 'BL', 'PM', 'YT', 'WF']  # These codes correspond to France and DOM-TOM.
+
+    @api.model
     def _get_unalterable_country(self):
-        return ['FR', 'MF', 'MQ', 'NC', 'PF', 'RE', 'GF', 'GP', 'TF'] # These codes correspond to France and DOM-TOM.
+        return self._get_france_country_codes()
 
     def _is_accounting_unalterable(self):
         if not self.vat and not self.country_id:

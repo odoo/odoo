@@ -50,11 +50,11 @@
         <t t-if="invoices" t-call="portal.portal_table">
             <thead>
                 <tr class="active">
-                    <th>Invoice #</th>
-                    <th>Invoice Date</th>
-                    <th class='d-none d-md-table-cell'>Due Date</th>
-                    <th>Status</th>
-                    <th class="text-end">Amount Due</th>
+                    <th name="invoice_number">Invoice #</th>
+                    <th name="invoice_date">Invoice Date</th>
+                    <th name="due_date" class='d-none d-md-table-cell'>Due Date</th>
+                    <th name="status">Status</th>
+                    <th name="amount_due" class="text-end">Amount Due</th>
                 </tr>
             </thead>
             <tbody>
@@ -117,7 +117,7 @@
                             <span t-if="invoice.amount_residual > 0" t-field="invoice.amount_residual"/>
                             <span t-else="1" t-field="invoice.amount_total"/>
                         </h2>
-                        <div class="small" t-if="invoice.payment_state not in ('paid', 'in_payment') and invoice.move_type == 'out_invoice'"><i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="invoice.invoice_date_due"/></div>
+                        <div class="small" t-if="invoice.payment_state not in ('paid', 'in_payment', 'reversed') and invoice.move_type == 'out_invoice'"><i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="invoice.invoice_date_due"/></div>
                     </t>
 
                     <t t-set="entries">
@@ -126,9 +126,6 @@
                                 <div class="o_download_pdf d-flex gap-1 flex-lg-column flex-xl-row">
                                     <div class="flex-grow-1">
                                         <a class="btn btn-secondary d-block o_download_btn" t-att-href="invoice.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/> Download</a>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <a class="btn btn-secondary d-block o_print_btn o_portal_invoice_print" t-att-href="invoice.get_portal_url(report_type='pdf')" id="print_invoice_report" title="Print" target="_blank"><i class="fa fa-print"/> Print</a>
                                     </div>
                                 </div>
                             </div>

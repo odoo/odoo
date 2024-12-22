@@ -228,13 +228,7 @@
                     <div t-if="portal_service_category_enable" class="o_portal_category row g-2 mt-3" id="portal_service_category"/>
                     <div t-if="portal_vendor_category_enable" class="o_portal_category row g-2 mt-3" id="portal_vendor_category"/>
                     <div class="o_portal_category row g-2 mt-3" id="portal_common_category">
-                        <t t-call="portal.portal_docs_entry">
-                            <t t-set="icon" t-value="'/portal/static/src/img/portal-addresses.svg'"/>
-                            <t t-set="title">Addresses</t>
-                            <t t-set="text">Add, remove or modify your addresses</t>
-                            <t t-set="url" t-value="'/my/account'"/>
-                            <t t-set="config_card" t-value="True"/>
-                        </t>
+                        <t t-call="portal.portal_docs_entry" t-if="False"/>
                         <t t-call="portal.portal_docs_entry">
                             <t t-set="icon" t-value="'/portal/static/src/img/portal-connection.svg'"/>
                             <t t-set="title">Connection &amp; Security</t>
@@ -275,7 +269,7 @@
                 <t t-out="0"/>
             </table>
         </div>
-        <div t-if="pager" class="o_portal_pager d-flex justify-content-center mt-3">
+        <div t-if="pager" class="o_portal_pager d-flex justify-content-center my-3">
             <t t-call="portal.pager"/>
         </div>
     </template>

@@ -11,7 +11,7 @@ from werkzeug.urls import url_quote
 from odoo.exceptions import UserError
 from odoo.tools import image_to_base64
 
-from odoo import api, fields, models, _, service, Command
+from odoo import api, fields, models, _, service
 from odoo.tools import file_open, split_every
 
 
@@ -25,8 +25,13 @@ class PosConfig(models.Model):
 
     def _self_order_default_user(self):
         user_ids = self.env["res.users"].search(['|', ('company_id', '=', self.env.company.id), ('company_id', '=', False)])
+        admin_user_ids = user_ids.filtered(lambda u: u.has_group("point_of_sale.group_pos_manager"))
+
+        if admin_user_ids:
+            return admin_user_ids[0]
+
         for user_id in user_ids:
-            if user_id.has_group("point_of_sale.group_pos_user") or user_id.has_group("point_of_sale.group_pos_manager"):
+            if user_id.has_group("point_of_sale.group_pos_user"):
                 return user_id
 
     status = fields.Selection(
@@ -346,7 +351,7 @@ class PosConfig(models.Model):
             "pos_config_id": self.id,
             "pos_session": self.current_session_id.read(["id", "access_token"])[0] if self.current_session_id and self.current_session_id.state == 'opened' else False,
             "company": {
-                **self.company_id.read(["name", "color", "email", "website", "vat", "name", "phone", "point_of_sale_use_ticket_qr_code", "point_of_sale_ticket_unique_code"])[0],
+                **self.company_id.read(["name", "email", "website", "vat", "name", "phone", "point_of_sale_use_ticket_qr_code", "point_of_sale_ticket_unique_code"])[0],
                 "partner_id": [None, self.company_id.partner_id.contact_address],
                 "country": self.company_id.country_id.read(["vat_label"])[0],
             },
@@ -447,6 +452,7 @@ class PosConfig(models.Model):
         self.ensure_one()
 
         if not self.current_session_id:
+            self._check_before_creating_new_session()
             pos_session = self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
             pos_session._ensure_access_token()
             self.env['bus.bus']._sendone(f'pos_config-{self.access_token}', 'STATUS', {

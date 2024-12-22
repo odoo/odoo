@@ -5,14 +5,15 @@
 # Translators:
 # Wil Odoo, 2023
 # Jolien De Paepe, 2023
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,6 +52,13 @@ msgstr "%s destinataires invalides"
 msgid ""
 "%s out of the %s selected SMS Text Messages have successfully been resent."
 msgstr "%s des %s SMS sélectionnés ont été renvoyés avec succès."
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+#, python-format
+msgid ", fits in"
+msgstr ", entre dans"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -392,7 +400,7 @@ msgstr "Modifier les partenaires"
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
 msgid "Email Thread"
-msgstr "Discussion par email"
+msgstr "Discussion par e-mail"
 
 #. module: sms
 #. odoo-javascript
@@ -791,7 +799,7 @@ msgid ""
 "object.partner_id.lang }}."
 msgstr ""
 "Langue de traduction facultative (code ISO) à sélectionner lors de l'envoi "
-"d'un email. Si aucune langue n'est définie, la version anglaise sera "
+"d'un e-mail. Si aucune langue n'est définie, la version anglaise sera "
 "utilisée. Il doit généralement s'agir d'une expression d'espace réservé qui "
 "fournit le langage approprié, par ex. {{ object.partner_id.lang }}."
 
@@ -1391,7 +1399,7 @@ msgstr ""
 "Type d'action serveur. Les valeurs suivantes sont disponibles :\n"
 "- 'Mettre à jour un enregistrement' : mettre à jours les valeurs d'un enregistrement\n"
 "- 'Créer une activité' : créer une activité (Discussion)\n"
-"- 'Envoyer un email' : publier un message, une note ou envoyer un email (Discussion)\n"
+"- 'Envoyer un e-mail' : publier un message, une note ou envoyer un e-mail (Discussion)\n"
 "- 'Envoyer un SMS' : envoyer des SMS, les enregistrer dans les documents (SMS)\n"
 "- 'Ajouter/supprimer des abonnés' : ajouter ou supprimer des abonnés sur un enregistrement (Discussion)\n"
 "- 'Créer un enregistrement' : créer un nouvel enregistrement avec de nouvelles valeurs\n"
@@ -1443,7 +1451,7 @@ msgid ""
 "'user_notification': generated for a specific recipient"
 msgstr ""
 "Utilisé pour catégoriser les générateurs de messages\n"
-"'email' : généré par un email entrant, par exemple mailgateway\n"
+"'e-mail' : généré par un e-mail entrant, par exemple mailgateway\n"
 "'comment' : généré par la contribution d'un utilisateur, par exemple via discussion ou composer\n"
 "'email_outgoing' : généré par un mailing\n"
 "'notification' : généré par un système, par exemple des messages de suivi\n"
@@ -1526,8 +1534,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 #, python-format
-msgid "characters, fits in"
-msgstr "caractères, envoyé en"
+msgid "characters"
+msgstr "caractères"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1552,7 +1560,7 @@ msgstr "par ex. en_US ou {{ object.partner_id.lang }}"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "out of"
-msgstr "depuis"
+msgstr "sur"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

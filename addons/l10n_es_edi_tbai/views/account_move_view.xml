@@ -9,10 +9,15 @@
                 <xpath expr="//group[@id='other_tab_group']/group[last()]" position='after'>
                     <group id="ticketbai_group" string="TicketBAI" invisible="not l10n_es_tbai_is_required">
                         <field name="l10n_es_tbai_is_required" invisible="1"/>
+                        <field name="move_type" invisible="1"/>
                         <field name="l10n_es_tbai_chain_index" groups="base.group_no_one"/>
                         <field name="l10n_es_tbai_refund_reason"
-                            invisible="not l10n_es_tbai_refund_reason"
+                            invisible="move_type not in ('out_refund', 'in_refund')"
                             readonly="state != 'draft'"/>
+                        <field name="l10n_es_tbai_post_xml" invisible="1"/>
+                        <field name="reversed_entry_id"
+                               invisible="move_type not in ('in_refund', 'out_refund') or not l10n_es_tbai_is_required"
+                               readonly="l10n_es_tbai_post_xml"/>
                     </group>
                 </xpath>
             </field>

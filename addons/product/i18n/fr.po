@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Jolien De Paepe, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,6 +84,7 @@ msgstr "%s %% remise"
 #. odoo-python
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
+#: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
@@ -839,7 +841,7 @@ msgstr "Confirmer"
 #: model:ir.model.fields.selection,name:product.selection__product_template__detailed_type__consu
 #: model:ir.model.fields.selection,name:product.selection__product_template__type__consu
 msgid "Consumable"
-msgstr "Consommable"
+msgstr "Produit consommable"
 
 #. module: product
 #. odoo-python
@@ -1713,7 +1715,7 @@ msgstr "Est une variante de produit"
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__is_custom
 msgid "Is custom value"
-msgstr "Est une valeur caractéristique"
+msgstr "Est une valeur personnalisable"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__public
@@ -2156,6 +2158,10 @@ msgid ""
 "\n"
 "Invalid URL: %s"
 msgstr ""
+"Veuillez saisir une URL valide.\n"
+"Exemple : https://www.odoo.com\n"
+"\n"
+"URL invalide : %s"
 
 #. module: product
 #. odoo-python
@@ -2886,7 +2892,7 @@ msgstr "Service"
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Services"
-msgstr "Interventions"
+msgstr "Services"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_round

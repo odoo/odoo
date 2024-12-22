@@ -16,18 +16,20 @@
                     <group name="ewaybill_group">
                         <group string="Transaction Details" name="Transaction_group" 
                             invisible="not l10n_in_edi_ewaybill_direct_api">
-                            <field name="l10n_in_type_id" domain="[('allowed_supply_type', 'in', ('in', 'both'))] if move_type in ('in_invoice', 'in_refund', 'in_receipt') else [('allowed_supply_type', 'in', ('out', 'both'))]"/>
+                            <field name="l10n_in_type_id" domain="[('code', '!=', 'CHL'), ('allowed_supply_type', 'in', ('in', 'both'))] if move_type in ('in_invoice', 'out_refund', 'in_receipt') else [('code', '!=', 'CHL'), ('allowed_supply_type', 'in', ('out', 'both'))]"/>
                         </group>
                         <group string="Transportation Details" name="transportation_group">
-                            <field name="l10n_in_mode"/>
+                            <field name="l10n_in_mode" widget="radio" options="{'horizontal': True}"/>
                             <label for="l10n_in_distance"/>
                             <div class="o_row" name="l10n_in_distance">
-                                <field name="l10n_in_distance"/>
+                                <field name="l10n_in_distance" class="oe_inline"/>
                                 <span>km</span>
                             </div>
                             <field name="l10n_in_vehicle_type" 
                                 invisible="l10n_in_mode != '1'"
-                                required="l10n_in_mode == '1'"/>
+                                required="l10n_in_mode == '1'"
+                                widget="radio"
+                                options="{'horizontal': True}"/>
                             <field name="l10n_in_vehicle_no" 
                                 invisible="l10n_in_mode != '1'"
                                 required="l10n_in_mode == '1'"/>
@@ -37,7 +39,8 @@
                                 required="l10n_in_mode == '0'"/>
                             <field name="l10n_in_transportation_doc_no" 
                                 invisible="l10n_in_mode not in ('2', '3', '4')"
-                                required="l10n_in_mode in ('2', '3', '4')"/>
+                                required="l10n_in_mode in ('2', '3', '4')"
+                                string="Transporter Document Number"/>
                             <field name="l10n_in_transportation_doc_date" 
                                 invisible="l10n_in_mode not in ('2', '3', '4')"
                                 required="l10n_in_mode in ('2', '3', '4')"/>
@@ -51,4 +54,4 @@
             </xpath>
         </field>
     </record>
- </odoo>
+</odoo>

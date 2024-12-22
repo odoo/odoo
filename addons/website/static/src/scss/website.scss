@@ -340,13 +340,24 @@ $-seen-urls: ();
     @include o-add-gradient('menu-gradient');
 }
 
+.navbar-light .o_navbar_mobile {
+    @include o-add-gradient('menu-gradient');
+}
+
 // TODO this should be reviewed. While it allowed to choose a color for the
 // navbar text, there is no :hover effect, the active item is not visible and
 // the selector is probably too specific and should rather be about extending
 // bootstrap if possible.
-#wrapwrap:not(.o_header_overlay) header, header.o_header_is_scrolled {
+#wrapwrap:not(.o_header_overlay) header, header.o_header_is_scrolled, header .o_navbar_mobile {
     .nav-item > .nav-link > *, .nav-item > .nav-link::after, .js_language_selector span, .badge {
-        color: o-website-value('header-text-color') !important;
+        $header-text-color: o-website-value('header-text-color');
+        // Check if the value is wrapped in quotes (initially it wasn't, and it
+        // didn't work) because we don't want the text color of the navbar to
+        // change once the fix is applied for users who tried the option when it
+        // wasn't working.
+        color: if(str-index(inspect($header-text-color), '"') == 1 or str-index(inspect($header-text-color), "'") == 1,
+            o-color($header-text-color),
+            $header-text-color) !important;
     }
 }
 
@@ -375,7 +386,7 @@ $-header-nav-link-height: $nav-link-height;
         font-size: o-website-value('header-font-size');
 
         .dropdown-menu, .btn {
-            font-size: inherit;
+            font-size: inherit !important;
         }
     }
 }
@@ -404,6 +415,17 @@ $-header-nav-link-height: $nav-link-height;
         @include o-apply-colors('copyright-custom', $background: $-footer-color);
         @include o-add-gradient('copyright-gradient');
     }
+}
+
+hr {
+    // Move the set up color as a border color. Indeed, we may use color-mix to
+    // define that color as a function of currentColor, in which case
+    // Safari 16.5 is known to crash when using that to set the color property.
+    border-top: $hr-height solid $hr-color;
+    color: inherit;
+    // Bootstrap sets up a "background-color" on the hr tag. As we may use a
+    // transparent color as $hr-color, we do not want that.
+    background-color: transparent;
 }
 
 h2 {
@@ -508,7 +530,19 @@ p {
 
 font[style*='background']:not(.text-gradient),
 font[class*='bg-'] {
-    padding: 2px 6px 4px;
+    // Not adding any horizontal padding is important as it ensures that several
+    // features work:
+    // - Highlighting part of a word -> you don't want the word to be split
+    // - Coloring a word inside a highlighted sentence -> in this case, the DOM
+    //   is a succession of 3 <font> elements, the word one with both the
+    //   background-color and the color.
+    // - Even in the good cases, you might just not want the padding, to align
+    //   the highlighted element with the general layout.
+    // => The user can still add surrounding spaces if needed anyway which is
+    //    actually both technically and functionally intuitive.
+    $-base-padding: 0.05em;
+    $-bottom-factor: 2;
+    padding: MAX($-base-padding, 1px) 0 MAX(($-bottom-factor * $-base-padding), ($-bottom-factor * 1px));
 }
 
 // Icons
@@ -1026,6 +1060,9 @@ $-transition-duration: 200ms;
             width: 100%;
             flex: auto;
         }
+        > .o_mega_menu_container_size {
+            transform: unset;
+        }
     }
 }
 
@@ -1317,18 +1354,31 @@ header {
     }
 }
 
+// TODO in master: remove this and create the SCSS file for the "Big Icons
+// Subtitles" mega menu template, as it cannot be added in stable.
+.s_mega_menu_big_icons_subtitles:not([data-vcss]) {
+    @include media-breakpoint-only(md) {
+        .row > div.col-md-6 {
+            min-width: fit-content;
+        }
+    }
+}
+
 #wrapwrap.o_header_overlay {
-    > header:not(.o_header_affixed):not(.o_top_menu_collapse_shown):not(.o_header_sidebar) {
+    > header:not(.o_header_affixed):not(.o_header_sidebar) {
         @include o-position-absolute(0, 0, auto, 0);
         z-index: 1000;
 
         > .navbar {
-            @include o-apply-colors(1); // Reset to default colored components
             // Prevent the nav color/gradient to impact the header color.
             background-color: transparent !important;
             background-image: none !important;
             border-color: transparent;
-            color: inherit;
+            color: inherit !important;
+        }
+
+        &:not(.o_top_menu_collapse_shown) > .navbar {
+            @include o-apply-colors(1); // Reset to default colored components
 
             .nav-item {
                 > .nav-link {
@@ -1341,6 +1391,15 @@ header {
                         font-weight: bolder;
                     }
                 }
+            }
+            .o_header_mobile_buttons_wrap, .btn[data-bs-toggle="offcanvas"] {
+                color: inherit;
+            }
+            .navbar-toggler-icon {
+                background-color: currentColor;
+                background-image: none;
+                mask: $navbar-light-toggler-icon-bg;
+                -webkit-mask: $navbar-light-toggler-icon-bg;
             }
         }
     }
@@ -1486,6 +1545,12 @@ span.list-inline-item.o_add_language:last-child {
     #o_footer_scrolltop_wrapper {
         position: relative;
         z-index: 1;
+
+        &:last-child {
+            height: 3rem !important;
+            margin-top: -3rem;
+            margin-bottom: 1rem;
+        }
     }
     #o_footer_scrolltop {
         $-footer-color: o-color('footer-custom') or o-color('footer') or rgba(0, 0, 0, 0);
@@ -1631,9 +1696,15 @@ $ribbon-padding: 100px;
     flex: 1;
 }
 
+.o_cookies_bar_toggle {
+    inset-inline-end: 1rem;
+    inset-block-end: var(--cookies-bar-toggle-inset-block-end, 1rem);
+    z-index: $zindex-modal + 1; // Over the modal backdrop.
+}
+
 .o_website_btn_loading {
-    cursor: wait;
     opacity: $btn-disabled-opacity;
+
     .fa:not(.fa-spin) {
         display: none;
     }
@@ -1735,7 +1806,7 @@ input[value*="data-oe-translation-initial-sha"] {
 .o_wanim_overflow_xy_hidden {
     overflow-x: hidden !important;
 
-    &.o_rtl {
+    &.o_rtl, .o_rtl {
         // Fix for Chrome and Edge bug: resolves slow/stuck scrolling during
         // left-overflowing animations on RTL web pages. Note: using overflow on
         // the main element hides animated elements outside of it (e.g. "Framed"
@@ -1743,6 +1814,7 @@ input[value*="data-oe-translation-initial-sha"] {
         // best workaround for now.
         > main {
             overflow-x: hidden;
+            overflow-y: hidden;
         }
     }
     .o_footer_slideout {
@@ -2494,4 +2566,19 @@ input[value*="data-oe-translation-initial-sha"] {
 // Disables the offset on dropdown to match relative position in mobile/offcanvas.
 .o_dropdown_without_offset {
     transform: none !important;
+}
+
+// o_facebook_page (Facebook page plugin)
+
+// Since October 2024, the Facebook mobile site (m.facebook.com) uses an
+// 'X-Frame-Options' header set to 'deny', preventing iframe embedding across
+// different domains. This header enforces a security policy restricting
+// cross-origin access to the content.
+// Meta has not provided any communication regarding this change. Until it is
+// resolved, we have no choice but to hide the iframe on mobile to prevent users
+// from seeing a "unavailable content" icon.
+@include media-breakpoint-down(md) {
+    .o_facebook_page {
+        display: none;
+    }
 }

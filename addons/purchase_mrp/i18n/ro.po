@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_mrp
-#
+# 
 # Translators:
-# Hongu Cosmin <cosmin513@gmail.com>, 2022
-# Foldi Robert <foldirobert@nexterp.ro>, 2022
-# Martin Trigaux, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2023
-#
+# Hongu Cosmin <cosmin513@gmail.com>, 2024
+# Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Martin Trigaux, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
-"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ro\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: purchase_mrp
@@ -53,6 +53,8 @@ msgstr "Linie Factură Materiale"
 #, python-format
 msgid "Components cost share have to be positive or equals to zero."
 msgstr ""
+"Partajarea costurilor componentelor trebuie să fie pozitivă sau egală cu "
+"zero."
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom_line__cost_share
@@ -62,12 +64,12 @@ msgstr "Partajare cost (%)"
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__mrp_production_count
 msgid "Count of MO Source"
-msgstr ""
+msgstr "Număr sursă CP"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__purchase_order_count
 msgid "Count of generated PO"
-msgstr ""
+msgstr "Număr de CA generate"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_account_move_line
@@ -77,21 +79,25 @@ msgstr "Element jurnal"
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr ""
+msgstr "Raport general CP"
 
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/purchase.py:0
 #, python-format
 msgid "Manufacturing Source of %s"
-msgstr ""
+msgstr "Sursă producție pentru %s"
 
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/stock_move.py:0
 #, python-format
-msgid "Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero."
-msgstr "Odoo nu este capabil să genereze intrări anglo saxon. Evaluarea totală a%s este 0."
+msgid ""
+"Odoo is not able to generate the anglo saxon entries. The total valuation of"
+" %s is zero."
+msgstr ""
+"Odoo nu este capabil să genereze intrări anglo saxon. Evaluarea totală a%s "
+"este 0."
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_mrp_production
@@ -122,12 +128,16 @@ msgstr "Mișcare stoc"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,help:purchase_mrp.field_mrp_bom_line__cost_share
-msgid "The percentage of the component repartition cost when purchasing a kit.The total of all components' cost have to be equal to 100."
+msgid ""
+"The percentage of the component repartition cost when purchasing a kit.The "
+"total of all components' cost have to be equal to 100."
 msgstr ""
+"Procentajul costului de repartizare a componentei la achiziționarea unui "
+"kit.Totalul costurilor tuturor componentelor trebuie să fie egal cu 100."
 
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/mrp_bom.py:0
 #, python-format
 msgid "The total cost share for a BoM's component have to be 100"
-msgstr ""
+msgstr "Costul total al componentei unei LDM trebuie să fie 100"

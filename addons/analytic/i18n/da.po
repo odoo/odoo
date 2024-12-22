@@ -5,17 +5,17 @@
 # Translators:
 # lhmflexerp <lhm@flexerp.dk>, 2023
 # Mads Søndergaard, 2023
-# Mads Søndergaard, 2023
 # Martin Trigaux, 2023
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
+# Mads Søndergaard, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
+"Last-Translator: Mads Søndergaard, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +33,7 @@ msgstr "%s (kopi)"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "<span class=\"o_stat_text\">Analytic Accounts</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Analysekonto</span>"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
@@ -159,12 +159,12 @@ msgstr "Analytisk fordeling"
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
 #, python-format
 msgid "Analytic Distribution Model"
-msgstr ""
+msgstr "Analytisk fordelingsmodel"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_distribution_model
 msgid "Analytic Distribution Models"
-msgstr ""
+msgstr "Analytiske fordelingsmodeller"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution_search
@@ -175,7 +175,7 @@ msgstr "Analytisk distributionssøgning"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Item"
-msgstr ""
+msgstr "Analytisk emne"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -203,7 +203,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__analytic_plan_id
 msgid "Analytic Plan"
-msgstr ""
+msgstr "Analytisk plan"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_applicability
@@ -216,7 +216,7 @@ msgstr "Anvendelsesmuligheder for analytiske planer"
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_tree_view
 msgid "Analytic Plans"
-msgstr ""
+msgstr "Analytiske planer"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
@@ -632,6 +632,13 @@ msgid "Nebula"
 msgstr ""
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+#, python-format
+msgid "New Model"
+msgstr "Ny Model"
+
+#. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet"
 msgstr "Ingen aktivitet endnu"
@@ -892,6 +899,13 @@ msgstr "Vis"
 msgid ""
 "You can't set a different company on your analytic account since there are "
 "some analytic items linked to it."
+msgstr ""
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+#, python-format
+msgid "You cannot add a parent to the base plan '%s'"
 msgstr ""
 
 #. module: analytic

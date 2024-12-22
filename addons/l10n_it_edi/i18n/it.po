@@ -678,6 +678,13 @@ msgstr "E-mail PEC"
 
 #. module: l10n_it_edi
 #. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+#, python-format
+msgid "Partner not found, useful informations from XML file:"
+msgstr "Partner non trovato, informazioni dal file XML:"
+
+#. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/res_partner.py:0
 #, python-format
 msgid "Partner(s) should have a Country when used for simplified invoices."
@@ -1215,13 +1222,6 @@ msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-#, python-format
-msgid "Vendor not found, useful informations from XML file:"
-msgstr "Fornitore non trovato, informazioni utili dal file XML:"
-
-#. module: l10n_it_edi
-#. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 #, python-format
 msgid "View Company/ies"
@@ -1292,11 +1292,33 @@ msgstr "Devi selezionare un rappresentante fiscale"
 #: code:addons/l10n_it_edi/models/account_move.py:0
 #, python-format
 msgid ""
-"Your company belongs to the Public Administration, please fill out Origin "
+"Partner(s) belongs to the Public Administration, please fill out Origin "
 "Document Type field in the Electronic Invoicing tab."
 msgstr ""
-"La tua Azienda appartiene alla Pubblica Amministrazione, per favore riempi "
-"il campo Tipo Documento Origine nella scheda Fatturazione Elettronica"
+"Il/i Partner appartiene alla Pubblica Amministrazione, compilare il campo "
+"Tipo Documento Origine nella scheda Fatturazione elettronica."
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"CIG/CUP fields of partner(s) are present, please fill out Origin "
+"Document Type field in the Electronic Invoicing tab."
+msgstr ""
+"Sono presenti i campi CIG/CUP dei partner, compilare il campo "
+"Tipo Documento Origine nella scheda Fatturazione elettronica."
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"Your company's VAT number and Fiscal Code haven't been found in the buyer "
+"and/or seller sections inside the document."
+msgstr ""
+"La Partita IVA e il Codice Fiscale della tua Azienda non sono stati "
+"trovati nelle sezioni acquirente e/o venditore del documento."
 
 #. module: l10n_it_edi
 #. odoo-python

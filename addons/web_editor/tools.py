@@ -8,6 +8,7 @@ import re
 import requests
 
 from markupsafe import Markup
+from urllib.parse import parse_qs
 from werkzeug.urls import url_encode
 
 from odoo import _
@@ -22,8 +23,9 @@ valid_url_regex = r'^(http://|https://|//)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{
 
 # Regex for few of the widely used video hosting services
 player_regexes = {
-    'youtube': r'^(?:(?:https?:)?//)?(?:www\.)?(?:youtu\.be/|youtube(-nocookie)?\.com/(?:embed/|v/|watch\?v=|watch\?.+&v=))((?:\w|-){11})\S*$',
-    'vimeo': r'//(player.)?vimeo.com/([a-z]*/)*([0-9]{6,11})[?]?.*',
+    'youtube': r'^(?:(?:https?:)?//)?(?:www\.|m\.)?(?:youtu\.be/|youtube(-nocookie)?\.com/(?:embed/|v/|shorts/|live/|watch\?v=|watch\?.+&v=))((?:\w|-){11})\S*$',
+    'vimeo': r'^(?:(?:https?:)?//)?(?:www\.)?vimeo\.com\/(?P<id>[^/\?]+)(?:/(?P<hash>[^/\?]+))?(?:\?(?P<params>[^\s]+))?$',
+    'vimeo_player': r'^(?:(?:https?:)?//)?player\.vimeo\.com\/video\/(?P<id>[^/\?]+)(?:\?(?P<params>[^\s]+))?$',
     'dailymotion': r'(https?:\/\/)(www\.)?(dailymotion\.com\/(embed\/video\/|embed\/|video\/|hub\/.*#video=)|dai\.ly\/)(?P<id>[A-Za-z0-9]{6,7})',
     'instagram': r'(?:(.*)instagram.com|instagr\.am)/p/(.[a-zA-Z0-9-_\.]*)',
     'youku': r'(?:(https?:\/\/)?(v\.youku\.com/v_show/id_|player\.youku\.com/player\.php/sid/|player\.youku\.com/embed/|cloud\.youku\.com/services/sharev\?vid=|video\.tudou\.com/v/)|youku:)(?P<id>[A-Za-z0-9]+)(?:\.html|/v\.swf|)',
@@ -41,9 +43,11 @@ def get_video_source_data(video_url):
         youtube_match = re.search(player_regexes['youtube'], video_url)
         if youtube_match:
             return ('youtube', youtube_match[2], youtube_match)
-        vimeo_match = re.search(player_regexes['vimeo'], video_url)
+        vimeo_match = (
+            re.search(player_regexes['vimeo'], video_url) or
+            re.search(player_regexes['vimeo_player'], video_url))
         if vimeo_match:
-            return ('vimeo', vimeo_match[3], vimeo_match)
+            return ('vimeo', vimeo_match.group('id'), vimeo_match)
         dailymotion_match = re.search(player_regexes['dailymotion'], video_url)
         if dailymotion_match:
             return ('dailymotion', dailymotion_match.group("id"), dailymotion_match)
@@ -60,6 +64,8 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
     """ Computes the platform name, the embed_url, the video id and the video params of the given URL
         (or error message in case of invalid URL).
     """
+    # TODO: In Master, remove the parameter "hide_yt_logo" (the parameter is no
+    # longer supported in the YouTube API.)
     source = get_video_source_data(video_url)
     if source is None:
         return {'error': True, 'message': _('The provided url is invalid')}
@@ -87,8 +93,6 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
             params['playlist'] = video_id
         if hide_fullscreen:
             params['fs'] = 0
-        if hide_yt_logo:
-            params['modestbranding'] = 1
         yt_extra = platform_match[1] or ''
         embed_url = f'//www.youtube{yt_extra}.com/embed/{video_id}'
     elif platform == 'vimeo':
@@ -100,6 +104,13 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
             params['controls'] = 0
         if loop:
             params['loop'] = 1
+        groups = platform_match.groupdict()
+        if groups.get('hash'):
+            params['h'] = groups['hash']
+        elif groups.get('params'):
+            url_params = parse_qs(groups['params'])
+            if 'h' in url_params:
+                params['h'] = url_params['h'][0]
         embed_url = f'//player.vimeo.com/video/{video_id}'
     elif platform == 'dailymotion':
         params['autoplay'] = autoplay and 1 or 0

@@ -3,6 +3,7 @@
 
 import logging
 from collections import namedtuple
+from markupsafe import Markup
 from odoo import _, api, fields, models
 
 _logger = logging.getLogger(__name__)
@@ -11,10 +12,10 @@ _logger = logging.getLogger(__name__)
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    l10n_it_amount_vat_signed = fields.Monetary(string='VAT', compute='_compute_amount_extended')
-    l10n_it_amount_pension_fund_signed = fields.Monetary(string='Pension Fund', compute='_compute_amount_extended')
-    l10n_it_amount_withholding_signed = fields.Monetary(string='Withholding', compute='_compute_amount_extended')
-    l10n_it_amount_before_withholding_signed = fields.Monetary(string='Total Before Withholding', compute='_compute_amount_extended')
+    l10n_it_amount_vat_signed = fields.Monetary(string='VAT', compute='_compute_amount_extended', currency_field='company_currency_id')
+    l10n_it_amount_pension_fund_signed = fields.Monetary(string='Pension Fund', compute='_compute_amount_extended', currency_field='company_currency_id')
+    l10n_it_amount_withholding_signed = fields.Monetary(string='Withholding', compute='_compute_amount_extended', currency_field='company_currency_id')
+    l10n_it_amount_before_withholding_signed = fields.Monetary(string='Total Before Withholding', compute='_compute_amount_extended', currency_field='company_currency_id')
 
     @api.depends('amount_total_signed')
     def _compute_amount_extended(self):
@@ -72,6 +73,18 @@ class AccountMove(models.Model):
             vat_tax, withholding_tax = pension_fund_mapping[pension_fund_tax.id]
             pension_fund_values.append(PensionFundTaxData(pension_fund_tax, line.tax_base_amount, abs(line.balance), vat_tax, withholding_tax))
 
+        # Pension fund must be expressed in the AltriDatiGestionali at the line detail level
+        pension_fund_by_line_id = {}
+        if pension_fund_values:
+            base_lines = [
+                line._convert_to_tax_base_line_dict()
+                for line in self.line_ids.filtered(lambda line: line.display_type == 'product')
+            ]
+            for base_line in base_lines:
+                for pension_fund in pension_fund_values:
+                    if pension_fund.tax.id in base_line['taxes'].ids:
+                        pension_fund_by_line_id[base_line['record'].id] = pension_fund.tax
+
         # Enasarco pension fund must be expressed in the AltriDatiGestionali at the line detail level
         enasarco_values = False
         if enasarco_taxes:
@@ -92,6 +105,7 @@ class AccountMove(models.Model):
         template_values.update({
             'withholding_values': withholding_values,
             'pension_fund_values': pension_fund_values,
+            'pension_fund_by_line_id': pension_fund_by_line_id,
             'enasarco_values': enasarco_values,
             'document_total': document_total,
         })
@@ -125,8 +139,10 @@ class AccountMove(models.Model):
             extra_domain = (extra_domain or []) + [('l10n_it_withholding_type', '=', False), ('l10n_it_pension_fund_type', '=', False)]
         return super()._l10n_it_edi_search_tax_for_import(company, percentage, extra_domain=extra_domain, l10n_it_exempt_reason=l10n_it_exempt_reason)
 
-    def _l10n_it_edi_get_extra_info(self, company, document_type, body_tree):
-        extra_info, message_to_log = super()._l10n_it_edi_get_extra_info(company, document_type, body_tree)
+    def _l10n_it_edi_get_extra_info(self, company, document_type, body_tree, incoming=True):
+        extra_info, message_to_log = super()._l10n_it_edi_get_extra_info(company, document_type, body_tree, incoming=incoming)
+
+        type_tax_use_domain = extra_info['type_tax_use_domain']
 
         withholding_elements = body_tree.xpath('.//DatiGeneraliDocumento/DatiRitenuta')
         withholding_taxes = []
@@ -140,13 +156,14 @@ class AccountMove(models.Model):
             withholding_tax = self._l10n_it_edi_search_tax_for_import(
                 company,
                 withholding_percentage,
-                [('l10n_it_withholding_type', '=', withholding_type),
-                 ('l10n_it_withholding_reason', '=', withholding_reason)],
+                ([('l10n_it_withholding_type', '=', withholding_type),
+                  ('l10n_it_withholding_reason', '=', withholding_reason)]
+                 + type_tax_use_domain),
                 vat_only=False)
             if withholding_tax:
                 withholding_taxes.append(withholding_tax)
             else:
-                message_to_log.append("%s<br/>%s" % (
+                message_to_log.append(Markup("%s<br/>%s") % (
                     _("Withholding tax not found"),
                     self.env['account.move']._compose_info_message(body_tree, '.'),
                 ))
@@ -164,12 +181,13 @@ class AccountMove(models.Model):
             pension_fund_tax = self._l10n_it_edi_search_tax_for_import(
                 company,
                 tax_factor_percent,
-                [('l10n_it_pension_fund_type', '=', pension_fund_type)],
+                ([('l10n_it_pension_fund_type', '=', pension_fund_type)]
+                 + type_tax_use_domain),
                 vat_only=False)
             if pension_fund_tax:
                 pension_fund_taxes.append(pension_fund_tax)
             else:
-                message_to_log.append("%s<br/>%s" % (
+                message_to_log.append(Markup("%s<br/>%s") % (
                     _("Pension Fund tax not found"),
                     self.env['account.move']._compose_info_message(body_tree, '.'),
                 ))
@@ -180,12 +198,12 @@ class AccountMove(models.Model):
     def _l10n_it_edi_import_line(self, element, move_line_form, extra_info=None):
         messages_to_log = super()._l10n_it_edi_import_line(element, move_line_form, extra_info)
 
+        type_tax_use_domain = extra_info['type_tax_use_domain']
+
         for withholding_tax in extra_info.get('withholding_taxes', []):
             withholding_tags = element.xpath("Ritenuta")
             if withholding_tags and withholding_tags[0].text == 'SI':
                 move_line_form.tax_ids |= withholding_tax
-        for pension_fund_tax in extra_info.get('pension_fund_taxes', []):
-            move_line_form.tax_ids |= pension_fund_tax
 
         if extra_info['simplified']:
             return messages_to_log
@@ -193,29 +211,34 @@ class AccountMove(models.Model):
         price_subtotal = move_line_form.price_unit
         company = move_line_form.company_id
 
-        # ENASARCO Pension Fund tax (works as a withholding)
+        # Pension Funds applied on line level and ENASARCO Pension Fund tax (works as a withholding)
         for other_data_element in element.xpath('.//AltriDatiGestionali'):
             data_kind_element = other_data_element.xpath("./TipoDato")
             text_element = other_data_element.xpath("./RiferimentoTesto")
-            number_element = other_data_element.xpath("./RiferimentoNumero")
-            if not data_kind_element or not text_element or not number_element:
+            if not data_kind_element or not text_element:
                 continue
-            data_kind, data_text, number_text = data_kind_element[0].text.lower(), text_element[0].text.lower(), number_element[0].text
-            if data_kind != 'cassa-prev' or ('enasarco' not in data_text and 'tc07' not in data_text):
-                continue
-            enasarco_amount = float(number_text)
-            enasarco_percentage = -self.env.company.currency_id.round(enasarco_amount / price_subtotal * 100)
-            enasarco_tax = self._l10n_it_edi_search_tax_for_import(
-                company,
-                enasarco_percentage,
-                [('l10n_it_pension_fund_type', '=', 'TC07')],
-                vat_only=False)
-            if enasarco_tax:
-                move_line_form.tax_ids |= enasarco_tax
-            else:
-                messages_to_log.append("%s<br/>%s" % (
-                    _("Enasarco tax not found for line with description '%s'", move_line_form.name),
-                    self.env['account.move']._compose_info_message(other_data_element, '.'),
-                ))
+            data_kind, data_text = data_kind_element[0].text.lower(), text_element[0].text.lower()
+            if data_kind == 'cassa-prev' and ('enasarco' in data_text or 'tc07' in data_text):
+                number_element = other_data_element.xpath("./RiferimentoNumero")
+                if not number_element:
+                    continue
+                enasarco_amount = float(number_element[0].text)
+                enasarco_percentage = -self.env.company.currency_id.round(enasarco_amount / price_subtotal * 100)
+                enasarco_tax = self._l10n_it_edi_search_tax_for_import(
+                    company,
+                    enasarco_percentage,
+                    [('l10n_it_pension_fund_type', '=', 'TC07')] + type_tax_use_domain,
+                    vat_only=False)
+                if enasarco_tax:
+                    move_line_form.tax_ids |= enasarco_tax
+                else:
+                    messages_to_log.append(Markup("%s<br/>%s") % (
+                        _("Enasarco tax not found for line with description '%s'", move_line_form.name),
+                        self.env['account.move']._compose_info_message(other_data_element, '.'),
+                    ))
+            elif data_kind == 'aswcasspre' and 'tc' in data_text:
+                for pension_fund_tax in extra_info.get('pension_fund_taxes', []):
+                    if pension_fund_tax.l10n_it_pension_fund_type.lower() in data_text:
+                        move_line_form.tax_ids |= pension_fund_tax
 
         return messages_to_log

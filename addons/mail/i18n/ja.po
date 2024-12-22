@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -416,7 +416,7 @@ msgstr "<span class=\"d-block w-75 py-2\">ヘッダ色</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "<span class=\"me-1 oe_inline\">@</span>"
-msgstr ""
+msgstr "<span class=\"me-1 oe_inline\">@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -644,6 +644,14 @@ msgstr "要アクション"
 #: model:ir.model,name:mail.model_ir_actions_act_window_view
 msgid "Action Window View"
 msgstr "アクションウィンドウビュー"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#, python-format
+msgid "Actions"
+msgstr "アクション"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
@@ -906,7 +914,7 @@ msgstr "連絡先を追加..."
 #: code:addons/mail/static/src/core/common/discuss_app_model.js:0
 #, python-format
 msgid "Add or join a channel"
-msgstr "チャネルを追加または参加する"
+msgstr "チャネルを追加または参加"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_add_signature
@@ -1236,14 +1244,14 @@ msgstr "ローンチ時に聞く"
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 #, python-format
 msgid "Assign to ..."
-msgstr "以下に割当:"
+msgstr "担当者:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 #, python-format
 msgid "Assign to me"
-msgstr "自分に割当"
+msgstr "自分が担当"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_on_demand_user_id
@@ -1268,7 +1276,7 @@ msgstr "担当者"
 msgid ""
 "Assigned user %s has no access to the document and is not able to handle "
 "this activity."
-msgstr "割り当てられたユーザー%sはドキュメントにアクセスできず、このアクティビティを処理できません。"
+msgstr "割当てられたユーザー%sはドキュメントにアクセスできず、このアクティビティを処理できません。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_type
@@ -1407,7 +1415,7 @@ msgstr "自動ターゲット通知"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__automated
 msgid "Automated activity"
-msgstr "自動化されたアクティビティ"
+msgstr "自動アクティビティ"
 
 #. module: mail
 #. odoo-javascript
@@ -1643,6 +1651,15 @@ msgstr ""
 #, python-format
 msgid "Bounced"
 msgstr "不達"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/webclient/web/webclient.js:0
+#, python-format
+msgid ""
+"Brave: enable 'Google Services for Push Messaging' to enable push "
+"notifications"
+msgstr "Brave: プッシュ通知を有効にするには、Google Services for Push Messagingを有効にします。"
 
 #. module: mail
 #. odoo-javascript
@@ -2092,7 +2109,7 @@ msgstr "会社"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
 msgid "Companies using this domain as default for sending mails"
-msgstr ""
+msgstr "このドメインをデフォルトでメール送信に使用している会社"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
@@ -2107,8 +2124,10 @@ msgstr "会社"
 
 #. module: mail
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/static/src/core/common/composer.js:0
 #: code:addons/mail/static/src/core/web/activity_mail_template.js:0
+#: code:addons/mail/wizard/mail_compose_message.py:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
@@ -2310,6 +2329,13 @@ msgstr "この連絡先に反響のあった電子メールの数のカウンタ
 #: model:ir.model.fields,field_description:mail.field_mail_guest__country_id
 msgid "Country"
 msgstr "国"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/views/web/activity/activity_renderer.xml:0
+#, python-format
+msgid "Create"
+msgstr "作成"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__next_activity
@@ -2676,6 +2702,8 @@ msgid ""
 " local-part e.g. 'notifications' either a complete email address e.g. "
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
+"送信サーバフィルタに一致しない場合のデフォルト。'notifications' "
+"のようなローカルパートか、'notifications@example.com'のような完全なメールアドレスを指定し、全ての送信メールを上書きすることができます。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
@@ -3019,7 +3047,7 @@ msgstr "完了、次を予定する"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.js:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -3346,7 +3374,7 @@ msgstr "メール作成アシスタント"
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_optional__alias_domain
 #: model:ir.model.fields,help:mail.field_res_company__alias_domain_name
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "Eメールドメイン例 'example.com' in 'odoo@example.com'"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -3527,6 +3555,13 @@ msgstr "不合格"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/webclient/web/webclient.js:0
+#, python-format
+msgid "Failed to enable push notifications"
+msgstr "プッシュ通知を有効化できませんでした"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "Failed to load gifs..."
@@ -3558,6 +3593,13 @@ msgstr ""
 #, python-format
 msgid "Failed to render inline_template template: %(template_txt)s)"
 msgstr "inline_templateテンプレートのレンダリングに失敗しました:%(template_txt)s)"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, python-format
+msgid "Failed to render inline_template template: %(template_txt)s"
+msgstr "テンプレートのレンダリングに失敗しました: %(template_txt)s"
 
 #. module: mail
 #. odoo-python
@@ -3624,16 +3666,6 @@ msgstr "フィールド"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/mail_tracking_duration_mixin.py:0
-#, python-format
-msgid ""
-"Field \"(field)r on model %(model)r must be of type Many2one and have "
-"tracking=True for the computation of duration."
-msgstr ""
-"フィールド \"(field)r モデル%(model)r 上は多対1タイプおよび期間の計算用にtracking=Trueを有する必要があります。"
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/ir_model.py:0
 #, python-format
 msgid "Field \"Mail Activity\" cannot be changed to \"False\"."
@@ -3671,6 +3703,17 @@ msgid ""
 "getattr(related_document.relation_field)."
 msgstr ""
 "関連文書を自動購読する場合、関連モデルをサブタイプのモデルにリンクするためのフィールド。このフィールドはgetattr(related_document.relation_field)の計算に使われます。"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_tracking_duration_mixin.py:0
+#, python-format
+msgid ""
+"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
+"tracking=True for the computation of duration."
+msgstr ""
+"フィールド \"%(field)s\"モデル "
+"\"%(model)s\"上は多対1タイプおよび期間の計算用にtracking=Trueを有する必要があります。"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model_fields
@@ -3999,8 +4042,10 @@ msgid "Groups"
 msgstr "グループ"
 
 #. module: mail
+#. odoo-javascript
 #. odoo-python
 #: code:addons/mail/controllers/discuss/public_page.py:0
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #: model:ir.model,name:mail.model_mail_guest
 #: model:ir.model.fields,field_description:mail.field_bus_presence__guest_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__guest_id
@@ -5251,7 +5296,7 @@ msgstr "ローカルパートに基づく着信検知"
 msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
-msgstr ""
+msgstr "返信先に使用され、回答を受取るためのメールのローカルパート例：'catchall@example.com'の'catchall'"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -5259,6 +5304,7 @@ msgid ""
 "Local-part of email used for Return-Path used when emails bounce e.g. "
 "'bounce' in 'bounce@example.com'"
 msgstr ""
+"'bounce@example.com'内の'bounce'など、メールがバウンスしたときに使用される返信パスに使用されるメールのローカルパート。"
 
 #. module: mail
 #. odoo-javascript
@@ -6008,6 +6054,8 @@ msgstr "自分のテンプレート"
 #: model:ir.model.fields,field_description:mail.field_mail_followers__name
 #: model:ir.model.fields,field_description:mail.field_mail_guest__name
 #: model:ir.model.fields,field_description:mail.field_mail_template__name
+#: model:ir.model.fields,field_description:mail.field_res_partner__name
+#: model:ir.model.fields,field_description:mail.field_res_users__name
 msgid "Name"
 msgstr "名称"
 
@@ -6644,6 +6692,14 @@ msgstr "ドキュメントを開く"
 #, python-format
 msgid "Open Form View"
 msgstr "フォームビューを開く"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#, python-format
+msgid "Open Link"
+msgstr "リンクを開く"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_tree
@@ -7509,8 +7565,7 @@ msgstr "関連項目"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.js:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/link_preview.xml:0
@@ -7811,6 +7866,13 @@ msgid "Save as a new template"
 msgstr "新しいテンプレートとして保存"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+#, python-format
+msgid "Save editing"
+msgstr "編集を保存"
+
+#. module: mail
 #: model:ir.model,name:mail.model_discuss_gif_favorite
 msgid "Save favorite GIF from Tenor API"
 msgstr "Tenor APIからお気に入りのGIFを保存"
@@ -7835,7 +7897,7 @@ msgstr "予定＆完了済とする"
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 #, python-format
 msgid "Schedule Activity"
-msgstr "活動をスケジュール"
+msgstr "活動を予定する"
 
 #. module: mail
 #. odoo-javascript
@@ -7844,7 +7906,7 @@ msgstr "活動をスケジュール"
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 #, python-format
 msgid "Schedule Activity On Selected Records"
-msgstr "選択済レコード上で活動をスケジュール"
+msgstr "選択済レコード上で活動を予定する"
 
 #. module: mail
 #. odoo-javascript
@@ -7858,21 +7920,21 @@ msgstr "あなたが物事を成し遂げるのを助けるために活動をス
 #: code:addons/mail/static/src/views/web/activity/activity_renderer.xml:0
 #, python-format
 msgid "Schedule activity"
-msgstr "活動をスケジュール"
+msgstr "活動を予定する"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "Schedule an Activity"
-msgstr "ある活動をスケジュール　"
+msgstr "活動を予定する　"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 #, python-format
 msgid "Schedule an activity"
-msgstr "活動をスケジュールする"
+msgstr "活動を予定する"
 
 #. module: mail
 #. odoo-javascript
@@ -7891,7 +7953,7 @@ msgstr "計画日"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_form
 msgid "Scheduled Message"
-msgstr "予定されたメッセージ"
+msgstr "予定済メッセージ"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_message_schedule_action
@@ -7899,7 +7961,7 @@ msgstr "予定されたメッセージ"
 #: model:ir.ui.menu,name:mail.mail_message_schedule_menu
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_search
 msgid "Scheduled Messages"
-msgstr "予定されたメッセージ"
+msgstr "予定済メッセージ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__scheduled_date
@@ -9112,6 +9174,13 @@ msgstr "この操作はトランジェント・モデルではできません。
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/views/web/activity/activity_renderer.xml:0
+#, python-format
+msgid "This action will send an email."
+msgstr "このアクションにより、電子メールが送信されます。"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
 #, python-format
 msgid "This channel doesn't have any attachments."
@@ -9391,7 +9460,7 @@ msgstr "次の活動をトリガー"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend
 msgid "Try Again"
-msgstr "もう一度試す"
+msgstr "再試行"
 
 #. module: mail
 #. odoo-javascript
@@ -9449,7 +9518,7 @@ msgstr ""
 "- レコードの作成': 新しい値で新しいレコードを作成します\n"
 "- コードの実行': 実行されるPythonコードのブロックします\n"
 "- 'Webhook通知の送信': Webhookとしても知られるPOSTリクエストを外部システムに送信します\n"
-"- '既存アクションの実行': 他のサーバーアクションをトリガするアクションを定義します\n"
+"- '既存アクションの実行': 他のサーバーアクションをトリガーするアクションを定義します\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -9991,13 +10060,6 @@ msgstr "ビュータイプ"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
-#, python-format
-msgid "View image"
-msgstr "画像を見る"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories.xml:0
 #, python-format
 msgid "View or join channels"
@@ -10489,6 +10551,13 @@ msgid "Your name"
 msgstr "名前"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/recipient_list.js:0
+#, python-format
+msgid "[%(name)s] (no email address)"
+msgstr "[%(name)s] (eメールアドレスなし)"
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
@@ -10692,12 +10761,12 @@ msgstr "例:  \"MyCompanyへようこそ\" または \"こんにちは、 {{ obj
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"bounce\""
-msgstr ""
+msgstr "例 \"bounce\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"catchall\""
-msgstr ""
+msgstr "例 \"catchall\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -10707,7 +10776,7 @@ msgstr "例:  \"mycompany.com\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"notifications\""
-msgstr ""
+msgstr "例 \"notifications\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -10887,6 +10956,13 @@ msgstr "モデル %s はドキュメント作成を受け付けません"
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__months
 msgid "months"
 msgstr "か月"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
+#, python-format
+msgid "ms"
+msgstr "ms"
 
 #. module: mail
 #. odoo-javascript
@@ -11108,6 +11184,13 @@ msgstr "あなたのエイリアス"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "{{ object.partner_id.lang }}"
 msgstr "{{ object.partner_id.lang }}"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/autoresize_input.xml:0
+#, python-format
+msgid "{{ props.placeholder }}"
+msgstr ""
 
 #. module: mail
 #. odoo-python

@@ -5,18 +5,19 @@
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2023
 # Jolien De Paepe, 2024
+# Larissa Manderfeld, 2024
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
-# Larissa Manderfeld, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +57,26 @@ msgstr "\"URL van\" mag niet leeg zijn."
 #, python-format
 msgid "\"URL to\" can not be empty."
 msgstr "\"URL naar\" mag niet leeg zijn."
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid ""
+"\"URL to\" cannot be set to \"/\". To change the homepage content, use the "
+"\"Homepage URL\" field in the website settings or the page properties on any"
+" custom page."
+msgstr ""
+"\"URL naar\" kan niet worden ingesteld op \"/\". Om de inhoud van de "
+"homepage te wijzigen, gebruik je het veld \"Homepage URL\" in de website-"
+"instellingen of de paginagegevens van een aangepaste pagina."
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" cannot be set to an existing page."
+msgstr "\"URL naar\" kan niet worden ingesteld op een bestaande pagina."
 
 #. module: website
 #. odoo-python
@@ -149,7 +170,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "&amp;lt;head&amp;gt; and &amp;lt;/body&amp;gt;"
-msgstr "&amp;lt;hoofd&amp;gt; en &amp;lt;/lichaam&amp;gt;"
+msgstr "&amp;lt;header&amp;gt; en &amp;lt;/body&amp;gt;"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
@@ -219,9 +240,13 @@ msgstr "+ Nieuwe website"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
+msgid "+1 555-555-5556"
+msgstr "+1 555-555-5556"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
-msgid "+1 (650) 555-0111"
-msgstr "+1 (650) 555-0111"
+msgid "+1 555-555-5556\""
+msgstr "+1 555-555-5556\""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
@@ -702,10 +727,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
 msgid ""
 "<i class=\"fa fa-1x fa-fw fa-phone me-1\"/>\n"
-"                        <span class=\"o_force_ltr\"><small>+1 (650) 555-0111</small></span>"
+"                        <span class=\"o_force_ltr\"><small>+1 555-555-5556</small></span>"
 msgstr ""
-"<i class=\"fa fa-1x fa-fw fa-phone me-1\"/><span "
-"class=\"o_force_ltr\"><small>+1 (650) 555-0111</small></span></i>"
+"<i class=\"fa fa-1x fa-fw fa-phone me-1\"/>\n"
+"                        <span class=\"o_force_ltr\"><small>+1 555-555-5556</small></span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
@@ -802,11 +827,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
 msgid ""
-"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 (650) "
-"555-0111</span>"
+"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 "
+"555-555-5556</span>"
 msgstr ""
-"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 (650) "
-"555-0111</span>"
+"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 "
+"555-555-5556</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -868,7 +893,7 @@ msgid ""
 "<i class=\"s_mega_menu_little_icons_icon fa fa-headphones fa-fw me-2\"/>\n"
 "                            <b>Help center</b>"
 msgstr ""
-"<i class=\"s_mega_menu_little_icons_icon fa fa-hoofdtelefoon fa-fw me-2\"/>\n"
+"<i class=\"s_mega_menu_little_icons_icon fa fa-headphones fa-fw me-2\"/>\n"
 "                            <b>Helpcentrum</b>"
 
 #. module: website
@@ -1107,7 +1132,7 @@ msgid ""
 "<span class=\"carousel-control-next-icon\"/>\n"
 "                <span class=\"visually-hidden\">Next</span>"
 msgstr ""
-"<span class=\"carrousel-control-next-icon\"/>\n"
+"<span class=\"carousel-control-next-icon\"/>\n"
 "                <span class=\"visually-hidden\">Volgende</span>"
 
 #. module: website
@@ -1164,8 +1189,8 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
-msgid "<span class=\"o_force_ltr\">+1 (650) 555-0111</span>"
-msgstr "<span class=\"o_force_ltr\">+1 (650) 555-0111</span>"
+msgid "<span class=\"o_force_ltr\">+1 555-555-5556</span>"
+msgstr "<span class=\"o_force_ltr\">+1 555-555-5556</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
@@ -1534,7 +1559,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_picture
 msgid "A punchy Headline"
-msgstr "Een treffende kop"
+msgstr "Een treffende titel"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -2448,6 +2473,7 @@ msgstr "Backend"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #, python-format
@@ -3217,6 +3243,7 @@ msgstr "Handelsdebiteuren"
 #. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor.xml:0
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
+#: code:addons/website/static/src/components/views/theme_preview.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/xml/website.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -3251,7 +3278,7 @@ msgstr "Kleren"
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "Clothes, Marketing, ..."
-msgstr ""
+msgstr "Kleding, marketing, ..."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3957,6 +3984,13 @@ msgid "Default Access Rights"
 msgstr "Standaard toegangsrechten"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_searchbar/options.js:0
+#, python-format
+msgid "Default Input Style"
+msgstr "Standaard invoerstijl"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website__default_lang_id
 msgid "Default Language"
 msgstr "Standaard taal"
@@ -4652,6 +4686,13 @@ msgstr "Bewerken %s"
 #, python-format
 msgid "Edit HTML anyway"
 msgstr "HTML toch bewerken"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.xml:0
+#, python-format
+msgid "Edit Head and Body Code"
+msgstr "Head- en bodycode bewerken"
 
 #. module: website
 #. odoo-javascript
@@ -5953,6 +5994,7 @@ msgstr "Kop 1"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Headings"
 msgstr "Hoofdtitels"
@@ -5963,27 +6005,42 @@ msgid "Headings 1"
 msgstr "Kop 1"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 2"
 msgstr "Kop 2"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 3"
 msgstr "Kop 3"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 4"
 msgstr "Kop 4"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 5"
 msgstr "Kop 5"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 6"
 msgstr "Kop 6"
 
@@ -6052,6 +6109,13 @@ msgstr "Verbergen"
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "Hide For"
 msgstr "Verbergen voor"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Hide the cookies bar"
+msgstr "Verberg de cookiesbalk"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
@@ -6345,17 +6409,6 @@ msgid ""
 msgstr ""
 "Als je analyse- of marketingtags moet toevoegen, injecteer dan code in je "
 "<head> of <body> in plaats daarvan."
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
-#, python-format
-msgid ""
-"If you need to add analytics or marketing tags, inject code in your header "
-"or body instead."
-msgstr ""
-"Als je analyse- of marketingtags moet toevoegen, injecteer dan code in je "
-"header of body."
 
 #. module: website
 #. odoo-javascript
@@ -7291,7 +7344,10 @@ msgid "Library"
 msgstr "Bibliotheek"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_searchbar/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_options
+#, python-format
 msgid "Light"
 msgstr "Licht"
 
@@ -7381,7 +7437,10 @@ msgid "Linkedin"
 msgstr "LinkedIn"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#, python-format
 msgid "Links"
 msgstr "Links"
 
@@ -8928,7 +8987,10 @@ msgid "Page Layout"
 msgstr "Pagina layout"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
+#, python-format
 msgid "Page Name"
 msgstr "Paginanaam"
 
@@ -9204,7 +9266,7 @@ msgstr "Plausible auth-sleutel"
 #: code:addons/website/static/src/snippets/s_website_form/000.js:0
 #, python-format
 msgid "Please fill in the form correctly."
-msgstr "Graag het formulier correct in te vullen."
+msgstr "Graag het formulier correct invullen."
 
 #. module: website
 #. odoo-javascript
@@ -9240,6 +9302,11 @@ msgstr "Kassa's"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Popup"
 msgstr "Pop-up"
+
+#. module: website
+#: model:ir.model,name:website.model_portal_wizard_user
+msgid "Portal User Config"
+msgstr "Portaal gebruikers instellingen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
@@ -9278,6 +9345,13 @@ msgstr "Prepend"
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "Preset"
 msgstr "Voorinstellen"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
+#, python-format
+msgid "Press %(key)s to exit full screen"
+msgstr "Druk%(key)s om het volledige scherm te verlaten"
 
 #. module: website
 #. odoo-javascript
@@ -9347,6 +9421,13 @@ msgstr "Pakketprijzen"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Primary"
 msgstr "Primair"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Primary Buttons"
+msgstr "Primaire knoppen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9629,6 +9710,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_features
 msgid "Rebranding"
 msgstr "Rebranding"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+#, python-format
+msgid "Recent Facebook Issues"
+msgstr "Recente Facebook-problemen"
 
 #. module: website
 #. odoo-javascript
@@ -10186,6 +10274,13 @@ msgid "Secondary"
 msgstr "Secundair"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Secondary Buttons"
+msgstr "Secundaire knoppen"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Secondary Style"
 msgstr "Secundaire stijl"
@@ -10499,6 +10594,13 @@ msgstr "Laat reCaptcha beleid zien"
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
 msgid "Show site map"
 msgstr "Toon plattegrond"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Show the cookies bar"
+msgstr "Toon de cookiesbalk"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -10971,8 +11073,11 @@ msgid "Structure"
 msgstr "Structuur"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_searchbar/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#, python-format
 msgid "Style"
 msgstr "Stijl"
 
@@ -11159,10 +11264,13 @@ msgid "Test your robots.txt with Google Search Console"
 msgstr "Test je robots.txt met Google Search Console"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.grid_layout_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
+#, python-format
 msgid "Text"
 msgstr "Tekst"
 
@@ -11261,6 +11369,8 @@ msgid ""
 "The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
 "Change that website's company first."
 msgstr ""
+"Het bedrijf %(company_name)r kan niet worden gearchiveerd omdat het een gekoppelde website %(website_name)r heeft.\n"
+"Wijzig eerst het bedrijf van die website."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -11558,8 +11668,19 @@ msgstr "Derde menu"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
-msgid "This URL is contained in the '%s' of the following '%s'"
-msgstr "Deze URL is opgenomen in de '%s' van de volgende link '%s'"
+msgid "This URL is contained in the “%(field)s” of the following “%(model)s”"
+msgstr "Deze URL is opgenomen in de “%(field)s” van de volgende “%(model)s”"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+#, python-format
+msgid ""
+"This block will temporarily not be shown on mobile due to recent Facebook "
+"issues."
+msgstr ""
+"Deze blok wordt tijdelijk niet weergegeven op mobiele apparaten vanwege "
+"recente problemen met Facebook."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_0_s_three_columns
@@ -11754,6 +11875,7 @@ msgstr "Deze view arch is aangepast"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#: code:addons/website/static/src/systray_items/website_switcher.js:0
 #, python-format
 msgid "This website does not have a domain configured."
 msgstr "Deze website heeft geen domein geconfigureerd."
@@ -11996,7 +12118,7 @@ msgstr "Overgang"
 #: code:addons/website/static/src/systray_items/translate_website.xml:0
 #, python-format
 msgid "Translate"
-msgstr "Vertaal"
+msgstr "Vertalen"
 
 #. module: website
 #. odoo-javascript
@@ -12503,7 +12625,7 @@ msgstr "Video"
 #: model:ir.model.fields,field_description:website.field_website_page__view_id
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_form_view
 msgid "View"
-msgstr "Bekijk"
+msgstr "Weergave"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__arch
@@ -12514,7 +12636,7 @@ msgstr "Hiërarchie bekijken"
 #. module: website
 #: model:ir.actions.client,name:website.action_website_view_hierarchy
 msgid "View Hierarchy"
-msgstr "Zie hiërarchie"
+msgstr "Bekijk hiërarchie"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__name
@@ -12771,6 +12893,13 @@ msgstr ""
 "Wij geloven dat elk fitnesstraject uniek is. Onze aanpak begint met het "
 "begrijpen van je fitnessambities, je huidige levensstijl en eventuele "
 "uitdagingen waarmee je wordt geconfronteerd."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+#, python-format
+msgid "We couldn't find the Facebook page"
+msgstr "We konden de Facebook-pagina niet vinden"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -13323,6 +13452,13 @@ msgstr "Jaar"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "Yes"
+msgstr "Ja"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.js:0
 #, python-format
 msgid ""
@@ -13402,11 +13538,30 @@ msgstr ""
 "de instellingen te wijzigen"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
+"Je kunt dit websitemenu niet verwijderen, aangezien dit fungeert als het "
+"standaard bovenliggende menu voor nieuwe websites (bijvoorbeeld /shop, "
+"/event, ...)."
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "You cannot duplicate this field."
 msgstr "Je kan dit veld niet dupliceren."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+#, python-format
+msgid "You didn't provide a valid Facebook link"
+msgstr "Je hebt geen geldige Facebook-link opgegeven"
 
 #. module: website
 #. odoo-python
@@ -13432,13 +13587,6 @@ msgid ""
 msgstr ""
 "Je hebt deze pagina verborgen van de zoekresultaten. De pagina wordt niet "
 "geïndexeerd door zoekmachines."
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-#, python-format
-msgid "You haven't defined your domain"
-msgstr "Je hebt je domein niet gedefinieerd"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -13749,7 +13897,7 @@ msgstr "btn-secondary"
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "business"
-msgstr ","
+msgstr " "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets

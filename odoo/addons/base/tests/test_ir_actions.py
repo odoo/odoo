@@ -293,20 +293,25 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         # Test: partner updated
         self.assertEqual(self.test_partner.country_id.name, 'TestUpdatedCountry', 'ir_actions_server: country name should have been updated through relation')
 
+        # update a readonly field
+        self.action.write({
+            'state': 'object_write',
+            'update_path': 'country_id.image_url',
+            'value': "/base/static/img/country_flags/be.png",
+        })
+        self.assertEqual(self.test_partner.country_id.image_url, "/base/static/img/country_flags/ty.png", 'ir_actions_server: country flag has this value before the update')
+        run_res = self.action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: update record action correctly finished should return False')
+        # Test: partner updated
+        self.assertEqual(self.test_partner.country_id.image_url, "/base/static/img/country_flags/be.png", 'ir_actions_server: country should have been updated through a readonly field')
+        self.assertEqual(self.test_partner.country_id.code, "TY", 'ir_actions_server: country code is still TY')
+
         # input an invalid path
         with self.assertRaises(ValidationError):
             self.action.write({
                 'state': 'object_write',
                 'update_path': 'country_id.name.foo',
                 'value': 'DoesNotMatter',
-            })
-            self.action.flush_recordset(['update_path', 'update_field_id'])
-
-        # update a readonly field
-            self.action.write({
-                'state': 'object_write',
-                'update_path': 'country_id.id',
-                'value': 0,
             })
             self.action.flush_recordset(['update_path', 'update_field_id'])
 
@@ -509,6 +514,16 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             # should warn in logs (hence mute_logger)
             self.action.with_context(self.context).run()
         self.assertEqual(num_requests, 2)
+
+    def test_90_convert_to_float(self):
+        # make sure eval_value convert the value into float for float-type fields
+        self.action.write({
+            'state': 'object_write',
+            'update_path': 'partner_latitude',
+            'value': '20.99',
+        })
+        self.assertEqual(self.action._eval_value()[self.action.id], 20.99)
+
 
 class TestCommonCustomFields(common.TransactionCase):
     MODEL = 'res.partner'
@@ -736,7 +751,7 @@ class TestCustomFields(TestCommonCustomFields):
 
         # create a non-computed field, and assert how many queries it takes
         model_id = self.env['ir.model']._get_id('res.partner')
-        query_count = 44
+        query_count = 48
         with self.assertQueryCount(query_count):
             self.env.registry.clear_cache()
             self.env['ir.model.fields'].create({

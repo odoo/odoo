@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +32,7 @@ msgstr " Please correct the number and try again."
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__active
@@ -55,7 +55,7 @@ msgstr "Đã lưu trữ"
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 #, python-format
 msgid "Are you sure you want to unblacklist this Phone Number?"
-msgstr ""
+msgstr "Bạn có chắc chắn muốn bỏ hạn chế Số điện thoại này không?"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
@@ -96,7 +96,7 @@ msgstr "Số điện thoại bị hạn chế là số điện thoại bàn"
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
 msgid "Blacklisted phone numbers won't receive SMS Mailings anymore."
-msgstr ""
+msgstr "Các số điện thoại bị hạn chế sẽ không nhận được Thư SMS nữa."
 
 #. module: phone_validation
 #. odoo-python
@@ -200,8 +200,31 @@ msgstr ""
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
+msgid "Impossible number %s: not a valid country prefix."
+msgstr "Số không đúng %s: không phải là tiền tố quốc gia hợp lệ."
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
+msgid "Impossible number %s: not enough digits."
+msgstr "Số không đúng %s: không đủ chữ số."
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
 msgid "Impossible number %s: probably invalid number of digits."
 msgstr "Impossible number %s: probably invalid number of digits."
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+#: code:addons/phone_validation/tools/phone_validation.py:0
+#: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
+msgid "Impossible number %s: too many digits."
+msgstr "Số không đúng %s: quá nhiều chữ số."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__mobile_blacklisted
@@ -275,7 +298,7 @@ msgstr "Tin nhắn"
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 #, python-format
 msgid "Missing definition of phone fields."
-msgstr ""
+msgstr "Thiếu định nghĩa trường điện thoại."
 
 #. module: phone_validation
 #: model:ir.model.constraint,message:phone_validation.constraint_phone_blacklist_unique_number
@@ -286,7 +309,7 @@ msgstr "Number already exists"
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction_counter
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_has_error_counter
@@ -352,7 +375,7 @@ msgstr "Điện thoại/di động"
 #, python-format
 msgid ""
 "Please enter at least 3 characters when searching a Phone/Mobile number."
-msgstr ""
+msgstr "Vui lòng nhập ít nhất 3 ký tự khi tìm kiếm Số điện thoại/di động."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__reason

@@ -22,7 +22,7 @@ class WebsiteSaleProductConfiguratorController(Controller):
 
         already_configured = bool(combination)
         if not force_dialog and not has_optional_products and (
-            not product.has_configurable_attributes or already_configured
+            product.product_variant_count <= 1 or already_configured
         ):
             # The modal is not shown if there are no optional products and
             # the main product either has no variants or is already configured
@@ -60,7 +60,18 @@ class WebsiteSaleProductConfiguratorController(Controller):
     def optional_product_items(self, product_id, add_qty=1, **kw):
         product = request.env['product.product'].browse(int(product_id))
 
-        return request.env['ir.ui.view']._render_template(
+        exclude_product_tmpl_ids = kw.get('exclude_product_tmpl_ids')
+        if exclude_product_tmpl_ids:
+            # Temporarily exclude products from being in `optional_product_ids`
+            # to avoid issues with mutually recursive/cyclic optional products
+            optional_products = product.optional_product_ids
+            exclude_products = request.env['product.template'].browse(exclude_product_tmpl_ids)
+            request.env.cache.update(
+                product,
+                product._fields['optional_product_ids'],
+                [(optional_products - exclude_products).ids],
+            )
+        res = request.env['ir.ui.view']._render_template(
             'website_sale_product_configurator.optional_product_items',
             {
                 'product': product,
@@ -69,3 +80,11 @@ class WebsiteSaleProductConfiguratorController(Controller):
                 'add_qty': float(add_qty) or 1.0,
             }
         )
+        if exclude_product_tmpl_ids:
+            # Re-add the excluded products after rendering the configurator template
+            request.env.cache.update(
+                product,
+                product._fields['optional_product_ids'],
+                [optional_products.ids],
+            )
+        return res

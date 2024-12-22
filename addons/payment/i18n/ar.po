@@ -3,15 +3,15 @@
 # 	* payment
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2023
-# Wil Odoo, 2023
+# Mustafa Rawi <mustafa@mrawi.com>, 2023
+# Wil Odoo, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -146,11 +146,6 @@ msgid ""
 "account</span>"
 msgstr ""
 "<span><i class=\"oi oi-arrow-right\"/> كيفية تهيئة حسابك على PayPal</span> "
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.form
-msgid "<span>Your payment methods</span>"
-msgstr "<span>طرق الدفع الخاصة بك</span> "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1648,6 +1643,11 @@ msgid "Test Mode"
 msgstr "وضع الاختبار "
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Thank you!"
+msgstr "شكرًا لك!"
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
@@ -2290,6 +2290,11 @@ msgid "Your payment has not been processed yet."
 msgstr "لم تتم معالجة عملية الدفع بعد. "
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Your payment methods"
+msgstr "طرق الدفع الخاصة بك "
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "ZIP"
 msgstr "الرمز البريدي"
@@ -2298,16 +2303,6 @@ msgstr "الرمز البريدي"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
 msgstr "الرمز البريدي"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "danger"
-msgstr "خطر "
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "info"
-msgstr "معلومات "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -2326,11 +2321,6 @@ msgid "provider"
 msgstr "مزود "
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "success"
-msgstr "نجاح "
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid ""
 "to make this\n"
@@ -2338,8 +2328,3 @@ msgid ""
 msgstr ""
 "لإتمام عملية\n"
 "                    الدفع. "
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
-msgstr "تحذير "

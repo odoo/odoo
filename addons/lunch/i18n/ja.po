@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -583,6 +583,13 @@ msgstr "取消"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Cancelled"
 msgstr "取消済"
+
+#. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_supplier.py:0
+#, python-format
+msgid "Cannot send an email to this supplier!"
+msgstr "このサプライヤにEメールを送信できません!"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
@@ -1302,32 +1309,32 @@ msgid "Lunch: Supplier Order"
 msgstr "ランチ: サプライヤオーダ"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_218
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_217
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr "ランチ：チャットアラート通知（オフィス３へのアラート）"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_219
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_218
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr "ランチ: Coin gourmandに自動的にメールを送付"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_214
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_213
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr "ランチ：ランチサプライヤに自動的にメールを送付"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_220
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_219
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr "ランチ：Pizza Inn に自動的にメールを送付"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_222
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_221
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr "ランチ：Sushi Shop に自動的にメールを送付"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_221
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_220
 msgid "Lunch: send automatic email to The Corner"
 msgstr "ランチ：The Corner に自動的にメールを送付"
 
@@ -1400,7 +1407,7 @@ msgstr "マイアカウント"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_form
 msgid "My Account History"
-msgstr "自分のアカウント履歴"
+msgstr "マイアカウント履歴"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
@@ -1484,6 +1491,20 @@ msgstr "配達なし"
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_account
 msgid "No cash move yet"
 msgstr "まだ入出金がありません"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/views/no_content_helper.xml:0
+#, python-format
+msgid "No location found"
+msgstr "ロケーションが見つかりません"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+#, python-format
+msgid "No lunch location available."
+msgstr "ランチロケーションが利用できません。"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
@@ -1685,6 +1706,13 @@ msgstr "マルゲリータピザ"
 #: model:lunch.product,name:lunch.product_vege
 msgid "Pizza Vegetarian"
 msgstr "ベジタリアンピザ"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/views/no_content_helper.xml:0
+#, python-format
+msgid "Please create a location to start ordering."
+msgstr "オーダを開始するにはロケーションを作成して下さい。"
 
 #. module: lunch
 #: model_terms:lunch.alert,message:lunch.alert_office_3
@@ -2106,7 +2134,7 @@ msgstr "時間帯"
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__new
 msgid "To Order"
-msgstr "注文する"
+msgstr "オーダ予定"
 
 #. module: lunch
 #. odoo-javascript

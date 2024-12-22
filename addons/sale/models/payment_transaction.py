@@ -18,10 +18,12 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         if self.provider_id.so_reference_type == 'so_name':
             order_reference = order.name
-        else:
-            # self.provider_id.so_reference_type == 'partner'
+        elif self.provider_id.so_reference_type == 'partner':
             identification_number = order.partner_id.id
             order_reference = '%s/%s' % ('CUST', str(identification_number % 97).rjust(2, '0'))
+        else:
+            # self.provider_id.so_reference_type is empty
+            order_reference = False
 
         invoice_journal = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
         if invoice_journal:
@@ -92,10 +94,9 @@ class PaymentTransaction(models.Model):
 
     def _set_authorized(self, state_message=None, **kwargs):
         """ Override of payment to confirm the quotations automatically. """
-        super()._set_authorized(state_message=state_message, **kwargs)
-        confirmed_orders = self._check_amount_and_confirm_order()
-        confirmed_orders._send_order_confirmation_mail()
-        (self.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
+        txs_to_process = super()._set_authorized(state_message=state_message, **kwargs)
+        confirmed_orders = txs_to_process._check_amount_and_confirm_order()
+        (txs_to_process.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
 
     def _log_message_on_linked_documents(self, message):
         """ Override of payment to log a message on the sales orders linked to the transaction.
@@ -106,15 +107,15 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._log_message_on_linked_documents(message)
-        self = self.with_user(SUPERUSER_ID)  # Log messages as 'OdooBot'
+        author = self.env.user.partner_id if self.env.uid == SUPERUSER_ID else self.partner_id
         for order in self.sale_order_ids or self.source_transaction_id.sale_order_ids:
-            order.message_post(body=message)
+            order.message_post(body=message, author_id=author.id)
 
     def _reconcile_after_done(self):
         """ Override of payment to automatically confirm quotations and generate invoices. """
         confirmed_orders = self._check_amount_and_confirm_order()
-        confirmed_orders._send_order_confirmation_mail()
-        (self.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
+        payment_txs = self.filtered(lambda tx: tx.operation != 'validation')
+        (payment_txs.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
 
         auto_invoice = str2bool(
             self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'))

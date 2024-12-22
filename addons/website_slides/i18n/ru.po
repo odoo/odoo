@@ -16,19 +16,20 @@
 # Denis Trepalin <zekarious@gmail.com>, 2023
 # Alena Vlasova, 2023
 # Максим Дронь <dronmax@gmail.com>, 2023
-# Collex100, 2023
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2024
 # alenafairy, 2024
+# Collex100, 2024
+# Nadia Martynova, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:10+0000\n"
-"Last-Translator: alenafairy, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -487,11 +488,9 @@ msgstr "<i class=\"fa fa-comments\"/> Комментарии ("
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<i class=\"fa fa-desktop me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">Fullscreen</span>"
+"<i class=\"fa fa-desktop me-xl-2 my-1\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">Fullscreen</span>"
 msgstr ""
-"<i class=\"fa fa-desktop me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">Полный экран</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -665,11 +664,9 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<i class=\"fa fa-share-alt me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">Share</span>"
+"<i class=\"fa fa-share-alt me-xl-2 my-1\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">Share</span>"
 msgstr ""
-"<i class=\"fa fa-share-alt me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">Поделиться</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -1091,11 +1088,8 @@ msgstr "Фрукты"
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid ""
-"A good course has a structure. Pick a name for your first section and click "
-"<b>Save</b> to create it."
+"A good course has a structure. Pick a name for your first <b>Section</b>."
 msgstr ""
-"Хороший курс имеет определенную структуру. Выберите название для первого "
-"раздела и нажмите кнопку <b>Сохранить</b>, чтобы создать его."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_4
@@ -1297,7 +1291,6 @@ msgstr "Добавить комментарий"
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #, python-format
 msgid "Add Content"
@@ -1357,7 +1350,7 @@ msgstr "Добавить контакты..."
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 msgid "Add quiz"
-msgstr ""
+msgstr "Добавить тест"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -1680,7 +1673,7 @@ msgstr "Назад"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid "Back to course"
-msgstr ""
+msgstr "Назад к курсу"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_default_background_image_url
@@ -1945,6 +1938,13 @@ msgid "Clear filters"
 msgstr "Очистить фильтры"
 
 #. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid "Click <b>Save</b> to create it."
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
 msgid "Click here to get started"
 msgstr "Нажмите здесь чтобы начать"
@@ -1974,8 +1974,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
-msgid "Click on the <b>Create</b> button to create your first course."
-msgstr "Нажмите на кнопку \" <b>Создать\"</b>, чтобы создать свой первый курс."
+msgid "Click on the <b>Save</b> button to create your first course."
+msgstr ""
 
 #. module: website_slides
 #. odoo-javascript
@@ -2972,7 +2972,7 @@ msgstr "Встраивание просмотров"
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "Embed code"
-msgstr ""
+msgstr "Код для вставки"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
@@ -3078,7 +3078,7 @@ msgstr "Упражнения"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid "Exit Fullscreen"
-msgstr ""
+msgstr "Выход из полноэкранного режима"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_code_external
@@ -3337,6 +3337,7 @@ msgstr "Ключ к документу Google"
 
 #. module: website_slides
 #. odoo-python
+#: code:addons/website_slides/models/slide_slide.py:0
 #: code:addons/website_slides/models/slide_slide.py:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__video_source_type__google_drive
 #, python-format
@@ -4697,6 +4698,13 @@ msgid "Ongoing Courses"
 msgstr "Текущие курсы"
 
 #. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/controllers/mail.py:0
+#, python-format
+msgid "Only a single review can be posted per course."
+msgstr "На один курс можно разместить только один отзыв."
+
+#. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__public
 msgid "Open"
 msgstr "Открыть"
@@ -4708,12 +4716,6 @@ msgstr "Открыть"
 #, python-format
 msgid "Operation not supported"
 msgstr "Операция не поддерживается"
-
-#. module: website_slides
-#: code:addons/website_slides/controllers/mail.py:0
-#, python-format
-msgid "Only a single review can be posted per course."
-msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__lang
@@ -4762,7 +4764,7 @@ msgstr "У партнера новый контент"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_pivot
 msgid "Pivot"
-msgstr "Точка Вращения"
+msgstr "Сводная таблица"
 
 #. module: website_slides
 #. odoo-javascript
@@ -4915,7 +4917,7 @@ msgstr "Прогресс"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_main
 #, python-format
 msgid "Progress bar"
-msgstr ""
+msgstr "Прогресс-бар"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promoted_slide_id
@@ -5719,7 +5721,7 @@ msgid ""
 " "
 msgstr ""
 "Слайд с вопросами должен быть отмечен как выполненный при правильном ответе "
-"на все вопросы"
+"на все вопросы "
 
 #. module: website_slides
 #. odoo-javascript
@@ -6494,6 +6496,11 @@ msgid "Use Course Groups to classify and organize your Courses."
 msgstr "Используйте группы курсов для классификации и организации курсов."
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
+msgid "Use template"
+msgstr "Используйте шаблон"
+
+#. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
 msgid "Used to categorize and filter displayed channels/courses"
 msgstr ""
@@ -6587,6 +6594,7 @@ msgstr "Просмотров •"
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
+#: code:addons/website_slides/models/slide_slide.py:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__video_source_type__vimeo
 #, python-format
 msgid "Vimeo"
@@ -6631,7 +6639,7 @@ msgstr "Голосование и комментарии для этого ку�
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Waiting for validation"
-msgstr "Жду подтверждения..."
+msgstr "Жду подтверждения"
 
 #. module: website_slides
 #. odoo-python
@@ -7268,6 +7276,13 @@ msgid "e.g. \"Which animal cannot fly?\""
 msgstr "например, \"Какое животное не умеет летать?\""
 
 #. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "e.g. \"{{placeholder || \"another animal\"}}\""
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add
 msgid "e.g. Computer Science for kids"
 msgstr "например, Компьютерные науки для детей"
@@ -7301,18 +7316,18 @@ msgstr "например, \"Ваш уровень"
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_root
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "eLearning"
-msgstr "Онлайн обучение"
+msgstr "eLearning"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_partner__slide_channel_ids
 #: model:ir.model.fields,field_description:website_slides.field_res_users__slide_channel_ids
 msgid "eLearning Courses"
-msgstr "Онлайн Курсы"
+msgstr "eLearning Курсы"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid "eLearning Overview"
-msgstr "Обзор Обучения"
+msgstr "eLearning Обзор"
 
 #. module: website_slides
 #. odoo-javascript
@@ -7424,7 +7439,7 @@ msgstr "запрос"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
 #, python-format
 msgid "sign in"
-msgstr "Вход"
+msgstr "вход"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join

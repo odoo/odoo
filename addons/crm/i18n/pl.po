@@ -3,15 +3,17 @@
 # 	* crm
 # 
 # Translators:
-# Wil Odoo, 2023
+# Damian Ratus, 2024
+# Wil Odoo, 2024
+# Marta Wacławek, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:54+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Marta Wacławek, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,21 +44,21 @@ msgstr "# Zaległe szanse"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_unassigned_count
 msgid "# Unassigned Leads"
-msgstr "# Nieprzypisane sygnały"
+msgstr "# Nieprzypisane leady"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "%(assigned)s leads allocated among %(team_count)s teams."
-msgstr "%(assigned)ssygnały przydzielone %(team_count)s zespołom."
+msgstr "%(assigned)sleady przydzielone %(team_count)s zespołom."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "%(assigned)s leads allocated to %(team_name)s team."
-msgstr "%(assigned)ssygnałów przydzielonych zespołowi %(team_name)s."
+msgstr "%(assigned)sleadów przydzielonych zespołowi %(team_name)s."
 
 #. module: crm
 #. odoo-python
@@ -70,7 +72,7 @@ msgstr "%(attach_name)s(od %(lead_name)s)"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "%(duplicates)s duplicates leads have been merged."
-msgstr "%(duplicates)sduplikaty sygnałów zostały połączone."
+msgstr "%(duplicates)sduplikaty leadów zostały połączone."
 
 #. module: crm
 #. odoo-python
@@ -78,8 +80,7 @@ msgstr "%(duplicates)sduplikaty sygnałów zostały połączone."
 #, python-format
 msgid ""
 "%(members_assigned)s leads assigned among %(member_count)s salespersons."
-msgstr ""
-"%(members_assigned)ssygnały przydzielone %(member_count)s sprzedawcom."
+msgstr "%(members_assigned)sleady przydzielone %(member_count)s sprzedawcom."
 
 #. module: crm
 #. odoo-python
@@ -161,6 +162,9 @@ msgid ""
 "title=\"By saving this change, the customer email will also be updated.\" "
 "invisible=\"not partner_email_update\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"By saving this change, the customer email will also be updated.\" "
+"invisible=\"not partner_email_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -169,6 +173,9 @@ msgid ""
 "title=\"By saving this change, the customer phone number will also be "
 "updated.\" invisible=\"not partner_phone_update\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"By saving this change, the customer phone number will also be "
+"updated.\" invisible=\"not partner_phone_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -176,6 +183,8 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">Similar Leads</span>\n"
 "                                    <span class=\"o_stat_text\" invisible=\"duplicate_lead_count &gt; 1\">Similar Lead</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">Podobne leady</span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"duplicate_lead_count &gt; 1\">Podobne leady</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
@@ -183,6 +192,8 @@ msgid ""
 "<span class=\"o_stat_text\" invisible=\"not use_leads\">Leads</span>\n"
 "                        <span class=\"o_stat_text\" invisible=\"use_leads\">Opportunities</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"not use_leads\">Leady</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"use_leads\">Szanse</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -229,7 +240,7 @@ msgid ""
 "<span> leads assigned this month\n"
 "                            on a maximum of </span>"
 msgstr ""
-"<span> sygnały przypisane w tym miesiącu\n"
+"<span> leady przypisane w tym miesiącu\n"
 "na maksymalnie </span>"
 
 #. module: crm
@@ -251,6 +262,11 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>Okresowe przypisywanie potencjalnych klientów na podstawie reguł</span><br/>\n"
+"                                <span invisible=\"not crm_use_auto_assignment\">\n"
+"                                    Wszystkie zespoły sprzedaży będą używać tego ustawienia domyślnie, chyba że\n"
+"                                   określono inaczej.\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -378,7 +394,7 @@ msgstr "Aktywne"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__lead_tomerge_ids
 msgid "Active Leads"
-msgstr "Aktywne sygnały"
+msgstr "Aktywne leady"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action
@@ -418,8 +434,8 @@ msgstr "Dekoracja wyjątku aktywności"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.mail_activity_plan_menu_config_lead
-msgid "Activity Plan"
-msgstr ""
+msgid "Activity Plans"
+msgstr "Plany działania"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_state
@@ -507,12 +523,12 @@ msgstr "Domena aliasu"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain
 msgid "Alias Domain Name"
-msgstr ""
+msgstr "Alias Domain Name"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_full_name
 msgid "Alias Email"
-msgstr ""
+msgstr "Alias Email"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_name
@@ -587,7 +603,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Assign Leads"
-msgstr "Przypisz sygnały"
+msgstr "Przypisz leady"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
@@ -677,7 +693,7 @@ msgstr "Automatyczne prawdopodobieństwo"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_max
 msgid "Average Leads Capacity (on 30 days)"
-msgstr "Średnia liczba sygnałów (na 30 dni)"
+msgstr "Średnia liczba leadów (na 30 dni)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_blacklisted
@@ -731,7 +747,7 @@ msgstr "Etapy CRM"
 #. module: crm
 #: model:ir.actions.server,name:crm.ir_cron_crm_lead_assign_ir_actions_server
 msgid "CRM: Lead Assignment"
-msgstr "CRM: Przypisywanie sygnałów"
+msgstr "CRM: Przypisywanie leadów"
 
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
@@ -777,7 +793,7 @@ msgid ""
 "converting them into opportunities and assigning them to a salesperson."
 msgstr ""
 "Zaznacz to pole, aby filtrować i kwalifikować przychodzące zapytania jako "
-"sygnały, a następnie przekształcić je w szanse i przypisać je sprzedającemu."
+"leady, a następnie przekształcić je w szanse i przypisać je sprzedającemu."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__use_opportunities
@@ -800,8 +816,8 @@ msgid ""
 "Classify and analyze your lead/opportunity categories like: Training, "
 "Service"
 msgstr ""
-"Klasyfikuj i analizuj swoje kategorie potencjalnych sygnałów/szans, takie "
-"jak: szkolenie, serwis"
+"Klasyfikuj i analizuj swoje kategorie potencjalnych leadów/szans, takie jak:"
+" szkolenie, serwis"
 
 #. module: crm
 #. odoo-javascript
@@ -892,7 +908,7 @@ msgstr "Gratulacje, powodzenia w łowieniu tak dużych ryb! :)"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Consider leads created as of the:"
-msgstr "Weź pod uwagę sygnały utworzone od dnia:"
+msgstr "Weź pod uwagę leady utworzone od dnia:"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -936,7 +952,7 @@ msgstr "Data konwersji"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Conversion Date from Lead to Opportunity"
-msgstr "Data konwersji z sygnału do szansy."
+msgstr "Data konwersji z leadu do szansy."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -946,12 +962,12 @@ msgstr "Opcje konwersji"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
 msgid "Convert Lead to Opportunity (in mass)"
-msgstr "Przekształcenie sygnału w szansę (masowo)"
+msgstr "Przekształcenie leadu w szansę (masowo)"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
 msgid "Convert Lead to Opportunity (not in mass)"
-msgstr "Przekształcenie sygnału w szansę (nie masowo)"
+msgstr "Przekształcenie leadu w szansę (nie masowo)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -986,7 +1002,7 @@ msgid ""
 "Convert visitors of your website into leads and perform data enrichment "
 "based on their IP address"
 msgstr ""
-"Przekształcanie odwiedzających witrynę w sygnały i wzbogacanie danych w "
+"Przekształcanie odwiedzających witrynę w leady i wzbogacanie danych w "
 "oparciu o ich adres IP."
 
 #. module: crm
@@ -1013,7 +1029,7 @@ msgstr "Kraj"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_website_crm_iap_reveal
 msgid "Create Leads/Opportunities from your website's traffic"
-msgstr "Twórz sygnały/szanse z ruchu w Twojej witrynie"
+msgstr "Twórz leady/szanse z ruchu w Twojej witrynie"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
@@ -1023,7 +1039,7 @@ msgstr "Utwórz szansę"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid "Create a Lead"
-msgstr "Utwórz sygnał"
+msgstr "Utwórz lead"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -1038,7 +1054,7 @@ msgstr "Utwórz plan cykliczny"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_mining_in_pipeline
 msgid "Create a lead mining request directly from the opportunity pipeline."
-msgstr "Utwórz żądanie wyszukiwania sygnałów bezpośrednio z lejka szans."
+msgstr "Utwórz żądanie wyszukiwania leadów bezpośrednio z lejka szans."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__create
@@ -1053,7 +1069,7 @@ msgstr "Utwórz nowego klienta"
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
 #, python-format
 msgid "Create a new lead"
-msgstr "Utwórz nowy sygnał"
+msgstr "Utwórz nowy lead"
 
 #. module: crm
 #. odoo-python
@@ -1348,6 +1364,11 @@ msgid "Email cc:"
 msgstr "Email cc:"
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_crm_team__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "Domena e-mail, np. „example.com” w „odoo@example.com”."
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Email:"
 msgstr "Email:"
@@ -1360,17 +1381,17 @@ msgstr "E-mail: Demo powitalne"
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__auto
 msgid "Enrich all leads automatically"
-msgstr "Automatycznie wzbogacaj wszystkie sygnały"
+msgstr "Automatycznie wzbogacaj wszystkie leady"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_enrich_auto
 msgid "Enrich lead automatically"
-msgstr "Automatycznie wzbogacaj sygnały"
+msgstr "Automatycznie wzbogacaj leady"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__manual
 msgid "Enrich leads on demand only"
-msgstr "Wzbogacaj sygnały tylko na żądanie"
+msgstr "Wzbogacaj leady tylko na żądanie"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_enrich
@@ -1378,13 +1399,13 @@ msgid ""
 "Enrich your leads automatically with company data based on their email "
 "address."
 msgstr ""
-"Automatycznie wzbogacaj swoje sygnały o dane firmy na podstawie ich adresu "
+"Automatycznie wzbogacaj swoje leady o dane firmy na podstawie ich adresu "
 "e-mail."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Enrich your leads with company data based on their email addresses"
-msgstr "Wzbogać swoje sygnały o dane firmowe na podstawie ich adresów e-mail"
+msgstr "Wzbogać swoje leady o dane firmowe na podstawie ich adresów e-mail"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -1403,7 +1424,7 @@ msgstr "Oszacowanie daty wygrania szansy"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_exceeded
 msgid "Exceed monthly lead assignement"
-msgstr "Przekroczenie miesięcznego przydziału sygnałów"
+msgstr "Przekroczenie miesięcznego przydziału leadów"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_deadline
@@ -1480,7 +1501,7 @@ msgstr ""
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency_field
 msgid "Fields that can be used for predictive lead scoring computation"
 msgstr ""
-"Pola, które mogą być używane do obliczania predykcyjnego scoringu sygnału"
+"Pola, które mogą być używane do obliczania predykcyjnego scoringu leadu"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
@@ -1515,8 +1536,8 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 200 credits for free."
 msgstr ""
-"Dla zespołu sprzedaży nie ma nic gorszego niż brak sygnałów. Na szczęście, "
-"wystarczy kilka kliknięć, by wygenerować sygnały na pozyskanie klientów "
+"Dla zespołu sprzedaży nie ma nic gorszego niż brak leadów. Na szczęście, "
+"wystarczy kilka kliknięć, by wygenerować leady na pozyskanie klientów "
 "dopasowane do Twoich potrzeb: wielkości firmy, branży itp. Aby pomóc Ci "
 "przetestować tę funkcję, oferujemy 200 kredytów za darmo."
 
@@ -1561,15 +1582,13 @@ msgstr "Przyszłe czynności"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_mine
 msgid "Generate new leads based on their country, industries, size, etc."
-msgstr ""
-"Generowanie nowych sygnałów w oparciu o ich kraj, branżę, wielkość itp."
+msgstr "Generowanie nowych leadów w oparciu o ich kraj, branżę, wielkość itp."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Generate new leads based on their country, industry, size, etc."
 msgstr ""
-"Wygeneruj potencjalne sygnały bazując na ich kraju, sektorze, rozmiarze, "
-"itp."
+"Wygeneruj potencjalne leady bazując na ich kraju, sektorze, rozmiarze, itp."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -1717,7 +1736,7 @@ msgstr "Importuj i synchronizuj"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Import Template for Leads & Opportunities"
-msgstr "Szablon importu dla sygnałów i szans"
+msgstr "Szablon importu dla leadów i szans"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1803,7 +1822,7 @@ msgstr "Czy prawdopodobieństwo jest zautomatyzowane?"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr ""
+msgstr "JSON, który mapuje identyfikatory z pola many2one na spędzone sekundy"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__function
@@ -1823,12 +1842,12 @@ msgstr "Stan Kanban"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
 msgid "Kpi Crm Lead Created Value"
-msgstr ""
+msgstr "Kpi Crm Lead Created Value"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won_value
 msgid "Kpi Crm Opportunities Won Value"
-msgstr ""
+msgstr "Kpi Crm Zdobyte możliwości"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_active_count
@@ -1853,7 +1872,7 @@ msgstr "Ostatnia akcja"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Last Automation:"
-msgstr ""
+msgstr "Ostatnia automatyzacja:"
 
 #. module: crm
 #. odoo-python
@@ -1916,7 +1935,7 @@ msgstr "Sygnał"
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_enabled
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_enabled
 msgid "Lead Assign"
-msgstr "Przypisz sygnał"
+msgstr "Przypisz lead"
 
 #. module: crm
 #. odoo-python
@@ -1938,53 +1957,53 @@ msgstr "Wzbogacanie potencjalnych klientów"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Generation"
-msgstr "Generacja potencjalnych sygnałów"
+msgstr "Generacja potencjalnych leadów"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Mining"
-msgstr "Wydobycie sygnałów"
+msgstr "Wydobycie leadów"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.mail_activity_plan_action_lead
 msgid "Lead Plans"
-msgstr ""
+msgstr "Leady plany"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_properties_definition
 msgid "Lead Properties"
-msgstr "Właściwości sygnału"
+msgstr "Właściwości leadu"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency
 msgid "Lead Scoring Frequency"
-msgstr "Częstotliwość oceny sygnałów"
+msgstr "Częstotliwość oceny leadów"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields
 msgid "Lead Scoring Frequency Fields"
-msgstr "Pola częstotliwości punktacji sygnałów"
+msgstr "Pola częstotliwości punktacji leadów"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields_str
 msgid "Lead Scoring Frequency Fields in String"
-msgstr "Pola częstotliwości scoringu sygnałów w ciągu znaków"
+msgstr "Pola częstotliwości scoringu leadów w ciągu znaków"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date
 msgid "Lead Scoring Starting Date"
-msgstr "Data rozpoczęcia oceny sygnałów"
+msgstr "Data rozpoczęcia oceny leadów"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date_str
 msgid "Lead Scoring Starting Date in String"
-msgstr "Data rozpoczęcia punktacji sygnałów w ciągu znaków"
+msgstr "Data rozpoczęcia punktacji leadów w ciągu znaków"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_tree
 msgid "Lead Tags"
-msgstr "Tagi sygnałów"
+msgstr "Tagi leadów"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
@@ -2006,8 +2025,8 @@ msgid ""
 "Lead/Opportunities automatic assignment is limited to managers or "
 "administrators"
 msgstr ""
-"Automatyczne przydzielanie sygnałów/szans jest ograniczone do menedżerów lub"
-" administratorów."
+"Automatyczne przydzielanie leadów/szans jest ograniczone do menedżerów lub "
+"administratorów."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
@@ -2050,7 +2069,7 @@ msgstr "Sygnały (30 dni)"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_graph_lead
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot_lead
 msgid "Leads Analysis"
-msgstr "Analiza sygnałów"
+msgstr "Analiza leadów"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.action_report_crm_lead_salesteam
@@ -2069,17 +2088,17 @@ msgstr ""
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Leads Assigned"
-msgstr "Przydzielone sygnały"
+msgstr "Przydzielone leady"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__leads_count
 msgid "Leads Count"
-msgstr "Ilość sygnałów"
+msgstr "Ilość leadów"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_calendar_view_leads
 msgid "Leads Generation"
-msgstr "Tworzenie sygnałów"
+msgstr "Tworzenie leadów"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
@@ -2136,7 +2155,7 @@ msgstr "Sygnały/Szanse"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__crm_lead_count
 msgid "Leads/Opportunities count"
-msgstr "Ilość sygnałów/szans"
+msgstr "Ilość leadów/szans"
 
 #. module: crm
 #. odoo-javascript
@@ -2164,14 +2183,14 @@ msgid ""
 "Linked partner (optional). Usually created when converting the lead. You can"
 " find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
-"Powiązany partner (opcjonalnie). Zwykle tworzony podczas konwersji sygnału. "
+"Powiązany partner (opcjonalnie). Zwykle tworzony podczas konwersji leadu. "
 "Partnera można znaleźć po jego nazwie, numerze NIP, adresie e-mail lub "
 "numerze wewnętrznym."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr ""
+msgstr "Wykrywanie przychodzących połączeń w oparciu o części lokalne"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_code
@@ -2218,7 +2237,7 @@ msgstr "Zagubiony licznik"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Lost Lead"
-msgstr "Utracone sygnały"
+msgstr "Utracone leady"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lost_reason_id
@@ -2423,7 +2442,7 @@ msgstr "Miesięcznie"
 #: model:ir.model.fields,help:crm.field_crm_team__assignment_max
 msgid "Monthly average leads capacity for all salesmen belonging to the team"
 msgstr ""
-"Miesięczna średnia liczba sygnałów dla wszystkich sprzedawców należących do "
+"Miesięczna średnia liczba leadów dla wszystkich sprzedawców należących do "
 "zespołu"
 
 #. module: crm
@@ -2451,7 +2470,7 @@ msgstr "Mój termin"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "My Leads"
-msgstr "Moje sygnały"
+msgstr "Moje leady"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_crm_opportunities
@@ -2468,12 +2487,12 @@ msgstr "Nowe"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_open_lead_form
 msgid "New Lead"
-msgstr "Nowy sygnał"
+msgstr "Nowy lead"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created
 msgid "New Leads"
-msgstr "Nowe sygnały"
+msgstr "Nowe leady"
 
 #. module: crm
 #. odoo-python
@@ -2558,8 +2577,8 @@ msgid ""
 "No allocated leads to %(team_name)s team and its salespersons because no "
 "unassigned lead matches its domain."
 msgstr ""
-"Brak przypisanych sygnałów do zespołu %(team_name)s i jego sprzedawców, "
-"ponieważ żaden nieprzypisany sygnał nie pasuje do jego domeny."
+"Brak przypisanych leadów do zespołu %(team_name)s i jego sprzedawców, "
+"ponieważ żaden nieprzypisany lead nie pasuje do jego domeny."
 
 #. module: crm
 #. odoo-python
@@ -2569,7 +2588,7 @@ msgid ""
 "No allocated leads to %(team_name)s team because it has no capacity. Add "
 "capacity to its salespersons."
 msgstr ""
-"Nie ma przydzielonych sygnałów dla zespołu %(team_name)s, ponieważ nie ma "
+"Nie ma przydzielonych leadów dla zespołu %(team_name)s, ponieważ nie ma "
 "pojemności. Zwiększ wydajność sprzedawców."
 
 #. module: crm
@@ -2580,8 +2599,8 @@ msgid ""
 "No allocated leads to any team or salesperson. Check your Sales Teams and "
 "Salespersons configuration as well as unassigned leads."
 msgstr ""
-"Brak przypisanych sygnałów do zespołu lub sprzedawcy. Sprawdź konfigurację "
-"zespołów sprzedaży i sprzedawców, a także nieprzypisane sygnały."
+"Brak przypisanych leadów do zespołu lub sprzedawcy. Sprawdź konfigurację "
+"zespołów sprzedaży i sprzedawców, a także nieprzypisane leady."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -2603,8 +2622,8 @@ msgid ""
 "No lead assigned to salespersons because no unassigned lead matches their "
 "domains."
 msgstr ""
-"Brak sygnałów przypisanych do sprzedawców, ponieważ żaden nieprzypisany "
-"sygnał nie pasuje do ich domen."
+"Brak leadów przypisanych do sprzedawców, ponieważ żaden nieprzypisany lead "
+"nie pasuje do ich domen."
 
 #. module: crm
 #. odoo-python
@@ -2614,8 +2633,8 @@ msgid ""
 "No new lead allocated to %(team_name)s team because no unassigned lead "
 "matches its domain."
 msgstr ""
-"Żaden nowy sygnał nie został przypisany do zespołu %(team_name)s, ponieważ "
-"żaden nieprzypisany sygnał nie pasuje do jego domeny."
+"Żaden nowy lead nie został przypisany do zespołu %(team_name)s, ponieważ "
+"żaden nieprzypisany lead nie pasuje do jego domeny."
 
 #. module: crm
 #. odoo-python
@@ -2624,8 +2643,8 @@ msgstr ""
 msgid ""
 "No new lead allocated to the teams because no lead match their domains."
 msgstr ""
-"Żaden nowy sygnał nie został przydzielony zespołom, ponieważ żaden sygnał "
-"nie pasuje do ich domen."
+"Żaden nowy lead nie został przydzielony zespołom, ponieważ żaden lead nie "
+"pasuje do ich domen."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__grey
@@ -2691,7 +2710,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_count
 msgid "Number of leads and opportunities assigned this last month."
-msgstr "Liczba sygnałów i szans przypisanych w zeszłym miesiącu."
+msgstr "Liczba leadów i szans przypisanych w zeszłym miesiącu."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -3002,7 +3021,7 @@ msgstr "Nazwa planu"
 msgid ""
 "Please select more than one element (lead or opportunity) from the list "
 "view."
-msgstr "Wybierz więcej niż jeden element (sygnał lub szansa) z widoku listy."
+msgstr "Wybierz więcej niż jeden element (lead lub szansa) z widoku listy."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_fields
@@ -3030,17 +3049,17 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_ids
 msgid "Potential Duplicate Lead"
-msgstr "Potencjalny zduplikowany sygnał"
+msgstr "Potencjalny zduplikowany lead"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_count
 msgid "Potential Duplicate Lead Count"
-msgstr "Potencjalna liczba zduplikowanych sygnałów"
+msgstr "Potencjalna liczba zduplikowanych leadów"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Predictive Lead Scoring"
-msgstr "Predykcyjny scoring sygnałów"
+msgstr "Predykcyjny scoring leadów"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_field_labels
@@ -3307,7 +3326,7 @@ msgstr "Zaplanuj działania, aby śledzić wszystko, co musisz zrobić."
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Search Leads"
-msgstr "Przeszukuj sygnały"
+msgstr "Przeszukuj leady"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
@@ -3374,12 +3393,12 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Show only lead"
-msgstr "Pokaż tylko sygnał"
+msgstr "Pokaż tylko lead"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only leads"
-msgstr "Pokaż tylko sygnały"
+msgstr "Pokaż tylko leady"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -3507,7 +3526,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duration_tracking
 msgid "Status time"
-msgstr ""
+msgstr "Czas stanu"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__street
@@ -3580,7 +3599,7 @@ msgid ""
 "The contacts below have been added as followers of this lead\n"
 "                        because they have been contacted less than 30 days ago on"
 msgstr ""
-"Poniższe kontakty zostały dodane jako osoby śledzące ten sygnał\n"
+"Poniższe kontakty zostały dodane jako osoby śledzące ten lead\n"
 "ponieważ skontaktowano się z nimi mniej niż 30 dni temu na stronie"
 
 #. module: crm
@@ -3619,7 +3638,7 @@ msgid ""
 " the lead into opportunity"
 msgstr ""
 "Przyszła nazwa firmy partnera, która będzie utworzona podczas konwertowania "
-"sygnału do szansy."
+"leadu do szansy."
 
 #. module: crm
 #: model:ir.model.constraint,message:crm.constraint_crm_recurring_plan_check_number_of_months
@@ -3648,8 +3667,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
 msgid "This analysis shows you how many leads have been created per month."
-msgstr ""
-"Ta analiza pokazuje, ile sygnałów zostało utworzonych w ciągu miesiąca."
+msgstr "Ta analiza pokazuje, ile leadów zostało utworzonych w ciągu miesiąca."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -3664,7 +3682,7 @@ msgid ""
 "This can be used to automatically assign leads to sales persons based on "
 "rules"
 msgstr ""
-"Może to być wykorzystane do automatycznego przypisywania sygnałów do "
+"Może to być wykorzystane do automatycznego przypisywania leadów do "
 "sprzedawców w oparciu o reguły"
 
 #. module: crm
@@ -3672,7 +3690,7 @@ msgstr ""
 msgid "This can be used to compute statistical probability to close a lead"
 msgstr ""
 "Może to być wykorzystane do obliczenia statystycznego prawdopodobieństwa "
-"zamknięcia sygnału"
+"zamknięcia leadu"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -3739,7 +3757,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "This will assign leads to all members. Do you want to proceed?"
 msgstr ""
-"Spowoduje to przypisanie sygnałów do wszystkich członków. Czy chcesz "
+"Spowoduje to przypisanie leadów do wszystkich członków. Czy chcesz "
 "kontynuować?"
 
 #. module: crm
@@ -3753,7 +3771,7 @@ msgstr "Wskazówka: Przekształcaj przychodzące wiadomości e-mail w szanse"
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_1
 msgid "Tip: Did you know Odoo has built-in lead mining?"
 msgstr ""
-"Wskazówka: Czy wiesz, że Odoo ma wbudowaną funkcję wydobywania sygnałów?"
+"Wskazówka: Czy wiesz, że Odoo ma wbudowaną funkcję wydobywania leadów?"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_4
@@ -3793,7 +3811,7 @@ msgid ""
 "To prevent data loss, Leads and Opportunities can only be merged by groups "
 "of %(max_length)s."
 msgstr ""
-"Aby zapobiec utracie danych, sygnały i szanse mogą być łączone tylko przez "
+"Aby zapobiec utracie danych, leady i szanse mogą być łączone tylko przez "
 "grupy %(max_length)s."
 
 #. module: crm
@@ -3824,7 +3842,7 @@ msgid ""
 "True if the monthly lead assignment count is greater than the maximum "
 "assignment limit, false otherwise."
 msgstr ""
-"Prawda, jeśli miesięczna liczba przypisanych sygnałów jest większa niż "
+"Prawda, jeśli miesięczna liczba przypisanych leadów jest większa niż "
 "maksymalny limit przypisań, fałsz w przeciwnym razie."
 
 #. module: crm
@@ -3842,7 +3860,7 @@ msgstr "Typ"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_report__lead_type
 msgid "Type is used to separate Leads and Opportunities"
-msgstr "Typ jest stosowany do rozróżnienia sygnałów od szans"
+msgstr "Typ jest stosowany do rozróżnienia leadów od szans"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_decoration
@@ -3947,17 +3965,17 @@ msgid ""
 "qualified, the lead can be converted into a business opportunity and/or a "
 "new customer in your address book."
 msgstr ""
-"Skorzystaj z sygnałów, jeśli potrzebujesz etapu kwalifikacji przed "
-"utworzeniem szansy sprzedaży lub klienta. Może to być otrzymana wizytówka, "
-"formularz kontaktowy wypełniony w Twojej witrynie lub importowany plik "
-"niewykwalifikowanych potencjalnych klientów itp. Po zakwalifikowaniu sygnał "
+"Skorzystaj z leadów, jeśli potrzebujesz etapu kwalifikacji przed utworzeniem"
+" szansy sprzedaży lub klienta. Może to być otrzymana wizytówka, formularz "
+"kontaktowy wypełniony w Twojej witrynie lub importowany plik "
+"niewykwalifikowanych potencjalnych klientów itp. Po zakwalifikowaniu lead "
 "można przekształcić w możliwość biznesową i / lub nowego klienta w książce "
 "adresowej."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "Use the <i>New</i> button, or send an email to"
-msgstr ""
+msgstr "Użyj przycisku <i>Nowy</i> lub wyślij wiadomość e-mail na adres"
 
 #. module: crm
 #. odoo-python
@@ -4012,7 +4030,7 @@ msgstr "Bardzo wysoki"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Visits to Leads"
-msgstr "Wizyty do sygnałów"
+msgstr "Wizyty do leadów"
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_2
@@ -4182,7 +4200,7 @@ msgstr "np. za drogo"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "e.g. domain.com"
-msgstr ""
+msgstr "np. domain.com"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4192,7 +4210,7 @@ msgstr "np. https://www.odoo.com"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "for the leads created as of the"
-msgstr "dla sygnałów utworzonych na dzień"
+msgstr "dla leadów utworzonych na dzień"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0

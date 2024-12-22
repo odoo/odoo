@@ -3,16 +3,17 @@
 # 	* stock
 # 
 # Translators:
-# Wil Odoo, 2024
+# Mohammad Abdulmoneim, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1193,6 +1194,11 @@ msgid "Archived"
 msgstr "مؤرشف"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Are you sure you want to cancel this transfer?"
+msgstr "هل أنت متأكد من أنك ترغب في إلغاء هذه الشحنة؟ "
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
 msgid "As soon as possible"
 msgstr "في أقرب وقت ممكن "
@@ -1617,6 +1623,17 @@ msgstr "الحركة المتسلسلة موجودة "
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
 msgstr "تغيير كمية المنتج "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"لا يُسمح بتغيير رقم المجموعة/الرقم التسلسلي لبنود الحركة التي تحتوي على "
+"منتجات مختلفة. "
 
 #. module: stock
 #. odoo-python
@@ -3513,6 +3530,13 @@ msgid "Generate Serials numbers"
 msgstr "إنشاء الأرقام التسلسلية "
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Generate Serials/Lots"
+msgstr "إنشاء أرقام تسلسلية/أرقام مجموعات "
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get a full traceability from vendors to customers"
 msgstr "تمكن من التتبع بشكل كامل من المورّدين إلى العملاء "
@@ -3539,7 +3563,7 @@ msgstr "يعرض ترتيب التسلسل عند عرض المستودعات. "
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Global Visibility Days"
-msgstr "أيام الظهور العالمي "
+msgstr "أيام الظهور العامة "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -3995,6 +4019,13 @@ msgstr "استيراد"
 #, python-format
 msgid "Import Lots"
 msgstr "استيراد المجموعات "
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Import Serials/Lots"
+msgstr "استيراد الأرقام التسلسلية/أرقام المجموعات "
 
 #. module: stock
 #. odoo-python
@@ -4801,6 +4832,13 @@ msgid "Locations"
 msgstr "المواقع "
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr "المواقع التي سيتم تحديثها"
+
+#. module: stock
 #: model:ir.actions.server,name:stock.action_toggle_is_locked
 msgid "Lock/Unlock"
 msgstr "قفل/إلغاء القفل "
@@ -4821,6 +4859,11 @@ msgstr "المجموعة "
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__lot_label_format
 msgid "Lot Label Format to auto-print"
 msgstr "تنسيق ملصق المجموعة لطباعته تلقائياً "
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_label_lot_template_view
+msgid "Lot Label Report"
+msgstr "تقرير عنوان المجموعة "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
@@ -5428,6 +5471,13 @@ msgid "No operations found. Let's create a transfer!"
 msgstr "لم يتم العثور على أي عمليات. فلنقم بإنشاء شحنة! "
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "No product found to generate Serials/Lots for."
+msgstr "لم يتم العثور على منتج لإنشاء أرقام تسلسلية/أرقام مجموعات من أجله. "
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
 msgstr "لم يتم العثور على أي منتج. فلنقم بإنشاء واحد! "
@@ -6002,6 +6052,11 @@ msgstr "الطرد "
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package A"
 msgstr "الطرد A "
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "Package B"
+msgstr "الطرد B "
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
@@ -8135,11 +8190,6 @@ msgid "Settings"
 msgstr "الإعدادات"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "Shelf 1"
-msgstr "الرف 1 "
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "Shelf A"
 msgstr "الرف أ "
@@ -8781,6 +8831,13 @@ msgid ""
 msgstr ""
 "ستقوم قيمة \"العملية اليدوية\" بإنشاء حركة مخزون بعد الحركة الحالية. مع "
 "\"تلقائي، لم تتم إضافة خطوة\"، سيتم تبديل الموقع في الحركة الأصلية. "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr "رقم المجموعة/الرقم التسلسلي (%s) مرتبط بمنتج آخر. "
 
 #. module: stock
 #. odoo-python
@@ -9909,6 +9966,7 @@ msgid "Used to order the 'All Operations' kanban view"
 msgstr "تُستخدم لطريقة عرض كانبان لـ \"كافة العمليات\" "
 
 #. module: stock
+#: model:ir.model,name:stock.model_res_users
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__user_id
 #: model:res.groups,name:stock.group_stock_user
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -10500,6 +10558,14 @@ msgstr "لا يمكنك تغيير نوع منتج قد تم استخدامه ب
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr "لا يمكنك إنشاء نقطة طلب خاملة لا يتم تشغيلها يدوياً. "
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You can not delete moves linked to another operation"
@@ -10558,6 +10624,17 @@ msgstr ""
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr "يمكنك معالجة 1.0 %s فقط من المنتجات برقم تسلسلي فريد. "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
+"يمكنك فقط جعل نقاط الطلب اليدوية خاملة. من الأفضل أرشفة نقاط الطلب ذات "
+"'التشغيل الآلي' إذا كنت ترغب في ألا يتم تشغيلها. "
 
 #. module: stock
 #. odoo-python
@@ -10660,6 +10737,26 @@ msgstr "لا يمكنك حذف عملية تحويل إلى مخلفات تصن�
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
+"لا يمكنك تعبئة الكميات مباشرة من شحنات مختلفة إلى نفس الطرد من خلال نافذة "
+"العرض هذه. حاول إضافتها إلى عملية انتقاء على دفعات، ثم قم بحزمها في طرد "
+"هناك. "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr "لا يمكنك نسخ كميات المخزون. "
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "You cannot modify inventory loss quantity"
@@ -10675,6 +10772,17 @@ msgid ""
 msgstr ""
 "لا يمكنك نقل محتوى نفس الطرد أكثر من مرة في نفس الشحنة أو تقسيم الطرد إلى "
 "موقعين. "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+"لا يمكنك حزم المنتجات في نفس الطرد عندما تكون من شحنات مختلفة مع أنواع "
+"عمليات مختلفة. "
 
 #. module: stock
 #. odoo-python
@@ -10852,13 +10960,6 @@ msgstr "عليك تفعيل مواقع التخزين حتى تتمكن من ت�
 #, python-format
 msgid "You need to select a route to replenish your products"
 msgstr "عليك تحديد مسار لتجديد مخزون منتجاتك "
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You need to set a Serial Number before generating more."
-msgstr "عليك تعيين رقم تسلسلي قبل إنشاء المزيد. "
 
 #. module: stock
 #. odoo-python

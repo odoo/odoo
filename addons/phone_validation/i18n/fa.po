@@ -6,9 +6,10 @@
 # Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Hamid Darabi, 2023
-# Hanna Kheradroosta, 2023
 # Martin Trigaux, 2023
 # Abbas Ebadian, 2024
+# Hanna Kheradroosta, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Abbas Ebadian, 2024\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +31,7 @@ msgstr ""
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 #, python-format
 msgid " Please correct the number and try again."
-msgstr ""
+msgstr "لطفاً شماره را تصحیح کرده و دوباره امتحان کنید‌."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction
@@ -46,7 +47,7 @@ msgstr "فعال"
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
 msgid "Add a phone number in the blacklist"
-msgstr ""
+msgstr "شماره تلفن را به لیست سیاه اضافه کنید"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
@@ -60,6 +61,7 @@ msgstr "بایگانی شده"
 #, python-format
 msgid "Are you sure you want to unblacklist this Phone Number?"
 msgstr ""
+"آیا مطمئن هستید که می‌خواهید این شماره تلفن را از لیست سیاه خارج کنید؟"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
@@ -80,7 +82,7 @@ msgstr "لیست‌سیاه"
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_tree
 msgid "Blacklist Date"
-msgstr ""
+msgstr "تاریخ لیست سیاه"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__mobile_blacklisted
@@ -90,7 +92,7 @@ msgstr "تلفن لیست‌سیاه شده، موبایل است"
 #. module: phone_validation
 #: model:ir.actions.act_window,name:phone_validation.phone_blacklist_action
 msgid "Blacklisted Phone Numbers"
-msgstr ""
+msgstr "شماره‌های تلفن مسدود شده"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_blacklisted
@@ -100,7 +102,7 @@ msgstr "تلفن لیست سیاه شده، تلفن است"
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
 msgid "Blacklisted phone numbers won't receive SMS Mailings anymore."
-msgstr ""
+msgstr "شماره‌های تلفن لیست سیاه دیگر پیامک دریافت نخواهند کرد."
 
 #. module: phone_validation
 #. odoo-python
@@ -110,6 +112,8 @@ msgid ""
 "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
 "(#%(user_id)s)"
 msgstr ""
+"مسدود شده توسط حذف حساب پورتال %(portal_user_name)s توسط %(user_name)s "
+"(#%(user_id)s)"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
@@ -204,21 +208,21 @@ msgstr ""
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Impossible number %s: not a valid country prefix."
-msgstr ""
+msgstr "شماره غیرممکن %s: پیشوند کشور معتبر نیست."
 
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Impossible number %s: not enough digits."
-msgstr ""
+msgstr "شماره غیرممکن %s: تعداد ارقام کافی نیست."
 
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Impossible number %s: probably invalid number of digits."
-msgstr ""
+msgstr "شماره غیرممکن %s: احتمالاً تعداد ارقام نامعتبر است."
 
 #. module: phone_validation
 #. odoo-python
@@ -227,7 +231,7 @@ msgstr ""
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Impossible number %s: too many digits."
-msgstr ""
+msgstr "شماره غیرممکن %s: تعداد رقم‌ها بیش از حد است."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__mobile_blacklisted
@@ -256,7 +260,7 @@ msgstr ""
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Invalid number %s: probably incorrect prefix."
-msgstr ""
+msgstr "شماره نامعتبر %s: احتمالاً پیشوند نادرست."
 
 #. module: phone_validation
 #. odoo-python
@@ -264,7 +268,7 @@ msgstr ""
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 #, python-format
 msgid "Invalid primary phone field on model %s"
-msgstr ""
+msgstr "فیلد تلفن اصلی نامعتبر بر روی مدل %s"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_is_follower
@@ -301,12 +305,12 @@ msgstr "پیام ها"
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 #, python-format
 msgid "Missing definition of phone fields."
-msgstr ""
+msgstr "تعریف فیلدهای تلفن وجود ندارد."
 
 #. module: phone_validation
 #: model:ir.model.constraint,message:phone_validation.constraint_phone_blacklist_unique_number
 msgid "Number already exists"
-msgstr ""
+msgstr "شماره از قبل وجود دارد"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction_counter
@@ -335,12 +339,14 @@ msgstr "تعداد پیامهای با خطای تحویل"
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__number
 msgid "Number should be E164 formatted"
-msgstr ""
+msgstr "شماره باید به فرمت E164 باشد"
 
 #. module: phone_validation
 #: model:ir.ui.menu,name:phone_validation.phone_menu_main
 msgid "Phone / SMS"
 msgstr ""
+"Phone / SMS  \n"
+"تلفن / پیامک"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist
@@ -348,12 +354,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_tree
 msgid "Phone Blacklist"
-msgstr ""
+msgstr "لیست سیاه تلفن"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_mail_thread_phone
 msgid "Phone Blacklist Mixin"
-msgstr ""
+msgstr "میکسین لیست سیاه تلفن"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
@@ -379,6 +385,7 @@ msgstr "تلفن/موبایل"
 msgid ""
 "Please enter at least 3 characters when searching a Phone/Mobile number."
 msgstr ""
+"لطفاً هنگام جستجوی یک شماره تلفن/ شماره همراه حداقل 3 حرف را وارد کنید."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__reason
@@ -389,31 +396,31 @@ msgstr "علت"
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist_remove
 msgid "Remove phone from blacklist"
-msgstr ""
+msgstr "حذف شماره تلفن از لیست سیاه"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized
 msgid "Sanitized Number"
-msgstr ""
+msgstr "شماره معتبر شده"
 
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Unable to parse %(phone)s: %(error)s"
-msgstr ""
+msgstr "قابل تحلیل نیست %(phone)s: %(error)s"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
 msgid "Unblacklist"
-msgstr ""
+msgstr "Unblacklist تحریم‌شده را از لیست خارج کنید"
 
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/wizard/phone_blacklist_remove.py:0
 #, python-format
 msgid "Unblock Reason: %(reason)s"
-msgstr ""
+msgstr "دلیل رفع مسدودیت: %(reason)s"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_users
@@ -423,4 +430,4 @@ msgstr "کاربر"
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "phone_blacklist_removal"
-msgstr ""
+msgstr "حذف_لیست_سیاه_تلفن"

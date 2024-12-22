@@ -30,6 +30,15 @@ export class DiscussCoreCommon {
     }
 
     setup() {
+        this.busService.addEventListener(
+            "connect",
+            () =>
+                this.store.imStatusTrackedPersonas.forEach((p) => {
+                    const model = p.type === "partner" ? "res.partner" : "mail.guest";
+                    this.busService.addChannel(`odoo-presence-${model}_${p.id}`);
+                }),
+            { once: true }
+        );
         this.messagingService.isReady.then((data) => {
             Record.MAKE_UPDATE(() => {
                 for (const channelData of data.channels) {
@@ -150,38 +159,6 @@ export class DiscussCoreCommon {
                     thread: { id: channel_id, model: "discuss.channel" },
                 });
             });
-            this.busService.subscribe("discuss.channel.member/seen", (payload) => {
-                const { channel_id, guest_id, id, last_message_id, partner_id } = payload;
-                const channel = this.store.Thread.get({ model: "discuss.channel", id: channel_id });
-                if (!channel) {
-                    // for example seen from another browser, the current one has no
-                    // knowledge of the channel
-                    return;
-                }
-                const member = id
-                    ? this.store.ChannelMember.insert({
-                          id,
-                          persona: {
-                              id: partner_id ?? guest_id,
-                              type: partner_id ? "partner" : "guest",
-                          },
-                          thread: { id: channel_id, model: "discuss.channel" },
-                      })
-                    : channel.channelMembers.find((member) => {
-                          const persona = this.store.Persona.get({
-                              type: partner_id ? "partner" : "guest",
-                              id: partner_id ?? guest_id,
-                          });
-                          return persona?.eq(member.persona);
-                      });
-                if (!member) {
-                    return;
-                }
-                member.lastSeenMessage = { id: last_message_id };
-                if (member.persona.eq(this.store.self)) {
-                    this.threadService.updateSeen(channel, last_message_id);
-                }
-            });
             this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {
                 if (message.originThread) {
                     if (message.id > message.originThread.seen_message_id) {
@@ -260,23 +237,8 @@ export class DiscussCoreCommon {
             if (message.isSelfAuthored) {
                 channel.seen_message_id = message.id;
             } else {
-                if (notif.id > this.store.initBusId) {
+                if (notif.id > channel.message_unread_counter_bus_id) {
                     channel.message_unread_counter++;
-                }
-                if (message.isNeedaction) {
-                    const inbox = this.store.discuss.inbox;
-                    if (message.notIn(inbox.messages)) {
-                        inbox.messages.push(message);
-                        if (notif.id > this.store.initBusId) {
-                            inbox.counter++;
-                        }
-                    }
-                    if (message.notIn(channel.needactionMessages)) {
-                        channel.needactionMessages.push(message);
-                        if (notif.id > this.store.initBusId) {
-                            channel.message_needaction_counter++;
-                        }
-                    }
                 }
             }
         }

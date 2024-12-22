@@ -35,7 +35,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='category_id']" position="after">
                     <field name="module_type" column_invisible="1"/>
+                    <field name="name" column_invisible="1"/>
                 </xpath>
+                <tree position="attributes">
+                    <attribute name="js_class">ir_module_module_tree_view</attribute>
+                </tree>
             </field>
         </record>
         <record model="ir.ui.view" id="module_form_apps_inherit">
@@ -48,6 +52,16 @@
                 </xpath>
                 <xpath expr="//page[@name='technical_data']" position="attributes">
                     <attribute name="invisible">module_type != 'official'</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_immediate_install']" position="after">
+                    <button type="object" class="btn btn-primary me-1" name="button_immediate_install_app" invisible="state != 'uninstalled' or module_type in ('official', False)" groups="base.group_system">Activate</button>
+                    <button type="object" class="btn btn-primary me-1" name="button_immediate_install_app" invisible="state == 'uninstalled' or module_type in ('official', False)" groups="base.group_system">Upgrade</button>
+                </xpath>
+                <xpath expr="//button[@name='button_immediate_install']" position="attributes">
+                    <attribute name="invisible">to_buy or state != 'uninstalled' or (module_type and module_type != 'official')</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_immediate_upgrade']" position="attributes">
+                    <attribute name="invisible">state == 'uninstalled' or (module_type and module_type != 'official')</attribute>
                 </xpath>
             </field>
         </record>

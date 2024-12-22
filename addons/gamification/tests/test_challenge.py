@@ -184,6 +184,49 @@ class test_challenge(TestGamificationCommon):
             "Challenge failed to start",
         )
 
+    def test_send_report_in_ranking(self):
+        gamification_model = self.env['ir.model']._get_id('gamification.badge')
+        field = self.env['ir.model.fields'].search([('model', '=', 'gamification.badge'), ('name', '=', 'rule_max_number')], limit=1)
+
+        sum_goal = self.env['gamification.goal.definition'].create({
+            'name': 'test1',
+            'computation_mode': 'sum',
+            'model_id': gamification_model,
+            'field_id': field.id
+        })
+
+        challenge = self.env['gamification.challenge'].create({
+            'name': 'test1',
+            'state': 'draft',
+            'user_domain': '[("active", "=", True)]',
+            'reward_id': 1,
+            'visibility_mode': 'ranking'
+        })
+
+        self.env['gamification.challenge.line'].create({
+            'challenge_id': challenge.id,
+            'definition_id': sum_goal.id,
+            'condition': 'higher',
+            'target_goal': 1
+        })
+
+        challenge.action_start()
+        current_date = datetime.datetime.now()
+
+        with freeze_time(current_date):
+            challenge.action_report_progress()
+
+            self.assertEqual(
+                challenge.state,
+                'inprogress',
+                "Challenge failed to start",
+            )
+
+            self.assertEqual(
+                challenge.last_report_date,
+                current_date.date(),
+                "Challenge last report date is not as expected"
+            )
 
 class test_badge_wizard(TestGamificationCommon):
 

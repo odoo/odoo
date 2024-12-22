@@ -28,20 +28,28 @@ class ProductTemplate(models.Model):
         product_ctx = dict(self.env.context or {}, active_test=False)
         if self.with_context(product_ctx).search_count([('id', 'in', self.ids), ('available_in_pos', '=', True)]):
             if self.env['pos.session'].sudo().search_count([('state', '!=', 'closed')]):
-                raise UserError(_("To delete a product, make sure all point of sale sessions are closed.\n\n"
-                    "Deleting a product available in a session would be like attempting to snatch a"
-                    "hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"))
+                raise UserError(
+                    _(
+                        "To delete a product, make sure all point of sale sessions are closed.\n\n"
+                        "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!",
+                    ),
+                )
 
     @api.onchange('sale_ok')
     def _onchange_sale_ok(self):
         if not self.sale_ok:
             self.available_in_pos = False
 
+    @api.onchange('detailed_type')
+    def _onchange_detailed_type(self):
+        if self.detailed_type == 'combo':
+            self.taxes_id = None
+
     @api.constrains('available_in_pos')
     def _check_combo_inclusions(self):
         for product in self:
             if not product.available_in_pos:
-                combo_name = self.env['pos.combo.line'].search([('product_id', 'in', product.product_variant_ids.ids)], limit=1).combo_id.name
+                combo_name = self.env['pos.combo.line'].sudo().search([('product_id', 'in', product.product_variant_ids.ids)], limit=1).combo_id.name
                 if combo_name:
                     raise UserError(_('You must first remove this product from the %s combo', combo_name))
 
@@ -68,18 +76,32 @@ class ProductTemplate(models.Model):
                     ])
         return res
 
+    @api.onchange('type')
+    def _onchange_type(self):
+        if self.type == "combo" and self.attribute_line_ids:
+            raise UserError(_("Combo products cannot contains variants or attributes"))
+        return super()._onchange_type()
+
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
+
+    @api.onchange('detailed_type')
+    def _onchange_detailed_type(self):
+        if self.detailed_type == 'combo':
+            self.taxes_id = None
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
         product_ctx = dict(self.env.context or {}, active_test=False)
         if self.env['pos.session'].sudo().search_count([('state', '!=', 'closed')]):
             if self.with_context(product_ctx).search_count([('id', 'in', self.ids), ('product_tmpl_id.available_in_pos', '=', True)]):
-                raise UserError(_("To delete a product, make sure all point of sale sessions are closed.\n\n"
-                    "Deleting a product available in a session would be like attempting to snatch a"
-                    "hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"))
+                raise UserError(
+                    _(
+                        "To delete a product, make sure all point of sale sessions are closed.\n\n"
+                        "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!",
+                    ),
+                )
 
     def get_product_info_pos(self, price, quantity, pos_config_id):
         self.ensure_one()

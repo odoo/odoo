@@ -3,16 +3,16 @@
 # 	* delivery
 # 
 # Translators:
-# Wil Odoo, 2023
 # Junko Augias, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -147,7 +147,7 @@ msgstr "アーカイブ済"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
 msgid "Available Carriers"
-msgstr "可能な配送業者"
+msgstr "可能な運送会社"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__base_on_rule
@@ -165,12 +165,12 @@ msgstr "返品可"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
-msgstr "配送業者"
+msgstr "運送会社"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
 msgid "Carrier Description"
-msgstr "配送業者説明"
+msgstr "運送会社説明"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -245,12 +245,12 @@ msgstr "新規配送方法の登録"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr "配送業者"
+msgstr "運送会社"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_carrier
 msgid "Delivery Carrier Selection Wizard"
-msgstr "配送業者選択ガイド"
+msgstr "運送会社選択ガイド"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
@@ -313,7 +313,7 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "            which zips it is available to."
 msgstr ""
-"配送郵便番号プレフィックスは配送業者に割り当てられ\n"
+"配送郵便番号プレフィックスは運送会社に割り当てられ\n"
 "　　どの郵便番号が使用可能かを制限します。"
 
 #. module: delivery
@@ -351,7 +351,7 @@ msgid ""
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
 msgstr ""
-"各配送会社（例：UPS）は、複数の配送方法\n"
+"各運送会社（例：UPS）は、複数の配送方法\n"
 "　　　（例：UPSエクスプレス、UPSスタンダード）\n"
 "　　　  を持つことができ、各配送方法に料金規則が紐づけられています。"
 
@@ -369,6 +369,13 @@ msgid "Error: this delivery method is not available for this address."
 msgstr "エラー：この配送方法はこのアドレスでは利用できません。"
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "Error: this delivery method is not available."
+msgstr "エラー:この配送方法は利用できません。"
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
@@ -380,7 +387,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
 msgid "Estimated cost"
-msgstr "見積価格"
+msgstr "見積費用"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
@@ -392,7 +399,7 @@ msgstr "ピッキングに基づいて出荷品の請求をする場合は、こ
 msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
-msgstr "このフォームを入力すると、顧客の配送先住所に応じて配送業者をフィルタリングすることができます。"
+msgstr "このフォームを入力すると、顧客の配送先住所に応じて運送会社をフィルタリングすることができます。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -430,7 +437,7 @@ msgstr "レート取得"
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate_and_ship
 msgid "Get Rate and Create Shipment"
-msgstr "レートの取得と出荷の作成"
+msgstr "レート取得と配送の作成"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -586,7 +593,7 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
-"このキャリアが適用される郵便番号のプレフィックス。正規表現を使用すると、郵便番号の長さが異なる国にも対応できることに注意しましょう。 "
+"この運送会社が適用される郵便番号のプレフィックス。正規表現を使用すると、郵便番号の長さが異なる国にも対応できることに注意しましょう。 "
 "つまり、プレフィックスの最後の '$'は、正確な郵便番号にマッチする場合に使用できます (たとえば '100$' は '100' にのみマッチし、 "
 "'1000' にはマッチしません)。"
 
@@ -611,6 +618,11 @@ msgstr "価格設定"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
 msgid "Pricing Rules"
 msgstr "価格設定規則"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_product_category
+msgid "Product Category"
+msgstr "プロダクトカテゴリ"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
@@ -833,6 +845,15 @@ msgstr ""
 "\n"
 "次の配送明細（プロダクト、請求数量、価格）はすでに処理されています：\n"
 "\n"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr "配送プロダクトカテゴリは、運送会社プロダクトで使用されているため、削除することはできません。"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list

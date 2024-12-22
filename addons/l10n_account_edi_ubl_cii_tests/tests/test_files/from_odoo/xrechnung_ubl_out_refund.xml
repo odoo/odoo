@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <CreditNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-  <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.3#conformant#urn:xoev-de:kosit:extension:xrechnung_2.3</cbc:CustomizationID>
+  <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0</cbc:CustomizationID>
   <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
   <cbc:ID>RINV/2017/01/0001</cbc:ID>
   <cbc:IssueDate>2017-01-01</cbc:IssueDate>
@@ -78,6 +78,7 @@
     </cac:Party>
   </cac:AccountingCustomerParty>
   <cac:Delivery>
+    <cbc:ActualDeliveryDate>2017-01-01</cbc:ActualDeliveryDate>
     <cac:DeliveryLocation>
       <cac:Address>
         <cbc:StreetName>Europa-Park-Straße 2</cbc:StreetName>
@@ -90,7 +91,7 @@
     </cac:DeliveryLocation>
   </cac:Delivery>
   <cac:PaymentMeans>
-    <cbc:PaymentMeansCode name="credit transfer">30</cbc:PaymentMeansCode>
+    <cbc:PaymentMeansCode name="standing agreement">57</cbc:PaymentMeansCode>
     <cbc:PaymentID>RINV/2017/01/0001</cbc:PaymentID>
     <cac:PayeeFinancialAccount>
       <cbc:ID>DE50500105175653254743</cbc:ID>

@@ -1,0 +1,17 @@
+<odoo>
+    <data>        
+        <record id="l10n_jo_res_partner_1" model="res.partner">
+            <field name="name">Jordanian Furniture</field>
+            <field eval="[Command.set([ref('base.res_partner_category_14'), ref('base.res_partner_category_12')])]" name="category_id"/>
+            <field name="is_company">1</field>
+            <field name="street">Ali bin, Abu Taleb St.</field>
+            <field name="city">Amman</field>
+            <field name="zip">11152</field>
+            <field name="country_id" ref="base.jo"/>
+            <field name="email">jordan.furniture2126@example.com</field>
+            <field name="phone">076679488</field>
+            <field name="website">http://www.jordan-furniture-company.com</field>
+            <field name="vat">987654321</field>
+        </record>
+    </data>
+</odoo>

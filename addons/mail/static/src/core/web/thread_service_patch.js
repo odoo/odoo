@@ -189,6 +189,9 @@ patch(ThreadService.prototype, {
     },
     /** @override */
     open(thread, replaceNewMessageChatWindow, options) {
+        if (thread.model === "discuss.channel") {
+            this.store.env.services["bus_service"].addChannel(thread.busChannel);
+        }
         if (!this.store.discuss.isActive && !this.ui.isSmall) {
             this._openChatWindow(thread, replaceNewMessageChatWindow, options);
             return;
@@ -229,7 +232,11 @@ patch(ThreadService.prototype, {
         }
         super.unpin(...arguments);
     },
-    _openChatWindow(thread, replaceNewMessageChatWindow, { openMessagingMenuOnClose } = {}) {
+    _openChatWindow(
+        thread,
+        replaceNewMessageChatWindow,
+        { autofocus = true, openMessagingMenuOnClose } = {}
+    ) {
         const chatWindow = this.store.ChatWindow.insert(
             assignDefined(
                 {
@@ -242,7 +249,9 @@ patch(ThreadService.prototype, {
                 }
             )
         );
-        chatWindow.autofocus++;
+        if (autofocus) {
+            chatWindow.autofocus++;
+        }
         if (thread) {
             thread.state = "open";
         }

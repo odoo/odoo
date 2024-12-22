@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
+from itertools import chain, starmap, zip_longest
 
 from odoo import SUPERUSER_ID, api, fields, models, _
 from odoo.exceptions import ValidationError
@@ -101,6 +102,9 @@ class SaleOrder(models.Model):
 
     @api.onchange('sale_order_template_id')
     def _onchange_sale_order_template_id(self):
+        if not self.sale_order_template_id:
+            return
+
         sale_order_template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
 
         order_lines_data = [fields.Command.clear()]
@@ -124,16 +128,55 @@ class SaleOrder(models.Model):
 
         self.sale_order_option_ids = option_lines_data
 
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        """Reload template for unsaved orders with unmodified lines & orders."""
+        if self._origin or not self.sale_order_template_id:
+            return
+
+        def line_eqv(line, t_line):
+            return line and t_line and (
+                line.product_id == t_line.product_id
+                and line.display_type == t_line.display_type
+                and line.product_uom == t_line.product_uom_id
+                and line.product_uom_qty == t_line.product_uom_qty
+            )
+
+        def option_eqv(option, t_option):
+            return option and t_option and all(
+                option[fname] == t_option[fname]
+                for fname in ['product_id', 'uom_id', 'quantity']
+            )
+
+        lines = self.order_line
+        options = self.sale_order_option_ids
+        t_lines = self.sale_order_template_id.sale_order_template_line_ids
+        t_options = self.sale_order_template_id.sale_order_template_option_ids
+
+        if all(chain(
+            starmap(line_eqv, zip_longest(lines, t_lines)),
+            starmap(option_eqv, zip_longest(options, t_options)),
+        )):
+            self._onchange_sale_order_template_id()
+
     #=== ACTION METHODS ===#
+
+    def _get_confirmation_template(self):
+        self.ensure_one()
+        return self.sale_order_template_id.mail_template_id or super()._get_confirmation_template()
 
     def action_confirm(self):
         res = super().action_confirm()
-        if self.env.su:
-            self = self.with_user(SUPERUSER_ID)
 
+        if self.env.context.get('send_email'):
+            # Mail already sent in super method
+            return res
+
+        # When an order is confirmed from backend (send_email=False), if the quotation template has
+        # a specified mail template, send it as it's probably meant to share additional information.
         for order in self:
-            if order.sale_order_template_id and order.sale_order_template_id.mail_template_id:
-                order.message_post_with_source(order.sale_order_template_id.mail_template_id)
+            if order.sale_order_template_id.mail_template_id:
+                order._send_order_notification_mail(order.sale_order_template_id.mail_template_id)
         return res
 
     def _recompute_prices(self):

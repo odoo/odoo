@@ -60,8 +60,8 @@
                     <i class="o_wslides_js_quiz_icon o_wslides_js_quiz_add_answer fa fa-lg fa-plus-circle col-auto p-md-2 py-2 px-1 text-muted" title="Add an answer below this one" />
                     <i class="o_wslides_js_quiz_icon o_wslides_js_quiz_remove_answer fa fa-lg fa-trash-o col-auto p-md-2 py-2 px-1 text-muted" title="Remove this answer" />
                 </div>
-                <div class="o_wslides_js_quiz_answer_comment row align-items-center d-none">
-                    <input type="text" class="form-control col-8 offset-1 mt-1" placeholder="This is the correct answer, congratulations"
+                <div class="o_wslides_js_quiz_answer_comment row col-8 offset-1 p-0 align-items-center flex-nowrap d-none">
+                    <input type="text" class="form-control mt-1 ms-2" placeholder="This is the correct answer, congratulations"
                         t-attf-value="#{answer ? answer.comment : ''}" />
                     <i class="o_wslides_js_quiz_icon o_wslides_js_quiz_remove_answer_comment fa fa-lg fa-trash-o p-2 text-muted" title="Remove the answer comment" />
                 </div>
@@ -70,7 +70,7 @@
     </t>
 
     <t t-name="slide.quiz.create.buttons">
-        <a class="o_wslides_js_quiz_validate_question btn btn-primary text-white border" role="button">
+        <a class="o_wslides_js_quiz_validate_question btn btn-primary text-white border me-1" role="button">
             <span>Save</span>
         </a>
         <a class="o_wslides_js_quiz_cancel_question btn btn-light border" role="button">
@@ -79,7 +79,7 @@
     </t>
 
     <t t-name="slide.quiz.update.buttons">
-        <a class="o_wslides_js_quiz_validate_question o_wslides_js_quiz_update btn btn-primary text-white border" role="button">
+        <a class="o_wslides_js_quiz_validate_question o_wslides_js_quiz_update btn btn-primary text-white border me-1" role="button">
             <span>Update</span>
         </a>
         <a class="o_wslides_js_quiz_cancel_question btn btn-light border" role="button">

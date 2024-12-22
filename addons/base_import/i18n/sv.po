@@ -4,25 +4,25 @@
 # 
 # Translators:
 # Robin Calvin, 2023
-# Daniel Löfgren, 2023
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
-# Haojun Zou <apollo_zhj@msn.com>, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
+# Daniel Löfgren, 2023
+# Haojun Zou <apollo_zhj@msn.com>, 2023
 # Simon S, 2023
 # Martin Trigaux, 2023
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
-# Lasse L, 2023
 # Claes-Johan Dahlin, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Lasse L, 2024
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
+"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,14 +35,14 @@ msgstr ""
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "%s at multiple rows"
-msgstr ""
+msgstr "%s på flera rader"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 #, python-format
 msgid "%s records successfully imported"
-msgstr ""
+msgstr "%s poster har importerats framgångsrikt"
 
 #. module: base_import
 #. odoo-javascript
@@ -52,6 +52,8 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect."
 msgstr ""
+"En enda kolumn hittades i filen, detta betyder ofta att filseparatorn är "
+"felaktig."
 
 #. module: base_import
 #. odoo-javascript
@@ -108,7 +110,7 @@ msgstr "Basimport härledning"
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "Batch"
-msgstr "Parti"
+msgstr "Batch"
 
 #. module: base_import
 #. odoo-javascript
@@ -137,6 +139,8 @@ msgstr "Avbryt"
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line %s."
 msgstr ""
+"Klicka på \"Fortsätt\" för att fortsätta med importen, som återupptas på rad"
+" %s."
 
 #. module: base_import
 #. odoo-python
@@ -229,7 +233,7 @@ msgstr "Datumtid-format:"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Decimals Separator:"
-msgstr ""
+msgstr "Avgränsare för decimaler:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -248,6 +252,8 @@ msgstr "Punkt"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Download"
@@ -272,7 +278,7 @@ msgstr "Fel vid datumanalys [%s:L %d]:%s"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Error at row %s: \"%s\""
-msgstr ""
+msgstr "Fel på rad %s: \"%s\""
 
 #. module: base_import
 #. odoo-python
@@ -439,6 +445,18 @@ msgstr ""
 "                    enklare, särskilt när filen har många kolumner."
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid ""
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
+msgstr ""
+"Om modellen använder openchatter kommer historik-spårningen ange en "
+"prenumeration och skicka notiser under importen. Detta leder dock till en "
+"långsammare import."
+
+#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
@@ -481,7 +499,7 @@ msgstr "Importfilen har inget innehåll eller är korrupt"
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "Import preview failed due to: \""
-msgstr ""
+msgstr "Förhandsgranskning av import misslyckades på grund av: \""
 
 #. module: base_import
 #. odoo-javascript
@@ -506,6 +524,7 @@ msgstr "Importerar"
 
 #. module: base_import
 #. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
@@ -575,7 +594,7 @@ msgstr "Ingen separator"
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "No matching records found for the following name"
-msgstr ""
+msgstr "Inga matchande register hittades för följande namn"
 
 #. module: base_import
 #. odoo-javascript
@@ -603,14 +622,14 @@ msgstr "Förhandsgranskning"
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "Progress bar"
-msgstr ""
+msgstr "Progress bar"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Reimport"
-msgstr ""
+msgstr "Återimport"
 
 #. module: base_import
 #. odoo-javascript
@@ -629,7 +648,7 @@ msgstr "Res model"
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 #, python-format
 msgid "Resume"
-msgstr "Återuppta"
+msgstr " Meritförteckning"
 
 #. module: base_import
 #. odoo-javascript
@@ -671,21 +690,21 @@ msgstr "Separator:"
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Set to: %s"
-msgstr ""
+msgstr "Ställ in på: %s"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Set to: False"
-msgstr "Ställ till: Falsk"
+msgstr "Sätt till: Falsk"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Set to: True"
-msgstr "Ställ till: Sant"
+msgstr "Sätt till: Sant"
 
 #. module: base_import
 #. odoo-javascript
@@ -764,7 +783,7 @@ msgstr "Testa"
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 #, python-format
 msgid "Testing"
-msgstr "Test"
+msgstr "Testar"
 
 #. module: base_import
 #. odoo-javascript
@@ -806,7 +825,7 @@ msgstr "Tusentalsseparator:"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "To import multiple values, separate them by a comma."
-msgstr ""
+msgstr "För att importera flera värden, separera dem med ett kommatecken."
 
 #. module: base_import
 #. odoo-javascript
@@ -869,6 +888,9 @@ msgid ""
 "system. You can use a custom format in addition to the suggestions provided."
 " Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
+"Använd HH för timmar i ett 24h-system, använd II i kombination med 'p' för "
+"ett 12h-system. Du kan använda ett anpassat format utöver de förslag som "
+"ges. Lämna tomt för att låta Odoo gissa formatet (rekommenderas)"
 
 #. module: base_import
 #. odoo-javascript
@@ -880,6 +902,10 @@ msgid ""
 "format in addition to the suggestions provided. Leave empty to let Odoo "
 "guess the format (recommended)"
 msgstr ""
+"Använd YYYY för att ange året, MM för månaden och DD för dagen. Inkludera "
+"separatorer som punkt, snedstreck eller bindestreck. Du kan använda ett "
+"anpassat format utöver de förslag som ges. Lämna tomt för att låta Odoo "
+"gissa formatet (rekommenderas)"
 
 #. module: base_import
 #. odoo-javascript
@@ -892,6 +918,17 @@ msgstr "Använd första raden som rubrik"
 #: model:ir.model,name:base_import.model_res_users
 msgid "User"
 msgstr "Användare"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr ""
+"Varning: ignorerar etikettraden, tomma rader och rader som endast består av "
+"tomma celler"
 
 #. module: base_import
 #. odoo-javascript

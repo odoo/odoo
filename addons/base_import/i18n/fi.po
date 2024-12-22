@@ -11,15 +11,15 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
 # Janne Rättyä <janne.rattya@web-veistamo.fi>, 2023
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -249,6 +249,8 @@ msgstr "Piste"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Download"
@@ -442,6 +444,17 @@ msgstr ""
 "\\v                    jos tiedostossa on useita sarakkeita."
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid ""
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
+msgstr ""
+"Jos malli käyttää openchatteria, historian seuranta asettaa tilauksen ja "
+"lähettää huomautuksia latauksen aikana. Tämä hidastaa latausta."
+
+#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
@@ -509,6 +522,7 @@ msgstr "Tuodaan tietoja"
 
 #. module: base_import
 #. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
@@ -601,6 +615,13 @@ msgstr "Estä tuonti"
 #, python-format
 msgid "Preview"
 msgstr "Esikatselu"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, python-format
+msgid "Progress bar"
+msgstr "Edistymispalkki"
 
 #. module: base_import
 #. odoo-javascript
@@ -897,6 +918,17 @@ msgstr "Ensimmäinen on otsikkorivi"
 #: model:ir.model,name:base_import.model_res_users
 msgid "User"
 msgstr "Käyttäjä"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr ""
+"Varoitus: jättää huomiotta otsikkorivin, tyhjät rivit ja rivit, joissa on "
+"vain tyhjiä soluja"
 
 #. module: base_import
 #. odoo-javascript

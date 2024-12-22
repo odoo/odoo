@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -143,7 +143,7 @@ msgstr "Mua 2+tặng 1"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "2023-08-20"
-msgstr ""
+msgstr "2023-08-20"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
@@ -306,6 +306,12 @@ msgid ""
 "                                <span class=\"o_stat_text\" invisible=\"program_type != 'gift_card'\">Gift Cards</span>\n"
 "                                <span class=\"o_stat_text\" invisible=\"program_type != 'ewallet'\">eWallets</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"program_type not in ('coupons', 'next_order_coupons')\">Phiếu giảm giá</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type != 'loyalty'\">Thẻ khách hàng thân thiết</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type not in ('promotion', 'buy_x_get_y')\">Khuyến mại</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type != 'promo_code'\">Giảm giá</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type != 'gift_card'\">Thẻ quà tặng</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type != 'ewallet'\">Ví điện tử</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -322,11 +328,13 @@ msgid ""
 "<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Grant the amount"
 " of coupon points defined as the coupon value</span>"
 msgstr ""
+"<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Cấp số điểm "
+"phiếu giảm giá được coi là giá trị phiếu giảm giá</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "<span invisible=\"not clear_wallet\"> (or more)</span>"
-msgstr ""
+msgstr "<span invisible=\"not clear_wallet\"> (hoặc hơn nữa)</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
@@ -338,6 +346,12 @@ msgid ""
 "                            Generate \n"
 "                        </span>"
 msgstr ""
+"<span invisible=\"not will_send_mail\">\n"
+"                            Tạo và Gửi \n"
+"                        </span>\n"
+"                        <span invisible=\"will_send_mail\">\n"
+"                            Tạo \n"
+"                        </span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -347,12 +361,12 @@ msgstr "<span> x </span>"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "<span>Minimum purchase of</span>"
-msgstr "<span>Minimum purchase of</span>"
+msgstr "<span>Mua tối thiểu</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "<span>Valid for purchase above</span>"
-msgstr "<span>Valid for purchase above</span>"
+msgstr "<span>Áp dụng cho mua hàng trên</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
@@ -507,12 +521,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "ABCDE12345"
-msgstr ""
+msgstr "ABCDE12345"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__active
@@ -527,7 +541,7 @@ msgstr "Đang hoạt động"
 #: model:ir.model.fields,field_description:loyalty.field_res_partner__loyalty_card_count
 #: model:ir.model.fields,field_description:loyalty.field_res_users__loyalty_card_count
 msgid "Active loyalty cards"
-msgstr ""
+msgstr "Thẻ khách hàng thân thiết đang hoạt động"
 
 #. module: loyalty
 #. odoo-javascript
@@ -599,7 +613,7 @@ msgstr "Tự động"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Automatic promo: 10% off on orders higher than $50"
-msgstr ""
+msgstr "Khuyến mại tự động: giảm giá 10% cho đơn hàng đạt trên $50"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__available_on
@@ -623,7 +637,7 @@ msgstr "Mã vạch"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Buy 10 products to get 10$ off on the 11th one"
-msgstr ""
+msgstr "Mua 10 sản phẩm và được giảm giá $10 cho sản phẩm thứ 11"
 
 #. module: loyalty
 #. odoo-python
@@ -806,14 +820,14 @@ msgstr "Tạo một mẫu mới từ đầu hoặc sử dụng một trong các 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_discount_loyalty_action
 msgid "Create one from scratch, or use a templates below:"
-msgstr ""
+msgstr "Tạo từ đầu hoặc sử dụng một mẫu dưới đây:"
 
 #. module: loyalty
 #. odoo-javascript
 #: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
 #, python-format
 msgid "Create record"
-msgstr "Tạo tập dữ liệu"
+msgstr "Tạo bản ghi"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__create_uid
@@ -879,12 +893,12 @@ msgstr "Khách hàng"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "DEMO_CODE"
-msgstr ""
+msgstr "DEMO_CODE"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "DEMO_TEXT"
-msgstr ""
+msgstr "DEMO_TEXT"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -968,7 +982,7 @@ msgstr "Điểm giảm giá"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Discount product"
-msgstr ""
+msgstr "Sản phẩm chiết khấu"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_category_id
@@ -1056,7 +1070,7 @@ msgstr "Ngày hết hạn"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Fidelity Card"
-msgstr ""
+msgstr "Thẻ khách hàng thân thiết"
 
 #. module: loyalty
 #. odoo-python
@@ -1071,6 +1085,8 @@ msgstr "Thẻ khách hàng thân thiết"
 #, python-format
 msgid "Fill in your eWallet, to pay future orders"
 msgstr ""
+"Điền thông tin ví điện tử của bạn và sử dụng để thanh toán các đơn hàng "
+"trong tương lai"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
@@ -1161,7 +1177,7 @@ msgstr "Tạo thẻ quà tặng"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Generate and share unique coupons with your customers"
-msgstr ""
+msgstr "Tạo và chia sẻ các phiếu giảm giá độc đáo với khách hàng"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1169,11 +1185,18 @@ msgid "Generate eWallet"
 msgstr "Tạo ví điện tử"
 
 #. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "Generate {{props.context.program_item_name}}"
+msgstr "Tạo {{props.context.program_item_name}}"
+
+#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Get 10% off on some products, with a code"
-msgstr ""
+msgstr "Giảm giá 10% đối với một số sản phẩm, khi nhập mã"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
@@ -1381,7 +1404,7 @@ msgstr "Logo"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Loyalty Card"
-msgstr ""
+msgstr "Thẻ khách hàng thân thiết"
 
 #. module: loyalty
 #. odoo-python
@@ -1423,7 +1446,7 @@ msgstr "Quy tắc khách hàng thân thiết"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Loyalty point(s)"
-msgstr "Điểm khách hàng thân thiết"
+msgstr "Điểm thưởng"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_max_amount
@@ -1475,7 +1498,7 @@ msgstr "Đa sản phẩm"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Next Order Coupon"
-msgstr ""
+msgstr "Phiếu giảm giá đơn hàng tiếp theo"
 
 #. module: loyalty
 #. odoo-python
@@ -1503,7 +1526,7 @@ msgstr "Không thấy chương trình nào."
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_has_error_counter
@@ -1745,6 +1768,7 @@ msgstr "Loại phần thưởng"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rewards"
 msgstr "Phần thưởng"
 
@@ -1768,7 +1792,7 @@ msgstr "Khách hàng được chọn"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Sell Gift Cards, that allows to purchase products"
-msgstr ""
+msgstr "Bán Thẻ quà tặng, có thể được sử dụng để mua sản phẩm"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
@@ -1781,6 +1805,7 @@ msgstr "Gửi"
 #, python-format
 msgid "Send a coupon after an order, valid for next purchase"
 msgstr ""
+"Gửi phiếu giảm giá sau khi đặt hàng, có giá trị cho lần mua hàng tiếp theo"
 
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_gift_card
@@ -1853,7 +1878,7 @@ msgstr "Gảm giá phải hoàn toàn là số dương."
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__date_to
 msgid "The end date is included in the validity period of this program"
-msgstr ""
+msgstr "Ngày kết thúc được tính vào thời hạn hiệu lực của chương trình này"
 
 #. module: loyalty
 #. odoo-python
@@ -1862,6 +1887,8 @@ msgstr ""
 msgid ""
 "The loyalty program's currency must be the same as all it's pricelists ones."
 msgstr ""
+"Đơn vị tiền tệ của chương trình khách hàng thân thiết phải giống với đơn vị "
+"tiền tệ trong bảng giá của chương trình."
 
 #. module: loyalty
 #. odoo-python
@@ -1876,6 +1903,13 @@ msgid "The required points for a reward must be strictly positive."
 msgstr "Điểm cần thiết để nhận phần thưởng phải là số dương."
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+#, python-format
+msgid "The reward description field cannot be empty."
+msgstr "Không được để trống trường mô tả phần thưởng."
+
+#. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
 msgid "The reward product quantity must be strictly positive."
 msgstr "Số lượng sản phẩm phần thưởng phải là số dương."
@@ -1883,7 +1917,7 @@ msgstr "Số lượng sản phẩm phần thưởng phải là số dương."
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__date_from
 msgid "The start date is included in the validity period of this program"
-msgstr ""
+msgstr "Ngày bắt đầu được tính vào thời hạn hiệu lực của chương trình này"
 
 #. module: loyalty
 #. odoo-python
@@ -1892,6 +1926,7 @@ msgstr ""
 msgid ""
 "The validity period's start date must be anterior or equal to its end date."
 msgstr ""
+"Ngày bắt đầu của thời hạn hiệu lực phải trước hoặc cùng ngày kết thúc."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_card_action
@@ -2016,7 +2051,7 @@ msgstr "Sẽ Gửi Mail"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Win points with each purchase, and claim gifts"
-msgstr ""
+msgstr "Tích điểm với mỗi lần mua hàng và sử dụng điểm để đổi quà tặng"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__mode__with_code
@@ -2116,7 +2151,7 @@ msgstr "(các) mặt hàng đã mua"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "loyalty Reward"
-msgstr ""
+msgstr "Phần thưởng khách hàng thân thiết"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -2197,3 +2232,10 @@ msgstr "sử dụng"
 #, python-format
 msgid "your order"
 msgstr "đơn hàng của bạn"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "{{loyalty_el_title}}"
+msgstr "{{loyalty_el_title}}"

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -159,6 +160,13 @@ msgstr "VD: khách hàng: Steward, ngày: 2020-05-09"
 
 #. module: pos_sale
 #. odoo-javascript
+#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
+#, python-format
+msgid "Error amount too high"
+msgstr "Số tiền lỗi quá cao"
+
+#. module: pos_sale
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
 #, python-format
@@ -178,6 +186,8 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale configuration to choose one."
 msgstr ""
+"Có vẻ bạn đã không cấu hình sản phẩm trả trước trong điểm bán hàng. Bạn có "
+"thể đi đến cấu hình điểm bán hàng để chọn một sản phẩm."
 
 #. module: pos_sale
 #. odoo-python
@@ -518,7 +528,7 @@ msgstr "Tổng"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_stock_picking
 msgid "Transfer"
-msgstr "Điều chuyển"
+msgstr "Lệnh chuyển hàng"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale

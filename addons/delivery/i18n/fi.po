@@ -9,19 +9,19 @@
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
 # Mikko Salmela <salmemik@gmail.com>, 2023
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
 # Martin Trigaux, 2023
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +35,13 @@ msgstr ""
 #, python-format
 msgid "%(carrier)s Error"
 msgstr "%(carrier)s Virhe"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "%(old_name)s (copy)"
+msgstr "%(old_name)s (kopio)"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -95,7 +102,7 @@ msgid ""
 "for customers to follow."
 msgstr ""
 "Kuvaus toimitustavasta, jonka haluat ilmoittaa asiakkaillesi "
-"myyntitilauksessa ja myyntivahvistussähköpostissa. Esim. ohjeet asiakkaille."
+"myyntitilauksessa ja tilausvahvistussähköpostissa. Esim. ohjeet asiakkaille."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -374,6 +381,13 @@ msgid "Error: this delivery method is not available for this address."
 msgstr "Virhe: tämä toimitustapa ei ole käytettävissä tässä osoitteessa."
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "Error: this delivery method is not available."
+msgstr "Virhe: Tämä toimitustapa ei ole käytettävissä."
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
@@ -624,6 +638,11 @@ msgid "Pricing Rules"
 msgstr "Hinnoittelusäännöt"
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_product_category
+msgid "Product Category"
+msgstr "Tuotekategoria"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
 msgid "Product Qty"
 msgstr "Tuotteen määrä"
@@ -850,6 +869,17 @@ msgstr ""
 "\n"
 "Seuraavat toimitusrivit (tuote, laskutettu määrä ja hinta) on jo käsitelty:\n"
 "\n"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr ""
+"Toimitukset-tuoteryhmää ei voi poistaa, koska sitä käytetään "
+"toimituskuljettajien tuotteissa."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list

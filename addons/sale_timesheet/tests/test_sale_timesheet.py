@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import date, timedelta
 
+from odoo import Command
 from odoo.fields import Date
 from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
@@ -968,6 +969,42 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
                 self.assertEqual(product_form.uom_id.id, self.uom_hour.id)
                 product_form.detailed_type = 'consu'
                 self.assertEqual(product_form.uom_id.id, uom_kg.id)
+
+    def test_non_consolidated_billing_service_timesheet(self):
+        """
+        When consolidated_billing is set to False, an invoice is created for each sale order
+        Makes sure it works with sales orders linked to timesheets
+        """
+
+        sale_orders = self.env['sale.order'].create([{
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_delivery_timesheet2.id,
+            })],
+        }, {
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_delivery_timesheet2.id,
+            })],
+        }])
+        sale_orders.action_confirm()
+
+        self.env['account.analytic.line'].create([{
+            'name': 'Timesheet',
+            'task_id': task.id,
+            'project_id': task.project_id.id,
+            'unit_amount': 2,
+            'employee_id': self.employee_user.id,
+        } for task in sale_orders.tasks_ids])
+
+        advance_payment = self.env['sale.advance.payment.inv'].with_context(active_ids=sale_orders.ids).create({
+            'consolidated_billing': False,
+        })
+
+        invoices = advance_payment._create_invoices(sale_orders)
+
+        self.assertEqual(len(invoices), 2, "The number of invoices created should be equal to the number of sales orders.")
+
 
 class TestSaleTimesheetView(TestCommonTimesheet):
     def test_get_view_timesheet_encode_uom(self):

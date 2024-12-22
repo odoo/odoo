@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -166,7 +166,7 @@ msgstr "Akun Analitik"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_ids
 msgid "Analytic Account Line"
-msgstr "Baris Akun Analiti"
+msgstr "Baris Akun Analitik"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_plan
@@ -181,7 +181,7 @@ msgstr "Otomatis"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_stock_accounting_automatic
 msgid "Automatic Stock Accounting"
-msgstr "Akuntansi Stok Otomati"
+msgstr "Akuntansi Stok Otomatis"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
@@ -1101,6 +1101,17 @@ msgid ""
 " You must define one before processing this operation."
 msgstr ""
 "Anda tidak memiliki akun input valuation yang didefinisikan pada kategori "
+"produk Anda. Anda harus mendefinisikannya sebelum memproses operasi ini."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"You don't have any output valuation account defined on your product "
+"category. You must define one before processing this operation."
+msgstr ""
+"Anda tidak memiliki akun output valuation yang didefinisikan pada kategori "
 "produk Anda. Anda harus mendefinisikannya sebelum memproses operasi ini."
 
 #. module: stock_account

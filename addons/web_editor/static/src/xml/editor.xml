@@ -170,8 +170,16 @@
 
             <div t-if="props.showLink" id="link" class="btn-group">
                 <div id="media-insert" title="Insert media" class="fa fa-file-image-o fa-fw btn editor-ignore"></div>
+                <!--
+                Unlink button is visually last but thanks through the order-1
+                class. Indeed the create-link button needs to be last in the DOM
+                for the border-radius to be right when unlink is not shown, e.g.
+                in website.
+                TODO this should be done another way (split web_editor/website
+                to review).
+                -->
+                <div id="unlink" data-call="unlink" title="Remove link" class="fa fa-unlink fa-fw btn order-1"></div>
                 <div id="create-link" title="Insert or edit link" class="fa fa-link fa-fw btn editor-ignore"></div>
-                <div id="unlink" data-call="unlink" title="Remove link" class="fa fa-unlink fa-fw btn"></div>
                 <a id="media-description" href="#" title="Edit media description" class="btn editor-ignore">Description</a>
             </div>
 

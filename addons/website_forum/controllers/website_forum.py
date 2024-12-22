@@ -157,7 +157,7 @@ class WebsiteForum(WebsiteProfile):
 
         pager = tools.lazy(lambda: request.website.pager(
             url=url, total=question_count, page=page, step=self._post_per_page,
-            scope=self._post_per_page, url_args=url_args))
+            scope=5, url_args=url_args))
 
         values = self._prepare_user_values(forum=forum, searches=post)
         values.update({
@@ -367,7 +367,7 @@ class WebsiteForum(WebsiteProfile):
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/close', type='http', auth="user", methods=['POST'], website=True)
     def question_close(self, forum, question, **post):
         question.close(reason_id=int(post.get('reason_id', False)))
-        return request.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
+        return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/reopen', type='http', auth="user", methods=['POST'], website=True)
     def question_reopen(self, forum, question, **kwarg):

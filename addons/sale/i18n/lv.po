@@ -3,7 +3,6 @@
 # 	* sale
 # 
 # Translators:
-# Aleksejs Ivanovs, 2023
 # Artjoms Ustinovs <artyom.ustinov2010@yandex.ru>, 2023
 # Arnis Putniņš <arnis@allegro.lv>, 2023
 # InfernalLV <karlisdreizis@gmail.com>, 2023
@@ -11,17 +10,17 @@
 # Martin Trigaux, 2023
 # ievaputnina <ievai.putninai@gmail.com>, 2023
 # Anzelika Adejanova, 2023
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
 # Lancelot Semal, 2024
 # Will Sensors, 2024
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Will Sensors, 2024\n"
+"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -751,6 +750,11 @@ msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
 msgstr "<i class=\"fa fa-fw fa-check\"/> Apmaksāts"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
 msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Termiņš iztecējis"
@@ -1007,9 +1011,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Noliktavas produkts ir produkts, kuram Jūs pārvaldat krājumus. Jābūt instalētam \"Inventory\" modulim.\n"
-"Palīgmateriāls ir produkts, kuram krājumi netiek pārvaldīti.\n"
-"Pakalpojums ir nemateriāls produkts, ko jūs sniedzat."
+"Uzglabājama prece ir prece, kurai Jūs pārvaldat atlikumu. Inventāra lietotnei jābūt uzstādītai.\n"
+"Patērējama prece ir prece, kurai atlikums nav pārvaldams.\n"
+"Pakalpojums ir nemateriāla prece, kuru Jūs nodrošinat."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -1169,15 +1173,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"Ļauj kopīgot dokumentu ar klientiem pārdošanas laikā.\n"
-"Atstājiet to tukšu, ja nevēlaties kopīgot šo dokumentu ar pārdošanas klientu.\n"
-"Piedāvājums: dokuments tiks nosūtīts klientiem un būs pieejams tiem jebkurā laikā.\n"
-"piemēram, šī opcija var būt noderīga, lai kopīgotu produkta apraksta failus.\n"
-"Apstiprināts pasūtījums: dokuments tiks nosūtīts klientiem un būs tiem pieejams.\n"
-"piemēram, šī opcija var būt noderīga, lai kopīgotu lietotāja rokasgrāmatu vai digitālo saturu, kas iegādāts e-komercijā.\n"
-"Citāti iekšpusē: Dokuments tiks iekļauts piedāvājuma pdf formātā starp galvenajām lapām un piedāvājuma tabulu. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -2560,7 +2558,7 @@ msgstr "Iesk. nodokļus)"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_account_id
 msgid "Income Account"
-msgstr "Ieņēmumu Konts"
+msgstr "Peļņas konts"
 
 #. module: sale
 #. odoo-python
@@ -4174,14 +4172,14 @@ msgid "Sales Analysis"
 msgstr "Pārdošanas analīze"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis By Customers"
-msgstr "Pārdošanas analīze pa klientiem"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
 msgstr "Pārdošanas analīze, ko veic pārdevēji"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis Per Customers"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -4267,7 +4265,6 @@ msgstr "Pārdošanas pasūtījums(i)"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4660,7 +4657,7 @@ msgstr "Stadija"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Start by checking your company's data."
-msgstr "Iesāciet ar Jūsu kompānijas datu pārbaudi."
+msgstr "Iesāciet ar Jūsu uzņēmuma datu pārbaudi."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -5004,7 +5001,6 @@ msgstr ""
 
 #. module: sale
 #. odoo-python
-#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
@@ -5051,11 +5047,6 @@ msgid "The value of the down payment amount must be positive."
 msgstr "Avansa maksājuma daudzuma vērtībai jābūt pozitīvai."
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid "There are currently no orders for your account."
-msgstr "There are currently no orders for your account."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
 msgstr "There are currently no quotations for your account."
@@ -5069,6 +5060,16 @@ msgstr "Pašlaik jūsu kontā nav pārdošanas pasūtījumu."
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
 msgstr "Ir esošās"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5507,6 +5508,7 @@ msgstr "Brīdinājums"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
@@ -5594,6 +5596,13 @@ msgstr "Bloķētu pasūtījumu nevar atcelt. Lūdzu, vispirms to atbloķējiet."
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid "You cannot change the pricelist of a confirmed order !"
+msgstr ""
+
+#. module: sale
+#. odoo-python
 #: code:addons/sale/models/product_product.py:0
 #: code:addons/sale/models/product_template.py:0
 #, python-format
@@ -5630,10 +5639,11 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
-"Visam pārdotajam vai iegādātajam produktam ir jādefinē produkts,\n"
-"                neatkarīgi no tā, vai tas ir uzglabājams produkts, patēriņa prece vai pakalpojums."
+"Jums ir jādefinē prece visam ko Jūs pārdodat vai iegādājaties,\n"
+"                neatkarīgi no tā, vai tā ir uzglabājama prece, patērējama prece vai pakalpojums."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Jūsu pasūtījumi"
@@ -5757,5 +5767,5 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} {{ object.type_name }} Atcelts (Ref {{ "
+"{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
 "object.name or 'n/a' }})"

@@ -244,7 +244,7 @@
                             <group invisible="type == 'opportunity'">
                                 <field name="user_id"
                                     context="{'default_sales_team_id': team_id}" widget="many2one_avatar_user"/>
-                                <field name="team_id" options="{'no_open': True, 'no_create': True}" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
+                                <field name="team_id" options="{'no_open': True, 'no_create': True}" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
                             </group>
                             <group name="lead_priority" invisible="type == 'opportunity'">
                                 <field name="priority" widget="priority"/>
@@ -901,6 +901,12 @@
                     <field name="stage_id"/>
                     <field name="user_id"/>
                     <field name="color" invisible="1"/>
+                    <field name="automated_probability" invisible="1"/>
+                    <field name="message_bounce" invisible="1"/>
+                    <field name="recurring_revenue_monthly" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_monthly_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
                 </graph>
             </field>
         </record>
@@ -919,9 +925,10 @@
                     <field name="day_close" invisible="1"/>
                     <field name="message_bounce" invisible="1"/>
                     <field name="probability" invisible="1"/>
-                    <field name="recurring_revenue_monthly" groups="crm.group_use_recurring_revenues"/>
-                    <field name="recurring_revenue_monthly_prorated" groups="crm.group_use_recurring_revenues"/>
-                    <field name="recurring_revenue" groups="crm.group_use_recurring_revenues"/>
+                    <field name="recurring_revenue_monthly" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_monthly_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
                 </graph>
             </field>
         </record>
@@ -938,9 +945,10 @@
                     <field name="automated_probability" invisible="1"/>
                     <field name="message_bounce" invisible="1"/>
                     <field name="probability" invisible="1"/>
-                    <field name="recurring_revenue_monthly" type="measure" groups="crm.group_use_recurring_revenues"/>
-                    <field name="recurring_revenue_monthly_prorated" groups="crm.group_use_recurring_revenues"/>
-                    <field name="recurring_revenue" groups="crm.group_use_recurring_revenues"/>
+                    <field name="recurring_revenue_monthly" type="measure" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_monthly_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
                 </pivot>
             </field>
         </record>
@@ -960,9 +968,10 @@
                     <field name="day_close" invisible="1"/>
                     <field name="message_bounce" invisible="1"/>
                     <field name="probability" invisible="1"/>
-                    <field name="recurring_revenue_monthly" groups="crm.group_use_recurring_revenues"/>
-                    <field name="recurring_revenue_monthly_prorated" groups="crm.group_use_recurring_revenues"/>
-                    <field name="recurring_revenue" groups="crm.group_use_recurring_revenues"/>
+                    <field name="recurring_revenue_monthly" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_monthly_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue" groups="!crm.group_use_recurring_revenues" invisible="1"/>
+                    <field name="recurring_revenue_prorated" groups="!crm.group_use_recurring_revenues" invisible="1"/>
                 </pivot>
             </field>
         </record>

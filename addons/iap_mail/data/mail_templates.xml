@@ -3,7 +3,7 @@
 
     <template id="enrich_company">
         <p t-esc="flavor_text" />
-        <div class="o_partner_autocomplete_enrich_info bg-white p-3 mt-3 mb-3 me-5">
+        <div class="o_partner_autocomplete_enrich_info p-3 mt-3 mb-3 me-5">
             <div class="row p-0 m-0">
             <div class="col-sm-10 p-0">
                 <h4>
@@ -51,7 +51,7 @@
                 </div>
                 <div t-if="sectors" class="my-1 col-sm-9">
                     <t t-foreach="sectors" t-as="inner_sector">
-                        <label t-esc="inner_sector" style="font-weight:normal; padding: 2px 10px; background-color: #eeeeee; margin: 1px 0px; border-radius: 13px; display: inline-block;"/>
+                        <label t-esc="inner_sector" class="o_tag o_tag_color_7" style="font-weight:normal; padding: 2px 10px; margin: 1px 0px; border-radius: 13px; display: inline-block;"/>
                     </t>
                 </div>
                 <div t-if="employees" class="d-flex my-1 p-0 col-sm-3">
@@ -72,7 +72,7 @@
                 </div>
                 <div t-if="phone_numbers" class="col-sm-9">
                     <t t-foreach="phone_numbers" t-as="phone_number">
-                        <a t-attf-href="tel:{{phone_number}}" t-esc="phone_number" style="font-weight:normal; padding: 2px 10px; background-color: #eeeeee; margin: 1px 0px; border-radius: 13px; display: inline-block;"/>
+                        <a t-attf-href="tel:{{phone_number}}" t-esc="phone_number" class="o_tag o_tag_color_7"  style="font-weight:normal; padding: 2px 10px; margin: 1px 0px; border-radius: 13px; display: inline-block;"/>
                     </t>
                 </div>
                 <div t-if="email" class="d-flex my-1 p-0 col-sm-3">
@@ -81,7 +81,7 @@
                 </div>
                 <div t-if="email" class="col-sm-9">
                     <t t-foreach="email" t-as="email_item">
-                        <a target="_top" t-attf-href="mailto:{{email_item}}" t-esc="email_item" style="font-weight:normal; padding: 2px 10px; background-color: #eeeeee; margin: 1px 0px; border-radius: 13px; display: inline-block;"/>
+                        <a target="_top" t-attf-href="mailto:{{email_item}}" t-esc="email_item" class="o_tag o_tag_color_7"  style="font-weight:normal; padding: 2px 10px; margin: 1px 0px; border-radius: 13px; display: inline-block;"/>
                     </t>
                 </div>
                 <div t-if="timezone" class="d-flex my-1 p-0 col-sm-3">
@@ -95,7 +95,7 @@
                 </div>
                 <div t-if="tech" class="my-1 col-sm-9">
                     <t t-foreach="tech" t-as="tech_item">
-                        <label t-esc="tech_item.replace('_', ' ').title()" style="font-weight:normal; padding: 2px 10px; background-color: #eeeeee; margin: 1px 0px; border-radius: 13px; display: inline-block;"/>
+                        <label t-esc="tech_item.replace('_', ' ').title()" class="o_tag o_tag_color_7"  style="font-weight:normal; padding: 2px 10px; margin: 1px 0px; border-radius: 13px; display: inline-block;"/>
                     </t>
                 </div>
                 <div t-if="twitter_bio" class="d-flex my-1 p-0 col-sm-3">
@@ -104,13 +104,13 @@
                 </div>
                 <div t-if="twitter_bio" class="my-1 col-sm-9">
                     <div class="d-flex gap-2">
-                        <a t-if="twitter" target="_blank" t-attf-href="http://www.twitter.com/{{twitter}}">
+                        <a t-if="twitter" target="_blank" t-attf-href="http://www.twitter.com/{{twitter}}" class="text-nowrap">
                             http://www.twitter.com/<t t-esc="twitter"/>
                         </a>
                         <span t-if="twitter"> • </span>
-                        <div t-if="twitter_followers"><t t-esc="twitter_followers"/> followers</div>
+                        <div t-if="twitter_followers" class="text-nowrap"><t t-esc="twitter_followers"/> followers</div>
                     </div>
-                    <div t-esc="twitter_bio" />
+                    <div t-esc="twitter_bio" class="mt-1"/>
                 </div>
             </div>
         </div>

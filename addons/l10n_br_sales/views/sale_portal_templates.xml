@@ -5,17 +5,17 @@
         <th id="taxes_header" position="replace"/>
         <!-- hide the taxes td -->
         <td id="taxes" position="replace"/>
-        <!-- hide the "Amount" th -->
-        <th id="subtotal_header" position="replace"/>
-        <!-- hide the "Amount" td -->
-        <td id='subtotal' position="replace"/>
+        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="attributes">
+            <attribute name="t-value">current_subtotal + line.price_total</attribute>
+        </t>
+        <span t-field="line.price_subtotal" position="attributes">
+            <attribute name="t-field">line.price_total</attribute>
+        </span>
         <xpath expr="//t[@t-call='sale.sale_order_portal_content_totals_table']" position="replace">
             <table class="table table-sm">
                 <t t-set="tax_totals" t-value="sale_order.tax_totals"/>
                 <t t-call="l10n_br_sales.document_tax_totals_brazil"/>
             </table>
         </xpath>
-        <!-- hide subsection subtotals, because they don't include tax -->
-        <xpath expr="//span[@t-out='current_subtotal']/.." position="replace"/>
     </template>
 </odoo>

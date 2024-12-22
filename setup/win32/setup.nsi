@@ -87,7 +87,7 @@ Unicode True
 
 Name '${DISPLAY_NAME}'
 Caption "${PRODUCT_NAME} ${VERSION} Setup"
-OutFile "odoo_setup_${VERSION}.exe"
+OutFile "${TOOLSDIR}\server\odoo_setup_${VERSION}.exe"
 SetCompressor /SOLID /FINAL lzma
 ShowInstDetails hide
 
@@ -136,6 +136,7 @@ Var ProxyTokenPwd
 !define MUI_PAGE_CUSTOMFUNCTION_LEAVE ComponentLeave
 !insertmacro MUI_PAGE_COMPONENTS
 Page Custom ShowPostgreSQL LeavePostgreSQL
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE dir_leave
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 Page Custom ShowProxyTokenDialogPage
@@ -181,6 +182,7 @@ LangString TITLE_IOT ${LANG_ENGLISH} "Odoo IoT"
 LangString TITLE_Nginx ${LANG_ENGLISH} "Nginx WebServer"
 LangString TITLE_Ghostscript ${LANG_ENGLISH} "Ghostscript interpreter"
 LangString DESC_FinishPageText ${LANG_ENGLISH} "Start Odoo"
+LangString UnsafeDirText ${LANG_ENGLISH} "Installing outside of $PROGRAMFILES64 is not recommended.$\nDo you want to continue ?"
 
 ; French
 LangString DESC_Odoo_Server ${LANG_FRENCH} "Installation du Serveur Odoo avec tous les modules Odoo standards."
@@ -206,6 +208,7 @@ LangString TITLE_IOT ${LANG_FRENCH} "Odoo IoT"
 LangString TITLE_Nginx ${LANG_FRENCH} "Installation du serveur web Nginx"
 LangString TITLE_Ghostscript ${LANG_FRENCH} "Installation de l'interpréteur Ghostscript"
 LangString DESC_FinishPageText ${LANG_FRENCH} "Démarrer Odoo"
+LangString UnsafeDirText ${LANG_FRENCH} "Installer en dehors de $PROGRAMFILES64 n'est pas recommandé.$\nVoulez-vous continuer ?"
 
 InstType /NOCUSTOM
 InstType $(Profile_AllInOne)
@@ -223,7 +226,7 @@ Section $(TITLE_Odoo_Server) SectionOdoo_Server
     File /r /x "src" "${TOOLSDIR}\nssm-2.24\*"
 
     SetOutPath "$INSTDIR\server"
-    File /r /x "wkhtmltopdf" /x "enterprise" "..\..\*"
+    File /r /x "wkhtmltopdf" /x "enterprise" "${TOOLSDIR}\server\*"
 
     SetOutPath "$INSTDIR\vcredist"
     File /r "${TOOLSDIR}\vcredist\*.exe"
@@ -233,7 +236,7 @@ Section $(TITLE_Odoo_Server) SectionOdoo_Server
     nsExec::Exec '"$INSTDIR\vcredist\vc_redist.x64.exe" /q'
 
     SetOutPath "$INSTDIR\thirdparty"
-    File /r "${STATIC_PATH}\wkhtmltopdf\*"
+    File /r "${TOOLSDIR}\wkhtmltopdf\*"
 
     # If there is a previous install of the Odoo Server, keep the login/password from the config file
     WriteIniStr "$INSTDIR\server\odoo.conf" "options" "db_host" $TextPostgreSQLHostname
@@ -277,7 +280,7 @@ Section $(TITLE_PostgreSQL) SectionPostgreSQL
     nsExec::Exec 'net user openpgsvc /delete'
 
     DetailPrint "Downloading PostgreSQl"
-    inetc::get "$postgresql_url" "$TEMP/$postgresql_exe_filename" /POPUP
+    NScurl::http get "$postgresql_url" "$TEMP/$postgresql_exe_filename" /PAGE /END
     pop $0
 
     ReadRegStr $0 HKLM "System\CurrentControlSet\Control\ComputerName\ActiveComputerName" "ComputerName"
@@ -307,7 +310,6 @@ Section $(TITLE_IOT) IOT
     nsExec::ExecToStack '"$INSTDIR\python\python.exe" "$INSTDIR\server\odoo-bin" genproxytoken'
     pop $0
     pop $ProxyTokenPwd
-    Call RestartOdooService
 SectionEnd
 
 
@@ -323,7 +325,7 @@ Section $(TITLE_Nginx) Nginx
     StrCpy $nginx_url "https://nginx.org/download/$nginx_zip_filename"
 
     DetailPrint "Downloading Nginx"
-    inetc::get "$nginx_url" "$TEMP\$nginx_zip_filename" /POPUP
+    NScurl::http get "$nginx_url" "$TEMP\$nginx_zip_filename" /PAGE /END
     DetailPrint "Temp dir: $TEMP\$nginx_zip_filename"
     DetailPrint "Unzip Nginx"
     nsisunz::UnzipToLog "$TEMP\$nginx_zip_filename" "$INSTDIR"
@@ -355,14 +357,15 @@ Section $(TITLE_Ghostscript) SectionGhostscript
     StrCpy $ghostscript_url "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10012/$ghostscript_exe_filename"
 
     DetailPrint "Downloading Ghostscript"
-    inetc::get "$ghostscript_url" "$TEMP\$ghostscript_exe_filename" /POPUP
+    NScurl::http get "$ghostscript_url" "$TEMP\$ghostscript_exe_filename" /PAGE /END
     DetailPrint "Temp dir: $TEMP\$ghostscript_exe_filename"
-    
+
     Rmdir /r "INSTDIR\Ghostscript"
     DetailPrint "Installing Ghostscript"
     ExecWait '"$TEMP\$ghostscript_exe_filename" \
         /S \
         /D=$INSTDIR\Ghostscript'
+    Call RestartOdooService
 SectionEnd
 
 Section -Post
@@ -415,6 +418,8 @@ Function .onInit
     ${If} $previous_install_dir == ""
         StrCpy $INSTDIR "$PROGRAMFILES64\Odoo ${VERSION}"
         WriteRegStr HKLM "${REGISTRY_KEY}" "Install_dir" "$INSTDIR"
+    ${Else}
+        StrCpy $INSTDIR $previous_install_dir
     ${EndIf}
 
     Push $R0
@@ -580,4 +585,14 @@ Function RestartOdooService
     DetailPrint "Restarting Odoo Service"
     ExecWait "net stop ${SERVICENAME}"
     ExecWait "net start ${SERVICENAME}"
+FunctionEnd
+
+Function dir_leave
+    StrLen $0 $PROGRAMFILES64
+    StrCpy $0 $INSTDIR $0
+    StrCmp $0 $PROGRAMFILES64 continue
+    MessageBox MB_YESNO|MB_ICONEXCLAMATION "$(UnsafeDirText)" IDYES continue IDNO aborting
+    aborting:
+        Abort
+    continue:
 FunctionEnd

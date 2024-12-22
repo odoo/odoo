@@ -163,9 +163,15 @@ class EventMailScheduler(models.Model):
         for scheduler in self:
             now = fields.Datetime.now()
             if scheduler.interval_type == 'after_sub':
-                new_registrations = scheduler.event_id.registration_ids.filtered_domain(
-                    [('state', 'not in', ('cancel', 'draft'))]
-                ) - scheduler.mail_registration_ids.registration_id
+                if self.env.context.get('event_mail_registration_ids'):
+                    new_registrations = self.env['event.registration'].search([
+                        ('id', 'in', self.env.context['event_mail_registration_ids']),
+                        ('event_id', '=', scheduler.event_id.id),
+                    ]) - scheduler.mail_registration_ids.registration_id
+                else:
+                    new_registrations = scheduler.event_id.registration_ids.filtered_domain(
+                        [('state', 'not in', ('cancel', 'draft'))]
+                    ) - scheduler.mail_registration_ids.registration_id
                 scheduler._create_missing_mail_registrations(new_registrations)
 
                 # execute scheduler on registrations
@@ -184,11 +190,10 @@ class EventMailScheduler(models.Model):
                     continue
                 # do not send emails if the mailing was scheduled before the event but the event is over
                 if scheduler.scheduled_date <= now and (scheduler.interval_type != 'before_event' or scheduler.event_id.date_end > now):
-                    scheduler.event_id.mail_attendees(scheduler.template_ref.id)
-                    # Mail is sent to all attendees (unconfirmed as well), so count all attendees
+                    scheduler.event_id.mail_attendees(scheduler.template_ref.id, filter_func=lambda reg: reg.state not in ('cancel', 'draft'))
                     scheduler.update({
                         'mail_done': True,
-                        'mail_count_done': len(scheduler.event_id.registration_ids.filtered(lambda r: r.state != 'cancel'))
+                        'mail_count_done': scheduler.event_id.seats_taken,
                     })
         return True
 

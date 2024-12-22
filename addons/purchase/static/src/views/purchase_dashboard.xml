@@ -5,29 +5,29 @@
             <div class="row justify-content-between gap-3 gap-lg-0">
                 <div class="col-12 col-lg-5 col-xl-5 col-xxl-4 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
                     <div class="grid gap-4">
-                        <div class="g-col-3 g-col-sm-2 d-flex align-items-center py-2 justify-content-end text-end justify-content-lg-start text-lg-start">
+                        <div class="g-col-3 g-col-sm-2 d-flex align-items-center py-2 justify-content-end text-end justify-content-lg-start text-lg-start text-break">
                             All RFQs
                         </div>
                         <div class="g-col-9 g-col-sm-10 grid gap-1">
                             <div class="g-col-4 p-0" t-on-click="setSearchContext" title="All Draft RFQs" filter_name="draft_rfqs">
-                                <a href="#" class="btn btn-primary w-100 h-100 border-0 rounded-0 text-capitalize fw-normal">
+                                <a href="#" class="btn btn-primary w-100 h-100 border-0 rounded-0 text-capitalize text-break fw-normal">
                                     <div class="fs-2" t-out="purchaseData['all_to_send']"/>To Send
                                 </a>
                             </div>
                             <div class="g-col-4 p-0" t-on-click="setSearchContext" title="All Waiting RFQs" filter_name="waiting_rfqs">
-                                <a href="#" class="btn btn-primary w-100 h-100 border-0 rounded-0 text-capitalize fw-normal">
+                                <a href="#" class="btn btn-primary w-100 h-100 border-0 rounded-0 text-capitalize text-break fw-normal">
                                     <div class="fs-2" t-out="purchaseData['all_waiting']"/>Waiting
                                 </a>
                             </div>
                             <div class="g-col-4 p-0" t-on-click="setSearchContext" title="All Late RFQs" filter_name="late_rfqs">
-                                <a href="#" class="btn btn-primary w-100 h-100 border-0 rounded-0 text-capitalize fw-normal">
+                                <a href="#" class="btn btn-primary w-100 h-100 border-0 rounded-0 text-capitalize text-break fw-normal">
                                     <div class="fs-2" t-out="purchaseData['all_late']"/>Late
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div class="grid gap-4">
-                        <div class="g-col-3 g-col-sm-2 d-flex align-items-center py-2 justify-content-end text-end justify-content-lg-start text-lg-start">
+                        <div class="g-col-3 g-col-sm-2 d-flex align-items-center py-2 justify-content-end text-end justify-content-lg-start text-lg-start text-break">
                             My RFQs
                         </div>
                         <div class="g-col-9 g-col-sm-10 grid gap-2">
@@ -53,7 +53,7 @@
                     <div class="d-flex flex-column justify-content-between gap-2 h-100">
                         <div class="grid gap-2 h-100">
                             <div class="g-col-6 g-col-md-6 grid gap-1 gap-md-4">
-                                <div class="g-col-12 g-col-sm-4 g-col-lg-6 d-flex align-items-center justify-content-center text-center justify-content-md-end text-md-end mt-4 mt-md-0">
+                                <div class="g-col-12 g-col-sm-4 g-col-lg-6 d-flex align-items-center justify-content-center text-center justify-content-md-end text-md-end mt-4 mt-sm-0 text-break">
                                     Avg Order Value
                                 </div>
                                 <div class="g-col-12 g-col-sm-8 g-col-lg-5 d-flex align-items-center justify-content-center py-2 bg-100">
@@ -61,7 +61,7 @@
                                 </div>
                             </div>
                             <div class="g-col-6 g-col-md-6 grid gap-1 gap-md-4">
-                                <div class="g-col-12 g-col-sm-4 g-col-lg-6 d-flex align-items-center py-2 justify-content-center text-center justify-content-md-end text-md-end mt-4 mt-md-0">
+                                <div class="g-col-12 g-col-sm-4 g-col-lg-6 d-flex align-items-center py-2 justify-content-center text-center justify-content-md-end text-md-end mt-4 mt-sm-0 text-break">
                                     Purchased Last 7 Days
                                 </div>
                                 <div class="g-col-12 g-col-sm-8 g-col-lg-6 d-flex align-items-center justify-content-center py-2 bg-100">
@@ -71,7 +71,7 @@
                         </div>
                         <div class="grid gap-2 h-100">
                             <div class="g-col-6 g-col-md-6 grid gap-1 gap-md-4">
-                                <div class="g-col-12 g-col-sm-4 g-col-lg-6 d-flex align-items-center justify-content-center text-center justify-content-md-end text-md-end mt-4 mt-md-0">
+                                <div class="g-col-12 g-col-sm-4 g-col-lg-6 d-flex align-items-center justify-content-center text-center justify-content-md-end text-md-end mt-4 mt-sm-0 text-break">
                                     Lead Time to Purchase
                                 </div>
                                 <div class="g-col-12 g-col-sm-8 g-col-lg-5 d-flex align-items-center justify-content-center py-2 bg-100">
@@ -79,7 +79,7 @@
                                 </div>
                             </div>
                             <div class="g-col-6 g-col-md-6 grid gap-1 gap-md-4">
-                                <div class="g-col-12 g-col-md-4 g-col-sm-4 g-col-lg-6 d-flex align-items-center justify-content-center text-center justify-content-md-end text-md-end mt-4 mt-md-0">
+                                <div class="g-col-12 g-col-md-4 g-col-sm-4 g-col-lg-6 d-flex align-items-center justify-content-center text-center justify-content-md-end text-md-end mt-4 mt-sm-0 text-break">
                                     RFQs Sent Last 7 Days
                                 </div>
                                 <div class="g-col-12 g-col-sm-8 g-col-lg-6 d-flex align-items-center justify-content-center py-2 bg-100">

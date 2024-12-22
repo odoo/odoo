@@ -82,6 +82,9 @@ class Survey(http.Controller):
         if (not survey_sudo.page_ids and survey_sudo.questions_layout == 'page_per_section') or not survey_sudo.question_ids:
             return 'survey_void'
 
+        if answer_sudo and answer_sudo.deadline and answer_sudo.deadline < datetime.now():
+            return 'answer_deadline'
+
         if answer_sudo and check_partner:
             if request.env.user._is_public() and answer_sudo.partner_id and not answer_token:
                 # answers from public user should not have any partner_id; this indicates probably a cookie issue
@@ -89,9 +92,6 @@ class Survey(http.Controller):
             if not request.env.user._is_public() and answer_sudo.partner_id != request.env.user.partner_id:
                 # partner mismatch, probably a cookie issue
                 return 'answer_wrong_user'
-
-        if answer_sudo and answer_sudo.deadline and answer_sudo.deadline < datetime.now():
-            return 'answer_deadline'
 
         return True
 
@@ -110,8 +110,8 @@ class Survey(http.Controller):
             survey_sudo, answer_sudo = self._fetch_from_access_token(survey_token, answer_token)
             try:
                 survey_user = survey_sudo.with_user(request.env.user)
-                survey_user.check_access_rights(self, 'read', raise_exception=True)
-                survey_user.check_access_rule(self, 'read')
+                survey_user.check_access_rights('read', raise_exception=True)
+                survey_user.check_access_rule('read')
             except:
                 pass
             else:
@@ -318,6 +318,9 @@ class Survey(http.Controller):
                     next_page_or_question = survey_sudo._get_next_page_or_question(
                         answer_sudo,
                         answer_sudo.last_displayed_page_id.id if answer_sudo.last_displayed_page_id else 0)
+                    # fallback to skipped page so that there is a next_page_or_question otherwise this should be a submit
+                    if not next_page_or_question:
+                        next_page_or_question = answer_sudo._get_next_skipped_page_or_question()
 
                 if next_page_or_question:
                     if answer_sudo.survey_first_submitted:

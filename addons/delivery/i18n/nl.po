@@ -3,17 +3,18 @@
 # 	* delivery
 # 
 # Translators:
-# Wil Odoo, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Manon Rondou, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -375,6 +376,13 @@ msgid "Error: this delivery method is not available for this address."
 msgstr "Fout: Deze verzendwijze is niet beschikbaar voor dit adres."
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "Error: this delivery method is not available."
+msgstr "Fout: deze verzendwijze is niet beschikbaar."
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
@@ -627,6 +635,11 @@ msgid "Pricing Rules"
 msgstr "Prijsregels"
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_product_category
+msgid "Product Category"
+msgstr "Productcategorie"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
 msgid "Product Qty"
 msgstr "Producthoeveelheid"
@@ -711,7 +724,7 @@ msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
 msgstr ""
-"Verzendverzekering is een service die afzenders kan vergoeden wiens "
+"Verzendverzekering is een service die afzenders kan vergoeden van wie de "
 "pakketten verloren, gestolen en/of beschadigd zijn tijdens het transport."
 
 #. module: delivery
@@ -855,6 +868,17 @@ msgstr ""
 "Je kunt de verzendkosten niet bijwerken op een order waar deze al is gefactureerd!\n"
 "\n"
 "De volgende leveringsregels (product, gefactureerde hoeveelheid en prijs) zijn al verwerkt:\n"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr ""
+"Je kunt de productcategorie leveringen niet verwijderen, aangezien deze "
+"wordt gebruikt voor de producten van de vervoerders."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list

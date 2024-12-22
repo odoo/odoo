@@ -21,7 +21,12 @@ class SaleOrder(models.Model):
         return result
 
     def action_confirm(self):
+        unconfirmed_registrations = self.order_line.registration_ids.filtered(
+            lambda reg: reg.state in ["draft", "cancel"]
+        )
         res = super(SaleOrder, self).action_confirm()
+        unconfirmed_registrations._update_mail_schedulers()
+
         for so in self:
             if not any(line.product_type == 'event' for line in so.order_line):
                 continue

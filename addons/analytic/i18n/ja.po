@@ -3,16 +3,16 @@
 # 	* analytic
 # 
 # Translators:
-# Wil Odoo, 2023
-# Junko Augias, 2023
+# Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Junko Augias, 2023\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -376,7 +376,7 @@ msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
-"サプライヤ請求書、経費、タイムシートを登録すると、\n"
+"仕入先請求書、経費、タイムシートを登録すると、\n"
 "自動的に原価が作成されます。"
 
 #. module: analytic
@@ -625,6 +625,13 @@ msgstr "名称"
 #: model:account.analytic.account,name:analytic.analytic_nebula
 msgid "Nebula"
 msgstr "Nebula"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+#, python-format
+msgid "New Model"
+msgstr "ニューモデル"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
@@ -890,6 +897,13 @@ msgid ""
 "You can't set a different company on your analytic account since there are "
 "some analytic items linked to it."
 msgstr "分析勘定には分析項目が連動しているため、別の会社を設定することはできません。"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+#, python-format
+msgid "You cannot add a parent to the base plan '%s'"
+msgstr ""
 
 #. module: analytic
 #. odoo-python

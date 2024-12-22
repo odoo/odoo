@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -1192,6 +1192,11 @@ msgid "Archived"
 msgstr "เก็บถาวรแล้ว"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Are you sure you want to cancel this transfer?"
+msgstr "คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการโอนนี้"
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
 msgid "As soon as possible"
 msgstr "เร็วที่สุดเท่าที่เป็นไปได้"
@@ -1603,10 +1608,11 @@ msgid ""
 "(Chicago) in its entirety and does not include any costs relating to the "
 "legislation of the country in which the client is located."
 msgstr ""
-"บางประเทศใช้การหัก ณ ที่จ่ายตามจำนวนใบแจ้งหนี้ ตามกฎหมายภายในของพวกเขา "
-"ลูกค้าจะจ่ายเงินหัก ณ ที่จ่ายให้กับหน่วยงานด้านภาษี บริษัทของฉัน (ชิคาโก) "
+"บางประเทศใช้การหัก ณ ที่จ่ายตามจำนวนใบแจ้งหนี้ ตามกฎหมายภายในของตน "
+"ลูกค้าจะจ่ายเงินหัก ณ ที่จ่าย ณ ที่จ่ายให้กับหน่วยงานด้านภาษี บริษัทของฉัน "
+"(ชิคาโก) "
 "ไม่สามารถมีส่วนร่วมในค่าใช้จ่ายที่เกี่ยวข้องกับกฎหมายของประเทศได้ไม่ว่าในสถานการณ์ใดก็ตาม"
-" ดังนั้นจำนวนเงินในใบแจ้งหนี้จะครบกำหนดชำระให้กับ บริษัทของฉัน (ชิคาโก) "
+" ดังนั้นจำนวนเงินในใบแจ้งหนี้จะถึงกำหนดชำระให้กับ My Company (Chicago) "
 "ทั้งหมด และไม่รวมค่าใช้จ่ายใดๆ "
 "ที่เกี่ยวข้องกับกฎหมายของประเทศที่ลูกค้าตั้งอยู่"
 
@@ -1620,6 +1626,16 @@ msgstr "ห่วงโซ่การเคลื่อนย้ายมีอ
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
 msgstr "เปลี่ยนปริมาณสินค้า"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"การเปลี่ยนแปลงหมายเลขล็อต/หมายเลขซีเรียลสำหรับสายการเคลื่อนย้ายที่มีผลิตภัณฑ์ที่แตกต่างกันไม่ได้รับอนุญาต"
 
 #. module: stock
 #. odoo-python
@@ -3513,6 +3529,13 @@ msgid "Generate Serials numbers"
 msgstr "สร้างหมายเลขซีเรียล"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Generate Serials/Lots"
+msgstr "สร้างหมายเลขซีเรียล/ล็อต"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get a full traceability from vendors to customers"
 msgstr "รับการตรวจสอบย้อนกลับอย่างเต็มรูปแบบจากผู้ขายไปยังลูกค้า"
@@ -3997,6 +4020,13 @@ msgstr "นำเข้า"
 #, python-format
 msgid "Import Lots"
 msgstr "นำเข้าล็อต"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Import Serials/Lots"
+msgstr "นำเข้าหมายเลขซีเรียล/ล็อต"
 
 #. module: stock
 #. odoo-python
@@ -4798,6 +4828,13 @@ msgid "Locations"
 msgstr "ตำแหน่ง"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.server,name:stock.action_toggle_is_locked
 msgid "Lock/Unlock"
 msgstr "ล็อค/ปลดล็อค"
@@ -4818,6 +4855,11 @@ msgstr "ล็อต"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__lot_label_format
 msgid "Lot Label Format to auto-print"
 msgstr "รูปแบบฉลากล็อตที่จะพิมพ์อัตโนมัติ"
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_label_lot_template_view
+msgid "Lot Label Report"
+msgstr "รายงานป้ายกำกับล็อต"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
@@ -5228,9 +5270,8 @@ msgid ""
 msgstr ""
 "บริษัทของฉัน (ชิคาโก) "
 "รับรองว่าจะพยายามอย่างดีที่สุดเพื่อให้บริการที่มีประสิทธิภาพภายในเวลาที่กำหนดตามกรอบเวลาที่ตกลงกันไว้"
-" อย่างไรก็ตาม "
-"ไม่มีภาระผูกพันใดที่สามารถพิจารณาว่าเป็นภาระผูกพันในการบรรลุผลลัพธ์ได้ "
-"บริษัทของฉัน (ชิคาโก) "
+" อย่างไรก็ตาม ไม่มีภาระผูกพันใดที่สามารถพิจารณาว่าเป็นภาระผูกพันในการบรรลุผล"
+" บริษัทของฉัน (ชิคาโก) "
 "ไม่สามารถถูกกำหนดโดยลูกค้าให้ปรากฏเป็นบุคคลที่สามในบริบทของการเรียกร้องค่าเสียหายใดๆ"
 " ที่ผู้บริโภคปลายทางยื่นต่อลูกค้า"
 
@@ -5422,6 +5463,13 @@ msgstr "ไม่มีการดำเนินการในล็อตน
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
 msgid "No operations found. Let's create a transfer!"
 msgstr "ไม่พบการดำเนินการ มาสร้างการโอนย้ายกันเถอะ!"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "No product found to generate Serials/Lots for."
+msgstr "ไม่พบผลิตภัณฑ์ที่จะสร้าง Serials/Lots สำหรับ"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -5863,8 +5911,8 @@ msgstr ""
 "เว้นแต่จะระบุกรอบเวลาการชำระเงินอื่นไว้ในใบแจ้งหนี้หรือคำสั่งซื้อ "
 "ในกรณีที่ไม่ชำระเงินภายในวันครบกำหนด บริษัทของฉัน (ชิคาโก) "
 "ขอสงวนสิทธิ์ในการขอชำระดอกเบี้ยคงที่จำนวน 10% ของจำนวนเงินคงเหลือที่ครบกำหนด"
-" บริษัทของฉัน (ชิคาโก) "
-"จะได้รับอนุญาตให้ระงับการให้บริการโดยไม่มีการแจ้งเตือนล่วงหน้าในกรณีที่ชำระเงินล่าช้า"
+" บริษัทของฉัน (ชิคาโก) จะได้รับอนุญาตให้ระงับการให้บริการใดๆ "
+"โดยไม่มีการแจ้งเตือนล่วงหน้าในกรณีที่ชำระเงินล่าช้า"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
@@ -5999,6 +6047,11 @@ msgstr "แพ็คเกจ"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package A"
 msgstr "แพ็คเกจ A"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "Package B"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
@@ -7696,6 +7749,14 @@ msgstr ""
 "และคุณสามารถเลือกมันจากสินค้าและหมวดสินค้า"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Rule %s belongs to %s while the route belongs to %s."
+msgstr "กฎ %s เป็นของ %s ในขณะที่เส้นทางเป็นของ %s"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
 msgid "Rule Message"
 msgstr "ข้อความกฎ"
@@ -8117,11 +8178,6 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_stock_general_settings
 msgid "Settings"
 msgstr "การตั้งค่า"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "Shelf 1"
-msgstr "ชั้นวาง 1"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -8769,6 +8825,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
@@ -8801,7 +8864,7 @@ msgstr ""
 "ลูกค้าได้สละสิทธิ์ในข้อกำหนดและเงื่อนไขมาตรฐานของตนเองอย่างชัดเจน "
 "แม้ว่าข้อกำหนดเหล่านี้จะถูกร่างขึ้นหลังจากข้อกำหนดและเงื่อนไขมาตรฐานในการขายเหล่านี้ก็ตาม"
 " เพื่อให้มีผลบังคับใช้ "
-"การเสื่อมเสียใดก็ตามจะต้องได้รับการยินยอมอย่างชัดแจ้งล่วงหน้าเป็นลายลักษณ์อักษร"
+"การเสื่อมเสียและความเสียหายใดก็ตามจะต้องได้รับการยินยอมอย่างชัดแจ้งล่วงหน้าเป็นลายลักษณ์อักษร"
 
 #. module: stock
 #. odoo-python
@@ -9902,6 +9965,7 @@ msgid "Used to order the 'All Operations' kanban view"
 msgstr "ใช้เพื่อจัดเรียงมุมมองคัมบัง ’ปฏิบัติการทั้งหมด’"
 
 #. module: stock
+#: model:ir.model,name:stock.model_res_users
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__user_id
 #: model:res.groups,name:stock.group_stock_user
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -10496,6 +10560,15 @@ msgstr "คุณไม่สามารถเปลี่ยนประเภ
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr ""
+"คุณไม่สามารถสร้างจุดสั่งซื้อที่ถูกพักไว้ซึ่งไม่ได้ถูกเรียกใช้งานด้วยตนเองได้"
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You can not delete moves linked to another operation"
@@ -10553,6 +10626,18 @@ msgstr ""
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 "คุณสามารถดำเนินการได้เพียง 1.0 %s ของสินค้าที่มีหมายเลขซีเรียลที่ไม่ซ้ำกัน"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
+"คุณสามารถระงับการทำงานของจุดสั่งซื้อด้วยตนเองได้เท่านั้น "
+"คุณควรเก็บจุดสั่งซื้อแบบ 'ทริกเกอร์อัตโนมัติ' ไว้เป็นไฟล์ถาวร "
+"หากคุณไม่ต้องการให้จุดสั่งซื้อเหล่านั้นถูกทริกเกอร์"
 
 #. module: stock
 #. odoo-python
@@ -10658,6 +10743,25 @@ msgstr "คุณไม่สามารถลบเศษสินค้าท
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
+"คุณไม่สามารถบรรจุปริมาณโดยตรงจากการถ่ายโอนที่แตกต่างกันลงในบรรจุภัณฑ์เดียวกันผ่านมุมมองนี้"
+" ลองเพิ่มพวกเขาในการเบิกสินค้าเป็นชุดและบรรจุไว้ที่นั่น"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "You cannot modify inventory loss quantity"
@@ -10673,6 +10777,16 @@ msgid ""
 msgstr ""
 "คุณไม่สามารถย้ายของในแพ็คเกจเดียวกันมากกว่าหนึ่งครั้งในการโอนย้ายเดียวกันได้"
 " หรือแยกแพ็คเกจเดียวกันออกเป็นสองตำแหน่ง"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+"คุณไม่สามารถบรรจุผลิตภัณฑ์ลงในบรรจุภัณฑ์เดียวกันได้เมื่อมาจากการโอนที่แตกต่างกันและมีประเภทการดำเนินการต่างกัน"
 
 #. module: stock
 #. odoo-python
@@ -10854,13 +10968,6 @@ msgstr "คุณต้องเปิดใช้งานสถานที่
 #, python-format
 msgid "You need to select a route to replenish your products"
 msgstr "คุณต้องเลือกเส้นทางเพื่อเติมสินค้าของคุณ"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You need to set a Serial Number before generating more."
-msgstr "คุณต้องตั้งค่าหมายเลขซีเรียลก่อนที่จะสร้างเพิ่ม"
 
 #. module: stock
 #. odoo-python

@@ -22,7 +22,8 @@ def add_stripped_items_before(node, spec, extract):
         parent = node.getparent()
         result = parent.text and RSTRIP_REGEXP.search(parent.text)
         before_text = result.group(0) if result else ''
-        parent.text = (parent.text or '').rstrip() + text
+        fallback_text = None if spec.text is None else ''
+        parent.text = ((parent.text or '').rstrip() + text) or fallback_text
     else:
         result = prev.tail and RSTRIP_REGEXP.search(prev.tail)
         before_text = result.group(0) if result else ''
@@ -238,6 +239,9 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                 # spec before the sentinel, then remove the sentinel element
                 sentinel = E.sentinel()
                 node.addnext(sentinel)
+                if node.tail is not None:  # for lxml >= 5.1
+                    sentinel.tail = node.tail
+                    node.tail = None
                 add_stripped_items_before(sentinel, spec, extract)
                 remove_element(sentinel)
             elif pos == 'before':

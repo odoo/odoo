@@ -70,6 +70,13 @@
                                         <span>|</span> <span t-field="company.country_id.name"/>
                                     </t>
                                     <hr class="company_invoice_line" />
+                                    <t t-if="not address and o and 'l10n_din5008_addresses' in o" t-set="address">
+                                        <address class="mb-0" t-field="o.partner_id.commercial_partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                                        <div t-if="o.partner_id.commercial_partner_id.vat" id="partner_vat_address_same_as_shipping">
+                                            <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                            <t t-else="">Tax ID</t>: <span t-field="o.partner_id.commercial_partner_id.vat"/>
+                                        </div>
+                                    </t>
                                     <div t-if="address">
                                         <t t-out="address"/>
                                     </div>
@@ -98,6 +105,10 @@
                                         <div class="shipping_address">
                                             <strong><t t-esc="doc_address[0]"/></strong>
                                             <div t-esc="doc_address[1]" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                                            <div t-if="len(doc_address) > 2 and isinstance(doc_address[2], dict) and doc_address[2].get('show_tax_id')" id="partner_vat_address_same_as_shipping">
+                                                <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                                <t t-else="">Tax ID</t>: <span t-field="doc_address[1].vat"/>
+                                            </div>
                                         </div>
                                     </td>
                                 </t>

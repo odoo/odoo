@@ -12,10 +12,13 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_receivable_id': 'ec1102050101',
             'property_account_payable_id': 'ec210301',
             'property_account_expense_categ_id': 'ec110307',
-            'property_account_income_categ_id': 'ec410201',
+            'journal_account_expense_categ_id': 'ec52022816',
+            'property_account_income_categ_id': 'ec410101',
             'property_stock_account_input_categ_id': 'ec110307',
             'property_stock_account_output_categ_id': 'ec510102',
             'property_stock_valuation_account_id': 'ec110306',
+            'loss_stock_valuation_account': 'ec510112',
+            'production_stock_valuation_account': 'ec110302',
             'code_digits': '4',
         }
 
@@ -34,8 +37,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'ec_early_pay_discount_gain',
                 'default_cash_difference_income_account_id': 'ec_income_cash_difference',
                 'default_cash_difference_expense_account_id': 'ec_expense_cash_difference',
-                'account_sale_tax_id': 'tax_vat_411_goods',
-                'account_purchase_tax_id': 'tax_vat_510_sup_01',
+                'account_sale_tax_id': 'tax_vat_15_411_goods',
+                'account_purchase_tax_id': 'tax_vat_15_510_sup_01',
             },
         }
 
@@ -50,3 +53,9 @@ class AccountChartTemplate(models.AbstractModel):
                 'l10n_ec_emission_address_id': self.env.company.partner_id.id,
             },
         }
+
+    def _post_load_data(self, template_code, company, template_data):
+        super()._post_load_data(template_code, company, template_data)
+        # Setup default Income/Expense Accounts on Sale/Purchase journals
+        if (purchase_journal := self.ref("purchase", raise_if_not_found=False)) and (expense_account_ref := template_data.get('journal_account_expense_categ_id')):
+            purchase_journal.default_account_id = self.ref(expense_account_ref, raise_if_not_found=False)

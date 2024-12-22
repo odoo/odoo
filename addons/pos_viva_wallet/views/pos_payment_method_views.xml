@@ -13,7 +13,7 @@
                 <field name="viva_wallet_client_secret" invisible="use_payment_terminal != 'viva_wallet'" required="use_payment_terminal == 'viva_wallet'"/>
                 <field name="viva_wallet_test_mode" invisible="use_payment_terminal != 'viva_wallet'" required="use_payment_terminal == 'viva_wallet'"/>
                 <field name="viva_wallet_terminal_id" invisible="use_payment_terminal != 'viva_wallet'" required="use_payment_terminal == 'viva_wallet'"/>
-                <field name="viva_wallet_webhook_endpoint" invisible="use_payment_terminal != 'viva_wallet' or not id" required="use_payment_terminal == 'viva_wallet'"/>
+                <field name="viva_wallet_webhook_endpoint" invisible="use_payment_terminal != 'viva_wallet' or not id" required="use_payment_terminal == 'viva_wallet'" widget="CopyClipboardChar"/>
             </xpath>
         </field>
     </record>

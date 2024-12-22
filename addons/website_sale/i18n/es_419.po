@@ -3,17 +3,18 @@
 # 	* website_sale
 # 
 # Translators:
-# Wil Odoo, 2023
 # Iran Villalobos López, 2023
 # Lucia Pacheco, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Martin Trigaux, 2024
+# Wil Odoo, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -49,7 +50,6 @@ msgstr "%s reseñas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "&amp; Envío"
 
@@ -126,7 +126,6 @@ msgstr "<b>Lista de precios</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<b>Shipping: </b>"
 msgstr "<b>Envío:</b>"
 
@@ -531,11 +530,6 @@ msgstr ""
 "            "
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "<u class=\"h5\">Documents</u>"
-msgstr "<u class=\"h5\">Documentos</u>"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
 msgid "<u>Terms and Conditions</u>"
 msgstr "<u>Términos y condiciones</u>"
@@ -918,7 +912,6 @@ msgstr "Grande"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Billing"
 msgstr "Facturación"
 
@@ -948,9 +941,10 @@ msgid ""
 "products."
 msgstr ""
 "Aumente sus ventas con varios tipos de programas: cupones, promociones, "
-"tarjetas de regalo y lealtad. Puede establecer condiciones específicas "
-"(productos, clientes, importe de compra mínimo, periodo). Las recompensas "
-"pueden ser descuentos (% o un importe) o productos gratis."
+"tarjetas de regalo y programas de lealtad. Puede establecer condiciones "
+"específicas (productos, clientes, importe de compra mínimo, periodo). Las "
+"recompensas pueden ser descuentos (un porcentaje o un importe) o productos "
+"gratis."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1023,22 +1017,6 @@ msgstr "La imagen 1024 puede agrandarse"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
 msgid "Can Publish"
 msgstr "Puede publicar"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence a video at first position."
-msgstr "No se puede resecuenciar un video en primera posición. "
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence embedded image/video with a non compatible image."
-msgstr ""
-"No se puede volver a secuenciar una imagen o video secuenciado con una "
-"imagen no compatible."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1297,28 +1275,33 @@ msgstr "Calcular costos de envío y enviar con Easypost"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Compute shipping cost and ship with Shiprocket"
+msgstr "Calcule los gastos de envío y hágalos con Shiprocket"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr "Calcular costos de envío y enviar con DHL"
+msgstr "Calcule los costos de envío y haga sus envíos con DHL"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr "Calcular costos de envío y enviar con FedEx"
+msgstr "Calcule los costos de envío y haga sus envíos con FedEx"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr "Calcular costos de envío y enviar con UPS"
+msgstr "Calcule los costos de envío y haga sus envíos con UPS"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr "Calcular costos de envío y enviar con USPS"
+msgstr "Calcule los costos de envío y haga sus envíos con USPS"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr "Calcular costos de envío y enviar con bpost"
+msgstr "Calcule los costos de envío y haga sus envíos con bpost"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1345,7 +1328,7 @@ msgstr "Confirmar"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
 msgid "Confirm Order"
-msgstr "Confirmar pedido"
+msgstr "Confirmar orden"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -1679,7 +1662,7 @@ msgstr "Código de descuento..."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Discounts, Loyalty & Gift Card"
-msgstr "Descuentos y tarjetas de lealtad y regalo"
+msgstr "Descuentos, programas de lealtad y tarjetas de regalo"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__display_name
@@ -1731,8 +1714,8 @@ msgstr ""
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"No tiene acceso, omita esta información para el correo electrónico del "
-"usuario"
+"No tiene acceso, omita esta información para el correo electrónico de "
+"resumen del usuario"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1740,6 +1723,11 @@ msgstr ""
 #, python-format
 msgid "Do you wish to clear your cart before adding products to it?"
 msgstr "¿Desea vaciar su carrito antes de agregarle productos?"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "Documents"
+msgstr "Documentos"
 
 #. module: website_sale
 #. odoo-python
@@ -2000,7 +1988,7 @@ msgstr "Muebles"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
-msgstr "Generar la factura en automático al confirmar el pago en línea"
+msgstr "Genere la factura en automático al confirmar el pago en línea."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__sequence
@@ -2092,8 +2080,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_product_template__message_has_error
 #: model:ir.model.fields,help:website_sale.field_product_template__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Si se encuentra seleccionado, algunos mensajes presentan un error de envío."
+msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2308,7 +2295,7 @@ msgstr "Horizontal (4/3)"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Last Month"
-msgstr "El mes pasado"
+msgstr "Mes pasado"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_partner__last_website_so_id
@@ -2454,7 +2441,7 @@ msgstr "Obligatorio (no se puede pagar como invitado)"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__medium
 msgid "Medium"
-msgstr "Media"
+msgstr "Medio"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_has_error
@@ -2621,6 +2608,13 @@ msgid ""
 msgstr ""
 "No hay un método de envío disponible para su orden y dirección de envío. "
 "Contáctenos para recibir más información."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+#, python-format
+msgid "No shipping method is selected."
+msgstr "No se seleccionó ningún método de envío."
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__none
@@ -2814,7 +2808,7 @@ msgstr "Órdenes a facturar"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.out_of_stock_ribbon
 msgid "Out of stock"
-msgstr " Sin existencias"
+msgstr "Agotado"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
@@ -2839,11 +2833,6 @@ msgid "Pay now"
 msgstr "Pagar ahora"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment
-msgid "Pay with"
-msgstr "Pagar con"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
@@ -2864,6 +2853,11 @@ msgstr "Métodos de pago"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
 msgid "Payment Providers"
 msgstr "Proveedores de pago"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_token
+msgid "Payment Token"
+msgstr "Token de pago"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
@@ -2902,7 +2896,7 @@ msgstr "Píldoras"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Please enter a valid Video URL."
-msgstr "Introduzca una URL de video válida."
+msgstr "Proporcione una URL de video válida."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -3479,7 +3473,7 @@ msgstr "Optimizado para SEO"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Error al enviar SMS"
+msgstr "Error en el envío del SMS"
 
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.sale_ribbon
@@ -3687,6 +3681,16 @@ msgid "Shipping address"
 msgstr "Dirección de envío"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket"
+msgstr "Shiprocket"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket Shipping Methods"
+msgstr "Métodos de envío de Shiprocket"
+
+#. module: website_sale
 #: model:website.menu,name:website_sale.menu_shop
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Shop"
@@ -3825,7 +3829,7 @@ msgstr "Algunos campos requeridos están vacíos."
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Sorry, we are unable to ship your order"
-msgstr "Lo sentimos, no es posible enviar su orden"
+msgstr "Lo sentimos, no podemos enviar su orden"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3915,7 +3919,7 @@ msgstr "Etiquetas"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_excluded
 msgid "Tax Excluded"
-msgstr "Impuestos no incluidos"
+msgstr "Sin impuestos"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_included
@@ -3957,7 +3961,7 @@ msgstr "Gracias por su orden."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
 msgid "The #1"
-msgstr "El #1"
+msgstr "El mejor"
 
 #. module: website_sale
 #. odoo-python
@@ -4006,14 +4010,14 @@ msgstr "La URL completa para acceder al documento a través del sitio web."
 #, python-format
 msgid ""
 "The given combination does not exist therefore it cannot be added to cart."
-msgstr "Esta combinación no existe, por lo que no se puede añadir al carrito."
+msgstr "Esta combinación no existe y no se puede agregar al carrito."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "The given product does not exist therefore it cannot be added to cart."
-msgstr "Esta producto no existe, por lo que no se puede añadir al carrito."
+msgstr "Este producto no existe y no se puede agregar al carrito."
 
 #. module: website_sale
 #. odoo-python
@@ -4562,6 +4566,13 @@ msgstr ""
 "Si quiere modificar su dirección de envío, cree un"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
+msgstr "No puede usar un video como la imagen principal de un producto."
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -4610,6 +4621,17 @@ msgid "Your Name"
 msgstr "Su nombre"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid ""
+"Your account is not allowed to pay in company %s. Please log out and create "
+"a new account for this website, or contact the website administrator."
+msgstr ""
+"Su cuenta no puede pagar en la empresa %s. Cierre su sesión y cree una nueva"
+" cuenta para este sitio web o contacte al administrador."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "Your cart is empty!"
@@ -4626,7 +4648,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "Your payment has been authorized."
-msgstr "Se ha autorizado su pago."
+msgstr "Se autorizó su pago."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart

@@ -6,6 +6,7 @@
 # Wil Odoo, 2023
 # Iran Villalobos López, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -207,11 +208,20 @@ msgstr "Comenzar una prueba en Odoo"
 #: code:addons/iap/tools/iap_tools.py:0
 #, python-format
 msgid ""
+"The request to the service timed out. Please contact the author of the app. "
+"The URL it tried to contact was %s"
+msgstr ""
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/tools/iap_tools.py:0
+#, python-format
+msgid ""
 "The url that this service requested returned an error. Please contact the "
 "author of the app. The url it tried to contact was %s"
 msgstr ""
-"El url que solicitó este servicio reportó un error. Póngase en contacto con "
-"el autor de la aplicación. El url que intentó utilizar es %s "
+"La URL a la que este servicio intentó acceder devolvió un error, contacte al"
+" autor de la aplicación. La URL a la que intentó conectarse fue %s"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_threshold
@@ -242,13 +252,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:iap.field_iap_account__warn_me
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__warn_me
 msgid "Warn me"
-msgstr "Advertirme "
+msgstr "Recibir advertencia"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_email
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__warning_email
 msgid "Warning Email"
-msgstr "Correo de advertencia"
+msgstr "Correo para advertencia"
 
 #. module: iap
 #: model:ir.model.fields,help:iap.field_iap_account__warn_me

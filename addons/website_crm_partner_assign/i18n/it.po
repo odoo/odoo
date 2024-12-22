@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Marianna Ciofani, 2023
+# Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Marianna Ciofani, 2023\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -152,8 +152,8 @@ msgid ""
 "customer before accepting the lead</span>"
 msgstr ""
 "<span class=\"text-danger error_partner_assign_desinterested\" "
-"style=\"display:none;\">Prima di accettare il contatto è necessario "
-"compilare l'azione successiva e contattare il cliente</span>"
+"style=\"display:none;\">Prima di accettare il lead è necessario compilare "
+"l'azione successiva e contattare il cliente</span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -163,8 +163,8 @@ msgid ""
 "customer before accepting the lead</span>"
 msgstr ""
 "<span class=\"text-danger error_partner_assign_interested\" "
-"style=\"display:none;\">Prima di accettare il contatto è necessario "
-"compilare l'azione successiva e contattare il cliente</span>"
+"style=\"display:none;\">Prima di accettare il lead è necessario compilare "
+"l'azione successiva e contattare il cliente</span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -293,7 +293,7 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">I tuoi contatti</span><br>\n"
+"                    <span style=\"font-size: 10px;\">I tuoi lead</span><br>\n"
 "                </td><td valign=\"middle\" align=\"right\" t-if=\"not user.company_id.uses_default_logo\">\n"
 "                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\">\n"
 "                </td></tr>\n"
@@ -311,18 +311,18 @@ msgstr ""
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
 "                            Ciao,<br>\n"
-"                            siamo stati contattati da alcuni potenziali clienti presenti nella tua regione. I contatti che seguono sono stati assegnati a <t t-out=\"ctx['partner_id'].name or ''\"></t>:<br>\n"
+"                            siamo stati contattati da alcuni potenziali clienti presenti nella tua regione. I lead che seguono sono stati assegnati a <t t-out=\"ctx['partner_id'].name or ''\"></t>:<br>\n"
 "                            <ol>\n"
-"                                <li t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject Undefined'\">soggetto non definito</a>, <t t-out=\"lead['lead_id'].partner_name or lead['lead_id'].contact_name or 'Contact Name Undefined'\">nome contatto non definito</t>, <t t-out=\"lead['lead_id'].country_id and lead['lead_id'].country_id.name or 'Country Undefined'\">nazione non definita</t>, <t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">e-mail non definita</t>, <t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</t> </li><br>\n"
+"                                <li t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject Undefined'\">soggetto non definito</a>, <t t-out=\"lead['lead_id'].partner_name or lead['lead_id'].contact_name or 'Contact Name Undefined'\">nome lead non definito</t>, <t t-out=\"lead['lead_id'].country_id and lead['lead_id'].country_id.name or 'Country Undefined'\">nazione non definita</t>, <t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">e-mail non definita</t>, <t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</t> </li><br>\n"
 "                            </ol>\n"
 "                            <t t-if=\"ctx.get('partner_in_portal')\">\n"
-"                                Collegati al <a t-att-href=\"'%s?db=%s' % (object.get_base_url(), object.env.cr.dbname)\">portale partner</a> per avere più dettagli. Per ogni contatto sono presenti due pulsanti, disposti nell'angolo in alto a sinistra, che dovresti premere una volta averlo contattato: \"Sono interessato\" e \"Non sono interessato\".<br>\n"
+"                                Collegati al <a t-att-href=\"'%s?db=%s' % (object.get_base_url(), object.env.cr.dbname)\">portale partner</a> per avere più dettagli. Per ogni lead sono presenti due pulsanti, disposti nell'angolo in alto a sinistra, che dovresti premere una volta averlo contattato: \"Sono interessato\" e \"Non sono interessato\".<br>\n"
 "                            </t>\n"
 "                            <t t-else=\"\">\n"
 "                                Non hai ancora accesso al portale per il nostro database. Per favore\n"
 "                                <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'\">contattaci</t>.<br>\n"
 "                            </t>\n"
-"                             Il contatto verrà inviato ad un altro partner se non lo contatti entro 20 giorni.<br><br>\n"
+"                             Il lead verrà inviato ad un altro partner se non lo lead entro 20 giorni.<br><br>\n"
 "                            Grazie,<br>\n"
 "                            <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or ''\"></t>\n"
 "                            <br>\n"
@@ -703,7 +703,7 @@ msgstr "Trova un rivenditore"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 msgid "Follow and convert your leads"
-msgstr "Segui e converti i tuoi contatti"
+msgstr "Segui e converti i tuoi lead"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
@@ -713,12 +713,12 @@ msgstr "Segui e converti le tue opportunità"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__partner_id
 msgid "Forward Leads To"
-msgstr "Inoltra i contatti a"
+msgstr "Inoltra i lead a"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__forward_type
 msgid "Forward selected leads to"
-msgstr "Inoltra i contatti selezionati a"
+msgstr "Inoltra i lead selezionati a"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.crm_lead_forward_to_partner_act
@@ -733,7 +733,7 @@ msgstr "Inoltra a partner"
 #. module: website_crm_partner_assign
 #: model:mail.template,subject:website_crm_partner_assign.email_template_lead_forward_mail
 msgid "Fwd: Lead: {{ ctx['partner_id'].name }}"
-msgstr "Fwd: Contatto: {{ ctx['partner_id'].name }}"
+msgstr "Fwd: lead: {{ ctx['partner_id'].name }}"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__partner_latitude
@@ -761,8 +761,8 @@ msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignment.)"
 msgstr ""
-"Fornisce la probabilità di assegnare un contatto a questo partner. (0 "
-"significa nessuna assegnazione)."
+"Fornisce la probabilità di assegnare un lead a questo partner. (0 significa "
+"nessuna assegnazione)."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -789,21 +789,21 @@ msgstr "Raggruppa per"
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 #, python-format
 msgid "I am interested by this lead."
-msgstr "Sono interessato a questo contatto."
+msgstr "Sono interessato a questo lead."
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 #, python-format
 msgid "I am not interested by this lead. I contacted the lead."
-msgstr "Nessun interesse per il contatto, è stato contattato."
+msgstr "Nessun interesse per il lead, è stato contattato."
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 #, python-format
 msgid "I am not interested by this lead. I have not contacted the lead."
-msgstr "Nessun interesse per il contatto, non è stato contattato."
+msgstr "Nessun interesse per il lead, non è stato contattato."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -879,49 +879,49 @@ msgstr "Ultima verifica partner"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_id
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 msgid "Lead"
-msgstr "Contatto"
+msgstr "Lead"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Lead -"
-msgstr "Contatto -"
+msgstr "Lead -"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_assignation
 msgid "Lead Assignation"
-msgstr "Assegnazione contatto"
+msgstr "Assegnazione lead"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Lead Feedback"
-msgstr "Riscontro dal contatto"
+msgstr "Riscontro dal lead"
 
 #. module: website_crm_partner_assign
 #: model:mail.template,name:website_crm_partner_assign.email_template_lead_forward_mail
 msgid "Lead Forward: Send to partner"
-msgstr "Inoltro contatto: invia al partner"
+msgstr "Inoltro lead: invia al partner"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_location
 msgid "Lead Location"
-msgstr "Ubicazione contatto"
+msgstr "Ubicazione lead"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_forward_to_partner
 msgid "Lead forward to partner"
-msgstr "Inoltro contatto al partner"
+msgstr "Inoltro lead al partner"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Contatto/Opportunità"
+msgstr "Lead/Opportunità"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_menu_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 msgid "Leads"
-msgstr "Contatti CRM"
+msgstr "Lead"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
@@ -943,7 +943,7 @@ msgstr "Peso livello"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_link
 msgid "Link to Lead"
-msgstr "Link al contatto"
+msgstr "Link al lead"
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -1308,7 +1308,7 @@ msgstr "Invia e-mail"
 #. module: website_crm_partner_assign
 #: model:mail.template,description:website_crm_partner_assign.email_template_lead_forward_mail
 msgid "Sent to partner when a lead has been assigned to him"
-msgstr "E-mail inviaa al partner quando gli viene assegnato un contatto"
+msgstr "E-mail inviaa al partner quando gli viene assegnato un lead"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__grade_sequence
@@ -1335,7 +1335,7 @@ msgstr "Impostare un indirizzo e-mail per i partner: %s"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.snippet_options
 msgid "Show Leads / Opps"
-msgstr "Mostra contatti/opportunità"
+msgstr "Mostra lead/opportunità"
 
 #. module: website_crm_partner_assign
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_data_silver
@@ -1390,7 +1390,7 @@ msgstr "URL completo per accedere al documento dal sito web."
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 msgid "There are no leads."
-msgstr "Non sono presenti contatti."
+msgstr "Non sono presenti lead."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
@@ -1414,7 +1414,7 @@ msgstr "Attività della settimana"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "This lead is a spam"
-msgstr "Questo contatto è spam"
+msgstr "Questo lead è spam"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner__partner_weight
@@ -1424,7 +1424,7 @@ msgid ""
 "contention for this partner to take this lead/opportunity."
 msgstr ""
 "Deve essere un valore numerico maggiore di 0 per discriminare la presa in "
-"carico del contatto/opportunità da parte del partner."
+"carico del lead/opportunità da parte del partner."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_activation_act
@@ -1481,7 +1481,7 @@ msgstr "Qual è la prossima azione? Quando? Quali sono le entrate attese?"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Why aren't you interested in this lead?"
-msgstr "Perché non c'è interesse per il contatto?"
+msgstr "Perché non c'è interesse per il lead?"
 
 #. module: website_crm_partner_assign
 #. odoo-python

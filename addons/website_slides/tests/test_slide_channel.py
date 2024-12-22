@@ -169,7 +169,8 @@ class TestSlidesManagement(slides_common.SlidesCase):
         channel_2 = self.env['slide.channel'].create({
             'name': 'Test Course 2',
             'slide_ids': [(0, 0, {
-                'name': 'Test Slide 2'
+                'name': 'Test Slide 2',
+                'is_published': True
             })],
             'completed_template_id': mail_template.id
         })
@@ -274,6 +275,38 @@ class TestSlidesManagement(slides_common.SlidesCase):
         self.assertEqual(13.37, round(slides_1.completion_time, 2))
         self.assertEqual(123.0, slides_2.completion_time)
 
+    @users('user_manager')
+    def test_mail_completed_not_on_unpublishing_or_unlinking_slides(self):
+        """Check that participants do not receive a course completion email when slides are deleted/unpublished."""
+        def were_emails_sent():
+            new_mails = self._new_mails.filtered(lambda m: m.model == 'slide.channel.partner')
+            return len(new_mails) > 0
+
+        # Setup
+        self.assertGreater(len(self.channel.channel_partner_ids), self.channel.members_completed_count,
+            "Channel shall have at least one participant not yet completer")
+        slides_initially_published = self.channel.slide_ids.filtered('is_published')
+        self.assertGreaterEqual(len(slides_initially_published), 2, "The test requires at least two published slides.")
+
+        # Unpublishing slides
+        with self.mock_mail_gateway():
+            slides_initially_published[:1].is_published = False
+        self.assertFalse(were_emails_sent(), "Participants should not receive emails when a slide is unpublished.")
+
+        with self.mock_mail_gateway():
+            slides_initially_published.is_published = False
+        self.assertFalse(were_emails_sent(), "Participants should not receive emails when all remaining slides are unpublished.")
+
+        # Unlinking slides
+        with self.mock_mail_gateway():
+            self.channel.slide_ids[:1].with_user(self.user_manager).unlink()
+        self.assertFalse(were_emails_sent(), "Participants should not receive emails when a slide is deleted.")
+
+        with self.mock_mail_gateway():
+            self.channel.slide_ids.with_user(self.user_manager).unlink()
+        self.assertFalse(were_emails_sent(), "Participants should not receive emails when all remaining slides are deleted.")
+
+
 class TestSequencing(slides_common.SlidesCase):
 
     @users('user_officer')
@@ -367,3 +400,6 @@ class TestSequencing(slides_common.SlidesCase):
 
         self.assertEqual(channel.visibility, 'members')
         self.assertEqual(channel.enroll, 'invite')
+
+        copied_channel = channel.copy()
+        self.assertEqual(copied_channel.enroll, 'invite', "Copied channel should have the same enroll field value")

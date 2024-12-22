@@ -23,7 +23,6 @@ from odoo.tools.misc import get_lang
 from . import crm_stage
 
 _logger = logging.getLogger(__name__)
-_schema = logging.getLogger('odoo.schema')
 
 
 CRM_LEAD_FIELDS_TO_MERGE = [
@@ -297,7 +296,8 @@ class Lead(models.Model):
                 continue
             team_domain = [('use_leads', '=', True)] if lead.type == 'lead' else [('use_opportunities', '=', True)]
             team = self.env['crm.team']._get_default_team_id(user_id=user.id, domain=team_domain)
-            lead.team_id = team.id
+            if lead.team_id != team:
+                lead.team_id = team.id
 
     @api.depends('user_id', 'team_id', 'partner_id')
     def _compute_company_id(self):
@@ -345,12 +345,14 @@ class Lead(models.Model):
     @api.depends('user_id')
     def _compute_date_open(self):
         for lead in self:
-            lead.date_open = self.env.cr.now() if lead.user_id else False
+            if not lead.date_open and lead.user_id:
+                lead.date_open = self.env.cr.now()
 
     @api.depends('stage_id')
     def _compute_date_last_stage_update(self):
         for lead in self:
-            lead.date_last_stage_update = self.env.cr.now()
+            if not lead.date_last_stage_update:
+                lead.date_last_stage_update = self.env.cr.now()
 
     @api.depends('create_date', 'date_open')
     def _compute_day_open(self):
@@ -606,7 +608,7 @@ class Lead(models.Model):
             # check for "same commercial entity" duplicates
             if lead.partner_id and lead.partner_id.commercial_partner_id:
                 duplicate_lead_ids |= lead.with_context(active_test=False).search(common_lead_domain + [
-                    ("partner_id", "child_of", lead.partner_id.commercial_partner_id.id)
+                    ("partner_id", "child_of", lead.partner_id.commercial_partner_id.ids)
                 ])
             # check the phone number duplicates, based on phone_sanitized. Only
             # exact matches are found, and the single one stored in phone_sanitized
@@ -738,17 +740,6 @@ class Lead(models.Model):
                            self._table, ['user_id', 'team_id', 'type'])
         tools.create_index(self._cr, 'crm_lead_create_date_team_id_idx',
                            self._table, ['create_date', 'team_id'])
-        phone_pattern = r'[\s\\./\(\)\-]'
-        for field_name in ('phone', 'mobile'):
-            index_name = f'crm_lead_{field_name}_partial_tgm'
-            if tools.index_exists(self._cr, index_name):
-                continue
-            regex_expression = f"regexp_replace(({field_name}::text), %s::text, ''::text, 'g'::text)"
-            self._cr.execute(
-                f'CREATE INDEX "{index_name}" ON "{self._table}" ({regex_expression}) WHERE {field_name} IS NOT NULL',
-                (phone_pattern,)
-            )
-            _schema.debug("Table %r: created index %r (%s)", self._table, index_name, regex_expression)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -767,13 +758,27 @@ class Lead(models.Model):
         if vals.get('website'):
             vals['website'] = self.env['res.partner']._clean_website(vals['website'])
 
-        stage_updated, stage_is_won = vals.get('stage_id'), False
-        # stage change: update date_last_stage_update
-        if stage_updated:
-            stage = self.env['crm.stage'].browse(vals['stage_id'])
-            if stage.is_won:
-                vals.update({'probability': 100, 'automated_probability': 100})
-                stage_is_won = True
+        now = self.env.cr.now()
+        stage_updated, stage_is_won = False, False
+        # stage change (or reset): update date_last_stage_update if at least one
+        # lead does not have the same stage
+        if 'stage_id' in vals:
+            stage_updated = any(lead.stage_id.id != vals['stage_id'] for lead in self)
+            if stage_updated:
+                vals['date_last_stage_update'] = now
+            if stage_updated and vals.get('stage_id'):
+                stage = self.env['crm.stage'].browse(vals['stage_id'])
+                if stage.is_won:
+                    vals.update({'probability': 100, 'automated_probability': 100})
+                    stage_is_won = True
+        # user change; update date_open if at least one lead does not
+        # have the same user
+        if 'user_id' in vals and not vals.get('user_id'):
+            vals['date_open'] = False
+        elif vals.get('user_id'):
+            user_updated = any(lead.user_id.id != vals['user_id'] for lead in self)
+            if user_updated:
+                vals['date_open'] = now
 
         # stage change with new stage: update probability and date_closed
         if vals.get('probability', 0) >= 100 or not vals.get('active', True):
@@ -1432,7 +1437,12 @@ class Lead(models.Model):
             if merged_data.get('stage_id') not in team_stage_ids.ids:
                 merged_data['stage_id'] = team_stage_ids[0].id if team_stage_ids else False
 
-        # write merged data into first opportunity
+        # write merged data into first opportunity; remove some keys if already
+        # set on opp to avoid useless recomputes
+        if 'user_id' in merged_data and opportunities_head.user_id.id == merged_data['user_id']:
+            merged_data.pop('user_id')
+        if 'team_id' in merged_data and opportunities_head.team_id.id == merged_data['team_id']:
+            merged_data.pop('team_id')
         opportunities_head.write(merged_data)
 
         # delete tail opportunities
@@ -1498,13 +1508,15 @@ class Lead(models.Model):
         :param opportunities: see ``_merge_dependences``
         """
         self.ensure_one()
-        for opportunity in opportunities:
-            for message in opportunity.message_ids:
-                if message.subject:
-                    subject = _("From %(source_name)s: %(source_subject)s", source_name=opportunity.name, source_subject=message.subject)
+        # sudo usage: because we want to go through all messages, whatever the real ACLs
+        # current user has on them
+        for opportunity_su in opportunities.sudo():
+            for message_su in opportunity_su.message_ids:
+                if message_su.subject:
+                    subject = _("From %(source_name)s: %(source_subject)s", source_name=opportunity_su.name, source_subject=message_su.subject)
                 else:
-                    subject = _("From %(source_name)s", source_name=opportunity.name)
-                message.write({
+                    subject = _("From %(source_name)s", source_name=opportunity_su.name)
+                message_su.write({
                     'res_id': self.id,
                     'subject': subject,
                 })
@@ -1686,7 +1698,6 @@ class Lead(models.Model):
         new_team_id = team_id if team_id else self.team_id.id
         upd_values = {
             'type': 'opportunity',
-            'date_open': self.env.cr.now(),
             'date_conversion': self.env.cr.now(),
         }
         if customer != self.partner_id:
@@ -1866,7 +1877,7 @@ class Lead(models.Model):
 
         for record in self.filtered('email_normalized'):
             values = email_normalized_to_values.setdefault(record.email_normalized, {})
-            contact_name = record.contact_name or record.partner_name or parse_contact_from_email(record.email_from)[0]
+            contact_name = record.contact_name or record.partner_name or parse_contact_from_email(record.email_from)[0] or record.email_from
             # Note that we don't attempt to create the parent company even if partner name is set
             values.update(record._prepare_customer_values(contact_name, is_company=False))
             values['company_name'] = record.partner_name

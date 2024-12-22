@@ -976,3 +976,35 @@ class TestUnbuild(TestMrpCommon):
         unbuild_wizard = Form(self.env[unbuild_action['res_model']].with_context(**unbuild_action['context'])).save()
         unbuild_wizard.action_validate()
         self.assertEqual(mo.unbuild_ids.produce_line_ids.filtered(lambda m: m.product_id == self.product_3).product_uom_qty, 15)
+
+    def test_unbuild_mo_different_qty(self):
+        # Test the unbuild of a MO with qty_produced > product_qty
+
+        bom = self.env['mrp.bom'].create({
+            'product_id': self.product_2.id,
+            'product_tmpl_id': self.product_2.product_tmpl_id.id,
+            'consumption': 'flexible',
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [Command.create({'product_id': self.product_3.id, 'product_qty': 1})]
+        })
+
+        with Form(self.env['mrp.production']) as mo_form:
+            mo_form.product_id = self.product_2
+            mo_form.bom_id = bom
+            mo_form.product_qty = 10
+            mo = mo_form.save()
+        mo.action_confirm()
+
+        mo.qty_producing = 12
+        mo.move_raw_ids.write({'quantity': 12, 'picked': True})
+        mo.button_mark_done()
+
+        unbuild_action = mo.button_unbuild()
+        unbuild_wizard = Form(self.env[unbuild_action['res_model']].with_context(**unbuild_action['context'])).save()
+        unbuild_wizard.action_validate()
+
+        unbuild_fns_move = mo.unbuild_ids.produce_line_ids.filtered(lambda m: m.product_id == self.product_2)
+        self.assertEqual(len(unbuild_fns_move), 1)
+        self.assertEqual(unbuild_fns_move.state, "done")
+        self.assertEqual(unbuild_fns_move.quantity, 12)

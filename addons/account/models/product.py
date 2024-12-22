@@ -27,12 +27,12 @@ class ProductTemplate(models.Model):
 
     taxes_id = fields.Many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id', help="Default taxes used when selling the product.", string='Customer Taxes',
         domain=[('type_tax_use', '=', 'sale')],
-        default=lambda self: self.env.companies.account_sale_tax_id or self.env.companies.root_id.account_sale_tax_id,
+        default=lambda self: self.env.companies.account_sale_tax_id or self.env.companies.root_id.sudo().account_sale_tax_id,
     )
     tax_string = fields.Char(compute='_compute_tax_string')
     supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id', string='Vendor Taxes', help='Default taxes used when buying the product.',
         domain=[('type_tax_use', '=', 'purchase')],
-        default=lambda self: self.env.companies.account_purchase_tax_id or self.env.companies.root_id.account_purchase_tax_id,
+        default=lambda self: self.env.companies.account_purchase_tax_id or self.env.companies.root_id.sudo().account_purchase_tax_id,
     )
     property_account_income_id = fields.Many2one('account.account', company_dependent=True,
         string="Income Account",
@@ -118,6 +118,22 @@ class ProductTemplate(models.Model):
                 "If you want to change its Unit of Measure, please archive this product and create a new one."
             ))
 
+    def _force_default_sale_tax(self, companies):
+        default_customer_taxes = companies.filtered('account_sale_tax_id').account_sale_tax_id
+        for product_grouped_by_tax in self.grouped('taxes_id').values():
+            product_grouped_by_tax.taxes_id += default_customer_taxes
+        self.invalidate_recordset(['taxes_id'])
+
+    def _force_default_purchase_tax(self, companies):
+        default_supplier_taxes = companies.filtered('account_purchase_tax_id').account_purchase_tax_id
+        for product_grouped_by_tax in self.grouped('supplier_taxes_id').values():
+            product_grouped_by_tax.supplier_taxes_id += default_supplier_taxes
+        self.invalidate_recordset(['supplier_taxes_id'])
+
+    def _force_default_tax(self, companies):
+        self._force_default_sale_tax(companies)
+        self._force_default_purchase_tax(companies)
+
     @api.model_create_multi
     def create(self, vals_list):
         products = super().create(vals_list)
@@ -125,18 +141,9 @@ class ProductTemplate(models.Model):
         # have the default taxes of the other companies as well. sudo() is used since we're going to need to fetch all
         # the other companies default taxes which the user may not have access to.
         other_companies = self.env['res.company'].sudo().search([('id', 'not in', self.env.companies.ids)])
-        if not other_companies:
-            return products
-
-        default_customer_tax_ids = other_companies.filtered('account_sale_tax_id').account_sale_tax_id.ids
-        default_supplier_tax_ids = other_companies.filtered('account_purchase_tax_id').account_purchase_tax_id.ids
-
-        products_without_company = products.filtered(lambda p: not p.company_id).sudo()
-        products_without_company.taxes_id = [Command.link(tax) for tax in default_customer_tax_ids]
-        products_without_company.supplier_taxes_id = [Command.link(tax) for tax in default_supplier_tax_ids]
-
-        products_without_company.invalidate_recordset(['taxes_id', 'supplier_taxes_id'])
-        products.invalidate_recordset(['taxes_id', 'supplier_taxes_id'])
+        if other_companies and products:
+            products_without_company = products.filtered(lambda p: not p.company_id).sudo()
+            products_without_company._force_default_tax(other_companies)
         return products
 
 
@@ -149,9 +156,9 @@ class ProductProduct(models.Model):
         return self.product_tmpl_id._get_product_accounts()
 
     def _get_tax_included_unit_price(self, company, currency, document_date, document_type,
-            is_refund_document=False, product_uom=None, product_currency=None,
-            product_price_unit=None, product_taxes=None, fiscal_position=None
-        ):
+        is_refund_document=False, product_uom=None, product_currency=None,
+        product_price_unit=None, product_taxes=None, fiscal_position=None
+    ):
         """ Helper to get the price unit from different models.
             This is needed to compute the same unit price in different models (sale order, account move, etc.) with same parameters.
         """
@@ -187,38 +194,63 @@ class ProductProduct(models.Model):
 
         # Apply fiscal position.
         if product_taxes and fiscal_position:
-            product_taxes_after_fp = fiscal_position.map_tax(product_taxes)
-            flattened_taxes_after_fp = product_taxes_after_fp._origin.flatten_taxes_hierarchy()
-            flattened_taxes_before_fp = product_taxes._origin.flatten_taxes_hierarchy()
-            taxes_before_included = all(tax.price_include for tax in flattened_taxes_before_fp)
-
-            if set(product_taxes.ids) != set(product_taxes_after_fp.ids) and taxes_before_included:
-                taxes_res = flattened_taxes_before_fp.with_context(round=False, round_base=False).compute_all(
-                    product_price_unit,
-                    quantity=1.0,
-                    currency=currency,
-                    product=product,
-                    is_refund=is_refund_document,
-                )
-                product_price_unit = taxes_res['total_excluded']
-
-                if any(tax.price_include for tax in flattened_taxes_after_fp):
-                    taxes_res = flattened_taxes_after_fp.with_context(round=False, round_base=False).compute_all(
-                        product_price_unit,
-                        quantity=1.0,
-                        currency=currency,
-                        product=product,
-                        is_refund=is_refund_document,
-                        handle_price_include=False,
-                    )
-                    for tax_res in taxes_res['taxes']:
-                        tax = self.env['account.tax'].browse(tax_res['id'])
-                        if tax.price_include:
-                            product_price_unit += tax_res['amount']
+            product_price_unit = self._get_tax_included_unit_price_from_price(
+                product_price_unit,
+                currency,
+                product_taxes,
+                fiscal_position=fiscal_position,
+                is_refund_document=is_refund_document,
+            )
 
         # Apply currency rate.
         if currency != product_currency:
             product_price_unit = product_currency._convert(product_price_unit, currency, company, document_date, round=False)
+
+        return product_price_unit
+
+    @api.model  # the product is optional for `compute_all`
+    def _get_tax_included_unit_price_from_price(
+        self, product_price_unit, currency, product_taxes,
+        fiscal_position=None,
+        product_taxes_after_fp=None,
+        is_refund_document=False,
+    ):
+        if not product_taxes:
+            return product_price_unit
+
+        if product_taxes_after_fp is None:
+            if not fiscal_position:
+                return product_price_unit
+
+            product_taxes_after_fp = fiscal_position.map_tax(product_taxes)
+
+        flattened_taxes_after_fp = product_taxes_after_fp._origin.flatten_taxes_hierarchy()
+        flattened_taxes_before_fp = product_taxes._origin.flatten_taxes_hierarchy()
+        taxes_before_included = all(tax.price_include for tax in flattened_taxes_before_fp)
+
+        if set(product_taxes.ids) != set(product_taxes_after_fp.ids) and taxes_before_included:
+            taxes_res = flattened_taxes_before_fp.with_context(round=False, round_base=False).compute_all(
+                product_price_unit,
+                quantity=1.0,
+                currency=currency,
+                product=self,
+                is_refund=is_refund_document,
+            )
+            product_price_unit = taxes_res['total_excluded']
+
+            if any(tax.price_include for tax in flattened_taxes_after_fp):
+                taxes_res = flattened_taxes_after_fp.with_context(round=False, round_base=False).compute_all(
+                    product_price_unit,
+                    quantity=1.0,
+                    currency=currency,
+                    product=self,
+                    is_refund=is_refund_document,
+                    handle_price_include=False,
+                )
+                for tax_res in taxes_res['taxes']:
+                    tax = self.env['account.tax'].browse(tax_res['id'])
+                    if tax.price_include:
+                        product_price_unit += tax_res['amount']
 
         return product_price_unit
 
@@ -252,14 +284,19 @@ class ProductProduct(models.Model):
 
         # Search for the product with the exact name, then ilike the name
         name_domains = [('name', '=', name)], [('name', 'ilike', name)] if name else []
+        company = company or self.env.company
         for name_domain in name_domains:
-            product = self.env['product.product'].search(
-                expression.AND([
-                    expression.OR(domains + [name_domain]),
-                    self.env['product.product']._check_company_domain(company),
-                ]),
-                limit=1,
-            )
-            if product:
-                return product
+            for extra_domain in (
+                [*self.env['res.partner']._check_company_domain(company), ('company_id', '!=', False)],
+                [('company_id', '=', False)],
+            ):
+                product = self.env['product.product'].search(
+                    expression.AND([
+                        expression.OR(domains + [name_domain]),
+                        extra_domain,
+                    ]),
+                    limit=1,
+                )
+                if product:
+                    return product
         return self.env['product.product']

@@ -157,3 +157,63 @@ class TestLoyalty(TransactionCase):
             product.action_archive()
         self.program.action_archive()
         product.action_archive()
+
+    def test_prevent_archiving_product_when_archiving_program(self):
+        """
+        Test prevent archiving a product when archiving a "Buy X Get Y" program.
+        We just have to archive the free product that has been created while creating
+        the program itself not the product we already had before.
+        """
+        product = self.env['product.product'].with_context(default_taxes_id=False).create({
+            'name': 'Test Product',
+            'detailed_type': 'consu',
+            'list_price': 20.0,
+        })
+
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Test Program',
+            'program_type': 'buy_x_get_y',
+            'reward_ids': [
+                Command.create({
+                    'description': 'Test Product',
+                    'reward_product_id': product.id,
+                    'reward_type': 'product'
+                }),
+            ],
+        })
+        loyalty_program.action_archive()
+        # Make sure that the main product didn't get archived
+        self.assertTrue(product.active)
+
+    def test_card_description_on_tag_change(self):
+        product_tag = self.env['product.tag'].create({'name': 'Multiple Products'})
+        product1 = self.env['product.product'].create({
+            'name': 'Test Product',
+            'detailed_type': 'consu',
+            'list_price': 20.0,
+            'product_tag_ids': product_tag,
+        })
+        self.env['product.product'].create({
+            'name': 'Test Product 2',
+            'detailed_type': 'consu',
+            'list_price': 30.0,
+            'product_tag_ids': product_tag,
+        })
+        reward = self.env['loyalty.reward'].create({
+            'program_id': self.program.id,
+            'reward_type': 'product',
+            'reward_product_id': product1.id,
+        })
+        reward_description_single_product = reward.description
+        reward.reward_product_tag_id = product_tag
+        reward_description_product_tag = reward.description
+        self.assertNotEqual(
+            reward_description_single_product,
+            reward_description_product_tag,
+            "Reward description should be changed after adding a tag"
+        )
+        self.assertEqual(
+            reward_description_product_tag,
+            "Free Product - [Test Product, Test Product 2]",
+            "Reward description for reward with tag should be 'Free Product - [Test Product, Test Product 2]'"
+        )

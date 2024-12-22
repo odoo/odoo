@@ -76,7 +76,7 @@ class Lead(models.Model):
 
                         email_domain = normalized_email.split('@')[1]
                         # Discard domains of generic email providers as it won't return relevant information
-                        if email_domain in iap_tools._MAIL_DOMAIN_BLACKLIST:
+                        if email_domain in iap_tools._MAIL_PROVIDERS:
                             lead.write({'iap_enrich_done': True})
                             lead.message_post_with_source(
                                 'crm_iap_enrich.mail_message_lead_enrich_notfound',

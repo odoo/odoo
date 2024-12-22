@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,7 +113,7 @@ msgstr "'Bao bì sản phẩm - %s' % (object.name)"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "(e.g: product description, ebook, legal notice, ...)."
-msgstr ""
+msgstr "(VD: mô tả sản phẩm, ebook, yết thị,...)"
 
 #. module: product
 #. odoo-python
@@ -234,7 +234,7 @@ msgstr "<span class=\"text-bg-danger\">Đã lưu trữ</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "<span class=\"text-bg-secondary\">Variant</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-secondary\">Biến thể</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -250,7 +250,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "<span>Variant </span>"
-msgstr ""
+msgstr "<span>Biến thể </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -624,8 +624,8 @@ msgid ""
 "a transfer in the Barcode app to move all the contained units"
 msgstr ""
 "Mã vạch được sử dụng để nhận dạng bao bì. Quét mã vạch bao bì này từ một "
-"điều chuyển trong ứng dụng Mã vạch để dịch chuyển tất cả các sản phẩm có "
-"trong đó"
+"lệnh chuyển hàng trong ứng dụng Mã vạch để dịch chuyển tất cả các sản phẩm "
+"có trong đó"
 
 #. module: product
 #. odoo-python
@@ -718,7 +718,7 @@ msgstr "Checksum/SHA1"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__child_id
 msgid "Child Categories"
-msgstr "Danh mục con"
+msgstr "Danh mục phụ"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_open_label_layout
@@ -1207,7 +1207,7 @@ msgstr "Số lượng tài liệu"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
 msgid "Documents of this variant"
-msgstr ""
+msgstr "Tài liệu về biến thể này"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1219,7 +1219,7 @@ msgstr "Tải xuống"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Download examples"
-msgstr ""
+msgstr "Tải xuống ví dụ"
 
 #. module: product
 #: model:product.template,name:product.product_product_27_product_template
@@ -2107,12 +2107,12 @@ msgstr "Bao bì"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
 msgid "Parent Category"
-msgstr "Danh mục cha"
+msgstr "Danh mục chính"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_path
 msgid "Parent Path"
-msgstr "Tuyến cha"
+msgstr "Tuyến chính"
 
 #. module: product
 #: model:product.template,name:product.product_product_9_product_template
@@ -2135,6 +2135,21 @@ msgstr "Viên "
 #, python-format
 msgid "Please enter a positive whole number."
 msgstr "Vui lòng nhập một số nguyên dương."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_document.py:0
+#, python-format
+msgid ""
+"Please enter a valid URL.\n"
+"Example: https://www.odoo.com\n"
+"\n"
+"Invalid URL: %s"
+msgstr ""
+"Vui lòng nhập một URL hợp lệ.\n"
+"Ví dụ: https://www.odoo.com\n"
+"\n"
+"URL không hợp lệ: %s"
 
 #. module: product
 #. odoo-python
@@ -2798,7 +2813,7 @@ msgstr "Phương pháp làm tròn"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__rows
 msgid "Rows"
-msgstr "Dòng"
+msgstr "Hàng"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
@@ -2880,8 +2895,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Show all records which has next action date is before today"
-msgstr ""
-"Hiển thị tất cả tập dữ liệu có ngày xử lý tiếp theo trước ngày hôm nay"
+msgstr "Hiển thị tất cả bản ghi có ngày xử lý tiếp theo trước ngày hôm nay"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__without_discount
@@ -2895,7 +2909,7 @@ msgid ""
 "to this category or its children categories. Keep empty otherwise."
 msgstr ""
 "Xác định một danh mục sản phẩm nếu quy tắc này chỉ áp dụng cho sản phẩm "
-"thuộc danh mục này hoặc danh mục con của nó. Nếu không hãy để trống."
+"thuộc danh mục này hoặc danh mục phụ của nó. Nếu không hãy để trống."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_id
@@ -3087,7 +3101,7 @@ msgstr "Biên lợi nhuận tổi thiểu nên thấp hơn biên lợi nhuận t
 msgid ""
 "The number of products under this category (Does not consider the children "
 "categories)"
-msgstr "Số lượng sản phẩm trong danh mục này (Không bao gồm danh mục con)"
+msgstr "Số lượng sản phẩm trong danh mục này (Không bao gồm danh mục phụ)"
 
 #. module: product
 #. odoo-python
@@ -3271,7 +3285,7 @@ msgstr "Loại"
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trong tập dữ liệu."
+msgstr "Loại hoạt động ngoại lệ trong bản ghi."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
@@ -3360,6 +3374,8 @@ msgid ""
 "Use this feature to store any files you would like to share with your "
 "customers"
 msgstr ""
+"Sử dụng tính năng này để lưu lại bất kỳ tệp nào bạn muốn chia sẻ với khách "
+"hàng của mình"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -3652,7 +3668,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_discount
 msgid "You can apply a mark-up by setting a negative discount."
-msgstr "Bạn có thể áp dụng tăng giá bằng cách đặt chiết khấu âm."
+msgstr "Bạn có thể áp dụng markup bằng cách đặt chiết khấu âm."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2

@@ -4,13 +4,24 @@ import secrets
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
-from markupsafe import Markup, escape
+from operator import itemgetter
+from traceback import format_exception
+from typing import Optional
+
+import json
+import logging
+
+from ..tools.pos_order_data import PoSOrderData
 
 from odoo import api, fields, models, _, Command
-from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools import float_is_zero, float_compare, convert
-from odoo.service.common import exp_version
+from odoo.addons.base.models.ir_qweb_fields import Markup, escape, nl2br
+from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.osv.expression import AND
+from odoo.service.common import exp_version
+from odoo.tools import float_is_zero, float_compare, convert
+from odoo.tools.misc import str2bool
+
+_logger = logging.getLogger(__name__)
 
 
 class PosSession(models.Model):
@@ -228,18 +239,6 @@ class PosSession(models.Model):
         else:
             sessions = super().create(vals_list)
         sessions.action_pos_session_open()
-
-        date_string = fields.Date.today().isoformat()
-        ir_sequence = self.env['ir.sequence'].sudo().search([('code', '=', f'pos.order_{date_string}')])
-        if not ir_sequence:
-            self.env['ir.sequence'].sudo().create({
-                'name': _("PoS Order"),
-                'padding': 0,
-                'code': f'pos.order_{date_string}',
-                'number_next': 1,
-                'number_increment': 1,
-                'company_id': self.env.company.id,
-            })
 
         return sessions
 
@@ -635,7 +634,7 @@ class PosSession(models.Model):
             pickings.write({'pos_session_id': self.id, 'origin': self.name})
 
     def _create_balancing_line(self, data, balancing_account, amount_to_balance):
-        if (not float_is_zero(amount_to_balance, precision_rounding=self.currency_id.rounding)):
+        if not self.company_id.currency_id.is_zero(amount_to_balance):
             balancing_vals = self._prepare_balancing_line_vals(amount_to_balance, self.move_id, balancing_account)
             MoveLine = data.get('MoveLine')
             MoveLine.create(balancing_vals)
@@ -794,15 +793,31 @@ class PosSession(models.Model):
                     for amount_key, amount in amounts.items():
                         taxes[tax_key][amount_key] += amount
 
-                if self.company_id.anglo_saxon_accounting and order.picking_ids.ids:
-                    # Combine stock lines
-                    stock_moves = self.env['stock.move'].sudo().search([
-                        ('picking_id', 'in', order.picking_ids.ids),
-                        ('company_id.anglo_saxon_accounting', '=', True),
-                        ('product_id.categ_id.property_valuation', '=', 'real_time'),
-                        ('product_id.type', '=', 'product'),
-                    ])
-                    for move in stock_moves:
+                if self.config_id.cash_rounding:
+                    diff = order.amount_paid - order.amount_total
+                    rounding_difference = self._update_amounts(rounding_difference, {'amount': diff}, order.date_order)
+
+                # Increasing current partner's customer_rank
+                partners = (order.partner_id | order.partner_id.commercial_partner_id)
+                partners._increase_rank('customer_rank')
+
+        if self.company_id.anglo_saxon_accounting:
+            all_picking_ids = self.order_ids.filtered(lambda p: not p.is_invoiced and not p.shipping_date).picking_ids.ids + self.picking_ids.filtered(lambda p: not p.pos_order_id).ids
+            if all_picking_ids:
+                # Combine stock lines
+                stock_move_sudo = self.env['stock.move'].sudo()
+                stock_moves = stock_move_sudo.search([
+                    ('picking_id', 'in', all_picking_ids),
+                    ('company_id.anglo_saxon_accounting', '=', True),
+                    ('product_id.categ_id.property_valuation', '=', 'real_time'),
+                    ('product_id.type', '=', 'product'),
+                ])
+                for stock_moves_split in self.env.cr.split_for_in_conditions(stock_moves.ids):
+                    stock_moves_batch = stock_move_sudo.browse(stock_moves_split)
+                    candidates = stock_moves_batch\
+                        .filtered(lambda m: not bool(m.origin_returned_move_id and sum(m.stock_valuation_layer_ids.mapped('quantity')) >= 0))\
+                        .mapped('stock_valuation_layer_ids')
+                    for move in stock_moves_batch.with_context(candidates_prefetch_ids=candidates._prefetch_ids):
                         exp_key = move.product_id._get_product_accounts()['expense']
                         out_key = move.product_id.categ_id.property_stock_account_output_categ_id
                         signed_product_qty = move.product_qty
@@ -814,36 +829,6 @@ class PosSession(models.Model):
                             stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
                         else:
                             stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
-
-                if self.config_id.cash_rounding:
-                    diff = order.amount_paid - order.amount_total
-                    rounding_difference = self._update_amounts(rounding_difference, {'amount': diff}, order.date_order)
-
-                # Increasing current partner's customer_rank
-                partners = (order.partner_id | order.partner_id.commercial_partner_id)
-                partners._increase_rank('customer_rank')
-
-        if self.company_id.anglo_saxon_accounting:
-            global_session_pickings = self.picking_ids.filtered(lambda p: not p.pos_order_id)
-            if global_session_pickings:
-                stock_moves = self.env['stock.move'].sudo().search([
-                    ('picking_id', 'in', global_session_pickings.ids),
-                    ('company_id.anglo_saxon_accounting', '=', True),
-                    ('product_id.categ_id.property_valuation', '=', 'real_time'),
-                    ('product_id.type', '=', 'product'),
-                ])
-                for move in stock_moves:
-                    exp_key = move.product_id._get_product_accounts()['expense']
-                    out_key = move.product_id.categ_id.property_stock_account_output_categ_id
-                    signed_product_qty = move.product_qty
-                    if move._is_in():
-                        signed_product_qty *= -1
-                    amount = signed_product_qty * move.product_id._compute_average_price(0, move.quantity, move)
-                    stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
-                    if move._is_in():
-                        stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
-                    else:
-                        stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
         MoveLine = self.env['account.move.line'].with_context(check_move_validity=False, skip_invoice_sync=True)
 
         data.update({
@@ -970,7 +955,7 @@ class PosSession(models.Model):
     def _apply_diff_on_account_payment_move(self, account_payment, payment_method, diff_amount):
         source_vals, dest_vals = self._get_diff_vals(payment_method.id, diff_amount)
         outstanding_line = account_payment.move_id.line_ids.filtered(lambda line: line.account_id.id == source_vals['account_id'])
-        new_balance = outstanding_line.balance + diff_amount
+        new_balance = outstanding_line.balance + self._amount_converter(diff_amount, self.stop_at, False)
         new_balance_compare_to_zero = self.currency_id.compare_amounts(new_balance, 0)
         account_payment.move_id.write({
             'line_ids': [
@@ -1269,10 +1254,10 @@ class PosSession(models.Model):
         account_id, sign, tax_keys, base_tag_ids = key
         tax_ids = set(tax[0] for tax in tax_keys)
         applied_taxes = self.env['account.tax'].browse(tax_ids)
-        title = 'Sales' if sign == 1 else 'Refund'
-        name = '%s untaxed' % title
+        title = _('Sales') if sign == 1 else _('Refund')
+        name = _('%s untaxed', title)
         if applied_taxes:
-            name = '%s with %s' % (title, ', '.join([tax.name for tax in applied_taxes]))
+            name = _('%s with %s', title, ', '.join([tax.name for tax in applied_taxes]))
         partial_vals = {
             'name': name,
             'account_id': account_id,
@@ -1292,6 +1277,7 @@ class PosSession(models.Model):
             'tax_base_amount': abs(base_amount_converted),
             'tax_repartition_line_id': repartition_line_id,
             'tax_tag_ids': [(6, 0, tag_ids)],
+            'display_type': 'tax',
         }
         return self._debit_amounts(partial_args, amount, amount_converted)
 
@@ -1648,7 +1634,7 @@ class PosSession(models.Model):
                        'price_extra': ptav.price_extra,
                        # id of a value should be from the "product.template.attribute.value" record
                        'id': ptav.id,
-                       } for ptav in list(group)]
+                       } for ptav in list(group) if ptav.ptav_active]
             res[attribute_line_id] = {
                 'id': attribute_line_id,
                 'name': attribute.name,
@@ -1663,6 +1649,18 @@ class PosSession(models.Model):
         """
         This is where we need to process the data if we can't do it in the loader/getter
         """
+        def filter_taxes_on_company(product_taxes, taxes_by_company):
+            """
+            Filter the list of tax ids on a single company starting from the current one.
+            If there is no tax in the result, it's filtered on the parent company and so
+            on until a non empty result is found.
+            """
+            taxes, comp = None, self.company_id
+            while not taxes and comp:
+                taxes = list(set(product_taxes) & set(taxes_by_company[comp.id]))
+                comp = comp.parent_id
+            return taxes
+
         loaded_data['version'] = exp_version()
 
         loaded_data['units_by_id'] = {unit['id']: unit for unit in loaded_data['uom.uom']}
@@ -1670,6 +1668,24 @@ class PosSession(models.Model):
         loaded_data['taxes_by_id'] = {tax['id']: tax for tax in loaded_data['account.tax']}
         for tax in loaded_data['taxes_by_id'].values():
             tax['children_tax_ids'] = [loaded_data['taxes_by_id'][id] for id in tax['children_tax_ids']]
+
+        taxes_by_company = defaultdict(set)
+        # If the current company is a branch company, the taxes of the products can come
+        # from the branch and its parents.
+        # We have to make sure to not mix them together and only use the taxes from the
+        # parent if there is no tax from the branch.
+        if self.company_id.parent_id:
+            # group all taxes by company in a dict where:
+            # - key: ID of the company
+            # - values: list of tax ids
+            key_company_id = itemgetter('company_id')
+            key_id = itemgetter('id')
+            for key, group in groupby(loaded_data['account.tax'], key=key_company_id):
+                taxes_by_company[key[0]] = list(map(key_id, group))
+        if len(taxes_by_company) > 1:
+            for product in loaded_data['product.product']:
+                if len(product['taxes_id']) > 1:
+                    product['taxes_id'] = filter_taxes_on_company(product['taxes_id'], taxes_by_company)
 
         if self.config_id.use_pricelist:
             default_pricelist = next(
@@ -1717,6 +1733,7 @@ class PosSession(models.Model):
             'pos.combo',
             'pos.combo.line',
             'product.packaging',
+            'product.tag',
             'account.cash.rounding',
             'pos.payment.method',
             'account.fiscal.position',
@@ -1731,7 +1748,7 @@ class PosSession(models.Model):
                 'fields': [
                     'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id',
                     'country_id', 'state_id', 'tax_calculation_rounding_method', 'nomenclature_id', 'point_of_sale_use_ticket_qr_code',
-                    'point_of_sale_ticket_unique_code',
+                    'point_of_sale_ticket_unique_code', 'account_fiscal_country_id',
                 ],
             }
         }
@@ -1745,6 +1762,11 @@ class PosSession(models.Model):
             company['country'] = self.env['res.country'].search_read(**params_country['search_params'])[0]
         else:
             company['country'] = None
+
+        company['account_fiscal_country_id'] = self.env['res.country'].search_read(
+            domain=[('id', '=', company['account_fiscal_country_id'][0])],
+            fields=['code'],
+        )[0]
 
         return company
 
@@ -1809,13 +1831,19 @@ class PosSession(models.Model):
     def _get_pos_ui_res_lang(self, params):
         return self.env['res.lang'].search_read(**params['search_params'])
 
+    def _get_pos_ui_product_tag(self, params):
+        return self.env['product.tag'].search_read(**params['search_params'])
+
+    def _loader_params_product_tag(self):
+        return {'search_params': {'domain': [], 'fields': ['name']}}
+
     def _loader_params_account_tax(self):
         return {
             'search_params': {
                 'domain': self.env['account.tax']._check_company_domain(self.company_id),
                 'fields': [
                     'name', 'price_include', 'include_base_amount', 'is_base_affected',
-                    'amount_type', 'children_tax_ids', 'amount', 'id'
+                    'amount_type', 'children_tax_ids', 'amount', 'company_id', 'id'
                 ],
             },
         }
@@ -1921,7 +1949,10 @@ class PosSession(models.Model):
         }
 
     def _get_pos_ui_res_users(self, params):
-        user = self.env['res.users'].search_read(**params['search_params'])[0]
+        user = self.env['res.users'].search_read(**params['search_params'], limit=1)
+        if not user:
+            raise UserError(_("You do not have permission to open a POS session. Please try opening a session with a different user"))
+        user = user[0]
         user['role'] = 'manager' if any(id == self.config_id.group_pos_manager_id.id for id in user['groups_id']) else 'cashier'
         del user['groups_id']
         return user
@@ -2035,7 +2066,7 @@ class PosSession(models.Model):
                 'fields': [
                     'display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode',
                     'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'product_tmpl_id', 'tracking',
-                    'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids',
+                    'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_tag_ids',
                 ],
                 'order': 'sequence,default_code,name',
             },
@@ -2162,8 +2193,7 @@ class PosSession(models.Model):
     def get_total_discount(self):
         amount = 0
         for line in self.env['pos.order.line'].search([('order_id', 'in', self._get_closed_orders().ids), ('discount', '>', 0)]):
-            original_price = line.tax_ids.compute_all(line.price_unit, line.currency_id, line.qty, product=line.product_id, partner=line.order_id.partner_id)['total_included']
-            amount += original_price - line.price_subtotal_incl
+            amount += line._get_discount_amount()
 
         return amount
 
@@ -2244,14 +2274,16 @@ class PosSession(models.Model):
 
     @api.model
     def _load_onboarding_data(self):
-        convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init', kind='data')
+        if not self.env.user.has_group("point_of_sale.group_pos_user"):
+            raise AccessDenied()
+        convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init', noupdate=True, kind='data')
         shop_config = self.env.ref('point_of_sale.pos_config_main', raise_if_not_found=False)
         if shop_config and shop_config.active:
             self._load_onboarding_main_config_data(shop_config)
 
     @api.model
     def _load_onboarding_main_config_data(self, shop_config):
-        convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding_main_config.xml', None, mode='init', kind='data')
+        convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding_main_config.xml', None, mode='init', noupdate=True, kind='data')
         if len(shop_config.session_ids.filtered(lambda s: s.state == 'opened')) == 0:
             self.env['pos.session'].create({
                 'config_id': shop_config.id,
@@ -2288,6 +2320,122 @@ class PosSession(models.Model):
             '&', ('product_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
             ('product_id', 'in', product_ids)]
         return self.env['product.pricelist.item'].search_read(pricelist_item_domain, self._product_pricelist_item_fields())
+
+    def _is_capture_system_activated(self):
+        # Enabled by default, but can be disabled manually if needed (error, crashs, storage issue due to number of attachments)
+        return str2bool(self.env['ir.config_parameter'].sudo().get_param('point_of_sale.capture_unprocessed_order', True))
+
+    def _handle_order_process_fail(self, order: dict, exception: Exception, draft: bool):
+        def early_return(reason: str):
+            _logger.info("order '%s' was not captured as %s", order['data']['name'], reason)
+
+        if not self._is_capture_system_activated():
+            return early_return("capture system is deactivated")
+
+        if draft:
+            # draft will be set when we receive a restaurant order that was not validated yet
+            # if we capture it, it will create tons of (a priori) irrelevant attachments
+            # So we capture only restaurant order that are validated
+            return early_return("order is draft")
+
+        if not self.env.context.get('is_receipt_printed'):
+            # Since 17.0 the PoS will revert to draft an order that raised an exception
+            # As such, the client can make the choice of removing the order or fix it.
+            # The order receipt was not printed thus the order was not validated yet so we can safely ignore its capture
+            # Furthermore, it would cause issue if we capture an order that the client would have decided to remove
+            return early_return("order was reseted to draft automatically due to the exception raised")
+
+        self.env.cr.rollback()  # It would have rollback anyway as it was raising an exception
+        self.sudo()._process_order_process_fail(order, exception, self.env.user.id)
+        self.env.cr.commit()  # Make sure that our created records are stored
+
+    def _process_order_process_fail(self, order: dict, exception: Exception, uid: int = False):
+        current_pos_order_data_hash = hash(PoSOrderData(order['data']))
+        self._get_unprocessed_pos_order_scheduled_activity(
+            order['data']['name'],
+            current_pos_order_data_hash,
+            uid or self.env.user.id,
+            create=True,
+        )
+        self._capture_order_data(order, exception, current_pos_order_data_hash)
+
+    def _shorten_pos_order_data_hash(self, pos_order_data_hash: int):
+        # The bigger the value, the less likely a hash collision will occur
+        # but a bigger value also means a longer name in the attachment
+        return str(pos_order_data_hash)[:6]
+
+    def _get_unprocessed_pos_order_scheduled_activity(self, order_ref: str, pos_order_data_hash: int, assigned_user_id: Optional[int] = None, create: bool = True):
+        if create:
+            assert assigned_user_id, "if in creation mode, assigned_user_id value is needed"
+        xml_id_module = '__support__'  # purposefully not using point.of.sale as otherwise the activity is removed on PoS app update
+        order_ref = order_ref.replace(' ', '_')
+        activity_xid_name = f"activity_pos_unprocessed_{order_ref}_{pos_order_data_hash}"
+        scheduled_activity = self.env.ref(f"{xml_id_module}.{activity_xid_name}", raise_if_not_found=False)
+        if create and not scheduled_activity:
+            scheduled_activity = self.activity_schedule(
+                act_type_xmlid='mail.mail_activity_data_warning',
+                summary=_("PoS order %s can not be processed", order_ref),
+                note=nl2br(_("The Point of Sale order with the following reference %s was received by the Odoo server, "
+                       "but the order processing phase failed.\n"
+                       "The datas received from the point of sale has been saved in the attachments.\n"
+                       "Please contact your support service to assist you on restoring it",
+                       Markup("<code>%s #%s</code>") % (order_ref, self._shorten_pos_order_data_hash(pos_order_data_hash)))),
+                user_id=assigned_user_id,
+            )
+            # and set it an XID
+            self.env['ir.model.data'].create({
+                'name': activity_xid_name,
+                'module': xml_id_module,
+                'model': scheduled_activity._name,
+                'res_id': scheduled_activity.id,
+            })
+        return scheduled_activity
+
+    def _capture_order_data_attachment_name(self, order_ref: str, pos_order_data_hash: int):
+        return f"pos_order_save_{order_ref}_{self._shorten_pos_order_data_hash(pos_order_data_hash)}.json"
+
+    def _get_captured_order_attachment(self, pos_order_ref: str, pos_order_data_hash: int):
+        return self.env['ir.attachment'].search([
+            ['res_model', '=', self._name],
+            ['name', '=', self._capture_order_data_attachment_name(pos_order_ref, pos_order_data_hash)],
+        ])
+
+    def _capture_order_data(self, order: dict, exception: Exception, pos_order_data_hash: int):
+        order_name = order['data']['name']
+
+        # Create an attachment with the order data content IF the content received is different from the ones already captured
+        existing_captured_attachment = self._get_captured_order_attachment(order_name, pos_order_data_hash)
+        if existing_captured_attachment:
+            _logger.info("order '%s' was not captured as the content is the same as in attachment %s #%d",
+                         order_name, existing_captured_attachment.name, existing_captured_attachment.id)
+            return
+
+        if exception:
+            # Store the traceback on the attachment in order to more easily investigate the cause of the issue
+            order["traceback"] = format_exception(
+                None, exception, exception.__traceback__  # ! compatibility with python > 3.7
+            )
+
+        attachment = self.env['ir.attachment'].create({
+            "name": self._capture_order_data_attachment_name(order_name, pos_order_data_hash),
+            "raw": json.dumps(order, indent=2),
+            "res_model": self._name,
+            "res_id": self.id,
+            "type": 'binary',
+        })
+        _logger.info("order '%s' was captured in attachment %s #%d", order_name, attachment.name, attachment.id)
+        return attachment
+
+    def _remove_capture_content(self, order_data):
+        current_order_data_obj_hash = hash(PoSOrderData(order_data))
+        pos_reference = order_data['name']
+        # Remove the scheduled activity if there is any
+        unprocessed_pos_order_scheduled_activity = self.sudo()._get_unprocessed_pos_order_scheduled_activity(pos_reference, current_order_data_obj_hash, create=False)
+        if unprocessed_pos_order_scheduled_activity:
+            unprocessed_pos_order_scheduled_activity.unlink()
+
+        # Remove the attachments that have different datas
+        self.sudo()._get_captured_order_attachment(pos_reference, current_order_data_obj_hash).unlink()
 
 
 class ProcurementGroup(models.Model):

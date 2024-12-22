@@ -49,7 +49,7 @@ msgstr ""
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
 msgid "Amount in Words"
-msgstr "Cantidad en palabras"
+msgstr "Importe en letra"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -60,7 +60,7 @@ msgstr "Cancelar"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid "Check Layout"
-msgstr "Disposición del cheque"
+msgstr "Diseño del cheque"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -105,7 +105,7 @@ msgstr "Los úmeros de cheque solo pueden consistir de dígitos"
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr "Marque esta opción si sus cheques pre-impresos no están numerados."
+msgstr "Seleccione esta opción si sus cheques preimpresos no están numerados."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -226,11 +226,11 @@ msgid ""
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "Manual: pague o cobre con cualquier método fuera de Odoo.\n"
-"Métodos de pago: cada sistema tiene su propio método de pago. Solicite una transacción en/a una tarjeta gracias al token de pago que el partner guarda al hacer una compra o suscribirse en línea.\n"
+"Proveedores de pago: cada proveedor tiene su propio método de pago. Solicite una transacción en o a una tarjeta gracias al token de pago que el contacto guarda al hacer una compra o suscribirse en línea.\n"
 "Cheque: pague las facturas con un cheque e imprímalo desde Odoo.\n"
-"Depósito por lote: recolecte varios cheques de clientes a la vez y genere y envíe un depósito por lote a su banco. Es necesario el módulo account_batch_payment.\n"
+"Depósito por lote: cobre varios cheques de clientes a la vez y genere y envíe un depósito por lote a su banco. Es necesario el módulo account_batch_payment.\n"
 "Transferencia de crédito SEPA: pague en la zona SEPA al enviar un archivo de transferencia de crédito SEPA a su banco. Es necesario el módulo account_sepa.\n"
-"Domiciliación bancaria SEPA: cobre en la zona SEPA gracias a un mandato que su partner le otorgará. Es necesario el módulo account_sepa.\n"
+"Domiciliación bancaria SEPA: cobre en la zona SEPA gracias a un mandato que le otorgará su contacto. Es necesario el módulo account_sepa.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -340,7 +340,7 @@ msgstr "Imprimir etiqueta de fecha"
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
 msgid "Print Pre-numbered Checks"
-msgstr "Imprimir cheques pre-numerados"
+msgstr "Imprimir cheques prenumerados"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment_register
@@ -418,8 +418,8 @@ msgid ""
 "wrong, you can change it in the journal configuration page."
 msgstr ""
 "El diario seleccionado está configurado para imprimir números de cheque. Si "
-"sus cheques pre-impresos ya tienen números o si la numeración actual es "
-"incorrecta, puedes cambiarla en la página de configuración del diario."
+"su cheque preimpreso ya tiene números o si la numeración actual es "
+"incorrecta puede cambiarla en la página de configuración del diario."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -428,8 +428,8 @@ msgid ""
 "This option allows you to print check details (stub) on multiple pages if "
 "they don't fit on a single page."
 msgstr ""
-"Esta opción te permite imprimir los detalles de verificación (stub) en "
-"varias páginas si no caben en una sola página."
+"Esta opción le permite imprimir los detalles del cheque (talón) en varias "
+"páginas si no caben en una sola página."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -438,8 +438,8 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
-"Esta opción te permite imprimir la etiqueta de fecha en el cheque según CPA.\n"
-"Desactiva esta opción si tu cheque preimpreso incluye la etiqueta de fecha."
+"Esta opción le permite imprimir la etiqueta de fecha en el cheque según la CPA.\n"
+"Desactívela si su cheque preimpreso incluye la etiqueta de fecha."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -451,12 +451,12 @@ msgstr ""
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Unmark Sent"
-msgstr "Quitar la marca de enviado"
+msgstr "Desmarcar enviado"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr "Cheque vacío"
+msgstr "Anular cheque"
 
 #. module: account_check_printing
 #. odoo-python

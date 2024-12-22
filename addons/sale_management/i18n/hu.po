@@ -3,24 +3,22 @@
 # 	* sale_management
 # 
 # Translators:
-# Szabolcs Rádi, 2023
-# Zsolt Godó <zsolttokio@gmail.com>, 2023
+# 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2023
 # Tamás Dombos, 2023
 # Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2023
-# Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023
 # Martin Trigaux, 2023
 # Ákos Nagy <akos.nagy@oregional.hu>, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
 # krnkris, 2023
-# gezza <geza.nagy@oregional.hu>, 2023
+# gezza <geza.nagy@oregional.hu>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:54+0000\n"
+"POT-Creation-Date: 2024-01-05 12:30+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2023\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +29,7 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "1.5"
-msgstr ""
+msgstr "1.5"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -39,11 +37,18 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
 "company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
+"company-specific.\" groups=\"base.group_multi_company\"/>"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "<span invisible=\"not require_payment\">of</span>"
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "<span>Options</span>"
-msgstr "<span>Beállítások</span>"
+msgstr "<span>Opciók</span>"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -59,12 +64,12 @@ msgstr "Megjegyzés hozzáadása"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a product"
-msgstr "Új termék létrehozása"
+msgstr "Termék hozzáadása"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a section"
-msgstr "Új szakasz hozzáadása"
+msgstr "Szakasz hozzáadása"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -115,12 +120,12 @@ msgstr "Vállalat"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_config_settings
 msgid "Config Settings"
-msgstr "Beállítások módosítása"
+msgstr "Beállítások"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
 msgid "Confirmation Mail"
-msgstr "Megerősítő e-mail"
+msgstr "Megerősítő email"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__product_uom_category_id
@@ -130,7 +135,7 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"A mértékegységek közötti átváltás csak akkor valósul meg, ha ugyanabba a "
+"A mértékegységek közötti átváltás csak akkor lehetséges, ha ugyanabba a "
 "kategóriába tartoznak. Az átváltás az arányszámok alapján történik."
 
 #. module: sale_management
@@ -213,14 +218,14 @@ msgstr "Megjelenített név"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_type
 msgid "Display Type"
-msgstr "Típus megjeleítése"
+msgstr "Megjelenítés típus"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "Nincs hozzáférés, adat kihagyása a felhasználó kivonat e-mailjéből"
+msgstr "Nincs hozzáférés, adat kihagyása a felhasználó kivonat emailjéből"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -253,7 +258,7 @@ msgstr "Csoportosítás"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr "ID"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__journal_id
@@ -272,7 +277,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__journal_id
 msgid "Invoicing Journal"
-msgstr ""
+msgstr "Számlázási napló"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
@@ -303,13 +308,13 @@ msgstr "Frissítve"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__line_id
 msgid "Line"
-msgstr "Tétel"
+msgstr "Sor"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_line_ids
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Lines"
-msgstr "Tételek"
+msgstr "Sorok"
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
@@ -359,11 +364,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Options"
 msgstr "Opciók"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "Prepayment amount"
-msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
@@ -448,7 +448,7 @@ msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "Quotation expires after"
+msgid "Quotation Validity"
 msgstr ""
 
 #. module: sale_management
@@ -459,7 +459,7 @@ msgstr "Eltávolítás"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Remove one"
-msgstr "Eltávolítás"
+msgstr "Egy eltávolítása"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_signature
@@ -488,12 +488,12 @@ msgstr "Értékesítések"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order
 msgid "Sales Order"
-msgstr "Megrendelések"
+msgstr "Vevői rendelés"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Vevői megrendelés sor"
+msgstr "Vevői rendelés sor"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__order_id
@@ -608,7 +608,7 @@ msgstr "Mértékegység"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "UoM"
-msgstr "Mértékegység"
+msgstr "M.e."
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action

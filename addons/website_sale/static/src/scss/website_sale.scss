@@ -23,6 +23,12 @@ $input-border-color: $gray-400;
             width: if($-list, 100%, 50%);
         }
 
+        @if ($-list == false) {
+            [data-ppr="3"] td.oe_product {
+                width: 100%;
+            }
+        }
+
         .modal-dialog {
             table, tbody, tr, td {
                 display: revert;
@@ -419,7 +425,8 @@ a.no-decoration {
     .carousel-outer {
         height: 400px;
         max-height: 90vh;
-
+        display: flex;
+        align-items: center;
         .carousel-inner {
             img {
                 object-fit: contain;
@@ -435,8 +442,8 @@ a.no-decoration {
     }
 
     .carousel-control-prev, .carousel-control-next {
-        height: 70%;
-        top: 15%;
+        top: auto;
+        bottom: auto;
         opacity: 0.5;
         cursor: pointer;
         transition: opacity 0.8s;
@@ -742,18 +749,19 @@ a.no-decoration {
     }
 
     .o_wsale_accordion {
-        .collapse:not(.show) {
-            display: block;
-
-            @include media-breakpoint-down(lg) {
-                display: none;
-            }
+        .accordion-button{
+            background-color: unset;
         }
 
         .o_wsale_scrollable_table {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            &::-webkit-scrollbar {
+              display: none;
+            }
             @include media-breakpoint-up(lg) {
                 overflow-y: scroll;
-                height: 21rem;
+                height: 15rem;
             }
         }
     }
@@ -764,7 +772,7 @@ a.no-decoration {
         line-height: $headings-line-height;
     }
 
-    div[itemprop="address"] {
+    div[itemprop="address"],  .o_address_font_sm {
         margin: map-get($spacers, 2) 0;
         font-size: $font-size-sm;
     }
@@ -816,4 +824,8 @@ a.no-decoration {
     a.disabled {
         pointer-events: none;
     }
+}
+
+.accordion-button:not(.collapsed).bg-transparent::after {
+    background-image: escape-svg($accordion-button-icon);
 }

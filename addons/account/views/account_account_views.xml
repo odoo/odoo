@@ -99,7 +99,7 @@
                     <field name="reconcile" widget="boolean_toggle" invisible="account_type in ('asset_cash', 'liability_credit_card') or internal_group == 'off_balance'"/>
                     <field name="non_trade" widget="boolean_toggle" invisible="account_type not in ('liability_payable', 'asset_receivable')" optional="hide"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tags"/>
-                    <field name="tag_ids" optional="hide" widget="many2many_tags"/>
+                    <field name="tag_ids" domain="[('applicability', '=', 'accounts')]" optional="hide" widget="many2many_tags"/>
                     <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -141,7 +141,7 @@
             <field name="model">account.account</field>
             <field name="arch" type="xml">
                 <search string="Accounts">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Account"/>
+                    <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', '=ilike', self + '%')]" string="Account"/>
                     <filter string="Receivable" name="receivableacc" domain="[('account_type','=','asset_receivable')]"/>
                     <filter string="Payable" name="payableacc" domain="[('account_type','=','liability_payable')]"/>
                     <filter string="Equity" name="equityacc" domain="[('internal_group','=', 'equity')]"/>
@@ -157,7 +157,7 @@
                     <group expand="0" string="Group By">
                         <filter string="Account Type" name="accounttype" domain="" context="{'group_by':'account_type'}"/>
                     </group>
-                    <searchpanel class="account_root">
+                    <searchpanel class="account_root w-auto">
                         <field name="root_id" icon="fa-filter" limit="0"/>
                     </searchpanel>
                 </search>
@@ -183,17 +183,6 @@
               </p>
             </field>
             <field name="context">{'search_default_activeacc': True}</field>
-        </record>
-
-        <record id="action_duplicate_account" model="ir.actions.server">
-            <field name="name">Duplicate</field>
-            <field name="model_id" ref="model_account_account"/>
-            <field name="binding_model_id" ref="account.model_account_account"/>
-            <field name="binding_view_types">list</field>
-            <field name="state">code</field>
-            <field name="code">
-                action = model.action_duplicate_accounts()
-            </field>
         </record>
 
     </data>

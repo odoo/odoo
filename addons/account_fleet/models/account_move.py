@@ -42,7 +42,7 @@ class AccountMoveLine(models.Model):
         return {
             'service_type_id': vendor_bill_service.id,
             'vehicle_id': self.vehicle_id.id,
-            'amount': self.price_subtotal,
+            'amount': self.debit,
             'vendor_id': self.partner_id.id,
             'description': self.name,
         }

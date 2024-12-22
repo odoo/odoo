@@ -123,7 +123,7 @@ export class TipScreen extends Component {
                     data: receipts[i],
                     total: this.env.utils.formatCurrency(this.totalAmount),
                 },
-                { webPrintFallback: true }
+                { webPrintFallback: false }
             );
         }
     }

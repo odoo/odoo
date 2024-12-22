@@ -3,16 +3,16 @@
 # 	* auth_signup
 # 
 # Translators:
-# Wil Odoo, 2023
-# Thi Huong Nguyen, 2023
+# Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +32,9 @@ msgid ""
 "                                A password reset was requested for the Odoo account linked to this email.\n"
 "                                You may change your password by following this link which will remain valid during 24 hours:<br/>"
 msgstr ""
+",<br/><br/>\n"
+"                                Đã yêu cầu đặt lại mật khẩu cho tài khoản Odoo liên kết với email này.\n"
+"                                Bạn có thể thay đổi mật khẩu của mình bằng cách nhấp vào liên kết này. Liên kết sẽ có hiệu lực trong vòng 24 giờ:<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -40,6 +43,9 @@ msgid ""
 "                        A new device was used to sign in to your account. <br/><br/>\n"
 "                        Here are some details about the connection:<br/>"
 msgstr ""
+",<br/><br/>\n"
+"                        Một thiết bị mới đã được sử dụng để đăng nhập tài khoản của bạn.<br/><br/>\n"
+"                        Một số thông tin về kết nối như sau:<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -178,7 +184,7 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
 "                        Xin chào <t t-out=\"object.name or ''\">Mitchell Admin</t>,<br> <br>\n"
-"                        Bạn đã thêm các (người dùng) sau vào cơ sở dữ liệu nhưng họ chưa đăng ký:\n"
+"                        Bạn đã thêm (các) người dùng sau vào cơ sở dữ liệu nhưng họ chưa đăng ký:\n"
 "                        <ul>\n"
 "                            <t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
 "                                <li t-out=\"invited_user or ''\">demo@example.com</li>\n"
@@ -323,8 +329,8 @@ msgstr ""
 "                            </a>\n"
 "                        </div>\n"
 "                        <t t-set=\"website_url\" t-value=\"object.get_base_url()\"></t>\n"
-"                        Miền Odoo của bạn là: <b><a t-att-href=\"website_url\" t-out=\"website_url or ''\">http://yourcompany.odoo.com</a></b><br>\n"
-"                        Email đăng nhập của bạn là: <b><a t-attf-href=\"/web/login?login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@example.com</a></b><br><br>\n"
+"                        Miền Odoo của bạn: <b><a t-att-href=\"website_url\" t-out=\"website_url or ''\">http://yourcompany.odoo.com</a></b><br>\n"
+"                        Email đăng nhập của bạn: <b><a t-attf-href=\"/web/login?login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@example.com</a></b><br><br>\n"
 "                        Bạn chưa biết đến Odoo? Odoo là một phần mềm hoạch định tài nguyên doanh nghiệp toàn diện được hơn 7 triệu người dùng yêu thích. Odoo sẽ nâng tầm trải nghiệm công việc và cải thiện hiệu suất làm việc của bạn một cách đáng kể.\n"
 "                        <br><br>\n"
 "                        Vui lòng xem <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Video giới thiệu Odoo</a> để khám phá phần mềm này.\n"
@@ -679,13 +685,15 @@ msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "                                Thanks,"
 msgstr ""
+"Nếu không muốn, bạn có thể yên tâm bỏ qua email này.<br/><br/>\n"
+"                                Xin cảm ơn!"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid ""
 "If you don't recognize it, you should change your password immediately via "
 "this link:<br/>"
-msgstr ""
+msgstr "Nếu không nhận ra, bạn nên đổi mật khẩu ngay qua link này:<br/>"
 
 #. module: auth_signup
 #. odoo-python
@@ -713,10 +721,11 @@ msgid "Marc Demo"
 msgstr "Marc Demo"
 
 #. module: auth_signup
+#. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Multiple accounts found for this login"
-msgstr ""
+msgstr "Tìm thấy nhiều tài khoản ứng với thông tin đăng nhập này"
 
 #. module: auth_signup
 #. odoo-python
@@ -777,7 +786,7 @@ msgstr "Khi mời"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "Otherwise, you can safely ignore this email."
-msgstr ""
+msgstr "Nếu không, bạn có thể yên tâm bỏ qua email này."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -814,7 +823,7 @@ msgstr "Mật khẩu không khớp; vui lòng nhập lại."
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Powered by"
-msgstr "Được hỗ trợ bởi"
+msgstr "Cung cấp bởi"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login_successful
@@ -989,7 +998,7 @@ msgid ""
 msgstr ""
 "Để gửi lời mời trong chế độ B2B, hãy mở một số liên hệ hoặc chọn nhiều liên "
 "hệ trong chế độ xem danh sách và nhấp vào tùy chọn 'Quản lý truy cập cổng "
-"thông tin' trong menu *Hành động* thả xuống."
+"thông tin' trong menu *Tác vụ* thả xuống."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users

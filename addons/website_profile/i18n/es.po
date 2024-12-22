@@ -40,13 +40,13 @@ msgid ""
 ". Collect points on the forum or on the eLearning platform. Those points "
 "will make you reach new ranks."
 msgstr ""
-". Recopilar puntos en el foro o en la plataforma eLearning. Esos puntos te "
-"harán alcanzar nuevos rangos."
+". Acumule puntos desde el foro o desde la plataforma de eLearning. Estos "
+"puntos le ayudarán a alcanzar nuevos rangos."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid ". Try another search."
-msgstr "Intente otra búsqueda"
+msgstr ". Intente otra búsqueda."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
@@ -174,8 +174,8 @@ msgid ""
 "<span id=\"email_validated_message\">Congratulations! Your email has just "
 "been validated.</span>"
 msgstr ""
-"<span id=\"email_validated_message\">    ¡Felicitaciones! Su correo "
-"electrónico acaba de ser validado.</span>"
+"<span id=\"email_validated_message\">¡Felicitaciones! Su correo electrónico "
+"acaba de ser validado.</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
@@ -282,11 +282,11 @@ msgstr ""
 "                <tr>\n"
 "                    <td valign=\"middle\">\n"
 "                        <span style=\"font-size: 20px; font-weight: bold;\">\n"
-"                            Validación del perfil de <t t-out=\"object.company_id.name or ''\">SuEmpresa</t> \n"
+"                            Validación del perfil de <t t-out=\"object.company_id.name or ''\">SuCompañía</t> \n"
 "                        </span>\n"
 "                    </td>\n"
 "                    <td t-if=\"not user.company_id.uses_default_logo\" valign=\"middle\" align=\"right\">\n"
-"                        <img t-attf-src=\"/logotipo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\">\n"
+"                        <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\">\n"
 "                    </td>\n"
 "                </tr>\n"
 "                <tr>\n"
@@ -330,12 +330,12 @@ msgstr ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\" font-family: 'Verdana Regular'; color: #454748; min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr>\n"
 "                    <td valign=\"middle\" align=\"left\">\n"
-"                         <t t-out=\"user.company_id.name or ''\">SuEmpresa</t>\n"
+"                         <t t-out=\"user.company_id.name or ''\">SuCompañía</t>\n"
 "                    </td>\n"
 "                    <td valign=\"middle\" align=\"right\" style=\"opacity: 0.7;\">\n"
 "                        <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
 "                        <t t-if=\"user.company_id.email\">\n"
-"                            | <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@suempresa.com</a>\n"
+"                            | <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@sucompañía.com</a>\n"
 "                        </t>\n"
 "                        <t t-if=\"user.company_id.website\">\n"
 "                            | <a t-attf-href=\"{{ user.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.ejemplo.com</a>\n"
@@ -377,7 +377,7 @@ msgstr "<u>aquí</u>"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "About"
-msgstr "Acerca de"
+msgstr "Sobre"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
@@ -452,7 +452,7 @@ msgstr "Foro: verificación por correo electrónico"
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_gamification_badge
 msgid "Gamification Badge"
-msgstr "Insignia de gamificación"
+msgstr "Insignia de ludificación"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
@@ -492,7 +492,7 @@ msgstr "Karma mínimo para ver el perfil de otro usuario"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Mobile sub-nav"
-msgstr "Sub-navegación móvil"
+msgstr "Subnavegación móvil"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -507,7 +507,7 @@ msgstr "Navegación"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Next rank:"
-msgstr "Siguiente grado:"
+msgstr "Siguiente rango:"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_main
@@ -517,12 +517,12 @@ msgstr "Todavía no hay tabla de clasificación :("
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
 msgid "No badges yet!"
-msgstr "Todavía no cuenta con insignias"
+msgstr "¡Todavía no cuenta con insignias!"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid "No user found for"
-msgstr "No se encuenta ningún usuario con"
+msgstr "No se encuenta ningún usuario para"
 
 #. module: website_profile
 #. odoo-python
@@ -548,7 +548,7 @@ msgstr "Rangos"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_access_denied
 msgid "Return to the website."
-msgstr "Regresar al sitio web."
+msgstr "Regrese al sitio web."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -564,7 +564,7 @@ msgstr "Buscar usuarios"
 #: model:mail.template,description:website_profile.validation_email
 msgid "Sent to forum visitors to confirm their mail address"
 msgstr ""
-"Enviar a los visitantes del foro para confirmar sus direcciones de correo "
+"Enviado a los visitantes del foro para confirmar sus direcciones de correo "
 "electrónico"
 
 #. module: website_profile
@@ -661,9 +661,9 @@ msgid ""
 "content. Points can also be earned on the forum. Follow this link to the "
 "guidelines of the forum."
 msgstr ""
-"Usted puede obtener más puntos contestando pruebas al final del contenido de"
-" cada curso. Los puntos también se pueden ganar en el foro. Siga este enlace"
-" a las directrices del foro."
+"Puede obtener más puntos si responde los cuestionarios que se encuentran al "
+"final de cada contenido del curso. También se pueden obtener puntos en el "
+"foro. Consulte en este enlace las normas del foro."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner

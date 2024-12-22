@@ -8,8 +8,9 @@ from odoo import http, fields, tools, models
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.exceptions import AccessError
-from odoo.http import request
+from odoo.http import request, Response
 from odoo.osv import expression
+from odoo.tools import consteq
 from odoo.tools.misc import get_lang
 
 
@@ -210,6 +211,31 @@ class PortalMailGroup(http.Controller):
     # ------------------------------------------------------------
     # SUBSCRIPTION
     # ------------------------------------------------------------
+
+    # csrf is disabled here because it will be called by the MUA with unpredictable session at that time
+    @http.route('/group/<int:group_id>/unsubscribe_oneclick', website=True, type='http', auth='public',
+           methods=['POST'], csrf=False)
+    def group_unsubscribe_oneclick(self, group_id, token, email):
+        """ Unsubscribe a given user from a given group. One-click unsubscribe
+        allow mail user agent to propose a one click button to the user to
+        unsubscribe as defined in rfc8058. Only POST method is allowed preventing
+        the risk that anti-spam trigger unwanted unsubscribe (scenario explained
+        in the same rfc).
+
+        :param int group_id: group ID from which user wants to unsubscribe;
+        :param str token: optional access token ensuring security;
+        :param email: email to unsubscribe;
+        """
+        group_sudo = request.env['mail.group'].sudo().browse(group_id).exists()
+        # new route parameters
+        if group_sudo and token and email:
+            correct_token = group_sudo._generate_email_access_token(email)
+            if not consteq(correct_token, token):
+                raise werkzeug.exceptions.NotFound()
+            group_sudo._leave_group(email)
+        else:
+            raise werkzeug.exceptions.NotFound()
+        return Response(status=200)
 
     @http.route('/group/subscribe', type='json', auth='public', website=True)
     def group_subscribe(self, group_id=0, email=None, token=None, **kw):

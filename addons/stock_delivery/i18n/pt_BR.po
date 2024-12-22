@@ -591,6 +591,19 @@ msgid "Weight:"
 msgstr "Peso:"
 
 #. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they have different "
+"carriers (i.e. check that all of their transfers have a carrier assigned and"
+" are using the same carrier)."
+msgstr ""
+"Não é possível embalar produtos no mesmo pacote quando eles têm "
+"transportadoras diferentes (ou seja, verifique se todas as transferências "
+"têm uma transportadora atribuída e se estão usando a mesma transportadora)."
+
+#. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
 msgstr ""

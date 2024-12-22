@@ -65,7 +65,7 @@
                     </cac:Country>
                 </cac:RegistrationAddress>
                 <cac:TaxScheme>
-                    <cbc:ID>VAT</cbc:ID>
+                    <cbc:ID>NOT_EU_VAT</cbc:ID>
                 </cac:TaxScheme>
             </cac:PartyTaxScheme>
             <cac:PartyLegalEntity>
@@ -97,7 +97,7 @@
     <cac:AccountingCustomerParty>
         <cac:Party>
             <cac:PartyIdentification>
-                <cbc:ID schemeID="CRN">353535353535353</cbc:ID>
+                <cbc:ID schemeID="CRN">US12345677</cbc:ID>
             </cac:PartyIdentification>
             <cac:PartyName>
                 <cbc:Name>Chichi Lboukla</cbc:Name>
@@ -118,6 +118,7 @@
             </cac:PostalAddress>
             <cac:PartyLegalEntity>
                 <cbc:RegistrationName>Chichi Lboukla</cbc:RegistrationName>
+                <cbc:CompanyID>US12345677</cbc:CompanyID>
                 <cac:RegistrationAddress>
                     <cbc:StreetName>4557 De Silva St</cbc:StreetName>
                     <cbc:BuildingNumber>12300</cbc:BuildingNumber>
@@ -136,7 +137,7 @@
             <cac:Contact>
                 <cbc:ID>42</cbc:ID>
                 <cbc:Name>Chichi Lboukla</cbc:Name>
-                <cbc:Telephone>(870)-931-0505</cbc:Telephone>
+                <cbc:Telephone>+18709310505</cbc:Telephone>
                 <cbc:ElectronicMail>azure.Interior24@example.com</cbc:ElectronicMail>
             </cac:Contact>
         </cac:Party>
@@ -172,6 +173,7 @@
         <cbc:LineExtensionAmount currencyID="SAR">320.00</cbc:LineExtensionAmount>
         <cbc:TaxExclusiveAmount currencyID="SAR">320.00</cbc:TaxExclusiveAmount>
         <cbc:TaxInclusiveAmount currencyID="SAR">368.00</cbc:TaxInclusiveAmount>
+        <cbc:AllowanceTotalAmount currencyID="SAR">0.00</cbc:AllowanceTotalAmount>
         <cbc:PrepaidAmount currencyID="SAR">0.00</cbc:PrepaidAmount>
         <cbc:PayableAmount currencyID="SAR">368.00</cbc:PayableAmount>
     </cac:LegalMonetaryTotal>
@@ -182,18 +184,6 @@
         <cac:TaxTotal>
             <cbc:TaxAmount currencyID="SAR">48.00</cbc:TaxAmount>
             <cbc:RoundingAmount currencyID="SAR">368.00</cbc:RoundingAmount>
-            <cac:TaxSubtotal>
-                <cbc:TaxableAmount currencyID="SAR">320.00</cbc:TaxableAmount>
-                <cbc:TaxAmount currencyID="SAR">48.00</cbc:TaxAmount>
-                <cbc:Percent>15.0</cbc:Percent>
-                <cac:TaxCategory>
-                <cbc:ID>S</cbc:ID>
-                <cbc:Percent>15.0</cbc:Percent>
-                <cac:TaxScheme>
-                    <cbc:ID>VAT</cbc:ID>
-                </cac:TaxScheme>
-                </cac:TaxCategory>
-            </cac:TaxSubtotal>
         </cac:TaxTotal>
         <cac:Item>
             <cbc:Description>[P0001] Product A</cbc:Description>

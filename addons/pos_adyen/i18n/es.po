@@ -23,12 +23,12 @@ msgstr ""
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
 msgid "Add tip through payment terminal (Adyen)"
-msgstr "Agregar propina a través del método de pago (Adyen)"
+msgstr "Añada propina a través del terminal de pago (Adyen)"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_api_key
 msgid "Adyen API key"
-msgstr "Clave de API de Adyen"
+msgstr "Clave API de Adyen"
 
 #. module: pos_adyen
 #. odoo-javascript
@@ -45,7 +45,7 @@ msgstr "Último diagnóstico de Adyen"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_response
 msgid "Adyen Latest Response"
-msgstr "Última Respuesta de Adyen"
+msgstr "Última respuesta de Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
@@ -74,7 +74,7 @@ msgstr "Solicitar propina a los clientes"
 #: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
-msgstr "Autenticación fallo. Por favor revise sus credenciales de Adyen."
+msgstr "La autenticación falló. Revise sus credenciales de Adyen."
 
 #. module: pos_adyen
 #. odoo-javascript
@@ -84,14 +84,15 @@ msgid ""
 "Cancelling the payment failed. Please cancel it manually on the payment "
 "terminal."
 msgstr ""
-"La cancelación del pago falló. Cancélelo manualmente en la terminal de pago."
+"Ocurrió un error al cancelar el pago. Cancélelo manualmente desde el "
+"terminal de pago."
 
 #. module: pos_adyen
 #. odoo-javascript
 #: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
 #, python-format
 msgid "Cannot process transactions with negative amount."
-msgstr "No se puede procesar transacciones con una cantidad negativa."
+msgstr "No se puede procesar transacciones con un importe negativo."
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_res_config_settings
@@ -131,8 +132,8 @@ msgstr "Mensaje de Adyen: %s"
 msgid ""
 "Please configure a tip product for POS %s to support tipping with Adyen."
 msgstr ""
-"Por favor, configure un producto de propina para POS %s para admitir "
-"propinas con Adyen."
+"Configure un producto de propina para el TPV %s para admitir propinas con "
+"Adyen."
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_config
@@ -152,7 +153,7 @@ msgstr "Sesión TPV"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__pos_adyen_ask_customer_for_tip
 msgid "Pos Adyen Ask Customer For Tip"
-msgstr "Pos Adyen Solicitar propina al cliente"
+msgstr "Solicitar propina al cliente en el TPV con Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_test_mode

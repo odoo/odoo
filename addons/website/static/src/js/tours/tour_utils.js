@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { cookie } from "@web/core/browser/cookie";
 
 import { markup } from "@odoo/owl";
 
@@ -331,7 +332,8 @@ function clickOnExtraMenuItem(stepOptions, backend = false) {
         trigger: `${backend ? "iframe" : ""} .top_menu`,
         run: function () {
             const extraMenuButton = this.$anchor[0].querySelector('.o_extra_menu_items a.nav-link');
-            if (extraMenuButton) {
+            // Don't click on the extra menu button if it's already visible.
+            if (extraMenuButton && !extraMenuButton.classList.contains("show")) {
                 extraMenuButton.click();
             }
         },
@@ -442,6 +444,23 @@ function selectElementInWeSelectWidget(widgetName, elementName, searchNeeded = f
     steps.push(clickOnElement(`${elementName} in the ${widgetName} widget`,
         `we-select[data-name="${widgetName}"] we-button:contains("${elementName}"), ` +
         `we-select[data-name="${widgetName}"] we-button[data-select-label="${elementName}"]`));
+    steps.push({
+        content: "Check we-select is set",
+        trigger: `we-select[data-name=${widgetName}]:contains(${elementName})`,
+        async run() {
+            // TODO: remove this delay when macro.js has been fixed.
+            // This additionnal line fix an underterministic error.
+            // When we-select is used twice a row too fast,
+            // the second we-select may not open.
+            // The first toggle is open, we click on it and almost
+            // at the same time, we click on the second one.
+            // The problem comes from macro.js which does not give
+            // the DOM time to be stable before looking for the trigger.
+            // We add a delay to let the mutations take place and
+            // therefore wait for the DOM to stabilize.
+            await new Promise((resolve) => setTimeout(resolve, 300));
+        }
+    });
     return steps;
 }
 
@@ -459,13 +478,49 @@ function switchWebsite(websiteId, websiteName) {
     }, {
         content: `Switch to website '${websiteName}'`,
         extra_trigger: `iframe html:not([data-website-id="${websiteId}"])`,
-        trigger: `.o_website_switcher_container .dropdown-item:contains("${websiteName}")`,
+        trigger: `.o_website_switcher_container .dropdown-item[data-website-id=${websiteId}]:contains("${websiteName}")`,
     }, {
         content: "Wait for the iframe to be loaded",
         // The page reload generates assets for the new website, it may take
         // some time
         timeout: 20000,
         trigger: `iframe html[data-website-id="${websiteId}"]`,
+        isCheck: true,
+    }];
+}
+
+/**
+* Switches to a different website by clicking on the website switcher.
+* This function can only be used during test tours as it requires
+* specific cookies to properly function.
+*
+* @param {string} websiteName - The name of the website to switch to.
+* @returns {Array} - The steps required to perform the website switch.
+*/
+function testSwitchWebsite(websiteName) {
+   const websiteIdMapping = JSON.parse(cookie.get('websiteIdMapping') || '{}');
+   const websiteId = websiteIdMapping[websiteName];
+   return switchWebsite(websiteId, websiteName)
+}
+
+/**
+ * Toggles the mobile preview on or off.
+ *
+ * @param {Boolean} toggleOn true to toggle the mobile preview on, false to
+ *     toggle it off.
+ * @returns {Array}
+ */
+function toggleMobilePreview(toggleOn) {
+    const onOrOff = toggleOn ? "on" : "off";
+    const mobileOnSelector = ".o_is_mobile";
+    const mobileOffSelector = ":not(.o_is_mobile)";
+    return [{
+        content: `Toggle the mobile preview ${onOrOff}`,
+        trigger: ".o_we_website_top_actions [data-action='mobile']",
+        extra_trigger: `iframe #wrapwrap${toggleOn ? mobileOffSelector : mobileOnSelector}`,
+    }, {
+        content: `Check that the mobile preview is ${onOrOff}`,
+        trigger: `iframe #wrapwrap${toggleOn ? mobileOnSelector : mobileOffSelector}`,
         isCheck: true,
     }];
 }
@@ -501,4 +556,6 @@ export default {
     selectNested,
     selectSnippetColumn,
     switchWebsite,
+    testSwitchWebsite,
+    toggleMobilePreview,
 };

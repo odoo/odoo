@@ -45,7 +45,7 @@
                             <th class="text-center" groups="uom.group_uom">
                                 <strong>Product UoM</strong>
                             </th>
-                            <th t-if="o.type_id == env.ref('purchase_requisition.type_single')">Price Unit</th>
+                            <th t-if="o.type_id.quantity_copy == 'none'">Price Unit</th>
                             <th class="text-end"><strong>Scheduled Date</strong></th>
                         </tr>
                     </thead>
@@ -66,7 +66,7 @@
                             <td class="text-center" groups="uom.group_uom">
                                 <span t-field="line_ids.product_uom_id.name">Unit</span>
                             </td>
-                            <td t-if="o.type_id == env.ref('purchase_requisition.type_single')">
+                            <td t-if="o.type_id.quantity_copy == 'none'">
                                 <span t-field="line_ids.price_unit" t-options='{"widget": "monetary", "display_currency": line_ids.requisition_id.currency_id}'>$50</span>
                             </td>
                             <td class="text-end">

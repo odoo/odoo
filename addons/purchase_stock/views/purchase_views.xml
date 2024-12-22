@@ -58,6 +58,9 @@
             <xpath expr="//field[@name='order_line']/form//field[@name='analytic_distribution']" position="before">
                 <field name="propagate_cancel" groups="base.group_no_one"/>
             </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='analytic_distribution']" position="before">
+                <field name="propagate_cancel" groups="base.group_no_one" optional="hide"/>
+            </xpath>
             <xpath expr="//field[@name='order_line']/tree//field[@name='qty_received']" position="attributes">
                 <attribute name="column_invisible">parent.state not in ('purchase', 'done')</attribute>
                 <attribute name="readonly">product_type in ('consu', 'product')</attribute>

@@ -1,9 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests.common import TransactionCase, tagged
+from odoo.tools._monkeypatches import new_get_soap_client
 from odoo.exceptions import ValidationError
 from unittest.mock import patch
 
 import stdnum.eu.vat
+from lxml import etree
+from zeep import Client, Transport
+from zeep.wsdl import Document
 
 
 class TestStructure(TransactionCase):
@@ -91,6 +95,36 @@ class TestStructure(TransactionCase):
 
         with self.assertRaises(ValidationError):
             test_partner.write({'vat': 'EU528003646', 'country_id': self.env.ref('base.be').id})
+
+    def test_nif_de(self):
+        test_partner = self.env['res.partner'].create({'name': "Mein Company", 'country_id': self.env.ref('base.de').id})
+        # Set a valid VAT
+        test_partner.write({'vat': "DE123456788"})
+        # Set a valid German tax ID (steuernummer)
+        test_partner.write({'vat': "201/123/12340"})
+        # Test invalid VAT (should raise a ValidationError)
+        with self.assertRaises(ValidationError):
+            test_partner.write({'vat': "136695978"})
+
+    def test_soap_client_for_vies_loads(self):
+        # Test of stdnum get_soap_client monkeypatch. This test is mostly to
+        # see that no unexpected import errors are thrown and not caught.
+        with patch.object(Document, '_get_xml_document', return_value=etree.Element("root")), \
+             patch.object(Client, 'service', return_value=None):
+            doc = Document(location=None, transport=Transport())
+            new_get_soap_client(doc, 30)
+
+    def test_rut_uy(self):
+        test_partner = self.env["res.partner"].create({"name": "UY Company", "country_id": self.env.ref("base.uy").id})
+        # Set a valid Number
+        test_partner.write({"vat": "215521750017"})
+        test_partner.write({"vat": "21-55217500-17"})
+        test_partner.write({"vat": "21 55217500 17"})
+        test_partner.write({"vat": "UY215521750017"})
+
+        # Test invalid VAT (should raise a ValidationError)
+        with self.assertRaisesRegex(ValidationError, "The VAT number.*does not seem to be valid."):
+            test_partner.write({"vat": "215521750018"})
 
 
 @tagged('-standard', 'external')

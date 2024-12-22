@@ -54,7 +54,7 @@ export class Dialog extends Component {
             { bypassEditableProtection: true }
         );
         this.id = `dialog_${this.data.id}`;
-        useChildSubEnv({ inDialog: true, dialogId: this.id, closeDialog: () => this.data.close() });
+        useChildSubEnv({ inDialog: true, dialogId: this.id });
         this.position = useState({ left: 0, top: 0 });
         useDialogDraggable({
             enable: () => !this.env.isSmall,
@@ -111,7 +111,7 @@ Dialog.props = {
     size: {
         type: String,
         optional: true,
-        validate: (s) => ["sm", "md", "lg", "xl", "fs"].includes(s),
+        validate: (s) => ["sm", "md", "lg", "xl", "fs", "fullscreen"].includes(s),
     },
     technical: { type: Boolean, optional: true },
     title: { type: String, optional: true },

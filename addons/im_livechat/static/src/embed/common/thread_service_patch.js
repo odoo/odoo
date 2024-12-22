@@ -44,6 +44,9 @@ patch(ThreadService.prototype, {
             folded: thread.state === "folded",
         });
         chatWindow.autofocus++;
+        if (this.chatbotService.savedState) {
+            this.chatbotService._restore();
+        }
         if (this.chatbotService.active) {
             this.chatbotService.start();
         }

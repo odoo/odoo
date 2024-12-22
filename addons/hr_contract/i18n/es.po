@@ -3,16 +3,16 @@
 # 	* hr_contract
 # 
 # Translators:
-# Wil Odoo, 2024
 # Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -234,7 +234,7 @@ msgstr "Empleado básico"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__calendar_mismatch
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__calendar_mismatch
 msgid "Calendar Mismatch"
-msgstr "Discordancia de calendarios"
+msgstr "Discrepancia entre calendarios"
 
 #. module: hr_contract
 #. odoo-javascript
@@ -268,7 +268,7 @@ msgstr "Compañía"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__vehicle
 #: model:ir.model.fields,field_description:hr_contract.field_res_users__vehicle
 msgid "Company Vehicle"
-msgstr "Vehículo de la empresa"
+msgstr "Vehículo de la compañía"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__company_country_id
@@ -315,18 +315,18 @@ msgstr "Detalles del contrato"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
 msgid "Contract End Date"
-msgstr "Fecha de finalización de contrato"
+msgstr "Fecha de finalización del contrato"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
 msgid "Contract Expiration Notice Period"
-msgstr "Plazo de notificación de vencimiento del contrato"
+msgstr "Plazo de preaviso de vencimiento del contrato"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_res_company__contract_expiration_notice_period
 #: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__contract_expiration_notice_period
 msgid "Contract Expiry Notice Period"
-msgstr "Periodo de notificación de contrato vencido"
+msgstr "Plazo de preaviso de vencimiento del contrato"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
@@ -480,7 +480,7 @@ msgstr "Actualmente bajo contrato"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__default_resource_calendar_id
 msgid "Default Working Hours"
-msgstr "Horas laborales predeterminadas"
+msgstr "Horas laborables por defecto"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
@@ -532,7 +532,7 @@ msgstr "Empleado"
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract
 msgid "Employee Contract"
-msgstr "Contrato de empleado"
+msgstr "Contrato del empleado"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_ids
@@ -642,13 +642,13 @@ msgstr "Agrupar por"
 #. module: hr_contract
 #: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_state_ir_actions_server
 msgid "HR Contract: update state"
-msgstr "Contrato laboral: actualizar estado"
+msgstr "Contrato de RR. HH.: actualizar estado"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__hr_responsible_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__hr_responsible_id
 msgid "HR Responsible"
-msgstr "Responsable de RR.HH."
+msgstr "Responsable de RR. HH."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__has_message
@@ -851,7 +851,7 @@ msgstr "Empleado público"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__rating_ids
 msgid "Ratings"
-msgstr "Valoraciones"
+msgstr "Calificaciones"
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__blocked
@@ -865,9 +865,14 @@ msgid "Reference Working Time"
 msgstr "Tiempo de trabajo de referencia"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "Detalle de las ausencias del recurso"
+
+#. module: hr_contract
 #: model:ir.model,name:hr_contract.model_resource_calendar
 msgid "Resource Working Time"
-msgstr "Tiempo de Trabajo de Recursos"
+msgstr "Tiempo de trabajo de recursos"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_resource_resource
@@ -883,13 +888,13 @@ msgstr "Usuario responsable"
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__open
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__open
 msgid "Running"
-msgstr "En proceso"
+msgstr "En curso"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Running Contracts"
-msgstr "Contratos en ejecución"
+msgstr "Contratos en curso"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
@@ -909,7 +914,7 @@ msgstr "Información del salario"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Salary Structure Type"
-msgstr "Tipo de Estructura Salarial"
+msgstr "Tipo de estructura salarial"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -924,7 +929,7 @@ msgstr "Buscar contratos de referencia"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_departure_wizard__set_date_end
 msgid "Set Contract End Date"
-msgstr "Establecer fecha de finalización de contrato"
+msgstr "Establecer fecha de finalización del contrato"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_departure_wizard__set_date_end
@@ -1030,7 +1035,7 @@ msgstr "Usuario"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__visa_no
 msgid "Visa No"
-msgstr "Número de Visa"
+msgstr "Número del visado"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__wage
@@ -1051,13 +1056,13 @@ msgstr "Historial de comunicación del sitio web"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
 msgid "Work Permit Expiration Notice Period"
-msgstr "Plazo de notificación de vencimiento del permiso de trabajo"
+msgstr "Periodo de preaviso de vencimiento del permiso de trabajo"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_res_company__work_permit_expiration_notice_period
 #: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__work_permit_expiration_notice_period
 msgid "Work Permit Expiry Notice Period"
-msgstr "Plazo de notificación del permiso de trabajo vencido"
+msgstr "Periodo de preaviso de vencimiento del permiso de trabajo"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no
@@ -1070,3 +1075,10 @@ msgstr "Número de permiso de trabajo"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Working Schedule"
 msgstr "Horario de trabajo"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_employee.py:0
+#, python-format
+msgid "You cannot delete an employee with a running contract."
+msgstr "No puede eliminar a un empleado con un contrato válido."

@@ -15,7 +15,7 @@ Think twice before you click that 'Delete' button!`
 
 export class ConfirmationDialog extends Component {
     setup() {
-        this.env.dialogData.dismiss = () => this._cancel();
+        this.env.dialogData.dismiss = () => this._dismiss();
         this.modalRef = useChildRef();
         this.isProcess = false;
     }
@@ -26,6 +26,10 @@ export class ConfirmationDialog extends Component {
 
     async _confirm() {
         return this.execButton(this.props.confirm);
+    }
+
+    async _dismiss() {
+        return this.execButton(this.props.dismiss || this.props.cancel);
     }
 
     setButtonsDisabled(disabled) {
@@ -77,6 +81,7 @@ ConfirmationDialog.props = {
     confirmClass: { type: String, optional: true },
     cancel: { type: Function, optional: true },
     cancelLabel: { type: String, optional: true },
+    dismiss: { type: Function, optional: true },
 };
 ConfirmationDialog.defaultProps = {
     confirmLabel: _t("Ok"),

@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from markupsafe import Markup
+from urllib.parse import urlparse
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import UserError, AccessError, RedirectWarning
 from odoo.tools.safe_eval import safe_eval, time
 from odoo.tools.misc import find_in_path, ustr
 from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version, split_every
+from odoo.tools.pdf import PdfFileWriter, PdfFileReader, PdfReadError
 from odoo.http import request
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
 
@@ -22,7 +24,7 @@ import json
 from lxml import etree
 from contextlib import closing
 from reportlab.graphics.barcode import createBarcodeDrawing
-from PyPDF2 import PdfFileWriter, PdfFileReader
+from reportlab.pdfbase.pdfmetrics import getFont, TypeFace
 from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile
@@ -31,11 +33,6 @@ from itertools import islice
 # Allow truncated images
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-try:
-    from PyPDF2.errors import PdfReadError
-except ImportError:
-    from PyPDF2.utils import PdfReadError
-
 _logger = logging.getLogger(__name__)
 
 # A lock occurs when the user wants to print a report having multiple barcode while the server is
@@ -43,8 +40,17 @@ _logger = logging.getLogger(__name__)
 # before rendering a barcode (done in a C extension) and this part is not thread safe. We attempt
 # here to init the T1 fonts cache at the start-up of Odoo so that rendering of barcode in multiple
 # thread does not lock the server.
+_DEFAULT_BARCODE_FONT = 'Courier'
 try:
-    createBarcodeDrawing('Code128', value='foo', format='png', width=100, height=100, humanReadable=1).asString('png')
+    available = TypeFace(_DEFAULT_BARCODE_FONT).findT1File()
+    if not available:
+        substitution_font = 'NimbusMonoPS-Regular'
+        fnt = getFont(substitution_font)
+        if fnt:
+            _DEFAULT_BARCODE_FONT = substitution_font
+            fnt.ascent = 629
+            fnt.descent = -157
+    createBarcodeDrawing('Code128', value='foo', format='png', width=100, height=100, humanReadable=1, fontName=_DEFAULT_BARCODE_FONT).asString('png')
 except Exception:
     pass
 
@@ -239,6 +245,13 @@ class IrActionsReport(models.Model):
     def get_paperformat(self):
         return self.paperformat_id or self.env.company.paperformat_id
 
+    def _get_layout(self):
+        return self.env.ref('web.minimal_layout', raise_if_not_found=False)
+
+    def _get_report_url(self, layout=None):
+        report_url = self.env['ir.config_parameter'].sudo().get_param('report.url')
+        return report_url or (layout or self._get_layout() or self).get_base_url()
+
     @api.model
     def _build_wkhtmltopdf_args(
             self,
@@ -260,10 +273,6 @@ class IrActionsReport(models.Model):
         command_args = ['--disable-local-file-access']
         if set_viewport_size:
             command_args.extend(['--viewport-size', landscape and '1024x1280' or '1280x1024'])
-
-        # Passing the cookie to wkhtmltopdf in order to resolve internal links.
-        if request and request.db:
-            command_args.extend(['--cookie', 'session_id', request.session.sid])
 
         # Less verbose error messages
         command_args.extend(['--quiet'])
@@ -339,13 +348,12 @@ class IrActionsReport(models.Model):
         :type specific_paperformat_args: dictionary of prioritized paperformat values.
         :return: bodies, header, footer, specific_paperformat_args
         '''
-        IrConfig = self.env['ir.config_parameter'].sudo()
 
         # Return empty dictionary if 'web.minimal_layout' not found.
-        layout = self.env.ref('web.minimal_layout', raise_if_not_found=False)
+        layout = self._get_layout()
         if not layout:
             return {}
-        base_url = IrConfig.get_param('report.url') or layout.get_base_url()
+        base_url = self._get_report_url(layout=layout)
 
         root = lxml.html.fromstring(html, parser=lxml.html.HTMLParser(encoding='utf-8'))
         match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
@@ -444,6 +452,18 @@ class IrActionsReport(models.Model):
 
         files_command_args = []
         temporary_files = []
+
+        # Passing the cookie to wkhtmltopdf in order to resolve internal links.
+        if request and request.db:
+            base_url = self._get_report_url()
+            domain = urlparse(base_url).hostname
+            cookie = f'session_id={request.session.sid}; HttpOnly; domain={domain}; path=/;'
+            cookie_jar_file_fd, cookie_jar_file_path = tempfile.mkstemp(suffix='.txt', prefix='report.cookie_jar.tmp.')
+            temporary_files.append(cookie_jar_file_path)
+            with closing(os.fdopen(cookie_jar_file_fd, 'wb')) as cookie_jar_file:
+                cookie_jar_file.write(cookie.encode())
+            command_args.extend(['--cookie-jar', cookie_jar_file_path])
+
         if header:
             head_file_fd, head_file_path = tempfile.mkstemp(suffix='.html', prefix='report.header.tmp.')
             with closing(os.fdopen(head_file_fd, 'wb')) as head_file:
@@ -576,6 +596,8 @@ class IrActionsReport(models.Model):
         }
         kwargs = {k: validator(kwargs.get(k, v)) for k, (v, validator) in defaults.items()}
         kwargs['humanReadable'] = kwargs.pop('humanreadable')
+        if kwargs['humanReadable']:
+            kwargs['fontName'] = _DEFAULT_BARCODE_FONT
 
         if barcode_type == 'UPCA' and len(value) in (11, 12, 13):
             barcode_type = 'EAN13'
@@ -661,6 +683,11 @@ class IrActionsReport(models.Model):
                 reader = PdfFileReader(stream)
                 writer.appendPagesFromReader(reader)
             except (PdfReadError, TypeError, NotImplementedError, ValueError):
+                # TODO : make custom_error_handler a parameter in master
+                custom_error_handler = self.env.context.get('custom_error_handler')
+                if custom_error_handler:
+                    custom_error_handler(stream)
+                    continue
                 raise UserError(_("Odoo is unable to merge the generated PDFs."))
         result_stream = io.BytesIO()
         streams.append(result_stream)
@@ -674,6 +701,7 @@ class IrActionsReport(models.Model):
 
         # access the report details with sudo() but evaluation context as current user
         report_sudo = self._get_report(report_ref)
+        has_duplicated_ids = res_ids and len(res_ids) != len(set(res_ids))
 
         collected_streams = OrderedDict()
 
@@ -682,9 +710,13 @@ class IrActionsReport(models.Model):
         if res_ids:
             records = self.env[report_sudo.model].browse(res_ids)
             for record in records:
+                res_id = record.id
+                if res_id in collected_streams:
+                    continue
+
                 stream = None
                 attachment = None
-                if report_sudo.attachment and not self._context.get("report_pdf_no_attachment"):
+                if not has_duplicated_ids and report_sudo.attachment and not self._context.get("report_pdf_no_attachment"):
                     attachment = report_sudo.retrieve_attachment(record)
 
                     # Extract the stream from the attachment.
@@ -699,13 +731,14 @@ class IrActionsReport(models.Model):
                             stream.close()
                             stream = new_stream
 
-                collected_streams[record.id] = {
+                collected_streams[res_id] = {
                     'stream': stream,
                     'attachment': attachment,
                 }
 
         # Call 'wkhtmltopdf' to generate the missing streams.
         res_ids_wo_stream = [res_id for res_id, stream_data in collected_streams.items() if not stream_data['stream']]
+        all_res_ids_wo_stream = res_ids if has_duplicated_ids else res_ids_wo_stream
         is_whtmltopdf_needed = not res_ids or res_ids_wo_stream
 
         if is_whtmltopdf_needed:
@@ -725,16 +758,16 @@ class IrActionsReport(models.Model):
             # https://github.com/wkhtmltopdf/wkhtmltopdf/issues/2083
             additional_context = {'debug': False}
 
-            html = self.with_context(**additional_context)._render_qweb_html(report_ref, res_ids_wo_stream, data=data)[0]
+            html = self.with_context(**additional_context)._render_qweb_html(report_ref, all_res_ids_wo_stream, data=data)[0]
 
             bodies, html_ids, header, footer, specific_paperformat_args = self.with_context(**additional_context)._prepare_html(html, report_model=report_sudo.model)
 
-            if report_sudo.attachment and set(res_ids_wo_stream) != set(html_ids):
+            if not has_duplicated_ids and report_sudo.attachment and set(res_ids_wo_stream) != set(html_ids):
                 raise UserError(_(
                     "The report's template %r is wrong, please contact your administrator. \n\n"
                     "Can not separate file to save as attachment because the report's template does not contains the"
                     " attributes 'data-oe-model' and 'data-oe-id' on the div with 'article' classname.",
-                    self.name,
+                    report_sudo.name,
                 ))
 
             pdf_content = self._run_wkhtmltopdf(
@@ -749,7 +782,7 @@ class IrActionsReport(models.Model):
             pdf_content_stream = io.BytesIO(pdf_content)
 
             # Printing a PDF report without any records. The content could be returned directly.
-            if not res_ids:
+            if has_duplicated_ids or not res_ids:
                 return {
                     False: {
                         'stream': pdf_content_stream,
@@ -775,7 +808,7 @@ class IrActionsReport(models.Model):
                     attachment_writer.addPage(reader.getPage(i))
                     stream = io.BytesIO()
                     attachment_writer.write(stream)
-                    collected_streams[res_ids[i]]['stream'] = stream
+                    collected_streams[res_ids_wo_stream[i]]['stream'] = stream
                 return collected_streams
 
             # In cases where the number of res_ids != the number of pages,
@@ -803,7 +836,7 @@ class IrActionsReport(models.Model):
                 outlines_pages = sorted(set(outlines_pages))
 
                 # The number of outlines must be equal to the number of records to be able to split the document.
-                has_same_number_of_outlines = len(outlines_pages) == len(res_ids)
+                has_same_number_of_outlines = len(outlines_pages) == len(res_ids_wo_stream)
 
                 # There should be a top-level heading on first page
                 has_top_level_heading = outlines_pages[0] == 0
@@ -817,7 +850,7 @@ class IrActionsReport(models.Model):
                             attachment_writer.addPage(reader.getPage(j))
                         stream = io.BytesIO()
                         attachment_writer.write(stream)
-                        collected_streams[res_ids[i]]['stream'] = stream
+                        collected_streams[res_ids_wo_stream[i]]['stream'] = stream
 
                     return collected_streams
 
@@ -841,7 +874,7 @@ class IrActionsReport(models.Model):
 
             # if res_id is false
             # we are unable to fetch the record, it won't be saved as we can't split the documents unambiguously
-            if not res_id:
+            if not res_id or not stream_data['stream']:
                 _logger.warning(
                     "These documents were not saved as an attachment because the template of %s doesn't "
                     "have any headers seperating different instances of it. If you want it saved,"
@@ -876,12 +909,13 @@ class IrActionsReport(models.Model):
 
         self = self.with_context(webp_as_jpg=True)
         collected_streams = self._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
+        has_duplicated_ids = res_ids and len(res_ids) != len(set(res_ids))
 
         # access the report details with sudo() but keep evaluation context as current user
         report_sudo = self._get_report(report_ref)
 
         # Generate the ir.attachment if needed.
-        if report_sudo.attachment and not self._context.get("report_pdf_no_attachment"):
+        if not has_duplicated_ids and report_sudo.attachment and not self._context.get("report_pdf_no_attachment"):
             attachment_vals_list = self._prepare_pdf_report_attachment_vals_list(report_sudo, collected_streams)
             if attachment_vals_list:
                 attachment_names = ', '.join(x['name'] for x in attachment_vals_list)
@@ -892,13 +926,38 @@ class IrActionsReport(models.Model):
                 else:
                     _logger.info("The PDF documents %r are now saved in the database", attachment_names)
 
+        stream_to_ids = {v['stream']: k for k, v in collected_streams.items() if v['stream']}
         # Merge all streams together for a single record.
-        streams_to_merge = [x['stream'] for x in collected_streams.values() if x['stream']]
+        streams_to_merge = list(stream_to_ids.keys())
+        error_record_ids = []
+
         if len(streams_to_merge) == 1:
             pdf_content = streams_to_merge[0].getvalue()
         else:
-            with self._merge_pdfs(streams_to_merge) as pdf_merged_stream:
+            with self.with_context(
+                    custom_error_handler=lambda error_stream: error_record_ids.append(stream_to_ids[error_stream])
+            )._merge_pdfs(streams_to_merge) as pdf_merged_stream:
                 pdf_content = pdf_merged_stream.getvalue()
+
+        if error_record_ids:
+            action = {
+                'type': 'ir.actions.act_window',
+                'name': _('Problematic record(s)'),
+                'res_model': report_sudo.model,
+                'domain': [('id', 'in', error_record_ids)],
+                'views': [(False, 'tree'), (False, 'form')],
+            }
+            num_errors = len(error_record_ids)
+            if num_errors == 1:
+                action.update({
+                    'views': [(False, 'form')],
+                    'res_id': error_record_ids[0],
+                })
+            raise RedirectWarning(
+                message=_('Odoo is unable to merge the generated PDFs because of %(num_errors)s corrupted file(s)', num_errors=num_errors),
+                action=action,
+                button_text=_('View Problematic Record(s)'),
+            )
 
         for stream in streams_to_merge:
             stream.close()

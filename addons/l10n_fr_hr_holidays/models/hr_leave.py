@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, api, _
@@ -10,7 +8,7 @@ from odoo.exceptions import UserError
 class HrLeave(models.Model):
     _inherit = 'hr.leave'
 
-    l10n_fr_date_to_changed = fields.Boolean()
+    l10n_fr_date_to_changed = fields.Boolean(export_string_translation=False)
 
     def _l10n_fr_leave_applies(self):
         # The french l10n is meant to be computed only in very specific cases:
@@ -31,7 +29,31 @@ class HrLeave(models.Model):
         # The following computation doesn't work for resource calendars in
         # which the employee works zero hours.
         if not (self.resource_calendar_id.attendance_ids):
-            raise UserError(_("An employee cannot take a paid time off in a period they work no hours."))
+            raise UserError(_("An employee can't take paid time off in a period without any work hours."))
+
+        if not self.request_unit_hours:
+            # Use company's working schedule hours for the leave to avoid duration calculation issues.
+            def adjust_date_range(date_from, date_to, period, attendance_ids, employee_id):
+                period_ids_from = attendance_ids.filtered(lambda a: a.day_period in period
+                                                                    and int(a.dayofweek) == date_from.weekday()
+                                                                    and (not a.two_weeks_calendar or int(a.week_type) == a.get_week_type(date_from)))
+                period_ids_to = attendance_ids.filtered(lambda a: a.day_period in period
+                                                                    and int(a.dayofweek) == date_to.weekday()
+                                                                    and (not a.two_weeks_calendar or int(a.week_type) == a.get_week_type(date_to)))
+                if period_ids_from:
+                    min_hour = min(attendance.hour_from for attendance in period_ids_from)
+                    date_from = self._to_utc(date_from, min_hour, employee_id)
+                if period_ids_to:
+                    max_hour = max(attendance.hour_to for attendance in period_ids_to)
+                    date_to = self._to_utc(date_to, max_hour, employee_id)
+                return date_from, date_to
+
+            if self.request_unit_half:
+                period = ['morning'] if self.request_date_from_period == 'am' else ['afternoon']
+            else:
+                period = ['morning', 'afternoon']
+            attendance_ids = self.company_id.resource_calendar_id.attendance_ids
+            date_from, date_to = adjust_date_range(date_from, date_to, period, attendance_ids, self.employee_id)
 
         if self.request_unit_half and self.request_date_from_period == 'am':
             # In normal workflows request_unit_half implies that date_from and date_to are the same
