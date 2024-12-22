@@ -31,19 +31,19 @@
 # Simo Suurla <simo@suurla.fi>, 2024
 # Miku Laitinen <miku.laitinen@gmail.com>, 2024
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2024
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Jessica Jakara, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -744,21 +744,9 @@ msgstr "Kohdistustyyppi"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Allocation must be \"To Approve\" or \"Second Approval\" in order to "
-"validate it."
+"Allocation must be confirmed \"To Approve\" or validated once \"Second "
+"Approval\" in order to approve it."
 msgstr ""
-"Varauksen on oltava \"Hyväksytty\" tai sillä on oltava \"Toinen "
-"hyväksyntä\", jotta se voidaan vahvistaa."
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid ""
-"Allocation must be confirmed (\"To Approve\") or validated once (\"Second "
-"Approval\") in order to approve it."
-msgstr ""
-"Varaus on vahvistettava (\"Hyväksytty\") tai varmistettava yhden kerran "
-"(\"Toinen hyväksyntä\"), jotta se voidaan hyväksyä."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2919,6 +2907,12 @@ msgid "Rate"
 msgstr "Määrä"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__rating_ids
+msgid "Ratings"
+msgstr "Arviointi"
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__reason
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Reason"
@@ -3579,6 +3573,16 @@ msgstr "Vapaa on peruttu: %s"
 msgid ""
 "The type with the smallest sequence is the default value in time off request"
 msgstr "Tyyppi, jonka sekvenssi on pienin, on oletusarvo vapaa-ajan pyynnössä"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"There is no employee set on the time off. Please make sure you're logged in "
+"the correct company."
+msgstr ""
+"Vapaa-aikaa ei ole asetettu työntekijälle. Varmista, että olet kirjautunut "
+"oikeaan yritykseen."
 
 #. module: hr_holidays
 #. odoo-python

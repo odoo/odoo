@@ -31,18 +31,18 @@
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024
 # Svante <svante@svante.fi>, 2024
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2024
-# Martin Trigaux, 2024
 # Camille Dantinne <cmd@odoo.com>, 2024
 # Jessica Jakara, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-27 08:16+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,6 +91,8 @@ msgid ""
 "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra fee\n"
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 msgstr ""
+"%(base)s ja %(discount)s %% %(discount_type)s ja %(surcharge)s lisämaksun kanssa\n"
+"Esimerkki: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -99,24 +101,26 @@ msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date "
 "(%(start_date)s)"
 msgstr ""
+"%(item_name)s: loppupäivän (%(end_date)s) on oltava alkupäivän "
+"(%(start_date)s) jälkeen"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
-msgstr ""
+msgstr "%(percentage)s %% %(discount_type)s perusteena %(base)s %(extra)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on %(pricelist)s"
-msgstr ""
+msgstr "%(percentage)s %% alennus %(pricelist)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on sales price"
-msgstr ""
+msgstr "%(percentage)s %% alennus myyntihinnasta"
 
 #. module: product
 #. odoo-python
@@ -150,19 +154,21 @@ msgstr "(esim. tuotekuvaus, ebook, oikeudellinen huomautus, ...)."
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "+ %(amount)s extra fee"
-msgstr ""
+msgstr "+ %(amount)s lisämaksu"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "- %(amount)s rebate"
-msgstr ""
+msgstr "- %(amount)s alennus"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
+"- Viivakoodi \"%(barcode)s\" on jo määritetty tuotteelle (tuotteille): "
+"%(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -172,6 +178,10 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
+"- Heti: Kaikki mahdolliset variantit luodaan heti, kun attribuutti ja sen arvot lisätään tuotteeseen.\n"
+"        - Dynaamisesti: Kukin variantti luodaan vasta, kun sitä vastaavat attribuutit ja arvot lisätään myyntitilaukseen.\n"
+"        - Ei koskaan: Määritteelle ei koskaan luoda vaihtoehtoja.\n"
+"        Huomautus: tätä ei voi muuttaa, kun attribuutti on käytössä tuotteessa."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -231,7 +241,7 @@ msgstr "4 x 7 hinnalla"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<b>Tip: want to round at 9.99?</b>"
-msgstr ""
+msgstr "<b>Vihje: haluat pyöristää 9,99:ään?</b>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -257,6 +267,12 @@ msgid ""
 "                                            Rule\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                            Säännöt\n"
+"                                        </span>\n"
+"                                        <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                            Sääntö\n"
+"                                        </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -268,6 +284,12 @@ msgid ""
 "                                        Pricelist\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                        Hinnastot\n"
+"                                    </span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                        Hinnasto\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -277,7 +299,7 @@ msgstr "<span class=\"o_stat_text\"> Tuotteet</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "<span class=\"o_stat_text\">Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Tuotteet</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -290,6 +312,8 @@ msgid ""
 "<span>%</span>\n"
 "                                <span>on</span>"
 msgstr ""
+"<span>%</span>\n"
+"                                <span>kohteessa</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -332,25 +356,25 @@ msgstr "Viivakoodi voidaan määrittää vain yhdelle pakkaukselle."
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice can't contain duplicate products."
-msgstr ""
+msgstr "Yhdistelmä ei voi sisältää päällekkäisiä tuotteita."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo_item.py:0
 msgid "A combo choice can't contain products of type \"combo\"."
-msgstr ""
+msgstr "Yhdistelmä ei voi sisältää \"yhdistelmä\"-tyyppisiä tuotteita."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice must contain at least 1 product."
-msgstr ""
+msgstr "Yhdistelmän on sisällettävä vähintään yksi tuote."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A combo product must contain at least 1 combo choice."
-msgstr ""
+msgstr "Yhdistelmätuotteessa on oltava vähintään yksi yhdistelmävalinta."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -389,7 +413,7 @@ msgstr "Tuote käyttää jo viivakoodia"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A sellable combo product can only contain sellable products."
-msgstr ""
+msgstr "Myytävä yhdistelmä voi sisältää vain tuotteita, joita voidaan myydä."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -483,7 +507,7 @@ msgstr "Lisää tuotteita"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Add Products to pricelist report"
-msgstr ""
+msgstr "Lisää tuotteita hinnastoraporttiin"
 
 #. module: product
 #. odoo-javascript
@@ -498,22 +522,24 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
+"Lisää tuotteita käyttämällä oikeassa yläkulmassa olevaa \"Lisää tuotteita\" -painiketta.\n"
+"                                Tämä sisällyttää ne raporttiin."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Add to all products"
-msgstr ""
+msgstr "Lisää kaikkiin tuotteisiin"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
 msgid "Add to existing products"
-msgstr ""
+msgstr "Lisää olemassa oleviin tuotteisiin"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Add to products"
-msgstr ""
+msgstr "Lisää tuotteisiin"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -571,13 +597,13 @@ msgstr "Kaikki tuotteet"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 msgid "All variants"
-msgstr ""
+msgstr "Kaikki variantit"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
 msgid "Allow customers to set their own value"
-msgstr ""
+msgstr "Anna asiakkaiden asettaa oma arvonsa"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -597,7 +623,7 @@ msgstr "Vaikutus"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Apply To"
-msgstr ""
+msgstr "Ota käyttöön"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
@@ -766,7 +792,7 @@ msgstr "Perustuen"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Based price"
-msgstr ""
+msgstr "Perustuva hinta"
 
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
@@ -885,7 +911,7 @@ msgstr "Yhdistelmä"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "Combo Choice"
-msgstr ""
+msgstr "Yhdistelmävalinta"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_combo_action
@@ -903,13 +929,13 @@ msgstr "Yhdistelmätuote"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__base_price
 msgid "Combo Price"
-msgstr ""
+msgstr "Yhdistelmähinta"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Combo products can't have attributes"
-msgstr ""
+msgstr "Yhdistelmällä ei voi olla attribuutteja"
 
 #. module: product
 #. odoo-python
@@ -918,6 +944,8 @@ msgid ""
 "Combos allow to choose one product amongst a selection of choices per "
 "category."
 msgstr ""
+"Yhdistelmät mahdollistavat yhden tuotteen valitsemisen kategorian eri "
+"vaihtoehdoista."
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -1002,6 +1030,16 @@ msgstr "Sisältyvän määrän olisi oltava positiivinen."
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Contained quantity"
 msgstr "Sisältää määrän"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__uom_category_id
+#: model:ir.model.fields,help:product.field_product_template__uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Yksiköiden välinen muunnos onnistuu vain saman ryhmän (kategorian) sisällä. "
+"Konversio tehdään käyttäen kertoimena suhdetta."
 
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
@@ -1184,7 +1222,7 @@ msgstr "Oletusarvoinen lisähinta"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price_changed
 msgid "Default Extra Price Changed"
-msgstr ""
+msgstr "Oletusarvoinen lisähinta muutettu"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1293,7 +1331,7 @@ msgstr "Alennushinta"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__display_applied_on
 msgid "Display Applied On"
-msgstr ""
+msgstr "Näytä mihin kohdistuu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__display_name
@@ -1437,7 +1475,7 @@ msgstr "Ergonominen"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Error exporting file. Please try again."
-msgstr ""
+msgstr "Virhe tiedoston viennissä. Yritä uudelleen."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
@@ -1474,7 +1512,7 @@ msgstr "Lisävaihtoehdot"
 #: model:ir.model.fields,field_description:product.field_product_combo_item__extra_price
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Extra Price"
-msgstr ""
+msgstr "Lisähinta"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
@@ -1584,7 +1622,7 @@ msgstr "Neljän hengen moderni toimisto työasema"
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__is_custom
 msgid "Free text"
-msgstr ""
+msgstr "Vapaa teksti"
 
 #. module: product
 #: model:product.template,name:product.product_product_furniture_product_template
@@ -1751,7 +1789,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute__active
 msgid ""
 "If unchecked, it will allow you to hide the attribute without removing it."
-msgstr ""
+msgstr "Jos ei valittu, voit piilottaa määritteen poistamatta sitä."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -2063,7 +2101,7 @@ msgstr "Katteet"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_markup
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Markup"
-msgstr ""
+msgstr "Merkintä"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2104,7 +2142,7 @@ msgstr "Mime-tyyppi"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Min Qty"
-msgstr ""
+msgstr "Minimimäärä"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2134,7 +2172,7 @@ msgstr "Näytön jalusta"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__multi
 msgid "Multi-checkbox"
-msgstr ""
+msgstr "Monivalintaruutu"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_check_multi_checkbox_no_variant
@@ -2222,7 +2260,7 @@ msgstr "Tuotteita ei löytynyt."
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "No products found in the report"
-msgstr ""
+msgstr "Raportista ei löydy tuotteita"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2303,7 +2341,7 @@ msgstr "Toimistotuoli musta"
 #. module: product
 #: model:product.template,name:product.office_combo_product_template
 msgid "Office Combo"
-msgstr ""
+msgstr "Toimiston yhdistelmä"
 
 #. module: product
 #: model:product.template,name:product.product_order_01_product_template
@@ -2339,7 +2377,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
 msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
-msgstr ""
+msgstr "'%(fileName)s' ei latautunut, koska sen muoto ei ole sallittu."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2430,7 +2468,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Please select some products first."
-msgstr ""
+msgstr "Valitse ensin joitakin tuotteita."
 
 #. module: product
 #. odoo-python
@@ -2551,7 +2589,7 @@ msgstr "Hinnaston raportti"
 #. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 msgid "Pricelist Report Preview"
-msgstr ""
+msgstr "Hinnaston raportin esikatselu"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2697,7 +2735,7 @@ msgstr "Tuotemäärä"
 #. module: product
 #: model:res.groups,name:product.group_product_manager
 msgid "Product Creation"
-msgstr ""
+msgstr "Tuotteen luominen"
 
 #. module: product
 #: model:ir.model,name:product.model_product_document
@@ -2969,7 +3007,7 @@ msgstr "Kuvaus ostotilaukselle"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
 #: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
 msgid "Purchase Unit"
-msgstr ""
+msgstr "Ostoyksikkö"
 
 #. module: product
 #. odoo-javascript
@@ -2992,7 +3030,7 @@ msgstr "Määrä"
 #. odoo-python
 #: code:addons/product/controllers/pricelist_report.py:0
 msgid "Quantity (%s UoM)"
-msgstr ""
+msgstr "Määrä (mittayksikkönä %s)"
 
 #. module: product
 #. odoo-javascript
@@ -3092,7 +3130,7 @@ msgstr "Ravintolakulut"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Round off to"
-msgstr ""
+msgstr "Pyöristetään"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__rows
@@ -3172,6 +3210,9 @@ msgid ""
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, round off to 10.00 and set an extra at -0.01"
 msgstr ""
+"Asettaa hinnan niin, että se on tämän arvon moninkertainen.\n"
+"Pyöristystä sovelletaan alennuksen jälkeen ja ennen lisämaksua.\n"
+"Jos haluat hinnat, jotka päättyvät 9,99:ään, pyöristä 10,00:aan ja aseta lisämaksuksi -0,01"
 
 #. module: product
 #. odoo-javascript
@@ -3193,7 +3234,7 @@ msgstr "Koko"
 #: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_users__specific_property_product_pricelist
 msgid "Specific Property Product Pricelist"
-msgstr ""
+msgstr "Tuotteen hinnaston erityinen ominaisuus"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
@@ -3329,7 +3370,7 @@ msgstr "Sisäinen viite '%s' on jo olemassa."
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "The Reference '%s' already exists."
-msgstr ""
+msgstr "Viite '%s' on jo olemassa."
 
 #. module: product
 #. odoo-python
@@ -3405,6 +3446,10 @@ msgid ""
 "combo product. This heuristic ensures that whatever product the user chooses"
 " in a combo, it will always be the same price."
 msgstr ""
+"Tämän yhdistelmän tuotteiden vähimmäishinta. Tätä arvoa käytetään tämän "
+"yhdistelmän hinnan suhteuttamiseen muihin yhdistelmätuotteisiin. Tämä "
+"heuristiikka varmistaa, että riippumatta siitä, minkä tuotteen käyttäjä "
+"valitsee yhdistelmästä, sen hinta on aina sama."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -3540,6 +3585,9 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %(min_precision)s and 1."
 msgstr ""
+"Tämä pyöristystarkkuus on suurempi kuin desimaalitarkkuus (%(digits)s numeroa).\n"
+"Tämä voi aiheuttaa epäjohdonmukaisuuksia laskutoimituksissa.\n"
+"Aseta tarkkuus välille %(min_precision)s ja 1."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -3643,25 +3691,31 @@ msgid "Units of Measure"
 msgstr "Mittayksiköt"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__uom_category_id
+#: model:ir.model.fields,field_description:product.field_product_template__uom_category_id
+msgid "UoM Category"
+msgstr "Mittayksikön luokka"
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Update extra prices"
-msgstr ""
+msgstr "Päivitä lisähinnat"
 
 #. module: product
 #: model:ir.model,name:product.model_update_product_attribute_value
 msgid "Update product attribute value"
-msgstr ""
+msgstr "Päivitä tuoteattribuutin arvo"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Update product extra prices"
-msgstr ""
+msgstr "Päivitä tuotteen lisähinnat"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__update_extra_price
 msgid "Update the extra price on existing products"
-msgstr ""
+msgstr "Päivitä olemassa olevien tuotteiden lisähinta"
 
 #. module: product
 #. odoo-javascript
@@ -3691,6 +3745,8 @@ msgid ""
 "Use the discount rules and activate the discount settings in order to show "
 "discount to customer."
 msgstr ""
+"Käytä alennussääntöjä ja aktivoi alennusasetukset, jotta voit näyttää "
+"alennuksen asiakkaalle."
 
 #. module: product
 #. odoo-python
@@ -3775,7 +3831,7 @@ msgstr "Varianttien määrä"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variant Creation"
-msgstr ""
+msgstr "Variantin luominen"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1920
@@ -3821,7 +3877,7 @@ msgstr "Vaihtoehto Myyjä"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
 msgid "Variant Tags"
-msgstr ""
+msgstr "Variantin tunnisteet"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_variant_value_ids
@@ -3896,7 +3952,7 @@ msgstr "Virtuaalinen sisustussuunnittelu"
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Visible to all"
-msgstr ""
+msgstr "Kaikkien nähtävissä"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__voice_ids
@@ -3983,12 +4039,13 @@ msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
 msgstr ""
+"Olet lisäämässä arvoa \"%(attribute_value)s\" tuotteisiin %(product_count)s."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/update_product_attribute_value.py:0
 msgid "You are about to update the extra price of %s products."
-msgstr ""
+msgstr "Olet päivittämässä %s tuotteen lisähintaa."
 
 #. module: product
 #. odoo-python
@@ -4023,7 +4080,7 @@ msgstr "Voit soveltaa lisähintaa asettamalla negatiivisen alennuksen."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_markup
 msgid "You can apply a mark-up on the cost"
-msgstr ""
+msgstr "Voit soveltaa kustannuksiin lisähintaa"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -4063,6 +4120,8 @@ msgstr "Et voi muokata tätä tuotetta luettelossa."
 msgid ""
 "You cannot archive this attribute as there are still products linked to it"
 msgstr ""
+"Tätä ominaisuutta ei voi arkistoida, koska siihen on edelleen liitetty "
+"tuotteita"
 
 #. module: product
 #. odoo-python
@@ -4135,6 +4194,10 @@ msgid ""
 "They are used within pricelist(s):\n"
 "%(other_pricelists)s"
 msgstr ""
+"Et voi poistaa hinnastoa (hinnastoja):\n"
+"(%(pricelists)s)\n"
+"Niitä käytetään hinnaston(eiden) sisällä:\n"
+"%(other_pricelists)s"
 
 #. module: product
 #. odoo-python
@@ -4159,6 +4222,8 @@ msgid ""
 "You cannot delete the value %(value)s because it is used on the following products:\n"
 "%(products)s\n"
 msgstr ""
+"Et voi poistaa arvoa %(value)s, koska sitä käytetään seuraavissa tuotteissa:\n"
+"%(products)s\n"
 
 #. module: product
 #. odoo-python
@@ -4250,7 +4315,7 @@ msgstr "Määrän on oltava positiivinen."
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "csv"
-msgstr ""
+msgstr "csv"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -4267,12 +4332,12 @@ msgstr "alennus"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
 msgid "e.g. 1234567890"
-msgstr ""
+msgstr "esim. 1234567890"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "e.g. Burger Choice"
-msgstr ""
+msgstr "esim. Burger Choice"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
@@ -4293,7 +4358,7 @@ msgstr "esimerkiksi. Odoo Enterprise tilaus"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Starter - Meal - Desert"
-msgstr ""
+msgstr "esim. alkuruoka - pääateria - jälkiruoka"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
@@ -4304,7 +4369,7 @@ msgstr "esimerkiksi. USD-jälleenmyyjät"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "markup"
-msgstr ""
+msgstr "kate"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -4334,19 +4399,19 @@ msgstr "tuote"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "product cost"
-msgstr ""
+msgstr "tuotteen hinta"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "round off to 10.00 and set an extra at -0.01"
-msgstr ""
+msgstr "pyöristetään 10.00:aan ja asetetaan ylimääräinen -0.01:een"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "sales price"
-msgstr ""
+msgstr "myyntihinta"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.view_partner_property_form
@@ -4367,4 +4432,4 @@ msgstr "->"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
-msgstr ""
+msgstr "xlsx"

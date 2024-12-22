@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
@@ -1135,6 +1135,17 @@ msgstr "Linie comandă de vânzare"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet_so_button
 msgid "Sales Orders"
 msgstr "Comenzi de vânzare"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
+msgid ""
+"Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+"If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
+"You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
+msgstr ""
+"Poziția de comandă de vânzare care va fi selectată în mod implicit pe timpii de lucru ai angajatului corespunzător. Aceasta ignoră poziția de comandă de vânzare definită pe proiect și pe sarcină, și poate fi modificată în fiecare intrare de timpii de lucru dacă este necesar.În alte cuvinte, aceasta definește rata la care timpul angajatului este facturat pe baza experienței, abilităților sau experienței acestuia, de exemplu.\n"
+"Dacă doriți să facturați același serviciu la o rată diferită, trebuie să creați două poziții de comandă de vânzare separate deoarece fiecare poziție de comandă de vânzare poate avea doar un singur preț unitar în același timp.\n"
+"Puteți defini și costul orar al angajaților dvs. pentru timpii de lucru pe acest proiect în mod specific. Aceasta va ignora costul timpii de lucru setat pe angajat."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line

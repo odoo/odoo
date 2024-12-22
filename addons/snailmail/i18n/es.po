@@ -31,12 +31,19 @@ msgstr "ATTACHMENT_ERROR"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__snailmail_cover
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid "Add a Cover Page"
-msgstr "Agregar una página de portada"
+msgstr "Añadir una página de portada"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "Address"
 msgstr "Dirección"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/failure_model_patch.js:0
+msgid ""
+"An error occurred when sending a letter with Snailmail on “%(record_name)s”"
+msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
@@ -371,7 +378,7 @@ msgid ""
 msgstr ""
 "Nuestro servicio no puede leer su carta debido a su formato.<br/>\n"
 "                 Modifique el formato de la plantilla o actualice su configuración\n"
-"                 para agregar automáticamente una portada vacía a todas las letras."
+"                 para añadir automáticamente una portada vacía a todas las letras."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__partner_id
@@ -465,6 +472,12 @@ msgstr "Portada solo de lectura para correo postal"
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
 msgid "Snailmail Credit Error"
 msgstr "Error del crédito del correo postal"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/messaging_menu/messaging_menu_patch.js:0
+msgid "Snailmail Failure: %(modelName)s"
+msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
