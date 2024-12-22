@@ -1606,6 +1606,15 @@ msgstr "품목 수량 변경"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr "다른 제품이 포함된 이동 라인의 로트/일련 번호 변경은 허용되지 않습니다."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_lot.py:0
@@ -8695,6 +8704,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr "로트/일련 번호(%s)가 다른 제품에 연결되어 있습니다."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
@@ -10524,6 +10540,13 @@ msgid ""
 msgstr ""
 "이 보기를 사용하여 서로 다른 전송의 수량을 동일한 패키지로 통합할 수 없습니다. 대신 일괄 피킹에 수량을 추가하고 그곳에서 포장할 수 "
 "있습니다."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr "재고량은 중복으로 사용할 수 없습니다."
 
 #. module: stock
 #. odoo-python

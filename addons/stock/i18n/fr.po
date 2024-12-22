@@ -5,8 +5,8 @@
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2024
 # Jolien De Paepe, 2024
-# Wil Odoo, 2024
 # Manon Rondou, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1641,6 +1641,17 @@ msgstr "Un mouvement chaîné existe"
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
 msgstr "Changer la quantité de produits"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"La modification du numéro de lot/série n'est pas autorisée pour des "
+"mouvements de stock concernant des produits différents."
 
 #. module: stock
 #. odoo-python
@@ -8937,6 +8948,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr "Le lot/numéro de série (%s) est lié à un autre produit."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
@@ -10921,6 +10939,13 @@ msgstr ""
 "Cette vue ne permet pas de regrouper directement des quantités provenant de "
 "différents transferts dans le même colis. Essayez de les ajouter à un "
 "transfert par lot et de les regrouper à ce niveau."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr "Vous ne pouvez pas dupliquer de quants."
 
 #. module: stock
 #. odoo-python

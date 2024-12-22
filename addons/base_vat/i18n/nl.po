@@ -3,23 +3,30 @@
 # 	* base_vat
 # 
 # Translators:
-# Wil Odoo, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2024-10-30 14:40+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "'219999830019' (should be 12 digits)"
+msgstr "'219999830019' (moet bestaan uit 12 cijfers)"
 
 #. module: base_vat
 #. odoo-python
@@ -34,8 +41,22 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
+msgid "17291716060 (NIN) or 1729171602 (VKN)"
+msgstr "17291716060 (NIN) of 1729171602 (VKN)"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
 msgid "1792060346001 or 1792060346"
 msgstr "1792060346001 of 1792060346"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "3101012009"
+msgstr "3101012009"
 
 #. module: base_vat
 #. odoo-python
@@ -168,13 +189,6 @@ msgstr "MXGODE561231GR8 of GODE561231GR8"
 #: model:ir.model.fields,field_description:base_vat.field_res_users__perform_vies_validation
 msgid "Perform Vies Validation"
 msgstr "VIES controle uitvoeren"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid "TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)"
-msgstr "TR1234567890 (VERGINO) of TR17291716060 (TCKIMLIKNO)"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form

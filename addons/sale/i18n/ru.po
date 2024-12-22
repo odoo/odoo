@@ -1187,15 +1187,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"Позволяет поделиться документом с клиентами в рамках продажи.\n"
-"Оставьте это поле пустым, если вы не хотите предоставлять этот документ покупателям.\n"
-"Предложение: документ будет отправлен клиентам и доступен им в любое время.\n"
-"например, этот параметр может быть полезен для обмена файлами с описанием товара.\n"
-"Подтвержденный заказ: документ будет отправлен клиентам и доступен для просмотра.\n"
-"например, эта опция может быть полезна для обмена руководствами пользователя или цифровым контентом, купленным в электронной коммерции.\n"
-"Внутренняя цитата: Документ будет включен в pdf-файл коммерческого предложения между заголовочными страницами и таблицей коммерческого предложения. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -4259,7 +4253,6 @@ msgstr "Заказ(ы) на продажу"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -5066,6 +5059,16 @@ msgid "There are existing"
 msgstr "Существуют"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "This default value is applied to any new product created. This can be "
@@ -5638,6 +5641,7 @@ msgstr ""
 "                будь то хранимый продукт, расходный материал или услуга."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Ваши заказы"

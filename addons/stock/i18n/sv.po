@@ -1657,6 +1657,17 @@ msgstr "Ändra produktantal"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"Det är inte tillåtet att ändra parti- eller serienummer för flyttrader med "
+"olika produkter."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_lot.py:0
@@ -8898,6 +8909,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr "Lot/Serienummer (%s) är kopplat till en annan produkt."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
@@ -10850,6 +10868,13 @@ msgstr ""
 "Du kan inte direkt packa kvantiteter från olika överföringar till samma "
 "paket via den här vyn. Försök att lägga till dem i en batchplockning och "
 "packa dem där."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr "Du kan inte duplicera aktiequanter."
 
 #. module: stock
 #. odoo-python
