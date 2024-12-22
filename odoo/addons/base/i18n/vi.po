@@ -1349,7 +1349,7 @@ msgstr ""
 "        * 2 (dua) digit pertama adalah Tahun Penerbitan\n"
 "        * 8 (delapan) digit berikutnya adalah Nomor Urut\n"
 "\n"
-"        Để có thể xuất hóa đơn khách hàng thành e-Faktur,\n"
+"        Để có thể xuất hóa đơn bán hàng thành e-Faktur,\n"
 "        bạn cần nhập các dãy số mà chính phủ đã chỉ định\n"
 "        cho bạn trong Kế toán > Khách hàng > e-Faktur\n"
 "\n"
@@ -2031,7 +2031,7 @@ msgid ""
 msgstr ""
 "\n"
 "        Phân hệ này gửi thông tin thuế (chủ yếu là VAT) của \n"
-"        hóa đơn nhà cung cấp và hóa đơn khách hàng tới SII. Nó được gọi là\n"
+"        hóa đơn mua hàng và hóa đơn bán hàng tới SII. Nó được gọi là\n"
 "        Procedimiento G417 - IVA. Llevanza de libros registro. Đây là\n"
 "        yêu cầu bắt buộc đối với mọi công ty có doanh thu trên 6 triệu €\n"
 "        và những công ty khác đã có thể sử dụng. Hóa đơn được gửi tự động\n"
@@ -2927,7 +2927,7 @@ msgstr ""
 "    Chọn nút radio **Chuyển khoản Tín dụng ABA**.\n"
 "\n"
 "    Nếu nhà cung cấp có nhiều tài khoản ngân hàng, bạn có thể cần chọn\n"
-"    đúng **Tài khoản Ngân hàng của Người nhận**. Hoặc nếu thanh toán hóa đơn nhà cung cấp, có thể\n"
+"    đúng **Tài khoản Ngân hàng của Người nhận**. Hoặc nếu thanh toán hóa đơn mua hàng, có thể\n"
 "    cần đúng tài khoản ngân hàng được liên kết với hóa đơn đó.\n"
 "    Nhập số tiền thanh toán,...\n"
 "\n"
@@ -5365,7 +5365,7 @@ msgstr ""
 "- Liên hệ trực tiếp với SII (Servicio de Impuestos Internos) để gửi hóa đơn và các chứng từ thuế khác liên quan đến bán hàng.\n"
 "- Liên hệ với Khách hàng để gửi DTE bán hàng.\n"
 "- Liên hệ với Nhà cung cấp để chấp nhận DTE từ họ.\n"
-"- Liên hệ trực tiếp với SII để thông báo về việc chấp nhận hoặc từ chối hóa đơn nhà cung cấp hoặc các DTE khác.\n"
+"- Liên hệ trực tiếp với SII để thông báo về việc chấp nhận hoặc từ chối hóa đơn mua hàng hoặc các DTE khác.\n"
 "\n"
 "Để xem mã vạch trên hóa đơn, bạn cần có thư viện pdf417gen.\n"
 "\n"
@@ -5441,7 +5441,7 @@ msgstr ""
 "Bạn cũng có thể gửi trực tiếp cho Digiflow nếu bạn đã mua tài khoản từ họ\n"
 "và thậm chí gửi tới SUNAT trong trường hợp có điều bất ngờ xảy ra.\n"
 "\n"
-"Chúng tôi hỗ trợ gửi và hủy hóa đơn khách hàng.\n"
+"Chúng tôi hỗ trợ gửi và hủy hóa đơn bán hàng.\n"
 "    "
 
 #. module: base
@@ -5950,7 +5950,7 @@ msgstr ""
 "Tính năng\n"
 "----------\n"
 "\n"
-"Ở một số quốc gia Mỹ Latinh, bao gồm Argentina và Chile, một số giao dịch kế toán như hóa đơn và hóa đơn nhà cung cấp được phân loại theo loại chứng từ do cơ quan tài chính của chính phủ xác định (Ở Argentina là AFIP, Chile là SII).\n"
+"Ở một số quốc gia Mỹ Latinh, bao gồm Argentina và Chile, một số giao dịch kế toán như hóa đơn và hóa đơn mua hàng được phân loại theo loại chứng từ do cơ quan tài chính của chính phủ xác định (Ở Argentina là AFIP, Chile là SII).\n"
 "\n"
 "Theo dự kiến, phân hệ này sẽ được mở rộng bằng bản địa hóa để quản lý các loại chứng từ này và là thông tin cần thiết cần được hiển thị trong các báo cáo được in và cần được xác định dễ dàng, trong bộ hóa đơn cũng như di chuyển tài khoản.\n"
 "\n"
@@ -23502,7 +23502,7 @@ msgstr "Ngày khóa không thể đảo ngược"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_is_company
 msgid "Is Company"
-msgstr "Là công ty"
+msgstr "Công ty"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__is_company_details_empty
@@ -24266,7 +24266,7 @@ msgid ""
 "your vendor bills"
 msgstr ""
 "Hãy để hệ thống cố gắng chọn đúng tài khoản, thuế và/hoặc sản phẩm cho hóa "
-"đơn nhà cung cấp của bạn"
+"đơn mua hàng của bạn"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_referral
@@ -28004,7 +28004,7 @@ msgstr ""
 "các đơn đặt hàng giao sau, hoàn tiền, tiếp nhận sản phẩm và kiểm soát chất lượng. Chọn phương pháp \n"
 "kiểm soát phù hợp với nhu cầu của bạn.\n"
 "\n"
-"Không mất công kiểm soát hóa đơn nhà cung cấp. Chọn phương pháp phù hợp với \n"
+"Không mất công kiểm soát hóa đơn mua hàng. Chọn phương pháp phù hợp với \n"
 "nhu cầu của bạn: tạo trước hóa đơn nháp dựa trên đơn mua hàng, khi tiếp nhận \n"
 "sản phẩm, tạo hóa đơn thủ công và nhập thông tin từ đơn mua hàng,...\n"
 "\n"
@@ -30216,7 +30216,7 @@ msgstr "Độ chính xác chữ số"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_predictive_bills
 msgid "Predictive vendor bill data"
-msgstr "Dữ liệu hóa đơn nhà cung cấp dự đoán"
+msgstr "Dữ liệu hóa đơn mua hàng dự đoán"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -30909,7 +30909,7 @@ msgstr "Ma trận mua hàng"
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_stock
 msgid "Purchase Orders, Receipts, Vendor Bills for Stock"
-msgstr "Đơn đặt hàng, biên lai, hóa đơn nhà cung cấp cho kho"
+msgstr "Đơn đặt hàng, biên lai, hóa đơn mua hàng cho kho"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition_stock
@@ -35854,7 +35854,7 @@ msgstr "Đến"
 #: model:ir.model.fields.selection,name:base.selection__res_users_deletion__state__todo
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_search
 msgid "To Do"
-msgstr "Cần làm"
+msgstr "Việc cần làm"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__state__to_install
@@ -35895,7 +35895,7 @@ msgstr "Để trả về một tác vụ, chỉ định: <code>action = {...}</c
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Todo"
-msgstr "Cần làm"
+msgstr "Việc cần làm"
 
 #. module: base
 #: model:res.country,name:base.tg

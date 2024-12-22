@@ -227,7 +227,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Backorders</span>"
-msgstr "<span class=\"o_stat_text\">Đơn hàng tồn đọng</span>"
+msgstr "<span class=\"o_stat_text\">Đơn hàng tách kiện</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -842,39 +842,39 @@ msgstr "Chi tiết DMVT của DMVT được đề cập"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder_line
 msgid "Backorder Confirmation Line"
-msgstr "Dòng xác nhận đơn hàng tồn đọng"
+msgstr "Dòng xác nhận đơn hàng tách kiện"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__mrp_production_backorder_line_ids
 msgid "Backorder Confirmation Lines"
-msgstr "Chi tiết xác nhận đơn hàng tồn đọng"
+msgstr "Chi tiết xác nhận đơn hàng tách kiện"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO"
-msgstr "LSX đơn hàng tồn đọng"
+msgstr "LSX đơn hàng tách kiện"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO's"
-msgstr "LSX đơn hàng tồn đọng"
+msgstr "LSX đơn hàng tách kiện"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__backorder_sequence
 msgid "Backorder Sequence"
-msgstr "Trình tự đơn hàng tồn đọng"
+msgstr "Trình tự đơn hàng tách kiện"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__backorder_sequence
 msgid ""
 "Backorder sequence, if equals to 0 means there is not related backorder"
 msgstr ""
-"Trình tự đơn hàng tồn đọng, nếu bằng 0 nghĩa là không có đơn hàng tồn đọng "
-"liên quan. "
+"Trình tự đơn hàng tách kiện, nếu bằng 0 nghĩa là không có đơn hàng tách kiện"
+" liên quan. "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -1448,12 +1448,12 @@ msgstr "Không thể hiển thị bảng tính đã chọn"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_backorder_count
 msgid "Count of linked backorder"
-msgstr "Số đơn hàng tồn đọng liên kết"
+msgstr "Số đơn hàng tách kiện liên kết"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "Create Backorder"
-msgstr "Tạo đơn hàng tồn đọng"
+msgstr "Tạo đơn hàng tách kiện"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__use_create_components_lots
@@ -1464,7 +1464,7 @@ msgstr "Tạo số lô/sê-ri mới cho các nguyên liệu"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create a Backorder"
-msgstr "Tạo một đơn hàng tồn đọng"
+msgstr "Tạo một đơn hàng tách kiện"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1472,8 +1472,8 @@ msgid ""
 "Create a backorder if you expect to process the remaining products later. Do"
 " not create a backorder if you will not process the remaining products."
 msgstr ""
-"Tạo đơn hàng tồn đọng nếu bạn dự kiến sẽ xử lý sản phẩm còn lại sau. Không "
-"tạo đơn hàng tồn đọng nếu bạn sẽ không xử lý sản phẩm còn lại. "
+"Tạo đơn hàng tách kiện nếu bạn dự kiến sẽ xử lý sản phẩm còn lại sau. Không "
+"tạo đơn hàng tách kiện nếu bạn sẽ không xử lý sản phẩm còn lại. "
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_report
@@ -1510,7 +1510,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create backorder"
-msgstr "Tạo đơn hàng tồn đọng"
+msgstr "Tạo đơn hàng tách kiện"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -2799,7 +2799,7 @@ msgstr "Thấp"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__mrp_production_backorder_id
 msgid "MO Backorder"
-msgstr "Đơn hàng tồn đọng LSX"
+msgstr "Đơn hàng tách kiện LSX"
 
 #. module: mrp
 #. odoo-python
@@ -3226,7 +3226,7 @@ msgstr "Loại hoạt động tiếp theo"
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "No Backorder"
-msgstr "Không có đơn hàng tồn đọng"
+msgstr "Không có đơn hàng tách kiện"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -4551,7 +4551,7 @@ msgstr "Hiển thị áp dụng"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__show_backorders
 msgid "Show Backorders"
-msgstr "Hiện thị đơn hàng tồn đọng"
+msgstr "Hiện thị đơn hàng tách kiện"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__show_bom
@@ -4592,7 +4592,7 @@ msgstr "Hiển thị tất cả dữ liệu có ngày xử lý tiếp theo trư�
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__show_backorder_lines
 msgid "Show backorder lines"
-msgstr "Hiển thị chi tiết đơn hàng tồn đọng"
+msgstr "Hiển thị chi tiết đơn hàng tách kiện"
 
 #. module: mrp
 #. odoo-javascript
@@ -5056,7 +5056,7 @@ msgstr ""
 msgid ""
 "The quantity already produced awaiting allocation in the backorders chain."
 msgstr ""
-"Số lượng đã được sản xuất đang chờ phân bổ trong chuỗi đơn hàng tồn đọng."
+"Số lượng đã được sản xuất đang chờ phân bổ trong chuỗi đơn hàng tách kiện."
 
 #. module: mrp
 #. odoo-python
@@ -5284,7 +5284,7 @@ msgstr "Đến"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__to_backorder
 msgid "To Backorder"
-msgstr "Cần lập đơn hàng tồn đọng"
+msgstr "Cần lập đơn hàng tách kiện"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__to_close
@@ -5303,7 +5303,7 @@ msgstr "Cần dùng"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "To Do"
-msgstr "Cần làm"
+msgstr "Việc cần làm"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -6304,8 +6304,8 @@ msgid ""
 "                        Do not create a backorder if you will not process the remaining products."
 msgstr ""
 "Số lượng số sê-ri bạn đã nhập ít hơn số lượng cần sản xuất.<br/>\n"
-"                        Tạo đơn hàng tồn đọng nếu bạn dự kiến sản xuất số lượng còn lại sau.<br/>\n"
-"                        Không tạo đơn hàng tồn đọng nếu bạn không xử lý những sản phẩm còn lại. "
+"                        Tạo đơn hàng tách kiện nếu bạn dự kiến sản xuất số lượng còn lại sau.<br/>\n"
+"                        Không tạo đơn hàng tách kiện nếu bạn không xử lý những sản phẩm còn lại. "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production

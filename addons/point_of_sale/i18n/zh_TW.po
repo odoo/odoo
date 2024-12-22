@@ -6,7 +6,6 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Benson <Benson.Dr@Gmail.com>, 2023
 # Martin Trigaux, 2023
-# Pak Wai Ho, 2024
 # Wil Odoo, 2024
 # Tony Ng, 2024
 # 
@@ -2097,7 +2096,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "無權存取，跳過使用者摘要電子信件的此資料"
+msgstr "沒有存取權限，使用者摘要電郵將跳過此數據"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2831,7 +2830,7 @@ msgstr "庫存管理"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Invoice"
-msgstr "應收憑單"
+msgstr "發票"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__invoice_journal_id
@@ -2858,7 +2857,7 @@ msgstr "已開立發票"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Invoices"
-msgstr "應收憑單"
+msgstr "發票"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -2890,7 +2889,7 @@ msgstr "是訂閱人"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_invoiced
 msgid "Is Invoiced"
-msgstr "已開具應收憑單"
+msgstr "已開立發票"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_refunded
@@ -3132,13 +3131,13 @@ msgstr "部分合作夥伴數量"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_limited_partners_loading
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Limited Partners Loading"
-msgstr "部分合作夥伴加載"
+msgstr "限制載入合作夥伴"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limited_products_loading
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_limited_products_loading
 msgid "Limited Product Loading"
-msgstr "部分產品加載"
+msgstr "限制載入產品"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limited_products_amount
@@ -3149,7 +3148,7 @@ msgstr "產品數量有限"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Limited Products Loading"
-msgstr "部分產品加載"
+msgstr "限制載入產品"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__manual_discount
@@ -3165,12 +3164,12 @@ msgstr "行號"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Load all remaining partners in the background"
-msgstr "在背景加載所有剩餘的合作夥伴"
+msgstr "在背景載入所有剩餘的合作夥伴"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Load all remaining products in the background"
-msgstr "在背景加載所有剩餘產品"
+msgstr "在背景載入所有剩餘的產品"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3590,7 +3589,7 @@ msgstr "打開的營業點數量"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Number of Partners Loaded"
-msgstr "加載的合作夥伴數量"
+msgstr "已載入合作夥伴數目"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__nb_print
@@ -3600,7 +3599,7 @@ msgstr "列印數量"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Number of Products Loaded"
-msgstr "加載的產品數量"
+msgstr "已載入產品數目"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__refund_orders_count
@@ -4097,7 +4096,7 @@ msgstr "業務夥伴"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__partner_load_background
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_partner_load_background
 msgid "Partner Load Background"
-msgstr "合作夥伴背景加載"
+msgstr "合作夥伴背景載入"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4934,7 +4933,7 @@ msgstr "產品分類"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__product_load_background
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_product_load_background
 msgid "Product Load Background"
-msgstr "產品背景加載"
+msgstr "產品背景載入"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5518,14 +5517,14 @@ msgstr "掃瞄儀"
 #: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
 #, python-format
 msgid "Search Customers..."
-msgstr "搜尋客戶..."
+msgstr "搜尋客戶⋯"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid "Search Orders..."
-msgstr "查詢訂單...."
+msgstr "搜尋訂單⋯"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6827,7 +6826,7 @@ msgstr "用秤稱重"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
 msgid "To invoice"
-msgstr "開應收憑單"
+msgstr "待開立發票"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form

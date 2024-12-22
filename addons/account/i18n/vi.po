@@ -275,8 +275,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- A default Customer Invoice / Vendor Bill date will be suggested."
-msgstr ""
-"- Ngày hóa đơn khách hàng / hóa đơn nhà cung cấp mặc định sẽ được đề xuất."
+msgstr "- Ngày hóa đơn bán hàng/hóa đơn mua hàng mặc định sẽ được đề xuất."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3159,8 +3158,8 @@ msgid ""
 "Partner bank account number."
 msgstr ""
 "Số tài khoản ngân hàng mà hóa đơn sẽ được thanh toán. Tài khoản ngân hàng "
-"của Công ty nếu đây là hóa đơn khách hàng hoặc khoản nợ của Nhà cung cấp, "
-"nếu không sẽ là số tài khoản ngân hàng của đối tác."
+"của Công ty nếu đây là hóa đơn bán hàng hoặc khoản nợ của Nhà cung cấp, nếu "
+"không sẽ là số tài khoản ngân hàng của đối tác."
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner_bank
@@ -4632,7 +4631,7 @@ msgstr "Tạo nhóm thuế mới"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
 msgid "Create a vendor bill"
-msgstr "Tạo hóa nhà cung cấp"
+msgstr "Tạo hóa đơn mua hàng"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
@@ -5060,7 +5059,7 @@ msgstr "Giấy báo Có Khách hàng"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_invoice
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_invoice
 msgid "Customer Invoice"
-msgstr "Hóa đơn khách hàng"
+msgstr "Hóa đơn bán hàng"
 
 #. module: account
 #. odoo-python
@@ -5072,12 +5071,12 @@ msgstr "Hóa đơn khách hàng"
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 #, python-format
 msgid "Customer Invoices"
-msgstr "Hóa đơn khách hàng"
+msgstr "Hóa đơn bán hàng"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__out_and_in_invoices
 msgid "Customer Invoices and Vendor Bills"
-msgstr "Hóa đơn khách hàng và hóa đơn nhà cung cấp"
+msgstr "Hóa đơn bán hàng và hóa đơn mua hàng"
 
 #. module: account
 #. odoo-python
@@ -9978,7 +9977,7 @@ msgid ""
 "                from the customer invoice."
 msgstr ""
 "Lưu ý là cách dễ nhất để tạo hóa đơn giảm là thực hiện trực tiếp trên biểu mẫu\n"
-"                hóa đơn khách hàng, để hoàn trả một phần hoặc toàn bộ."
+"                hóa đơn bán hàng, để hoàn trả một phần hoặc toàn bộ."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
@@ -9987,7 +9986,7 @@ msgid ""
 "directly from the vendor bill."
 msgstr ""
 "Lưu ý rằng cách dễ nhất để tạo giấy báo có của nhà cung cấp là thực hiện "
-"trực tiếp từ hóa đơn của nhà cung cấp."
+"trực tiếp từ hóa đơn mua hàng"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
@@ -12504,10 +12503,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"Chọn 'Bán hàng' đối với sổ nhật ký ghi nhận hạch toán Hoá đơn khách hàng.\n"
-"Chọn 'Mua hàng' đối với sổ nhật ký ghi nhận hạch toán hoá đơn từ nhà cung cấp.\n"
-"Chọn 'Ngân hàng' hoặc 'Tiền mặt' đối với các số nhật ký ghi nhận hạch toán các khoản thanh toán.\n"
-"Chọn 'Khác' đối với các sổ nhật ký dành cho các hoạt động khác."
+"Chọn 'Bán hàng' đối với sổ nhật ký hoá đơn bán hàng.\n"
+"Chọn 'Mua hàng' đối với sổ nhật ký hoá đơn mua hàng.\n"
+"Chọn 'Tiền mặt' hoặc 'Ngân hàng' đối với các sổ nhật ký ghi nhận những khoản thanh toán mua hàng hoặc bán hàng.\n"
+"Chọn 'Chung' đối với các sổ nhật ký dành cho những hoạt động khác."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id
@@ -12517,9 +12516,9 @@ msgid ""
 "select this product, it will automatically take this as an analytic account)"
 msgstr ""
 "Chọn một danh mục sản phẩm sẽ sử dụng tài khoản phân tích được chỉ định "
-"trong mặc định phân tích (ví dụ: tạo hóa đơn khách hàng mới hoặc Đơn đặt "
-"hàng nếu chúng tôi chọn sản phẩm này, nó sẽ tự động coi đây là tài khoản "
-"phân tích)"
+"trong mặc định phân tích (ví dụ: tạo hóa đơn bán hàng mới hoặc Đơn đặt hàng "
+"nếu chúng tôi chọn sản phẩm này, nó sẽ tự động coi đây là tài khoản phân "
+"tích)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_id
@@ -12529,13 +12528,13 @@ msgid ""
 "will automatically take this as an analytic account)"
 msgstr ""
 "Chọn một sản phẩm mà phân phối phân tích sẽ được sử dụng (ví dụ: tạo hóa đơn"
-" khách hàng mới hoặc Đơn đặt hàng bán hàng nếu chúng tôi chọn sản phẩm này, "
-"nó sẽ tự động coi đây là tài khoản phân tích)"
+" bán hàng mới hoặc Đơn đặt hàng bán hàng nếu chúng tôi chọn sản phẩm này, nó"
+" sẽ tự động coi đây là tài khoản phân tích)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Select an old vendor bill"
-msgstr "Chọn hóa đơn cũ từ nhà cung cấp"
+msgstr "Chọn hóa đơn mua hàng cũ"
 
 #. module: account
 #. odoo-javascript
@@ -14287,10 +14286,10 @@ msgid ""
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
 msgstr ""
-"Chi phí được hạch toán khi hóa đơn của nhà cung cấp được xác thực, ngoại trừ"
-" trong kế toán anglo-saxon với định giá hàng tồn kho vĩnh viễn trong trường "
-"hợp chi phí (Tài khoản giá vốn hàng bán) được ghi nhận khi xác thực hóa đơn "
-"của khách hàng."
+"Chi phí được hạch toán khi hóa đơn mua hàng được xác thực, ngoại trừ trong "
+"kế toán anglo-saxon với định giá hàng tồn kho vĩnh viễn trong trường hợp chi"
+" phí (Tài khoản giá vốn hàng bán) được ghi nhận khi xác thực hóa đơn của "
+"khách hàng."
 
 #. module: account
 #. odoo-python
@@ -15375,7 +15374,7 @@ msgid ""
 "orders and vendor bills"
 msgstr ""
 "Điều khoản thanh toán này sẽ được sử dụng thay cho điều khoản mặc định với "
-"Đơn mua hàng và Hoá đơn nhà cung cấp"
+"Đơn mua hàng và Hóa đơn mua hàng"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_payment_term_id
@@ -15689,7 +15688,7 @@ msgstr ""
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Try a sample vendor bill"
-msgstr "Hãy thử một hóa đơn mẫu của nhà cung cấp"
+msgstr "Hãy thử một hóa đơn mua hàng mẫu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__account_type
@@ -16172,19 +16171,19 @@ msgstr "Tài khoản ngân hàng của nhà cung cấp"
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_invoice
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Vendor Bill"
-msgstr "Hóa đơn Nhà cung cấp"
+msgstr "Hóa đơn mua hàng"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_account__vendor_bill_count
 msgid "Vendor Bill Count"
-msgstr "Số hóa đơn nhà cung cấp"
+msgstr "Số hóa đơn mua hàng"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Vendor Bill Created"
-msgstr "Hóa đơn Nhà cung cấp đã được Tạo"
+msgstr "Hóa đơn mua hàng đã được tạo"
 
 #. module: account
 #. odoo-python
@@ -16196,7 +16195,7 @@ msgstr "Hóa đơn Nhà cung cấp đã được Tạo"
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 #, python-format
 msgid "Vendor Bills"
-msgstr "Hoá đơn Nhà cung cấp"
+msgstr "Hóa đơn mua hàng"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__in_refund
@@ -16582,7 +16581,7 @@ msgid ""
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr ""
-"Ở đây, bạn có thể cài đặt thông tin mặc định sẽ hiển thị trên hóa đơn khách "
+"Ở đây, bạn có thể cài đặt thông tin mặc định sẽ hiển thị trên hóa đơn bán "
 "hàng, mỗi khi xác nhận, để khách hàng có thể xem được hóa đơn đó khi tiến "
 "hành thanh toán."
 

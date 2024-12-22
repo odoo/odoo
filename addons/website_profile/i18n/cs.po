@@ -5,7 +5,7 @@
 # Translators:
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # Martin Trigaux, 2022
-# Jiří Podhorecký, 2022
+# Jiří Podhorecký <jirka.p@volny.cz>, 2022
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
@@ -28,6 +28,8 @@ msgid ""
 "!<br/>\n"
 "            Did not receive it?"
 msgstr ""
+"!<br/>\n"
+"            Neobdrželi jste to?"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
@@ -51,7 +53,7 @@ msgstr ". Zkuste další hledání."
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
 msgid "<i class=\"fa fa-arrow-right me-1\"/>All Badges"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right me-1\"/>Všechny odznaky"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
@@ -61,17 +63,17 @@ msgstr "<i class=\"fa fa-arrow-right\"/> Všechny odznaky"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<i class=\"fa fa-pencil fa-1g float-sm-none float-md-start\" title=\"Edit\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil fa-1g float-sm-none float-md-start\" title=\"Edit\"/>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
 msgid "<i class=\"fa fa-pencil me-1\"/>EDIT"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil me-1\"/>UPRAVIT"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
 msgid "<i class=\"fa fa-pencil me-2\"/>EDIT PROFILE"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil me-2\"/>UPRAVIT PROFIL"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
@@ -86,62 +88,62 @@ msgstr "<option value=\"\">Země...</option>"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "<small class=\"fw-bold me-2\">Current rank:</small>"
-msgstr ""
+msgstr "<small class=\"fw-bold me-2\">Aktuální úroveň:</small>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "<small class=\"fw-bold\">Badges</small>"
-msgstr ""
+msgstr "<small class=\"fw-bold\">Odznaky</small>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "<small class=\"fw-bold\">Joined</small>"
-msgstr ""
+msgstr "<small class=\"fw-bold\">Se připojil</small>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<span class=\"fw-bold\">Biography</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold\">Životopis</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<span class=\"fw-bold\">City</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold\">Město</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<span class=\"fw-bold\">Country</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold\">Země</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<span class=\"fw-bold\">Email</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold\">E-mail</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<span class=\"fw-bold\">Name</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold\">Jméno</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<span class=\"fw-bold\">Public profile</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold\">Veřejný profil</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<span class=\"fw-bold\">Website</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold\">Webová stránka</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 msgid "<span class=\"text-muted small fw-bold\">Badges</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small fw-bold\">Odznaky</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 msgid "<span class=\"text-muted small fw-bold\">XP</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small fw-bold\">XP</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
@@ -165,7 +167,7 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
 msgid "<strong class=\"mb-3 text-white me-2\">Rank by :</strong>"
-msgstr ""
+msgstr "<strong class=\"mb-3 text-white me-2\">Seřadit podle :</strong>"
 
 #. module: website_profile
 #: model:mail.template,body_html:website_profile.validation_email
@@ -257,21 +259,107 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- ZÁHLAVÍ -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                        <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                            Ověření profilu <t t-out=\"object.company_id.name or ''\">VašíSpolečnosti</t>\n"
+"                        </span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\">\n"
+"                        <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\">\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td colspan=\"2\" style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\">\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- OBSAH -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                            Dobrý den <t t-out=\"object.name or ''\">Marcu Demo</t>,<br><br>\n"
+"                            Byli jste pozváni k ověření vašeho e-mailu, abyste získali přístup na web „<t t-out=\"object.company_id.name or ''\">VašeSpolečnost</t>“.\n"
+"                            Chcete-li ověřit svůj e-mail, klikněte na následující odkaz:\n"
+"                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                <a t-att-href=\"ctx.get('token_url')\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                    Ověřit můj účet\n"
+"                                </a>\n"
+"                            </div>\n"
+"                            Děkujeme za vaši účast!\n"
+"                        </p>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- ZÁPATÍ -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\" font-family: 'Verdana Regular'; color: #454748; min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\" align=\"left\">\n"
+"                         <t t-out=\"user.company_id.name or ''\">VašeSpolečnost</t>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\" style=\"opacity: 0.7;\">\n"
+"                        <t t-out=\"user.company_id.phone or ''\">+420 601 123 456</t>\n"
+"                        <t t-if=\"user.company_id.email\">\n"
+"                            | <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@vasespolecnost.com</a>\n"
+"                        </t>\n"
+"                        <t t-if=\"user.company_id.website\">\n"
+"                            | <a t-attf-href=\"{{ user.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.priklad.com</a>\n"
+"                        </t>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- BĚŽÍ NA -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"        <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"            Běží na <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=forum\" style=\"color: #875A7B;\">Odoo</a>\n"
+"        </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid "<u>Correct your email address</u>"
-msgstr ""
+msgstr "<u>Opravte svou e-mailovou adresu</u>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid "<u>Send Again</u>"
-msgstr ""
+msgstr "<u>Odeslat znovu</u>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid "<u>here</u>"
-msgstr ""
+msgstr "<u>zde</u>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -303,6 +391,9 @@ msgid ""
 "                        you receive badges for being especially helpful.<br class=\"d-none d-lg-inline-block\"/>Badges\n"
 "                        appear on your profile page, and your posts."
 msgstr ""
+"Kromě získávání reputace svými otázkami a odpověďmi,\n"
+"                        dostáváte odznaky za to, že jste obzvlášť užiteční.<br class=\"d-none d-lg-inline-block\"/>Odznaky\n"
+"                        se zobrazí na stránce vašeho profilu a ve vašich příspěvcích."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -337,7 +428,7 @@ msgstr "Editovat profil"
 #. module: website_profile
 #: model:mail.template,name:website_profile.validation_email
 msgid "Forum: Email Verification"
-msgstr ""
+msgstr "Fórum: Verifikace e-mailu"
 
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_gamification_badge
@@ -397,7 +488,7 @@ msgstr "Další úroveň:"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_main
 msgid "No Leaderboard Yet :("
-msgstr ""
+msgstr "Zatím žádná výsledková tabulka :("
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
@@ -446,7 +537,7 @@ msgstr "Hledat uživatele"
 #. module: website_profile
 #: model:mail.template,description:website_profile.validation_email
 msgid "Sent to forum visitors to confirm their mail address"
-msgstr ""
+msgstr "Odesláno návštěvníkům fóra k potvrzení jejich e-mailové adresy"
 
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__website_url
@@ -497,7 +588,7 @@ msgstr "Uživatelé"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid "Verification Email sent to"
-msgstr ""
+msgstr "Ověřovací e-mail odeslán na adresu"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_published
@@ -542,11 +633,13 @@ msgid ""
 "Your Account has not yet been verified.<br/>\n"
 "            Click"
 msgstr ""
+"Váš účet ještě nebyl ověřen.<br/>\n"
+"            Klikněte"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid "Your account does not have an email set up. Please set it up on"
-msgstr ""
+msgstr "Váš účet nemá nastaven e-mail. Nastavte to prosím"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -577,7 +670,7 @@ msgstr "tento týden"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid "to receive a verification email"
-msgstr ""
+msgstr "pro obdržení ověřovacího e-mailu"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
@@ -587,12 +680,12 @@ msgstr "xp"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid "your account settings"
-msgstr ""
+msgstr "vaše nastavení účtu"
 
 #. module: website_profile
 #: model:mail.template,subject:website_profile.validation_email
 msgid "{{ object.company_id.name }} Profile validation"
-msgstr ""
+msgstr "{{ object.company_id.name }} Ověření profilu"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
