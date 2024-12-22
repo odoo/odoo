@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -30,22 +30,14 @@ msgstr "%(name)s は本日 %(state)s とされています"
 #: model:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
 "<div>\n"
-"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
 "We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.\n"
 "Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.\n"
 "Thank you for your prompt attention to this matter.\n"
-"                    <br>Best Regards,<br><br>\n"
+"                    <br/>Best Regards,<br/><br/>\n"
 "                </div>\n"
 "            "
 msgstr ""
-"<div>\n"
-"                     <t t-out=\"object.name or ''\">Abigail Peterson</t>様、<br><br>\n"
-" お疲れ様です。現在、出社されておらず、休暇申請の記録もありません。本日の欠勤がこちらの見落としである場合には、混乱をさせてしまい申し訳ありません。\n"
-"この無断欠勤に対処するために必要なご対応をお願いします。質問やサポートが必要な場合は、遠慮なく上司または人事部までご連絡下さい。\n"
-"迅速な対応をお願い致します。\n"
-"                    <br>宜しくお願い致します。<br><br>\n"
-"                </div>\n"
-"            "
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
@@ -217,6 +209,12 @@ msgstr "出勤を設定"
 #: model:mail.template,subject:hr_presence.mail_template_presence
 msgid "Unexpected Absence"
 msgstr "予想外の欠勤"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "Unplanned Absence"
+msgstr ""
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log

@@ -141,6 +141,8 @@ msgid ""
 "A project must be defined on the quotation or on the form of products creating a task on order.\n"
 "The following products need a project in which to put their task: %(product_names)s"
 msgstr ""
+"Un projet doit être défini sur le devis ou sur le formulaire des produits créant une tâche dans la commande.\n"
+"Les produits suivants nécessitent un projet dans lequel placer leur tâche :%(product_names)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -149,6 +151,9 @@ msgid ""
 "analytic distribution of this project will also serve as a reference for "
 "newly created sales order items."
 msgstr ""
+"Une tâche sera créée pour le projet lors de la confirmation de la commande "
+"client. La distribution analytique de ce projet servira également de "
+"référence pour les nouveaux articles de la commande client créée."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -290,7 +295,7 @@ msgstr "Factures clients"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Defined on quotation"
-msgstr ""
+msgstr "Défini sur le devis"
 
 #. module: sale_project
 #. odoo-javascript
@@ -323,7 +328,7 @@ msgstr "Acomptes"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Empty project"
-msgstr ""
+msgstr "Projet vide"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_flooring_product_template
@@ -493,6 +498,9 @@ msgid ""
 "generate analytic costs, will be re-invoiced in this sales order if they are"
 " set up for it."
 msgstr ""
+"Les produits ajoutés aux transferts de stock, dont le type d'opération est "
+"configuré pour générer des coûts analytiques, seront facturés à nouveau dans"
+" cette commande client si cela est prévu."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_project

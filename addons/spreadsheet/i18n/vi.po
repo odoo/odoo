@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -867,12 +867,6 @@ msgid ""
 msgstr ""
 "Tất cả các ngày phải lớn hơn hoặc bằng ngày đầu tiên trong "
 "cashflow_dates(%s)."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "All the ranges and the range values must have the same size"
-msgstr "Tất cả phạm vi và giá trị phạm vi phải có cùng kích thước"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1758,7 +1752,7 @@ msgstr "Loại biểu đồ"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Checkbox"
-msgstr "Ô đánh dấu"
+msgstr "Hộp kiểm"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3285,6 +3279,7 @@ msgstr "Trường %(field)s không được hỗ trợ vì loại của trườn
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/odoo_pivot.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_helpers.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 msgid "Field %s does not exist"
 msgstr "Trường %s không tồn tại"
 
@@ -4922,7 +4917,7 @@ msgstr "Đo \"%s\" tuỳ chọn"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Measures"
-msgstr "Đơn vị tính"
+msgstr "Thước đo"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6598,6 +6593,12 @@ msgstr "Giá trị đơn nhất từ một phạm vi dạng bảng."
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+msgid "Some measures are not available: %s"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Some used characters are not allowed in a sheet name (Forbidden characters "
@@ -6772,7 +6773,7 @@ msgstr "Biểu đồ cột chồng"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Stacked line chart"
-msgstr "Biểu đồ nhiều đường"
+msgstr "Biểu đồ đường chồng"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8464,6 +8465,21 @@ msgstr "Số bị trừ, hay số cần được trừ đi."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The minute component of the time."
 msgstr "Thành phần phút của thời gian."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/data_sources/data_source.js:0
+#: code:addons/spreadsheet/static/src/pivot/odoo_pivot_loader.js:0
+msgid "The model \"%(model)s\" does not exist."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/global_filters/components/filter_value/filter_value.js:0
+msgid ""
+"The model (%(model)s) of this global filter is not valid (it may have been "
+"renamed/deleted)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript

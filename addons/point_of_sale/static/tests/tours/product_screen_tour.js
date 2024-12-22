@@ -278,7 +278,7 @@ registry.category("web_tour.tours").add("MultiProductOptionsTour", {
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductConfiguratorPopup.isOptionShown("Value 1"),
             ProductConfiguratorPopup.isOptionShown("Value 2"),
-            Dialog.confirm("Ok"),
+            Dialog.confirm("Add"),
 
             Chrome.endTour(),
         ].flat(),
@@ -373,28 +373,28 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             {
-                trigger: '.category-button:eq(0) > span:contains("AAA")',
+                trigger: '.category-button > span:contains("AAA")',
             },
             {
-                trigger: '.category-button:eq(1) > span:contains("AAB")',
+                trigger: '.category-button > span:contains("AAB")',
             },
             {
-                trigger: '.category-button:eq(2) > span:contains("AAC")',
+                trigger: '.category-button > span:contains("AAC")',
             },
             {
-                trigger: '.category-button:eq(1) > span:contains("AAB")',
+                trigger: '.category-button > span:contains("AAB")',
                 run: "click",
             },
             ProductScreen.productIsDisplayed("Product in AAB and AAX", 0),
             {
-                trigger: '.category-button:eq(2) > span:contains("AAX")',
+                trigger: '.category-button > span:contains("AAX")',
             },
             {
-                trigger: '.category-button:eq(2) > span:contains("AAX")',
+                trigger: '.category-button > span:contains("AAX")',
                 run: "click",
             },
             {
-                trigger: '.category-button:eq(3) > span:contains("AAY")',
+                trigger: '.category-button > span:contains("AAY")',
             },
         ].flat(),
 });
