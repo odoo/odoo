@@ -1164,15 +1164,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"Vous permet de partager le document avec vos clients dans le cadre d'une vente. \n"
-"Laissez ce champ vide si vous ne voulez pas partager ce document avec vos clients.\n"
-"Devis : le document sera envoyé aux clients et est accessible par eux à tout moment. \n"
-"Par exemple, cette option peut être utile pour partager des fichiers de description de produits. \n"
-"Commande confirmée : le document sera envoyé aux clients et est accessible par eux.\n"
-"Par exemple, cette option peut être utile pour partager des manuels d'utilisation ou des contenus numériques achetés dans le cadre d'un eCommerce.\n"
-"Dans le devis : Le document sera inclus dans le PDF du devis entre les pages d'en-tête et le tableau du devis."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -4243,7 +4237,6 @@ msgstr "Bon(s) de commande"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -5045,6 +5038,19 @@ msgid "There are existing"
 msgstr "Il y a des"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
+"Il ne semble pas encore y avoir de produit de réduction configuré pour cette"
+" entreprise. Il est possible d'utiliser une remise par ligne ou de demander "
+"à un administrateur d'accorder la remise la première fois."
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "This default value is applied to any new product created. This can be "
@@ -5621,6 +5627,7 @@ msgstr ""
 "                que ce soit un produit stockable, consommable ou un service."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Vos commandes"

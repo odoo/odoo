@@ -261,7 +261,7 @@ msgstr ""
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
-"                <!-- Usamos el logo de la empresa que realizó la encuesta (para gestionar casos de multiempresas) -->\n"
+"                <!-- Usamos el logo de la empresa que realizó la encuesta (en caso de que se trate de una base de datos multiempresa) -->\n"
 "                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Certificación: <t t-out=\"object.survey_id.display_name or ''\">Formulario de retroalimentación</t>\n"
@@ -271,13 +271,13 @@ msgstr ""
 "    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
 "        <tbody>\n"
 "            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
-"                <p>Apreciable <span t-out=\"object.partner_id.name or 'participant'\">participante</span></p>\n"
+"                <p>Apreciable <span t-out=\"object.partner_id.name or 'participante'\">participante</span></p>\n"
 "                <p>\n"
-"                    A continuación encontrará adjunta su certificación de\n"
+"                    Adjuntamos su certificación de\n"
 "                        <strong t-out=\"object.survey_id.display_name or ''\">Creación de mobiliario</strong>\n"
 "                    .\n"
 "                </p>\n"
-"                <p>¡Felicidades por aprobar el cuestionario con un puntaje de <strong t-out=\"object.scoring_percentage\"></strong>%!</p>\n"
+"                <p>Felicidades por aprobar el cuestionario con un puntaje de <strong t-out=\"object.scoring_percentage\"></strong>%.</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -321,9 +321,9 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Apreciable <t t-out=\"object.partner_id.name or 'participant'\">participante</t><br><br>\n"
+"        Apreciable <t t-out=\"object.partner_id.name or 'participante'\">participante</t><br><br>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
-"            Le invitamos a realizar un nueva certificación.\n"
+"            Recibió una invitación para realizar una nueva certificación.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            Estamos realizando una encuesta y agradeceríamos su participación.\n"
@@ -551,7 +551,7 @@ msgid ""
 msgstr ""
 "<span class=\"o_survey_key text-center position-absolute bg-white rounded-"
 "start py-0 ps-2\"><span class=\"text-primary text-center text-center w-100 "
-"position-relative\">Clave</span></span>"
+"position-relative\">Tecla</span></span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -5837,21 +5837,21 @@ msgstr "de logros"
 #: code:addons/survey/static/src/js/survey_form.js:0
 #, python-format
 msgid "or press CTRL+Enter"
-msgstr "o pulse CTRL+Enter"
+msgstr "o presione CTRL+Enter"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/survey_form.js:0
 #, python-format
 msgid "or press Enter"
-msgstr "o pulse Enter"
+msgstr "o presione Enter"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/survey_form.js:0
 #, python-format
 msgid "or press ⌘+Enter"
-msgstr "o pulse ⌘+Enter"
+msgstr "o presione ⌘+Enter"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_progression
