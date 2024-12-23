@@ -21,35 +21,6 @@ class AccountEdiProxyClientUser(models.Model):
     # -------------------------------------------------------------------------
     # HELPER METHODS
     # -------------------------------------------------------------------------
-
-
-    def _make_request(self, url, params=False):
-        if self.proxy_type == 'peppol':
-            return self._make_request_peppol(url, params=params)
-        return super()._make_request(url, params=params)
-
-    @handle_demo
-    def _make_request_peppol(self, url, params=False):
-        # extends account_edi_proxy_client to update peppol_proxy_state
-        # of archived users
-        try:
-            result = super()._make_request(url, params)
-        except AccountEdiProxyError as e:
-            if (
-                e.code == 'no_such_user'
-                and not self.active
-                and not self.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
-            ):
-                self.company_id.write({
-                    'account_peppol_proxy_state': 'not_registered',
-                    'account_peppol_migration_key': False,
-                })
-                # commit the above changes before raising below
-                if not modules.module.current_test:
-                    self.env.cr.commit()
-            raise AccountEdiProxyError(e.code, e.message)
-        return result
-
     def _get_proxy_urls(self):
         urls = super()._get_proxy_urls()
         urls['peppol'] = {
@@ -59,8 +30,11 @@ class AccountEdiProxyClientUser(models.Model):
         }
         return urls
 
+    @handle_demo
     def _call_peppol_proxy(self, endpoint, params=None):
         self.ensure_one()
+        if self.proxy_type != 'peppol':
+            raise UserError(_('EDI user should be of type Peppol'))
 
         errors = {
             'code_incorrect': _('The verification code is not correct'),
@@ -75,6 +49,18 @@ class AccountEdiProxyClientUser(models.Model):
                 params=params,
             )
         except AccountEdiProxyError as e:
+            if (
+                e.code == 'no_such_user'
+                and not self.active
+                and not self.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
+            ):
+                self.company_id.write({
+                    'account_peppol_proxy_state': 'not_registered',
+                    'account_peppol_migration_key': False,
+                })
+                # commit the above changes before raising below
+                if not modules.module.current_test:
+                    self.env.cr.commit()
             raise UserError(e.message)
 
         if 'error' in response:

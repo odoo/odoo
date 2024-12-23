@@ -71,6 +71,10 @@ export function onExternalClick(refName, cb) {
 }
 
 /**
+ * Hook that allows to determine precisely when refs are (mouse-)hovered.
+ * Should provide a list of ref names, and can add callbacks when elements are
+ * hovered-in (onHover), hovered-out (onAway), hovering for some time (onHovering).
+ *
  * @param {string | string[]} refNames name of refs that determine whether this is in state "hovering".
  *   ref name that end with "*" means it takes parented HTML node into account too. Useful for floating
  *   menu where dropdown menu container is not accessible.
@@ -79,14 +83,18 @@ export function onExternalClick(refName, cb) {
  * @param {() => void} [param1.onAway] callback when stop hovering the ref names.
  * @param {number, () => void} [param1.onHovering] array where 1st param is duration until start hovering
  *   and function to be executed at this delay duration after hovering is kept true.
+ * @param {() => Array} [param1.stateObserver] when provided, function that, when called, returns list of
+ *   reactive state related to presence of targets' el. This is used to help the hook detect when the targets
+ *   are removed from DOM, to properly mark the hovered target as non-hovered.
  * @returns {({ isHover: boolean })}
  */
-export function useHover(refNames, { onHover, onAway, onHovering } = {}) {
+export function useHover(refNames, { onHover, onAway, stateObserver, onHovering } = {}) {
     refNames = Array.isArray(refNames) ? refNames : [refNames];
     const targets = [];
     let wasHovering = false;
     let hoveringTimeout;
     let awayTimeout;
+    let lastHoveredTarget;
     for (const refName of refNames) {
         targets.push({
             ref: refName.endsWith("*")
@@ -144,6 +152,7 @@ export function useHover(refNames, { onHover, onAway, onHovering } = {}) {
             }
             if (target.ref.el.contains(ev.target)) {
                 setHover(true);
+                lastHoveredTarget = target;
                 return;
             }
         }
@@ -161,6 +170,7 @@ export function useHover(refNames, { onHover, onAway, onHovering } = {}) {
             }
         }
         setHover(false);
+        lastHoveredTarget = null;
     }
 
     for (const target of targets) {
@@ -176,6 +186,15 @@ export function useHover(refNames, { onHover, onAway, onHovering } = {}) {
             (ev) => onmouseleave(ev),
             true
         );
+    }
+
+    if (stateObserver) {
+        useEffect(() => {
+            if (lastHoveredTarget && !lastHoveredTarget.ref.el) {
+                setHover(false);
+                lastHoveredTarget = null;
+            }
+        }, stateObserver);
     }
     return state;
 }
