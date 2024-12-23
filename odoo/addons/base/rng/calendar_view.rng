@@ -6,6 +6,19 @@
          template
     -->
     <rng:include href="common.rng"/>
+
+    <rng:define name="quickpanel">
+        <rng:element name="quickpanel">
+            <rng:ref name="overload"/>
+            <rng:optional>
+                <rng:attribute name="criteria_field"/>
+            </rng:optional>
+            <rng:zeroOrMore>
+                <rng:ref name="field"/>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
     <rng:define name="calendar">
         <rng:element name="calendar">
             <rng:optional><rng:attribute name="string" /></rng:optional>
@@ -40,6 +53,7 @@
             </rng:optional>
             <rng:zeroOrMore>
                 <rng:ref name="field"/>
+                <rng:ref name="quickpanel"/>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>

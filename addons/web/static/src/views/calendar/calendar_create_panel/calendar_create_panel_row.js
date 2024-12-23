@@ -1,109 +1,93 @@
 /** @odoo-module **/
 
-import { Component, useState } from "@odoo/owl";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { Component } from "@odoo/owl";
+import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
 /**
- * Subcomponent to render a single field row. Depending on field type,
- * we display a different widget. We specifically handle "many2one" with AutoComplete.
+ * Renders a single row with a label + input widget, based on field type.
+ * For many2one, we use Many2XAutocomplete in a generic way.
  */
 export class FieldRow extends Component {
-    static template = "web.CalendarSuperQuickPanelFieldRow";
-    static components = { AutoComplete };
+    static template = "my_module.CalendarSuperQuickPanelFieldRow";
+    static components = { Many2XAutocomplete };
     static props = {
         fieldName: String,
         fieldInfo: Object,
-        value: { type: [String, Number, Boolean], optional: true },
-        onChange: Function, // callback for updated value
-        // We also pass in an 'orm' and 'env' or other services if needed to load name_search
-        orm: Object,
-        model: Object
+        value: { type: [String, Number, Boolean, Object], optional: true },
+        onChange: Function,
+        orm: { type: Object, optional: true },
+        model: { type: Object, optional: true },
     };
 
-    setup() {
-        this.state = useState({
-            // If you want to store local stuff, do it here
-        });
+    /**
+     * For convenience, let's define a few getters for detecting field type
+     */
+    get isMany2One() {
+        return this.props.fieldInfo.type === "many2one";
+    }
+    get isBoolean() {
+        return this.props.fieldInfo.type === "boolean";
+    }
+    get isFloat() {
+        return this.props.fieldInfo.type === "float";
+    }
+    get isInteger() {
+        return this.props.fieldInfo.type === "integer";
     }
 
-    // For many2one: define an AutoComplete source
-    get autoCompleteProps() {
+    get many2XProps() {
+        const displayName = (this.props.value && this.props.value.display_name) ? this.props.value.display_name : "";
         return {
-            placeholder: this.fieldInfo.string || this.fieldInfo.name,
+            value: displayName,
+            resModel: this.props.model.fields[this.props.fieldName].relation,
+            fieldString: this.props.fieldInfo.string || this.props.fieldInfo.name,
+            getDomain: () => this.props.fieldInfo.domain,
+            update: this.onMany2XUpdate.bind(this),
             autoSelect: true,
-            resetOnSelect: true,
-            value: this.props.value || "",
-            onSelect: (option) => {
-                if (option.action) {
-                    option.action();
-                } else {
-                    // user picked an existing record
-                    this.triggerChange(option.value);
-                }
-            },
-            sources: [
-                {
-                    placeholder: "Loading...",
-                    options: (request) => this.loadM2ORecords(this, request),
-                    optionTemplate: "web.CalendarSuperQuickPanelAutoCompleteOption",
-                },
-            ],
+            activeActions: {},
         };
     }
 
-    async loadM2ORecords(field, request) {
-        // This is analogous to the name_search approach in CalendarFilterPanel
-        // 1) identify the model from field attrs
-        console.log(this.props.orm);
-        console.log(field);
-        const relation = this.props.model.fields[field.props.fieldName].relation;
-        if (!relation) {
-            return [{ label: "No relation", unselectable: true }];
-        }
-        // 2) build domain
-        const domain = []; // adapt as needed
-        // 3) call name_search
-        const records = await this.props.model.orm.call(relation, "name_search", [], {
-            name: request,
-            operator: "ilike",
-            args: domain,
-            limit: 8,
-            context: {}, // pass context if needed
-        });
-        // 4) build the options
-        const options = records.map((res) => ({
-            value: res[0], // ID
-            label: res[1], // Name
-            model: relation,
-        }));
-        if (records.length === 0) {
-            options.push({
-                label: "No records",
-                classList: "o_m2o_no_result",
-                unselectable: true,
-            });
-        }
-        return options;
-    }
-
-    triggerChange(newVal) {
-        // call parent callback
-        this.props.onChange(this.props.fieldName, newVal);
-    }
-
-    onValueChange(ev) {
-        let newVal;
-        if (ev.target.type === "checkbox") {
-            newVal = ev.target.checked;
-        } else if (ev.target.type === "number") {
-            newVal = ev.target.value ? parseFloat(ev.target.value) : 0;
+    onMany2XUpdate(recordListOrFalse) {
+        console.log(recordListOrFalse)
+        if (!recordListOrFalse) {
+            this.triggerChange(null );
         } else {
-            newVal = ev.target.value;
+            const [rec] = recordListOrFalse;
+            const display_name = rec.display_name || rec.label || "";
+            this.triggerChange({ id: rec.id, display_name }, rec.id);
         }
-        this.triggerChange(newVal);
     }
 
-    get fieldInfo() {
-        return this.props.fieldInfo;
+    onInputChange(ev) {
+        let newVal = ev.target.value;
+        if (this.isBoolean) {
+            newVal = ev.target.checked;
+        } else if (this.isFloat || this.isInteger) {
+            newVal = newVal ? parseFloat(newVal) : 0;
+        }
+        this.triggerChange(newVal, newVal);
+    }
+
+    triggerChange(newVal, raw_value) {
+        this.props.onChange(this.props.fieldName, newVal, raw_value);
+    }
+
+    parseDomain(domainDef) {
+        if (!domainDef) {
+            return [];
+        }
+        if (Array.isArray(domainDef)) {
+            return domainDef;
+        }
+        if (typeof domainDef === "string") {
+            try {
+                return JSON.parse(domainDef);
+            } catch {
+                // fallback
+                return [];
+            }
+        }
+        return [];
     }
 }

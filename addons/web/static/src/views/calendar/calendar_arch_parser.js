@@ -37,6 +37,7 @@ export class CalendarArchParser {
         let isDateHidden = false;
         let isTimeHidden = false;
         let formViewId = false;
+        let superQuickPanelCriteria = false;
         const popoverFieldNodes = {};
         const superQuickPanelFields = {};
         const filtersInfo = {};
@@ -129,7 +130,6 @@ export class CalendarArchParser {
                         jsClass
                     );
                     popoverFieldNodes[fieldName] = fieldInfo;
-                    superQuickPanelFields[fieldName] = fieldInfo;
 
                     const field = fields[fieldName];
                     if (!node.hasAttribute("invisible") || node.hasAttribute("filters")) {
@@ -185,20 +185,27 @@ export class CalendarArchParser {
 
                     break;
                 }
-                case "SuperQuickPanel": {
-                    console.log("heheheh")
+                case "quickpanel": {
+
+                    superQuickPanelCriteria = node.getAttribute("criteria_field");
+
                     for (const child of node.children) {
                         if (child.tagName === "field" && child.hasAttribute("name")) {
                             const fieldName = child.getAttribute("name");
-                            superQuickPanelFields.push({
-                                name: fieldName,
-                                downsize: child.getAttribute("downsize") || null,
-                                string: child.getAttribute("string") || fieldName,
-                            });
+                            const fieldInfo = Field.parseFieldNode(
+                                child,
+                                models,
+                                modelName,
+                                "calendar",
+                                jsClass
+                            );
+                            superQuickPanelFields[fieldName] = fieldInfo;
                         }
                     }
                     break;
                 }
+
+
             }
         });
 
@@ -220,7 +227,8 @@ export class CalendarArchParser {
             scale,
             scales,
             showUnusualDays,
-            superQuickPanelFields
+            superQuickPanelFields,
+            superQuickPanelCriteria,
         };
     }
 }

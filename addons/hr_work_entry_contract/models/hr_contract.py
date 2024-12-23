@@ -310,6 +310,32 @@ class HrContract(models.Model):
         self.ensure_one()
         return self.work_entry_source == 'calendar'
 
+    def generate_work_entry_vals(self, date_start, date_stop, force=False):
+        # Generate work entries between 2 dates (datetime.date)
+        # To correctly englobe the period, the start and end periods are converted
+        # using the calendar timezone.
+        assert not isinstance(date_start, datetime)
+        assert not isinstance(date_stop, datetime)
+
+        date_start = datetime.combine(fields.Datetime.to_datetime(date_start), datetime.min.time())
+        date_stop = datetime.combine(fields.Datetime.to_datetime(date_stop), datetime.max.time())
+
+        contracts_by_company_tz = defaultdict(lambda: self.env['hr.contract'])
+        for contract in self:
+            contracts_by_company_tz[(
+                contract.company_id,
+                (contract.resource_calendar_id or contract.employee_id.resource_calendar_id).tz
+            )] += contract
+        utc = pytz.timezone('UTC')
+        new_work_entries = []
+        for (company, contract_tz), contracts in contracts_by_company_tz.items():
+            tz = pytz.timezone(contract_tz) if contract_tz else pytz.utc
+            date_start_tz = tz.localize(date_start).astimezone(utc).replace(tzinfo=None)
+            date_stop_tz = tz.localize(date_stop).astimezone(utc).replace(tzinfo=None)
+            new_work_entries += contracts.with_company(company).sudo()._generate_work_entries(
+                date_start_tz, date_stop_tz, force=force)
+        return new_work_entries
+
     def generate_work_entries(self, date_start, date_stop, force=False):
         # Generate work entries between 2 dates (datetime.date)
         # To correctly englobe the period, the start and end periods are converted
@@ -332,8 +358,8 @@ class HrContract(models.Model):
             tz = pytz.timezone(contract_tz) if contract_tz else pytz.utc
             date_start_tz = tz.localize(date_start).astimezone(utc).replace(tzinfo=None)
             date_stop_tz = tz.localize(date_stop).astimezone(utc).replace(tzinfo=None)
-            new_work_entries += contracts.with_company(company).sudo()._generate_work_entries(
-                date_start_tz, date_stop_tz, force=force)
+            new_work_entries += self.env['hr.work.entry'].create(contracts.with_company(company).sudo()._generate_work_entries(
+                date_start_tz, date_stop_tz, force=force))
         return new_work_entries
 
     def _generate_work_entries(self, date_start, date_stop, force=False):
@@ -397,7 +423,7 @@ class HrContract(models.Model):
         if not vals_list:
             return self.env['hr.work.entry']
 
-        return self.env['hr.work.entry'].create(vals_list)
+        return vals_list
 
     def _remove_work_entries(self):
         ''' Remove all work_entries that are outside contract period (function used after writing new start or/and end date) '''

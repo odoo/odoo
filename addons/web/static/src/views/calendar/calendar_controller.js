@@ -101,7 +101,7 @@ export class CalendarController extends Component {
                 !this.env.isSmall &&
                 Boolean(sessionShowSidebar != null ? JSON.parse(sessionShowSidebar) : true),
         });
-        this.superQuickValues = {};
+        this.superQuickValues = useState({values: {}});
 
         this.searchBarToggler = useSearchBarToggler();
     }
@@ -224,17 +224,10 @@ export class CalendarController extends Component {
     get superQuickPanelProps() {
         return {
             fields: this.props.archInfo.superQuickPanelFields || {},
-            onChange: this.handleSuperQuickChange,
-            title: "Add Work Entry", // or whatever
-            showSaveButton: false,  // example
-            model: this.model
+            title: "Add Work Entry",
+            model: this.model,
+            values: this.superQuickValues
         };
-    }
-
-    handleSuperQuickChange(changed, allValues) {
-        this.superQuickValues = allValues;
-        // now, whenever a user changes something in the super quick panel,
-        // we store it here so we can pass it to createRecord
     }
 
     get mobileFilterPanelProps() {
@@ -288,34 +281,50 @@ export class CalendarController extends Component {
         };
     }
 
-    createRecord(record) {
+    async createRecord(record) {
         if (!this.model.canCreate) {
             return;
         }
-        if (this.model.hasQuickCreate) {
-            if (this.model.quickCreateFormViewId) {
+        console.log(this.model)
+        if (this.superQuickValues.values){
+            let vals = this.superQuickValues.values;
+            const exportedState = this.env.searchModel.exportState() || {};
+            const sections = exportedState.sections || [];
+
+            for (const section of sections) {
+                const [sectionId, sectionData] = section;
+                if (sectionData.activeValueId) {
+                    vals[sectionData.fieldName] = sectionData.activeValueId;
+                }
+            }
+            await this.orm.call('hr.work.entry', "calendar_panel_replace", [record, this.superQuickValues.values]);
+            await this.model.load();
+        }else {
+            if (this.model.hasQuickCreate) {
+                if (this.model.quickCreateFormViewId) {
+                    return new Promise((resolve) => {
+                        this.displayDialog(
+                            this.constructor.components.QuickCreateFormView,
+                            this.getQuickCreateFormViewProps(record),
+                            {
+                                onClose: () => resolve(),
+                            }
+                        );
+                    });
+                }
+
                 return new Promise((resolve) => {
                     this.displayDialog(
-                        this.constructor.components.QuickCreateFormView,
-                        this.getQuickCreateFormViewProps(record),
+                        this.constructor.components.QuickCreate,
+                        this.getQuickCreateProps(record),
                         {
                             onClose: () => resolve(),
                         }
                     );
                 });
+            } else {
+                return this.editRecordInCreation(record);
             }
-
-            return new Promise((resolve) => {
-                this.displayDialog(
-                    this.constructor.components.QuickCreate,
-                    this.getQuickCreateProps(record),
-                    {
-                        onClose: () => resolve(),
-                    }
-                );
-            });
-        } else {
-            return this.editRecordInCreation(record);
         }
     }
     async editRecord(record, context = {}, shouldFetchFormViewId = true) {

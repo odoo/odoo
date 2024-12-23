@@ -38,6 +38,8 @@ export class CalendarModel extends Model {
             records: {},
             unusualDays: [],
         };
+
+        this.aggreg = {};
     }
     async load(params = {}) {
         Object.assign(this.meta, params);
@@ -54,8 +56,52 @@ export class CalendarModel extends Model {
         browser.localStorage.setItem(this.storageKey, this.meta.scale);
         const data = { ...this.data };
         await this.keepLast.add(this.updateData(data));
+
         this.data = data;
+        const aggregates = {};
+
+        for (const key of Object.keys(data.records)) {
+            const record = data.records[key];
+            // e.g. record.rawRecord.work_entry_type_id = [7, "Sick Time Off"]
+            const wetype = record.rawRecord?.work_entry_type_id;
+            if (!wetype) {
+                continue;
+            }
+            const typeName = wetype[1]; // second element is the name
+            const dur = record.rawRecord.duration || 0;
+
+            if (!aggregates[typeName]) {
+                aggregates[typeName] = 0;
+            }
+            aggregates[typeName] += dur;
+        }
+
+        // 3) Convert that object into an array
+        const result = Object.entries(aggregates).map(([typeName, totalDur]) => {
+            return { name: typeName, total_duration: totalDur };
+        });
+
+        // 4) Sort or do any logic if you want
+        result.sort((a, b) => a.name.localeCompare(b.name));
+
+        // 5) Store in state so the template can render it
+        this.aggreg = result;
+
         this.notify();
+    }
+
+    async panel_quick_create(record, vals){
+        const exportedState = this.env.searchModel.exportState() || {};
+        const sections = exportedState.sections || [];
+
+        for (const section of sections) {
+            const [sectionId, sectionData] = section;
+            if (sectionData.activeValueId) {
+                vals[sectionData.fieldName] = sectionData.activeValueId;
+            }
+        }
+        await this.orm.call(this.meta.resModel, "calendar_panel_create", [record, vals]);
+        await this.load();
     }
 
     //--------------------------------------------------------------------------

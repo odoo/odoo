@@ -10,6 +10,7 @@ from odoo.exceptions import UserError
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
+from dateutil import parser
 
 
 class HrWorkEntry(models.Model):
@@ -172,6 +173,55 @@ class HrWorkEntry(models.Model):
         work_entries._check_if_error()
         return work_entries
 
+    @api.model
+    def calendar_panel_create(self, params, vals):
+        start_dt = params["start"]
+        end_dt = params.get("end", False) or start_dt
+
+        start_dt = parser.isoparse(start_dt).replace(tzinfo=None)
+        end_dt = parser.isoparse(end_dt).replace(tzinfo=None)
+
+        wtype_id = vals.get("work_entry_type_id")
+        employee_id = vals.get("employee_id")
+        wtype_id = self.env['hr.work.entry.type'].browse(int(wtype_id or 1)) or 1
+
+        if employee_id:
+            emp = self.env['hr.employee'].browse(int(employee_id))
+            current_contracts = emp._get_contracts(start_dt, end_dt, states=["open", "close"])
+        else:
+            current_contracts = self.env['hr.employee']._get_all_contracts(start_dt, end_dt, states=["open", "close"])
+
+        vals = current_contracts.generate_work_entry_vals(start_dt.date(), end_dt.date(), force=True)
+
+        for val in vals:
+            val['work_entry_type_id'] = wtype_id.id
+        return self.create(vals)
+
+    @api.model
+    def calendar_panel_replace(self, params, vals):
+        start_dt = params["start"]
+        end_dt = params.get("end", False) or start_dt
+
+        start_dt = parser.isoparse(start_dt).replace(tzinfo=None)
+        end_dt = parser.isoparse(end_dt).replace(tzinfo=None).replace(hour=23, minute=59, second=59)
+
+        domain = [('date_start', '>', start_dt), ('date_stop', '<', end_dt)]
+
+        if "employee_id" in vals:
+            domain.append(('employee_id', '=', vals.get('employee_id')))
+
+        wtype_id = vals.get("work_entry_type_id")
+        wtype_id = self.env['hr.work.entry.type'].browse(int(wtype_id or 1)) or 1
+
+        valid_work_entries = self.env['hr.work.entry'].search(domain)
+
+        valid_work_entries.write({
+            'work_entry_type_id': wtype_id
+        })
+
+        return valid_work_entries
+
+
     def write(self, vals):
         skip_check = not bool({'date_start', 'date_stop', 'employee_id', 'work_entry_type_id', 'active'} & vals.keys())
         if 'state' in vals:
@@ -277,6 +327,9 @@ class HrWorkEntryType(models.Model):
                 ('country_id', 'in', self.country_id.ids + [False]),
             ]):
                 raise UserError(_("The same code cannot be associated to multiple work entry types."))
+
+
+
 
 
 class HrUserWorkEntryEmployee(models.Model):

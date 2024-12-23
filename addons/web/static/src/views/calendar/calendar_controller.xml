@@ -16,7 +16,7 @@
                 <t t-set-slot="control-panel-navigation-additional">
                     <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
                 </t>
-                <div class="o_calendar_container d-grid h-100 bg-view">
+                <div class="o_calendar_container d-grid h-100 bg-view w-100">
                     <div class="o_calendar_header d-flex align-items-center gap-1 px-3 pe-md-1 py-2 px-print-0 pt-print-0 border-bottom">
                         <div t-if="!env.isSmall" class="o_calendar_navigation_buttons btn-group d-print-none">
                             <button
@@ -55,13 +55,13 @@
                             </t>
                         </h5>
                     </div>
-                    <div class="o_sidebar_toggler d-none d-md-flex d-print-none align-items-center border-bottom pe-3">
+                    <div class="o_sidebar_toggler w-100 d-none d-md-flex d-print-none align-items-center border-bottom pe-3">
                         <button class="btn btn-light oi oi-panel-right collapsed ms-2 lh-base" t-on-click="toggleSideBar"/>
                     </div>
                     <MobileFilterPanel t-if="env.isSmall" t-props="mobileFilterPanelProps" />
                     <div class="o_calendar_wrapper d-flex overflow-hidden">
                         <t t-if="showCalendar" t-component="props.Renderer" t-props="rendererProps"/>
-                        <div t-if="showSideBar" class="o_calendar_sidebar_container d-print-none position-relative w-100 w-md-auto bg-view overflow-x-hidden overflow-y-auto">
+                        <div  t-if="showSideBar and False" class="o_calendar_sidebar_container d-print-none position-relative w-100 w-md-auto bg-view overflow-x-hidden overflow-y-auto">
                             <div class="o_calendar_sidebar">
                                 <DatePicker t-if="!env.isSmall" t-props="datePickerProps" />
                                 <FilterPanel t-props="filterPanelProps" />
@@ -70,7 +70,6 @@
                         <SuperQuickPanel t-if="showSideBar"
                              t-props="superQuickPanelProps"
                         />
-
                     </div>
                 </div>
             </Layout>

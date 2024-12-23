@@ -1,47 +1,44 @@
-import { FieldRow } from "./calendar_create_panel_row";
+/** @odoo-module **/
+
 import { Component, useState } from "@odoo/owl";
+import { FieldRow } from "./calendar_create_panel_row";
 
 export class CalendarSuperQuickPanel extends Component {
     static template = "web.CalendarSuperQuickPanel";
     static components = { FieldRow };
     static props = {
-        fields: { type: Object }, // e.g. { 'employee_id': {...}, 'state': {...}, ... }
-        orm: {type: Object}, // needed so we can pass it down for many2one name_search
+        fields: { type: Object },
+        orm: { type: Object, optional: true },
+        model: { type: Object, optional: true },
         title: { type: String, optional: true },
-        onChange: { type: Function, optional: true },
-        model: {type: Object}
+        values: {type: Object}
     };
 
     setup() {
-        console.log(this.props)
         this.state = useState({ values: {} });
-    }
-
-    get sortedFieldNames() {
-        // simple alphabetical sort or some custom order
-        return Object.keys(this.props.fields).sort();
     }
 
     get panelTitle() {
         return this.props.title || "Super Quick Create";
     }
 
-    fieldRowProps(field){
+    fieldRowProps(fieldName) {
+        console.log(this.props.fields[fieldName])
         return {
-            fieldName: field,
-            fieldInfo: this.props.fields[field],
-            value: this.state.values[field],
-            onChange: this.onFieldValueChange,
+            fieldName,
+            fieldInfo: this.props.fields[fieldName],
+            value: this.state.values[fieldName],
+            onChange: this.onFieldValueChange.bind(this),
             orm: this.props.orm,
-            model: this.props.model
-        }
+            model: this.props.model,
+        };
     }
 
-    onFieldValueChange(fieldName, newVal) {
+    onFieldValueChange(fieldName, newVal, raw_value) {
+        console.log(raw_value)
         this.state.values[fieldName] = newVal;
-        console.log(this.state)
-        if (this.props.onChange) {
-            this.props.onChange({ [fieldName]: newVal }, this.state.values);
-        }
+        this.props.values.values[fieldName] = raw_value;
     }
+
+
 }

@@ -135,9 +135,8 @@
                 <filter name="group_start_date" string="Start Date" context="{'group_by': 'date_start'}"/>
                 <separator/>
                 <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
-                                <searchpanel view_types="calendar,list">
-                    <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
-                    <field name="employee_id" icon="fa-users"/>
+                <searchpanel view_types="calendar,list">
+                    <field name="employee_id" icon="fa-users" hierarchize="0" expand="1"/>
                 </searchpanel>
             </search>
         </field>

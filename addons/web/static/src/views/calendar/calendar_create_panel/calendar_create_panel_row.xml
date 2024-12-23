@@ -1,46 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="web.CalendarSuperQuickPanelFieldRow">
-        <div class="o_csqp_field mb-3">
-            <label class="o_csqp_label form-label fw-bold">
+
+    <t t-name="my_module.CalendarSuperQuickPanelFieldRow">
+        <div class="o_csqp_field mb-2">
+            <label class="o_csqp_label fw-bold">
                 <t t-esc="props.fieldInfo.string || props.fieldName"/>
             </label>
-
-            <!-- Decide what to render based on field type -->
-            <div t-if="props.fieldInfo.type === 'many2one'" class="o_csqp_input_wrapper">
-                <AutoComplete t-props="autoCompleteProps"/>
+            <div t-if="isMany2One" class="o_csqp_input_wrapper mt-1">
+                <Many2XAutocomplete t-props="many2XProps"/>
             </div>
 
-            <div t-elif="props.fieldInfo.type === 'boolean'" class="form-check o_csqp_input_wrapper">
+            <div t-elif="isBoolean" class="form-check o_csqp_input_wrapper mt-1">
                 <input type="checkbox"
                        class="form-check-input"
                        t-model.bool="props.value"
-                       t-on-change="onValueChange"
-                />
+                       t-att-placeholder="props.fieldInfo.attrs.placeholder"
+                       t-on-change="onInputChange"/>
             </div>
 
-            <div t-elif="props.fieldInfo.type === 'float'" class="o_csqp_input_wrapper">
+            <div t-elif="isFloat" class="o_csqp_input_wrapper mt-1">
                 <input type="number"
                        step="0.01"
                        class="form-control"
                        t-model.number="props.value"
-                       t-on-change="onValueChange"
-                />
+                       t-att-placeholder="props.fieldInfo.attrs.placeholder"
+                       t-on-change="onInputChange"/>
             </div>
 
-            <!-- fallback: treat as char -->
-            <div t-else="" class="o_csqp_input_wrapper">
+            <div t-elif="isInteger" class="o_csqp_input_wrapper mt-1">
+                <input type="number"
+                       step="1"
+                       class="form-control"
+                       t-model.number="props.value"
+                       t-att-placeholder="props.fieldInfo.attrs.placeholder"
+                       t-on-change="onInputChange"/>
+            </div>
+
+            <div t-else="" class="o_csqp_input_wrapper mt-1">
                 <input type="text"
                        class="form-control"
                        t-model="props.value"
-                       t-on-change="onValueChange"
-                />
+                       t-att-placeholder="props.fieldInfo.attrs.placeholder"
+                       t-on-change="onInputChange"/>
             </div>
         </div>
     </t>
 
-    <!-- AutoComplete option template if you want custom display -->
-    <t t-name="web.CalendarSuperQuickPanelAutoCompleteOption">
-        <span t-esc="option.label"/>
-    </t>
 </templates>
