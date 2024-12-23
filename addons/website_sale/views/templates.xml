@@ -1117,9 +1117,11 @@
                                             </div>
                                         </section>
                                     </div>
-                                    <t t-if="is_view_active('website_sale.product_tags')" t-call="website_sale.product_tags">
+                                    <div t-if="is_view_active('website_sale.product_tags')" t-call="website_sale.product_tags" class="mt-2">
                                         <t t-set="all_product_tags" t-value="product_variant.all_product_tag_ids"/>
-                                    </t>
+                                    </div>
+                                    <!-- TODO: remove me in master -->
+                                    <t t-if="is_view_active('website_sale.product_tags')" t-call="website_sale.product_tags" class="d-none"/>
                                 </div>
                             </form>
                             <p t-elif="not product.active" class="alert alert-warning">This product is no longer available.</p>
