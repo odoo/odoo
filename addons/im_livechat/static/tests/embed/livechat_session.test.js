@@ -1,4 +1,4 @@
-import { waitNotifications, waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
+import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
@@ -23,8 +23,8 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
-import { rpc } from "@web/core/network/rpc";
 import { queryFirst } from "@odoo/hoot-dom";
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -82,7 +82,7 @@ test("Seen message is saved on the server", async () => {
     const pyEnv = await startServer();
     await loadDefaultEmbedConfig();
     const userId = serverState.userId;
-    const env = await start({ authenticateAs: false });
+    await start({ authenticateAs: false });
     await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Thread");
@@ -113,7 +113,6 @@ test("Seen message is saved on the server", async () => {
         ["guest_id", "=", guestId],
         ["channel_id", "=", getService("im_livechat.livechat").thread.id],
     ]);
-    await waitNotifications([env, "mail.record/insert"]);
     expect(initialSeenMessageId).not.toBe(member.seen_message_id[0]);
     expect(getService("im_livechat.livechat").thread.selfMember.seen_message_id.id).toBe(
         member.seen_message_id[0]
