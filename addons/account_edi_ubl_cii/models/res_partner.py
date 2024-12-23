@@ -109,7 +109,7 @@ class ResPartner(models.Model):
             ('0142', "SECETI Object Identifiers - 0142"),
             ('0193', "UBL.BE party identifier - 0193"),
             ('0199', "Legal Entity Identifier (LEI) - 0199"),
-            ('0201', "Codice Univoco UnitÃ  Organizzativa iPA - 0201"),
+            ('0201', "Codice Univoco Unità Organizzativa iPA - 0201"),
             ('0202', "Indirizzo di Posta Elettronica Certificata - 0202"),
             ('0209', "GS1 identification keys - 0209"),
             ('0210', "Codice Fiscale - 0210"),
