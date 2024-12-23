@@ -20,13 +20,27 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     # -------------------------------------------------------------------------
     # HELPER METHODS
     # -------------------------------------------------------------------------
+    def _get_proxy_urls(self):
+        urls = super()._get_proxy_urls()
+        urls['peppol'] = {
+            'prod': 'https://peppol.api.odoo.com',
+            'test': 'https://peppol.test.odoo.com',
+            'demo': 'demo',
+        }
+        return urls
 
     @handle_demo
-    def _make_request(self, url, params=False):
-        # extends account_edi_proxy_client to update peppol_proxy_state
-        # of archived users
+    def _call_peppol_proxy(self, endpoint, params=None):
+        self.ensure_one()
+        if self.proxy_type != 'peppol':
+            raise UserError(_('EDI user should be of type Peppol'))
+
+        params = params or {}
         try:
-            result = super()._make_request(url, params)
+            response = self._make_request(
+                f"{self._get_server_url()}{endpoint}",
+                params=params,
+            )
         except AccountEdiProxyError as e:
             if (
                 e.code == 'no_such_user'
@@ -40,28 +54,6 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 # commit the above changes before raising below
                 if not modules.module.current_test:
                     self.env.cr.commit()
-            raise AccountEdiProxyError(e.code, e.message)
-        return result
-
-    def _get_proxy_urls(self):
-        urls = super()._get_proxy_urls()
-        urls['peppol'] = {
-            'prod': 'https://peppol.api.odoo.com',
-            'test': 'https://peppol.test.odoo.com',
-            'demo': 'demo',
-        }
-        return urls
-
-    def _call_peppol_proxy(self, endpoint, params=None):
-        self.ensure_one()
-
-        params = params or {}
-        try:
-            response = self._make_request(
-                f"{self._get_server_url()}{endpoint}",
-                params=params,
-            )
-        except AccountEdiProxyError as e:
             raise UserError(e.message)
 
         if 'error' in response:
