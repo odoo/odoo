@@ -183,6 +183,8 @@ class HrEmployee(models.Model):
     message_has_error_counter = fields.Integer(groups="hr.group_hr_user")
     message_attachment_count = fields.Integer(groups="hr.group_hr_user")
 
+    test = fields.Char()
+
     _barcode_uniq = models.Constraint(
         'unique (barcode)',
         'The Badge ID must be unique, this one is already assigned to another employee.',
