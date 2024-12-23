@@ -210,9 +210,54 @@
             <field name="country_id" ref="base.cl"/>
         </record>
 
+        <!-- Account Tags for the refactored F29 report -->
+
+        <record id="account_tag_f29_020" model="account.account.tag">
+            <field name="name">(020) Exports</field>
+            <field name="name@es_419">(020) Exportaciones</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="account_tag_f29_142" model="account.account.tag">
+            <field name="name">(142) Sales of exempt services</field>
+            <field name="name@es_419">(142) Venta de servicios exentos</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="account_tag_f29_077" model="account.account.tag">
+            <field name="name">(077) Remaining Fiscal Credit</field>
+            <field name="name@es_419">(077) Remanente Crédito Fiscal</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="account_tag_f29_048" model="account.account.tag">
+            <field name="name">(048) Unique Workers' Tax</field>
+            <field name="name@es_419">(048) Impuesto único a los trabajadores</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="account_tag_f29_062" model="account.account.tag">
+            <field name="name">(062) Provisional Monthly Payment (PPM)</field>
+            <field name="name@es_419">(062) Pago Provisional Mensual (PPM)</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record id="account_tag_f29_755" model="account.account.tag">
+            <field name="name">(755) VAT Tax Postponement</field>
+            <field name="name@es_419">(755) Postergación del pago de IVA</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
         <record id="tag_cl_purchase_mnt_iec" model="account.account.tag">
             <!-- TotMntIEC -->
             <field name="name">Purchases - Specific Fuel Tax</field>
+            <field name="name@es_419">Compras - Impuestos específicos a los combustibles</field>
             <field name="applicability">taxes</field>
             <field name="country_id" ref="base.cl"/>
         </record>
