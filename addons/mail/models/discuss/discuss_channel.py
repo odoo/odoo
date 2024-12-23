@@ -539,9 +539,9 @@ class DiscussChannel(models.Model):
                     ),
                 },
             )
-            devices, private_key, public_key = self._get_web_push_parameters(members.partner_id.ids)
+            devices, private_key, public_key = self._web_push_get_partners_parameters(members.partner_id.ids)
             if devices:
-                self._push_web_notification(devices, private_key, public_key, payload={
+                self._web_push_send_notification(devices, private_key, public_key, payload={
                     "title": "",
                     "options": {
                         "data": {

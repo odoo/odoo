@@ -3707,30 +3707,28 @@ class MailThread(models.AbstractModel):
           directly. It lessens query count in some optimized use cases by avoiding
           access message content in db;
         """
-        partner_ids = self._extract_partner_ids_for_notifications(message, recipients_data, msg_vals=msg_vals)
-        devices, private_key, public_key = self._get_web_push_parameters(partner_ids)
+        partner_ids = self._notify_get_recipients_for_extra_notifications(message, recipients_data, msg_vals=msg_vals)
+        devices, private_key, public_key = self._web_push_get_partners_parameters(partner_ids)
         if not devices:
             return
-        payload = self._truncate_payload(self._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals))
-        self._push_web_notification(devices, private_key, public_key, payload=payload)
+        payload = self._web_push_truncate_payload(self._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals))
+        self._web_push_send_notification(devices, private_key, public_key, payload=payload)
 
-    def _get_web_push_parameters(self, partner_ids):
+    def _web_push_get_partners_parameters(self, partner_ids):
         """
         :param partner_ids: IDs of the res.partners
         :returns: the `mail.push.device` records, the vapid private key and the vapid public key
         """
+        devices_su = self.env["mail.push.device"].sudo()
         if not partner_ids:
-            return self.env["mail.push.device"].sudo(), None, None
-        ir_parameter_sudo = self.env["ir.config_parameter"].sudo()
-        vapid_private_key = ir_parameter_sudo.get_param("mail.web_push_vapid_private_key")
-        vapid_public_key = ir_parameter_sudo.get_param("mail.web_push_vapid_public_key")
+            return devices_su, None, None
+        vapid_private_key = self.env["ir.config_parameter"].sudo().get_param("mail.web_push_vapid_private_key")
+        vapid_public_key = self.env["ir.config_parameter"].sudo().get_param("mail.web_push_vapid_public_key")
         if not vapid_private_key or not vapid_public_key:
-            return self.env["mail.push.device"].sudo(), None, None
-        partner_devices_sudo = self.env["mail.push.device"].sudo()
-        devices = partner_devices_sudo.search([("partner_id", "in", partner_ids)])
-        return devices, vapid_private_key, vapid_public_key
+            return devices_su, None, None
+        return devices_su.search([("partner_id", "in", partner_ids)]), vapid_private_key, vapid_public_key
 
-    def _push_web_notification(self, devices, private_key, public_key, payload_by_lang=None, payload=None):
+    def _web_push_send_notification(self, devices, private_key, public_key, payload_by_lang=None, payload=None):
         """
         :param payload: JSON serializable dict following the notification api specs https://notifications.spec.whatwg.org/#api
         :param payload_by_lang a dict mapping payload by lang, either this or payload must be provided
@@ -4070,6 +4068,26 @@ class MailThread(models.AbstractModel):
             if group_data['recipients_data']
         ]
 
+    def _notify_get_recipients_for_extra_notifications(self, message, recipients_data, msg_vals=False):
+        """ Never send to author and to people outside Odoo (email) except comments """
+        notif_pids = []
+        notif_pids_notinbox = []
+        for recipient in (r for r in recipients_data if r['active'] and r['id']):
+            notif_pids.append(recipient['id'])
+            if recipient['notif'] != 'inbox':
+                notif_pids_notinbox.append(recipient['id'])
+        if not notif_pids:
+            return []
+
+        msg_vals = msg_vals or {}
+        msg_type = msg_vals.get('message_type') or message.sudo().message_type
+        author_ids = [msg_vals.get('author_id') or message.sudo().author_id.id]
+        if msg_type in {'comment', 'whatsapp_message'}:
+            return set(notif_pids) - set(author_ids)
+        elif msg_type in ('notification', 'user_notification', 'email'):
+            return (set(notif_pids) - set(author_ids) - set(notif_pids_notinbox))
+        return []
+
     def _notify_get_action_link(self, link_type, **kwargs):
         """ Prepare link to an action: view document, follow document, ... """
         params = {
@@ -4120,9 +4138,7 @@ class MailThread(models.AbstractModel):
     def _extract_model_and_id(self, html_content):
         """
         Return the model and the id when is present in a link (HTML)
-
         :param msg_vals: see :meth:`._notify_thread_by_web_push`
-
         :return: a dict empty if no matches and a dict with these keys if match : model and res_id
         """
         regex = r"<a.+model=(?P<model>[\w.]+).+res_id=(?P<id>\d+).+>[\s\w\/\\.]+<\/a>"
@@ -4131,30 +4147,6 @@ class MailThread(models.AbstractModel):
         for match in matches:
             return match['model'], match['id']
         return None, None
-
-    def _extract_partner_ids_for_notifications(self, message, recipients_data, msg_vals=None):
-        msg_vals = msg_vals or {}
-        notif_pids = []
-        no_inbox_pids = []
-        for recipient in recipients_data:
-            if recipient['active'] and recipient['id']:
-                notif_pids.append(recipient['id'])
-                if recipient['notif'] != 'inbox':
-                    no_inbox_pids.append(recipient['id'])
-
-        if not notif_pids:
-            return []
-
-        msg_sudo = message.sudo()
-        msg_type = msg_vals.get('message_type') or msg_sudo.message_type
-        author_ids = [msg_vals.get('author_id') or msg_sudo.author_id.id]
-        # never send to author and to people outside Odoo (email), except comments
-        pids = set()
-        if msg_type in {'comment', 'whatsapp_message'}:
-            pids = set(notif_pids) - set(author_ids)
-        elif msg_type in ('notification', 'user_notification', 'email'):
-            pids = (set(notif_pids) - set(author_ids) - set(no_inbox_pids))
-        return list(pids)
 
     @api.model
     def _generate_tracking_message(self, message, return_line='\n'):
@@ -4191,10 +4183,9 @@ class MailThread(models.AbstractModel):
             raise ValueError(_('At this point lang should be correctly set'))
         return self.env['ir.model']._get(model_name).display_name  # one query for display name
 
-    def _truncate_payload(self, payload):
-        """
-        Check the payload limit of 4096 bytes to avoid 413 error return code.
-        If the payload is too big, we trunc the body value.
+    @api.model
+    def _web_push_truncate_payload(self, payload):
+        """ Truncate body at 4096 bytes to avoid 413 error return code.
         :param dict payload: Current payload to trunc
         :return: The truncate payload;
         """

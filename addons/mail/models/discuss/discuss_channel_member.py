@@ -462,7 +462,7 @@ class DiscussChannelMember(models.Model):
                     ),
                 },
             )
-            devices, private_key, public_key = self.channel_id._get_web_push_parameters(members.partner_id.ids)
+            devices, private_key, public_key = self.channel_id._web_push_get_partners_parameters(members.partner_id.ids)
             if devices:
                 if self.channel_id.channel_type != 'chat':
                     icon = f"/web/image/discuss.channel/{self.channel_id.id}/avatar_128"
@@ -502,7 +502,7 @@ class DiscussChannelMember(models.Model):
                             ]
                         }
                     }
-                self.channel_id._push_web_notification(devices, private_key, public_key, payload_by_lang=payload_by_lang)
+                self.channel_id._web_push_send_notification(devices, private_key, public_key, payload_by_lang=payload_by_lang)
         return members
 
     def _mark_as_read(self, last_message_id, sync=False):
