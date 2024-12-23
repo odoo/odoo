@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_report" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.mr"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_non_taxables" model="account.report.column">
+                <field name="name">Non-Taxables</field>
+                <field name="expression_label">non_taxables</field>
+            </record>
+            <record id="tax_report_tax_0" model="account.report.column">
+                <field name="name">0%</field>
+                <field name="expression_label">tax_0</field>
+            </record>
+            <record id="tax_report_tax_16" model="account.report.column">
+                <field name="name">16%</field>
+                <field name="expression_label">tax_16</field>
+            </record>
+            <record id="tax_report_tax_18" model="account.report.column">
+                <field name="name">18%</field>
+                <field name="expression_label">tax_18</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_vat_base" model="account.report.line">
+                <field name="name">Calculation of VAT base</field>
+                <field name="code">mr_vat_base</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_base_completed_operations" model="account.report.line">
+                        <field name="name">Completed Operations</field>
+                        <field name="children_ids">
+                            <record id="tax_report_base_sales" model="account.report.line">
+                                <field name="name">Sales</field>
+                                <field name="code">mr_vat_base_sale</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_base_sales_non_taxable" model="account.report.expression">
+                                        <field name="label">non_taxables</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable</field>
+                                    </record>
+                                    <record id="tax_report_base_sales_16" model="account.report.expression">
+                                        <field name="label">tax_16</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">S_16 (base)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_base_services" model="account.report.line">
+                                <field name="name">Services</field>
+                                <field name="code">mr_vat_base_services</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_base_services_non_taxable" model="account.report.expression">
+                                        <field name="label">non_taxables</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable</field>
+                                    </record>
+                                    <record id="tax_report_base_services_16" model="account.report.expression">
+                                        <field name="label">tax_16</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">S_S_16 (base)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_base_telephony" model="account.report.line">
+                                <field name="name">Telephony</field>
+                                <field name="code">mr_vat_base_telephony</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_base_telephony_non_taxable" model="account.report.expression">
+                                        <field name="label">non_taxables</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable</field>
+                                    </record>
+                                    <record id="tax_report_base_telephony_18" model="account.report.expression">
+                                        <field name="label">tax_18</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">S_18 (base)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_base_exports" model="account.report.line">
+                                <field name="name">Exports</field>
+                                <field name="code">mr_vat_base_exports</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_base_exports_non_taxable" model="account.report.expression">
+                                        <field name="label">non_taxables</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable</field>
+                                    </record>
+                                    <record id="tax_report_base_exports_0" model="account.report.expression">
+                                        <field name="label">tax_0</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">EXP_0</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_base_totals" model="account.report.line">
+                                <field name="name">Totals</field>
+                                <field name="code">mr_vat_base_totals</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_base_totals_non_taxable" model="account.report.expression">
+                                        <field name="label">non_taxables</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">mr_vat_base_sale.non_taxables + mr_vat_base_services.non_taxables + mr_vat_base_telephony.non_taxables + mr_vat_base_exports.non_taxables</field>
+                                    </record>
+                                    <record id="tax_report_base_totals_0" model="account.report.expression">
+                                        <field name="label">tax_0</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">mr_vat_base_exports.tax_0</field>
+                                    </record>
+                                    <record id="tax_report_base_totals_16" model="account.report.expression">
+                                        <field name="label">tax_16</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">mr_vat_base_sale.tax_16 + mr_vat_base_services.tax_16</field>
+                                    </record>
+                                    <record id="tax_report_base_totals_18" model="account.report.expression">
+                                        <field name="label">tax_18</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">mr_vat_base_telephony.tax_18</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_base_total_no_vat" model="account.report.line">
+                        <field name="name">Total turnover excluding VAT</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_base_total_no_vat_expr" model="account.report.expression">
+                                <field name="label">tax_18</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mr_vat_base_totals.non_taxables + mr_vat_base_totals.tax_0 + mr_vat_base_totals.tax_16 + mr_vat_base_totals.tax_18</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_vat" model="account.report.line">
+                <field name="name">Gross VAT calculation</field>
+                <field name="code">mr_vat</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_vat_gross" model="account.report.line">
+                        <field name="name">Gross VAT</field>
+                        <field name="code">mr_vat_gross</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_gross_16" model="account.report.expression">
+                                <field name="label">tax_16</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">S_16 (tax)</field>
+                            </record>
+                            <record id="tax_report_vat_gross_18" model="account.report.expression">
+                                <field name="label">tax_18</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">S_18 (tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_deducted" model="account.report.line">
+                        <field name="name">VAT previously deducted (to be justified)</field>
+                        <field name="code">mr_vat_deducted</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_deducted_16" model="account.report.expression">
+                                <field name="label">tax_16</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="tax_report_vat_deducted_18" model="account.report.expression">
+                                <field name="label">tax_18</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_total_gross" model="account.report.line">
+                        <field name="name">Total gross VAT (line 7 + 8)</field>
+                        <field name="code">mr_vat_total</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_total_gross_18" model="account.report.expression">
+                                <field name="label">tax_18</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mr_vat_gross.tax_18 + mr_vat_gross.tax_16 + mr_vat_deducted.tax_18 + mr_vat_deducted.tax_16</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_deductions" model="account.report.line">
+                <field name="name">Deductions</field>
+                <field name="code">mr_deductions</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_deductions_prev_month" model="account.report.line">
+                        <field name="name">Credit carried forward from previous month</field>
+                        <field name="code">mr_deductions_prev_month</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_deductions_prev_month_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_tax_period</field>
+                            </record>
+                            <record id="tax_report_deductions_prev_month_expr" model="account.report.expression">
+                                <field name="label">tax_18</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mr_deductions_prev_month._applied_carryover_balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_deductions_vat_goods" model="account.report.line">
+                        <field name="name">VAT on goods (other than fixed assets) and services</field>
+                        <field name="code">mr_deductions_vat_goods</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_deductions_vat_goods_expr" model="account.report.expression">
+                                <field name="label">tax_18</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P_DET (tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_deductions_vat_assets" model="account.report.line">
+                        <field name="name">VAT on fixed assets</field>
+                        <field name="code">mr_deductions_vat_assets</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_deductions_vat_assets_expr" model="account.report.expression">
+                                <field name="label">tax_18</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P_ASSET_DET (tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_deductions_vat_other" model="account.report.line">
+                        <field name="name">Other deductions to be justified</field>
+                        <field name="code">mr_deductions_vat_other</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_deductions_vat_other_expr" model="account.report.expression">
+                                <field name="label">tax_18</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">P_OTHER_DET (tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_deductions_total" model="account.report.line">
+                        <field name="name">Deductible VAT (lines 10 to 13)</field>
+                        <field name="code">mr_deductions_total</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_deductions_total_expr" model="account.report.expression">
+                                <field name="label">tax_18</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mr_deductions_vat_goods.tax_18 + mr_deductions_vat_assets.tax_18 + mr_deductions_vat_other.tax_18</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_vat_net" model="account.report.line">
+                <field name="name">Calculation of net VAT</field>
+                <field name="code">mr_vat_net</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_vat_net_gross" model="account.report.line">
+                        <field name="name">Total gross VAT (line 9)</field>
+                        <field name="code">mr_vat_net_gross</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_net_gross_expr" model="account.report.expression">
+                                <field name="label">tax_18</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mr_vat_total.tax_18</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_net_detuctable" model="account.report.line">
+                        <field name="name">Deductible VAT (line 14)</field>
+                        <field name="code">mr_vat_net_deductable</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_net_deductable_expr" model="account.report.expression">
+                                <field name="label">tax_18</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mr_deductions_total.tax_18</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_net_total" model="account.report.line">
+                        <field name="name">Net VAT payable (line 15 - line 16)</field>
+                        <field name="code">mr_vat_net_total</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_net_total_expr" model="account.report.expression">
+                                <field name="label">tax_18</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mr_vat_net_gross.tax_18 - mr_vat_net_deductable.tax_18</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_vat_net_carry_forward" model="account.report.line">
+                        <field name="name">Credit to be carried forward (line 16 - line 15)</field>
+                        <field name="code">mr_vat_net_carry_forward</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_vat_net_carry_forward_expr" model="account.report.expression">
+                                <field name="label">tax_18</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">mr_vat_net_deductable.tax_18 - mr_vat_net_gross.tax_18</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>
