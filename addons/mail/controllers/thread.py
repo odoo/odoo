@@ -1,5 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from datetime import datetime
 from markupsafe import Markup
 from werkzeug.exceptions import NotFound
@@ -14,9 +12,26 @@ from odoo.addons.mail.tools.discuss import Store
 
 class ThreadController(http.Controller):
 
+    # access helpers
+    # ------------------------------------------------------------
+
+    @classmethod
+    def _get_thread_with_access(cls, thread_model, thread_id, mode="read", **kwargs):
+        """ Simplified getter that filters access params only, making model methods
+        using strong parameters. """
+        return request.env[thread_model]._get_thread_with_access(
+            int(thread_id), mode=mode, **{
+                key: value for key, value in kwargs.items()
+                if key in request.env[thread_model]._get_allowed_access_params()
+            },
+        )
+
+    # main routes
+    # ------------------------------------------------------------
+
     @http.route("/mail/thread/data", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     def mail_thread_data(self, thread_model, thread_id, request_list, **kwargs):
-        thread = request.env[thread_model]._get_thread_with_access(thread_id, **kwargs)
+        thread = self._get_thread_with_access(thread_model, thread_id, **kwargs)
         if not thread:
             return Store(
                 request.env[thread_model].browse(thread_id),
@@ -133,12 +148,11 @@ class ThreadController(http.Controller):
                 'last_used': datetime.now(),
                 'ids': canned_response_ids,
             })
-        thread = request.env[thread_model]._get_thread_with_access(
-            thread_id, mode=request.env[thread_model]._mail_post_access, **kwargs
-        )
+        # TDE todo: should rely on '_get_mail_message_access'
+        thread = self._get_thread_with_access(thread_model, thread_id, mode=request.env[thread_model]._mail_post_access, **kwargs)
         if not thread:
             raise NotFound()
-        if not request.env[thread_model]._get_thread_with_access(thread_id, "write"):
+        if not self._get_thread_with_access(thread_model, thread_id, mode="write"):
             thread.env.context = frozendict(
                 thread.env.context, mail_create_nosubscribe=True, mail_post_autofollow=False
             )

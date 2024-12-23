@@ -4,6 +4,7 @@ from werkzeug.exceptions import NotFound, Forbidden
 
 from odoo import http
 from odoo.http import request
+from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.portal.controllers.portal_thread import PortalChatter
 from odoo.tools import plaintext2html, html2plaintext
 
@@ -30,13 +31,12 @@ class SlidesPortalChatter(PortalChatter):
 
         self._portal_post_check_attachments(attachment_ids, post.get('attachment_tokens', []))
 
-        pid = int(post['pid']) if post.get('pid') else False
-        channel = request.env["slide.channel"]._get_thread_with_access(
-            thread_id,
-            request.env["slide.channel"]._mail_post_access,
-            token=post.get("token"),
-            hash=post.get("hash"),
-            pid=pid,
+        channel = ThreadController._get_thread_with_access(
+            "slide.channel", thread_id,
+            # TDE todo: should rely on '_get_mail_message_access'
+            mode=request.env["slide.channel"]._mail_post_access,
+            pid=int(post.pop('pid', None)) or False,
+            **post,
         )
         if not channel:
             raise Forbidden()
