@@ -108,7 +108,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'duration': 18,
         })
         partner_model = self.env.ref('base.model_res_partner')
-        with self.assertQueryCount(__system__=86):
+        with self.assertQueryCount(__system__=82):
             event = self.env['calendar.event'].create({
                 'name': "Event",
                 'start': datetime(2020, 1, 15, 8, 0),
@@ -125,7 +125,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
                 'res_id': partner.id,
             })
 
-        with self.assertQueryCount(__system__=38):
+        with self.assertQueryCount(__system__=27):
             event.unlink()
 
     def test_event_without_user(self):
