@@ -225,7 +225,6 @@ export class DiscussChannelMember extends models.ServerModel {
         if (!member) {
             return;
         }
-        DiscussChannelMember._set_new_message_separator([member.id], message_id + 1);
         DiscussChannelMember.write([member.id], {
             fetched_message_id: message_id,
             seen_message_id: message_id,
