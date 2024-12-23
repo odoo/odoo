@@ -80,7 +80,7 @@ export class WifiDialog extends Component {
     static template = xml`
         <LoadingFullScreen t-if="this.state.waitRestart">
             <t t-set-slot="body">
-                Processing your request please wait...
+                Updating Wi-Fi configuration, please wait...
             </t>
         </LoadingFullScreen>
 
