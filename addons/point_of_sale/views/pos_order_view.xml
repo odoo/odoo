@@ -18,6 +18,7 @@
                 <sheet>
                 <field name="failed_pickings" invisible="1"/>
                 <div class="oe_button_box" name="button_box">
+                    <field name="currency_id" invisible="1" />
                     <button name="action_stock_picking"
                         type="object"
                         class="oe_stat_button"
@@ -70,13 +71,13 @@
                                     <main class="col">
                                         <div class="d-flex">
                                             <field name="full_product_name" class="fw-bolder"/>
-                                            <field name="price_subtotal_incl" widget="monetary" class="ms-auto me-3"/>
+                                            <field name="price_subtotal_incl" class="ms-auto me-3"/>
                                         </div>
                                         <div class="text-muted">
                                             Quantity: <field name="qty"/> <field name="product_uom_id" groups="uom.group_uom"/>
                                         </div>
                                         <div class="text-muted">
-                                            Unit price: <field name="price_unit" widget="monetary"/>
+                                            Unit price: <field name="price_unit"/>
                                         </div>
                                     </main>
                                 </t>
@@ -90,16 +91,16 @@
                                 <field name="qty"/>
                                 <field name="customer_note" optional="hide"/>
                                 <field name="product_uom_id" groups="uom.group_uom"/>
-                                <field name="price_unit" widget="monetary"/>
+                                <field name="price_unit"/>
                                 <field name="is_total_cost_computed" column_invisible="True"/>
-                                <field name="total_cost" invisible="not is_total_cost_computed" optional="hide" widget="monetary"/>
-                                <field name="margin" invisible="not is_total_cost_computed" optional="hide" widget="monetary"/>
+                                <field name="total_cost" invisible="not is_total_cost_computed" optional="hide"/>
+                                <field name="margin" invisible="not is_total_cost_computed" optional="hide"/>
                                 <field name="margin_percent" invisible="not is_total_cost_computed" optional="hide" widget="percentage"/>
                                 <field name="discount" width="50px" string="Disc.%"/>
                                 <field name="tax_ids_after_fiscal_position" widget="many2many_tax_tags" string="Taxes"/>
                                 <field name="tax_ids" widget="many2many_tax_tags" column_invisible="True"/>
-                                <field name="price_subtotal" widget="monetary" force_save="1"/>
-                                <field name="price_subtotal_incl" widget="monetary" force_save="1"/>
+                                <field name="price_subtotal" force_save="1"/>
+                                <field name="price_subtotal_incl" force_save="1"/>
                                 <field name="currency_id" column_invisible="True"/>
                                 <field name="refunded_qty" optional="hide" />
                             </list>
@@ -108,9 +109,9 @@
                                     <field name="product_id" />
                                     <field name="qty"/>
                                     <field name="discount"/>
-                                    <field name="price_unit" widget="monetary"/>
-                                    <field name="price_subtotal" invisible="1" widget="monetary" force_save="1"/>
-                                    <field name="price_subtotal_incl" invisible="1" widget="monetary" force_save="1"/>
+                                    <field name="price_unit"/>
+                                    <field name="price_subtotal" invisible="1" force_save="1"/>
+                                    <field name="price_subtotal_incl" invisible="1" force_save="1"/>
                                     <field name="tax_ids_after_fiscal_position" widget="many2many_tax_tags" string="Taxes"/>
                                     <field name="tax_ids" widget="many2many_tax_tags" invisible="1"/>
                                     <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
@@ -121,19 +122,13 @@
                             </form>
                         </field>
                         <group class="oe_subtotal_footer" colspan="2" name="order_total">
-                            <field name="amount_tax"
-                                   force_save="1"
-                                   widget="monetary"/>
-                            <field name="amount_total"
-                                   force_save="1"
-                                   class="h3"
-                                   widget="monetary"/>
+                            <field name="amount_tax" force_save="1"/>
+                            <field name="amount_total" force_save="1" class="h3"/>
                             <div class="oe_inline o_td_label">
                                 <label class="o_form_label_readonly" for="amount_paid" string="Total Paid (with rounding)"/>
                             </div>
                             <field name="amount_paid"
                                 nolabel="1"
-                                widget="monetary"
                                 class="h3"
                                 invisible="amount_paid == 'amount_total'"
                                 readonly="state != 'draft'"/>
@@ -164,9 +159,9 @@
                             </list>
                         </field>
                         <group class="oe_subtotal_footer" colspan="2" name="order_total">
-                            <field name="amount_total" class="h3" widget="monetary"/>
-                            <field name="amount_paid" widget="monetary" class="h3" readonly="1" />
-                            <field name="amount_difference" widget="monetary" force_save="1" />
+                            <field name="amount_total" class="h3"/>
+                            <field name="amount_paid" class="h3" readonly="1" />
+                            <field name="amount_difference" force_save="1" />
                         </group>
                     </page>
                     <page name="extra" string="Extra Info">
@@ -227,7 +222,7 @@
                             <span t-else="">
                                 <field name="name" class="fw-bolder me-2"/>
                             </span>
-                            <field name="amount_total" widget="monetary" class="fw-bolder ms-auto flex-shrink-0"/>
+                            <field name="amount_total" class="fw-bolder ms-auto flex-shrink-0"/>
                         </div>
                         <field name="pos_reference" />
                         <footer class="flex-wrap">
@@ -300,7 +295,7 @@
                 <field name="tracking_number" optional="hide"/>
                 <field name="partner_id"/>
                 <field name="user_id" widget="many2one_avatar_user" readonly="account_move or state == 'done'"/>
-                <field name="amount_total" sum="Amount total" widget="monetary" decoration-bf="1"/>
+                <field name="amount_total" sum="Amount total" decoration-bf="1"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state not in ('draft','cancel')"/>
                 <field name="invoice_status" widget="badge" decoration-success="invoice_status == 'invoiced'" decoration-info="invoice_status == 'to_invoice'"/>
                 <field name="is_edited" readonly="1" optional="hide"/>
@@ -339,9 +334,9 @@
                 <field name="product_id" readonly="1"/>
                 <field name="qty" readonly="1" sum="Total qty"/>
                 <field name="discount" readonly="1"/>
-                <field name="price_unit" readonly="1" widget="monetary"/>
-                <field name="price_subtotal" readonly="1" sum="Sum of subtotals" widget="monetary"/>
-                <field name="price_subtotal_incl" readonly="1" sum="Sum of subtotals" widget="monetary"/>
+                <field name="price_unit" readonly="1"/>
+                <field name="price_subtotal" readonly="1" sum="Sum of subtotals"/>
+                <field name="price_subtotal_incl" readonly="1" sum="Sum of subtotals"/>
                 <field name="create_date" readonly="1"/>
                 <field name="currency_id" column_invisible="True"/>
             </list>
@@ -357,7 +352,7 @@
                     <field name="product_id" />
                     <field name="qty" />
                     <field name="discount"/>
-                    <field name="price_unit" widget="monetary"/>
+                    <field name="price_unit"/>
                     <field name="create_date" />
                     <field name="currency_id"/>
                 </group>
@@ -396,7 +391,7 @@
                 <field name="create_date" />
                 <field name="product_id" />
                 <field name="qty" />
-                <field name="price_unit" widget="monetary"/>
+                <field name="price_unit"/>
                 <field name="currency_id" column_invisible="True"/>
             </list>
         </field>

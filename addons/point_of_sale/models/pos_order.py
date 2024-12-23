@@ -301,8 +301,8 @@ class PosOrder(models.Model):
     partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index='btree_not_null')
     sequence_number = fields.Integer(string='Sequence Number', help='A session-unique sequence number for the order. Negative if generated from the client', default=1)
     session_id = fields.Many2one('pos.session', string='Session', index=True, domain="[('state', '=', 'opened')]")
-    config_id = fields.Many2one('pos.config', compute='_compute_order_config_id', string="Point of Sale", readonly=False, store=True)
-    currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency")
+    config_id = fields.Many2one('pos.config', compute='_compute_order_config_id', string="Point of Sale", readonly=False, store=True, precompute=True)
+    currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency", store=True, precompute=True)
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, digits=0, readonly=True,
         help='The rate of the currency to the currency of rate applicable at the date of the order')
 
@@ -1428,13 +1428,13 @@ class PosOrderLine(models.Model):
         comodel_name='product.attribute.custom.value', inverse_name='pos_order_line_id',
         string="Custom Values",
         store=True, readonly=False)
-    price_unit = fields.Float(string='Unit Price', digits=0)
+    price_unit = fields.Monetary(string='Unit Price')
     qty = fields.Float('Quantity', digits='Product Unit', default=1)
     price_subtotal = fields.Monetary(string='Tax Excl.',
         readonly=True, required=True)
     price_subtotal_incl = fields.Monetary(string='Tax Incl.',
         readonly=True, required=True)
-    price_extra = fields.Float(string="Price extra")
+    price_extra = fields.Monetary(string="Price extra")
     price_type = fields.Selection([
         ('original', 'Original'),
         ('manual', 'Manual'),
@@ -1442,7 +1442,7 @@ class PosOrderLine(models.Model):
     ], string='Price Type', default='original')
     margin = fields.Monetary(string="Margin", compute='_compute_margin')
     margin_percent = fields.Float(string="Margin (%)", compute='_compute_margin', digits=(12, 4))
-    total_cost = fields.Float(string='Total cost', digits='Product Price', readonly=True)
+    total_cost = fields.Monetary(string='Total cost', readonly=True)
     is_total_cost_computed = fields.Boolean(help="Allows to know if the total cost has already been computed or not")
     discount = fields.Float(string='Discount (%)', digits=0, default=0.0)
     order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade', required=True, index=True)
@@ -1450,7 +1450,7 @@ class PosOrderLine(models.Model):
     tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes to Apply')
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
     product_uom_id = fields.Many2one('uom.uom', string='Product Unit', related='product_id.uom_id')
-    currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
+    currency_id = fields.Many2one('res.currency', related='order_id.currency_id', store=True, precompute=True)
     full_product_name = fields.Char('Full Product Name')
     customer_note = fields.Char('Customer Note')
     refund_orderline_ids = fields.One2many('pos.order.line', 'refunded_orderline_id', 'Refund Order Lines', help='Orderlines in this field are the lines that refunded this orderline.')
