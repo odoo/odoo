@@ -55,12 +55,15 @@ export class Discuss extends Component {
         this.messageToReplyTo = useMessageToReplyTo();
         this.contentRef = useRef("content");
         this.root = useRef("root");
-        this.state = useState({ jumpThreadPresent: 0 });
+        this.state = useState({
+            jumpThreadPresent: 0,
+            hideWhileInCall: false, // 't' for conversation/thread, 'c' for call view
+        });
         this.orm = useService("orm");
         this.effect = useService("effect");
         this.ui = useState(useService("ui"));
         useSubEnv({
-            inDiscussApp: true,
+            inDiscussApp: this.state,
             messageHighlight: this.messageHighlight,
         });
         this.notification = useService("notification");

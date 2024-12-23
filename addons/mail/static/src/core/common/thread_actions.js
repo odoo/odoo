@@ -84,6 +84,49 @@ threadActionsRegistry
             });
         },
         toggle: true,
+    })
+    .add("thread-call-layout", {
+        component: SearchMessagesPanel,
+        condition(component) {
+            return component.env.inDiscussApp && component.thread?.allowCalls;
+        },
+        icon: "oi oi-fw oi-view-kanban",
+        iconLarge: "oi oi-fw fa-lg oi-view-kanban",
+        name: _t("Conversation & Call Layout"),
+        sequence: 30,
+        sequenceGroup: 40,
+        open(component) {
+            component.store.discuss.callThreadLayout =
+                component.store.discuss.callThreadLayout === "h" ? "v" : "h";
+        },
+    })
+    .add("show-conversation-while-in-call", {
+        component: SearchMessagesPanel,
+        condition(component) {
+            return component.env.inDiscussApp && component.state.hideWhileInCall === "t";
+        },
+        icon: "fa fa-fw fa-comment",
+        iconLarge: "fa fa-fw fa-lg fa-comment",
+        name: _t("Show conversation"),
+        sequence: 20,
+        sequenceGroup: 40,
+        open(component) {
+            component.state.hideWhileInCall = false;
+        },
+    })
+    .add("show-call-while-in-call", {
+        component: SearchMessagesPanel,
+        condition(component) {
+            return component.env.inDiscussApp && component.state.hideWhileInCall === "c";
+        },
+        icon: "fa fa-fw fa-photo",
+        iconLarge: "fa fa-fw fa-lg fa-photo",
+        name: _t("Show call view"),
+        sequence: 10,
+        sequenceGroup: 40,
+        open(component) {
+            component.state.hideWhileInCall = false;
+        },
     });
 
 function transformAction(component, id, action) {

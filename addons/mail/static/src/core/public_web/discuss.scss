@@ -8,6 +8,14 @@
     background-color: var(--mail-Discuss-coreBgColor, $body-bg);
 }
 
+.o-mail-Discuss-threadContainer.o-inDiscussAppHorizontalLayout {
+    flex-basis: 33%;
+}
+
+.o-mail-Discuss-threadContainerHeader {
+    background-color: var(--mail-Discuss-coreBgColor, $body-bg);
+}
+
 .o-mail-Discuss-selfAvatar {
     height: $o-mail-Avatar-sizeSmall;
     width: $o-mail-Avatar-sizeSmall;
@@ -24,7 +32,11 @@
 
 .o-mail-Discuss-headerActions button {
     --btn-disabled-opacity: 0.25;
+    opacity: 75%;
 
+    &:hover, &.o-isActive {
+        opacity: 100%;
+    }
     &:not(.o-isActive):hover {
         background-color: $gray-200;
     }
@@ -32,6 +44,7 @@
         background-color: $gray-300;
         outline: $border-width solid $gray-500;
         outline-offset: -$border-width;
+        opacity: 100%;
     }
     &.o-isActive:hover {
         background-color: $gray-300;
@@ -45,6 +58,10 @@
 
 .o-mail-Discuss-headerCountry {
     width: 24px;
+}
+
+.o-mail-Discuss-panelContainer {
+    --border-opacity: .5;
 }
 
 .o-mail-Discuss-threadAvatar {

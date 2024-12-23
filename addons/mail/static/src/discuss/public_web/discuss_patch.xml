@@ -2,7 +2,16 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.Discuss" t-inherit-mode="extension">
         <xpath expr="//Thread" position="before">
-            <Call t-if="thread.rtcSessions.length > 0" thread="thread"/>
+            <Call t-if="state.hideWhileInCall !== 'c' and thread.rtcSessions.length > 0 and !(store.discuss.callThreadLayout === 'h' or state.hideWhileInCall === 't')" thread="thread"/>
+        </xpath>
+        <xpath expr="//*[@name='core-content']" position="replace">
+            <t t-if="state.hideWhileInCall !== 'c' and thread?.rtcSessions.length > 0 and (store.discuss.callThreadLayout === 'h' or state.hideWhileInCall === 't')">
+                <div class="d-flex w-100">
+                    <Call thread="thread"/>
+                    <t>$0</t>
+                </div>
+            </t>
+            <t t-else="">$0</t>
         </xpath>
     </t>
 </templates>

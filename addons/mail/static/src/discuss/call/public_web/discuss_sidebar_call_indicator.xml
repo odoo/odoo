@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebarCallIndicator">
-        <div t-if="props.thread.rtcSessions.length > 0" class="fa fa-volume-up" title="Ongoing call" t-att-class="{ 'text-danger': props.thread.eq(rtc.state.channel), 'mx-1': !store.discuss.isSidebarCompact }"/>
+        <div t-if="props.thread.rtcSessions.length > 0" title="Ongoing call" t-ref="root" class="o-mail-DiscussSidebarCallIndicator o-py-0_5 fa-fw rounded border" t-att-class="{
+            'fa fa-volume-up border-transparent': !hover.isHover or store.discuss.isSidebarCompact,
+            'o-hover': hover.isHover and !store.discuss.isSidebarCompact,
+            'fa fa-sign-in text-success border-success': hover.isHover and !props.thread.eq(rtc.state.channel) and !store.discuss.isSidebarCompact,
+            'fa fa-sign-out': hover.isHover and props.thread.eq(rtc.state.channel) and !store.discuss.isSidebarCompact,
+            'text-danger border-danger': props.thread.eq(rtc.state.channel),
+            'me-2': !store.discuss.isSidebarCompact,
+        }" t-on-click="onClick"/>
     </t>
 </templates>

@@ -3,8 +3,17 @@
 
     <t t-name="discuss.Call">
         <PttAdBanner/>
-        <div class="o-discuss-Call user-select-none d-flex" t-att-class="{'o-fullscreen fixed-top vw-100 vh-100': state.isFullscreen, 'o-compact': props.compact,'o-minimized': minimized, 'position-relative': !state.isFullscreen }">
-            <div class="o-discuss-Call-main d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto" t-on-mouseleave="onMouseleaveMain">
+        <div class="o-discuss-Call user-select-none d-flex position-relative" t-att-class="{
+            'o-fullscreen fixed-top vw-100 vh-100': state.isFullscreen,
+            'o-compact': props.compact,
+            'o-minimized': minimized,
+            'position-relative': !state.isFullscreen,
+            'flex-grow-1 o-inDiscussAppHorizontalLayout min-w-0': env.inDiscussApp and store.discuss.callThreadLayout === 'h',
+        }">
+            <t t-if="env.inDiscussApp">
+                <i class="oi oi-close opacity-25 opacity-100-hover cursor-pointer position-absolute top-0 end-0 z-1 mt-1 pt-2 p-1" title="Hide call view" t-on-click="() => this.env.inDiscussApp.hideWhileInCall = 'c'"/>
+            </t>
+            <div class="o-discuss-Call-main d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto" t-att-class="{ 'px-2 py-3': env.inDiscussApp and store.discuss.callThreadLayout === 'h' }" t-on-mouseleave="onMouseleaveMain">
                 <div
                     class="o-discuss-Call-mainCards d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
                     t-attf-style="--height:{{state.tileHeight}}px; --width:{{state.tileWidth}}px;"

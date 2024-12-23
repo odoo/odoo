@@ -89,19 +89,28 @@
             </div>
             <div class="o-mail-Discuss-main d-flex overflow-hidden flex-grow-1" t-ref="main">
                 <t t-if="ui.isSmall" t-call="mail.Discuss.loading"/>
-                <div class="o-mail-Discuss-core overflow-auto d-flex flex-grow-1" t-ref="core">
-                    <t t-if="thread">
-                        <div class="d-flex flex-column flex-grow-1">
-                            <t name="thread"><Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/></t>
-                            <Composer t-if="thread.model !== 'mail.box' or thread.eq(messageToReplyTo.thread)" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="messageToReplyTo?.message ? (messageToReplyTo.message.is_note ? 'note' : 'message') : undefined"/>
-                        </div>
-                        <div t-if="threadActions.activeAction?.componentCondition" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}" class="h-100 border-start flex-shrink-0">
-                            <t t-component="threadActions.activeAction.component" thread="thread" t-props="threadActions.activeAction.componentProps"/>
+                <div class="o-mail-Discuss-core overflow-auto d-flex flex-grow-1 w-100" t-ref="core">
+                    <t name="core-content">
+                        <t t-if="thread">
+                            <div t-if="!(rtc?.state.channel?.eq(thread) and thread.rtcSessions?.length > 0 and state.hideWhileInCall === 't')" class="o-mail-Discuss-threadContainer d-flex flex-column flex-grow-1" t-att-class="{ 'o-inDiscussAppHorizontalLayout': thread.rtcSessions.length > 0 and store.discuss.callThreadLayout === 'h' }">
+                                <t t-if="thread.rtcSessions.length > 0 and store.discuss.callThreadLayout === 'h'">
+                                    <div class="o-mail-Discuss-threadContainerHeader o-mail-ActionPanel-header position-sticky top-0 pt-2 pb-2 d-flex flex-column bg-inherit small px-2">
+                                        <div class="d-flex align-items-baseline gap-1">
+                                            <i class="text-muted opacity-50 fa fa-comment"/><p class="fw-bold text-uppercase m-0 text-muted opacity-50 flex-grow-1">Conversation</p><i class="oi oi-close opacity-25 opacity-100-hover cursor-pointer" title="Hide conversation" t-on-click="() => this.state.hideWhileInCall = 't'"/>
+                                        </div>
+                                    </div>
+                                </t>
+                                <t name="thread"><Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/></t>
+                                <Composer t-if="thread.model !== 'mail.box' or thread.eq(messageToReplyTo.thread)" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="messageToReplyTo?.message ? (messageToReplyTo.message.is_note ? 'note' : 'message') : undefined"/>
+                            </div>
+                            <div t-if="threadActions.activeAction?.componentCondition" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}" class="o-mail-Discuss-panelContainer h-100 border-start border-secondary flex-shrink-0">
+                                <t t-component="threadActions.activeAction.component" thread="thread" t-props="threadActions.activeAction.componentProps"/>
+                            </div>
+                        </t>
+                        <div t-elif="(!ui.isSmall or store.discuss.activeTab === 'main') and store.discuss.hasRestoredThread" class="d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
+                            <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
                         </div>
                     </t>
-                    <div t-elif="(!ui.isSmall or store.discuss.activeTab === 'main') and store.discuss.hasRestoredThread" class="d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
-                        <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
-                    </div>
                 </div>
             </div>
         </div>

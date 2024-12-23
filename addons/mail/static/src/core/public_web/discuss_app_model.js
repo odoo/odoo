@@ -46,6 +46,32 @@ export class DiscussApp extends Record {
     INSPECTOR_WIDTH = 300;
     /** @type {'main'|'channel'|'chat'|'livechat'} */
     activeTab = "main";
+    /**
+     * Layout of call and thread in discuss app.
+     * - 'v' (default): call view is above thread, aka 'vertical'.
+     * - 'h': call view is next to thread, aka 'horizontal'.
+     */
+    callThreadLayout = Record.attr("h", {
+        // 'h' for horizontal, 'v' for vertical
+        compute() {
+            return browser.localStorage.getItem(
+                "mail.user_setting.discuss_call_thread_layout_h"
+            ) !== "true"
+                ? "h"
+                : "v";
+        },
+        /** @this {import("models").DiscussApp} */
+        onUpdate() {
+            if (this.callThreadLayout === "v") {
+                browser.localStorage.removeItem("mail.user_setting.discuss_call_thread_layout_h");
+            } else {
+                browser.localStorage.setItem(
+                    "mail.user_setting.discuss_call_thread_layout_h",
+                    "true"
+                );
+            }
+        },
+    });
     searchTerm = "";
     isActive = false;
     isMemberPanelOpenByDefault = Record.attr(true, {
