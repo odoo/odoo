@@ -129,7 +129,10 @@ class StockLot(models.Model):
     @api.depends('product_id.company_id')
     def _compute_company_id(self):
         for lot in self:
-            lot.company_id = lot.product_id.company_id
+            if self.env.company in lot.product_id.company_id.all_child_ids and lot.product_id.company_id not in self.env.companies:
+                lot.company_id = self.env.company
+            else:
+                lot.company_id = lot.product_id.company_id
 
     @api.depends('name')
     def _compute_display_complete(self):
