@@ -574,6 +574,23 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 0)
         self.assertEqual(self.product1.value_svl, 0)
 
+    def test_rounding_svl_5(self):
+        self.product1.categ_id.property_cost_method = 'average'
+        self._make_in_move(self.product1, 10, unit_cost=16.83)
+        self._make_in_move(self.product1, 10, unit_cost=20)
+        self.assertEqual(self.product1.standard_price, 18.42)
+
+        self._make_out_move(self.product1, 10)
+        out_move = self._make_out_move(self.product1, 9)
+        self.assertEqual(out_move.stock_valuation_layer_ids[0].value, -165.73)
+
+        self.assertEqual(self.product1.value_svl, 18.42)
+        self.assertEqual(self.product1.quantity_svl, 1)
+
+        self._make_out_move(self.product1, 1)
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
+
     def test_return_delivery_2(self):
         self.product1.write({"standard_price": 1})
         move1 = self._make_out_move(self.product1, 10, create_picking=True, force_assign=True)
