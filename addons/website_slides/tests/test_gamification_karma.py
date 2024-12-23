@@ -147,7 +147,7 @@ class TestKarmaGain(common.SlidesCase):
             self.assertEqual(user_trackings[1].origin_ref, self.channel)
 
         # now, remove the membership in batch, on multiple users - karma should not move as we only archive membership
-        with self.assertQueryCount(10):
+        with self.assertQueryCount(8):
             (self.channel | self.channel_2)._remove_membership(users.partner_id.ids)
 
         for user in users:
