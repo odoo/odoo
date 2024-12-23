@@ -58,6 +58,8 @@ SQL_OPERATORS = {
     "=ilike": SQL(" ILIKE "),
     "not like": SQL(" NOT LIKE "),
     "not ilike": SQL(" NOT ILIKE "),
+    "not =like": SQL(" NOT LIKE "),
+    "not =ilike": SQL(" NOT ILIKE "),
 }
 
 
