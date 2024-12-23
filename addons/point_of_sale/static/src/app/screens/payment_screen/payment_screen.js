@@ -15,7 +15,7 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, useState, onMounted } from "@odoo/owl";
 import { Numpad, enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
-import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { handleRPCError } from "@point_of_sale/app/utils/error_handlers";
 import { sprintf } from "@web/core/utils/strings";
 import { serializeDateTime } from "@web/core/l10n/dates";
@@ -212,19 +212,37 @@ export class PaymentScreen extends Component {
         this.hardwareProxy.openCashbox();
     }
     async addTip() {
-        // click_tip
         const tip = this.currentOrder.getTip();
         const change = this.currentOrder.getChange();
         const value = tip === 0 && change > 0 ? change : tip;
-
-        this.dialog.add(NumberPopup, {
+        const newTip = await makeAwaitable(this.dialog, NumberPopup, {
             title: tip ? _t("Change Tip") : _t("Add Tip"),
             startingValue: this.env.utils.formatCurrency(value, false),
             formatDisplayedValue: (x) => `${this.pos.currency.symbol} ${x}`,
-            getPayload: async (num) => {
-                await this.pos.setTip(parseFloat(num ?? ""));
-            },
         });
+
+        if (newTip === undefined) {
+            return;
+        }
+
+        await this.pos.setTip(parseFloat(newTip ?? ""));
+        const pLine =
+            this.selectedPaymentLine &&
+            (!this.selectedPaymentLine.isElectronic() ||
+                this.selectedPaymentLine.getPaymentStatus() === "pending")
+                ? this.selectedPaymentLine
+                : false;
+
+        if (!pLine || newTip === tip) {
+            this.notification.add(
+                _t(
+                    "The tip has been added to the order. However,the selected payment line does not allow tips to be added."
+                )
+            );
+            return;
+        }
+
+        pLine.setAmount(pLine.getAmount() - (tip || 0) + parseFloat(newTip));
     }
     async toggleShippingDatePicker() {
         if (!this.currentOrder.getShippingDate()) {
