@@ -1800,6 +1800,7 @@
             <field name="context">{'journal_type':'general', 'search_default_posted':1}</field>
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
+            <field name="path">items</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note')), ('parent_state', '!=', 'cancel')]</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="view_mode">list,pivot,graph,kanban</field>
@@ -1810,6 +1811,7 @@
         <record id="action_move_journal_line" model="ir.actions.act_window">
             <field name="name">Journal Entries</field>
             <field name="res_model">account.move</field>
+            <field name="path">entries</field>
             <field name="view_mode">list,kanban,form,activity</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
@@ -1861,10 +1863,10 @@
             </field>
         </record>
 
-        <record id="action_move_out_refund_type" model="ir.actions.act_window">
+        <record id="action_move_out_refund_type_non_legacy" model="ir.actions.act_window">
             <field name="name">Credit Notes</field>
             <field name="res_model">account.move</field>
-            <field name="path">credit-notes</field>
+            <field name="path">customer-credit-notes</field>
             <field name="view_mode">list,kanban,form,activity</field>
             <field name="view_id" ref="view_out_credit_note_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
@@ -1922,6 +1924,7 @@
         <record id="action_move_in_refund_type" model="ir.actions.act_window">
             <field name="name">Refunds</field>
             <field name="res_model">account.move</field>
+            <field name="path">vendor-refunds</field>
             <field name="view_mode">list,kanban,form,activity</field>
             <field name="view_id" ref="view_in_invoice_refund_tree"/>
             <field name="search_view_id" ref="view_account_bill_filter"/>
@@ -1955,6 +1958,7 @@
         <record id="action_move_out_receipt_type" model="ir.actions.act_window">
             <field name="name">Receipts</field>
             <field name="res_model">account.move</field>
+            <field name="path">customer-receipts</field>
             <field name="view_mode">list,kanban,form,activity</field>
             <field name="view_id" ref="view_invoice_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
@@ -1973,6 +1977,7 @@
         <record id="action_move_in_receipt_type" model="ir.actions.act_window">
             <field name="name">Receipts</field>
             <field name="res_model">account.move</field>
+            <field name="path">vendor-receipts</field>
             <field name="view_mode">list,kanban,form,activity</field>
             <field name="view_id" ref="view_in_invoice_receipt_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
@@ -2039,6 +2044,26 @@ if records:
             <field name="state">code</field>
             <field name="code">
                 action = env.company._action_check_hash_integrity()
+            </field>
+        </record>
+
+        <!-- ============= LEGACY (kept to not break the previous action with their path ================-->
+        <record id="action_move_out_refund_type" model="ir.actions.act_window">
+            <field name="name">Credit Notes</field>
+            <field name="res_model">account.move</field>
+            <field name="path">credit-notes</field>
+            <field name="view_mode">list,kanban,form,activity</field>
+            <field name="view_id" ref="view_out_credit_note_tree"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="domain">[('move_type', 'in', ['out_invoice', 'out_refund'])]</field>
+            <field name="context">{'search_default_out_refund': 1, 'default_move_type': 'out_refund', 'display_account_trust': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a credit note
+              </p><p>
+                Note that the easiest way to create a credit note is to do it directly
+                from the customer invoice.
+              </p>
             </field>
         </record>
 
