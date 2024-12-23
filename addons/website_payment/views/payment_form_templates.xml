@@ -3,9 +3,9 @@
 
     <!-- Insert the donation form inside the payment form's <form/> element. -->
     <template id="website_payment.payment_form" inherit_id="payment.form">
-        <xpath expr="//div[@id='o_payment_form_options']" position="before">
-            <div class="mb-3" t-if="is_donation">
-                <t t-call="website_payment.donation_information"/>
+        <xpath expr="//form[@id='o_payment_form']" position="before">
+            <div t-if="is_donation" class="s_website_form o_payment_form_container mb-3" data-vcss="001" data-snippet="s_website_form" data-name="Form" t-ignore="True">
+                <t t-call="website_payment.website_payment_fields_form"/>
             </div>
         </xpath>
     </template>
@@ -40,23 +40,26 @@
 
     <template id="website_payment.donation_information" name="Donation Information">
         <h3 class="o_page_header mt16 mb4">Donation</h3>
-        <div class="row">
-            <div t-attf-class="mb-3 #{error.get('name') and 'o_has_error' or ''} col-lg-12 div_name">
-                <label class="col-form-label fw-bold" for="name">Name
+        <div class="s_website_form_rows row">
+            <div data-type="char" data-name="Field" t-attf-class="s_website_form_field s_website_form_custom mb-3 s_website_form_required #{error.get('name') and 'o_has_error' or ''} col-lg-12 div_name">
+                <label class="s_website_form_label col-form-label fw-bold" for="name">
+                    <span class="s_website_form_label_content">Name</span>
                     <span class="s_website_form_mark"> *</span>
                 </label>
-                <input t-att-readonly="'1' if 'name' in partner_details and partner_id else None" type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="partner_details.get('name')" />
+                <input t-att-readonly="'1' if 'name' in partner_details and partner_id else None" type="text" name="name" data-fill-with="name" t-attf-class="form-control s_website_form_input #{error.get('name') and 'is-invalid' or ''}" t-att-value="partner_details.get('name')" />
             </div>
             <div class="w-100"/>
-            <div t-attf-class="mb-3 #{error.get('email') and 'o_has_error' or ''} col-lg-6" id="div_email">
-                <label class="col-form-label fw-bold" for="email">Email
+            <div data-name="Field" t-attf-class="s_website_form_field s_website_form_custom mb-3 s_website_form_required #{error.get('email') and 'o_has_error' or ''} col-lg-6" id="div_email" data-type="char">
+                <label class="s_website_form_label col-form-label fw-bold" for="email">
+                    <span class="s_website_form_label_content">Email</span>
                     <span class="s_website_form_mark"> *</span>
                 </label>
-                <input t-att-readonly="'1' if 'email' in partner_details and partner_id else None" type="email" name="email" t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}" t-att-value="partner_details.get('email')" />
+                <input t-att-readonly="'1' if 'email' in partner_details and partner_id else None" type="email" name="email"  data-fill-with="email" t-attf-class="form-control s_website_form_input #{error.get('email') and 'is-invalid' or ''}" t-att-value="partner_details.get('email')" />
             </div>
             <t t-set="country_id" t-value="partner_details.get('country_id')"/>
-            <div t-attf-class="mb-3 #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
-                <label class="col-form-label fw-bold" for="country_id">Country
+            <div  data-name="Field" t-attf-class="s_website_form_field s_website_form_custom mb-3 #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
+                <label class="s_website_form_label col-form-label fw-bold" for="country_id">
+                    <span class="s_website_form_label_content">Country</span>
                     <span class="s_website_form_mark"> *</span>
                 </label>
                 <select t-att-disabled="'1' if country_id and partner_id else None" id="country_id" name="country_id" t-attf-class="form-select #{error.get('country_id') and 'is-invalid' or ''}">
@@ -119,6 +122,21 @@
             <div class="w-100"/>
         </div>
         <h3 class="o_page_header mt16 mb4">Payment Details</h3>
+    </template>
+
+    <template id="website_payment_fields_form">
+        <form class="o_payment_field_form" data-model_name="payment.transaction" hide-change-model="true">
+            <t t-call="website_payment.donation_information" />
+        </form>
+    </template>
+
+    <template id="website_signup_form_options" inherit_id="website.snippet_options">
+        <xpath expr="//div[@data-js='WebsiteFormEditor']//we-row//we-select" position="attributes">
+            <attribute name="data-name" add="payment_form_opt" />
+        </xpath>
+        <xpath expr="//div[@data-js='AddFieldForm']" position="attributes">
+            <attribute name="data-exclude" add=".o_payment_form_container" />
+        </xpath>
     </template>
 
     <template id="website_payment.donation_input" name="Donation input">
