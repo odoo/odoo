@@ -20,7 +20,7 @@
                     <attribute name="widget">filterable_selection</attribute>
                     <attribute name="options">{'whitelist_fname': 'available_peppol_edi_formats'}</attribute>
                 </xpath>
-                <xpath expr="//field[@name='peppol_eas']" position="before">
+                <xpath expr="//field[@name='invoice_edi_format']" position="after">
                     <field name="bank_account_count" invisible="1"/>
                     <div class="alert alert-warning mb-0"
                          colspan="2"
@@ -35,7 +35,7 @@
                          To generate complete electronic invoices, also set a country for this partner.
                     </div>
                 </xpath>
-                <xpath expr="//div[@id='peppol_address']" position="after">
+                <xpath expr="//field[@name='invoice_edi_format']" position="after">
                     <field name="is_peppol_edi_format" invisible="1"/>
                     <field name="peppol_verification_state" invisible="1" force_save="1"/>
                     <label for="peppol_verification_state"
