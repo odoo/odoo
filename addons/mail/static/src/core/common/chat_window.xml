@@ -116,7 +116,7 @@
 </t>
 
 <t t-name="mail.ChatWindow.quickAction">
-    <button class="o-mail-ChatWindow-command btn d-flex opacity-100-hover align-items-center" style="aspect-ratio: 1;" t-att-class="{ 'border o-small': ui.isSmall, 'opacity-25': !ui.isSmall }" t-attf-class="{{ itemClass }}" t-att-title="action.name" t-att-disabled="state.actionsDisabled" t-on-click.stop="() => action.onSelect()"><i t-att-class="ui.isSmall ? 'fa-lg' : ''" t-attf-class="{{ action.icon }}"/></button>
+    <button class="o-mail-ChatWindow-command btn d-flex opacity-100-hover align-items-center" style="aspect-ratio: 1;" t-att-class="{ 'border border-secondary rounded-circle o-small p-2 my-1': ui.isSmall, 'opacity-25': !ui.isSmall }" t-attf-class="{{ itemClass }}" t-att-title="action.name" t-att-disabled="state.actionsDisabled" t-on-click.stop="() => action.onSelect()"><i t-att-class="ui.isSmall ? 'fa-lg' : ''" t-attf-class="{{ action.icon }}"/></button>
 </t>
 
 <t t-name="mail.ChatWindow.dropdownAction">

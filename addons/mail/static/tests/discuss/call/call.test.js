@@ -475,7 +475,7 @@ test("Sort call participants in side bar by name", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await click("[title='Expand']");
+    await click("[title='Expand participants']");
     await contains(".o-mail-DiscussSidebarCallParticipants", {
         contains: [
             ".o-mail-DiscussSidebarCallParticipants-participant:nth-child(1):contains('AAA')",

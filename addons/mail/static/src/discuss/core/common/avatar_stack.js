@@ -20,6 +20,7 @@ export class AvatarStack extends Component {
         max: { type: Number, optional: true },
         personas: Array,
         size: { type: Number, optional: true },
+        slots: { optional: true },
     };
     static defaultProps = {
         avatarClass: () => "",
