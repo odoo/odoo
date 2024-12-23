@@ -583,6 +583,14 @@ class TestDomainOptimize(TransactionCase):
             Domain('important', 'in', [0, 2])._optimize_for_sql(model),
             Domain.TRUE,
         )
+        self.assertEqual(
+            len(list(Domain('active', 'not in', [True, False]).optimize(model).iter_conditions())),
+            1, "the condition should not be reduced to a constant for active record"
+        )
+        self.assertEqual(
+            Domain('active', 'not in', [True, False])._optimize_for_sql(model),
+            Domain.FALSE,
+        )
 
     def test_condition_optimize_date(self):
         model = self.env['test_new_api.mixed']
