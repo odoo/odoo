@@ -1801,21 +1801,19 @@ def _operator_hierarchy(condition, model):
     or it is a field where the comodel is the same as the model.
     The value is used to search a set of `related_records`. We start from the given value,
     which can be ids, a name (for searching by name), etc. Then we follow up the relation;
-    forward in case of `parent_of` and backward in case of `child_of`.
-    The resulting domain will have 'id' if the field is 'id' or a many2one.
+    forward in case of `parent_of` and backward in case of `child_of`. Following up the
+    relation is done in sudo mode.
 
     In the case where the comodel is not the same as the model, the result is equivalent to
-    `('field', 'any', ('id', operator, value))`
+    `('field', 'any!', ('id', operator, value))`. With the exception that hiearchical
+    operators accept strings to search on display name.
     """
     if condition.operator == 'parent_of':
         hierarchy = _operator_parent_of_domain
     else:
         hierarchy = _operator_child_of_domain
-    value = condition.value
-    if value is False:
-        return _FALSE_DOMAIN
     # Get:
-    # - field: used in the resulting domain)
+    # - field: used for parent name
     # - parent (str | None): field name to find parent in the hierarchy
     # - comodel_sudo: used to resolve the hierarchy
     # - comodel: used to search for ids based on the value
@@ -1829,13 +1827,23 @@ def _operator_hierarchy(condition, model):
     else:
         condition._raise(f"Cannot execute {condition.operator} for {field}, works only for relational fields")
     comodel_sudo = comodel.sudo().with_context(active_test=False)
-    parent = comodel._parent_name
-    if comodel._name == model._name:
-        if condition.field_expr != 'id':
-            parent = condition.field_expr
-        if field.type == 'many2one':
-            field = model._fields['id']
+    if comodel._name != model._name:
+        values = condition.value if hasattr(condition.value, '__iter__') else [condition.value]
+        domain = DomainCondition('id', 'in', values).optimize(comodel)
+        if domain.is_false():
+            return domain
+        domain = _optimize_relational_name_search(domain, comodel)  # handle str values
+        # we search ids in sudo to avoid subquery with permissions
+        domain = domain.map_conditions(lambda cond: DomainCondition(
+            condition.field_expr,
+            'any!',
+            DomainCondition('id', condition.operator, comodel.search(cond).ids if cond.field_expr != 'id' else cond.value),
+        ))
+        return domain
     # Get the initial ids and bind them to comodel_sudo before resolving the hierarchy
+    value = condition.value
+    if value is False:
+        return _FALSE_DOMAIN
     if isinstance(value, (int, str)):
         value = [value]
     elif not isinstance(value, COLLECTION_TYPES):
@@ -1855,13 +1863,10 @@ def _operator_hierarchy(condition, model):
     coids += comodel.search(search_domain, order='id').ids
     if not coids:
         return _FALSE_DOMAIN
+    parent = comodel._parent_name if condition.field_expr == 'id' else condition.field_expr
     result = hierarchy(comodel_sudo.browse(coids), parent)
     # Format the resulting domain
-    if isinstance(result, Domain):
-        if field.name == 'id':
-            return result
-        return DomainCondition(field.name, 'any!', result)
-    return DomainCondition(field.name, 'in', result)
+    return result if isinstance(result, Domain) else DomainCondition('id', 'in', result)
 
 
 def _operator_child_of_domain(comodel: BaseModel, parent):
