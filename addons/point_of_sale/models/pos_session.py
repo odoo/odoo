@@ -198,12 +198,13 @@ class PosSession(models.Model):
         pricelist_item_fields = self.env['product.pricelist.item']._load_pos_data_fields(config_id)
 
         pricelist_item_domain = [
-            '|',
-            ('company_id', '=', False),
-            ('company_id', '=', self.company_id.id),
+            '&',
+            ('pricelist_id', 'in', self.config_id._get_available_pricelists().ids),
+            *self.env['product.pricelist.item']._check_company_domain(self.company_id),
             '|',
             '&', ('product_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
-            ('product_id', 'in', product_ids)]
+            ('product_id', 'in', product_ids)
+        ]
 
         pricelist_item = self.env['product.pricelist.item'].search(pricelist_item_domain)
         pricelist = pricelist_item.pricelist_id
