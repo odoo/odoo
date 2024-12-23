@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
-        <record id="product_template_view_tree" model="ir.ui.view">
-            <field name="name">product.template.list</field>
+        <record id="product_template_list_view_sellable_inherit" model="ir.ui.view">
+            <field name="name">product.template.list.sellable.inherit</field>
             <field name="model">product.template</field>
-            <field name="arch" type="xml">
-                <list string="Products" sample="1">
-                    <field name="default_code"/>
-                    <field name="name"/>
-                    <field name="list_price"/>
-                    <field name="taxes_id" widget="many2many_tax_tags"/>
-                    <field name="supplier_taxes_id" widget="many2many_tax_tags"/>
-                    <field name="activity_exception_decoration" widget="activity_exception"/>
-                </list>
-            </field>
+            <field name="inherit_id" ref="product.product_template_list_view_sellable"/>
+                <field name="arch" type="xml">
+                    <xpath expr="//field[@name='list_price']" position="after">
+                        <field name="taxes_id" widget="many2many_tax_tags"/>
+                    </xpath>
+                </field>
+        </record>
+
+        <record id="product_template_list_view_purchasable_inherit" model="ir.ui.view">
+            <field name="name">product.template.list.purchasable.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_list_view_purchasable"/>
+                <field name="arch" type="xml">
+                    <xpath expr="//field[@name='standard_price']" position="after">
+                        <field name="supplier_taxes_id" widget="many2many_tax_tags"/>
+                    </xpath>
+                </field>
         </record>
 
         <record id="product_product_action_sellable" model="ir.actions.act_window">
             <field name="name">Products</field>
             <field name="res_model">product.template</field>
-            <field name="view_mode">kanban,list,form,activity</field>
+            <field name="path">customer-products</field>
+            <field name="view_ids" eval="[Command.clear(),
+                Command.create({'view_mode': 'kanban'}),
+                Command.create({'view_mode': 'list', 'view_id': ref('account.product_template_list_view_sellable_inherit')}),
+                Command.create({'view_mode': 'form'}),
+                Command.create({'view_mode': 'activity'})]"/>
             <field name="context">{'search_default_filter_to_sell': 1}</field>
-            <field name="view_id" ref="product_template_view_tree"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                   Create a new sellable product
@@ -33,9 +43,13 @@
         <record id="product_product_action_purchasable" model="ir.actions.act_window">
             <field name="name">Products</field>
             <field name="res_model">product.template</field>
-            <field name="view_mode">kanban,list,form,activity</field>
+            <field name="path">vendor-products</field>
             <field name="context">{'search_default_filter_to_purchase': 1}</field>
-            <field name="view_id" ref="product_template_view_tree"/>
+            <field name="view_ids" eval="[Command.clear(),
+                Command.create({'view_mode': 'kanban'}),
+                Command.create({'view_mode': 'list', 'view_id': ref('account.product_template_list_view_purchasable_inherit')}),
+                Command.create({'view_mode': 'form'}),
+                Command.create({'view_mode': 'activity'})]"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                   Create a new purchasable product
