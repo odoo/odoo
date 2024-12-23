@@ -76,9 +76,8 @@ STANDARD_CONDITION_OPERATORS = frozenset([
     '<', '>', '<=', '>=',
     'like', 'not like',
     'ilike', 'not ilike',
-    '=like',
-    '=ilike',
-    # TODO "not =like"?
+    '=like', 'not =like',
+    '=ilike', 'not =ilike',
 ])
 """List of standard operators for conditions.
 This should be supported in the framework at all levels.
@@ -119,6 +118,8 @@ NEGATIVE_CONDITION_OPERATORS = {
     'not in': 'in',
     'not like': 'like',
     'not ilike': 'ilike',
+    'not =like': '=like',
+    'not =ilike': '=ilike',
     '!=': '=',
     '<>': '=',
 }
@@ -131,6 +132,8 @@ _INVERSE_OPERATOR = {
     'not in': 'in',
     'not like': 'like',
     'not ilike': 'ilike',
+    'not =like': '=like',
+    'not =ilike': '=ilike',
     '!=': '=',
     '<>': '=',
     # positive to negative
@@ -138,6 +141,8 @@ _INVERSE_OPERATOR = {
     'in': 'not in',
     'like': 'not like',
     'ilike': 'not ilike',
+    '=like': 'not =like',
+    '=ilike': 'not =ilike',
     '=': '!=',
     # inequalities
     '<': '>=',
