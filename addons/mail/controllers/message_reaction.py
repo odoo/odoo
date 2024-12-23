@@ -4,6 +4,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
+from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 from odoo.addons.mail.tools.discuss import Store
 
@@ -12,7 +13,7 @@ class MessageReactionController(http.Controller):
     @http.route("/mail/message/reaction", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def mail_message_reaction(self, message_id, content, action, **kwargs):
-        message = request.env["mail.message"]._get_with_access(int(message_id), "create", **kwargs)
+        message = ThreadController._get_message_with_access(int(message_id), mode="create", **kwargs)
         if not message:
             raise NotFound()
         partner, guest = self._get_reaction_author(message, **kwargs)

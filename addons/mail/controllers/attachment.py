@@ -90,8 +90,7 @@ class AttachmentController(http.Controller):
             return
         attachment_message = request.env["mail.message"].sudo().search(
             [("attachment_ids", "in", attachment.ids)], limit=1)
-        message = request.env["mail.message"].sudo(False)._get_with_access(attachment_message.id,
-                                                                           "create", **kwargs)
+        message = ThreadController._get_message_with_access(attachment_message.id, mode="create", **kwargs)
         if not request.env.user.share:
             # Check through standard access rights/rules for internal users.
             attachment._delete_and_notify(message)
