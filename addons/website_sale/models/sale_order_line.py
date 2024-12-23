@@ -24,6 +24,30 @@ class SaleOrderLine(models.Model):
     def get_description_following_lines(self):
         return self.name.splitlines()[1:]
 
+    def _get_order_date(self):
+        self.ensure_one()
+        if self.order_id.website_id and self.state == 'draft':
+            # cart prices must always be computed based on the current time, not on the order
+            # creation date.
+            return fields.Datetime.now()
+        return super()._get_order_date()
+
+    def _get_pricelist_price_before_discount(self):
+        """On ecommerce orders, the base price must always be the sales price."""
+        self.ensure_one()
+        self.product_id.ensure_one()
+
+        if self.order_id.website_id:
+            return self.env['product.pricelist.item']._compute_price_before_discount(
+                product=self.product_id.with_context(**self._get_product_price_context()),
+                quantity=self.product_uom_qty or 1.0,
+                uom=self.product_uom,
+                date=self._get_order_date(),
+                currency=self.currency_id,
+            )
+
+        return super()._get_pricelist_price_before_discount()
+
     def _get_shop_warning(self, clear=True):
         self.ensure_one()
         warn = self.shop_warning
