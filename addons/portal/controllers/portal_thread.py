@@ -29,10 +29,10 @@ class PortalChatter(http.Controller):
             )
             message_su = message_su if thread else request.env["mail.message"]
         else:
-            message = request.env.ref('web.image_placeholder').sudo()
+            message_su = request.env.ref('web.image_placeholder').sudo()
         # in case there is no message, it creates a stream with the placeholder image
         stream = request.env['ir.binary']._get_image_stream_from(
-            message, field_name='author_avatar', width=int(width), height=int(height),
+            message_su, field_name='author_avatar', width=int(width), height=int(height),
         )
         return stream.get_response()
 
