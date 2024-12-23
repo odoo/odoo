@@ -23,9 +23,10 @@ export const sizingGrid = {
 };
 
 export class BuilderOverlay {
-    constructor(overlayTarget, { overlayContainer, addStep, refreshAllOverlaysPosition }) {
+    constructor(overlayTarget, { iframe, overlayContainer, addStep, refreshAllOverlaysPosition }) {
         this.addStep = addStep;
         this.refreshAllOverlaysPosition = refreshAllOverlaysPosition;
+        this.iframe = iframe;
         this.overlayContainer = overlayContainer;
         this.overlayElement = renderToElement("html_builder.BuilderOverlay");
         this.overlayTarget = overlayTarget;
@@ -68,13 +69,14 @@ export class BuilderOverlay {
         }
 
         // TODO transform
+        const iframeRect = this.iframe.getBoundingClientRect();
         const overlayContainerRect = this.overlayContainer.getBoundingClientRect();
         const targetRect = this.overlayTarget.getBoundingClientRect();
         Object.assign(this.overlayElement.style, {
             width: `${targetRect.width}px`,
             height: `${targetRect.height}px`,
-            top: `${targetRect.y - overlayContainerRect.y + window.scrollY}px`,
-            left: `${targetRect.x - overlayContainerRect.x + window.scrollX}px`,
+            top: `${iframeRect.y + targetRect.y - overlayContainerRect.y + window.scrollY}px`,
+            left: `${iframeRect.x + targetRect.x - overlayContainerRect.x + window.scrollX}px`,
         });
         this.handlesWrapperEl.style.height = `${targetRect.height}px`;
     }

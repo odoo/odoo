@@ -50,6 +50,8 @@ export class WebsiteBuilder extends Component {
             localOverlayContainerKey: uniqueId("website"),
         });
 
+        this.websitePreviewRef = useRef("website_preview");
+
         onWillStart(async () => {
             const [backendWebsiteRepr] = await Promise.all([
                 this.orm.call("website", "get_current_website"),
@@ -176,6 +178,9 @@ export class WebsiteBuilder extends Component {
 
     toggleMobile() {
         this.state.isMobile = !this.state.isMobile;
+        // Adding the mobile class directly, to not wait for the component
+        // re-rendering.
+        this.websitePreviewRef.el.classList.toggle("o_is_mobile", this.state.isMobile);
     }
 }
 

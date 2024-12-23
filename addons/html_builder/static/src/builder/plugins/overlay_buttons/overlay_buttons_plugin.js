@@ -54,16 +54,20 @@ export class OverlayButtonsPlugin extends Plugin {
     resources = {
         step_added_handlers: this.refreshButtons.bind(this),
         change_current_options_containers_listeners: this.addOverlayButtons.bind(this),
+        on_mobile_preview_clicked: this.refreshButtons.bind(this),
     };
 
     setup() {
+        // TODO find how to not overflow the mobile preview.
+        this.iframe = this.editable.ownerDocument.defaultView.frameElement;
         this.overlay = this.dependencies.overlay.createOverlay(OverlayButtons, {
             positionOptions: {
                 position: "top-middle",
                 onPositioned: (overlayEl, position) => {
-                    if (position.top < 0) {
+                    const iframeRect = this.iframe.getBoundingClientRect();
+                    if (position.top < iframeRect.top) {
                         const targetRect = this.target.getBoundingClientRect();
-                        const newTop = targetRect.bottom + 15;
+                        const newTop = iframeRect.top + targetRect.bottom + 15;
                         position.top = newTop;
                         overlayEl.style.top = `${newTop}px`;
                     }

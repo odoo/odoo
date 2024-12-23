@@ -300,6 +300,7 @@ export class BuilderSidebar extends Component {
 
     onMobilePreviewClick() {
         this.props.toggleMobile();
+        this.editor.resources["on_mobile_preview_clicked"].forEach((handler) => handler());
     }
 
     updateInvisibleEls(isMobile = this.props.isMobile) {

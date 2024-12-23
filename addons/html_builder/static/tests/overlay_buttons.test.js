@@ -85,3 +85,37 @@ test("Use the 'grid' overlay buttons", async () => {
     await contains(".overlay .o_bring_front").click();
     expect(":iframe .g-col-lg-5").toHaveStyle({ zIndex: "2" });
 });
+
+test("Refresh the overlay buttons when toggling the mobile preview", async () => {
+    await setupWebsiteBuilder(
+        `
+        <section>
+            <div class="container">
+                <div class="row o_grid_mode" data-row-count="4">
+                    <div class="o_grid_item g-height-4 g-col-lg-5 col-lg-5" style="grid-area: 1 / 1 / 5 / 6; z-index: 1;">
+                        <p>TEST</p>
+                    </div>
+                    <div class="o_grid_item g-height-2 g-col-lg-4 col-lg-4" style="grid-area: 1 / 6 / 3 / 10; z-index: 2;">
+                        <p>TEST</p>
+                    </div>
+                    <div class="o_grid_item g-height-2 g-col-lg-3 col-lg-3" style="grid-area: 1 / 10 / 3 / 13; z-index: 3;">
+                        <p>TEST</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `,
+        { loadIframeBundles: true }
+    );
+
+    await contains(":iframe .g-col-lg-4").click();
+    await contains("[data-action='mobile']").click();
+    expect(".overlay .o_send_back, .overlay .o_bring_front").toHaveCount(0);
+    expect(".overlay .fa-angle-left").toHaveCount(1);
+    expect(".overlay .fa-angle-right").toHaveCount(1);
+
+    await contains("[data-action='mobile']").click();
+    expect(".overlay .o_send_back").toHaveCount(1);
+    expect(".overlay .o_bring_front").toHaveCount(1);
+    expect(".overlay .fa-angle-left, .overlay .fa-angle-right").toHaveCount(0);
+});

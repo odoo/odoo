@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.WebsiteBuilder">
     <div class="d-flex h-100 w-100" t-ref="container">
-        <div class="o_website_preview flex-grow-1" t-att-class="{ 'o_is_mobile': this.state.isMobile }">
+        <div class="o_website_preview flex-grow-1" t-ref="website_preview">
             <div class="o_iframe_container">
                 <iframe t-att-src="initialUrl" class="h-100 w-100" t-ref="iframe" t-on-load="onIframeLoad"/>
                 <div t-if="this.state.isMobile" class="o_mobile_preview_layout">

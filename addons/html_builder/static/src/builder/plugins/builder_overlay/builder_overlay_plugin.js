@@ -9,9 +9,12 @@ export class BuilderOverlayPlugin extends Plugin {
     resources = {
         step_added_handlers: this._update.bind(this),
         change_current_options_containers_listeners: this.openBuilderOverlay.bind(this),
+        on_mobile_preview_clicked: this._update.bind(this),
     };
 
     setup() {
+        // TODO find how to not overflow the mobile preview.
+        this.iframe = this.editable.ownerDocument.defaultView.frameElement;
         this.overlayContainer = this.dependencies.localOverlay.makeLocalOverlay(
             "builder-overlay-container"
         );
@@ -67,6 +70,7 @@ export class BuilderOverlayPlugin extends Plugin {
         // Create the overlays.
         optionsContainer.forEach((option) => {
             const overlay = new BuilderOverlay(option.element, {
+                iframe: this.iframe,
                 overlayContainer: this.overlayContainer,
                 addStep: this.dependencies.history.addStep,
                 refreshAllOverlaysPosition: this.refreshPosition.bind(this),
