@@ -338,6 +338,7 @@
         <record id="action_account_payments" model="ir.actions.act_window">
             <field name="name">Customer Payments</field>
             <field name="res_model">account.payment</field>
+            <field name="path">customer-payments</field>
             <field name="view_mode">list,kanban,form,graph,activity</field>
             <field name="context">{
                 'default_payment_type': 'inbound',
@@ -359,6 +360,7 @@
         <record id="action_account_payments_payable" model="ir.actions.act_window">
             <field name="name">Vendor Payments</field>
             <field name="res_model">account.payment</field>
+            <field name="path">vendor-payments</field>
             <field name="view_mode">list,kanban,form,graph,activity</field>
             <field name="context">{
                 'default_payment_type': 'outbound',
