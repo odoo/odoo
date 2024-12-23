@@ -41,6 +41,7 @@
         <field name="model">product.image</field>
         <field name="arch" type="xml">
             <kanban string="Product Images" default_order="sequence">
+                <field name="video_url" invisible="1"/>
                 <field name="sequence" widget="handle"/>
                 <templates>
                     <t t-name="card" class="p-0 border-0">
