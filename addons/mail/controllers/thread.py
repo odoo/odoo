@@ -16,6 +16,22 @@ class ThreadController(http.Controller):
     # ------------------------------------------------------------
 
     @classmethod
+    def _get_message_with_access(cls, message_id, mode="read", **kwargs):
+        """ Simplified getter that filters access params only, making model methods
+        using strong parameters. """
+        message_su = request.env['mail.message'].sudo().browse(message_id).exists()
+        if not message_su:
+            return message_su
+        return request.env['mail.message']._get_with_access(
+            message_su.id,
+            mode=mode,
+            **{
+                key: value for key, value in kwargs.items()
+                if key in request.env[message_su.model or 'mail.thread']._get_allowed_access_params()
+            },
+        )
+
+    @classmethod
     def _get_thread_with_access(cls, thread_model, thread_id, mode="read", **kwargs):
         """ Simplified getter that filters access params only, making model methods
         using strong parameters. """
@@ -170,7 +186,7 @@ class ThreadController(http.Controller):
     def mail_message_update_content(self, message_id, body, attachment_ids, attachment_tokens=None, partner_ids=None, **kwargs):
         guest = request.env["mail.guest"]._get_guest_from_context()
         guest.env["ir.attachment"].browse(attachment_ids)._check_attachments_access(attachment_tokens)
-        message = request.env["mail.message"]._get_with_access(message_id, "create", **kwargs)
+        message = self._get_message_with_access(message_id, mode="create", **kwargs)
         if not message or not self._is_message_editable(message, **kwargs):
             raise NotFound()
         # sudo: mail.message - access is checked in _get_with_access and _is_message_editable
