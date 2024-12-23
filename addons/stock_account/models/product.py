@@ -512,7 +512,7 @@ will update the cost of every lot/serial number in stock."),
             all_candidates = all_candidates_by_product[product.id]
             current_real_time_svls = ValuationLayer
             for svl_to_vacuum in svls_to_vacuum_by_product[product.id]:
-                # We don't use search to avoid executing _flush_search and to decrease interaction with DB
+                # We don't use search to avoid flushing fields and to decrease interaction with DB
                 candidates = all_candidates.filtered(
                     lambda r: r.create_date > svl_to_vacuum.create_date
                     or r.create_date == svl_to_vacuum.create_date

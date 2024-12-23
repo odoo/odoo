@@ -140,10 +140,10 @@ class TestRules(TransactionCase):
         self.assertEqual(search_result, allowed_child)
         self.assertEqual(filter_result, allowed_child)
 
-    def test_flush_search_with_inherits(self):
+    def test_flush_with_inherits(self):
         """
-        For models with `_inherits`, verify that method `_flush_search` takes in
-        account the rules from inherited models, as method `_search` does.
+        For models with `_inherits`, verify that fields of the rules from inherited models
+        are flushed correctly.
         """
         ChildModel = self.env['test_access_right.inherits']
         child = ChildModel.create([{'some_id': self.allowed.id}])
