@@ -16,7 +16,7 @@
                 <field name="is_favorite" widget="boolean_favorite" optional="show" nolabel="1"/>
                 <field name="name" string="Product Name"/>
                 <field name="default_code" optional="show"/>
-                <field name="product_tag_ids" widget="many2many_tags" optional="show"/>
+                <field name="product_tag_ids" widget="many2many_tags" optional="hide"/>
                 <field name="barcode" optional="hide" readonly="product_variant_count != 1"/>
                 <field name="company_id" options="{'no_create': True}"
                     groups="base.group_multi_company" optional="hide"/>
@@ -29,6 +29,30 @@
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </list>
         </field>
+    </record>
+
+    <record id="product_template_list_view_sellable" model="ir.ui.view">
+        <field name="name">product.template.list.sellable</field>
+        <field name="model">product.template</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='standard_price']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+            </field>
+    </record>
+
+    <record id="product_template_list_view_purchasable" model="ir.ui.view">
+        <field name="name">product.template.list.purchasable</field>
+        <field name="model">product.template</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='list_price']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+            </field>
     </record>
 
     <record id="product_template_only_form_view" model="ir.ui.view">
