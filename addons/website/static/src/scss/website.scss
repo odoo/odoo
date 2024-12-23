@@ -2151,10 +2151,19 @@ input[value*="data-oe-translation-source-sha"] {
     visibility: visible;
 }
 .o_wanim_overflow_xy_hidden {
-    // "overflow-x: hidden" is added to the "body" and not to "html" because if
+    // "overflow-x: clip" is added to the "body" and not to "html" because if
     // it's added to "html", when a popup opens, the page scrolls to the top.
     > body {
-        overflow-x: hidden !important;
+        // We use clip instead of hidden to prevent scroll animations to an
+        // anchor from stopping working.
+        overflow-x: clip !important;
+        // For supporting browsers not updated since around 2021-2022.
+        @supports not (overflow-x: clip) {
+            overflow-x: hidden !important;
+        }
+        // Create a new formatting context. Without this, elements inside <body>
+        // may still overflow (e.g. animated elements in Firefox).
+        display: flow-root;
     }
     &.o_rtl, .o_rtl {
         // Fix for Chrome and Edge bug: resolves slow/stuck scrolling during
