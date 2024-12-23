@@ -5,7 +5,7 @@ import { BootstrapDialog } from "./BootstrapDialog.js";
 
 const { Component, xml } = owl;
 
-const DEVICE_ICONS = {
+export const DEVICE_ICONS = {
     camera: "fa-camera",
     device: "fa-plug",
     display: "fa-desktop",

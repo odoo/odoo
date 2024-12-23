@@ -60,7 +60,7 @@ export class Homepage extends Component {
         );
         if (wifiInterface) {
             return this.state.data.is_access_point_up
-                ? "Wi-Fi access point"
+                ? "No internet connection - click on \"Configure\""
                 : `Wi-Fi: ${wifiInterface.ssid}`;
         }
         return "Not Connected";
@@ -118,7 +118,7 @@ export class Homepage extends Component {
             <div class="d-flex mb-4 flex-column align-items-center justify-content-center">
                 <h4 class="text-center m-0">IoT Box - <t t-esc="state.data.hostname" /></h4>
             </div>
-            <div t-if="!this.store.advanced and !state.data.is_certificate_ok" class="alert alert-warning" role="alert">
+            <div t-if="!store.advanced and !state.data.is_certificate_ok and !store.base.is_access_point_up" class="alert alert-warning" role="alert">
                 <p class="m-0 fw-bold">
                     No subscription linked to your IoT Box.
                 </p>
@@ -126,7 +126,7 @@ export class Homepage extends Component {
                     Please contact your account manager to take advantage of your IoT Box's full potential.
                 </small>
             </div>
-            <div t-if="this.store.advanced" t-att-class="'alert ' + (state.data.is_certificate_ok === true ? 'alert-info' : 'alert-warning')" role="alert">
+            <div t-if="store.advanced and !store.base.is_access_point_up" t-att-class="'alert ' + (state.data.is_certificate_ok === true ? 'alert-info' : 'alert-warning')" role="alert">
                 <p class="m-0 fw-bold">HTTPS Certificate</p>
                 <small>
                     <t t-if="state.data.is_certificate_ok === true">Status: </t>
@@ -134,35 +134,41 @@ export class Homepage extends Component {
                     <t t-esc="state.data.certificate_details" />
                 </small>
             </div>
-            <SingleData name="'Name'" value="state.data.hostname" icon="'fa-id-card'">
+            <div t-if="store.base.is_access_point_up" class="alert alert-info" role="alert">
+                <p class="m-0 fw-bold">No Internet Connection</p>
+                <small>
+                    Please connect your IoT Box to internet via an ethernet cable or via Wi-Fi by clicking on "Configure" below
+                </small>
+            </div>
+            <SingleData t-if="!store.base.is_access_point_up" name="'Name'" value="state.data.hostname" icon="'fa-id-card'">
 				<t t-set-slot="button">
 					<ServerDialog t-if="this.store.isLinux" />
 				</t>
 			</SingleData>
-            <SingleData t-if="this.store.advanced" name="'Version'" value="state.data.version" icon="'fa-microchip'">
+            <SingleData t-if="store.advanced and !store.base.is_access_point_up" name="'Version'" value="state.data.version" icon="'fa-microchip'">
                 <t t-set-slot="button">
                     <UpdateDialog t-if="this.store.isLinux" />
                 </t>
             </SingleData>
-            <SingleData t-if="this.store.advanced" name="'IP address'" value="state.data.ip" icon="'fa-globe'" />
-            <SingleData t-if="this.store.advanced" name="'MAC address'" value="state.data.mac.toUpperCase()" icon="'fa-address-card'" />
-            <SingleData t-if="this.store.isLinux" name="'Internet Status'" value="networkStatus" icon="'fa-wifi'">
+            <SingleData t-if="store.advanced" name="'IP address'" value="state.data.ip" icon="'fa-globe'" />
+            <SingleData t-if="store.advanced" name="'MAC address'" value="state.data.mac.toUpperCase()" icon="'fa-address-card'" />
+            <SingleData t-if="store.isLinux" name="'Internet Status'" value="networkStatus" icon="'fa-wifi'">
                 <t t-set-slot="button">
                     <WifiDialog />
                 </t>
             </SingleData>
-            <SingleData name="'Odoo database connected'" value="state.data.server_status" icon="'fa-link'">
+            <SingleData t-if="!store.base.is_access_point_up" name="'Odoo database connected'" value="state.data.server_status" icon="'fa-link'">
 				<t t-set-slot="button">
 					<ServerDialog />
 				</t>
 			</SingleData>
-            <SingleData t-if="state.data.pairing_code" name="'Pairing Code'" value="state.data.pairing_code" icon="'fa-code'"/>
-            <SingleData  t-if="this.store.advanced" name="'Six terminal'" value="state.data.six_terminal" icon="'fa-money'">
+            <SingleData t-if="state.data.pairing_code and !this.store.base.is_access_point_up" name="'Pairing Code'" value="state.data.pairing_code" icon="'fa-code'"/>
+            <SingleData  t-if="store.advanced and !store.base.is_access_point_up" name="'Six terminal'" value="state.data.six_terminal" icon="'fa-money'">
                 <t t-set-slot="button">
                     <SixDialog />
                 </t>
             </SingleData>
-            <SingleData name="'Devices'" value="numDevices + ' devices'" icon="'fa-plug'">
+            <SingleData t-if="!this.store.base.is_access_point_up" name="'Devices'" value="numDevices + ' devices'" icon="'fa-plug'">
                 <t t-set-slot="button">
                     <DeviceDialog />
                 </t>
