@@ -1,5 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
+from datetime import datetime, timedelta
+from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo.fields import Command
@@ -384,6 +388,50 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         })
         res = product_tmpl._get_sales_prices(self.pricelist, self.env['account.fiscal.position'])
         self.assertEqual(res[product_tmpl.id]['base_price'], 75)
+
+    def test_pricelist_item_validity_period(self):
+        """ Test that if a cart was created before a validity period,
+            the correct prices will still apply.
+        """
+        today = datetime.today()
+        tomorrow = today + timedelta(days=1)
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Pricelist with validity period',
+            'item_ids': [Command.create({
+                    'compute_price': 'formula',
+                    'base': 'list_price',
+                    'price_discount': 20,
+                    'date_start': tomorrow,
+            })]
+        })
+        product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'list_price': 100,
+            'taxes_id': False,
+        })
+        current_website = self.env['website'].get_current_website()
+        current_website.pricelist_id = pricelist
+        with freeze_time(today) as frozen_time:
+            so = self.env['sale.order'].create({
+                'partner_id': self.env.user.partner_id.id,
+                'pricelist_id': pricelist.id,
+                'order_line': [(0, 0, {
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_uom_qty': 1,
+                    'product_uom': product.uom_id.id,
+                    'price_unit': product.list_price,
+                    'tax_id': False,
+                })],
+                'website_id': current_website.id,
+            })
+            sol = so.order_line
+            self.assertEqual(sol.price_total, 100.0)
+
+            frozen_time.move_to(tomorrow + timedelta(seconds=10))
+            so._cart_update(product_id=product.id, line_id=sol.id, set_qty=2)
+            self.assertEqual(sol.price_unit, 80.0, 'Reduction should be applied')
+            self.assertEqual(sol.price_total, 160)
 
 def simulate_frontend_context(self, website_id=1):
     # Mock this method will be enough to simulate frontend context in most methods
