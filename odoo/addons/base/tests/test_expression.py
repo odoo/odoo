@@ -777,8 +777,8 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         self.assertIs(Domain(simple), simple, "Domain(Domain) should return the instance")
 
         # negative and nary
-        neg_domain = ~Domain('foo', '=like', 'bar')
-        self.assertEqual(list(neg_domain), ['!', ('foo', '=like', 'bar')], "Internal test that we are inversing a domain")
+        neg_domain = ~Domain('foo.x', '>', 'bar')
+        self.assertEqual(list(neg_domain), ['!', ('foo.x', '>', 'bar')], "Internal test that we are inversing a domain")
         and_domain = simple & Domain('bar', '=', 'baz')
 
         # bool
@@ -1000,14 +1000,20 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(helen, self._search(Model, [('name', '=ilike', 'hél%')]))
         self.assertNotIn(helen, self._search(Model, [('name', 'not ilike', 'Helene')]))
         self.assertNotIn(helen, self._search(Model, [('name', 'not ilike', 'hélène')]))
+        self.assertNotIn(helen, self._search(Model, [('name', 'not ilike', 'ele')]))
+        self.assertNotIn(helen, self._search(Model, [('name', 'not ilike', 'élè')]))
+        self.assertNotIn(helen, self._search(Model, [('name', 'not =ilike', 'Hel%')]))
+        self.assertNotIn(helen, self._search(Model, [('name', 'not =ilike', 'hél%')]))
 
         # =like and like should be case and accent sensitive
         self.assertEqual(helen, self._search(Model, [('name', '=like', 'Hél%')]))
         self.assertNotIn(helen, self._search(Model, [('name', '=like', 'Hel%')]))
         self.assertEqual(helen, self._search(Model, [('name', 'like', 'élè')]))
         self.assertNotIn(helen, self._search(Model, [('name', 'like', 'ele')]))
-        self.assertNotIn(helen, self._search(Model, [('name', 'not ilike', 'ele')]))
-        self.assertNotIn(helen, self._search(Model, [('name', 'not ilike', 'élè')]))
+        self.assertIn(helen, self._search(Model, [('name', 'not like', 'ele')]))
+        self.assertNotIn(helen, self._search(Model, [('name', 'not like', 'élè')]))
+        self.assertNotIn(helen, self._search(Model, [('name', 'not =like', 'Hél%')]))
+        self.assertIn(helen, self._search(Model, [('name', 'not =like', 'Hel%')]))
 
         hermione, nicostratus = Model.create([
             {'name': 'Hermione', 'parent_id': helen.id},
