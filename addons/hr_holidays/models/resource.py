@@ -81,6 +81,9 @@ class CalendarLeaves(models.Model):
             leave.write({'state': state})
             if leave.number_of_days == 0.0:
                 leaves_to_cancel |= leave
+            elif leave.state == 'validate':
+                # recreate the resource leave that were removed by writing state to draft
+                leave.sudo()._create_resource_leave()
 
         leaves_to_cancel._force_cancel(_("a new public holiday completely overrides this leave."), 'mail.mt_comment')
 
