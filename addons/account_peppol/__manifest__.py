@@ -38,6 +38,7 @@
     'demo': [
         'demo/account_peppol_demo.xml',
     ],
+    'pre_init_hook': '_account_peppol_pre_init',
     'post_init_hook': '_account_peppol_post_init',
     'license': 'LGPL-3',
     'assets': {

@@ -5,6 +5,10 @@ from . import models
 from . import wizard
 from . import tools
 
+def _account_peppol_pre_init(env):
+    view = env.ref('account_edi_ubl_cii.view_partner_property_form')
+    if "peppol_address" not in view.arch:
+        view.reset_arch(mode='hard')
 
 def _account_peppol_post_init(env):
     for company in env['res.company'].sudo().search([]):
