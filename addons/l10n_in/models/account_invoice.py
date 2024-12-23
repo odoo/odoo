@@ -31,6 +31,7 @@ class AccountMove(models.Model):
     l10n_in_state_id = fields.Many2one('res.country.state', string="Place of supply",
         compute="_compute_l10n_in_state_id", store=True, copy=True, readonly=False, precompute=True)
     l10n_in_gstin = fields.Char(string="GSTIN")
+    l10n_in_is_advanced_template = fields.Boolean(related='company_id.l10n_in_is_advanced_template')
     # For Export invoice this data is need in GSTR report
     l10n_in_shipping_bill_number = fields.Char('Shipping bill number')
     l10n_in_shipping_bill_date = fields.Date('Shipping bill date')

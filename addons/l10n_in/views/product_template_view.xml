@@ -14,6 +14,15 @@
             <field name="categ_id" position="after">
                 <field name="l10n_in_hsn_code" widget="l10n_in_hsn_autocomplete" invisible="'IN' not in fiscal_country_codes or not l10n_in_is_gst_registered_enabled"/>
             </field>
+            <xpath expr="//label[@for='taxes_id']" position="attributes">
+                <attribute name="invisible">not l10n_in_is_advanced_template and 'IN' in fiscal_country_codes</attribute>
+            </xpath>
+            <xpath expr="//div[@name='taxes_div']" position="attributes">
+                <attribute name="invisible">type == 'combo' or not l10n_in_is_advanced_template and 'IN' in fiscal_country_codes</attribute>
+            </xpath>
+            <xpath expr="//field[@name='supplier_taxes_id']" position="attributes">
+                <attribute name="invisible">not purchase_ok or type == 'combo' or not l10n_in_is_advanced_template and 'IN' in fiscal_country_codes</attribute>
+            </xpath>
         </field>
     </record>
 

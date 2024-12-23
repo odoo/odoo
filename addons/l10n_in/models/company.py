@@ -36,6 +36,12 @@ class ResCompany(models.Model):
     )
     l10n_in_pan_type = fields.Char(string="PAN Type", compute="_compute_l10n_in_pan_type")
     l10n_in_gst_state_warning = fields.Char(related="partner_id.l10n_in_gst_state_warning")
+    l10n_in_is_advanced_template = fields.Boolean(compute='_compute_l10n_in_is_advanced_template')
+
+    @api.depends('chart_template')
+    def _compute_l10n_in_is_advanced_template(self):
+        for company in self:
+            company.l10n_in_is_advanced_template = company.chart_template == 'in_adv'
 
     # TDS/TCS settings
     l10n_in_tds_feature = fields.Boolean(
@@ -157,10 +163,10 @@ class ResCompany(models.Model):
         return res
 
     def _update_l10n_in_fiscal_position(self):
-        companies_need_update_fp = self.filtered(lambda c: c.parent_ids[0].chart_template == 'in')
+        companies_need_update_fp = self.filtered(lambda c: c.parent_ids[0].chart_template == 'in_adv')
         for company in companies_need_update_fp:
             ChartTemplate = self.env['account.chart.template'].with_company(company)
-            fiscal_position_data = ChartTemplate._get_in_account_fiscal_position()
+            fiscal_position_data = ChartTemplate._get_in_adv_account_fiscal_position()
             ChartTemplate._load_data({'account.fiscal.position': fiscal_position_data})
 
     def _update_l10n_in_is_gst_registered(self):

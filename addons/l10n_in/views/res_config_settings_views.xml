@@ -127,6 +127,12 @@
                     </div>
                 </setting>
             </block>
+            <xpath expr="//field[@name='chart_template']" position="attributes">
+                <attribute name="readonly">has_accounting_entries and country_code != 'IN'</attribute>
+            </xpath>
+            <xpath expr="//block[@name='default_taxes_setting_container']" position="attributes">
+                <attribute name="invisible">not l10n_in_is_advanced_template and country_code == 'IN'</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>

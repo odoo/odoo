@@ -96,6 +96,12 @@
                     </field>
                 </page>
             </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list//field[@name='tax_ids']" position="attributes">
+                <attribute name="column_invisible">not parent.l10n_in_is_advanced_template and parent.country_code == 'IN'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='fiscal_position_id']" position="attributes">
+                <attribute name="invisible">not l10n_in_is_advanced_template and country_code == 'IN'</attribute>
+            </xpath>
         </field>
     </record>
 

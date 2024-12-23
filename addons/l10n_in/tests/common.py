@@ -5,6 +5,7 @@ from odoo import Command
 class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
     @classmethod
     @AccountTestInvoicingCommon.setup_country('in')
+    @AccountTestInvoicingCommon.setup_chart_template('in_adv')
     def setUpClass(cls):
         super().setUpClass()
 
