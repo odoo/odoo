@@ -2028,13 +2028,17 @@ class ProjectTask(models.Model):
             task.subtask_completion_percentage = task.subtask_count and task.closed_subtask_count / task.subtask_count
 
     @api.model
-    def _get_thread_with_access(self, thread_id, mode="read", **kwargs):
-        if project_sharing_id := kwargs.get("project_sharing_id"):
+    def _get_allowed_access_params(self):
+        return super()._get_allowed_access_params() | {'project_sharing_id'}
+
+    @api.model
+    def _get_thread_with_access(self, thread_id, project_sharing_id=None, token=None, **kwargs):
+        if project_sharing_id:
             if token := ProjectSharingChatter._check_project_access_and_get_token(
-                self, project_sharing_id, self._name, thread_id, kwargs.get("token")
+                self, project_sharing_id, self._name, thread_id, token
             ):
-                kwargs["token"] = token
-        return super()._get_thread_with_access(thread_id, mode, **kwargs)
+                token = token
+        return super()._get_thread_with_access(thread_id, project_sharing_id=project_sharing_id, token=token, **kwargs)
 
     def get_mention_suggestions(self, search, limit=8):
         """Return the 'limit'-first followers of the given task or followers of its project matching

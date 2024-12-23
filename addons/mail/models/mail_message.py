@@ -585,7 +585,10 @@ class MailMessage(models.Model):
 
         if message.model and message.res_id:
             mode = self.env[message.model]._get_mail_message_access([message.res_id], operation)
-            if self.env[message.model]._get_thread_with_access(message.res_id, mode, **kwargs):
+            if self.env[message.model]._get_thread_with_access(
+                message.res_id, mode=mode,
+                **{key: value for key, value in kwargs.items() if key in self.env[message.model]._get_allowed_access_params()},
+            ):
                 return message
 
         return self.browse()
