@@ -4,7 +4,7 @@
         <ActionPanel title.translate="Threads" resizable="false" icon="'fa fa-comments-o'">
             <t t-set-slot="header">
                 <div class="d-flex align-items-center my-0">
-                    <div class="input-group my-2">
+                    <div class="input-group ms-2 my-2">
                         <div class="form-control d-flex align-items-center p-0 bg-view" role="search" aria-autocomplete="list">
                             <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1 h-100">
                                 <input t-ref="search" t-model="state.searchTerm" type="text" class="o_searchview_input rounded flex-grow-1 w-auto border-0 px-2" t-on-keydown="onKeydownSearch" placeholder="Search by name"/>

@@ -1,5 +1,9 @@
 .o-mail-DiscussSidebarChannel-container.o-bordered.o-selfInCall {
-    --border-opacity: var(--mail-DiscussSidebarChannel-borderSelfInCallOpacity, 0.25);
-    border-color: rgba($o-action, var(--border-opacity, 1)) !important;
-    background-color: mix($white, $o-action, 95%) !important;
+    @include o-mail-call-bordered;
+
+    .o-mail-DiscussSidebar-item {
+        &.o-active, &:hover {
+            background-color: mix(mix($white, $o-action, 95%), $gray-200, 15%) !important;
+        }
+    }
 }

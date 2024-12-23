@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebarCallIndicator">
-        <div t-if="props.thread.rtcSessions.length > 0" class="fa fa-volume-up" title="Ongoing call" t-att-class="{ 'text-danger': props.thread.eq(rtc.state.channel), 'mx-1': !store.discuss.isSidebarCompact }"/>
+        <div t-if="props.thread.rtcSessions.length > 0" title="Ongoing call" class="o-mail-DiscussSidebarCallIndicator o-py-0_5 fa-fw rounded fa fa-volume-up" t-att-class="{
+            'text-danger': props.thread.eq(rtc.state.channel),
+            'me-2': !store.discuss.isSidebarCompact,
+        }"/>
     </t>
 </templates>

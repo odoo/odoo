@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.ChannelMemberList">
-        <ActionPanel title.translate="Members" minWidth="200" icon="'fa fa-users'">
-            <button t-on-click="() => props.openChannelInvitePanel({ keepPrevious: env.inChatWindow })" class="btn btn-sm btn-secondary m-2 mt-0 d-flex align-items-center justify-content-center gap-1"><i class="fa fa-user-plus"/><span>Invite a User</span></button>
+        <ActionPanel title.translate="Members" minWidth="200" initialWidth="250" icon="'fa fa-users'">
+            <button t-on-click="() => props.openChannelInvitePanel({ keepPrevious: env.inChatWindow })" class="btn btn-sm btn-secondary mt-2 d-flex align-items-center justify-content-center gap-1 rounded"><i class="fa fa-user-plus opacity-75"/><span>Invite a User</span></button>
             <t t-if="props.thread.onlineMembers.length > 0">
                 <t t-call="discuss.ChannelMemberList.section">
                     <t t-set="sectionName" t-value="onlineSectionText"/>
@@ -31,7 +31,7 @@
     </t>
 
     <t t-name="discuss.ChannelMemberList.section">
-        <h6 class="text-muted pt-2 text-uppercase smaller" t-esc="sectionName"/>
+        <h6 class="text-muted pt-4 text-uppercase o-xsmaller opacity-75" t-esc="sectionName"/>
     </t>
 
     <t t-name="discuss.channel_member">
@@ -40,11 +40,11 @@
                 <img class="w-100 h-100 rounded o_object_fit_cover" t-att-src="member.persona.avatarUrl"/>
                 <ImStatus member="member" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
             </div>
-            <span t-ref="displayName" class="ms-2 text-truncate" t-esc="member.name"/>
+            <span t-ref="displayName" class="ms-2 text-truncate text-muted fw-bold" t-esc="member.name"/>
             <span class="ms-auto">
-                <span t-if="member.in(props.thread.invitedMembers)" class="p-1 fa fa-user-plus"/>
-                <span t-if="member.rtcSession?.is_muted and !member.rtcSession?.is_deaf" class="p-1 fa fa-microphone-slash"/>
-                <span t-elif="member.rtcSession?.is_deaf" class="p-1 fa fa-deaf"/>
+                <span t-if="member.in(props.thread.invitedMembers)" class="p-1 fa fa-user-plus opacity-75"/>
+                <span t-if="member.rtcSession?.is_muted and !member.rtcSession?.is_deaf" class="p-1 fa fa-microphone-slash opacity-75"/>
+                <span t-elif="member.rtcSession?.is_deaf" class="p-1 fa fa-deaf opacity-75"/>
                 <span t-if="member.rtcSession?.raisingHand" class="p-1 fa fa-hand-paper-o"/>
             </span>
 

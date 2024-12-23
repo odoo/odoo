@@ -28,8 +28,8 @@
             </div>
             <t t-if="rtcSession">
                 <!-- overlay -->
-                <span class="o-discuss-CallParticipantCard-overlay o-discuss-CallParticipantCard-overlayBottom z-1 position-absolute bottom-0 start-0 d-flex overflow-hidden">
-                    <span t-if="!props.minimized and !props.inset" class="p-1 rounded-1 text-truncate" t-esc="name"/>
+                <span class="o-discuss-CallParticipantCard-overlay o-discuss-CallParticipantCard-overlayBottom z-1 position-absolute bottom-0 start-0 d-flex overflow-hidden rounded-1">
+                    <span t-if="!props.minimized and !props.inset" class="px-1 rounded-1 text-truncate smaller opacity-75" t-esc="name"/>
                     <small t-if="rtcSession.is_screen_sharing_on and props.minimized and !isOfActiveCall" class="user-select-none o-minimized rounded-pill text-bg-danger d-flex align-items-center fw-bolder" title="live" aria-label="live">
                         LIVE
                     </small>

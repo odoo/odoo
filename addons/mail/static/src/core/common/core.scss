@@ -1,4 +1,4 @@
-$o-discuss-talkingColor: lighten($success, 5%);
+$o-discuss-talkingColor: lighten($success, 10%);
 
 .o-mail-discussSidebarBgColor {
     background-color: $white;
@@ -69,8 +69,17 @@ $o-discuss-talkingColor: lighten($success, 5%);
     font-size: 0.65rem;
 }
 
+.o-xxsmaller {
+    font-size: 0.5rem;
+}
+
 .o-yellow {
     color: $yellow;
+}
+
+@mixin o-mail-call-bordered() {
+    outline: 2px solid rgba($o-action, 0.5) !important;
+    background-color: mix($white, $o-action, 95%) !important;
 }
 
 // see `@mixin button-variant`, this is the implementation without requiring `.btn` classname

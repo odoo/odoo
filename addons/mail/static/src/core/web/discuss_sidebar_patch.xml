@@ -15,6 +15,6 @@
     </t>
 
     <t t-name="mail.DiscussSidebar.startMeetingButton">
-        <button class="btn btn-primary rounded d-flex align-items-center gap-1 mx-5" t-att-class="{ 'py-2': store.discuss.isSidebarCompact, 'btn-sm': !store.discuss.isSidebarCompact }" t-on-click="store.startMeeting" data-hotkey="m" t-ref="meeting-btn"><i class="fa fa-fw fa-users"/><span t-if="!store.discuss.isSidebarCompact" t-esc="startMeetingText"/></button>
+        <button class="btn btn-primary rounded d-flex align-items-center gap-1 mx-5" t-att-class="{ 'py-2': store.discuss.isSidebarCompact, 'btn-sm': !store.discuss.isSidebarCompact }" t-on-click="store.startMeeting" data-hotkey="m" t-ref="meeting-btn"><i class="fa fa-fw fa-users opacity-75"/><span t-if="!store.discuss.isSidebarCompact" t-esc="startMeetingText"/></button>
     </t>
 </templates>
