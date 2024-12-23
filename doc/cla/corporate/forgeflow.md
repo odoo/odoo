@@ -22,3 +22,4 @@ Bernat Puig bernat.puig@forgeflow.com https://github.com/BernatPForgeFlow
 Joan Sisquella joan.sisquella@forgeflow.com https://github.com/JoanSForgeFlow
 Laura Cazorla laura.cazorla@forgeflow.com https://github.com/LauraCForgeFlow
 Arnau Cruz arnau.cruz@forgeflow.com https://github.com/ArnauCForgeFlow
+Guillem Casassas guillem.casassas@forgeflow.com https://github.com/GuillemCForgeFlow
