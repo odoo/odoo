@@ -14,7 +14,7 @@ class AuthorizeTest(AuthorizeCommon):
 
     def test_compatible_providers(self):
         # Note: in the test common, 'USD' is specified as the currency linked to the user account.
-        unsupported_currency = self._prepare_currency('CHF')
+        unsupported_currency = self._enable_currency('CHF')
         providers = self.env['payment.provider']._get_compatible_providers(
             self.company.id, self.partner.id, self.amount, currency_id=unsupported_currency.id
         )
