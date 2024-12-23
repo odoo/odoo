@@ -6,6 +6,7 @@ import { ConnectionLostError } from "@web/core/network/rpc";
 import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { uuidv4 } from "@point_of_sale/utils";
+import { TipScreen } from "@pos_restaurant/app/tip_screen/tip_screen";
 
 const NON_IDLE_EVENTS = [
     "mousemove",
@@ -135,7 +136,10 @@ patch(PosStore.prototype, {
             isDraftOrder = true;
         }
 
-        if (this.get_order()?.finalized) {
+        if (
+            this.get_order()?.finalized &&
+            ![ReceiptScreen, TipScreen].includes([this.mainScreen.component])
+        ) {
             this.add_new_order();
         }
 
