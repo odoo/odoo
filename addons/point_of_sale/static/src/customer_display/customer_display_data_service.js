@@ -6,8 +6,8 @@ import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export const CustomerDisplayDataService = {
-    dependencies: ["bus_service", "dialog"],
-    async start(env, { bus_service, dialog }) {
+    dependencies: ["bus_service", "notification" ],
+    async start(env, { bus_service, notification }) {
         const data = reactive({});
         if (session.type === "local") {
             new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY").onmessage = (event) => {
@@ -34,19 +34,19 @@ export const CustomerDisplayDataService = {
                                 "Content-Type": "application/json",
                             },
                             body: JSON.stringify({
-                                action: "get",
+                                params: {
+                                    action: "get",
+                                },
                             }),
                         }
                     );
                     const payload = await response.json();
                     Object.assign(data, payload.result.data);
                 } catch (error) {
-                    dialog.add(AlertDialog, {
-                        title: _t("IoT customer display error"),
-                        body: _t(
-                            "Error: %s.\nMake sure there is an IoT Box subscription associated with your Odoo database, then restart the IoT Box.",
-                            error
-                        ),
+                    notification.add(
+                        _t("Make sure there is an IoT Box subscription associated with your Odoo database, then restart the IoT Box."), {
+                        title: _t("IoT Customer Display Error"),
+                        type: "danger",
                     });
                     console.error("Error fetching data for the IoT customer display: %s", error);
                     clearInterval(intervalId);
