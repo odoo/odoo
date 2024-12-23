@@ -4634,7 +4634,16 @@ class MailThread(models.AbstractModel):
         return {"attachment_ids", "body", "email_add_signature", "message_type", "partner_ids", "subtype_xmlid"}
 
     @api.model
+    def _get_allowed_access_params(self):
+        return set()
+
+    @api.model
     def _get_thread_with_access(self, thread_id, mode="read", **kwargs):
+        # sanity check on kwargs
+        allowed_params = self._get_allowed_access_params()
+        if invalid := (set((kwargs or {}).keys()) - allowed_params):
+            _logger.warning("Invalid access parameters to _get_thread_with_access: %s", invalid)
+
         thread = self.browse(thread_id)
         if thread.exists() and thread.sudo(False).has_access(mode):
             return thread

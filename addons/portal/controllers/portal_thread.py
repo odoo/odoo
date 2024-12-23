@@ -3,6 +3,7 @@ from werkzeug.exceptions import Forbidden
 from odoo import http
 from odoo.http import request
 from odoo.osv import expression
+from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.portal.utils import get_portal_partner
 
@@ -21,11 +22,12 @@ class PortalChatter(http.Controller):
     def portal_avatar(self, res_id=None, height=50, width=50, access_token=None, _hash=None, pid=None):
         """Get the avatar image in the chatter of the portal"""
         if access_token or (_hash and pid):
-            message = request.env["mail.message"].browse(int(res_id)).exists().filtered(
-                lambda msg: request.env[msg.model]._get_thread_with_access(
-                    msg.res_id, token=access_token, hash=_hash, pid=pid and int(pid)
-                )
+            message_su = request.env["mail.message"].browse(int(res_id)).exists().sudo()
+            thread = ThreadController._get_thread_with_access(
+                message_su.model, message_su.res_id,
+                token=access_token, hash=_hash, pid=pid and int(pid)
             )
+            message_su = message_su if thread else request.env["mail.message"]
         else:
             message = request.env.ref('web.image_placeholder').sudo()
         # in case there is no message, it creates a stream with the placeholder image
@@ -37,7 +39,7 @@ class PortalChatter(http.Controller):
     @http.route("/portal/chatter_init", type="jsonrpc", auth="public", website=True)
     def portal_chatter_init(self, thread_model, thread_id, **kwargs):
         store = Store()
-        thread = request.env[thread_model]._get_thread_with_access(thread_id, **kwargs)
+        thread = ThreadController._get_thread_with_access(thread_model, thread_id, **kwargs)
         partner = request.env.user.partner_id
         if thread and request.env.user._is_public():
             if portal_partner := get_portal_partner(
@@ -67,8 +69,8 @@ class PortalChatter(http.Controller):
         # Check access
         Message = request.env['mail.message']
         if kw.get('token'):
-            access_as_sudo = request.env[thread_model]._get_thread_with_access(
-                thread_id, token=kw.get("token")
+            access_as_sudo = ThreadController._get_thread_with_access(
+                thread_model, thread_id, token=kw.get("token"),
             )
             if not access_as_sudo:  # if token is not correct, raise Forbidden
                 raise Forbidden()
