@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models
+from odoo import models, _
 from odoo.addons.account.models.chart_template import template
 
 
@@ -33,4 +33,17 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_account_id': 'account_410235',
                 'income_account_id': 'account_310115',
             },
+        }
+
+    @template('cl', 'account.journal')
+    def _get_cl_account_journal(self):
+        return {
+            'domestic_purchase': {
+                'name': _("Domestic Purchases"),
+                'code': 'DMP',
+                'type': 'purchase',
+                'sequence': 2,
+                'l10n_latam_use_documents': True,
+                'default_account_id': 'account_410235',
+            }
         }
