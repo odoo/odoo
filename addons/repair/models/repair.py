@@ -348,9 +348,9 @@ class Repair(models.Model):
         sale_order_values_list = []
         for repair in self:
             sale_order_values_list.append({
-                "company_id": self.company_id.id,
-                "partner_id": self.partner_id.id,
-                "warehouse_id": self.picking_type_id.warehouse_id.id,
+                "company_id": repair.company_id.id,
+                "partner_id": repair.partner_id.id,
+                "warehouse_id": repair.picking_type_id.warehouse_id.id,
                 "repair_order_ids": [Command.link(repair.id)],
             })
         self.env['sale.order'].create(sale_order_values_list)
@@ -537,12 +537,19 @@ class Repair(models.Model):
         }
 
     def action_view_sale_order(self):
-        return {
+        sale_order_ids = self.mapped('sale_order_id.id')
+        action_window = {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
-            "views": [[False, "form"]],
-            "res_id": self.sale_order_id.id,
+            "name": _("Sales Order"),
         }
+        if len(sale_order_ids) == 1:
+            action_window["views"] = [[False, "form"]]
+            action_window["res_id"] = sale_order_ids[0]
+        else:
+            action_window["views"] = [[False, "tree"], [False, "form"]]
+            action_window["domain"] = [["id", "in", sale_order_ids]]
+        return action_window
 
     def print_repair_order(self):
         return self.env.ref('repair.action_report_repair_order').report_action(self)
