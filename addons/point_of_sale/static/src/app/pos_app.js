@@ -71,8 +71,10 @@ export class Chrome extends Component {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    action: "set",
-                    data: selectedOrder.getCustomerDisplayData(),
+                    params: {
+                        action: "set",
+                        data: selectedOrder.getCustomerDisplayData(),
+                    },
                 }),
             }).catch(() => {
                 console.log("Failed to send data to customer display");

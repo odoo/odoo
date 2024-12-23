@@ -126,9 +126,11 @@ export class Navbar extends Component {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    action: "open",
-                    access_token: this.pos.config.access_token,
-                    id: this.pos.config.id,
+                    params: {
+                        action: "open",
+                        access_token: this.pos.config.access_token,
+                        id: this.pos.config.id,
+                    },
                 }),
             })
                 .then(() => {

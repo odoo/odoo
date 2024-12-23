@@ -155,7 +155,9 @@ export class ClosePosPopup extends Component {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    action: "close",
+                    params: {
+                        action: "close",
+                    },
                 }),
             }).catch(() => {
                 console.log("Failed to send data to customer display");
