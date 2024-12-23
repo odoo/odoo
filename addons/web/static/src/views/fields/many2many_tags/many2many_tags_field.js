@@ -104,8 +104,10 @@ export class Many2ManyTagsField extends Component {
                 write: true,
             },
             onRecordSaved: async (record) => {
-                await this.props.record.data[this.props.name].forget(record);
-                return saveRecord([record.resId]);
+                await this.props.record.data[this.props.name].validateExtendedRecord(record);
+                // Save the intermediate changes of record and reload the model for fresh changes
+                await this.props.record.save();
+                await this.props.record.model.load();
             },
         });
 
