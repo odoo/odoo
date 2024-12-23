@@ -3779,8 +3779,6 @@ class MailThread(models.AbstractModel):
         title = msg_vals['record_name'] if 'record_name' in msg_vals else message.model
         res_id = msg_vals['res_id'] if 'res_id' in msg_vals else message.res_id
         body = msg_vals['body'] if 'body' in msg_vals else message.body
-        if not model and body:
-            model, res_id = self._extract_model_and_id(body)
 
         if author_id:
             author_name = self.env['res.partner'].browse(author_id).name
@@ -4133,20 +4131,6 @@ class MailThread(models.AbstractModel):
         token = '%s?%s' % (base_link, ' '.join('%s=%s' % (key, params[key]) for key in sorted(params)))
         hm = hmac.new(secret.encode('utf-8'), token.encode('utf-8'), hashlib.sha1).hexdigest()
         return hm
-
-    @api.model
-    def _extract_model_and_id(self, html_content):
-        """
-        Return the model and the id when is present in a link (HTML)
-        :param msg_vals: see :meth:`._notify_thread_by_web_push`
-        :return: a dict empty if no matches and a dict with these keys if match : model and res_id
-        """
-        regex = r"<a.+model=(?P<model>[\w.]+).+res_id=(?P<id>\d+).+>[\s\w\/\\.]+<\/a>"
-        matches = re.finditer(regex, html_content)
-
-        for match in matches:
-            return match['model'], match['id']
-        return None, None
 
     @api.model
     def _generate_tracking_message(self, message, return_line='\n'):
