@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_departure_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.departure.view.form</field>
+        <field name="model">hr.employee.departure</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_schedule" string="Schedule" type="object" class="oe_highlight" invisible="state != 'draft' or apply_immediately"/>
+                    <button name="action_register_departure" string="Apply" type="object" class="oe_highlight" invisible="not apply_immediately"/>
+                    <button name="action_cancel" string="Cancel" type="object" invisible="state == 'cancelled'"/>
+                    <button name="action_draft" string="Reset to Draft" type="object" invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id" options="{'no_open': True}" widget="many2one_avatar_user"
+                                readonly="state == 'done'"/>
+                            <field name="has_selected_actions" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="country_id" invisible="1"/>
+                            <field name="country_code" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                            <label for="departure_date" string="Contract End Date"/>
+                            <div invisible="not departure_reason_id">
+                                <field name="departure_date" nolabel="1" class="oe_inline"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group>
+                        <div id="detailed_reason" colspan="2">
+                            <span class="o_form_label o_hr_form_label cursor-default">Note</span>
+                            <field name="departure_description" placeholder="Add more details about the reason to end the collaboration with this employee."/>
+                        </div>
+                    </group>
+                    <notebook>
+                        <page string="Planned Actions" name="planned_actions">
+                            <group>
+                                <group name="planned_actions_left">
+                                    <label for="do_archive_employee" string="Employee"/>
+                                    <div class="o_row">
+                                        <field name="do_archive_employee" nolabel="1" readonly="state == 'done'"/>
+                                        <span>Archive</span>
+                                    </div>
+                                </group>
+                                <group name="planned_actions_right"/>
+                            </group>
+                            <group class="mt-4" invisible="not has_selected_actions">
+                                <group invisible="state == 'done'">
+                                    <field name="action_at" readonly="state == 'done'"/>
+                                    <field name="action_other_date" invisible="action_at == 'departure_date'"
+                                        placeholder="Immediately" readonly="state == 'done'"/>
+                                </group>
+                                <div invisible="state != 'done'">
+                                    <span class="alert alert-warning" role="alert">
+                                        All selected actions have been executed on the
+                                        <field name="apply_date" class="oe_inline"/>
+                                    </span>
+                                </div>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_employee_departure_view_list" model="ir.ui.view">
+        <field name="name">hr.employee.departure.view.list</field>
+        <field name="model">hr.employee.departure</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="employee_id"/>
+                <field name="departure_reason_id"/>
+                <field name="departure_date"/>
+                <field name="state" widget="badge"
+                    decoration-muted="state == 'draft'"
+                    decoration-warning="state == 'scheduled'"
+                    decoration-success="state == 'done'"
+                    decoration-danger="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_employee_departure_action" model="ir.actions.act_window">
+        <field name="name">Ends of Collaboration</field>
+        <field name="res_model">hr.employee.departure</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
