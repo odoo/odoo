@@ -1323,21 +1323,19 @@ def _operator_hierarchy(condition, model):
     or it is a field where the comodel is the same as the model.
     The value is used to search a set of `related_records`. We start from the given value,
     which can be ids, a name (for searching by name), etc. Then we follow up the relation;
-    forward in case of `parent_of` and backward in case of `child_of`.
-    The resulting domain will have 'id' if the field is 'id' or a many2one.
+    forward in case of `parent_of` and backward in case of `child_of`. Following up the
+    relation is done in sudo mode.
 
     In the case where the comodel is not the same as the model, the result is equivalent to
-    `('field', 'any', ('id', operator, value))`
+    `('field', 'any', ('id', operator, value))`.
+    XXX not true, because of permissions, do we want to keep that?
     """
     if condition.operator == 'parent_of':
         hierarchy = _operator_parent_of_domain
     else:
         hierarchy = _operator_child_of_domain
-    value = condition.value
-    if value is False:
-        _logger.warning('Using %s with False value, the result will be empty', condition.operator)
     # Get:
-    # - field: used in the resulting domain)
+    # - field: used for parent name
     # - parent (str | None): field name to find parent in the hierarchy
     # - comodel_sudo: used to resolve the hierarchy
     # - comodel: used to search for ids based on the value
@@ -1351,26 +1349,33 @@ def _operator_hierarchy(condition, model):
     else:
         condition._raise(f"Cannot execute {condition.operator} for {field}, works only for relational fields")
     comodel_sudo = comodel.sudo().with_context(active_test=False)
-    parent = comodel._parent_name
-    if comodel._name == model._name:
-        if condition.field_expr != 'id':
-            parent = condition.field_expr
-        if field.type == 'many2one':
-            field = model._fields['id']
+    if comodel._name != model._name:
+        """XXX lot of queries like ('company_id', 'child_of', [1]) - accept for now
+        warnings.warn(
+            "Hierarchy operators require a field with the same comodel"
+            f", use [({condition.field_expr!r}, 'in', ['id', {condition.operator!r}, value])]",
+            DeprecationWarning)
+        """
+        # XXX need to handle str and _value_to_ids (which is to be removed)
+        domain = Domain('id', condition.operator, condition.value)._optimize(comodel)
+        if isinstance(domain, DomainCondition) and domain.field_expr == 'id' and domain.operator in ('in', 'not in'):
+            # we search is sudo, avoid subquery with permissions
+            return Domain(condition.field_expr, domain.operator, domain.value)
+        return Domain(condition.field_expr, 'in', domain)
     # Get the initial ids and bind them to comodel_sudo before resolving the hierarchy
-    coids = _value_to_ids(value, comodel, 'in')
+    value = condition.value
+    if value is False:
+        return _FALSE_DOMAIN
+    coids = _value_to_ids(value, comodel, 'in')  # XXX depends on removal of this function
     if field.type == 'many2many' or isinstance(coids, (SQL, Query)):
         # always search for many2many
         coids = comodel.search(Domain('id', 'in', coids), order='id').ids
     if not coids:
         return _FALSE_DOMAIN
+    parent = comodel._parent_name if condition.field_expr == 'id' else condition.field_expr
     result = hierarchy(comodel_sudo.browse(coids), parent)
     # Format the resulting domain
-    if isinstance(result, Domain):
-        if field.name == 'id':
-            return result
-        return DomainCondition(field.name, 'any', result)
-    return DomainCondition(field.name, 'in', result)
+    return result if isinstance(result, Domain) else DomainCondition('id', 'in', result)
 
 
 def _operator_child_of_domain(comodel: BaseModel, parent):
