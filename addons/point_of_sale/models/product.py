@@ -10,6 +10,7 @@ from odoo.osv.expression import AND
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
+    _order = "is_favorite desc, sequence, name"
 
     available_in_pos = fields.Boolean(string='Available in POS', help='Check if you want this product to appear in the Point of Sale.', default=False)
     to_weight = fields.Boolean(string='To Weigh With Scale', help="Check if the product should be weighted using the hardware scale integration.")
@@ -20,6 +21,15 @@ class ProductTemplate(models.Model):
         string="Product Description",
         translate=True
     )
+    color = fields.Integer('Color Index', compute="_compute_color", store=True, readonly=False)
+
+    @api.depends('pos_categ_ids')
+    def _compute_color(self):
+        """Automatically set the color field based on the selected category."""
+        if self.pos_categ_ids:
+            self.color = self.pos_categ_ids[0].color  # Set to the first selected category's color
+        else:
+            self.color = False
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_open_session(self):
@@ -64,7 +74,7 @@ class ProductProduct(models.Model):
         return [
             'id', 'display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode', 'name',
             'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'product_tmpl_id', 'tracking', 'type', 'service_tracking', 'is_storable',
-            'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_template_variant_value_ids', 'product_tag_ids',
+            'write_date', 'is_favorite', 'color', 'sequence', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_template_variant_value_ids', 'product_tag_ids',
         ]
 
     def _load_pos_data(self, data):

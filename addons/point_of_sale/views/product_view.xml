@@ -21,7 +21,7 @@
         <field name="name">Products</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,list,form,activity</field>
-        <field name="context">{'search_default_filter_to_availabe_pos': 1, 'default_available_in_pos': True, 'create_variant_never': 'no_variant', '_pos_self_order': True}</field>
+        <field name="context">{'search_default_filter_to_availabe_pos': 1, 'default_available_in_pos': True, 'create_variant_never': 'no_variant', '_pos_self_order': True, 'list_view_ref': 'point_of_sale.product_template_list_view_pos'}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create new product
@@ -72,6 +72,8 @@
                                    groups="point_of_sale.group_pos_user"
                                    string="Category"
                                    options="{'color_field': 'color'}"/>
+                            <field name="color"
+                                   widget="color_picker" string="Color" />
                         </group>
                         <group string="Public Description" name="public_description" invisible="1">
                             <field name="public_description"
@@ -163,6 +165,21 @@
         </field>
     </record>
 
+    <!-- Sequence will only be visible in Point of Sale -->
+    <record id="product_template_list_view_pos" model="ir.ui.view">
+        <field name="name">product.template.product.list.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="point_of_sale.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="js_class">pos_list_renderer</attribute>
+            </xpath>
+            <field name="is_favorite" position="before">
+                <field name="sequence" widget="handle_widget" nolabel="1" groups="point_of_sale.group_pos_user" />
+            </field>
+        </field>
+    </record>
+
     <record id="product_product_tree_view" model="ir.ui.view">
         <field name="name">product.product.product.list.inherit</field>
         <field name="model">product.product</field>
@@ -188,6 +205,7 @@
             </xpath>
             <div name="tax_info" position="after">
                 <field name="pos_categ_ids" string="POS Category" class="oe_inline" widget="many2many_tags" placeholder="Unsaleable"/>
+                <field name="color" widget="color_picker" string="Color" />
             </div>
         </field>
     </record>
