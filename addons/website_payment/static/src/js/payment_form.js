@@ -52,7 +52,7 @@ PaymentForm.include({
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (document.querySelector('.o_donation_payment_form')) {
             const errorFields = {};
-            if (!this.el.querySelector('input[name="email"]').checkValidity()) {
+            if (!document.querySelector('input[name="email"]').checkValidity()) {
                 errorFields['email'] = _t("Email is invalid");
             }
             const mandatoryFields = {
@@ -61,7 +61,7 @@ PaymentForm.include({
                 'country_id': _t('Country'),
             };
             for (const id in mandatoryFields) {
-                const fieldEl = this.el.querySelector(`input[name="${id}"],select[name="${id}"]`);
+                const fieldEl = document.querySelector(`input[name="${id}"],select[name="${id}"]`);
                 fieldEl.classList.remove('is-invalid');
                 Popover.getOrCreateInstance(fieldEl)?.dispose();
                 if (!fieldEl.value.trim()) {
@@ -70,7 +70,7 @@ PaymentForm.include({
             }
             if (Object.keys(errorFields).length) {
                 for (const id in errorFields) {
-                    const fieldEl = this.el.querySelector(
+                    const fieldEl = document.querySelector(
                         `input[name="${id}"],select[name="${id}"]`
                     );
                     fieldEl.classList.add('is-invalid');
@@ -100,6 +100,23 @@ PaymentForm.include({
      */
     _prepareTransactionRouteParams() {
         const transactionRouteParams = this._super(...arguments);
+        this.getFormData = (formSelector) => {
+            const form = document.querySelector(formSelector);
+            if (!form) {
+                return {};
+            }
+            const formData = new FormData(form)
+
+            const partnerDetails = {};
+
+            formData.forEach((value, key) => {
+                partnerDetails[key] = value;
+            });
+
+            return partnerDetails;
+        };
+
+        const partnerDetails = this.getFormData(".o_payment_field_form");
         return document.querySelector('.o_donation_payment_form')
             ? {
             ...transactionRouteParams,
@@ -107,13 +124,9 @@ PaymentForm.include({
             currency_id: this.paymentContext['currencyId']
                     ? parseInt(this.paymentContext['currencyId']) : null,
             reference_prefix:this.paymentContext['referencePrefix']?.toString(),
-            partner_details: {
-                name: this.el.querySelector('input[name="name"]').value,
-                email: this.el.querySelector('input[name="email"]').value,
-                country_id: this.el.querySelector('select[name="country_id"]').value,
-            },
-            donation_comment: this.el.querySelector('#donation_comment').value,
-            donation_recipient_email: this.el.querySelector(
+            partner_details: partnerDetails,
+            donation_comment: document.querySelector('#donation_comment').value,
+            donation_recipient_email: document.querySelector(
                 'input[name="donation_recipient_email"]'
             ).value,
         } : transactionRouteParams;
