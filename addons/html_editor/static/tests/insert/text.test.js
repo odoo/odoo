@@ -3,6 +3,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { deleteBackward, insertText } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
 import { execCommand } from "../_helpers/userCommands";
+import { press } from "@odoo/hoot-dom";
 
 describe("collapsed selection", () => {
     test("should insert a char into an empty span without removing the zws", async () => {
@@ -42,6 +43,17 @@ describe("collapsed selection", () => {
                 await insertText(editor, "x");
             },
             contentAfter: "<p>abx[]cd</p>",
+        });
+    });
+
+    test("should insert text within heading after selecting a heading using ctrl+A", async () => {
+        await testEditor({
+            contentBefore: "<h1>abc[]</h1><p>def</p>",
+            stepFunction: async (editor) => {
+                await press(["ctrl", "a"]);
+                await insertText(editor, "x");
+            },
+            contentAfter: "<h1>x[]<br></h1>",
         });
     });
 });
