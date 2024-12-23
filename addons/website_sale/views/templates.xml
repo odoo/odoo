@@ -2188,7 +2188,7 @@
             - xmlid: The id of the xml templated rendered by the controller.
         -->
         <t t-set="step_specific_values" t-value="website._get_checkout_steps(xmlid)"/>
-        <div t-attf-class="#{_container_classes} d-flex #{_form_send_navigation and 'flex-column flex-lg-row align-items-lg-center' or 'flex-column'} pt-4">
+        <div t-attf-class="#{_container_classes} d-flex #{_form_send_navigation and 'flex-column flex-lg-row align-items-lg-center' or 'flex-column'} mb-5 mb-lg-0 pt-4">
             <t t-if="website_sale_order and website_sale_order.website_order_line">
                 <t t-if="xmlid == 'website_sale.payment'">
                     <div t-if="not errors and not website_sale_order.amount_total"
@@ -2831,7 +2831,7 @@
                         <!-- This div serves as an anchor for the navigation buttons on the mobile
                              view. -->
                         <div t-if="not show_shorter_cart_summary and show_navigation_button"
-                             class="o_cta_navigation_placeholder d-block d-lg-none order-lg-4"/>
+                             class="o_cta_navigation_placeholder d-block d-none d-lg-none order-lg-4"/>
                     </div>
                 </div>
                 <!-- This is the drag-and-drop area for website building blocs at the end of each
