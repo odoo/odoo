@@ -177,7 +177,6 @@ export async function initAutoMoreMenu(el, options) {
                 if (navLink) {
                     navLink.classList.remove('nav-link');
                     navLink.classList.add('dropdown-item');
-                    navLink.classList.toggle('active', el.classList.contains('active'));
                 }
             } else {
                 const dropdownSubMenu = el.querySelector('.dropdown-menu');
