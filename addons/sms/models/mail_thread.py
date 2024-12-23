@@ -219,7 +219,7 @@ class MailThread(models.AbstractModel):
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         # Main notification method. Override to add support of sending OCN notifications.
         scheduled_date = self._is_notification_scheduled(kwargs.get('scheduled_date'))
-        recipients_data = super(MailThread, self)._notify_thread(message, msg_vals=msg_vals, **kwargs)
+        recipients_data = super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
         if not scheduled_date:
             self._notify_thread_by_sms(message, recipients_data, msg_vals=msg_vals, **kwargs)
         return recipients_data
@@ -250,13 +250,14 @@ class MailThread(models.AbstractModel):
         :param put_in_queue: use cron to send queued SMS instead of sending them
           directly;
         """
+        msg_vals = msg_vals or {}
         sms_pid_to_number = sms_pid_to_number if sms_pid_to_number is not None else {}
         sms_numbers = sms_numbers if sms_numbers is not None else []
         sms_create_vals = []
         sms_all = self.env['sms.sms'].sudo()
 
         # pre-compute SMS data
-        body = sms_content or html2plaintext(msg_vals['body'] if msg_vals and 'body' in msg_vals else message.body)
+        body = sms_content or html2plaintext(msg_vals['body'] if 'body' in msg_vals else message.body)
         sms_base_vals = {
             'body': body,
             'mail_message_id': message.id,

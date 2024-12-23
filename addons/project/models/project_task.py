@@ -457,7 +457,7 @@ class ProjectTask(models.Model):
                 personal_stage_by_user[user_id].sudo().write({'stage_id': stage.id})
 
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
-        """ Set task notification based on project notification preference if user follow the project"""
+        # Set task notification based on project notification preference if user follow the project
         if not subtype_ids:
             project_followers = self.project_id.message_follower_ids.filtered(lambda f: f.partner_id.id in partner_ids)
             for project_follower in project_followers:
@@ -1464,7 +1464,7 @@ class ProjectTask(models.Model):
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False):
         render_context = super()._notify_by_email_prepare_rendering_context(
-            message, msg_vals, model_description=model_description,
+            message, msg_vals=msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
         if self.stage_id:
@@ -1592,11 +1592,11 @@ class ProjectTask(models.Model):
                 res -= waiting_subtype
         return res
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
-        """ Handle project users and managers recipients that can assign
-        tasks and create new one directly from notification emails. Also give
-        access button to portal users and portal customers. If they are notified
-        they should probably have access to the document. """
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
+        # Handle project users and managers recipients that can assign
+        # tasks and create new one directly from notification emails. Also give
+        # access button to portal users and portal customers. If they are notified
+        # they should probably have access to the document.
         groups = super()._notify_get_recipients_groups(
             message, model_description, msg_vals=msg_vals
         )
@@ -1628,7 +1628,7 @@ class ProjectTask(models.Model):
         return groups
 
     def _notify_get_reply_to(self, default=None):
-        """ Override to set alias of tasks to their project if any. """
+        # Override to set alias of tasks to their project if any
         aliases = self.sudo().mapped('project_id')._notify_get_reply_to(default=default)
         res = {task.id: aliases.get(task.project_id.id) for task in self}
         leftover = self.filtered(lambda rec: not rec.project_id)
@@ -1653,10 +1653,6 @@ class ProjectTask(models.Model):
 
     @api.model
     def message_new(self, msg, custom_values=None):
-        """ Overrides mail_thread message_new that is called by the mailgateway
-            through message_process.
-            This override updates the document according to the email.
-        """
         # remove default author when going through the mail gateway. Indeed we
         # do not want to explicitly set user_id to False; however we do not
         # want the gateway user to be responsible if no other responsible is
@@ -1687,7 +1683,6 @@ class ProjectTask(models.Model):
         return task
 
     def message_update(self, msg, update_vals=None):
-        """ Override to update the task according to the email. """
         email_list = self.task_email_split(msg)
         partner_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(email_list, records=self, force_create=False) if p]
         self.message_subscribe(partner_ids)

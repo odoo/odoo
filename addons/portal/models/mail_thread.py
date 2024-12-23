@@ -17,7 +17,7 @@ class MailThread(models.AbstractModel):
         auto_join=True,
         help="Website communication history")
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
         groups = super()._notify_get_recipients_groups(
             message, model_description, msg_vals=msg_vals
         )

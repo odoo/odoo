@@ -659,7 +659,7 @@ class ProjectProject(models.Model):
                 res -= waiting_subtype
         return res
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
         """ Give access to the portal user/customer if the project visibility is portal. """
         groups = super()._notify_get_recipients_groups(message, model_description, msg_vals=msg_vals)
         if not self:
