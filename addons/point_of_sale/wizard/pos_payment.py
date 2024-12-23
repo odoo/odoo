@@ -35,7 +35,8 @@ class PosMakePayment(models.TransientModel):
         return False
 
     config_id = fields.Many2one('pos.config', string='Point of Sale Configuration', required=True, default=_default_config)
-    amount = fields.Float(digits=0, required=True, default=_default_amount)
+    amount = fields.Monetary(required=True, default=_default_amount)
+    currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency", store=True, precompute=True)
     payment_method_id = fields.Many2one('pos.payment.method', string='Payment Method', required=True, default=_default_payment_method)
     payment_name = fields.Char(string='Payment Reference')
     payment_date = fields.Datetime(string='Payment Date', required=True, default=lambda self: fields.Datetime.now())
