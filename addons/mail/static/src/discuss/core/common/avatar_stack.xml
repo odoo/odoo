@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.AvatarStack">
-        <div t-if="props.personas.length > 0">
-            <div class="d-flex" t-att-class="{'flex-column': props.direction === 'v'}">
-                <t t-foreach="props.personas.slice(0, props.max)" t-as="persona" t-key="persona.localId">
+        <div t-if="props.personas.length > 0" class="bg-inherit">
+            <div class="d-flex bg-inherit" t-att-class="{'flex-column': props.direction === 'v'}">
+                <span t-foreach="props.personas.slice(0, props.max)" t-as="persona" t-key="persona.localId" class="position-relative bg-inherit rounded-circle">
                     <img t-att-src="persona.avatarUrl" t-att-title="persona.name" class="rounded-circle" t-attf-class="{{props.avatarClass(persona)}}" t-attf-style="{{getStyle(persona_index)}}"/>
-                </t>
+                    <t t-slot="avatarExtraInfo" persona="persona"/>
+                </span>
                 <span t-if="props.personas.length > props.max" class="rounded-circle bg-secondary smaller d-flex justify-content-center align-items-center user-select-none" t-attf-style="{{getStyle(props.personas.length)}}">+<t t-esc="props.personas.length - props.max"/></span>
             </div>
         </div>

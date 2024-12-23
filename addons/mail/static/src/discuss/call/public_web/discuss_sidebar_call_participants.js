@@ -88,12 +88,12 @@ export class DiscussSidebarCallParticipants extends Component {
      * @param {import("models").Persona} persona
      */
     avatarClass(persona) {
-        return this.state.expanded && persona.currentRtcSession?.isActuallyTalking
-            ? "o-mail-DiscussSidebarCallParticipants-avatar o-isTalking"
+        return persona.currentRtcSession?.isActuallyTalking
+            ? "o-mail-DiscussSidebarCallParticipants-avatar o-isTalking shadow"
             : "";
     }
 
     get title() {
-        return this.state.expanded ? _t("Collapse") : _t("Expand");
+        return this.state.expanded ? _t("Collapse participants") : _t("Expand participants");
     }
 }
