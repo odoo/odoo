@@ -46,6 +46,10 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
     }
 }
 
+.o-mail-DiscussSidebarCategory-chevronCompact {
+    left: map-get($spacers, 1);
+}
+
 .o-mail-DiscussSidebarCategory-toggler {
     &.o-compact {
         font-size: .65rem;
@@ -75,19 +79,15 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
 }
 
 .o-mail-DiscussSidebarChannel-subChannel.o-nonCompact {
-    margin-left: map-get($spacers, 4) + map-get($spacers, 2) + map-get($spacers, 1);
+    margin-left: map-get($spacers, 4) + map-get($spacers, 2);
 }
 
 .o-mail-DiscussSidebar-unreadIndicator {
     font-size: 0.35rem;
-    left: 6px;
-
-    &.o-compact {
-        left: 1px;
-    }
+    left: 1px;
 
     .o-mail-DiscussSidebarSubchannel &:not(.o-compact) {
-        left: 12px;
+        left: map-get($spacers, 2);
     }
 }
 
@@ -112,6 +112,6 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
 
 .o-mail-DiscussSidebarSubchannel svg {
     color: var(--mail-DiscussSidebarSubchannel-svgColor, $gray-300);
-    left: 26px;
+    left: 20px;
     transform: scaleX(1) #{"/* rtl:scaleX(-1) */"};
 }
