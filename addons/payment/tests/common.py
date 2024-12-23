@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+
 from unittest.mock import patch
 
 from lxml import objectify
@@ -11,7 +12,6 @@ from odoo.tools.misc import hmac as hmac_tool
 
 from odoo.addons.base.tests.common import BaseCommon
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -21,21 +21,17 @@ class PaymentCommon(BaseCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.currency_euro = cls._prepare_currency('EUR')
-        cls.currency_usd = cls._prepare_currency('USD')
+        cls.currency_euro = cls._enable_currency('EUR')
+        cls.currency_usd = cls._enable_currency('USD')
 
-        cls.country_belgium = cls.env.ref('base.be')
-        cls.country_france = cls.env.ref('base.fr')
-        cls.europe = cls.env.ref('base.europe')
+        cls.country_belgium = cls.quick_ref('base.be')
+        cls.country_france = cls.quick_ref('base.fr')
+        cls.europe = cls.quick_ref('base.europe')
 
-        cls.group_user = cls.env.ref('base.group_user')
-        cls.group_portal = cls.env.ref('base.group_portal')
-        cls.group_public = cls.env.ref('base.group_public')
-
-        cls.admin_user = cls.env.ref('base.user_admin')
+        cls.admin_user = cls.quick_ref('base.user_admin')
         cls.internal_user = cls._create_new_internal_user()
         cls.portal_user = cls._create_new_portal_user()
-        cls.public_user = cls.env.ref('base.public_user')
+        cls.public_user = cls.quick_ref('base.public_user')
 
         cls.admin_partner = cls.admin_user.partner_id
         cls.internal_partner = cls.internal_user.partner_id
@@ -65,12 +61,13 @@ class PaymentCommon(BaseCommon):
             'arch': arch,
         })
 
+        cls.pm_unknown = cls.quick_ref('payment.payment_method_unknown')
         cls.dummy_provider = cls.env['payment.provider'].create({
             'name': "Dummy Provider",
             'code': 'none',
             'state': 'test',
             'is_published': True,
-            'payment_method_ids': [Command.set([cls.env.ref('payment.payment_method_unknown').id])],
+            'payment_method_ids': [Command.set([cls.pm_unknown.id])],
             'allow_tokenization': True,
             'redirect_form_view_id': redirect_form.id,
             'available_currency_ids': [Command.set(
@@ -78,7 +75,7 @@ class PaymentCommon(BaseCommon):
             )],
         })
         # Activate pm
-        cls.env.ref('payment.payment_method_unknown').write({
+        cls.pm_unknown.write({
             'active': True,
             'support_tokenization': True,
         })
@@ -110,14 +107,6 @@ class PaymentCommon(BaseCommon):
             self.startPatcher(self.post_process_patcher)
 
     #=== Utils ===#
-
-    @classmethod
-    def _prepare_currency(cls, currency_code):
-        currency = cls.env['res.currency'].with_context(active_test=False).search(
-            [('name', '=', currency_code.upper())]
-        )
-        currency.action_unarchive()
-        return currency
 
     @classmethod
     def _prepare_provider(cls, code='none', company=None, update_values=None):
