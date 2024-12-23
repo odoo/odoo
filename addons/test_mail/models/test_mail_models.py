@@ -91,8 +91,6 @@ class MailTestGateway(models.Model):
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
-        """ Check override of 'message_new' allowing to update record values
-        base on incoming email. """
         defaults = {
             'email_from': msg_dict.get('from'),
         }

@@ -539,9 +539,9 @@ class DiscussChannel(models.Model):
                     ),
                 },
             )
-            devices, private_key, public_key = self._get_web_push_parameters(members.partner_id.ids)
+            devices, private_key, public_key = self._web_push_get_partners_parameters(members.partner_id.ids)
             if devices:
-                self._push_web_notification(devices, private_key, public_key, payload={
+                self._web_push_send_notification(devices, private_key, public_key, payload={
                     "title": "",
                     "options": {
                         "data": {
@@ -555,29 +555,20 @@ class DiscussChannel(models.Model):
     # MAILING
     # ------------------------------------------------------------
 
-    def _notify_get_recipients(self, message, msg_vals, **kwargs):
-        """ Override recipients computation as channel is not a standard
-        mail.thread document. Indeed there are no followers on a channel.
-        Instead of followers it has members that should be notified.
-
-        :param message: see ``MailThread._notify_get_recipients()``;
-        :param msg_vals: see ``MailThread._notify_get_recipients()``;
-        :param kwargs: see ``MailThread._notify_get_recipients()``;
-
-        :return recipients: structured data holding recipients data. See
-          ``MailThread._notify_thread()`` for more details about its content
-          and use;
-        """
-        # get values from msg_vals or from message if msg_vals doen't exists
-        message_type = msg_vals.get('message_type', 'comment') if msg_vals else message.message_type
-        pids = msg_vals.get('partner_ids', []) if msg_vals else message.partner_ids.ids
+    def _notify_get_recipients(self, message, msg_vals=False, **kwargs):
+        # Override recipients computation as channel is not a standard
+        # mail.thread document. Indeed there are no followers on a channel.
+        # Instead of followers it has members that should be notified.
+        msg_vals = msg_vals or {}
 
         # notify only user input (comment, whatsapp messages or incoming / outgoing emails)
+        message_type = msg_vals['message_type'] if 'message_type' in msg_vals else message.message_type
         if message_type not in ('comment', 'email', 'email_outgoing', 'whatsapp_message'):
             return []
 
         recipients_data = []
         author_id = msg_vals.get("author_id") or message.author_id.id
+        pids = msg_vals['partner_ids'] or [] if 'partner_ids' in msg_vals else message.partner_ids.ids
         if pids:
             email_from = tools.email_normalize(msg_vals.get('email_from') or message.email_from)
             self.env['res.partner'].flush_model(['active', 'email', 'partner_share'])
@@ -663,11 +654,11 @@ class DiscussChannel(models.Model):
             })
         return recipients_data
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
-        """ All recipients of a message on a channel are considered as partners.
-        This means they will receive a minimal email, without a link to access
-        in the backend. Mailing lists should indeed send minimal emails to avoid
-        the noise. """
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
+        # All recipients of a message on a channel are considered as partners.
+        # This means they will receive a minimal email, without a link to access
+        # in the backend. Mailing lists should indeed send minimal emails to avoid
+        # the noise.
         groups = super()._notify_get_recipients_groups(
             message, model_description, msg_vals=msg_vals
         )
@@ -694,9 +685,9 @@ class DiscussChannel(models.Model):
     def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
         payload = super()._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
         payload['options']['data']['action'] = 'mail.action_discuss'
-        record_name = msg_vals.get('record_name') if msg_vals and 'record_name' in msg_vals else message.record_name
-        author_id = [msg_vals["author_id"]] if msg_vals and msg_vals.get("author_id") else message.author_id.ids
-        author = self.env["res.partner"].browse(author_id) or self.env["mail.guest"].browse(
+        record_name = msg_vals['record_name'] if 'record_name' in msg_vals else message.record_name
+        author_ids = [msg_vals["author_id"]] if msg_vals.get("author_id") else message.author_id.ids
+        author = self.env["res.partner"].browse(author_ids) or self.env["mail.guest"].browse(
             msg_vals.get("author_guest_id", message.author_guest_id.id)
         )
         if self.channel_type == 'chat':
@@ -719,7 +710,7 @@ class DiscussChannel(models.Model):
         super()._notify_thread_by_web_push(message, [r for r in recipients_data if r["notif"] == "web_push"], msg_vals=msg_vals, **kwargs)
 
     def _message_receive_bounce(self, email, partner):
-        """ Override bounce management to unsubscribe bouncing addresses """
+        # Override bounce management to unsubscribe bouncing addresses
         for p in partner:
             if p.message_bounce >= self.MAX_BOUNCE_LIMIT:
                 self._action_unfollow(p)
@@ -762,9 +753,7 @@ class DiscussChannel(models.Model):
         return super(DiscussChannel, self.with_context(mail_create_nosubscribe=True, mail_post_autofollow=False)).message_post(message_type=message_type, **kwargs)
 
     def _message_post_after_hook(self, message, msg_vals):
-        """
-        Automatically set the message posted by the current user as seen for themselves.
-        """
+        # Automatically set the message posted by the current user as seen for themselves.
         if (current_channel_member := self.env["discuss.channel.member"].search([
             ("channel_id", "=", self.id), ("is_self", "=", True)
         ])) and message.is_current_user_or_guest_author:
@@ -773,8 +762,7 @@ class DiscussChannel(models.Model):
         return super()._message_post_after_hook(message, msg_vals)
 
     def _check_can_update_message_content(self, message):
-        """ We don't call super in this override as we want to ignore the
-        mail.thread behavior completely """
+        # Don't call super in this override as we want to ignore the mail.thread behavior completely
         if not message.message_type == 'comment':
             raise UserError(_("Only messages type comment can have their content updated on model 'discuss.channel'"))
 
@@ -790,8 +778,7 @@ class DiscussChannel(models.Model):
         return attachments
 
     def _message_subscribe(self, partner_ids=None, subtype_ids=None, customer_ids=None):
-        """ Do not allow follower subscription on channels. Only members are
-        considered. """
+        # Do not allow follower subscription on channels. Only members are considered
         raise UserError(_('Adding followers on channels is not possible. Consider adding members instead.'))
 
     # ------------------------------------------------------------

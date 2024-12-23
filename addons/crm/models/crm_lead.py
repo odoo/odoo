@@ -1921,7 +1921,7 @@ class CrmLead(models.Model):
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False):
         render_context = super()._notify_by_email_prepare_rendering_context(
-            message, msg_vals, model_description=model_description,
+            message, msg_vals=msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
         if self.date_deadline:
@@ -1930,7 +1930,7 @@ class CrmLead(models.Model):
         return render_context
 
     def _notify_get_reply_to(self, default=None):
-        """ Override to set alias of lead and opportunities to their sales team if any. """
+        # Override to set alias of lead and opportunities to their sales team if any
         aliases = self.mapped('team_id').sudo()._notify_get_reply_to(default=default)
         res = {lead.id: aliases.get(lead.team_id.id) for lead in self}
         leftover = self.filtered(lambda rec: not rec.team_id)
@@ -1964,10 +1964,6 @@ class CrmLead(models.Model):
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
-        """ Overrides mail_thread message_new that is called by the mailgateway
-            through message_process.
-            This override updates the document according to the email.
-        """
         # remove default author when going through the mail gateway. Indeed we
         # do not want to explicitly set an user as responsible. We prefer that
         # assignment is done automatically (scoring) or manually. Otherwise it

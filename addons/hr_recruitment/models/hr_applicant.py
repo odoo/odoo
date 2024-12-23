@@ -578,10 +578,6 @@ class HrApplicant(models.Model):
 
     @api.model
     def message_new(self, msg, custom_values=None):
-        """ Overrides mail_thread message_new that is called by the mailgateway
-            through message_process.
-            This override updates the document according to the email.
-        """
         # Remove default author when going through the mail gateway. Indeed, we
         # do not want to explicitly set user_id to False; however we do not
         # want the gateway user to be responsible if no other responsible is
