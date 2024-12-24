@@ -33,8 +33,13 @@ class ProjectProject(models.Model):
         compute='_compute_pricing_type',
         search='_search_pricing_type',
         help='The task rate is perfect if you would like to bill different services to different customers at different rates. The fixed rate is perfect if you bill a service at a fixed rate per hour or day worked regardless of the employee who performed it. The employee rate is preferable if your employees deliver the same service at a different rate. For instance, junior and senior consultants would deliver the same service (= consultancy), but at a different rate because of their level of seniority.')
-    sale_line_employee_ids = fields.One2many('project.sale.line.employee.map', 'project_id', copy=False, export_string_translation=False,
-        string="Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+    sale_line_employee_ids = fields.One2many(
+        'project.sale.line.employee.map',
+        'project_id',
+        'Sale line/Employee map',
+        copy=False,
+        export_string_translation=False,
+        help="Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
              "If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
              "You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee.")
     timesheet_product_id = fields.Many2one(
@@ -51,7 +56,7 @@ class ProjectProject(models.Model):
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate', compute_sudo=True, export_string_translation=False)
     partner_id = fields.Many2one(
         compute='_compute_partner_id', store=True, readonly=False)
-    allocated_hours = fields.Float(copy=False)
+    allocated_hours = fields.Float()
     billing_type = fields.Selection(
         compute="_compute_billing_type",
         selection=[
@@ -417,7 +422,7 @@ class ProjectProject(models.Model):
             return profitability_items
         aa_line_read_group = self.env['account.analytic.line'].sudo()._read_group(
             self.sudo()._get_profitability_aal_domain(),
-            ['timesheet_invoice_type', 'timesheet_invoice_id', 'currency_id'],
+            ['timesheet_invoice_type', 'timesheet_invoice_id', 'currency_id', 'category'],
             ['amount:sum', 'id:array_agg'],
         )
         can_see_timesheets = with_action and len(self) == 1 and self.env.user.has_group('hr_timesheet.group_hr_timesheet_approver')
@@ -426,7 +431,9 @@ class ProjectProject(models.Model):
         total_revenues = {'invoiced': 0.0, 'to_invoice': 0.0}
         total_costs = {'billed': 0.0, 'to_bill': 0.0}
         convert_company = self.company_id or self.env.company
-        for timesheet_invoice_type, dummy, currency, amount, ids in aa_line_read_group:
+        for timesheet_invoice_type, dummy, currency, category, amount, ids in aa_line_read_group:
+            if category == 'vendor_bill':
+                continue  # This is done to prevent expense duplication with product re-invoice policies
             amount = currency._convert(amount, self.currency_id, convert_company)
             invoice_type = timesheet_invoice_type
             cost = costs_dict.setdefault(invoice_type, {'billed': 0.0, 'to_bill': 0.0})

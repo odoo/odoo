@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
+    <!-- DDV -->
     <record id="tax_report" model="account.report">
-        <field name="name">Tax Report</field>
+        <field name="name">VAT Return (DDV-O)</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.si"/>
         <field name="column_ids">
@@ -18,7 +19,14 @@
                     <record id="tax_report_I_formula" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">c11.balance + c11a.balance + c12.balance + c13.balance + c14.balance + c15.balance</field>
+                        <field name="formula">
+                            c11.balance +
+                            c11a.balance +
+                            c12.balance +
+                            c13.balance +
+                            c14.balance +
+                            c15.balance
+                        </field>
                     </record>
                 </field>
                 <field name="children_ids">
@@ -97,7 +105,21 @@
                     <record id="tax_report_II_formula" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">c21.balance + c22.balance + c22a.balance + c23.balance + c23a.balance + c24.balance + c24a.balance + c24b.balance + c24c.balance + c25.balance + c25a.balance + c25b.balance + c26.balance</field>
+                        <field name="formula">
+                            c21.balance +
+                            c22.balance +
+                            c22a.balance +
+                            c23.balance +
+                            c23a.balance +
+                            c24.balance +
+                            c24a.balance +
+                            c24b.balance +
+                            c24c.balance +
+                            c25.balance +
+                            c25a.balance +
+                            c25b.balance +
+                            c26.balance
+                        </field>
                     </record>
                 </field>
                 <field name="children_ids">
@@ -253,7 +275,15 @@
                     <record id="tax_report_III_formula" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">c31.balance + c31a.balance + c32.balance + c32a.balance + c33.balance + c34.balance + c35.balance</field>
+                        <field name="formula">
+                            c31.balance +
+                            c31a.balance +
+                            c32.balance +
+                            c32a.balance +
+                            c33.balance +
+                            c34.balance +
+                            c35.balance
+                        </field>
                     </record>
                 </field>
                 <field name="children_ids">
@@ -400,7 +430,24 @@
                     <record id="tax_report_51_formula" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">c21.balance + c22.balance + c22a.balance + c23.balance + c23a.balance + c24.balance + c24a.balance + c24b.balance + c25.balance + c25a.balance + c25b.balance + c26.balance - c41.balance - c42.balance - c42a.balance - c43.balance</field>
+                        <field name="formula">
+                            c21.balance +
+                            c22.balance +
+                            c22a.balance +
+                            c23.balance +
+                            c23a.balance +
+                            c24.balance +
+                            c24a.balance +
+                            c24b.balance +
+                            c25.balance +
+                            c25a.balance +
+                            c25b.balance +
+                            c26.balance -
+                            c41.balance -
+                            c42.balance -
+                            c42a.balance -
+                            c43.balance
+                        </field>
                         <field name="subformula">if_above(EUR(0))</field>
                     </record>
                 </field>
@@ -412,7 +459,24 @@
                     <record id="tax_report_52_formula" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">c41.balance + c42.balance + c42a.balance + c43.balance - c21.balance - c22.balance - c22a.balance - c23.balance - c23a.balance - c24.balance - c24a.balance - c24b.balance - c25.balance - c25a.balance - c25b.balance - c26.balance</field>
+                        <field name="formula">
+                            c41.balance +
+                            c42.balance +
+                            c42a.balance +
+                            c43.balance -
+                            c21.balance -
+                            c22.balance -
+                            c22a.balance -
+                            c23.balance -
+                            c23a.balance -
+                            c24.balance -
+                            c24a.balance -
+                            c24b.balance -
+                            c25.balance -
+                            c25a.balance -
+                            c25b.balance -
+                            c26.balance
+                        </field>
                         <field name="subformula">if_above(EUR(0))</field>
                     </record>
                 </field>

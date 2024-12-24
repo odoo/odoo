@@ -38,7 +38,7 @@ const RE_OFFSET_MATCH = /(^| )offset(-[\w\d]+)*( |$)/;
 const RE_PADDING_MATCH = /[ ]*padding[^;]*;/g;
 const RE_PADDING = /([\d.]+)/;
 const RE_WHITESPACE = /[\s\u200b]*/;
-const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])/;
+const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])|@page/;
 // CSS properties relating to font, which Outlook seem to have trouble inheriting.
 const FONT_PROPERTIES_TO_INHERIT = [
     "color",
@@ -1112,7 +1112,7 @@ export function formatTables(element) {
             height = parent.style.getPropertyValue("height");
         }
         if (parent) {
-            parent.style.setProperty("height", $(parent).height());
+            parent.style.setProperty("height", parent.getBoundingClientRect().height);
         }
     }
     // Align self and justify content don't work on table cells.

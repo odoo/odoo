@@ -2,7 +2,7 @@
 
 import { loadJS } from '@web/core/assets';
 import { _t } from '@web/core/l10n/translation';
-import { rpc } from '@web/core/network/rpc';
+import { rpc, RPCError } from '@web/core/network/rpc';
 
 import paymentForm from '@payment/js/payment_form';
 
@@ -118,6 +118,7 @@ paymentForm.include({
             return;
         }
         this.paypalData[paymentOptionId].paypalOrderId = processingValues['order_id'];
+        this.paypalData[paymentOptionId].paypalTxRef = processingValues['reference'];
     },
 
     /**
@@ -127,17 +128,24 @@ paymentForm.include({
      * @param {object} data - The data returned by PayPal on approving the order.
      * @return {void}
      */
-    _paypalOnApprove(data) {
+    async _paypalOnApprove(data) {
         const orderID = data.orderID;
         const { provider_id } = this.inlineFormValues
 
-        rpc('/payment/paypal/complete_order', {
+        await rpc('/payment/paypal/complete_order', {
             'provider_id': provider_id,
             'order_id': orderID,
+            'reference': this.paypalData[this.selectedOptionId].paypalTxRef,
         }).then(() => {
             // Close the PayPal buttons that were rendered
             this.paypalData[this.selectedOptionId]['paypalButton'].close();
             window.location = '/payment/status';
+        }).catch(error => {
+            if (error instanceof RPCError) {
+                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
+                this._enableButton(); // The button has been disabled before initiating the flow.
+            }
+            return Promise.reject(error);
         })
     },
 
@@ -161,8 +169,8 @@ paymentForm.include({
         this.call('ui', 'unblock');
         // Paypal throws an error if the popup is closed before it can load;
         // this case should be treated as an onCancel event.
-        if (message !== "Detected popup close") {
-            this._displayErrorDialog(_t("Payment processing failed"), error.message);
+        if (message !== "Detected popup close" && !(error instanceof RPCError)) {
+            this._displayErrorDialog(_t("Payment processing failed"), message);
         }
     },
 });

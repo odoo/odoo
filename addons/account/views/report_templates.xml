@@ -7,7 +7,7 @@
     </template>
 
     <template id="report_invoice_document_preview" inherit_id="account.report_invoice_document" primary="True">
-        <xpath expr="//div[@id='qrcode']" position="after">
+        <xpath expr="//div[@id='qrcode']" position="replace">
             <div t-if="qr_code" class="d-flex mb-3 avoid-page-break-inside">
                 <div class="qrcode me-3" id="qrcode_image">
                     <p class="position-relative mb-0">

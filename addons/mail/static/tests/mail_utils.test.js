@@ -33,6 +33,7 @@ test("add_link utility function", () => {
         "https://github.com/odoo/enterprise/compare/16.0...chỗgiặt-voip-fix_demo_data-tsm?expand=1": true,
         "https://github.com/odoo/enterprise/compare/chỗgiặt...chỗgiặt-voip-fix_demo_data-tsm?expand=1": true,
         "https://github.com/odoo/enterprise/compare/@...}-voip-fix_demo_data-tsm?expand=1": true,
+        "https://x.com": true,
     };
 
     for (const [content, willLinkify] of Object.entries(testInputs)) {
@@ -90,9 +91,9 @@ test("addLink: linkify inside text node (1 occurrence)", async () => {
     const div = document.createElement("div");
     fragment.appendChild(div);
     div.innerHTML = linkified;
-    expect(div.textContent).toBe("some text https://somelink.com");
+    expect(div).toHaveText("some text https://somelink.com");
     await contains("a", { target: div });
-    expect(div.querySelector(":scope a").textContent).toBe("https://somelink.com");
+    expect(div.querySelector(":scope a")).toHaveText("https://somelink.com");
 });
 
 test("addLink: linkify inside text node (2 occurrences)", () => {
@@ -105,12 +106,10 @@ test("addLink: linkify inside text node (2 occurrences)", () => {
     const div = document.createElement("div");
     fragment.appendChild(div);
     div.innerHTML = linkified;
-    expect(div.textContent).toBe(
-        "some text https://somelink.com and again https://somelink2.com ..."
-    );
+    expect(div).toHaveText("some text https://somelink.com and again https://somelink2.com ...");
     expect(div.querySelectorAll(":scope a")).toHaveCount(2);
-    expect(div.querySelectorAll(":scope a")[0].textContent).toBe("https://somelink.com");
-    expect(div.querySelectorAll(":scope a")[1].textContent).toBe("https://somelink2.com");
+    expect(div.querySelectorAll(":scope a")[0]).toHaveText("https://somelink.com");
+    expect(div.querySelectorAll(":scope a")[1]).toHaveText("https://somelink2.com");
 });
 
 test("url", async () => {

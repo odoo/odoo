@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { HootDomError, getTag, isFirefox, isIterable, parseRegExp } from "../hoot_dom_utils";
-import { Deferred, waitUntil } from "./time";
+import { waitUntil } from "./time";
 
 /**
  * @typedef {number | [number, number] | {
@@ -1331,7 +1331,7 @@ export function getActiveElement(node) {
  *  getFocusableElements();
  */
 export function getFocusableElements(options) {
-    const parent = options?.root || getDefaultRoot();
+    const parent = queryOne(options?.root || getDefaultRoot());
     if (typeof parent.querySelectorAll !== "function") {
         return [];
     }
@@ -1362,8 +1362,8 @@ export function getFocusableElements(options) {
  *  getPreviousFocusableElement();
  */
 export function getNextFocusableElement(options) {
-    const parent = options?.root || getDefaultRoot();
-    const focusableEls = getFocusableElements(parent, options);
+    const parent = queryOne(options?.root || getDefaultRoot());
+    const focusableEls = getFocusableElements({ ...options, parent });
     const index = focusableEls.indexOf(getActiveElement(parent));
     return focusableEls[index + 1] || null;
 }
@@ -1398,8 +1398,8 @@ export function getParentFrame(node) {
  *  getPreviousFocusableElement();
  */
 export function getPreviousFocusableElement(options) {
-    const parent = options?.root || getDefaultRoot();
-    const focusableEls = getFocusableElements(parent, options);
+    const parent = queryOne(options?.root || getDefaultRoot());
+    const focusableEls = getFocusableElements({ ...options, parent });
     const index = focusableEls.indexOf(getActiveElement(parent));
     return index < 0 ? focusableEls.at(-1) : focusableEls[index - 1] || null;
 }
@@ -1873,7 +1873,7 @@ export function queryValue(target, options) {
  * @see {@link waitUntil}
  * @param {Target} target
  * @param {QueryOptions & WaitOptions} [options]
- * @returns {Deferred<Element>}
+ * @returns {Promise<Element>}
  * @example
  *  const button = await waitFor(`button`);
  *  button.click();

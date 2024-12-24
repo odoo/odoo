@@ -730,7 +730,9 @@ class Message(models.Model):
         messages_by_partner = defaultdict(lambda: self.env['mail.message'])
         partners_with_user = self.partner_ids.filtered('user_ids')
         for elem in self:
-            for partner in elem.partner_ids & partners_with_user:
+            for partner in (
+                elem.partner_ids & partners_with_user | elem.notification_ids.author_id
+            ):
                 messages_by_partner[partner] |= elem
         # Notify front-end of messages deletion for partners having a user
         for partner, messages in messages_by_partner.items():
@@ -1125,7 +1127,7 @@ class Message(models.Model):
                     Store.one(
                         self.env[message.model].browse(message.res_id) if message.model else False,
                         as_thread=True,
-                        fields=["modelName"],
+                        fields=["modelName", "name" if message.model == "discuss.channel" else "display_name"],
                     )
                 ),
             }
@@ -1225,7 +1227,7 @@ class Message(models.Model):
             records = self.env[model].browse([res_id])
         else:
             records = self.env[model] if model else self.env['mail.thread']
-        return records._notify_get_reply_to(default=email_from)[res_id]
+        return records.sudo()._notify_get_reply_to(default=email_from)[res_id]
 
     @api.model
     def _get_message_id(self, values):

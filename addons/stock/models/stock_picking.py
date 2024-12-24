@@ -33,12 +33,12 @@ class PickingType(models.Model):
     default_location_src_id = fields.Many2one(
         'stock.location', 'Source Location', compute='_compute_default_location_src_id',
         check_company=True, store=True, readonly=False, precompute=True, required=True,
-        help="This is the default source location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location.")
+        help="This is the default source location when this operation is manually created. However, it is possible to change it afterwards or that the routes use another one by default.")
     default_location_dest_id = fields.Many2one(
         'stock.location', 'Destination Location', compute='_compute_default_location_dest_id',
         check_company=True, store=True, readonly=False, precompute=True, required=True,
-        help="This is the default destination location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location.")
-    code = fields.Selection([('incoming', 'Receipt'), ('outgoing', 'Delivery'), ('internal', 'Internal Transfer')], 'Type of Operation', required=True)
+        help="This is the default destination location when this operation is manually created. However, it is possible to change it afterwards or that the routes use another one by default.")
+    code = fields.Selection([('incoming', 'Receipt'), ('outgoing', 'Delivery'), ('internal', 'Internal Transfer')], 'Type of Operation', default='incoming', required=True)
     return_picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type for Returns',
         check_company=True)
@@ -220,7 +220,7 @@ class PickingType(models.Model):
     def _search_is_favorite(self, operator, value):
         if operator not in ['=', '!='] or not isinstance(value, bool):
             raise NotImplementedError(_('Operation not supported'))
-        return [('favorite_user_ids', 'in' if (operator == '=') == value else 'in', self.env.uid)]
+        return [('favorite_user_ids', 'in' if (operator == '=') == value else 'not in', self.env.uid)]
 
     def _compute_is_favorite(self):
         for picking_type in self:
@@ -1148,7 +1148,7 @@ class Picking(models.Model):
 
     def should_print_delivery_address(self):
         self.ensure_one()
-        return self.move_ids and self.move_ids[0].partner_id and self._is_to_external_location()
+        return self.move_ids and (self.move_ids[0].partner_id or self.partner_id) and self._is_to_external_location()
 
     def _is_to_external_location(self):
         self.ensure_one()

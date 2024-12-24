@@ -39,7 +39,8 @@ class Account extends models.Model {
 
 defineAccountModels();
 defineModels([Account]);
-test.tags("desktop")("List: placeholder_field shows as text/placeholder", async () => {
+test.tags("desktop");
+test("List: placeholder_field shows as text/placeholder", async () => {
     await mountView({
         type: "list",
         resModel: "account.account",

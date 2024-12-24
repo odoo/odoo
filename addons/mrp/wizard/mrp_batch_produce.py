@@ -7,6 +7,7 @@ from collections import defaultdict, deque
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import OrderedSet
 
 
 class MrpBatchProduct(models.TransientModel):
@@ -105,14 +106,14 @@ class MrpBatchProduct(models.TransientModel):
             })
         lots = lots + self.env['stock.lot'].create(raw_lots)
 
-        productions_to_set = set()
+        productions_to_set = OrderedSet()
         for production, finished_lot in zip(productions, lots):
             production.lot_producing_id = finished_lot
             self._process_components(production, components_list.pop(0))
             productions_to_set.add(production.id)
 
         productions = self.env['mrp.production'].browse(productions_to_set)
-        for production in productions:
+        for production in reversed(productions):
             production.qty_producing = production.product_uom_qty
             production.set_qty_producing()
             production.move_raw_ids.picked = True

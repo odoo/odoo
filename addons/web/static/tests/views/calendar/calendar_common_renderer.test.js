@@ -1,7 +1,7 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryFirst, queryRect } from "@odoo/hoot-dom";
 import { runAllTimers } from "@odoo/hoot-mock";
-import { mockService, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { mockService, mountWithCleanup, preloadBundle } from "@web/../tests/web_test_helpers";
 import {
     DEFAULT_DATE,
     FAKE_MODEL,
@@ -27,6 +27,7 @@ async function start(props = {}, target) {
     });
 }
 
+preloadBundle("web.fullcalendar_lib");
 beforeEach(() => {
     luxon.Settings.defaultZone = "UTC+1";
 });
@@ -77,7 +78,8 @@ test(`Day: click all day slot`, async () => {
     expect.verifySteps(["create"]);
 });
 
-test.tags("desktop")(`Day: select range`, async () => {
+test.tags("desktop");
+test(`Day: select range`, async () => {
     await start({
         model: { ...FAKE_MODEL, scale: "day" },
         createRecord(record) {
@@ -97,7 +99,8 @@ test(`Day: check event`, async () => {
     expect(`.o_event`).toHaveAttribute("data-event-id", "1");
 });
 
-test.tags("desktop")(`Day: click on event`, async () => {
+test.tags("desktop");
+test(`Day: click on event`, async () => {
     mockService("popover", () => ({
         add(target, component, { record }) {
             expect.step("popover");

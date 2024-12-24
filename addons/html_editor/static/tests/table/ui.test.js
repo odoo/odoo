@@ -78,28 +78,26 @@ test("should not display the table ui menu if we leave the editor content", asyn
     expect(".o-we-table-menu").toHaveCount(0);
 });
 
-test.tags("desktop")(
-    "should display the resizeCursor if the table element isContentEditable=true",
-    async () => {
-        const { el } = await setupEditor(`
+test.tags("desktop");
+test("should display the resizeCursor if the table element isContentEditable=true", async () => {
+    const { el } = await setupEditor(`
         <table><tbody><tr>
             <td>11[]</td>
         </tr></tbody></table>`);
 
-        expect(".o_col_resize").toHaveCount(0);
-        expect(".o_row_resize").toHaveCount(0);
+    expect(".o_col_resize").toHaveCount(0);
+    expect(".o_row_resize").toHaveCount(0);
 
-        const td = el.querySelector("td");
-        const tdBox = td.getBoundingClientRect();
-        const x = tdBox.x + 1;
-        const y = tdBox.bottom - tdBox.height / 2;
+    const td = el.querySelector("td");
+    const tdBox = td.getBoundingClientRect();
+    const x = tdBox.x + 1;
+    const y = tdBox.bottom - tdBox.height / 2;
 
-        await hover(td, { position: { x, y } });
+    await hover(td, { position: { x, y } });
 
-        await waitFor(".o_col_resize");
-        expect(".o_col_resize").toHaveCount(1);
-    }
-);
+    await waitFor(".o_col_resize");
+    expect(".o_col_resize").toHaveCount(1);
+});
 
 test("should not display the resizeCursor if the table element isContentEditable=false", async () => {
     const { el } = await setupEditor(`

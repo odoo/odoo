@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { App } from "@odoo/owl";
 import { memoize } from "@web/core/utils/functions";
 
 /**
@@ -7,13 +6,22 @@ import { memoize } from "@web/core/utils/functions";
  * sub components in an editor.
  */
 export class EmbeddedComponentPlugin extends Plugin {
-    static name = "embedded_components";
-    static dependencies = ["history", "protected_node"];
+    static id = "embeddedComponents";
+    static dependencies = ["history", "protectedNode"];
     resources = {
-        filter_descendants_to_serialize: this.filterDescendantsToSerialize.bind(this),
-        is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
-        on_change_attribute: this.onChangeAttribute.bind(this),
-        onExternalHistorySteps: this.handleComponents.bind(this, this.editable),
+        /** Handlers */
+        normalize_handlers: this.normalize.bind(this),
+        clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
+        attribute_change_handlers: this.onChangeAttribute.bind(this),
+        restore_savepoint_handlers: () => this.handleComponents(this.editable),
+        history_reset_handlers: () => this.handleComponents(this.editable),
+        history_reset_from_steps_handlers: () => this.handleComponents(this.editable),
+        step_added_handlers: ({ stepCommonAncestor }) => this.handleComponents(stepCommonAncestor),
+        external_step_added_handlers: () => this.handleComponents(this.editable),
+
+        serializable_descendants_processors: this.processDescendantsToSerialize.bind(this),
+        attribute_change_processors: this.onChangeAttribute.bind(this),
+        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
     };
 
     setup() {
@@ -32,7 +40,8 @@ export class EmbeddedComponentPlugin extends Plugin {
             }
             return result;
         });
-        // First mount is done during HISTORY_RESET which happens during START_EDITION
+        // First mount is done during history_reset_handlers which happens
+        // when start_edition_handlers are called.
     }
 
     isMutationRecordSavable(record) {
@@ -49,33 +58,10 @@ export class EmbeddedComponentPlugin extends Plugin {
         return true;
     }
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "NORMALIZE": {
-                this.normalize(payload.node);
-                break;
-            }
-            case "CLEAN_FOR_SAVE": {
-                this.cleanForSave(payload.root);
-                break;
-            }
-            case "RESTORE_SAVEPOINT":
-            case "HISTORY_RESET_FROM_STEPS":
-            case "HISTORY_RESET": {
-                this.handleComponents(this.editable);
-                break;
-            }
-            case "STEP_ADDED": {
-                this.handleComponents(payload.stepCommonAncestor);
-                break;
-            }
-        }
-    }
-
-    filterDescendantsToSerialize(elem) {
+    processDescendantsToSerialize(elem, serializableDescendants) {
         const embedding = this.getEmbedding(elem);
         if (!embedding) {
-            return;
+            return serializableDescendants;
         }
         return Object.values(embedding.getEditableDescendants?.(elem) || {});
     }
@@ -106,7 +92,7 @@ export class EmbeddedComponentPlugin extends Plugin {
     }
 
     getEmbedding(host) {
-        return this.embeddedComponents(this.getResource("embeddedComponents"))[
+        return this.embeddedComponents(this.getResource("embedded_components"))[
             host.dataset.embedded
         ];
     }
@@ -121,24 +107,27 @@ export class EmbeddedComponentPlugin extends Plugin {
      * @param { Object } options
      * @param { boolean } options.forNewStep whether the mutation is being used
      *        to create a new step
-     * @returns {string|undefined} new attribute value to set on the node if
-     *          attributeChange.value has to be altered, undefined if
-     *          attributeChange.value is already correct.
+     * @returns {string} new attribute value to set on the node, which might be
+     *        unchanged
      */
     onChangeAttribute(attributeChange, { forNewStep = false } = {}) {
-        if (attributeChange.attributeName !== "data-embedded-state") {
-            return;
+        const attributeValue = attributeChange.value;
+        let newAttributeValue;
+        if (attributeChange.attributeName === "data-embedded-state") {
+            const attrState = attributeChange.reverse
+                ? attributeChange.oldValue
+                : attributeChange.value;
+            const stateChangeManager = this.getStateChangeManager(attributeChange.target);
+            if (stateChangeManager) {
+                // onStateChanged returns undefined if no change is needed for
+                // the attribute value
+                newAttributeValue = stateChangeManager.onStateChanged(attrState, {
+                    reverse: attributeChange.reverse,
+                    forNewStep,
+                });
+            }
         }
-        const attrState = attributeChange.reverse
-            ? attributeChange.oldValue
-            : attributeChange.value;
-        const stateChangeManager = this.getStateChangeManager(attributeChange.target);
-        if (stateChangeManager) {
-            return stateChangeManager.onStateChanged(attrState, {
-                reverse: attributeChange.reverse,
-                forNewStep,
-            });
-        }
+        return newAttributeValue || attributeValue;
     }
 
     getStateChangeManager(host) {
@@ -149,7 +138,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         if (!this.hostToStateChangeManagerMap.has(host)) {
             const config = {
                 host,
-                dispatch: this.dispatch.bind(this),
+                commitStateChanges: () => this.dependencies.history.addStep(),
             };
             const stateChangeManager = embedding.getStateChangeManager(config);
             stateChangeManager.setup();
@@ -163,7 +152,6 @@ export class EmbeddedComponentPlugin extends Plugin {
         { Component, getEditableDescendants, getProps, name, getStateChangeManager }
     ) {
         const props = getProps?.(host) || {};
-        const { dev, translateFn, getRawTemplate } = this.app;
         const env = Object.create(this.env);
         if (getStateChangeManager) {
             env.getStateChangeManager = this.getStateChangeManager.bind(this);
@@ -171,33 +159,23 @@ export class EmbeddedComponentPlugin extends Plugin {
         if (getEditableDescendants) {
             env.getEditableDescendants = getEditableDescendants;
         }
-        this.dispatch("SETUP_NEW_COMPONENT", {
-            name,
-            env,
+        this.dispatchTo("mount_component_handlers", { name, env, props });
+        const root = this.app.createRoot(Component, {
             props,
-        });
-        const app = new App(Component, {
-            test: dev,
             env,
-            translateFn,
-            getTemplate: getRawTemplate,
-            props,
         });
-        app.rawTemplates = this.app.rawTemplates;
-        // Can't copy compiled templates because they have a reference to the main app
-        // app.templates = mainApp.templates;
-        app.mount(host);
-        // Patch mount fiber to hook into the exact call stack where app is
+        root.mount(host);
+        // Patch mount fiber to hook into the exact call stack where root is
         // mounted (but before). This will remove host children synchronously
-        // just before adding the app rendered html.
-        const fiber = Array.from(app.scheduler.tasks)[0];
+        // just before adding the root rendered html.
+        const fiber = root.node.fiber;
         const fiberComplete = fiber.complete;
         fiber.complete = function () {
             host.replaceChildren();
             fiberComplete.call(this);
         };
         const info = {
-            app,
+            root,
             host,
         };
         this.components.add(info);
@@ -249,10 +227,10 @@ export class EmbeddedComponentPlugin extends Plugin {
      * Should not be called directly as it will not handle recursivity and
      * removed components @see deepDestroyComponent
      */
-    destroyComponent({ app, host }) {
+    destroyComponent({ root, host }) {
         const { getEditableDescendants } = this.getEmbedding(host);
         const editableDescendants = getEditableDescendants?.(host) || {};
-        app.destroy();
+        root.destroy();
         this.components.delete(arguments[0]);
         this.nodeMap.delete(host);
         host.append(...Object.values(editableDescendants));
@@ -269,18 +247,18 @@ export class EmbeddedComponentPlugin extends Plugin {
 
     normalize(elem) {
         this.forEachEmbeddedComponentHost(elem, (host, { getEditableDescendants }) => {
-            this.shared.setProtectingNode(host, true);
+            this.dependencies.protectedNode.setProtectingNode(host, true);
             const editableDescendants = getEditableDescendants?.(host) || {};
             for (const editableDescendant of Object.values(editableDescendants)) {
-                this.shared.setProtectingNode(editableDescendant, false);
+                this.dependencies.protectedNode.setProtectingNode(editableDescendant, false);
             }
         });
     }
 
     cleanForSave(clone) {
         this.forEachEmbeddedComponentHost(clone, (host, { getEditableDescendants }) => {
-            // In this case, host is a cloned element, there is no
-            // live app attached to it.
+            // In this case, host is a cloned element, there is no OWL root
+            // attached to it.
             const editableDescendants = getEditableDescendants?.(host) || {};
             host.replaceChildren();
             for (const editableDescendant of Object.values(editableDescendants)) {

@@ -635,7 +635,10 @@ class PurchaseOrder(models.Model):
             for i, line_val in enumerate(line_vals, start=1)
         ]
         downpayment_lines = self.env['purchase.order.line'].create(vals)
-        self.order_line += downpayment_lines
+        self.order_line = [
+            Command.link(line_id)
+            for line_id in downpayment_lines.ids
+        ]  # a simple concatenation would cause all order_line to recompute, we do not want it to happen
         return downpayment_lines
 
     def action_create_invoice(self):

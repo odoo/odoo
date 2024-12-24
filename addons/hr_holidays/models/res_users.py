@@ -40,7 +40,7 @@ class User(models.Model):
                     user.im_status = 'leave_online'
                 elif user.im_status == 'away':
                     user.im_status = 'leave_away'
-                else:
+                elif user.im_status == 'offline':
                     user.im_status = 'leave_offline'
 
     @api.model

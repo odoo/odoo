@@ -1,7 +1,12 @@
 import { Plugin } from "../plugin";
 
+/**
+ * @typedef { Object } SanitizeShared
+ * @property { SanitizePlugin['sanitize'] } sanitize
+ */
+
 export class SanitizePlugin extends Plugin {
-    static name = "sanitize";
+    static id = "sanitize";
     static shared = ["sanitize"];
     setup() {
         if (!window.DOMPurify) {

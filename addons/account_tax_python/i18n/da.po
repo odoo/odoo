@@ -1,22 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_tax_python
-#
+# 
 # Translators:
-# Martin Trigaux, 2022
-#
+# Martin Trigaux, 2024
+# Mads Søndergaard, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Mads Søndergaard, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
-"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_tax_python
@@ -25,113 +26,56 @@ msgid ""
 "\n"
 "    - Group of Taxes: The tax is a set of sub taxes.\n"
 "    - Fixed: The tax amount stays the same whatever the price.\n"
-"    - Percentage of Price: The tax amount is a % of the price:\n"
+"    - Percentage: The tax amount is a % of the price:\n"
 "        e.g 100 * (1 + 10%) = 110 (not price included)\n"
 "        e.g 110 / (1 + 10%) = 100 (price included)\n"
-"    - Percentage of Price Tax Included: The tax amount is a division of the price:\n"
+"    - Percentage Tax Included: The tax amount is a division of the price:\n"
 "        e.g 180 / (1 - 10%) = 200 (not price included)\n"
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
 "\n"
-"- Momsgrupper: Momsen udgøres af et sæt af momsgrupper.\n"
-"- Fast: Momsen forbliver den samme uanset prisen.\n"
-"- Procentsats: Momsen er en procentdel af prisen:\n"
-"    F.eks.: 100 * 10% = 100 (pris ikke inkluderet)\n"
-"    F.eks.: 110 / (1 + 10%) = 100 (pris inkluderet)\n"
-"- Procent af pris moms inkluderet: Momsen er en del af prisen:\n"
-"    F.eks.: 180 / (1 - 10%) = 200 (pris ikke inkluderet)\n"
-"    F.eks.: 200 * (1 - 10%) = 180 (pris inkluderet)"
+"    - Momsgruppe: Momsen består af en række delmomser.\n"
+"    - Fast: Momsbeløbet er det samme, uanset prisen.\n"
+"    - Procent: Momsbeløbet er en procentdel af prisen:\n"
+"        f.eks. 100 * (1 + 10%) = 110 (med moms)\n"
+"        f.eks. 110 / (1 + 10%) = 100 (uden moms)\n"
+"    - Procent med moms inkluderet: Momsen beregnes som en division af prisen::\n"
+"        f.eks. 180 / (1 - 10%) = 200 (med moms)\n"
+"        f.eks. 200 * (1 - 10%) = 180 (uden moms)\n"
+"        "
 
 #. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
-msgid "Applicable Code"
-msgstr "Brugbar kode"
-
-#. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
 msgid ""
-"Compute the amount of the tax by setting the variable 'result'.\n"
+"Compute the amount of the tax.\n"
 "\n"
-":param base_amount: float, actual amount on which the tax is applied\n"
+":param base: float, actual amount on which the tax is applied\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
-":param company: res.company recordset singleton\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
+":param product: A object representing the product\n"
 msgstr ""
-"Udregn mængden af moms ved at angive variablen 'result'.\n"
-"\n"
-":param base_amount: decimaltal, faktisk mængde hvorpå moms skal anvendes\n"
-":param price_unit: decimaltal\n"
-":param quantity: decimaltal\n"
-":param company: res.company datasæt singleton\n"
-":param product: product.product datasæt singleton eller None\n"
-":param partner: res.partner datasæt singleton eller None"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
-msgid ""
-"Compute the amount of the tax by setting the variable 'result'.\n"
-"\n"
-":param base_amount: float, actual amount on which the tax is applied\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"Udregn mængden af moms ved at angive variablen 'result'.\n"
-"\n"
-":param base_amount: decimaltal, faktisk mængde hvorpå moms skal anvendes\n"
-":param price_unit: decimaltal\n"
-":param quantity: decimaltal\n"
-":param product: product.product datasæt singleton eller None\n"
-":param partner: res.partner datasæt singleton eller None"
-
-#. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
-msgid ""
-"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
-"\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param company: res.company recordset singleton\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"Afgør om moms vil blive anvendt ved at angive variablen 'result' til Sandt eller Falsk.\n"
-"\n"
-":param price_unit: decimaltal\n"
-":param quantity: decimaltal\n"
-":param company: res.company datasæt singleton\n"
-":param product: product.product datasæt singleton eller None\n"
-":param partner: res.partner datasæt singleton eller None"
-
-#. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
-msgid ""
-"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
-"\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"Afgør om momsen skal anvendes ved at angive variablen 'result' til Sandt eller Falsk.\n"
-"\n"
-":param price_unit: decimaltal\n"
-":param quantity: decimaltal\n"
-":param product: product.product datasæt singleton eller None\n"
-":param partner: res.partner datasæt singleton eller None"
-
-#. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
-#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
-msgid "Python Code"
-msgstr "Python kode"
+msgid "Custom Formula"
+msgstr ""
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
+msgid "Formula"
+msgstr "Formular"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
+msgid "Formula Decoded Info"
+msgstr ""
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/models/account_tax.py:0
+msgid "Malformed formula '%(formula)s' at position %(position)s"
+msgstr ""
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
@@ -140,11 +84,5 @@ msgstr "Moms"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
 msgid "Tax Computation"
 msgstr "Momsberegning"
-
-#. module: account_tax_python
-#: model:ir.model,name:account_tax_python.model_account_tax_template
-msgid "Templates for Taxes"
-msgstr "Momsskabeloner"

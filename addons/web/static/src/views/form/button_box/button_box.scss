@@ -43,6 +43,7 @@
         padding-top: 0;
         padding-bottom: 0;
         height: $-stat-button-height;
+        min-width: 0;
 
         @include media-breakpoint-up(md) {
             min-width: 7.5em; // Arbitrary
@@ -60,6 +61,10 @@
         // Some buttons only display text without using StatInfo template
         > span {
             @include o-text-overflow(block);
+        }
+
+        .o_field_statinfo {
+            overflow: hidden;
         }
 
         .o_stat_info, > span, .o_field_statinfo {

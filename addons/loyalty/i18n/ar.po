@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -109,7 +109,7 @@ msgstr "(غير شامل الضريبة) "
 #. odoo-javascript
 #: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
 msgid "-> View History"
-msgstr ""
+msgstr "-> عرض السجل "
 
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.10_percent_coupon
@@ -151,7 +151,7 @@ msgid ""
 "                    Here is your gift card!\n"
 "                </div>\n"
 "                <div style=\"padding-top:20px; padding-bottom:20px\">\n"
-"                    <img src=\"/loyalty/static/img/gift_card.png\" style=\"display:block; border:0; outline:none; text-decoration:none; margin:auto;\" width=\"300\">\n"
+"                    <img src=\"/loyalty/static/img/gift_card.png\" style=\"display:block; border:0; outline:none; text-decoration:none; margin:auto;\" width=\"300\"/>\n"
 "                </div>\n"
 "                <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; text-align:center;\">\n"
 "                    <h3 style=\"margin:0px; line-height:48px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-style:normal; font-weight:normal; color:#333333; text-align:center\">\n"
@@ -179,7 +179,7 @@ msgstr ""
 "                    إليك بطاقة الهدايات الخاصة بك!\n"
 "                </div>\n"
 "                <div style=\"padding-top:20px; padding-bottom:20px\">\n"
-"                    <img src=\"/loyalty/static/img/gift_card.png\" style=\"display:block; border:0; outline:none; text-decoration:none; margin:auto;\" width=\"300\">\n"
+"                    <img src=\"/loyalty/static/img/gift_card.png\" style=\"display:block; border:0; outline:none; text-decoration:none; margin:auto;\" width=\"300\"/>\n"
 "                </div>\n"
 "                <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; text-align:center;\">\n"
 "                    <h3 style=\"margin:0px; line-height:48px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-style:normal; font-weight:normal; color:#333333; text-align:center\">\n"
@@ -192,7 +192,7 @@ msgstr ""
 "                    <p style=\"margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9\" t-out=\"object.code or ''\">4f10-15d6-41b7-b04c-7b3e</p>\n"
 "                </div>\n"
 "                <div t-if=\"object.expiration_date\" style=\"padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
-"                    <h3 style=\"margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">تاريخ انتهاء الصلاحية <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t></h3>\n"
+"                    <h3 style=\"margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">تاريخ انتهاء صلاحية البطاقة <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t></h3>\n"
 "                </div>\n"
 "                <div style=\"padding:20px; margin:0px; text-align:center;\">\n"
 "                    <span style=\"background-color:#999999; display:inline-block; width:auto; border-radius:5px;\">\n"
@@ -298,7 +298,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.portal_loyalty_history_breadcrumbs
 msgid "<span>History</span>"
-msgstr ""
+msgstr "<span>السجل</span> "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -332,15 +332,15 @@ msgid ""
 "<tr>\n"
 "    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
 "        <t t-if=\"object._get_mail_partner().name\">\n"
-"            Congratulations <t t-out=\"object._get_mail_partner().name or ''\">Brandon Freeman</t>,<br>\n"
+"            Congratulations <t t-out=\"object._get_mail_partner().name or ''\">Brandon Freeman</t>,<br/>\n"
 "        </t>\n"
 "\n"
-"        Here is your reward from <t t-out=\"object.program_id.company_id.name or ''\">YourCompany</t>.<br>\n"
+"        Here is your reward from <t t-out=\"object.program_id.company_id.name or ''\">YourCompany</t>.<br/>\n"
 "\n"
 "        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
 "            <t t-if=\"reward.required_points &lt;= object.points\">\n"
 "                <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\" t-esc=\"reward.description\">Reward Description</span>\n"
-"                <br>\n"
+"                <br/>\n"
 "            </t>\n"
 "        </t>\n"
 "    </td>\n"
@@ -358,73 +358,25 @@ msgid ""
 "            <t t-if=\"rule.minimum_qty not in [0, 1]\">\n"
 "                <span style=\"font-size: 14px;\">\n"
 "                    Minimum purchase of <t t-out=\"rule.minimum_qty or ''\">10</t> products\n"
-"                </span><br>\n"
+"                </span><br/>\n"
 "            </t>\n"
 "            <t t-if=\"rule.minimum_amount != 0.00\">\n"
 "                <span style=\"font-size: 14px;\">\n"
 "                    Valid for purchase above <t t-out=\"rule.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % float(rule.minimum_amount) or ''\">10.00</t>\n"
-"                </span><br>\n"
+"                </span><br/>\n"
 "            </t>\n"
 "        </t>\n"
-"        <br>\n"
+"        <br/>\n"
 "        Thank you,\n"
-"        <t t-if=\"object._get_signature()\">\n"
-"            <br>\n"
-"            <t t-out=\"object._get_signature() or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-if=\"object._get_signature()\" data-o-mail-quote-container=\"1\">\n"
+"            <br/>\n"
+"            <t t-out=\"object._get_signature() or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </td>\n"
 "</tr>\n"
 "</tbody></table>\n"
 "        "
 msgstr ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto; background:#ffffff; color:#333333;\"><tbody>\n"
-"<tr>\n"
-"    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
-"        <t t-if=\"object._get_mail_partner().name\">\n"
-"            تهانينا <t t-out=\"object._get_mail_partner().name or ''\">براندن فريمان</t>،<br>\n"
-"        </t>\n"
-"\n"
-"        إليك مكافأتك من <t t-out=\"object.program_id.company_id.name or ''\">شركتك</t>.<br>\n"
-"\n"
-"        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
-"            <t t-if=\"reward.required_points &lt;= object.points\">\n"
-"                <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\" t-esc=\"reward.description\">وصف المكافأة</span>\n"
-"                <br>\n"
-"            </t>\n"
-"        </t>\n"
-"    </td>\n"
-"</tr>\n"
-"<tr style=\"margin-top: 16px\">\n"
-"    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
-"        استخدم هذا الكود الترويجي\n"
-"        <t t-if=\"object.expiration_date\">\n"
-"            قبل <t t-out=\"object.expiration_date or ''\">2021-06-16</t>\n"
-"        </t>\n"
-"        <p style=\"margin-top: 16px;\">\n"
-"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; background-color: #F1F1F1;\" t-out=\"object.code or ''\">15637502648479132902</strong>\n"
-"        </p>\n"
-"        <t t-foreach=\"object.program_id.rule_ids\" t-as=\"rule\">\n"
-"            <t t-if=\"rule.minimum_qty not in [0, 1]\">\n"
-"                <span style=\"font-size: 14px;\">\n"
-"                    الحد الأدنى للشراء هو <t t-out=\"rule.minimum_qty or ''\">10</t> منتجات\n"
-"                </span><br>\n"
-"            </t>\n"
-"            <t t-if=\"rule.minimum_amount != 0.00\">\n"
-"                <span style=\"font-size: 14px;\">\n"
-"                    صالح للمنتجات التي تفوق قيمتها <t t-out=\"rule.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % float(rule.minimum_amount) or ''\">10.00</t>\n"
-"                </span><br>\n"
-"            </t>\n"
-"        </t>\n"
-"        <br>\n"
-"        شكراً لك،\n"
-"        <t t-if=\"object._get_signature()\">\n"
-"            <br>\n"
-"            <t t-out=\"object._get_signature() or ''\">--<br>ميتشل آدمن</t>\n"
-"        </t>\n"
-"    </td>\n"
-"</tr>\n"
-"</tbody></table>\n"
-"        "
 
 #. module: loyalty
 #. odoo-python
@@ -446,13 +398,13 @@ msgstr "يجب أن يكون في البرنامج مكافأة واحدة عل�
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_buttons
 msgid "A reward is waiting for you"
-msgstr ""
+msgstr "هناك مكافأة بانتظارك "
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "A reward product can't be of type \"combo\"."
-msgstr ""
+msgstr "لا يمكن أن يكون منتج المكافأة من نوع \"مجموعة عناصر\". "
 
 #. module: loyalty
 #. odoo-python
@@ -517,7 +469,7 @@ msgstr "بين "
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "Among:"
-msgstr ""
+msgstr "بين: "
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__anonymous
@@ -532,7 +484,7 @@ msgstr "التطبيق "
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "Applied to:"
-msgstr ""
+msgstr "تم تطبيقه على: "
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__applies_on
@@ -1030,7 +982,7 @@ msgstr "تاريخ الانتهاء"
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Example: Gift for customer"
-msgstr ""
+msgstr "مثال: هدية لعميل "
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__expiration_date
@@ -1215,7 +1167,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/loyalty/wizard/loyalty_generate_wizard.py:0
 msgid "Gift For Customer"
-msgstr ""
+msgstr "هدية لعميل "
 
 #. module: loyalty
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_gift_ewallet_action
@@ -1226,7 +1178,7 @@ msgstr "بطاقات الهدايا والمحفظة الإلكترونية "
 #. odoo-python
 #: code:addons/loyalty/wizard/loyalty_card_update_balance.py:0
 msgid "Gift for customer"
-msgstr ""
+msgstr "هدية لعميل "
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__points_granted
@@ -1267,12 +1219,12 @@ msgstr "السجل"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_form
 msgid "History Lines"
-msgstr ""
+msgstr "بنود السجل "
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_history
 msgid "History for Loyalty cards and Ewallets"
-msgstr ""
+msgstr "سجل بطاقات الولاء والمَحافظ الإلكترونية "
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__id
@@ -1345,7 +1297,7 @@ msgstr "برنامج دفع "
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_history__issued
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
 msgid "Issued"
-msgstr ""
+msgstr "تم إصدارها "
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__coupon_count_display
@@ -1362,7 +1314,7 @@ msgstr "جون دو "
 #. odoo-javascript
 #: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
 msgid "Last Transactions"
-msgstr ""
+msgstr "المعاملات الأخيرة "
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__write_uid
@@ -1445,7 +1397,7 @@ msgstr "قاعدة الولاء"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
 msgid "Loyalty Transaction"
-msgstr ""
+msgstr "معاملة الولاء "
 
 #. module: loyalty
 #. odoo-python
@@ -1506,13 +1458,13 @@ msgstr "منتج متعدد "
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card_update_balance__new_balance
 msgid "New Balance"
-msgstr ""
+msgstr "رصيد جديد "
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/wizard/loyalty_card_update_balance.py:0
 msgid "New Balance should be positive and different then old balance."
-msgstr ""
+msgstr "يجب أن يكون الرصيد الجديد موجباً ومختلفاً عن الرصيد القديم. "
 
 #. module: loyalty
 #. odoo-python
@@ -1577,7 +1529,7 @@ msgstr "الطلب"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_history__order_model
 msgid "Order Model"
-msgstr ""
+msgstr "موديل الطلب "
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__partner_id
@@ -1894,7 +1846,7 @@ msgstr "الضرائب"
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__tax_ids
 msgid "Taxes to add on the discount line."
-msgstr ""
+msgstr "الضرائب التي يجب إضافتها إلى بند الخصم.  "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -1952,7 +1904,7 @@ msgstr ""
 #: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
 msgid "There are currently no transaction lines for this card."
-msgstr ""
+msgstr "لا توجد حالياً أي بنود معاملات لهذه البطاقة. "
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_card_action
@@ -2003,19 +1955,19 @@ msgstr "المشغّل "
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Untaxed discount"
-msgstr ""
+msgstr "الخصم غير شامل الضريبة "
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_card.py:0
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
 msgid "Update Balance"
-msgstr ""
+msgstr "تحديث الرصيد "
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_card_update_balance
 msgid "Update Loyalty Card Points"
-msgstr ""
+msgstr "تحديث نقاط بطاقة الولاء "
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__use_count
@@ -2060,7 +2012,7 @@ msgstr "صالح حتى "
 #. odoo-javascript
 #: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
 msgid "Valid until"
-msgstr ""
+msgstr "سارية حتى "
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__website_message_ids
@@ -2129,7 +2081,7 @@ msgstr "مع كود ترويجي "
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
 msgid "You are about to change the balance of the card"
-msgstr ""
+msgstr "أنت على وشك تغيير رصيد البطاقة"
 
 #. module: loyalty
 #. odoo-python
@@ -2231,7 +2183,7 @@ msgstr "مكافأة الولاء "
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "on the cheapest product"
-msgstr ""
+msgstr "على المنتج الأقل سعراً "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -2241,7 +2193,7 @@ msgstr "على طلبك القادم "
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "on your order"
-msgstr ""
+msgstr "على طلبك "
 
 #. module: loyalty
 #. odoo-python
@@ -2291,7 +2243,7 @@ msgstr "أرخص منتج "
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "the value of the coupon"
-msgstr ""
+msgstr "قيمة الكوبون "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form

@@ -1,14 +1,14 @@
 /** @odoo-module */
 
-import { describe, expect, mountOnFixture, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
 import { watchListeners } from "@odoo/hoot-mock";
 import { EventBus } from "@odoo/owl";
-import { parseUrl } from "../local_helpers";
+import { mountForTest, parseUrl } from "../local_helpers";
 
 describe(parseUrl(import.meta.url), () => {
     test("elementFromPoint and elementsFromPoint should be mocked", async () => {
-        await mountOnFixture(/* xml */ `
+        await mountForTest(/* xml */ `
             <div class="oui" style="position: absolute; left: 10px; top: 10px; width: 250px; height: 250px;">
                 Oui
             </div>

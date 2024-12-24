@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Sarah Park, 2024
-# Wil Odoo, 2024
 # Daye Jeong, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +37,7 @@ msgstr "/ 게스트"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.js:0
 msgid "18:45 John 4P"
-msgstr ""
+msgstr "18:45 John 4P"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_cheeseburger_product_template
@@ -65,7 +65,7 @@ msgstr "<strong>층 이름 :  </strong>"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Point of Sales:</strong>"
-msgstr ""
+msgstr "<strong>POS:</strong>"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -277,7 +277,7 @@ msgstr "장바구니"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Change Floor Background"
-msgstr ""
+msgstr "바닥 배경 변경"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -378,6 +378,12 @@ msgid "Design floors and assign orders to tables"
 msgstr "플로어 디자인 및 테이블에 주문 배정"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Dine in"
+msgstr "매장에서 식사"
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__display_name
 msgid "Display Name"
@@ -403,7 +409,7 @@ msgstr "매장 내 식사 / 테이크아웃"
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.js:0
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.xml:0
 msgid "Edit Order Name"
-msgstr ""
+msgstr "주문 이름 편집"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -428,12 +434,6 @@ msgstr "이미지를 불러오는 중 오류가 발생했습니다. 다시 시�
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
 msgid "Enter a table number"
 msgstr "테이블 번호를 입력하세요."
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
-msgid "Error"
-msgstr "오류"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.espresso_product_template
@@ -545,12 +545,6 @@ msgid "Funghi"
 msgstr "펑기"
 
 #. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
-msgid "General Note"
-msgstr "일반적인 참고 사항"
-
-#. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_negroni_product_template
 msgid "Gin, vermouth rosso, Campari, and an orange peel."
 msgstr "진, 베르무트 로쏘, 캄파리, 오렌지 껍질."
@@ -609,8 +603,8 @@ msgstr "False 인 경우 테이블이 비활성화되어 POS에서 사용할 수
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
-msgid "Jump to table"
-msgstr ""
+msgid "Jump"
+msgstr "이동"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -629,6 +623,12 @@ msgstr "최근 갱신한 사람"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__write_date
 msgid "Last Updated on"
 msgstr "최근 갱신 일자"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
+msgid "Loading"
+msgstr "불러오는 중"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -672,6 +672,12 @@ msgstr "사각형 만들기"
 #: model:product.template,name:pos_restaurant.product_margarita_product_template
 msgid "Margarita"
 msgstr "마가리타"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Message"
+msgstr "메시지"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.milkshake_banana_product_template
@@ -723,9 +729,9 @@ msgstr "팁 없음"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
-msgid "No table or floating order found with this number"
-msgstr "이 번호에 대한 테이블 또는 보류 중인 주문이 없습니다."
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Note"
+msgstr "노트"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1122,13 +1128,13 @@ msgstr "플로어 보기 전환"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.xml:0
 msgid "Switch to Dine in"
-msgstr ""
+msgstr "다이닝으로 전환"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.xml:0
 msgid "Switch to Takeaway"
-msgstr ""
+msgstr "테이크아웃으로 전환"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1172,6 +1178,12 @@ msgid "Take Away"
 msgstr "테이크아웃"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Take out"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__takeaway
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_takeaway
 msgid "Takeaway"
@@ -1205,7 +1217,7 @@ msgstr "이 테이블에서 서비스를 제공한 기본 고객 수입니다."
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__table_number
 msgid "The number of the table as displayed on the floor plan"
-msgstr ""
+msgstr "평면도에 표시된 테이블 번호입니다."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__parent_id

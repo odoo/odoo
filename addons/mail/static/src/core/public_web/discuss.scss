@@ -5,7 +5,7 @@
 }
 
 .o-mail-Discuss-core {
-    background-color: $body-bg;
+    background-color: var(--mail-Discuss-coreBgColor, $body-bg);
 }
 
 .o-mail-Discuss-selfAvatar {
@@ -19,6 +19,7 @@
 .o-mail-Discuss-header {
     background-color: $white;
     box-shadow: 0px 1px 6px -3px rgba(50, 50, 50, 0.15);
+    --border-opacity: .25;
 }
 
 .o-mail-Discuss-headerActions button {

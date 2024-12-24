@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -36,7 +36,7 @@ msgstr "/ ضيف "
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.js:0
 msgid "18:45 John 4P"
-msgstr ""
+msgstr "18:45 John 4P"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_cheeseburger_product_template
@@ -65,7 +65,7 @@ msgstr "<strong>اسم الطابق: </strong>"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Point of Sales:</strong>"
-msgstr ""
+msgstr "<strong>نقطة البيع:</strong> "
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -92,7 +92,7 @@ msgstr "إضافة طابق "
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Add Table"
-msgstr ""
+msgstr "أضف طاولة "
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -283,7 +283,7 @@ msgstr "عربة التسوق "
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Change Floor Background"
-msgstr ""
+msgstr "تغيير خلفية الطابق "
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -384,6 +384,12 @@ msgid "Design floors and assign orders to tables"
 msgstr "تصميم الأرضيات وتعيين الطلبات للطاولات "
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Dine in"
+msgstr "تناول الطعام في المطعم "
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__display_name
 msgid "Display Name"
@@ -409,7 +415,7 @@ msgstr "الأكل في المطعم / أخذ الطعام إلى المنزل "
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.js:0
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.xml:0
 msgid "Edit Order Name"
-msgstr ""
+msgstr "تحرير اسم الطلب "
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -434,12 +440,6 @@ msgstr "حدث خطأ أثناء تحميل الصورة. يرجى المحاو�
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
 msgid "Enter a table number"
 msgstr "أدخِل رقم الطاولة "
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
-msgid "Error"
-msgstr "خطأ"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.espresso_product_template
@@ -504,7 +504,7 @@ msgstr "اسم الطابق؟ "
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.xml:0
 msgid "Floor Plan"
-msgstr ""
+msgstr "خطة الطابق "
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_floor_form
@@ -549,12 +549,6 @@ msgstr "لتسهيل الأمور، سوف نقوم بتقديم عمليات ا
 #: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
 msgid "Funghi"
 msgstr "Funghi"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
-msgid "General Note"
-msgstr ""
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_negroni_product_template
@@ -615,8 +609,8 @@ msgstr "إذا كانت قيمته خطأ، تُلغى الطاولة ولن ت�
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
-msgid "Jump to table"
-msgstr ""
+msgid "Jump"
+msgstr "انتقال "
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -635,6 +629,12 @@ msgstr "آخر تحديث بواسطة"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__write_date
 msgid "Last Updated on"
 msgstr "آخر تحديث في"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
+msgid "Loading"
+msgstr "تحميل"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -666,18 +666,24 @@ msgstr "Mai Tai"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Make Round"
-msgstr ""
+msgstr "جعلها دائرية "
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Make Square"
-msgstr ""
+msgstr "جعلها مربعة "
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_margarita_product_template
 msgid "Margarita"
 msgstr "مارغريتا "
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Message"
+msgstr "الرسالة"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.milkshake_banana_product_template
@@ -729,9 +735,9 @@ msgstr "بلا بقشيش "
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
-msgid "No table or floating order found with this number"
-msgstr ""
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Note"
+msgstr "الملاحظات"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -912,7 +918,7 @@ msgstr "بروسيكو، أبيرول، صودا "
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/product_screen/order_summary/order_summary.xml:0
 msgid "Release Order"
-msgstr ""
+msgstr "إرسال الطلب "
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1128,13 +1134,13 @@ msgstr "تبديل نافذة عرض الطابق "
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.xml:0
 msgid "Switch to Dine in"
-msgstr ""
+msgstr "التبديل إلى خيار تناول الطعام في المطعم "
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.xml:0
 msgid "Switch to Takeaway"
-msgstr ""
+msgstr "التبديل إلى خيار تناول الطعام في الخارج "
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1157,7 +1163,7 @@ msgstr "حجز الطاولة "
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__table_number
 msgid "Table Number"
-msgstr ""
+msgstr "رقم الطاولة "
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1176,6 +1182,12 @@ msgstr "الجداول "
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__takeaway
 msgid "Take Away"
 msgstr "للخارج "
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Take out"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__takeaway

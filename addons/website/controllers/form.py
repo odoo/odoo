@@ -21,7 +21,7 @@ _lt = LazyTranslate(__name__)
 
 class WebsiteForm(http.Controller):
 
-    @http.route('/website/form', type='http', auth="public", methods=['POST'], multilang=False)
+    @http.route('/website/form', type='http', auth="public", methods=['POST'], multilang=False, readonly=True)
     def website_form_empty(self, **kwargs):
         # This is a workaround to don't add language prefix to <form action="/website/form/" ...>
         return ""
@@ -268,7 +268,7 @@ class WebsiteForm(http.Controller):
 
         authenticate_message = False
         email_field_name = request.env[model_name]._mail_get_primary_email_field()
-        if email_field_name and hasattr(record, '_message_log'):
+        if email_field_name and hasattr(record, '_message_log') and email_field_name in values:
             warning_icon = ""
             if request.session.uid:
                 user_email = request.env.user.email

@@ -9,7 +9,7 @@ from odoo.tests import tagged
 from odoo.tests.common import users
 
 
-@tagged('event_flow')
+@tagged('event_crm')
 class TestEventCrmFlow(TestEventCrmCommon, CronMixinCase):
 
     @classmethod

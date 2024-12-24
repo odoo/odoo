@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Sarah Park, 2024
 # Daye Jeong, 2024
 # 
 msgid ""
@@ -27,6 +28,8 @@ msgid ""
 "#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong "
 "class=\"text-primary\">%(date)s</strong>"
 msgstr ""
+"#%(number)s - <strong>%(amount)s</strong>의 할부금 납부일 <strong class=\"text-"
+"primary\">%(date)s</strong>"
 
 #. module: account_payment
 #. odoo-javascript
@@ -84,7 +87,7 @@ msgstr "<i class=\"fa fa-fw fa-check-circle\"/> 보류"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-fw fa-check-circle\"/> Processing Payment"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> 결제 처리 중"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -120,14 +123,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_link_wizard.py:0
 msgid "A discount will be applied if the customer pays before %s included."
-msgstr ""
+msgstr "%s일까지 결제가 접수되면 할인이 적용됩니다."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
 "A payment has already been made on this invoice, please make sure to not pay"
 " twice."
-msgstr ""
+msgstr "이 청구서는 이미 결제가 완료되었습니다. 중복 결제가 되지 않도록 주의하세요. "
 
 #. module: account_payment
 #. odoo-python
@@ -231,7 +234,7 @@ msgstr "표시명"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__display_open_installments
 msgid "Display Open Installments"
-msgstr ""
+msgstr "미결제 할부 표시"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
@@ -243,7 +246,7 @@ msgstr "완료. 귀하의 온라인 결제가 성공적으로 처리되었습니
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__epd_info
 msgid "Early Payment Discount Information"
-msgstr ""
+msgstr "선납 할인 정보"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -275,7 +278,7 @@ msgstr "결제 링크 생성"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__has_eligible_epd
 msgid "Has Eligible Epd"
-msgstr ""
+msgstr "적격 Epd 보유"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
@@ -293,7 +296,7 @@ msgstr "ID"
 msgid ""
 "Impossible to pay all the overdue invoices if they don't share the same "
 "currency."
-msgstr ""
+msgstr "연체된 청구서가 다른 통화로 되어 있는 경우 모두 결제할 수 없습니다."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
@@ -334,7 +337,7 @@ msgstr "청구서 수"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_home_account_payment
 msgid "Invoices to pay"
-msgstr ""
+msgstr "지불할 청구서"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_journal
@@ -399,19 +402,19 @@ msgstr "온라인 결제"
 #. odoo-python
 #: code:addons/account_payment/controllers/portal.py:0
 msgid "Overdue invoices should share the same company."
-msgstr ""
+msgstr "연체된 청구서는 동일한 회사에서 공유되어야 합니다."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/portal.py:0
 msgid "Overdue invoices should share the same currency."
-msgstr ""
+msgstr "연체된 청구서는 동일한 통화로 공유되어야 합니다."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/controllers/portal.py:0
 msgid "Overdue invoices should share the same partner."
-msgstr ""
+msgstr "연체된 청구서는 동일한 파트너와 공유되어야 합니다."
 
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__partial
@@ -516,7 +519,7 @@ msgstr "결제"
 #. odoo-python
 #: code:addons/account_payment/controllers/payment.py:0
 msgid "Please log in to pay your overdue invoices"
-msgstr ""
+msgstr "연체된 청구서에 대한 금액을 지불하려면 로그인하세요"
 
 #. module: account_payment
 #. odoo-python
@@ -657,7 +660,7 @@ msgstr "지불 처리 중 오류 발생: 신용 카드 ID가 잘못되었습니�
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "This invoice has already been paid."
-msgstr ""
+msgstr "이 청구서는 이미 결제가 완료되었습니다."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_count
@@ -719,7 +722,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_payment/static/src/js/portal_my_invoices_payment.js:0
 msgid "due in %s day(s)"
-msgstr ""
+msgstr "%s 일 후 만기"
 
 #. module: account_payment
 #. odoo-javascript

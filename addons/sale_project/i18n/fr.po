@@ -50,7 +50,7 @@ msgstr "Articles de commande de %(name)s"
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's Sales Orders"
-msgstr "Bons de commande de %(name)s"
+msgstr "Commandes clients de %(name)s"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -61,9 +61,9 @@ msgid ""
 "the cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"Le bon de "
-"commande associé à ce projet a été annulé. Nous vous conseillons de mettre à"
-" jour l'article de commande ou d'annuler ce projet en même temps que "
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"La commande "
+"client associé à ce projet a été annulé. Nous vous conseillons de mettre à "
+"jour l'article de commande ou d'annuler ce projet en même temps que "
 "l'annulation de la commande.\" invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_project
@@ -75,9 +75,9 @@ msgid ""
 "cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"Le bon de "
-"commande associé à cette tâche a été annulé. Nous vous conseillons de mettre"
-" à jour l'article de commande ou d'annuler cette tâche en même temps que "
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"La commande "
+"client associé à cette tâche a été annulé. Nous vous conseillons de mettre à"
+" jour l'article de commande ou d'annuler cette tâche en même temps que "
 "l'annulation de la commande.\" invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_project
@@ -105,7 +105,7 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                            Bons de commande\n"
+"                            Commandes clients\n"
 "                        </span>"
 
 #. module: sale_project
@@ -122,7 +122,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
-msgstr "<span class=\"o_stat_text\">Bon de commande</span>"
+msgstr "<span class=\"o_stat_text\">Commande client</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
@@ -141,6 +141,8 @@ msgid ""
 "A project must be defined on the quotation or on the form of products creating a task on order.\n"
 "The following products need a project in which to put their task: %(product_names)s"
 msgstr ""
+"Un projet doit être défini sur le devis ou sur le formulaire des produits créant une tâche dans la commande.\n"
+"Les produits suivants nécessitent un projet dans lequel placer leur tâche :%(product_names)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -149,6 +151,9 @@ msgid ""
 "analytic distribution of this project will also serve as a reference for "
 "newly created sales order items."
 msgstr ""
+"Une tâche sera créée pour le projet lors de la confirmation de la commande "
+"client. La distribution analytique de ce projet servira également de "
+"référence pour les nouveaux articles de la commande client créée."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -218,7 +223,7 @@ msgid ""
 "Create a project for the order with a task for each sales order line to "
 "track the time spent."
 msgstr ""
-"Créez un projet pour la commande avec une tâche pour chaque ligne de bon de "
+"Créez un projet pour la commande avec une tâche pour chaque ligne de "
 "commande client afin de suivre le temps passé."
 
 #. module: sale_project
@@ -290,7 +295,7 @@ msgstr "Factures clients"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Defined on quotation"
-msgstr ""
+msgstr "Défini sur le devis"
 
 #. module: sale_project
 #. odoo-javascript
@@ -306,13 +311,13 @@ msgstr "Campagne de marketing digital (projet)"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
 msgid "Display Sales Order"
-msgstr "Afficher le bon de commande"
+msgstr "Afficher la commande client"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "Done"
-msgstr "Fait"
+msgstr "Terminé"
 
 #. module: sale_project
 #. odoo-python
@@ -323,7 +328,7 @@ msgstr "Acomptes"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Empty project"
-msgstr ""
+msgstr "Projet vide"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_flooring_product_template
@@ -443,7 +448,7 @@ msgstr "Mobilier de bureau (tâche)"
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
 msgstr ""
-"Une fois le devis confirmé par le client, il devient un bon de commande."
+"Une fois le devis confirmé par le client, il devient une commande client."
 
 #. module: sale_project
 #. odoo-python
@@ -493,6 +498,9 @@ msgid ""
 "generate analytic costs, will be re-invoiced in this sales order if they are"
 " set up for it."
 msgstr ""
+"Les produits ajoutés aux transferts de stock, dont le type d'opération est "
+"configuré pour générer des coûts analytiques, seront facturés à nouveau dans"
+" cette commande client si cela est prévu."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_project
@@ -578,7 +586,7 @@ msgstr "Rapport d'analyse des ventes"
 #: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__sale_order_id
 #: model:project.project,name:sale_project.so_template_project
 msgid "Sales Order"
-msgstr "Bon de commande"
+msgstr "Commande client"
 
 #. module: sale_project
 #. odoo-python
@@ -590,7 +598,7 @@ msgstr "Bon de commande"
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "Sales Order Item"
-msgstr "Article du bon de commande"
+msgstr "Article de la commande client"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
@@ -605,9 +613,9 @@ msgid ""
 "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
 "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
 msgstr ""
-"Article du bon de commande auquel sera ajouté le temps passé sur cette tâche afin d'être facturé à votre client.\n"
-"Par défaut, l'article du bon de commande défini sur le projet sera sélectionné. En son absence, le dernier article du bon de commande prépayé qui a encore du temps sera utilisé.\n"
-"Supprimez l'article du bon de commande afin de rendre cette tâche non facturable. Vous pouvez également modifier ou supprimer l'article du bon de commande de chaque entrée de feuille de temps individuellement."
+"Article de la commande client à laquelle sera ajouté le temps passé sur cette tâche afin d'être facturé à votre client.\n"
+"Par défaut, l'article de la commande client défini sur le projet sera sélectionné. En son absence, le dernier article de la commande client prépayé qui a encore du temps sera utilisé.\n"
+"Supprimez l'article de la commande client afin de rendre cette tâche non facturable. Vous pouvez également modifier ou supprimer l'article de la commande client de chaque entrée de feuille de temps individuellement."
 
 #. module: sale_project
 #. odoo-javascript
@@ -615,7 +623,7 @@ msgstr ""
 #: code:addons/sale_project/models/project_project.py:0
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 msgid "Sales Order Items"
-msgstr "Articles du bon de commande"
+msgstr "Articles de la commande client"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
@@ -628,7 +636,7 @@ msgstr "Ligne de commande"
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_orders
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_orders_dashboard
 msgid "Sales Orders"
-msgstr "Bons de commande"
+msgstr "Commandes clients"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
@@ -636,13 +644,13 @@ msgid ""
 "Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
 "It can be modified on each task and timesheet entry individually if necessary."
 msgstr ""
-"Article du bon de commande qui sera sélectionné par défaut sur les tâches et feuilles de temps de ce projet, sauf si l'employé renseigné sur les feuilles de temps est explicitement lié à un article du bon de commande sur le projet.\n"
+"Article de la commande client qui sera sélectionné par défaut sur les tâches et feuilles de temps de ce projet, sauf si l'employé renseigné sur les feuilles de temps est explicitement lié à un article de la commande client sur le projet.\n"
 "Il peut être modifié sur chaque tâche et entrée de feuille de temps individuellement si nécessaire."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr "Bon de commande auquel la tâche est liée."
+msgstr "Commande client à laquelle la tâche est liée."
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_screw_driver_product_template
@@ -659,7 +667,7 @@ msgstr "Rechercher dans la facture"
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 msgid "Search in Sales Order"
-msgstr "Rechercher dans le bon de commande"
+msgstr "Rechercher dans la commande client"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
@@ -754,7 +762,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "This Sales Order must contain at least one product of type \"Service\"."
-msgstr "Ce bon de commande doit contenir au moins un produit du type \"Service\"."
+msgstr ""
+"Cette commande client doit contenir au moins un produit du type \"Service\"."
 
 #. module: sale_project
 #. odoo-python
@@ -789,7 +798,7 @@ msgstr "Factures fournisseurs"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "View Sales Order"
-msgstr "Afficher le bon de commande"
+msgstr "Afficher la commande client"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_and_task_product_template

@@ -6,7 +6,7 @@
                 <button class="btn btn-secondary btn-lg px-3 text-nowrap" t-on-click="() => router.back()">
                     <i class="oi oi-chevron-left" aria-hidden="true"/><span class="ms-2 d-none d-md-inline">Discard</span>
                 </button>
-                <h1 class="mb-0 text-nowrap"><strong t-esc="product.display_name"/> options</h1>
+                <h1 class="mb-0 text-nowrap"><strong t-esc="product.name"/> options</h1>
                 <span class="d-none d-md-inline px-5"/> <!-- Spacer -->
             </div>
 
@@ -24,7 +24,7 @@
                             onerror="this.remove()"/>
                     </div>
                     <div class="o-so-product-details-description">
-                        <h2 t-esc="product.display_name"/>
+                        <h2 t-esc="product.name"/>
                         <small t-if="product.public_description"
                             class="o_self_order_main_desc d-block mb-3 text-muted"
                             t-out="product.public_description"
@@ -49,8 +49,18 @@
                 </div>
             </div>
 
-            <div t-if="showQtyButtons and !props.onValidate" class="page-buttons d-flex justify-content-end p-3 gap-3 bg-view border-top">
-                <button t-if="showQtyButtons and !props.onValidate and selfOrder.ordering" class="btn btn-primary btn-lg" t-att-class="{ 'disabled': this.isEveryValueSelected() }" t-on-click="addToCart">Add to cart</button>
+            <div t-if="showQtyButtons and !props.onValidate" class="page-buttons d-flex p-3 gap-3 bg-view border-top"
+                t-att-class="(isArchivedCombination() ? 'justify-content-between': 'justify-content-end')">
+                <div t-if="isArchivedCombination() and !this.isEveryValueSelected()" class="alert alert-warning m-0">
+                    This combination does not exist.
+                </div>
+                <button
+                    t-if="showQtyButtons and !props.onValidate and selfOrder.ordering"
+                    class="btn btn-primary btn-lg"
+                    t-att-disabled="this.isEveryValueSelected() or isArchivedCombination()"
+                    t-on-click="addToCart">
+                    Add to cart
+                </button>
             </div>
         </div>
     </t>

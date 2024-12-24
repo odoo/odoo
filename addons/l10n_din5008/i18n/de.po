@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.3alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-24 08:09+0000\n"
+"POT-Creation-Date: 2024-12-08 10:58+0000\n"
 "PO-Revision-Date: 2024-04-24 08:11+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -104,6 +104,11 @@ msgstr "<span class=\"fw-bold\">Rechnungsadresse:</span>"
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "<span class=\"fw-bold\">Invoicing and Shipping Address:</span>"
 msgstr "<span class=\"fw-bold\">Rechnungs- und Lieferadresse:</span>"
+
+#. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
+msgid "<span class=\"fw-bold\">Beneficiary:</span>"
+msgstr "<span class=\"fw-bold\">Leistungsempfänger:</span>"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
@@ -229,7 +234,7 @@ msgstr "Rechnungsdatum:"
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "Invoice No."
-msgstr "Rechnungsnr"
+msgstr "Rechnungsnr."
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
@@ -239,17 +244,17 @@ msgstr "Rechnungsnr:"
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_delivery_date
 msgid "L10N Din5008 Delivery Date"
-msgstr ""
+msgstr "L10N Din5008 Lieferdatum"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_due_date
 msgid "L10N Din5008 Due Date"
-msgstr ""
+msgstr "L10N Din5008 Fälligkeitsdatum"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_invoice_date
 msgid "L10N Din5008 Invoice Date"
-msgstr ""
+msgstr "L10N Din5008 Rechnungsdatum"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
@@ -293,6 +298,8 @@ msgstr "Straße 2"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008_account_move
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "Tax ID"
 msgstr "USt-IdNr."
 
@@ -309,7 +316,7 @@ msgid ""
 "ID. It must be unique across all partners of a same country"
 msgstr ""
 "Die Registernummer des Unternehmens. Verwenden Sie diese, wenn sie sich von "
-"der Steuer-ID unterscheidet. Sie muss für alle Partner desselben Landes "
+"der USt-IdNr. unterscheidet. Sie muss für alle Partner desselben Landes "
 "eindeutig sein."
 
 #. module: l10n_din5008

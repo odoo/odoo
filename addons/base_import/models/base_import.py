@@ -317,6 +317,8 @@ class Import(models.TransientModel):
             definition_record_field = field['definition_record_field']
 
             target_model = Model.env[Model._fields[definition_record].comodel_name]
+            if not target_model.has_access('read'):  # ignore if you cannot read target_model at all
+                continue
             # Do not take into account the definition of archived parents,
             # we do not import archived records most of the time.
             definition_records = target_model.search_fetch(
@@ -1108,7 +1110,7 @@ class Import(models.TransientModel):
                 'advanced_mode': advanced_mode,
                 'debug': self.env.user.has_group('base.group_no_one'),
                 'batch': batch,
-                'file_length': file_length
+                'file_length': len(rows),
             }
         except Exception as error:
             # Due to lazy generators, UnicodeDecodeError (for

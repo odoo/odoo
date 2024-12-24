@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { App, Component, xml } from "@odoo/owl";
+import { App } from "@odoo/owl";
 import {
     defineRootNode,
     getActiveElement,
@@ -10,6 +10,11 @@ import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import { HootError } from "../hoot_utils";
 
 /**
+ * @typedef {Parameters<typeof import("@odoo/owl").mount>[2] & {
+ *  className: string | string[];
+ *  target?: import("@odoo/hoot-dom").Target;
+ * }} MountOnFixtureOptions
+ *
  * @typedef {{
  *  component: import("@odoo/owl").ComponentConstructor;
  *  props: unknown;
@@ -20,11 +25,21 @@ import { HootError } from "../hoot_utils";
 // Global
 //-----------------------------------------------------------------------------
 
-const { customElements, document, getSelection, HTMLElement } = globalThis;
+const { customElements, document, getSelection, HTMLElement, WeakSet } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
+
+class HootFixtureElement extends HTMLElement {
+    connectedCallback() {
+        currentFixture = this;
+    }
+
+    disconnectedCallback() {
+        currentFixture = null;
+    }
+}
 
 const FIXTURE_COMMON_STYLE = [
     "position: fixed",
@@ -43,15 +58,19 @@ const FIXTURE_DEBUG_STYLE = [
 const FIXTURE_STYLE = [...FIXTURE_COMMON_STYLE, "opacity: 0", "z-index: -1"].join(";");
 
 const destroyed = new WeakSet();
+let allowFixture = false;
+/** @type {HootFixtureElement | null} */
+let currentFixture = null;
+let shouldPrepareNextFixture = true; // Prepare setup for first test
 
-customElements.define("hoot-fixture", class HootFixture extends HTMLElement {});
+customElements.define("hoot-fixture", HootFixtureElement);
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
 /**
- * @param {App | Component} target
+ * @param {App | import("@odoo/owl").Component} target
  */
 export function destroy(target) {
     const app = target instanceof App ? target : target.__owl__.app;
@@ -68,64 +87,35 @@ export function destroy(target) {
 export function makeFixtureManager(runner) {
     const cleanupFixture = () => {
         allowFixture = false;
-        if (!fixture) {
+        if (!currentFixture) {
             return;
         }
         shouldPrepareNextFixture = true;
-        fixture.remove();
-        fixture = null;
+        currentFixture.remove();
     };
 
     const getFixture = () => {
         if (!allowFixture) {
             throw new HootError(`Cannot access fixture outside of a test.`);
         }
-        if (!fixture) {
-            fixture = document.createElement("hoot-fixture");
+        if (!currentFixture) {
+            // Prepare fixture once to not force layouts/reflows
+            const preFixture = document.createElement("hoot-fixture");
             if (runner.debug || runner.config.headless) {
-                fixture.setAttribute("style", FIXTURE_DEBUG_STYLE);
+                preFixture.setAttribute("style", FIXTURE_DEBUG_STYLE);
             } else {
-                fixture.setAttribute("style", FIXTURE_STYLE);
+                preFixture.setAttribute("style", FIXTURE_STYLE);
             }
 
             const { width, height } = getCurrentDimensions();
-            fixture.style.width = `${width}px`;
-            fixture.style.height = `${height}px`;
+            preFixture.style.width = `${width}px`;
+            preFixture.style.height = `${height}px`;
 
-            setupEventActions(fixture);
+            setupEventActions(preFixture);
 
-            document.body.appendChild(fixture);
+            document.body.appendChild(preFixture);
         }
-        return fixture;
-    };
-
-    /**
-     * @param {Parameters<typeof import("@odoo/owl").mount>[0]} ComponentClass
-     * @param {Parameters<typeof import("@odoo/owl").mount>[2]} config
-     * @param {Parameters<typeof import("@odoo/owl").mount>[1]} [target]
-     */
-    const mountOnFixture = (ComponentClass, config, target) => {
-        if (target && !fixture) {
-            throw new HootError(`Cannot mount on a custom target before the fixture is created.`);
-        }
-
-        if (typeof ComponentClass === "string") {
-            ComponentClass = class extends Component {
-                static props = {};
-                static template = xml`${ComponentClass}`;
-            };
-        }
-
-        const app = new App(ComponentClass, {
-            name: `TEST: ${ComponentClass.name}`,
-            test: true,
-            warnIfNoStaticProps: true,
-            ...config,
-        });
-
-        runner.after(() => destroy(app));
-
-        return app.mount(target || getFixture());
+        return currentFixture;
     };
 
     const setupFixture = () => {
@@ -140,11 +130,6 @@ export function makeFixtureManager(runner) {
         getSelection().removeAllRanges();
     };
 
-    let allowFixture = false;
-    /** @type {HTMLElement | null} */
-    let fixture = null;
-    let shouldPrepareNextFixture = true; // Prepare setup for first test
-
     runner.beforeAll(() => {
         defineRootNode(getFixture);
     });
@@ -156,6 +141,5 @@ export function makeFixtureManager(runner) {
         cleanup: cleanupFixture,
         setup: setupFixture,
         get: getFixture,
-        mount: mountOnFixture,
     };
 }

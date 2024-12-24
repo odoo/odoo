@@ -105,6 +105,8 @@ class TestVideoFromURL(slides_common.SlidesCase):
                 'https://youtu.be/W0JQcpGLSFw',
                 'https://www.youtube.com/watch?v=W0JQcpGLSFw',
                 'https://www.youtube.com/watch?v=W0JQcpGLSFw&list=PL1-aSABtP6ACZuppkBqXFgzpNb2nVctZx',
+                'https://www.youtube.com/live/W0JQcpGLSFw?feature=shared',
+                'https://youtube.com/shorts/W0JQcpGLSFw?si=N9xYS2w3f1BWuhU9',
             ],
             'vmhB-pt7EfA': [  # id starts with v, it is important
                 'https://youtu.be/vmhB-pt7EfA',

@@ -13,6 +13,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { contains } from "@web/../tests/web_test_helpers";
+import { execCommand } from "./_helpers/userCommands";
 
 test("can set foreground color", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
@@ -26,6 +27,7 @@ test("can set foreground color", async () => {
 
     await click(".o_color_button[data-color='#6BADDE']");
     await animationFrame();
+    await waitFor(".o-we-toolbar");
     expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
     expect(".o_font_color_selector").toHaveCount(0); // selector closed
     expect(getContent(el)).toBe(`<p><font style="color: rgb(107, 173, 222);">[test]</font></p>`);
@@ -43,6 +45,7 @@ test("can set background color", async () => {
 
     await click(".o_color_button[data-color='#6BADDE']");
     await animationFrame();
+    await waitFor(".o-we-toolbar");
     expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
     expect(".o_font_color_selector").toHaveCount(0); // selector closed
     expect(getContent(el)).toBe(
@@ -193,36 +196,34 @@ test("Can reset a color", async () => {
     await animationFrame();
     expect("font[style='color: rgb(255, 0, 0);']").toHaveCount(0);
     expect(".tested").toHaveInnerHTML("test");
-    editor.dispatch("HISTORY_UNDO");
+    execCommand(editor, "historyUndo");
     expect("font[style='color: rgb(255, 0, 0);']").toHaveCount(1);
     expect(".tested").not.toHaveInnerHTML("test");
 });
 
-test.tags("desktop")(
-    "selected text color is shown in the toolbar and update when hovering",
-    async () => {
-        await setupEditor(
-            `<p>
+test.tags("desktop");
+test("selected text color is shown in the toolbar and update when hovering", async () => {
+    await setupEditor(
+        `<p>
             <font style="color: rgb(255, 0, 0);">[test]</font>
         </p>`
-        );
+    );
 
-        await waitFor(".o-we-toolbar");
-        expect(".o_font_color_selector").toHaveCount(0);
-        await animationFrame();
-        expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
-        await click(".o-we-toolbar .o-select-color-foreground");
-        await animationFrame();
-        // Hover a color
-        await hover(queryOne("button[data-color='#FF00FF']"));
-        await animationFrame();
-        expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 255)" });
-        // Hover out
-        await hover(queryOne(".o-we-toolbar .o-select-color-foreground"));
-        await animationFrame();
-        expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
-    }
-);
+    await waitFor(".o-we-toolbar");
+    expect(".o_font_color_selector").toHaveCount(0);
+    await animationFrame();
+    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    // Hover a color
+    await hover(queryOne("button[data-color='#FF00FF']"));
+    await animationFrame();
+    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 255)" });
+    // Hover out
+    await hover(queryOne(".o-we-toolbar .o-select-color-foreground"));
+    await animationFrame();
+    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+});
 
 test("selected text color is shown in the toolbar and update when clicking", async () => {
     await setupEditor(
@@ -367,7 +368,25 @@ test("clicking on the angle input does not close the dropdown", async () => {
     expect("input[name='angle'").toHaveCount(1);
 });
 
-describe.tags("desktop")("color preview", () => {
+test("should be able to select farthest-corner option in radial gradient", async () => {
+    await setupEditor(`<p>a[bcd]e</p>`);
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".btn:contains('Gradient')").toHaveCount(1);
+    await click(".btn:contains('Gradient')");
+    await animationFrame();
+    expect("button:contains('Radial')").toHaveCount(1);
+    await click(".btn:contains('Radial')");
+    await animationFrame();
+    expect("button[title='Extend to the farthest corner']").toHaveCount(1);
+    await click("button[title='Extend to the farthest corner']");
+    await animationFrame();
+    expect("button[title='Extend to the farthest corner']").toHaveClass("active");
+});
+
+describe.tags("desktop");
+describe("color preview", () => {
     test("preview color should work and be reverted", async () => {
         await setupEditor("<p>[test]</p>");
 
@@ -420,9 +439,9 @@ describe.tags("desktop")("color preview", () => {
         expect("font").toHaveCount(1);
         expect("font").toHaveClass("text-o-color-2");
         await animationFrame();
-        editor.dispatch("HISTORY_UNDO");
+        execCommand(editor, "historyUndo");
         expect("font").toHaveCount(0);
-        editor.dispatch("HISTORY_REDO");
+        execCommand(editor, "historyRedo");
         expect("font").toHaveCount(1);
         expect("font").toHaveClass("text-o-color-2");
     });
@@ -445,7 +464,131 @@ describe.tags("desktop")("color preview", () => {
         await press("escape");
         await animationFrame();
         expect("font").toHaveCount(0);
-        editor.dispatch("HISTORY_UNDO");
+        execCommand(editor, "historyUndo");
         expect("font").toHaveCount(0);
+    });
+
+    test("should preview color in table on hover in solid tab", async () => {
+        const { el } = await setupEditor(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        await waitFor(".o-we-toolbar");
+        await animationFrame();
+        await click(".o-select-color-background");
+        await animationFrame();
+        // Hover a color
+        await hover(queryOne("button[data-color='#CE0000']"));
+        expect(getContent(el)).toBe(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="" style="background-color: rgb(206, 0, 0);">
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="" style="background-color: rgb(206, 0, 0);">
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        // Hover out
+        await hover(queryOne(".o-we-toolbar .o-select-color-foreground"));
+        await animationFrame();
+        expect(getContent(el)).toBe(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td">
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td">
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
+    });
+
+    test("should preview color in table on hover in custom tab", async () => {
+        const { el } = await setupEditor(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p><br>]</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        await waitFor(".o-we-toolbar");
+        await animationFrame();
+        await click(".o-select-color-background");
+        await animationFrame();
+        await click(".btn:contains('Custom')");
+        await animationFrame();
+        // Hover a color
+        await hover(queryOne("button[data-color='black']"));
+        expect(getContent(el)).toBe(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="bg-black">
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bg-black">
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        // Hover out
+        await hover(queryOne(".o-we-toolbar .o-select-color-foreground"));
+        await animationFrame();
+        expect(getContent(el)).toBe(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td">
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td">
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
     });
 });

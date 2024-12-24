@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Message">
-        <div t-if="message.isNotification" class="o-mail-NotificationMessage text-break mx-auto text-500 px-3 text-center smaller" t-on-click="onClickNotificationMessage"  t-att-class="props.className" t-ref="root">
+        <div t-if="message.isNotification" class="o-mail-NotificationMessage text-break mx-auto text-muted opacity-75 px-3 text-center smaller" t-on-click="onClickNotificationMessage"  t-att-class="props.className" t-ref="root">
             <i t-if="message.notificationIcon" t-attf-class="{{ message.notificationIcon }} me-1"/>
             <span class="o-mail-NotificationMessage-author d-inline" t-if="message.author and !message.body.includes(escape(message.author.name))" t-esc="message.author.name"/> <t t-out="message.body"/>
         </div>
@@ -24,7 +24,7 @@
                         </div>
                         <t t-elif="message.isPending" t-call="mail.Message.pendingStatus"/>
                         <t t-elif="!message.is_transient">
-                            <small t-if="isActive and props.showDates" class="o-mail-Message-date text-muted smaller mt-2">
+                            <small t-if="isActive and props.showDates" class="o-mail-Message-date o-xsmaller mt-2" t-att-title="message.datetimeShort">
                                 <t t-esc="message.dateSimple"/>
                             </small>
                         </t>
@@ -35,10 +35,9 @@
                                 <strong class="me-1" t-esc="authorName"/>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
-                            <small t-if="!message.is_transient" class="o-mail-Message-date text-muted smaller" t-att-title="message.datetimeShort">
-                                <t t-if="shouldDisplayAuthorName">- </t>
+                            <small t-if="!message.is_transient" class="o-mail-Message-date o-xsmaller" t-att-title="message.datetimeShort">
                                 <t t-if="message.isPending" t-call="mail.Message.pendingStatus"/>
-                                <RelativeTime t-else="" datetime="message.datetime"/>
+                                <t t-else="" t-out="message.dateSimpleWithDay"/>
                             </small>
                             <small t-if="isPersistentMessageFromAnotherThread" t-on-click.prevent="openRecord" class="ms-1 text-500">
                                 <t t-if="message.thread.model !== 'discuss.channel'">
@@ -69,11 +68,10 @@
                                         <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="false"/>
                                         <t t-else="">
                                             <div class="position-relative overflow-x-auto overflow-y-hidden d-inline-block" t-att-class="{ 'w-100': state.isEditing }">
-                                                <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
-                                                    'border': state.isEditing and !message.is_note,
-                                                    'o-blue border border-info': message.bubbleColor === 'blue',
-                                                    'o-green border border-success': message.bubbleColor === 'green',
-                                                    'o-orange border border-warning': message.bubbleColor === 'orange',
+                                                <div t-if="message.bubbleColor" class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100 border" t-att-class="{
+                                                    'o-blue': message.bubbleColor === 'blue',
+                                                    'o-green': message.bubbleColor === 'green',
+                                                    'o-orange': message.bubbleColor === 'orange',
                                                     }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
                                                 <MessageInReply t-if="message.parentMessage" message="message" onClick="props.onParentMessageClick"/>
                                                 <div class="position-relative text-break o-mail-Message-body" t-att-class="{
@@ -155,7 +153,7 @@
                         'rounded-start-1': isStart,
                         'rounded-end-1': isEnd,
                     }"/>
-                    <button t-else="" class="btn px-1 py-0 rounded-0" t-att-title="action.title" t-att-name="action.id" t-on-click.stop="action.onClick" t-att-class="{
+                    <button t-else="" class="btn border-0 px-1 py-0 rounded-0" t-att-title="action.title" t-att-name="action.id" t-on-click.stop="action.onClick" t-att-class="{
                         'rounded-start-1': isStart,
                         'rounded-end-1': isEnd,
                     }">
@@ -182,12 +180,11 @@
 
 
 <t t-name="mail.Message.expandAction">
-    <button class="btn rounded-0" t-att-title="expandText" t-on-click="openMobileActions" t-att-class="{
+    <button class="btn border-0 rounded-0" t-att-title="expandText" t-on-click="openMobileActions" t-att-class="{
         'o-mail-Message-openActionMobile opacity-25 p-2 mt-n2 rounded-circle user-select-none': isMobileOS and !mobileExpanded,
         'me-n2': isMobileOS and !mobileExpanded and isAlignedRight,
         'ms-n2': isMobileOS and !mobileExpanded and !isAlignedRight,
         'px-2 py-0': !isMobileOS,
-        'bg-200': optionsDropdown.isOpen,
         'rounded-start-1': !isMobileOS and isReverse,
         'rounded-end-1': !isMobileOS and !isReverse,
     }">

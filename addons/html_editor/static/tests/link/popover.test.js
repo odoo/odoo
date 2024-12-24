@@ -33,7 +33,7 @@ describe("should open a popover", () => {
         expect(".o-we-linkpopover").toHaveCount(1);
         // selection outside a link
         setContent(el, "<p>this []is a <a>link</a></p>");
-        await waitUntil(() => !queryFirst(".o-we-linkpopover"));
+        await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
         expect(".o-we-linkpopover").toHaveCount(0);
     });
     test("link popover should have input field for href when the link doesn't have href", async () => {
@@ -123,7 +123,7 @@ describe("popover should edit,copy,remove the link", () => {
         const { el } = await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
         await waitFor(".o-we-linkpopover");
         await click(".o_we_remove_link");
-        await waitUntil(() => !queryFirst(".o-we-linkpopover"));
+        await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
         expect(getContent(el)).toBe("<p>this is a li[]nk</p>");
     });
     test("after edit the label, the text of the link should be updated", async () => {
@@ -339,21 +339,25 @@ describe("Link creation", () => {
             const { el } = await setupEditor("<p>[Hello]</p>");
             await waitFor(".o-we-toolbar");
             await click(".o-we-toolbar .fa-link");
-            await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
+            await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
+                "#"
+            );
             expect(cleanLinkArtifacts(getContent(el))).toBe('<p><a href="#">Hello[]</a></p>');
         });
         test("should set the link on two existing characters", async () => {
             const { el } = await setupEditor("<p>H[el]lo</p>");
             await waitFor(".o-we-toolbar");
             await click(".o-we-toolbar .fa-link");
-            await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
+            await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
+                "#"
+            );
             expect(cleanLinkArtifacts(getContent(el))).toBe('<p>H<a href="#">el[]</a>lo</p>');
         });
         test("when you open link popover with a label, url input should be focus by default ", async () => {
             const { el } = await setupEditor("<p>[Hello]</p>");
             await waitFor(".o-we-toolbar");
             await click(".o-we-toolbar .fa-link");
-            await waitFor(".o-we-linkpopover");
+            await waitFor(".o-we-linkpopover", { timeout: 1500 });
             expect(getActiveElement()).toBe(
                 queryOne(".o-we-linkpopover input.o_we_href_input_link")
             );
@@ -380,14 +384,16 @@ describe("Link creation", () => {
             });
             await waitFor(".o-we-toolbar");
             await click(".o-we-toolbar .fa-link");
-            await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
+            await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
+                "#"
+            );
             expect(cleanLinkArtifacts(getContent(el))).toBe('<p>aaa<a href="#">ab[]</a>cdef</p>');
         });
         test("should remove link when click away without inputting url", async () => {
             const { el } = await setupEditor("<p>H[el]lo</p>");
             await waitFor(".o-we-toolbar");
             await click(".o-we-toolbar .fa-link");
-            await waitFor(".o-we-linkpopover");
+            await waitFor(".o-we-linkpopover", { timeout: 1500 });
             const pNode = queryOne("p");
             setSelection({
                 anchorNode: pNode,
@@ -403,7 +409,7 @@ describe("Link creation", () => {
             await waitFor(".o-we-toolbar");
 
             await click(".o-we-toolbar .fa-link");
-            await waitFor(".o-we-linkpopover");
+            await waitFor(".o-we-linkpopover", { timeout: 1500 });
             expect(".o-we-linkpopover").toHaveCount(1);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 '<p>a<a href="http://test.com/">bcd[]</a>ef</p>'
@@ -414,7 +420,7 @@ describe("Link creation", () => {
             await waitFor(".o-we-toolbar");
 
             await click(".o-we-toolbar .fa-link");
-            await waitFor(".o-we-linkpopover");
+            await waitFor(".o-we-linkpopover", { timeout: 1500 });
             expect(".o-we-linkpopover").toHaveCount(1);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 '<p>a<a href="http://test.com/">bcde[]</a>f</p>'
@@ -427,7 +433,7 @@ describe("Link creation", () => {
             await waitFor(".o-we-toolbar");
 
             await click(".o-we-toolbar .fa-link");
-            await waitFor(".o-we-linkpopover");
+            await waitFor(".o-we-linkpopover", { timeout: 1500 });
             expect(".o-we-linkpopover").toHaveCount(1);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 '<p>a<a href="http://test.com/">bcdef[]</a></p><p>gh</p>'
@@ -440,7 +446,7 @@ describe("Link creation", () => {
             await waitFor(".o-we-toolbar");
 
             await click(".o-we-toolbar .fa-link");
-            await waitFor(".o-we-linkpopover");
+            await waitFor(".o-we-linkpopover", { timeout: 1500 });
             expect(".o_we_label_link").toHaveValue("st m");
             expect(".o_we_href_input_link").toHaveValue("");
         });
@@ -448,7 +454,9 @@ describe("Link creation", () => {
             const { el, editor } = await setupEditor("<p>[Hello]</p>");
             await waitFor(".o-we-toolbar");
             await click(".o-we-toolbar .fa-link");
-            await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
+            await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
+                "#"
+            );
             expect(cleanLinkArtifacts(getContent(el))).toBe('<p><a href="#">Hello[]</a></p>');
 
             undo(editor);
@@ -460,7 +468,7 @@ describe("Link creation", () => {
             );
             await waitFor(".o-we-toolbar");
             await click(".o-we-toolbar .fa-link");
-            await waitFor(".o-we-linkpopover");
+            await waitFor(".o-we-linkpopover", { timeout: 1500 });
             expect(queryFirst(".o-we-linkpopover a").href).toBe("https://www.test.com/");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 `<p><a href="https://www.test.com">Hello my friend[]</a></p>`
@@ -474,7 +482,8 @@ describe("Link creation", () => {
     });
 });
 
-describe.tags("desktop")("Link formatting in the popover", () => {
+describe.tags("desktop");
+describe("Link formatting in the popover", () => {
     test("click on link, the link popover should load the current format correctly", async () => {
         await setupEditor(
             '<p><a href="http://test.com/" class="btn btn-outline-primary rounded-circle btn-lg">link2[]</a></p>'
@@ -698,7 +707,7 @@ describe("link preview", () => {
             focusNode: pNode,
             focusOffset: 1,
         });
-        await waitUntil(() => !queryFirst(".o-we-linkpopover"));
+        await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
 
         const linkNode = queryOne("a");
         setSelection({
@@ -739,7 +748,7 @@ describe("link preview", () => {
             focusNode: pNode,
             focusOffset: 1,
         });
-        await waitUntil(() => !queryFirst(".o-we-linkpopover"));
+        await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
 
         const linkNode = queryOne("a");
         setSelection({
@@ -766,7 +775,7 @@ describe("link in templates", () => {
             focusNode: pNode,
             focusOffset: 0,
         });
-        await waitUntil(() => !queryFirst(".o-we-linkpopover"));
+        await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>[]test<a t-attf-href="/test/1">link</a></p>'
         );
@@ -783,7 +792,7 @@ describe("link in templates", () => {
             focusNode: pNode,
             focusOffset: 0,
         });
-        await waitUntil(() => !queryFirst(".o-we-linkpopover"));
+        await waitUntil(() => !queryFirst(".o-we-linkpopover"), { timeout: 1500 });
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>[]test<a t-att-href="/test/1">link</a></p>'
         );
@@ -795,7 +804,7 @@ describe("links with inline image", () => {
         const { el } = await setupEditor(`<p>ab[cd<img src="${base64Img}">ef]g</p>`);
         await waitFor(".o-we-toolbar");
         await click(".o-we-toolbar .fa-link");
-        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
+        await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit("#");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             `<p>ab<a href="#">cd<img src="${base64Img}">ef[]</a>g</p>`
         );
@@ -804,7 +813,7 @@ describe("links with inline image", () => {
         const { editor, el } = await setupEditor(`<p>ab[cd<img src="${base64Img}">ef]g</p>`);
         await waitFor(".o-we-toolbar");
         await click(".o-we-toolbar .fa-link");
-        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#");
+        await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit("#");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             `<p>ab<a href="#">cd<img src="${base64Img}">ef[]</a>g</p>`
         );

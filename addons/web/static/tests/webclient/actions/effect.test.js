@@ -84,7 +84,8 @@ defineActions([
     },
 ]);
 
-test.tags("desktop")("rainbowman integrated to webClient", async () => {
+test.tags("desktop");
+test("rainbowman integrated to webClient", async () => {
     patchWithCleanup(user, { showEffect: true });
 
     await mountWithCleanup(WebClient);
@@ -109,9 +110,10 @@ test.tags("desktop")("rainbowman integrated to webClient", async () => {
     expect(".o_list_view").toHaveCount(1);
 });
 
-test.tags("desktop")("on close with effect from server", async () => {
+test.tags("desktop");
+test("on close with effect from server", async () => {
     patchWithCleanup(user, { showEffect: true });
-    onRpc("/web/dataset/call_button", () => {
+    onRpc("/web/dataset/call_button/*", () => {
         return {
             type: "ir.actions.act_window_close",
             effect: {
@@ -127,7 +129,8 @@ test.tags("desktop")("on close with effect from server", async () => {
     expect(".o_reward").toHaveCount(1);
 });
 
-test.tags("desktop")("on close with effect in xml on desktop", async () => {
+test.tags("desktop");
+test("on close with effect in xml on desktop", async () => {
     patchWithCleanup(user, { showEffect: true });
 
     Partner._views["form,false"] = `
@@ -139,7 +142,7 @@ test.tags("desktop")("on close with effect in xml on desktop", async () => {
             </header>
             <field name="display_name"/>
         </form>`;
-    onRpc("/web/dataset/call_button", () => false);
+    onRpc("/web/dataset/call_button/*", () => false);
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(6);
@@ -148,7 +151,8 @@ test.tags("desktop")("on close with effect in xml on desktop", async () => {
     expect(".o_reward .o_reward_msg_content").toHaveText("rainBowInXML");
 });
 
-test.tags("mobile")("on close with effect in xml on mobile", async () => {
+test.tags("mobile");
+test("on close with effect in xml on mobile", async () => {
     patchWithCleanup(user, { showEffect: true });
 
     Partner._views["form,false"] = `
@@ -160,7 +164,7 @@ test.tags("mobile")("on close with effect in xml on mobile", async () => {
             </header>
             <field name="display_name"/>
         </form>`;
-    onRpc("/web/dataset/call_button", () => false);
+    onRpc("/web/dataset/call_button/*", () => false);
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(6);

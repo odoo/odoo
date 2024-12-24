@@ -6,6 +6,7 @@ import { registry } from "@web/core/registry";
 import { makeEnv, startServices } from "@web/env";
 import { MockServer, makeMockServer } from "./mock_server/mock_server";
 import { patch } from "@web/core/utils/patch";
+import { pick } from "@web/core/utils/objects";
 
 /**
  * @typedef {Record<keyof Services, any>} Dependencies
@@ -144,17 +145,28 @@ export function mockService(name, serviceFactory) {
         name,
         {
             ...originalService,
-            start() {
+            start(env, dependencies) {
                 if (typeof serviceFactory === "function") {
-                    return serviceFactory(...arguments);
+                    return serviceFactory(env, dependencies);
+                } else {
+                    const service = originalService.start(env, dependencies);
+                    patch(service, serviceFactory);
+                    return service;
                 }
-                const service = originalService.start(...arguments);
-                patch(service, serviceFactory);
-                return service;
             },
         },
         { force: true }
     );
+
+    // Patch already initialized service
+    if (currentEnv?.services?.[name]) {
+        if (typeof serviceFactory === "function") {
+            const dependencies = pick(currentEnv.services, ...(originalService.dependencies || []));
+            currentEnv.services[name] = serviceFactory(currentEnv, dependencies);
+        } else {
+            patch(currentEnv.services[name], serviceFactory);
+        }
+    }
 }
 
 /**

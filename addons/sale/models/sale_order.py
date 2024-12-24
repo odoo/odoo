@@ -732,7 +732,7 @@ class SaleOrder(models.Model):
                            order.company_id.account_use_credit_limit
             if show_warning:
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
-                    order,
+                    order.sudo(),  # ensure access to `credit` & `credit_limit` fields
                     current_amount=(order.amount_total / order.currency_rate),
                 )
 
@@ -1306,8 +1306,7 @@ class SaleOrder(models.Model):
     def _recompute_prices(self):
         lines_to_recompute = self._get_update_prices_lines()
         lines_to_recompute.invalidate_recordset(['pricelist_item_id'])
-        lines_to_recompute.technical_price_unit = 0.0
-        lines_to_recompute._compute_price_unit()
+        lines_to_recompute.with_context(force_price_recomputation=True)._compute_price_unit()
         # Special case: we want to overwrite the existing discount on _recompute_prices call
         # i.e. to make sure the discount is correctly reset
         # if pricelist rule is different than when the price was first computed.
@@ -1456,6 +1455,12 @@ class SaleOrder(models.Model):
 
         return self.env['sale.order.line'].browse(invoiceable_line_ids + down_payment_line_ids)
 
+    def _create_account_invoices(self, invoice_vals_list, final):
+        """Small method to allow overriding the behavior right after an invoice is created."""
+        # Manage the creation of invoices in sudo because a salesperson must be able to generate an invoice from a
+        # sale order without "billing" access rights. However, he should not be able to create an invoice from scratch.
+        return self.env['account.move'].sudo().with_context(default_move_type='out_invoice').create(invoice_vals_list)
+
     def _create_invoices(self, grouped=False, final=False, date=None):
         """ Create invoice(s) for the given Sales Order(s).
 
@@ -1572,15 +1577,16 @@ class SaleOrder(models.Model):
                     line[2]['sequence'] = SaleOrderLine._get_invoice_line_sequence(new=sequence, old=line[2]['sequence'])
                     sequence += 1
 
-        # Manage the creation of invoices in sudo because a salesperson must be able to generate an invoice from a
-        # sale order without "billing" access rights. However, he should not be able to create an invoice from scratch.
-        moves = self.env['account.move'].sudo().with_context(default_move_type='out_invoice').create(invoice_vals_list)
+        moves = self._create_account_invoices(invoice_vals_list, final)
 
         # 4) Some moves might actually be refunds: convert them if the total amount is negative
         # We do this after the moves have been created since we need taxes, etc. to know if the total
         # is actually negative or not
         if final:
-            moves.sudo().filtered(lambda m: m.amount_total < 0).action_switch_move_type()
+            if moves_to_switch := moves.sudo().filtered(lambda m: m.amount_total < 0):
+                moves_to_switch.action_switch_move_type()
+                self.invoice_ids._set_reversed_entry(moves_to_switch)
+
         for move in moves:
             if final:
                 # Downpayment might have been determined by a fixed amount set by the user.

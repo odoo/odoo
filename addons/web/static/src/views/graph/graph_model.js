@@ -4,7 +4,7 @@ import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { rankInterval } from "@web/search/utils/dates";
 import { getGroupBy } from "@web/search/utils/group_by";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
-import { Model } from "@web/model/model";
+import { addPropertyFieldDefs, Model } from "@web/model/model";
 import { computeReportMeasures, processMeasure } from "@web/views/utils";
 import { Domain } from "@web/core/domain";
 
@@ -117,6 +117,13 @@ export class GraphModel extends Model {
             this.initialGroupBy = searchParams.context.graph_groupbys || this.metaData.groupBy; // = arch groupBy --> change that
         }
         const metaData = this._buildMetaData();
+        await addPropertyFieldDefs(
+            this.orm,
+            metaData.resModel,
+            searchParams.context,
+            metaData.fields,
+            metaData.groupBy.map((gb) => gb.fieldName)
+        );
         await this._fetchDataPoints(metaData);
     }
 
@@ -586,14 +593,16 @@ export class GraphModel extends Model {
         const processedGroupBy = [];
         for (const gb of groupBy) {
             const { fieldName, interval } = gb;
-            const { groupable, type } = fields[fieldName];
-            if (
-                // cf. _description_groupable in odoo/fields.py
-                !groupable ||
-                ["id", "__count"].includes(fieldName) ||
-                !GROUPABLE_TYPES.includes(type)
-            ) {
-                continue;
+            if (!fieldName.includes(".")) {
+                const { groupable, type } = fields[fieldName];
+                if (
+                    // cf. _description_groupable in odoo/fields.py
+                    !groupable ||
+                    ["id", "__count"].includes(fieldName) ||
+                    !GROUPABLE_TYPES.includes(type)
+                ) {
+                    continue;
+                }
             }
             const index = processedGroupBy.findIndex((gb) => gb.fieldName === fieldName);
             if (index === -1) {

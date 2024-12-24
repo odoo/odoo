@@ -88,7 +88,7 @@ class PaymentTransaction(models.Model):
             invoice_ids = self._fields['invoice_ids'].convert_to_cache(command_list, self)
             invoices = self.env['account.move'].browse(invoice_ids).exists()
             if len(invoices) == len(invoice_ids):  # All ids are valid
-                prefix = separator.join(invoices.mapped('name'))
+                prefix = separator.join(invoices.filtered(lambda inv: inv.name).mapped('name'))
                 if name := values.get('name_next_installment'):
                     prefix = name
                 return prefix
@@ -169,8 +169,10 @@ class PaymentTransaction(models.Model):
             **extra_create_values,
         }
 
-        if self.invoice_ids:
-            next_payment_values = self.invoice_ids._get_invoice_next_payment_values()
+        for invoice in self.invoice_ids:
+            if invoice.state != 'posted':
+                continue
+            next_payment_values = invoice._get_invoice_next_payment_values()
             if next_payment_values['installment_state'] == 'epd' and self.amount == next_payment_values['amount_due']:
                 aml = next_payment_values['epd_line']
                 epd_aml_values_list = [({
@@ -183,8 +185,9 @@ class PaymentTransaction(models.Model):
                 for aml_values_list in early_payment_values.values():
                     if (aml_values_list):
                         aml_vl = aml_values_list[0]
-                        aml_vl['partner_id'] = self.partner_id.id
+                        aml_vl['partner_id'] = invoice.partner_id.id
                         payment_values['write_off_line_vals'] += [aml_vl]
+                break
 
         payment = self.env['account.payment'].create(payment_values)
         payment.action_post()

@@ -25,6 +25,10 @@ registry.category("web_tour.tours").add("self_combo_selector", {
             },
         ]),
         Utils.clickBtn("Order"),
+        {
+            trigger: '.btn:contains("＋")',
+            run: "click",
+        },
         ...CartPage.checkCombo("Office Combo", [
             {
                 product: "Desk Organizer",

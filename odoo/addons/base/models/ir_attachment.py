@@ -655,6 +655,7 @@ class IrAttachment(models.Model):
         return super().create(vals_list)
 
     def _post_add_create(self, **kwargs):
+        # TODO master: rename to _post_upload, better indicating its usage
         pass
 
     def generate_access_token(self):

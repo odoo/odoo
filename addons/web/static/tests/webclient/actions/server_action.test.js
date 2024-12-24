@@ -59,7 +59,7 @@ test("can execute server actions from db ID", async () => {
         },
     ]);
     onRpc("/web/action/run", async () => {
-        return Promise.resolve(1); // execute action 1
+        return 1; // execute action 1
     });
     stepAllNetworkCalls();
 
@@ -95,7 +95,7 @@ test("handle server actions returning false", async function (assert) {
         },
     ]);
     onRpc("/web/action/run", async () => {
-        return Promise.resolve(false);
+        return false;
     });
     stepAllNetworkCalls();
     await mountWithCleanup(WebClient);
@@ -130,14 +130,14 @@ test("action with html help returned by a server action", async () => {
             type: "ir.actions.server",
         },
     ]);
-    onRpc("/web/action/run", async (request) => {
-        return Promise.resolve({
+    onRpc("/web/action/run", async () => {
+        return {
             res_model: "partner",
             type: "ir.actions.act_window",
             views: [[false, "kanban"]],
             help: "<p>I am not a helper</p>",
             domain: [[0, "=", 1]],
-        });
+        };
     });
 
     await mountWithCleanup(WebClient);

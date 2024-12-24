@@ -352,7 +352,7 @@
                     <t t-foreach="channel_frontend_tags" t-as="tag">
                         <t t-if="search_tags">
                             <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
-                                t-attf-class="post_link cursor-pointer badge o_badge_clickable #{'text-bg-primary' if tag in search_tags else 'o_wslides_channel_tag o_color_0'}" t-esc="tag.name"/>
+                                t-attf-class="post_link cursor-pointer badge o_badge_clickable #{'o_color_'+str(tag.color) if tag in search_tags else 'o_wslides_channel_tag o_color_0'}" t-esc="tag.name"/>
                         </t>
                         <t t-else="">
                             <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"

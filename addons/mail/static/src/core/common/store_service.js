@@ -102,8 +102,6 @@ export class Store extends BaseStore {
      */
     inPublicPage = false;
     odoobot = Record.one("Persona");
-    /** @type {boolean} */
-    odoobotOnboarding;
     users = {};
     /** @type {number} */
     internalUserGroupId;
@@ -187,18 +185,9 @@ export class Store extends BaseStore {
              * - threads with needaction
              * - unread channels
              * - read channels
-             * - odoobot chat
              *
              * In each group, thread with most recent message comes first
              */
-            const aOdooBot = a.isCorrespondentOdooBot;
-            const bOdooBot = b.isCorrespondentOdooBot;
-            if (aOdooBot && !bOdooBot) {
-                return 1;
-            }
-            if (bOdooBot && !aOdooBot) {
-                return -1;
-            }
             const aNeedaction = a.needactionMessages.length;
             const bNeedaction = b.needactionMessages.length;
             if (aNeedaction > 0 && bNeedaction === 0) {
@@ -268,7 +257,7 @@ export class Store extends BaseStore {
 
     /** Import data received from init_messaging */
     async initialize() {
-        await this.fetchData(this.initMessagingParams, { readonly: false });
+        await this.fetchData(this.initMessagingParams);
         this.isReady.resolve();
     }
 
@@ -506,7 +495,7 @@ export class Store extends BaseStore {
      * Get the parameters to pass to the message post route.
      */
     async getMessagePostParams({ body, postData, thread }) {
-        const { attachments, cannedResponseIds, isNote, mentionedChannels, mentionedPartners } =
+        const { attachments, cannedResponseIds, emailAddSignature, isNote, mentionedChannels, mentionedPartners } =
             postData;
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions = this.getMentionsFromText(body, {
@@ -530,6 +519,7 @@ export class Store extends BaseStore {
         }
         postData = {
             body: await prettifyMessageContent(body, validMentions),
+            email_add_signature: emailAddSignature,
             message_type: "comment",
             subtype_xmlid: subtype,
         };

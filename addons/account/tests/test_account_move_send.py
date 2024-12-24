@@ -392,6 +392,66 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         # invoice update
         self.assertTrue(test_move.is_move_sent)
 
+    @users('user_account')
+    @warmup
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_move_composer_with_dynamic_reports(self):
+        """
+        It makes sure that when an invoice is sent using a template that
+        has additional dynamic reports, those extra reports are also
+        generated and sent by mail along side the invoice PDF and the
+        other attachments that were manually added.
+        """
+        test_move = self.test_account_moves[0].with_env(self.env)
+        test_customer = self.test_customers[0].with_env(self.env)
+        move_template = self.move_template.with_env(self.env)
+
+        extra_dynamic_report = self.env.ref('account.action_account_original_vendor_bill')
+        move_template.report_template_ids += extra_dynamic_report
+
+        composer = self.env['account.move.send.wizard'].with_context(active_model='account.move', active_ids=test_move.ids).create({
+            'sending_methods': ['email'],
+            'mail_template_id': move_template.id,
+        })
+
+        with self.mock_mail_gateway(mail_unlink_sent=False), \
+             self.mock_mail_app():
+            composer.action_send_and_print()
+            self.env.cr.flush()  # force tracking message
+
+        self.assertMailMail(
+            test_customer,
+            'sent',
+            author=self.user_account_other.partner_id,  # author: synchronized with email_from of template
+            content=f'TemplateBody for {test_move.name}',
+            email_values={
+                'attachments_info': [
+                    {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
+                    {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
+                    {'name': f'{test_move.name}.pdf', 'type': 'application/pdf'},
+                    {'name': f'{extra_dynamic_report.name.lower()}_{test_move.name}.pdf', 'type': 'application/pdf'},
+                ],
+                'body_content': f'TemplateBody for {test_move.name}',
+                'email_from': self.user_account_other.email_formatted,
+                'subject': f'{self.env.user.company_id.name} Invoice (Ref {test_move.name})',
+                'reply_to': formataddr((
+                    f'{test_move.company_id.name} {test_move.display_name}',
+                    f'{self.alias_catchall}@{self.alias_domain}'
+                )),
+            },
+            fields_values={
+                'auto_delete': True,
+                'email_from': self.user_account_other.email_formatted,
+                'is_notification': True,  # should keep logs by default
+                'mail_server_id': self.mail_server_default,
+                'subject': f'{self.env.user.company_id.name} Invoice (Ref {test_move.name})',
+                'reply_to': formataddr((
+                    f'{test_move.company_id.name} {test_move.display_name}',
+                    f'{self.alias_catchall}@{self.alias_domain}'
+                )),
+            },
+        )
+
     def test_invoice_sent_to_additional_partner(self):
         """
         Make sure that when an invoice is sent to a partner who is not
@@ -647,6 +707,36 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertFalse(self._get_mail_message(invoice1))
         self.assertTrue(invoice2.invoice_pdf_report_id)
         self.assertTrue(self._get_mail_message(invoice2))
+
+    def test_invoice_multi_with_edi(self):
+        invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
+        invoice2 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
+
+        self.partner_a.invoice_sending_method = 'email'
+        self.partner_b.invoice_sending_method = 'manual'
+
+        def get_default_extra_edis(self, move):
+            if move == invoice1:
+                return {'edi1'}
+            return {'edi1', 'edi2'}
+
+        def get_all_extra_edis(self):
+            return {
+                'edi1': {'label': 'EDI 1'},
+                'edi2': {'label': 'EDI 2'},
+            }
+
+        with (
+            patch('odoo.addons.account.models.account_move_send.AccountMoveSend._get_default_extra_edis', get_default_extra_edis),
+            patch('odoo.addons.account.models.account_move_send.AccountMoveSend._get_all_extra_edis', get_all_extra_edis)
+        ):
+            wizard = self.create_send_and_print(invoice1 + invoice2)
+            self.assertEqual(wizard.summary_data, {
+                'edi1': {'count': 2, 'label': 'by EDI 1'},
+                'edi2': {'count': 1, 'label': 'by EDI 2'},
+                'manual': {'count': 1, 'label': 'Download'},
+                'email': {'count': 1, 'label': 'by Email'},
+            })
 
     def test_invoice_mail_attachments_widget(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)

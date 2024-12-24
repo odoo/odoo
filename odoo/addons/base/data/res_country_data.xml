@@ -1008,7 +1008,7 @@
             <field name="currency_id" ref="MXN" />
             <field eval="52" name="phone_code" />
             <field name="vat_label">RFC</field>
-            <field eval="'%(street)s %(street2)s\n%(zip)s %(city)s, %(state_code)s\n%(country_name)s'"  name="address_format" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s, %(state_code)s\n%(country_name)s'"  name="address_format" />
         </record>
         <record id="my" model="res.country">
             <field name="name">Malaysia</field>
@@ -1142,6 +1142,7 @@
             <field name="code">pk</field>
             <field name="currency_id" ref="PKR" />
             <field eval="92" name="phone_code" />
+            <field name="vat_label">NTN</field>
         </record>
         <record id="pl" model="res.country">
             <field name="name">Poland</field>

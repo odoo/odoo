@@ -1,10 +1,7 @@
-import { busService } from "@bus/services/bus_service";
 import { busModels } from "@bus/../tests/bus_test_helpers";
-
-import { mailGlobal } from "@mail/utils/common/misc";
-import { after, before, getFixture } from "@odoo/hoot";
-import { hover as hootHover, resize } from "@odoo/hoot-dom";
-import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
+import { after, before, expect, getFixture, registerDebugInfo } from "@odoo/hoot";
+import { hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
+import { Deferred } from "@odoo/hoot-mock";
 import {
     MockServer,
     authenticate,
@@ -21,12 +18,20 @@ import {
     serverState,
     webModels,
 } from "@web/../tests/web_test_helpers";
+import { contains } from "./mail_test_helpers_contains";
+
+import { busService } from "@bus/services/bus_service";
+import { mailGlobal } from "@mail/utils/common/misc";
+import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
 import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
+import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
+export { SIZES } from "@web/core/ui/ui_service";
+
 import {
     DISCUSS_ACTION_ID,
     authenticateGuest,
@@ -34,7 +39,6 @@ import {
 } from "./mock_server/mail_mock_server";
 import { Base } from "./mock_server/mock_models/base";
 import { DEFAULT_MAIL_VIEW_ID } from "./mock_server/mock_models/constants";
-
 import { DiscussChannel } from "./mock_server/mock_models/discuss_channel";
 import { DiscussChannelMember } from "./mock_server/mock_models/discuss_channel_member";
 import { DiscussChannelRtcSession } from "./mock_server/mock_models/discuss_channel_rtc_session";
@@ -66,12 +70,6 @@ import { ResUsers } from "./mock_server/mock_models/res_users";
 import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
 
-import { contains } from "./mail_test_helpers_contains";
-
-export { SIZES } from "@web/core/ui/ui_service";
-import { patch } from "@web/core/utils/patch";
-import { logger } from "@web/../lib/hoot/core/logger";
-
 export * from "./mail_test_helpers_contains";
 
 before(prepareRegistriesWithCleanup);
@@ -88,7 +86,7 @@ patch(busService, {
             const recordsByModelName = Object.entries(payload);
             for (const [modelName, records] of recordsByModelName) {
                 for (const record of Array.isArray(records) ? records : [records]) {
-                    logger.logDebug(modelName, record);
+                    registerDebugInfo(modelName, record);
                 }
             }
         }
@@ -334,7 +332,7 @@ export async function start(options) {
         patchWithCleanup(session, {
             storeData: store.get_result(),
         });
-        logger.logDebug("session.storeData", session.storeData);
+        registerDebugInfo("session.storeData", session.storeData);
     }
     let env;
     if (options?.asTab) {
@@ -623,16 +621,41 @@ export function observeRenders() {
 /**
  * Determine if the child element is in the view port of the parent.
  *
- * @param {HTMLElement} parent
- * @param {HTMLElement} child
+ * @param {string} childSelector
+ * @param {string} parentSelector
  */
-export function isInViewportOf(parent, child) {
-    const childRect = child.getBoundingClientRect();
-    const parentRect = parent.getBoundingClientRect();
-
-    return childRect.top <= parentRect.top
-        ? parentRect.top - childRect.top <= childRect.height
-        : childRect.bottom - parentRect.bottom <= childRect.height;
+export async function isInViewportOf(childSelector, parentSelector) {
+    await contains(parentSelector);
+    const inViewportDeferred = new Deferred();
+    const failTimeout = setTimeout(() => check({ crashOnFail: true }), 3000);
+    const check = ({ crashOnFail = false } = {}) => {
+        const parent = queryFirst(parentSelector);
+        const child = queryFirst(childSelector);
+        let alreadyInViewport = false;
+        if (parent && child) {
+            const childRect = child.getBoundingClientRect();
+            const parentRect = parent.getBoundingClientRect();
+            alreadyInViewport =
+                childRect.top <= parentRect.top
+                    ? parentRect.top - childRect.top <= childRect.height
+                    : childRect.bottom - parentRect.bottom <= childRect.height;
+        }
+        if (alreadyInViewport) {
+            clearTimeout(failTimeout);
+            expect(true).toBe(true, {
+                message: `Element ${childSelector} found in viewport of ${parentSelector}`,
+            });
+            inViewportDeferred.resolve();
+        } else if (crashOnFail) {
+            const failMsg = `Element ${childSelector} not found in viewport of ${parentSelector}`;
+            expect(false).toBe(true, { message: failMsg });
+            inViewportDeferred.reject(new Error(failMsg));
+        } else {
+            parent.addEventListener("scrollend", check, { once: true });
+        }
+    };
+    check();
+    return inViewportDeferred;
 }
 
 export async function hover(selector) {

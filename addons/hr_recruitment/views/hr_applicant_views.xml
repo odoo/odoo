@@ -16,6 +16,8 @@
                 <field name="candidate_id" optional="show"/>
                 <field name="application_status" optional="hide" invisible="application_status == 'ongoing'"/>
                 <field name="refuse_reason_id" optional='hide'/>
+                <field name="activity_ids" widget="list_activity" optional="hide"/>
+                <field name="activity_date_deadline" optional="hide"/>
                 <field name="priority" widget="priority" optional="show"/>
                 <field name="email_from" readonly="1" optional="hide"/>
                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
@@ -109,7 +111,7 @@
                 <div class="oe_title pe-0">
                     <label for="candidate_id" class="oe_edit_only"/>
                     <h1 class="d-flex justify-content-between align-items-center">
-                        <field name="candidate_id" options="{'line_breaks': False}"/>
+                        <field name="candidate_id" options="{'line_breaks': False}" context="{'default_company_id': company_id}"/>
                     </h1>
                 </div>
                 <group>

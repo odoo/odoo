@@ -22,7 +22,7 @@ const mountManifestLink = (href) => {
 test("Installation page displays the app info correctly", async () => {
     const beforeInstallPromptEvent = new CustomEvent("beforeinstallprompt");
     beforeInstallPromptEvent.preventDefault = () => {};
-    beforeInstallPromptEvent.prompt = async () => Promise.resolve({ outcome: "accepted" });
+    beforeInstallPromptEvent.prompt = async () => ({ outcome: "accepted" });
     browser.BeforeInstallPromptEvent = beforeInstallPromptEvent;
     await makeMockEnv();
     patchWithCleanup(browser.location, {

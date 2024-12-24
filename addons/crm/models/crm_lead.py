@@ -1486,17 +1486,18 @@ class Lead(models.Model):
         :param opportunities: see ``_merge_dependences``
         """
         self.ensure_one()
-        for opportunity in opportunities:
-            for message in opportunity.message_ids:
-                if message.subject:
-                    subject = _("From %(source_name)s: %(source_subject)s", source_name=opportunity.name, source_subject=message.subject)
+        # sudo usage: because we want to go through all messages, whatever the real ACLs
+        # current user has on them
+        for opportunity_su in opportunities.sudo():
+            for message_su in opportunity_su.message_ids:
+                if message_su.subject:
+                    subject = _("From %(source_name)s: %(source_subject)s", source_name=opportunity_su.name, source_subject=message_su.subject)
                 else:
-                    subject = _("From %(source_name)s", source_name=opportunity.name)
-                message.sudo().write({
+                    subject = _("From %(source_name)s", source_name=opportunity_su.name)
+                message_su.write({
                     'res_id': self.id,
                     'subject': subject,
                 })
-
         opportunities.activity_ids.write({
             'res_id': self.id,
         })

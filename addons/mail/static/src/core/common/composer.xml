@@ -11,12 +11,11 @@
                     'pb-2': extended and !props.composer.message,
                     'o-extended': extended,
                     'o-isUiSmall': ui.isSmall,
-                    'p-3': normal,
+                    'px-3 pb-2': normal,
                     'o-hasSelfAvatar': !env.inChatWindow and thread,
                     'o-focused': props.composer.isFocused,
                     'o-editing': props.composer.message,
-                    'o-chatWindow': env.inChatWindow,
-                    'o-chatWindowBig': store.chatHub.isBig,
+                    'o-chatWindow mx-2 mb-3': env.inChatWindow,
                     'o-discussApp': env.inDiscussApp,
                 }" t-attf-class="{{ props.className }}">
             <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="showComposerAvatar">
@@ -32,11 +31,10 @@
                 <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => props.messageToReplyTo.cancel()"/>
             </div>
             <div class="o-mail-Composer-coreMain d-flex flex-nowrap align-items-start flex-grow-1" t-att-class="{ 'flex-column' : extended }">
-                <div class="d-flex o-mail-Composer-bg flex-grow-1 border"
+                <div class="d-flex o-mail-Composer-bg flex-grow-1 border border-secondary rounded-3"
                     t-att-class="{
-                        'o-mail-Composer-compactContainer m-1 shadow-sm border-secondary': compact and !props.composer.message,
+                        'o-mail-Composer-compactContainer m-1 shadow-sm': compact and !props.composer.message,
                         'o-iosPwa': isIosPwa,
-                        'rounded-3' : normal or isMobileOS or extended,
                         'align-self-stretch' : extended,
                     }"
                     t-ref="input-container"

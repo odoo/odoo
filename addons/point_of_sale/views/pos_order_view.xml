@@ -431,13 +431,14 @@
         </field>
     </record>
 
+    <!-- REMOVE IN MASTER -->
     <record id="pos_rounding_form_view_inherited" model="ir.ui.view">
         <field name="name">pos.cash.rounding.form.inherited</field>
         <field name="model">account.cash.rounding</field>
         <field name="inherit_id" ref="account.rounding_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_title')]" position="before">
-                <div class="o_notification_alert alert alert-warning" role="alert">
+                <div class="o_notification_alert alert alert-warning" role="alert" invisible="1">
                   The Point of Sale only supports the "add a rounding line" rounding strategy.
                 </div>
             </xpath>

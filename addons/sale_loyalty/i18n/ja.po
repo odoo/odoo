@@ -3,8 +3,8 @@
 # 	* sale_loyalty
 # 
 # Translators:
-# Junko Augias, 2024
 # Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,8 +23,8 @@ msgstr ""
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
-msgid " - On product with the following taxes: %(taxes)s"
-msgstr " - 以下の税のプロダクトにおいて：%(taxes)s"
+msgid " - On products with the following taxes: %(taxes)s"
+msgstr " - 対象:以下の税のプロダクト: %(taxes)s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
@@ -34,7 +34,7 @@ msgstr "<span class=\"fa fa-clipboard\"/> コピー"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "<strong>Loyalty Card</strong>"
-msgstr ""
+msgstr "<strong>ロイヤリティカード</strong>"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -124,15 +124,15 @@ msgid "Discard"
 msgstr "破棄"
 
 #. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "Discount %(desc)s%(tax_str)s"
+msgstr "値引 %(desc)s%(tax_str)s"
+
+#. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_discount_loyalty_type_config
 msgid "Discount & Loyalty"
 msgstr "値引 & ロイヤリティ"
-
-#. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid "Discount: %(desc)s%(tax_str)s"
-msgstr "値引： %(desc)s%(tax_str)s"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__display_name
@@ -175,7 +175,7 @@ msgstr "ギフトカード & eウォレット"
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_history
 msgid "History for Loyalty cards and Ewallets"
-msgstr ""
+msgstr "ロイヤリティカードとEウォレット用履歴"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_sale_order_line__points_cost
@@ -209,13 +209,13 @@ msgstr "プログラム特典明細ですか？"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "Issued"
-msgstr ""
+msgstr "発行済"
 
 #. module: sale_loyalty
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Issued :"
-msgstr ""
+msgstr "発行済 :"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
@@ -235,7 +235,7 @@ msgstr "最終更新日"
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Loyalty Card :"
-msgstr ""
+msgstr "ロイヤリティカード :"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
@@ -245,7 +245,7 @@ msgstr "ロイヤリティクーポン"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__loyalty_data
 msgid "Loyalty Data"
-msgstr ""
+msgstr "ロイヤリティデータ"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_program
@@ -284,7 +284,7 @@ msgstr "このロイヤリティプログラム用のカードが見つかりま
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "No product is compatible with this promotion."
-msgstr ""
+msgstr "このプロモーションと互換性のあるプロダクトがありません。"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -529,7 +529,7 @@ msgstr "使用済"
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Used :"
-msgstr ""
+msgstr "使用済 :"
 
 #. module: sale_loyalty
 #. odoo-python

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
@@ -1135,6 +1135,17 @@ msgstr "Položka prodejní objednávky"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet_so_button
 msgid "Sales Orders"
 msgstr "Prodejní objednávky"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
+msgid ""
+"Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+"If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
+"You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
+msgstr ""
+"Položka prodejní objednávky, která bude ve výchozím nastavení vybrána na časových výkazech příslušného zaměstnance. Obchází položku prodejní zakázky definovanou na projektu a úkolu a v případě potřeby ji lze upravit při každém zadání timesheetu. Jinými slovy definuje sazbu, podle které se účtuje čas zaměstnance, například na základě jeho odborných znalostí, dovedností nebo zkušeností.\n"
+"Pokud chcete stejnou službu účtovat v jiné sazbě, musíte vytvořit dvě samostatné položky prodejního příkazu, protože každá položka prodejního příkazu může mít vždy jen jednu jednotkovou cenu.\n"
+"Můžete také definovat hodinové firemní náklady svých zaměstnanců pro jejich časové výkazy konkrétně na tomto projektu. Překoná se tím cena timesheetu nastavená na zaměstnanci."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line

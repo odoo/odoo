@@ -134,6 +134,12 @@ patch(PosStore.prototype, {
                     });
                 }
             }
+
+            line.has_valued_move_ids = await this.data.call(
+                "sale.order.line",
+                "has_valued_move_ids",
+                [line.id]
+            );
             newLine.setQuantityFromSOL(line);
             newLine.set_unit_price(line.price_unit);
             newLine.set_discount(line.discount);
@@ -147,6 +153,7 @@ patch(PosStore.prototype, {
                         ...newLineValues,
                     });
                     splitted_line.set_quantity(Math.min(remaining_quantity, 1.0), true);
+                    splitted_line.set_discount(line.discount);
                     remaining_quantity -= splitted_line.qty;
                 }
             }
@@ -174,9 +181,9 @@ patch(PosStore.prototype, {
             buttons: enhancedButtons(),
             formatDisplayedValue: (x) => (isPercentage ? `% ${x}` : x),
             feedback: (buffer) =>
-                isPercentage
+                isPercentage && buffer
                     ? `(${this.env.utils.formatCurrency(
-                          (sale_order.amount_total * parseFloat(buffer)) / 100
+                          (sale_order.amount_unpaid * parseFloat(buffer)) / 100
                       )})`
                     : "",
         });
@@ -191,7 +198,7 @@ patch(PosStore.prototype, {
             );
             const percentageBase =
                 !down_payment_tax || down_payment_tax.price_include
-                    ? sale_order.amount_total
+                    ? sale_order.amount_unpaid
                     : sale_order.amount_untaxed;
             proposed_down_payment = (percentageBase * userValue) / 100;
         }
@@ -211,9 +218,10 @@ patch(PosStore.prototype, {
     },
     async _createDownpaymentLines(sale_order, total_down_payment) {
         //This function will create all the downpaymentlines. We will create on downpayment line per unique tax combination
-        const grouped = Object.groupBy(sale_order.order_line, (ol) => {
-            return ol.tax_id.map((tax_id) => tax_id.id).sort((a, b) => a - b);
-        });
+        const grouped = Object.groupBy(
+            sale_order.order_line.filter((ol) => ol.product_id),
+            (ol) => ol.tax_id.map((tax_id) => tax_id.id).sort((a, b) => a - b)
+        );
         Object.keys(grouped).forEach(async (key) => {
             const group = grouped[key];
 
@@ -221,9 +229,10 @@ patch(PosStore.prototype, {
             const total_price = group.reduce((total, line) => (total += line.price_total), 0);
             const ratio = total_price / sale_order.amount_total;
             const down_payment_line_price = total_down_payment * ratio;
+            const taxes_to_apply = group[0].tax_id.filter((tax) => tax.amount_type !== "fixed");
             // We apply the taxes and keep the same price
             const new_price = compute_price_force_price_include(
-                group[0].tax_id,
+                taxes_to_apply,
                 down_payment_line_price,
                 this.config.down_payment_product_id,
                 this.config._product_default_values,
@@ -236,8 +245,8 @@ patch(PosStore.prototype, {
                 product_id: this.config.down_payment_product_id,
                 price_unit: new_price,
                 sale_order_origin_id: sale_order,
-                tax_ids: [["link", ...group[0].tax_id]],
-                down_payment_details: sale_order.order_line
+                tax_ids: [["link", ...taxes_to_apply]],
+                down_payment_details: group
                     .filter(
                         (line) =>
                             line.product_id &&

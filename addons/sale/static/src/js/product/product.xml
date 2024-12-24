@@ -63,8 +63,10 @@
                     name="sale_product_configurator_add_button"
                     class="btn btn-secondary"
                     t-att-class="{'disabled': !this.env.isPossibleCombination(this.props)}"
-                    t-on-click="() => this.env.addProduct(this.props.product_tmpl_id)">
-                    <i class="fa fa-plus d-none d-md-inline" role="img"/> Add
+                    t-on-click="() => this.env.addProduct(this.props.product_tmpl_id)"
+                >
+                    <i class="fa fa-plus" role="img"/>
+                    <span class="ms-2 d-none d-md-inline">Add</span>
                 </button>
             </t>
         </td>

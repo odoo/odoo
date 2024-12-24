@@ -313,6 +313,7 @@ class AccountMove(models.Model):
 
     def _l10n_hu_edi_check_invoices(self):
         hu_vat_regex = re.compile(r'\d{8}-[1-5]-\d{2}')
+        hu_bank_account_regex = re.compile(r'\d{8}-\d{8}-\d{8}|\d{8}-\d{8}|[A-Z]{2}\d{2}[0-9A-Za-z]{11,30}')
 
         # This contains all the advance invoices that correspond to final invoices in `self`.
         advance_invoices = self.filtered(lambda m: not m._is_downpayment()).invoice_line_ids._get_downpayment_lines().mapped('move_id')
@@ -342,6 +343,11 @@ class AccountMove(models.Model):
                 'records': self.company_id.filtered(lambda c: c.currency_id.name != 'HUF'),
                 'message': _('Please use HUF as company currency!'),
                 'action_text': _('View Company/ies'),
+            },
+            'partner_bank_account_invalid': {
+                'records': self.partner_bank_id.filtered(lambda p: not hu_bank_account_regex.fullmatch(p.acc_number)),
+                'message': _('Please set a valid recipient bank account number!'),
+                'action_text': _('View partner(s)'),
             },
             'partner_vat_missing': {
                 'records': self.partner_id.commercial_partner_id.filtered(
@@ -1002,7 +1008,7 @@ class AccountMove(models.Model):
 
         self.ensure_one()
         tax_totals = self.tax_totals
-        if not tax_totals or self.move_type not in ('out_refund', 'in_refund'):
+        if not tax_totals:
             return tax_totals
 
         fields_to_reverse = (
@@ -1013,16 +1019,17 @@ class AccountMove(models.Model):
             'cash_rounding_base_amount_currency', 'cash_rounding_base_amount',
         )
 
-        invert_dict(tax_totals, fields_to_reverse)
-        for subtotal in tax_totals['subtotals']:
-            invert_dict(subtotal, fields_to_reverse)
-            for tax_group in subtotal['tax_groups']:
-                invert_dict(tax_group, fields_to_reverse)
+        if self.move_type in ('out_refund', 'in_refund'):
+            invert_dict(tax_totals, fields_to_reverse)
+            for subtotal in tax_totals['subtotals']:
+                invert_dict(subtotal, fields_to_reverse)
+                for tax_group in subtotal['tax_groups']:
+                    invert_dict(tax_group, fields_to_reverse)
 
         currency_huf = self.env.ref('base.HUF')
         tax_totals['total_vat_amount_in_huf'] = sum(
-            -line.balance for line in self.line_ids.filtered(lambda l: l.tax_line_id.l10n_hu_tax_type)
-        )
+            line.balance for line in self.line_ids.filtered(lambda l: l.tax_line_id.l10n_hu_tax_type)
+        ) * (1 if self.is_purchase_document() else -1)
         tax_totals['formatted_total_vat_amount_in_huf'] = formatLang(
             self.env, tax_totals['total_vat_amount_in_huf'], currency_obj=currency_huf
         )

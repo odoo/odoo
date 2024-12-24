@@ -478,4 +478,52 @@ describe("Error Service Logs", () => {
         await errorCb(errorEvent);
         expect(errorEvent.defaultPrevented).toBe(true);
     });
+
+    test("error in handlers while handling an error", async () => {
+        // Scenario: an error occurs at the early stage of the "boot" sequence, error handlers
+        // that are supposed to spawn dialogs are not ready then and will crash.
+        // We assert that *exactly one* error message is logged, that contains the original error's traceback
+        // and an indication that a handler has crashed just for not loosing information.
+        // The crash of the error handler should merely be seen as a consequence of the early stage at which the error occurs.
+        errorHandlerRegistry.add(
+            "__test_handler__",
+            (env, err, originalError) => {
+                throw new Error("Boom in handler");
+            },
+            { sequence: 0 }
+        );
+        // We want to assert that the error_service code does the preventDefault.
+        patchWithCleanup(console, {
+            error(errorMessage) {
+                expect(errorMessage).toMatch(
+                    new RegExp(
+                        `^@web/core/error_service: handler "__test_handler__" failed with "Error: Boom in handler" while trying to handle:\nError: Genuine Business Boom.*`
+                    )
+                );
+                expect.step("error logged");
+            },
+        });
+
+        await makeMockEnv();
+        let errorEvent = new Event("error", {
+            promise: null,
+            cancelable: true,
+        });
+
+        errorEvent.error = new Error("Genuine Business Boom");
+        errorEvent.error.annotatedTraceback = "annotated";
+        errorEvent.filename = "dummy_file.js"; // needed to not be treated as a CORS error
+        await errorCb(errorEvent);
+        expect(errorEvent.defaultPrevented).toBe(true);
+        expect.verifySteps(["error logged"]);
+
+        errorEvent = new PromiseRejectionEvent("unhandledrejection", {
+            promise: null,
+            cancelable: true,
+            reason: new Error("Genuine Business Boom"),
+        });
+        await unhandledRejectionCb(errorEvent);
+        expect(errorEvent.defaultPrevented).toBe(true);
+        expect.verifySteps(["error logged"]);
+    });
 });

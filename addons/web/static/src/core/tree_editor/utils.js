@@ -181,9 +181,11 @@ function _getConditionDescription(node, getFieldDef, getPathDescription, display
     const values =
         operator == "within"
             ? [value[0], Within.options.find((option) => option[0] === value[1])[1]]
-            : (Array.isArray(value) ? value : [value]).map((val) =>
-                  formatValue(val, dis, fieldDef, coModeldisplayNames)
-              );
+            : (Array.isArray(value) ? value : [value])
+                  .slice(0, 21)
+                  .map((val, index) =>
+                      index < 20 ? formatValue(val, dis, fieldDef, coModeldisplayNames) : "..."
+                  );
     let join;
     let addParenthesis = Array.isArray(value);
     switch (operator) {

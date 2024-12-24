@@ -69,7 +69,7 @@ const idToTimeout = (id) => Number(id.slice(ID_PREFIX.timeout.length));
  */
 const intervalToId = (id) => ID_PREFIX.interval + String(id);
 
-const now = () => $performanceNow() + timeOffset;
+const now = () => (freezed ? 0 : $performanceNow()) + timeOffset;
 
 /**
  * @param {number} id
@@ -85,7 +85,7 @@ const ID_PREFIX = {
 /** @type {Map<string, [() => any, number, number]>} */
 const timers = new Map();
 
-let allowTimers = true;
+let allowTimers = false;
 let freezed = false;
 let frameDelay = 1000 / 60;
 let nextDummyId = 1;
@@ -140,10 +140,10 @@ export function advanceTime(ms) {
  * Returns a promise resolved after the next animation frame, typically allowing
  * Owl components to render.
  *
- * @returns {Deferred<void>}
+ * @returns {Promise<void>}
  */
 export function animationFrame() {
-    return new Deferred((resolve) => requestAnimationFrame(() => delay().then(resolve)));
+    return new Promise((resolve) => requestAnimationFrame(() => delay().then(resolve)));
 }
 
 /**
@@ -161,22 +161,26 @@ export function cancelAllTimers() {
     }
 }
 
-export function cleanupTime() {
+export async function cleanupTime() {
+    allowTimers = false;
+    freezed = false;
+
     cancelAllTimers();
 
-    freezed = false;
+    // Wait for remaining async code to run
+    await delay();
 }
 
 /**
  * Returns a promise resolved after a given amount of milliseconds (default to 0).
  *
  * @param {number} [duration]
- * @returns {Deferred<void>}
+ * @returns {Promise<void>}
  * @example
  *  await delay(1000); // waits for 1 second
  */
 export function delay(duration) {
-    return new Deferred((resolve) => setTimeout(resolve, duration));
+    return new Promise((resolve) => setTimeout(resolve, duration));
 }
 
 /**
@@ -200,7 +204,7 @@ export function isTimeFreezed() {
  * @returns {Promise<void>}
  */
 export function microTick() {
-    return Deferred.resolve();
+    return new Promise(queueMicrotask);
 }
 
 /** @type {typeof cancelAnimationFrame} */
@@ -305,24 +309,15 @@ export function resetTimeOffset() {
  * animations, and then advances the current time by that amount.
  *
  * @see {@link advanceTime}
- * @param {boolean} [preventTimers=false]
  * @returns {Promise<number>} time consumed by timers (in ms).
  */
-export async function runAllTimers(preventTimers = false) {
+export async function runAllTimers() {
     if (!timers.size) {
         return 0;
     }
 
-    if (preventTimers) {
-        allowTimers = false;
-    }
-
     const endts = $max(...[...timers.values()].map(([, init, delay]) => init + delay));
     const ms = await advanceTime($ceil(endts - now()));
-
-    if (preventTimers) {
-        allowTimers = true;
-    }
 
     return ms;
 }
@@ -339,10 +334,14 @@ export function setFrameRate(frameRate) {
     frameDelay = 1000 / frameRate;
 }
 
+export function setupTime() {
+    allowTimers = true;
+}
+
 /**
  * Returns a promise resolved after the next task tick.
  *
- * @returns {Deferred<void>}
+ * @returns {Promise<void>}
  */
 export function tick() {
     return delay();
@@ -360,7 +359,7 @@ export function tick() {
  * @template T
  * @param {() => T} predicate
  * @param {WaitOptions} [options]
- * @returns {Deferred<T>}
+ * @returns {Promise<T>}
  * @example
  *  await waitUntil(() => []); // -> []
  * @example
@@ -371,13 +370,15 @@ export function waitUntil(predicate, options) {
     // Early check before running the loop
     const result = predicate();
     if (result) {
-        return Deferred.resolve(result);
+        return Promise.resolve().then(() => result);
     }
 
+    const timeout = $floor(options?.timeout ?? 200);
     let handle;
     let timeoutId;
     let running = true;
-    return new Deferred((resolve, reject) => {
+
+    return new Promise((resolve, reject) => {
         const runCheck = () => {
             const result = predicate();
             if (result) {
@@ -394,9 +395,8 @@ export function waitUntil(predicate, options) {
             }
         };
 
-        const timeout = $floor(options?.timeout ?? 200);
-        timeoutId = setTimeout(() => (running = false), timeout);
         handle = requestAnimationFrame(runCheck);
+        timeoutId = setTimeout(() => (running = false), timeout);
     }).finally(() => {
         cancelAnimationFrame(handle);
         clearTimeout(timeoutId);

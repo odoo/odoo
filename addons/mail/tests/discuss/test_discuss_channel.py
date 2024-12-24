@@ -465,6 +465,12 @@ class TestChannelInternals(MailCommon, HttpCase):
         message_3 = channels[1].message_post(body='Body3', parent_id=message.id + 100)
         self.assertFalse(message_3.parent_id, "should not allow non-existing parent")
 
+    def test_channel_message_post_with_voice_attachment(self):
+        """ Test 'voice' info being supported to create voice metadata. """
+        channel = self.env['discuss.channel'].create({'name': 'channel_1'})
+        channel.message_post(attachments=[('audio', b'OggS\x00\x02', {'voice': True})])
+        self.assertTrue(channel.message_ids.attachment_ids.voice_ids, "message's attachment should have voice metadata")
+
     @mute_logger('odoo.models.unlink')
     def test_channel_unsubscribe_auto(self):
         """ Archiving / deleting a user should automatically unsubscribe related
@@ -663,9 +669,24 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertEqual(len(mentions_notif), 0, "mentions + normal message = no needaction")
         self.assertEqual(len(nothing_notif), 0, "nothing + normal message = no needaction")
 
-        # sending mention message
-        with self.with_user("employee"):
-            channel_msg = channel.message_post(body="Test @mentions", partner_ids=(all_test_user.partner_id + mentions_test_user.partner_id + nothing_test_user.partner_id).ids, message_type="comment", subtype_xmlid="mail.mt_comment")
+        partner_ids = (
+            all_test_user.partner_id + mentions_test_user.partner_id + nothing_test_user.partner_id
+        ).ids
+        self._reset_bus()
+        with self.assertBusNotificationType(
+            [
+                ((self.cr.dbname, "res.partner", partner_id), "mail.message/inbox")
+                for partner_id in partner_ids
+            ],
+        ):
+            # sending mention message
+            with self.with_user("employee"):
+                channel_msg = channel.message_post(
+                    body="Test @mentions",
+                    partner_ids=partner_ids,
+                    message_type="comment",
+                    subtype_xmlid="mail.mt_comment",
+                )
         all_notif = self.env["mail.notification"].search([
             ("mail_message_id", "=", channel_msg.id),
             ("res_partner_id", "=", all_test_user.partner_id.id)

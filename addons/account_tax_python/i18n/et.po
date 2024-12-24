@@ -42,7 +42,7 @@ msgstr ""
 "        nt 110 / (1 + 10%) = 100 (hind sisaldab maksu)\n"
 "    - Sisaldab protsendilist maksu: Maksusumma sõltub hinnast:\n"
 "        nt 180 / (1 - 10%) = 200 (hind ei sisalda maksu)\n"
-"       nt 200 * (1 - 10%) = 180 hind sisaldab maksu)\n"
+"       nt 200 * (1 - 10%) = 180 (hind sisaldab maksu)\n"
 "        "
 
 #. module: account_tax_python
@@ -55,11 +55,17 @@ msgid ""
 ":param quantity: float\n"
 ":param product: A object representing the product\n"
 msgstr ""
+"Arvutage maksusumma.\n"
+"\n"
+":param baas: ujuv, tegelik summa, millelt maks rakendatakse\n"
+":param hinna_ühik: ujuv\n"
+":param kogus: ujuv\n"
+":param toode: toodet esindav objekt\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
 msgid "Custom Formula"
-msgstr ""
+msgstr "Kohandatud valem"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
@@ -69,13 +75,13 @@ msgstr "Valem"
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
 msgid "Formula Decoded Info"
-msgstr ""
+msgstr "Valemi dekodeeritud teave"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/models/account_tax.py:0
 msgid "Malformed formula '%(formula)s' at position %(position)s"
-msgstr ""
+msgstr "Vigane valem '%(formula)s' positsioonis %(position)s"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax

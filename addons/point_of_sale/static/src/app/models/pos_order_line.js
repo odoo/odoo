@@ -27,6 +27,7 @@ export class PosOrderline extends Base {
         this.uiState = {
             hasChange: true,
         };
+        this.saved_quantity = 0;
     }
 
     set_full_product_name() {
@@ -99,7 +100,7 @@ export class PosOrderline extends Base {
     }
 
     get currency() {
-        return this.models["res.currency"].getFirst();
+        return this.order_id.currency;
     }
 
     get pickingType() {
@@ -145,7 +146,7 @@ export class PosOrderline extends Base {
         const lotLinesToRemove = [];
 
         for (const lotLine of this.pack_lot_ids) {
-            const modifiedLotName = modifiedPackLotLines[lotLine.uuid];
+            const modifiedLotName = modifiedPackLotLines[lotLine.id];
             if (modifiedLotName) {
                 lotLine.lot_name = modifiedLotName;
             } else {
@@ -189,7 +190,18 @@ export class PosOrderline extends Base {
 
         const disc = Math.min(Math.max(parsed_discount || 0, 0), 100);
         this.discount = disc;
+        this.order_id.recomputeOrderData();
         this.setDirty();
+    }
+
+    setLinePrice() {
+        const prices = this.get_all_prices();
+        if (this.price_subtotal !== prices.priceWithoutTax) {
+            this.price_subtotal = prices.priceWithoutTax;
+        }
+        if (this.price_subtotal_incl !== prices.priceWithTax) {
+            this.price_subtotal_incl = prices.priceWithTax;
+        }
     }
 
     // sets the qty of the product. The qty will be rounded according to the
@@ -341,6 +353,9 @@ export class PosOrderline extends Base {
     merge(orderline) {
         this.order_id.assert_editable();
         this.set_quantity(this.get_quantity() + orderline.get_quantity());
+        this.update({
+            pack_lot_ids: [["link", ...orderline.pack_lot_ids]],
+        });
     }
 
     set_unit_price(price) {
@@ -525,14 +540,12 @@ export class PosOrderline extends Base {
 
     display_discount_policy() {
         // Sales dropped `discount_policy`, and we only show discount if applied pricelist rule
-        // is a percentage discount. However we don't have that information in pos
-        // so this is heuristic used to imitate the same behavior.
-        if (
-            this.order_id.pricelist_id &&
-            this.order_id.pricelist_id.item_ids
-                .map((rule) => rule.compute_price)
-                .includes("percentage")
-        ) {
+        // is a percentage discount.
+        const pricelistRule = this.product_id.getPricelistRule(
+            this.order_id.pricelist_id,
+            this.get_quantity()
+        );
+        if (pricelistRule && pricelistRule.compute_price === "percentage") {
             return "without_discount";
         }
         return "with_discount";

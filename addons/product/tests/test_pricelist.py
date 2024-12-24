@@ -34,6 +34,12 @@ class TestPricelist(ProductCommon):
                     'product_id': cls.datacard.id,
                     'applied_on': '0_product_variant',
                 }),
+                Command.create({
+                    'compute_price': 'formula',
+                    'base': 'standard_price',  # based on cost
+                    'price_markup': 99.99,
+                    'applied_on': '3_global',
+                }),
             ],
         })
         # Enable pricelist feature
@@ -59,6 +65,19 @@ class TestPricelist(ProductCommon):
         self.assertAlmostEqual(
             self.sale_pricelist_id._get_product_price(self.datacard, 1.0, uom=self.uom_unit)*12,
             self.sale_pricelist_id._get_product_price(self.datacard, 1.0, uom=self.uom_dozen))
+
+    def test_11_markup(self):
+        """Ensure `price_markup` always equals negative `price_discount`."""
+        # Check create values
+        for item in self.sale_pricelist_id.item_ids:
+            self.assertEqual(item.price_markup, -item.price_discount)
+
+        # Overwrite create values, and check again
+        self.sale_pricelist_id.item_ids[0].price_discount = 0
+        self.sale_pricelist_id.item_ids[1].price_discount = -20.02
+        self.sale_pricelist_id.item_ids[2].price_markup = -0.5
+        for item in self.sale_pricelist_id.item_ids:
+            self.assertEqual(item.price_markup, -item.price_discount)
 
     def test_20_pricelist_uom(self):
         # Verify that the pricelist rules are correctly using the product's default UoM

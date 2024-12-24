@@ -321,7 +321,8 @@ test("can be the UI active element", async () => {
     });
 });
 
-test.tags("mobile")("dialog can't be moved on small screen", async () => {
+test.tags("mobile");
+test("dialog can't be moved on small screen", async () => {
     class Parent extends Component {
         static template = xml`<Dialog>content</Dialog>`;
         static components = { Dialog };
@@ -355,7 +356,8 @@ test.tags("mobile")("dialog can't be moved on small screen", async () => {
     });
 });
 
-test.tags("desktop")("dialog can be moved", async () => {
+test.tags("desktop");
+test("dialog can be moved", async () => {
     class Parent extends Component {
         static template = xml`<Dialog>content</Dialog>`;
         static props = ["*"];
@@ -385,7 +387,8 @@ test.tags("desktop")("dialog can be moved", async () => {
     });
 });
 
-test.tags("desktop")("dialog's position is reset on resize", async () => {
+test.tags("desktop");
+test("dialog's position is reset on resize", async () => {
     class Parent extends Component {
         static template = xml`<Dialog>content</Dialog>`;
         static props = ["*"];

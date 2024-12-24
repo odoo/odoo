@@ -107,6 +107,8 @@ class OdooBaseChecker(BaseChecker):
 
     def _evaluate_function_call(self, node, args_allowed, position):
         name = node.func.attrname if isinstance(node.func, astroid.Attribute) else node.func.name
+        if name == 'SQL':
+            return True
         if isinstance(node.scope(), astroid.GeneratorExp):
             return True
         if name == node.scope().name:

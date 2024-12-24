@@ -8,6 +8,7 @@
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2024
 # İmat Yahya Çataklı <yahya.catakli@soluto.com.tr>, 2024
 # Buket Şeker <buket_skr@hotmail.com>, 2024
+# emre oktem, 2024
 # ismail eski <ismaileski@gmail.com>, 2024
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2024
 # Ayhan Kızıltan, 2024
@@ -19,7 +20,6 @@
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2024
 # abc Def <hdogan1974@gmail.com>, 2024
 # Martin Trigaux, 2024
-# Ediz Duman <neps1192@gmail.com>, 2024
 # Umur Akın <umura@projetgrup.com>, 2024
 # Levent Karakaş <levent@mektup.at>, 2024
 # Halil, 2024
@@ -29,17 +29,17 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2024
 # Tugay Hatıl <tugayh@projetgrup.com>, 2024
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
-# Özlem Atalay <ozlema@eskayazilim.com.tr>, 2024
 # Deniz Guvener, 2024
-# emre oktem, 2024
+# Ediz Duman <neps1192@gmail.com>, 2024
+# Özlem Atalay <ozlema@eskayazilim.com.tr>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 08:17+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: emre oktem, 2024\n"
+"Last-Translator: Özlem Atalay <ozlema@eskayazilim.com.tr>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,6 +70,15 @@ msgstr ""
 #: code:addons/mrp/models/stock_rule.py:0
 msgid " <br/><br/> The components will be taken from <b>%s</b>."
 msgstr " <br/><br/> Bileşenler %s'den alınacaktır. <b></b>."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_rule.py:0
+msgid ""
+" <br/><br/> The manufactured products will be moved towards "
+"<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
+"destination."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -336,8 +345,8 @@ msgstr "<span class=\"col-6\">Bekleyenler</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "<span class=\"fw-bold\">To Produce</span>"
-msgstr "<span class=\"fw-bold\">Üretilecekler</span>"
+msgid "<span class=\"fw-bold text-nowrap\">To Produce</span>"
+msgstr "<span class=\"fw-bold text-nowrap\">Üretme</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -864,11 +873,6 @@ msgid "Assembling"
 msgstr "Montaj"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_ir_attachment
-msgid "Attachment"
-msgstr "Ek"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_attachment_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_attachment_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__message_attachment_count
@@ -1169,15 +1173,11 @@ msgstr ""
 "biten ürünlerin yapılması için gereken hammadde listesini tanımlamanıza yardımcı olur."
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.js:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block"
 msgstr "Engelle"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.xml:0
-msgid "Block WC"
-msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter
@@ -1715,12 +1715,6 @@ msgstr "Maliyetlendirme Bilgisi"
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 msgid "Costs"
 msgstr "Maliyetler"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
-msgid "Could not display the selected spreadsheet"
-msgstr "Seçili elektronik tablo görüntülenemedi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__production_count
@@ -2517,12 +2511,6 @@ msgstr "Google Slayt"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Google Slide Link"
 msgstr "Google Slide Bağlantısı"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
-msgid "Google Slides Viewer"
-msgstr "Google Slayt Görüntüleyici"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -4945,7 +4933,7 @@ msgstr "Hurda Hareketi"
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "Scrap Products"
-msgstr ""
+msgstr "Hurda Ürünler"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__scrap_ids
@@ -5115,12 +5103,6 @@ msgid "Show backorder lines"
 msgstr "Ön teslimat satırlarını göster"
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.xml:0
-msgid "Slides viewer"
-msgstr "Slayt görüntüleyici"
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
 msgid "Slot into workcenter calendar once planned"
 msgstr "Takvim planlandığından iş merkezine yerleştirin."
@@ -5273,7 +5255,7 @@ msgstr "Başlama Tarihi"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
 msgid "State"
-msgstr "İl/Eyalet"
+msgstr "Durumu"
 
 #. module: mrp
 #. odoo-javascript
@@ -5998,7 +5980,8 @@ msgid "Unable to split with more than the quantity to produce."
 msgstr "Üretilecek miktardan daha fazlası ile bölünemez."
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.js:0
 msgid "Unblock"
 msgstr "Engeli Kaldır"
 
@@ -6157,22 +6140,6 @@ msgstr "İşlem Bağımlılıklarını Kullanın"
 #: model:res.groups,name:mrp.group_mrp_reception_report
 msgid "Use Reception Report with Manufacturing Orders"
 msgstr "Alım Raporunu Üretim Siparişleri ile Kullanın"
-
-#. module: mrp
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
-#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
-#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
-msgid ""
-"Use the table work center control panel to register operations in the shop floor directly.\n"
-"            The tablet provides worksheets for your workers and allow them to scrap products, track time,\n"
-"            launch a maintenance request, perform quality tests, etc."
-msgstr ""
-"İşlemleri doğrudan imalat ekranında kaydetmek için tablo çalışma merkezi "
-"kontrol panelini kullanın. Tablet, çalışanlarınıza çalışma sayfaları sağlar "
-"ve ürünleri hurdaya ayırmalarına, zamanı takip etmelerine, bakım talebi "
-"başlatmalarına, kalite testleri gerçekleştirmelerine vb. olanak tanır."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -6553,10 +6520,18 @@ msgid "Work center"
 msgstr "İş merkezi"
 
 #. module: mrp
+#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
+msgid ""
+"Work orders are operations to do as part of a manufacturing order.\n"
+"                    Operations are defined in the bill of materials or added in the manufacturing order directly."
+msgstr ""
+"İş emirleri bir üretim emrinin parçası olarak yapılacak operasyonlardır. \n"
+"Operasyonlar ürün reçetesinde tanımlanır ya da üretim emrine doğrudan eklenir."
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
-#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"

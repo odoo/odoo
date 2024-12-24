@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +41,7 @@ msgstr "庫存移動"
 msgid ""
 "The Sales Order %(order)s linked to the Project %(project)s is cancelled. "
 "You cannot validate a stock picking on a cancelled Sales Order."
-msgstr ""
+msgstr "連結至專案 %(project)s 的銷售單 %(order)s 已取消。你不可驗證已取消銷售單的庫存提取。"
 
 #. module: sale_project_stock
 #. odoo-python
@@ -50,6 +51,7 @@ msgid ""
 "locked. You cannot validate a stock picking on a locked Sales Order. Please "
 "create a new SO linked to this Project."
 msgstr ""
+"連結至專案 %(project)s 的銷售單 %(order)s 目前已鎖定。你不可驗證已鎖定銷售單的庫存提取。請建立一張連結至該專案的新銷售單。"
 
 #. module: sale_project_stock
 #. odoo-python
@@ -57,7 +59,7 @@ msgstr ""
 msgid ""
 "The Sales Order %(order)s linked to the Project %(project)s must be "
 "validated before validating the stock picking."
-msgstr ""
+msgstr "驗證庫存提取之前，必須先驗證連結至專案 %(project)s 的銷售單 %(order)s。"
 
 #. module: sale_project_stock
 #: model_terms:ir.actions.act_window,help:sale_project_stock.stock_move_per_sale_order_line_action

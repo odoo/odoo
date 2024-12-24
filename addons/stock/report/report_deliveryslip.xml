@@ -10,8 +10,8 @@
                     <div name="div_outgoing_address">
                         <div name="outgoing_delivery_address"
                             t-if="o.should_print_delivery_address()">
-                            <strong>Delivery Address</strong>
-                            <div t-field="o.move_ids[0].partner_id"
+                            <span><strong>Delivery Address:</strong></span>
+                            <div t-out="o.move_ids[0].partner_id or o.partner_id"
                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                         </div>
                         <div name="outgoing_warehouse_address"
@@ -46,7 +46,7 @@
                         <span t-field="o.name">WH/OUT/0001</span>
                     </h2>
                     <div class="oe_structure"></div>
-                    <div id="informations" class="row mb-4">
+                    <div id="informations" class="report-wrapping-flexbox clearfix row mb-4">
                         <div t-if="o.origin" class="col col-3 mw-100 mb-2" name="div_origin">
                             <strong>Order</strong>
                             <div t-field="o.origin" class="m-0">S0001</div>
@@ -218,7 +218,10 @@
             <t t-if="not description and description != ''">
                 <t t-set="description" t-value="move_line.move_id.description_picking"/>
             </t>
-            <p t-if="description !='' and description != move_line.product_id.name">
+            <p t-if="description != '' and
+                     description != move_line.product_id.display_name and
+                     description != move_line.product_id.name"
+            >
                 <span t-esc="description"/>
             </p>
         </td>

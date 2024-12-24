@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Odoo哥 <vnsoft.he@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,13 +22,27 @@ msgstr ""
 
 #. module: spreadsheet_dashboard_event_sale
 #. odoo-javascript
-#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
-msgid "Attendees"
-msgstr "参加者"
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
+msgid "Attended"
+msgstr "参加"
 
 #. module: spreadsheet_dashboard_event_sale
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
+msgid "Attendees"
+msgstr "参会者"
+
+#. module: spreadsheet_dashboard_event_sale
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
+msgid "Booked"
+msgstr "已预订"
+
+#. module: spreadsheet_dashboard_event_sale
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
 msgid "Current"
 msgstr "当前"
 
@@ -39,31 +54,14 @@ msgstr "日期"
 
 #. module: spreadsheet_dashboard_event_sale
 #. odoo-javascript
-#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
-msgid "Event by Organizer"
-msgstr "按组织者分类的活动"
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
+msgid "Ended"
+msgstr "结束的"
 
 #. module: spreadsheet_dashboard_event_sale
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
-msgid "Event by Tags"
-msgstr "按标记分类的活动"
-
-#. module: spreadsheet_dashboard_event_sale
-#. odoo-javascript
-#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
-msgid "Event by Template"
-msgstr "按模板分类的活动"
-
-#. module: spreadsheet_dashboard_event_sale
-#. odoo-javascript
-#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
-msgid "Event by Venue"
-msgstr "按场地分类的活动"
-
-#. module: spreadsheet_dashboard_event_sale
-#. odoo-javascript
-#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
 #: model:spreadsheet.dashboard,name:spreadsheet_dashboard_event_sale.spreadsheet_dashboard_events
 msgid "Events"
 msgstr "活动"
@@ -71,42 +69,55 @@ msgstr "活动"
 #. module: spreadsheet_dashboard_event_sale
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
 msgid "Events Status"
 msgstr "活动状态"
 
 #. module: spreadsheet_dashboard_event_sale
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
 msgid "KPI"
 msgstr "KPI"
 
 #. module: spreadsheet_dashboard_event_sale
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
 msgid "Organizer"
 msgstr "组织者"
 
 #. module: spreadsheet_dashboard_event_sale
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
 msgid "Previous"
-msgstr "前一"
+msgstr "上一页"
+
+#. module: spreadsheet_dashboard_event_sale
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
+msgid "Registered"
+msgstr "已注册"
 
 #. module: spreadsheet_dashboard_event_sale
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
 msgid "Registration Status"
 msgstr "注册状态"
 
 #. module: spreadsheet_dashboard_event_sale
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
 msgid "Revenue"
 msgstr "收入"
 
 #. module: spreadsheet_dashboard_event_sale
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
 msgid "Tag"
 msgstr "标签"
 
@@ -119,77 +130,48 @@ msgstr "标签"
 #. module: spreadsheet_dashboard_event_sale
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
 msgid "Template"
 msgstr "模板"
 
 #. module: spreadsheet_dashboard_event_sale
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
 msgid "Top Organizers"
 msgstr "最佳组织者"
 
 #. module: spreadsheet_dashboard_event_sale
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
 msgid "Top Tags"
 msgstr "最热门标记"
 
 #. module: spreadsheet_dashboard_event_sale
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
 msgid "Top Templates"
 msgstr "最佳模板"
 
 #. module: spreadsheet_dashboard_event_sale
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
 msgid "Top Venues"
 msgstr "最佳场地"
 
 #. module: spreadsheet_dashboard_event_sale
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
 msgid "Venue"
 msgstr "场地"
 
 #. module: spreadsheet_dashboard_event_sale
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
-msgid "attendees - current"
-msgstr "参会者 - 目前"
-
-#. module: spreadsheet_dashboard_event_sale
-#. odoo-javascript
-#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
-msgid "attendees - previous"
-msgstr "参会者 - 以前"
-
-#. module: spreadsheet_dashboard_event_sale
-#. odoo-javascript
-#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
-msgid "events - current"
-msgstr "活动 - 目前"
-
-#. module: spreadsheet_dashboard_event_sale
-#. odoo-javascript
-#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
-msgid "events - previous"
-msgstr "活动 - 以前"
-
-#. module: spreadsheet_dashboard_event_sale
-#. odoo-javascript
-#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
+#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_sample_dashboard.json:0
 msgid "since last period"
 msgstr "从上期以来"
-
-#. module: spreadsheet_dashboard_event_sale
-#. odoo-javascript
-#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
-msgid "untaxed revenue - current"
-msgstr "未税收入 - 目前"
-
-#. module: spreadsheet_dashboard_event_sale
-#. odoo-javascript
-#: code:addons/spreadsheet_dashboard_event_sale/data/files/events_dashboard.json:0
-msgid "untaxed revenue - previous"
-msgstr "未税收入 - 以前"

@@ -350,7 +350,7 @@ _HTML_PARSER = etree.HTMLParser(encoding='utf8')
 def parse_html(text):
     try:
         parse = html.fragment_fromstring(text, parser=_HTML_PARSER)
-    except TypeError as e:
+    except (etree.ParserError, TypeError) as e:
         raise UserError(_("Error while parsing view:\n\n%s") % e) from e
     return parse
 

@@ -2,7 +2,7 @@
 
 <templates xml:space="preserve">
 
-    <t t-name="project_todo.TodoChatterPanel">
+    <div t-name="project_todo.TodoChatterPanel" t-ref="root">
         <chatter t-if="state.displayChatter" class="o_FormRenderer_chatterContainer">
             <Chatter
                 threadModel="'project.task'"
@@ -14,6 +14,6 @@
                 saveRecord="props.record.save.bind(props.record, { reload: false })"
             />
         </chatter>
-    </t>
+    </div>
 
 </templates>

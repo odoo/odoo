@@ -27,6 +27,12 @@ export class WebsiteSwitcherSystray extends Component {
             name: website.name,
             id: website.id,
             domain: website.domain,
+            dataset: Object.assign({
+                'data-website-id': website.id,
+            }, website.domain ? {} : {
+                'data-tooltip': _t('This website does not have a domain configured.'),
+                'data-tooltip-position': 'left',
+            }),
             callback: () => {
                 if (website.domain && !wUtils.isHTTPSorNakedDomainRedirection(website.domain, window.location.origin)) {
                     const { location: { pathname, search, hash } } = this.websiteService.contentWindow;

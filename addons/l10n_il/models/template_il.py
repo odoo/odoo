@@ -30,7 +30,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'il_account_101201',
                 'income_currency_exchange_account_id': 'il_account_201000',
                 'expense_currency_exchange_account_id': 'il_account_202100',
-                'account_sale_tax_id': 'il_vat_sales_17',
-                'account_purchase_tax_id': 'il_vat_self_inv_purchase',
+                'account_sale_tax_id': 'il_vat_sales_18',
+                'account_purchase_tax_id': 'il_vat_inputs_18',
             },
         }

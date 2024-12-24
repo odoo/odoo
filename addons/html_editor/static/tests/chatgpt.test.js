@@ -10,6 +10,7 @@ import { loadLanguages } from "@web/core/l10n/translation";
 
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { DEFAULT_ALTERNATIVES_MODES } from "../src/main/chatgpt/chatgpt_alternatives_dialog";
+import { execCommand } from "./_helpers/userCommands";
 
 const PROMPT_DIALOG_TITLE = "Generate Text with AI";
 const ALTERNATIVES_DIALOG_TITLE = "AI Copywriter";
@@ -231,9 +232,9 @@ test("insert the response from ChatGPT translate dialog", async () => {
     loadLanguages.installedLanguages = false;
 
     // Expect to undo and redo the inserted text.
-    editor.dispatch("HISTORY_UNDO");
+    execCommand(editor, "historyUndo");
     expect(getContent(el)).toBe(`<p>[Hello]</p>`);
-    editor.dispatch("HISTORY_REDO");
+    execCommand(editor, "historyRedo");
     expect(getContent(el)).toBe(`<p>Bonjour[]</p>`);
 });
 

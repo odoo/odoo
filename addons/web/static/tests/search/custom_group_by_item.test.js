@@ -17,10 +17,10 @@ import { SearchBar } from "@web/search/search_bar/search_bar";
 
 class Foo extends models.Model {
     bar = fields.Many2one({ relation: "partner", groupable: false });
-    birthday = fields.Date({ groupable: true });
-    date_field = fields.Date({ string: "Date", groupable: true });
-    float_field = fields.Float({ string: "Float", groupable: false });
-    foo = fields.Char({ groupable: true });
+    birthday = fields.Date();
+    date = fields.Date();
+    float = fields.Float({ groupable: false });
+    foo = fields.Char();
 
     _views = {
         search: `<search/>`,
@@ -101,7 +101,7 @@ test(`add a date field in "Add Custom Group" activate a groupby with global defa
         searchMenuTypes: ["groupBy"],
         searchViewId: false,
         searchViewFields: {
-            date_field: {
+            date: {
                 string: "Date",
                 type: "date",
                 store: true,
@@ -116,8 +116,8 @@ test(`add a date field in "Add Custom Group" activate a groupby with global defa
     expect(component.env.searchModel.groupBy).toEqual([]);
     expect(`.o_add_custom_group_menu`).toHaveCount(1); // Add Custom Group
 
-    await selectGroup("date_field");
-    expect(component.env.searchModel.groupBy).toEqual(["date_field:month"]);
+    await selectGroup("date");
+    expect(component.env.searchModel.groupBy).toEqual(["date:month"]);
     expect(getFacetTexts()).toEqual(["Date: Month"]);
     expect(isItemSelected("Date")).toBe(true);
 

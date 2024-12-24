@@ -113,8 +113,8 @@ class ReportBomStructure(models.AbstractModel):
                 if not product_info[product.id]['consumptions'].get(stock_loc, False):
                     product_info[product.id]['consumptions'][stock_loc] = 0
                 quantities_info['free_to_manufacture_qty'] = product.uom_id._compute_quantity(subloc_product.free_qty, bom_uom)
-                quantities_info['free_qty'] += quantities_info['free_to_manufacture_qty']
-                quantities_info['on_hand_qty'] += product.uom_id._compute_quantity(subloc_product.qty_available, bom_uom)
+                quantities_info['free_qty'] = quantities_info['free_to_manufacture_qty']
+                quantities_info['on_hand_qty'] = product.uom_id._compute_quantity(subloc_product.qty_available, bom_uom)
                 quantities_info['stock_loc'] = stock_loc
 
         return quantities_info

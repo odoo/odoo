@@ -132,6 +132,7 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
 class TestProjectSharingChatterAccess(TestProjectSharingCommon, HttpCase):
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_post_chatter_as_portal_user(self):
+        self.project_no_collabo.privacy_visibility = 'portal'
         message = self.get_project_share_link()
         share_link = str(message.body.split('href="')[1].split('">')[0])
         match = search(r"access_token=([^&]+)&amp;pid=([^&]+)&amp;hash=([^&]*)", share_link)

@@ -204,8 +204,13 @@ class AccountMoveSendWizard(models.TransientModel):
         for wizard in self:
             manual_attachments_data = [x for x in wizard.mail_attachments_widget or [] if x.get('manual')]
             wizard.mail_attachments_widget = (
-                    self._get_default_mail_attachments_widget(wizard.move_id, wizard.mail_template_id, extra_edis=wizard.extra_edis or {})
-                    + manual_attachments_data
+                self._get_default_mail_attachments_widget(
+                    wizard.move_id,
+                    wizard.mail_template_id,
+                    extra_edis=wizard.extra_edis or {},
+                    pdf_report=wizard.pdf_report_id,
+                )
+                + manual_attachments_data
             )
 
     # -------------------------------------------------------------------------

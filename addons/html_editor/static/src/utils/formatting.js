@@ -19,6 +19,7 @@ export const FONT_SIZE_CLASSES = [
     "h6-fs",
     "base-fs",
     "small",
+    "o_small-fs",
 ];
 
 export const TEXT_STYLE_CLASSES = ["display-1", "display-2", "display-3", "display-4", "lead"];
@@ -81,7 +82,7 @@ export const formatsSpecs = {
             ),
     },
     fontSize: {
-        isFormatted: (node) => node.style && node.style["font-size"],
+        isFormatted: (node) => closestElement(node)?.style["font-size"],
         hasStyle: (node) => node.style && node.style["font-size"],
         addStyle: (node, props) => {
             node.style["font-size"] = props.size;
@@ -90,7 +91,8 @@ export const formatsSpecs = {
         removeStyle: (node) => removeStyle(node, "font-size"),
     },
     setFontSizeClassName: {
-        isFormatted: (node) => FONT_SIZE_CLASSES.find((cls) => node?.classList?.contains(cls)),
+        isFormatted: (node) =>
+            FONT_SIZE_CLASSES.find((cls) => closestElement(node)?.classList?.contains(cls)),
         hasStyle: (node, props) => FONT_SIZE_CLASSES.find((cls) => node.classList.contains(cls)),
         addStyle: (node, props) => node.classList.add(props.className),
         removeStyle: (node) => removeClass(node, ...FONT_SIZE_CLASSES, ...TEXT_STYLE_CLASSES),

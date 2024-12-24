@@ -32,7 +32,7 @@ test("mark as read", async () => {
     await triggerEvents(".o-mail-NotificationItem", ["mouseenter"], { text: "" });
     await contains(".o-mail-NotificationItem [title='Mark As Read']");
     await contains(".o-mail-NotificationItem-text", {
-        text: "An error occurred when sending an SMS",
+        text: "An error occurred when sending an SMS on “Mitchell Admin”",
     });
     await click(".o-mail-NotificationItem [title='Mark As Read']");
     await contains(".o-mail-NotificationItem", { count: 0 });
@@ -80,14 +80,14 @@ test("notifications grouped by notification_type", async () => {
     await contains(".o-mail-NotificationItem", { count: 2 });
     await contains(":nth-child(1 of .o-mail-NotificationItem)", {
         contains: [
-            [".o-mail-NotificationItem-name", { text: "Contact" }],
+            [".o-mail-NotificationItem-name", { text: "Email Failure: Contact" }],
             [".o-mail-NotificationItem-counter", { text: "2" }],
             [".o-mail-NotificationItem-text", { text: "An error occurred when sending an email" }],
         ],
     });
     await contains(":nth-child(2 of .o-mail-NotificationItem)", {
         contains: [
-            [".o-mail-NotificationItem-name", { text: "Contact" }],
+            [".o-mail-NotificationItem-name", { text: "SMS Failure: Contact" }],
             [".o-mail-NotificationItem-counter", { text: "2" }],
             [".o-mail-NotificationItem-text", { text: "An error occurred when sending an SMS" }],
         ],
@@ -96,7 +96,7 @@ test("notifications grouped by notification_type", async () => {
 
 test("grouped notifications by document model", async () => {
     const pyEnv = await startServer();
-    const [partnerId_1, partnerId_2 ]= pyEnv["res.partner"].create([{}, {}]);
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([{}, {}]);
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
             message_type: "sms",
@@ -127,7 +127,11 @@ test("grouped notifications by document model", async () => {
             expect(action.name).toBe("SMS Failures");
             expect(action.type).toBe("ir.actions.act_window");
             expect(action.view_mode).toBe("kanban,list,form");
-            expect(action.views).toEqual([[false, "kanban"],[false, "list"],[false, "form"]]);
+            expect(action.views).toEqual([
+                [false, "kanban"],
+                [false, "list"],
+                [false, "form"],
+            ]);
             expect(action.target).toBe("current");
             expect(action.res_model).toBe("res.partner");
             expect(action.domain).toEqual([["message_has_sms_error", "=", true]]);
@@ -136,7 +140,7 @@ test("grouped notifications by document model", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", {
-        text: "Contact",
+        text: "SMS Failure: Contact",
         contains: [".badge", { text: "2" }],
     });
     await assertSteps(["do_action"]);

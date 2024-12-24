@@ -8,6 +8,9 @@ patch(AttachmentUploadService.prototype, {
     setup(env, services) {
         super.setup(env, services);
         this.uploadingCloudFiles = new Map();
+        window.addEventListener('beforeunload', () => 
+            this.abortByAttachmentId.forEach(abort => abort())
+        );
     },
 
     _processLoaded(thread, composer, { data, upload_info }, tmpId, def) {
@@ -15,7 +18,7 @@ patch(AttachmentUploadService.prototype, {
             super._processLoaded(...arguments);
             return;
         }
-        function removeAttachment() {
+        const removeAttachment = () => {
             const { Attachment } = this.store.insert(data);
             const [attachment] = Attachment;
             attachment.remove();

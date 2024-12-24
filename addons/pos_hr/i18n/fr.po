@@ -7,14 +7,15 @@
 # Jolien De Paepe, 2024
 # Wil Odoo, 2024
 # Manon Rondou, 2024
+# Tiffany Chang, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Tiffany Chang, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,12 +26,12 @@ msgstr ""
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_report_pos_hr_multi_employee_sales_report
 msgid "A collection of single session reports. One for each employee"
-msgstr ""
+msgstr "Un ensemble de rapports à session unique. Un par employé"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
 msgid "Abigal Peterson"
-msgstr ""
+msgstr "Abigal Peterson"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -41,7 +42,7 @@ msgstr "Accès refusé"
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_daily_sales_reports_wizard__add_report_per_employee
 msgid "Add a report per each employee"
-msgstr ""
+msgstr "Ajouter un rapport par employé"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
@@ -72,12 +73,14 @@ msgid ""
 "Can't generate a report per employee! as selected session has no orders "
 "associated with any employee."
 msgstr ""
+"Impossible de générer un rapport par employé ! La session sélectionnée n'a "
+"pas de commandes associées à un employé."
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
 msgid "Cash in/out"
-msgstr ""
+msgstr "Cash entrant / sortant"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__employee_id
@@ -91,12 +94,12 @@ msgstr "Caissier"
 #. odoo-python
 #: code:addons/pos_hr/models/pos_order.py:0
 msgid "Cashier %s"
-msgstr ""
+msgstr "Caissier %s"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
 msgid "Cashier name"
-msgstr ""
+msgstr "Nom du caissier"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -145,12 +148,12 @@ msgstr "Employé"
 #. module: pos_hr
 #: model:ir.actions.report,name:pos_hr.multi_employee_sales_report_action
 msgid "Employee Sales Details"
-msgstr ""
+msgstr "Détails Ventes Employé"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
 msgid "Employee Sales Report"
-msgstr ""
+msgstr "Rapport Ventes Employé"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
@@ -179,7 +182,7 @@ msgstr "Employés ayant un accès de manager"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
 msgid "Enter your PIN"
-msgstr ""
+msgstr "Saisir votre PIN"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
@@ -217,13 +220,19 @@ msgstr "Ouvrir la caisse"
 #. odoo-python
 #: code:addons/pos_hr/models/pos_session.py:0
 msgid "Opened register"
-msgstr ""
+msgstr "Caisse ouverte"
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
 msgid "Opening"
 msgstr "Ouverture"
+
+#. module: pos_hr
+#. odoo-python
+#: code:addons/pos_hr/models/pos_session.py:0
+msgid "Others"
+msgstr "Autres"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -247,7 +256,7 @@ msgstr "Paiements"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.js:0
 msgid "Payments in %(paymentMethod)s"
-msgstr ""
+msgstr "Paiement %(paymentMethod)s"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_config
@@ -299,35 +308,35 @@ msgstr "Sélectionner un ou plusieurs employé(s)"
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_report_pos_hr_single_employee_sales_report
 msgid "Session sales details for a single employee"
-msgstr ""
+msgstr "Détails des ventes de la session pour un seul employé"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_session__employee_id
 msgid "The employee who currently uses the cash register"
-msgstr ""
+msgstr "L'employé qui utilise actuellement la caisse enregistreuse"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_account_bank_statement_line__employee_id
 msgid "The employee who made the cash move."
-msgstr ""
+msgstr "L'employé qui a effectué le mouvement de trésorerie."
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
 #: model:ir.model.fields,help:pos_hr.field_pos_payment__employee_id
 msgid "The employee who uses the cash register."
-msgstr ""
+msgstr "L'employé qui utilise la caisse enregistreuse."
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 msgid "There is no cashier available."
-msgstr ""
+msgstr "Aucun caissier disponible."
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
 msgid "Unlock Register"
-msgstr ""
+msgstr "Déverrouiller la caisse"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -339,7 +348,7 @@ msgstr "Mauvais PIN"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/screens/product_screen/order_summary/order_summary.js:0
 msgid "You are not allowed to change the price of a product."
-msgstr ""
+msgstr "Vous n'êtes pas autorisé à changer le prix d'un produit."
 
 #. module: pos_hr
 #. odoo-python

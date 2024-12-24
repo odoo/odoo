@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2024-10-30 14:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -33,6 +34,12 @@ msgid ""
 "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr ""
 "10XXXXXXXXY of 20XXXXXXXXY of 15XXXXXXXXY of 16XXXXXXXXY of 17XXXXXXXXY"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "17291716060 (NIN) or 1729171602 (VKN)"
+msgstr "17291716060 (NIN) of 1729171602 (VKN)"
 
 #. module: base_vat
 #. odoo-python
@@ -95,7 +102,7 @@ msgid ""
 "Connection with the VIES server failed. The VAT number %s could not be "
 "validated."
 msgstr ""
-"De verbinding met de VIES-server is mislukt. Het BTW-nummer %s kon niet "
+"De verbinding met de VIES-server is mislukt. Het btw-nummer %s kon niet "
 "worden bevestigd."
 
 #. module: base_vat
@@ -120,7 +127,7 @@ msgstr "DO1-01-85004-3 of 101850043"
 #: model:ir.model.fields,help:base_vat.field_res_users__vies_valid
 msgid "European VAT numbers are automatically checked on the VIES database."
 msgstr ""
-"Europese BTW-nummers zijn automatisch gecontroleerd in de VIES-database."
+"Europese btw-nummers zijn automatisch gecontroleerd in de VIES-database."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
@@ -168,12 +175,6 @@ msgid "Perform Vies Validation"
 msgstr "VIES controle uitvoeren"
 
 #. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)"
-msgstr "TR1234567890 (VERGINO) of TR17291716060 (TCKIMLIKNO)"
-
-#. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
 msgid "Tax ID"
 msgstr "Btw nr."
@@ -203,7 +204,7 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The VAT number %s could not be interpreted by the VIES server."
 msgstr ""
-"Het BTW-nummer %s kon niet worden geïnterpreteerd door de VIES-server."
+"Het btw-nummer %s kon niet worden geïnterpreteerd door de VIES-server."
 
 #. module: base_vat
 #. odoo-python
@@ -233,32 +234,32 @@ msgid ""
 "The request for VAT validation was not processed. VIES service has responded"
 " with the following error: %s"
 msgstr ""
-"De aanvraag voor BTW-validatie is niet verwerkt. De VIES-service heeft "
+"De aanvraag voor btw-validatie is niet verwerkt. De VIES-service heeft "
 "gereageerd met de volgende fout: %s"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "VAT"
-msgstr "BTW"
+msgstr "Btw"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr "Controleer BTW nummers"
+msgstr "Controleer btw-nummers"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
 msgstr ""
-"Controleer BTW nummers door gebruik te maken van de Europese VIES dienst"
+"Controleer btw-nummers door gebruik te maken van de Europese VIES dienst"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
 msgid "Vies Vat To Check"
-msgstr "Vies te controleren BTW"
+msgstr "Vies te controleren Btw"
 
 #. module: base_vat
 #. odoo-python
@@ -284,4 +285,4 @@ msgstr "fiscale positie [%s]"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
-msgstr "relatie [%s]"
+msgstr "contact [%s]"

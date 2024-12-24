@@ -46,12 +46,12 @@ test("default params", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, 1],
+                    [0, 0, 0, 0, 0, 0, 1],
                     [2, 3, 4, 5, 6, 7, 8],
                     [9, 10, 11, 12, 13, 14, 15],
                     [16, 17, 18, 19, 20, 21, 22],
                     [23, 24, "25", 26, 27, 28, 29],
-                    [30, -1, -2, -3, -4, -5, -6],
+                    [30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 weekNumbers: [13, 14, 15, 16, 17, 18],
@@ -81,12 +81,12 @@ test("minDate: correct days/month/year/decades are disabled", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, -1],
+                    [0, 0, 0, 0, 0, 0, -1],
                     [-2, -3, -4, -5, -6, -7, -8],
                     [-9, -10, -11, -12, -13, -14, -15],
                     [-16, -17, -18, -19, 20, 21, 22],
                     [23, 24, "25", 26, 27, 28, 29],
-                    [30, -1, -2, -3, -4, -5, -6],
+                    [30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 weekNumbers: [13, 14, 15, 16, 17, 18],
@@ -165,12 +165,12 @@ test("minDate: correct days/month/year/decades are disabled", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, -1],
+                    [0, 0, 0, 0, 0, 0, -1],
                     [-2, -3, -4, -5, -6, -7, -8],
                     [-9, -10, -11, -12, -13, -14, -15],
                     [-16, -17, -18, -19, 20, 21, 22],
                     [23, 24, "25", 26, 27, 28, 29],
-                    [30, -1, -2, -3, -4, -5, -6],
+                    [30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 weekNumbers: [13, 14, 15, 16, 17, 18],
@@ -192,12 +192,12 @@ test("maxDate: correct days/month/year/decades are disabled", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, 1],
+                    [0, 0, 0, 0, 0, 0, 1],
                     [2, 3, 4, 5, 6, 7, 8],
                     [9, 10, 11, 12, 13, 14, 15],
                     [16, 17, 18, 19, 20, 21, 22],
                     [23, 24, "25", 26, 27, 28, -29],
-                    [-30, -1, -2, -3, -4, -5, -6],
+                    [-30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 weekNumbers: [13, 14, 15, 16, 17, 18],
@@ -289,12 +289,12 @@ test("maxDate: correct days/month/year/decades are disabled", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, 1],
+                    [0, 0, 0, 0, 0, 0, 1],
                     [2, 3, 4, 5, 6, 7, 8],
                     [9, 10, 11, 12, 13, 14, 15],
                     [16, 17, 18, 19, 20, 21, 22],
                     [23, 24, "25", 26, 27, 28, -29],
-                    [-30, -1, -2, -3, -4, -5, -6],
+                    [-30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 weekNumbers: [13, 14, 15, 16, 17, 18],
@@ -317,12 +317,12 @@ test("min+max date: correct days/month/year/decades are disabled", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, -1],
+                    [0, 0, 0, 0, 0, 0, -1],
                     [-2, -3, -4, -5, -6, -7, -8],
                     [-9, -10, -11, -12, -13, -14, -15],
                     [-16, -17, -18, -19, 20, 21, 22],
                     [23, 24, "25", 26, 27, 28, -29],
-                    [-30, -1, -2, -3, -4, -5, -6],
+                    [-30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 weekNumbers: [13, 14, 15, 16, 17, 18],
@@ -408,12 +408,12 @@ test("min+max date: correct days/month/year/decades are disabled", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, -1],
+                    [0, 0, 0, 0, 0, 0, -1],
                     [-2, -3, -4, -5, -6, -7, -8],
                     [-9, -10, -11, -12, -13, -14, -15],
                     [-16, -17, -18, -19, 20, 21, 22],
                     [23, 24, "25", 26, 27, 28, -29],
-                    [-30, -1, -2, -3, -4, -5, -6],
+                    [-30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 weekNumbers: [13, 14, 15, 16, 17, 18],
@@ -462,12 +462,12 @@ test("twelve-hour clock", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, 1],
+                    [0, 0, 0, 0, 0, 0, 1],
                     [2, 3, 4, 5, 6, 7, 8],
                     [9, 10, 11, 12, 13, 14, 15],
                     [16, 17, 18, 19, 20, 21, 22],
                     [23, 24, "25", 26, 27, 28, 29],
-                    [30, -1, -2, -3, -4, -5, -6],
+                    [30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 weekNumbers: [13, 14, 15, 16, 17, 18],
@@ -498,12 +498,12 @@ test("hide time picker", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, 1],
+                    [0, 0, 0, 0, 0, 0, 1],
                     [2, 3, 4, 5, 6, 7, 8],
                     [9, 10, 11, 12, 13, 14, 15],
                     [16, 17, 18, 19, 20, 21, 22],
                     [23, 24, "25", 26, 27, 28, 29],
-                    [30, -1, -2, -3, -4, -5, -6],
+                    [30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 weekNumbers: [13, 14, 15, 16, 17, 18],
@@ -524,15 +524,14 @@ test("focus is adjusted to selected date", async () => {
         date: [
             {
                 cells: [
-                    [-30, 1, 2, 3, 4, 5, 6],
+                    [0, 1, 2, 3, 4, 5, 6],
                     [7, 8, 9, 10, 11, 12, 13],
                     [14, 15, 16, 17, 18, 19, 20],
                     [21, 22, 23, 24, 25, 26, 27],
-                    [28, [29], 30, 31, -1, -2, -3],
-                    [-4, -5, -6, -7, -8, -9, -10],
+                    [28, [29], 30, 31, 0, 0, 0],
                 ],
                 daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-                weekNumbers: [18, 19, 20, 21, 22, 23],
+                weekNumbers: [18, 19, 20, 21, 22],
             },
         ],
         time: [[23, 55]],
@@ -551,12 +550,12 @@ test("next month and previous month", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, 1],
+                    [0, 0, 0, 0, 0, 0, 1],
                     [2, 3, 4, 5, 6, 7, 8],
                     [9, 10, 11, 12, 13, 14, 15],
                     [16, 17, 18, 19, 20, 21, 22],
                     [23, 24, "25", 26, 27, 28, 29],
-                    [30, -1, -2, -3, -4, -5, -6],
+                    [30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 weekNumbers: [13, 14, 15, 16, 17, 18],
@@ -572,15 +571,14 @@ test("next month and previous month", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, 1, 2, 3, 4],
+                    [0, 0, 0, 1, 2, 3, 4],
                     [5, 6, 7, 8, 9, 10, 11],
                     [12, 13, 14, 15, 16, 17, 18],
                     [19, 20, 21, 22, 23, 24, 25],
-                    [26, 27, 28, 29, 30, 31, -1],
-                    [-2, -3, -4, -5, -6, -7, -8],
+                    [26, 27, 28, 29, 30, 31, 0],
                 ],
                 daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-                weekNumbers: [9, 10, 11, 12, 13, 14],
+                weekNumbers: [9, 10, 11, 12, 13],
             },
         ],
     });
@@ -593,12 +591,12 @@ test("next month and previous month", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, 1],
+                    [0, 0, 0, 0, 0, 0, 1],
                     [2, 3, 4, 5, 6, 7, 8],
                     [9, 10, 11, 12, 13, 14, 15],
                     [16, 17, 18, 19, 20, 21, 22],
                     [23, 24, "25", 26, 27, 28, 29],
-                    [30, -1, -2, -3, -4, -5, -6],
+                    [30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 weekNumbers: [13, 14, 15, 16, 17, 18],
@@ -614,21 +612,21 @@ test("next month and previous month", async () => {
         date: [
             {
                 cells: [
-                    [-30, 1, 2, 3, 4, 5, 6],
+                    [0, 1, 2, 3, 4, 5, 6],
                     [7, 8, 9, 10, 11, 12, 13],
                     [14, 15, 16, 17, 18, 19, 20],
                     [21, 22, 23, 24, 25, 26, 27],
-                    [28, 29, 30, 31, -1, -2, -3],
-                    [-4, -5, -6, -7, -8, -9, -10],
+                    [28, 29, 30, 31, 0, 0, 0],
                 ],
                 daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-                weekNumbers: [18, 19, 20, 21, 22, 23],
+                weekNumbers: [18, 19, 20, 21, 22],
             },
         ],
     });
 });
 
-test.tags("desktop")("additional month, hide time picker", async () => {
+test.tags("desktop");
+test("additional month, hide time picker", async () => {
     await mountWithCleanup(DateTimePicker, {
         props: {
             value: [
@@ -645,23 +643,23 @@ test.tags("desktop")("additional month, hide time picker", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, 1],
+                    [0, 0, 0, 0, 0, 0, 1],
                     [2, 3, 4, 5, 6, 7, 8],
                     [9, 10, 11, 12, 13, 14, 15],
                     [16, 17, 18, 19, 20, 21, 22],
                     [23, 24, ["25"], 26, 27, 28, 29],
-                    [30, -1, -2, -3, -4, -5, -6],
+                    [30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             },
             {
                 cells: [
-                    [-30, 1, 2, 3, 4, 5, 6],
+                    [0, 1, 2, 3, 4, 5, 6],
                     [7, 8, 9, 10, 11, 12, 13],
                     [14, 15, 16, 17, 18, 19, 20],
                     [21, 22, 23, 24, 25, 26, 27],
-                    [28, 29, 30, 31, -1, -2, -3],
-                    [-4, -5, -6, -7, -8, -9, -10],
+                    [28, 29, 30, 31, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             },
@@ -669,7 +667,8 @@ test.tags("desktop")("additional month, hide time picker", async () => {
     });
 });
 
-test.tags("desktop")("additional month, empty range value", async () => {
+test.tags("desktop");
+test("additional month, empty range value", async () => {
     await mountWithCleanup(DateTimePicker, {
         props: {
             value: [null, null],
@@ -682,23 +681,23 @@ test.tags("desktop")("additional month, empty range value", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, 1],
+                    [0, 0, 0, 0, 0, 0, 1],
                     [2, 3, 4, 5, 6, 7, 8],
                     [9, 10, 11, 12, 13, 14, 15],
                     [16, 17, 18, 19, 20, 21, 22],
                     [23, 24, "25", 26, 27, 28, 29],
-                    [30, -1, -2, -3, -4, -5, -6],
+                    [30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             },
             {
                 cells: [
-                    [-30, 1, 2, 3, 4, 5, 6],
+                    [0, 1, 2, 3, 4, 5, 6],
                     [7, 8, 9, 10, 11, 12, 13],
                     [14, 15, 16, 17, 18, 19, 20],
                     [21, 22, 23, 24, 25, 26, 27],
-                    [28, 29, 30, 31, -1, -2, -3],
-                    [-4, -5, -6, -7, -8, -9, -10],
+                    [28, 29, 30, 31, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             },
@@ -723,7 +722,8 @@ test.tags("desktop")("additional month, empty range value", async () => {
     });
 });
 
-test.tags("desktop")("range value", async () => {
+test.tags("desktop");
+test("range value", async () => {
     await mountWithCleanup(DateTimePicker, {
         props: {
             value: [
@@ -739,23 +739,23 @@ test.tags("desktop")("range value", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, 1],
+                    [0, 0, 0, 0, 0, 0, 1],
                     [2, 3, 4, [5], [6], [7], [8]],
                     [[9], [10], [11], [12], [13], [14], [15]],
                     [[16], [17], [18], [19], [20], [21], [22]],
                     [[23], [24], ["25"], [26], [27], [28], [29]],
-                    [[30], -1, -2, -3, -4, -5, -6],
+                    [[30], 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             },
             {
                 cells: [
-                    [-30, [1], [2], [3], [4], [5], [6]],
+                    [0, [1], [2], [3], [4], [5], [6]],
                     [[7], [8], [9], [10], [11], [12], [13]],
                     [[14], [15], [16], [17], [18], 19, 20],
                     [21, 22, 23, 24, 25, 26, 27],
-                    [28, 29, 30, 31, -1, -2, -3],
-                    [-4, -5, -6, -7, -8, -9, -10],
+                    [28, 29, 30, 31, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             },
@@ -767,9 +767,9 @@ test.tags("desktop")("range value", async () => {
     });
 
     expect(queryAllTexts(".o_time_picker_select:eq(0) option")).toEqual(range(24, String));
-    expect(queryAllTexts(".o_time_picker_select:eq(1) option")).toEqual(
-        range(12, (i) => pad2(i * 5))
-    );
+    const expectedMinutes = range(12, (i) => pad2(i * 5));
+    expectedMinutes.unshift("");
+    expect(queryAllTexts(".o_time_picker_select:eq(1) option")).toEqual(expectedMinutes);
 
     expect(queryAllTexts(".o_time_picker_select:eq(2) option")).toEqual(range(24, String));
     expect(queryAllTexts(".o_time_picker_select:eq(3) option")).toEqual(
@@ -799,12 +799,12 @@ test("range value on small device", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, 1],
+                    [0, 0, 0, 0, 0, 0, 1],
                     [2, 3, 4, 5, 6, 7, 8],
                     [9, 10, 11, 12, 13, 14, 15],
                     [16, 17, 18, 19, 20, 21, 22],
                     [23, 24, ["25"], 26, 27, 28, 29],
-                    [30, -1, -2, -3, -4, -5, -6],
+                    [30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             },
@@ -816,9 +816,9 @@ test("range value on small device", async () => {
     });
 
     expect(queryAllTexts(".o_time_picker_select:eq(0) option")).toEqual(range(24, String));
-    expect(queryAllTexts(".o_time_picker_select:eq(1) option")).toEqual(
-        range(12, (i) => pad2(i * 5))
-    );
+    const expectedMinutes = range(12, (i) => pad2(i * 5));
+    expectedMinutes.unshift("");
+    expect(queryAllTexts(".o_time_picker_select:eq(1) option")).toEqual(expectedMinutes);
 
     expect(queryAllTexts(".o_time_picker_select:eq(2) option")).toEqual(range(24, String));
     expect(queryAllTexts(".o_time_picker_select:eq(3) option")).toEqual(
@@ -830,7 +830,8 @@ test("range value on small device", async () => {
     });
 });
 
-test.tags("desktop")("range value, previous month", async () => {
+test.tags("desktop");
+test("range value, previous month", async () => {
     await mountWithCleanup(DateTimePicker, {
         props: {
             value: [false, false],
@@ -843,23 +844,23 @@ test.tags("desktop")("range value, previous month", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, 1],
+                    [0, 0, 0, 0, 0, 0, 1],
                     [2, 3, 4, 5, 6, 7, 8],
                     [9, 10, 11, 12, 13, 14, 15],
                     [16, 17, 18, 19, 20, 21, 22],
                     [23, 24, "25", 26, 27, 28, 29],
-                    [30, -1, -2, -3, -4, -5, -6],
+                    [30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             },
             {
                 cells: [
-                    [-30, 1, 2, 3, 4, 5, 6],
+                    [0, 1, 2, 3, 4, 5, 6],
                     [7, 8, 9, 10, 11, 12, 13],
                     [14, 15, 16, 17, 18, 19, 20],
                     [21, 22, 23, 24, 25, 26, 27],
-                    [28, 29, 30, 31, -1, -2, -3],
-                    [-4, -5, -6, -7, -8, -9, -10],
+                    [28, 29, 30, 31, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             },
@@ -878,23 +879,23 @@ test.tags("desktop")("range value, previous month", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, 1, 2, 3, 4],
+                    [0, 0, 0, 1, 2, 3, 4],
                     [5, 6, 7, 8, 9, 10, 11],
                     [12, 13, 14, 15, 16, 17, 18],
                     [19, 20, 21, 22, 23, 24, 25],
-                    [26, 27, 28, 29, 30, 31, -1],
-                    [-2, -3, -4, -5, -6, -7, -8],
+                    [26, 27, 28, 29, 30, 31, 0],
+                    [0, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             },
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, 1],
+                    [0, 0, 0, 0, 0, 0, 1],
                     [2, 3, 4, 5, 6, 7, 8],
                     [9, 10, 11, 12, 13, 14, 15],
                     [16, 17, 18, 19, 20, 21, 22],
                     [23, 24, "25", 26, 27, 28, 29],
-                    [30, -1, -2, -3, -4, -5, -6],
+                    [30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             },
@@ -918,12 +919,12 @@ test("days of week narrow format", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, 1],
+                    [0, 0, 0, 0, 0, 0, 1],
                     [2, 3, 4, 5, 6, 7, 8],
                     [9, 10, 11, 12, 13, 14, 15],
                     [16, 17, 18, 19, 20, 21, 22],
                     [23, 24, "25", 26, 27, 28, 29],
-                    [30, -1, -2, -3, -4, -5, -6],
+                    [30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["#", "S", "M", "T", "W", "T", "F", "S"],
                 weekNumbers: [13, 14, 15, 16, 17, 18],
@@ -978,7 +979,7 @@ test("no value, select date", async () => {
         },
     });
 
-    await click(getPickerCell("5").at(0));
+    await click(getPickerCell("5"));
     await animationFrame();
     await click(getPickerCell("12"));
     await animationFrame();
@@ -1105,12 +1106,12 @@ test("custom invalidity function", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, -1],
+                    [0, 0, 0, 0, 0, 0, -1],
                     [-2, 3, 4, 5, 6, 7, -8],
                     [-9, 10, 11, 12, 13, 14, -15],
                     [-16, 17, 18, 19, 20, 21, -22],
                     [-23, 24, "25", 26, 27, 28, -29],
-                    [-30, -1, -2, -3, -4, -5, -6],
+                    [-30, 0, 0, 0, 0, 0, 0],
                 ],
             },
         ],
@@ -1127,7 +1128,6 @@ test("custom date cell class function", async () => {
     });
 
     expect(queryAllTexts(".o_weekend")).toEqual([
-        "26",
         "1",
         "2",
         "8",
@@ -1138,7 +1138,6 @@ test("custom date cell class function", async () => {
         "23",
         "29",
         "30",
-        "6",
     ]);
 });
 
@@ -1150,7 +1149,7 @@ test("single value, select date", async () => {
         },
     });
 
-    await click(getPickerCell("5").at(0));
+    await click(getPickerCell("5"));
     await animationFrame();
     expect.verifySteps(["2023-04-05T08:43:00"]);
 });
@@ -1202,7 +1201,7 @@ test("range value, select date for first value", async () => {
         },
     });
 
-    await click(getPickerCell("5").at(0));
+    await click(getPickerCell("5"));
     await animationFrame();
     expect.verifySteps(["2023-04-05T08:43:00,2023-04-23T17:16:00"]);
 });
@@ -1228,7 +1227,8 @@ test("range value, select time for first value", async () => {
     ]);
 });
 
-test.tags("desktop")("range value, select date for second value", async () => {
+test.tags("desktop");
+test("range value, select date for second value", async () => {
     await mountWithCleanup(DateTimePicker, {
         props: {
             value: [
@@ -1268,7 +1268,8 @@ test("range value, select time for second value", async () => {
     ]);
 });
 
-test.tags("desktop")("range value, select date for second value before first value", async () => {
+test.tags("desktop");
+test("range value, select date for second value before first value", async () => {
     await mountWithCleanup(DateTimePicker, {
         props: {
             value: [
@@ -1283,7 +1284,7 @@ test.tags("desktop")("range value, select date for second value before first val
 
     await click(getPickerCell("19").at(0));
     await animationFrame();
-    expect.verifySteps(["2023-04-19T08:43:00,2023-04-23T17:16:00"]);
+    expect.verifySteps(["2023-04-20T08:43:00,2023-04-19T17:16:00"]);
 });
 
 test("range value, select date for first value after second value", async () => {
@@ -1299,9 +1300,9 @@ test("range value, select date for first value after second value", async () => 
         },
     });
 
-    await click(getPickerCell("27").at(1));
+    await click(getPickerCell("27"));
     await animationFrame();
-    expect.verifySteps(["2023-04-20T08:43:00,2023-04-27T17:16:00"]);
+    expect.verifySteps(["2023-04-27T08:43:00,2023-04-23T17:16:00"]);
 });
 
 test("focus proper month when changing props out of current month", async () => {
@@ -1323,12 +1324,12 @@ test("focus proper month when changing props out of current month", async () => 
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, 1],
+                    [0, 0, 0, 0, 0, 0, 1],
                     [2, 3, 4, 5, 6, 7, 8],
                     [9, 10, 11, 12, 13, 14, 15],
                     [16, 17, 18, 19, 20, 21, 22],
                     [23, 24, ["25"], 26, 27, 28, 29],
-                    [30, -1, -2, -3, -4, -5, -6],
+                    [30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             },
@@ -1344,12 +1345,11 @@ test("focus proper month when changing props out of current month", async () => 
         date: [
             {
                 cells: [
-                    [-30, [1], 2, 3, 4, 5, 6],
+                    [0, [1], 2, 3, 4, 5, 6],
                     [7, 8, 9, 10, 11, 12, 13],
                     [14, 15, 16, 17, 18, 19, 20],
                     [21, 22, 23, 24, 25, 26, 27],
-                    [28, 29, 30, 31, -1, -2, -3],
-                    [-4, -5, -6, -7, -8, -9, -10],
+                    [28, 29, 30, 31, 0, 0, 0],
                 ],
                 daysOfWeek: ["#", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             },
@@ -1368,12 +1368,12 @@ test("disable show week numbers", async () => {
         date: [
             {
                 cells: [
-                    [-26, -27, -28, -29, -30, -31, 1],
+                    [0, 0, 0, 0, 0, 0, 1],
                     [2, 3, 4, 5, 6, 7, 8],
                     [9, 10, 11, 12, 13, 14, 15],
                     [16, 17, 18, 19, 20, 21, 22],
                     [23, 24, "25", 26, 27, 28, 29],
-                    [30, -1, -2, -3, -4, -5, -6],
+                    [30, 0, 0, 0, 0, 0, 0],
                 ],
                 daysOfWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                 weekNumbers: [],

@@ -1302,6 +1302,73 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         const isRotated = isElementRotated(img);
         assert.notOk(isRotated, "The image should not be rotated");
     });
+
+    QUnit.module("Responsive fontsize");
+
+    QUnit.test("Apply responsive fontsize on table selection", async (assert) => {
+        assert.expect(2);
+        serverData.models.partner.records.push({
+            id: 1,
+            txt: `<table>
+                    <tbody>
+                        <tr>
+                            <td class="1"><p>ab</p></td>
+                            <td class="2"><p>cd</p></td>
+                        </tr>
+                        <tr>
+                            <td class="3"><p>ef</p></td>
+                            <td class="4"><p>hg</p></td>
+                        </tr>
+                    </tbody>
+                </table>`,
+        });
+        let htmlField;
+        const wysiwygPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await super.startWysiwyg(...arguments);
+                htmlField = this;
+                wysiwygPromise.resolve();
+            },
+        });
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html_legacy"/>
+                </form>`,
+        });
+        await wysiwygPromise;
+        const editor = htmlField.wysiwyg.odooEditor;
+        const table = editor.editable.querySelector("table");
+        const firstp = table.firstElementChild.firstElementChild.firstElementChild.firstElementChild;
+        const lastp = table.firstElementChild.lastElementChild.lastElementChild.firstElementChild;
+        // we need the selection in middle of the text nodes of the table cells
+        setSelection(firstp.firstChild, 1, lastp.firstChild, 1);
+        await nextTick();
+        assert.ok(
+            document.querySelector('div#toolbar[style*="visibility: visible"]'),
+            "Toolbar should be visible"
+        );
+        const fontSizeOptionButtonFS3 = document.querySelector(
+            "#toolbar #font-size .dropdown-item[data-apply-class='display-3-fs']"
+        );
+        const event = new MouseEvent("mousedown", {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+            button: 0, // Left mouse button (0: left, 1: middle, 2: right)
+        });
+        // we need to have a mutation when applying fontsize change for the issue to occur
+        // so we change it first and then we change it again.
+        fontSizeOptionButtonFS3.dispatchEvent(event);
+        await nextTick();
+        assert.containsN(editor.editable, "td span.display-3-fs", 4);
+    });
 });
 
 export const mediaDialogServices = {

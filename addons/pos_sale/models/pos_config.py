@@ -21,8 +21,9 @@ class PosConfig(models.Model):
     @api.model
     def _ensure_downpayment_product(self):
         pos_config = self.env.ref('point_of_sale.pos_config_main', raise_if_not_found=False)
-        if pos_config:
-            pos_config.write({'down_payment_product_id': self.env.ref('pos_sale.default_downpayment_product').id})
+        downpayment_product = self.env.ref('pos_sale.default_downpayment_product', raise_if_not_found=False)
+        if pos_config and downpayment_product:
+            pos_config.write({'down_payment_product_id': downpayment_product.id})
 
     @api.model
     def load_onboarding_furniture_scenario(self):

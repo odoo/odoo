@@ -291,6 +291,12 @@ class MrpWorkcenter(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.action_work_orders")
         return action
 
+    def action_work_order_alternatives(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_workorder_todo")
+        action['domain'] = ['|', ('workcenter_id', 'in', self.alternative_workcenter_ids.ids),
+                            ('workcenter_id.alternative_workcenter_ids', '=', self.id)]
+        return action
+
     def _get_unavailability_intervals(self, start_datetime, end_datetime):
         """Get the unavailabilities intervals for the workcenters in `self`.
 

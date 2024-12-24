@@ -997,3 +997,38 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             copy.order_line.analytic_distribution,
             copy.order_line.project_id._get_analytic_distribution(),
         )
+
+    def test_confirm_sale_order_on_task_save(self):
+        sale_order = self.env['sale.order'].create({
+            'name': 'Sale Order',
+            'partner_id': self.partner.id,
+        })
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_order_service1.id,
+        })
+        self.assertEqual(sale_order.state, 'draft')
+
+        task = self.env['project.task'].create({
+            'name': 'Task',
+            'project_id': self.project_global.id,
+        })
+        task.write({'sale_line_id': sale_order_line.id})
+        self.assertEqual(sale_order.state, 'sale')
+
+    def test_confirm_sale_order_on_project_creation(self):
+        sale_order = self.env['sale.order'].create({
+            'name': 'Sale Order',
+            'partner_id': self.partner.id,
+        })
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_order_service1.id,
+        })
+        self.assertEqual(sale_order.state, 'draft')
+
+        self.env['project.project'].create({
+            'name': 'Project',
+            'sale_line_id': sale_order_line.id,
+        })
+        self.assertEqual(sale_order.state, 'sale')

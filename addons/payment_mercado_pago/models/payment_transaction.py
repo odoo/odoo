@@ -7,7 +7,8 @@ from urllib.parse import quote as url_quote
 from werkzeug import urls
 
 from odoo import _, api, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
+from odoo.tools import float_round
 
 from odoo.addons.payment_mercado_pago import const
 from odoo.addons.payment_mercado_pago.controllers.main import MercadoPagoController
@@ -64,17 +65,10 @@ class PaymentTransaction(models.Model):
             base_url, f'{MercadoPagoController._webhook_url}/{sanitized_reference}'
         )  # Append the reference to identify the transaction from the webhook notification data.
 
-        # In the case where we are issuing a preference request in CLP or COP, we must ensure that
-        # the price unit is an integer because these currencies do not have a minor unit.
         unit_price = self.amount
-        if self.currency_id.name in ('CLP', 'COP'):
-            rounded_unit_price = int(self.amount)
-            if rounded_unit_price != self.amount:
-                raise UserError(_(
-                    "Prices in the currency %s must be expressed in integer values.",
-                    self.currency_id.name,
-                ))
-            unit_price = rounded_unit_price
+        decimal_places = const.CURRENCY_DECIMALS.get(self.currency_id.name)
+        if decimal_places is not None:
+            unit_price = float_round(unit_price, decimal_places, rounding_method='DOWN')
 
         return {
             'auto_return': 'all',

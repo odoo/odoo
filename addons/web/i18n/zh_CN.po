@@ -4,20 +4,21 @@
 # 
 # Translators:
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2024
-# Raymond Yu <cl_yu@hotmail.com>, 2024
 # Martin Trigaux, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
-# Wil Odoo, 2024
 # Chloe Wang, 2024
-# 何彬 <vnsoft.he@gmail.com>, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
+# Chill Liao <chill421@qq.com>, 2024
+# Raymond Yu <cl_yu@hotmail.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-19 11:53+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +32,12 @@ msgstr ""
 #: code:addons/web/static/src/core/expression_editor/expression_editor.xml:0
 msgid "# Code editor"
 msgstr "# 代码编辑器"
+
+#. module: web
+#. odoo-python
+#: code:addons/web/controllers/export.py:0
+msgid "%(property_string)s (%(parent_name)s)"
+msgstr "%(property_string)s (%(parent_name)s)"
 
 #. module: web
 #. odoo-javascript
@@ -1276,6 +1283,18 @@ msgid "Back"
 msgstr "回退"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/breadcrumbs/breadcrumbs.js:0
+msgid "Back to “%s”"
+msgstr "返回“%s”"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/breadcrumbs/breadcrumbs.js:0
+msgid "Back to “%s” form"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Background"
 msgstr "背景"
@@ -1320,6 +1339,12 @@ msgstr "柱状图"
 #: code:addons/web/static/src/core/barcode/barcode_dialog.xml:0
 msgid "Barcode Scanner"
 msgstr "条码扫描器"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/barcode/barcode_video_scanner.js:0
+msgid "Barcode Video Scanner could not be mounted properly."
+msgstr "条形码视频扫描仪无法正确安装。"
 
 #. module: web
 #: model:ir.model,name:web.model_base
@@ -1803,7 +1828,7 @@ msgstr "比较"
 #. odoo-javascript
 #: code:addons/web/static/src/views/debug_items.js:0
 msgid "Computed Arch"
-msgstr "计算架构定义"
+msgstr "视图XML结构"
 
 #. module: web
 #. odoo-javascript
@@ -1907,7 +1932,7 @@ msgstr "控制面板按钮"
 msgid ""
 "Control the number of minutes in the time selection. E.g. set it to 15 to "
 "work in quarters."
-msgstr "控制时间选择中的分钟数。例如，设置为 15 分钟，就可以以刻钟为单位工作。"
+msgstr "控制时间选择中的分钟数。例如：设置为 15 分钟，就可以以刻钟为单位工作。"
 
 #. module: web
 #. odoo-javascript
@@ -1972,6 +1997,12 @@ msgstr "无法显示选定的pdf"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+msgid "Could not display the selected spreadsheet"
+msgstr "无法显示所选电子表格"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
 msgid "Could not display the specified image url."
 msgstr "无法显示指定的图像网址。"
@@ -1982,7 +2013,7 @@ msgstr "无法显示指定的图像网址。"
 msgid ""
 "Could not set the cover image: incorrect field (\"%s\") is provided in the "
 "view."
-msgstr "无法设置封面图像：视图中提供了错误的字段（“%s”）。"
+msgstr "无法设置封面图片：视图中提供了错误的字段（“%s”）。"
 
 #. module: web
 #. odoo-javascript
@@ -2062,13 +2093,13 @@ msgstr "创建用户："
 #. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 msgid "Cumulative"
-msgstr "累积"
+msgstr "累加"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/monetary/monetary_field.js:0
 msgid "Currency"
-msgstr "币种"
+msgstr "币别"
 
 #. module: web
 #. odoo-javascript
@@ -2128,6 +2159,12 @@ msgstr "DVD"
 #: code:addons/web/static/src/views/debug_items.js:0
 msgid "Data"
 msgstr "数据"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/debug_items.js:0
+msgid "Data: %(model)s(%(id)s)"
+msgstr "数据: %(model)s(%(id)s)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -2444,6 +2481,14 @@ msgstr "显示或隐藏日期时间值中的时间。"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/char/char_field.js:0
+msgid ""
+"Displays the value of the selected field as a textual hint. If the selected "
+"field is empty, the static placeholder attribute is displayed instead."
+msgstr "显示所选字段的值作为文本提示。如果所选字段为空，则显示静态占位符属性。"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_bar.js:0
 msgid "Do you really want to cancel the upload of %s?"
 msgstr "您真的要取消上传 %s 吗？"
@@ -2534,7 +2579,7 @@ msgstr "将文件拖到此处"
 #. odoo-javascript
 #: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 msgid "Draw"
-msgstr "画"
+msgstr "手写"
 
 #. module: web
 #. odoo-javascript
@@ -2552,8 +2597,8 @@ msgstr "复制"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/char/char_field.js:0
-msgid "Dynamic placeholder"
-msgstr "动态占位符"
+msgid "Dynamic Placeholder"
+msgstr "动态定位符"
 
 #. module: web
 #. odoo-javascript
@@ -2641,13 +2686,6 @@ msgstr "启用换行符"
 #: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "Enable profiling"
 msgstr "启用性能分析"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/char/char_field.js:0
-msgid ""
-"Enable this option to allow the input to display a dynamic placeholder."
-msgstr "启用此选项可使输入显示动态占位符。"
 
 #. module: web
 #. odoo-javascript
@@ -3043,7 +3081,7 @@ msgstr "飞盘"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/actions/action_install_kiosk_pwa.xml:0
 msgid "From your Kiosk, open this URL:"
-msgstr "从 Kiosk 打开此 URL："
+msgstr "从 自助终端 打开此 网址："
 
 #. module: web
 #. odoo-javascript
@@ -3086,6 +3124,13 @@ msgstr "通过Odoo企业版获得该功能及其他更多！"
 #: code:addons/web/static/src/views/fields/url/url_field.xml:0
 msgid "Go to URL"
 msgstr "转到链接"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.xml:0
+msgid "Google Slide Viewer"
+msgstr "谷歌幻灯片播放器"
 
 #. module: web
 #. odoo-javascript
@@ -3247,6 +3292,15 @@ msgstr "如果为 True，URL 将按原样使用，不添加任何前缀。"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
+msgid ""
+"If checked, clicking on the tag will open the form that allows to directly "
+"edit it. Note that if a color field is also set, the tag edition will "
+"prevail. So, the color picker will not be displayed on click on the tag."
+msgstr "如果选中，点击标签将打开一个可以直接编辑它的表单。请注意，如果还设置了颜色字段，则标签编辑将优先。因此，点击标签时不会显示颜色选择器。"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.js:0
 #: code:addons/web/static/src/views/fields/boolean_toggle/boolean_toggle_field.js:0
 #: code:addons/web/static/src/views/fields/priority/priority_field.js:0
@@ -3254,14 +3308,6 @@ msgstr "如果为 True，URL 将按原样使用，不添加任何前缀。"
 msgid ""
 "If checked, the record will be saved immediately when the field is modified."
 msgstr "如果选中，则在修改字段时将立即保存记录。"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
-msgid ""
-"If checked, users will be able to edit tag related records by clicking on "
-"the tags."
-msgstr "如果选中，用户就可以通过点击标签来编辑与标签相关的记录。"
 
 #. module: web
 #. odoo-javascript
@@ -3394,6 +3440,12 @@ msgid "Invalid data"
 msgstr "无效的数据"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/json.py:0
+msgid "Invalid default search filter name for %s"
+msgstr "无效的默认搜索筛选名称 %s"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Invalid domain"
@@ -3448,6 +3500,12 @@ msgstr "无效模型：%s"
 #: code:addons/web/static/src/core/tree_editor/tree_editor_autocomplete.js:0
 msgid "Invalid record ID: %s"
 msgstr "无效记录 ID：%s"
+
+#. module: web
+#. odoo-python
+#: code:addons/web/controllers/json.py:0
+msgid "Invalid view type '%(view_type)s' for action id=%(action)s"
+msgstr "动作id为%(action)s的视图类型%(view_type)s无效。"
 
 #. module: web
 #. odoo-javascript
@@ -3830,7 +3888,7 @@ msgstr "线状图"
 #. odoo-javascript
 #: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 msgid "Load"
-msgstr "加载"
+msgstr "导入"
 
 #. module: web
 #. odoo-javascript
@@ -3995,6 +4053,12 @@ msgstr "匹配"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
+msgid "Max value"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
 #: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
 msgid "Max value field"
 msgstr "最大值字段"
@@ -4029,7 +4093,7 @@ msgstr "计量值"
 #: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
 msgid "Medium"
-msgstr "媒介"
+msgstr "中等"
 
 #. module: web
 #. odoo-javascript
@@ -4100,6 +4164,12 @@ msgid "Missing Record"
 msgstr "缺失记录"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/json.py:0
+msgid "Missing record id"
+msgstr "缺少记录ID"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 msgid "Mobile support"
@@ -4136,12 +4206,6 @@ msgstr "模型字段"
 #: code:addons/web/static/src/views/fields/field_tooltip.xml:0
 msgid "Model field:"
 msgstr "模型字段"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/char/char_field.js:0
-msgid "Model reference field"
-msgstr "模型参考区域"
 
 #. module: web
 #. odoo-javascript
@@ -4463,7 +4527,7 @@ msgstr "未找到命令"
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_renderer.js:0
 msgid "No currency provided"
-msgstr "未提供货币"
+msgstr "未提供币别"
 
 #. module: web
 #. odoo-javascript
@@ -4492,8 +4556,8 @@ msgstr "找不到任何设备。"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "No emoji match your search"
-msgstr "没有符合您的搜索的表情符号"
+msgid "No emoji matches your search"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4588,13 +4652,13 @@ msgstr "不是有效 %s"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
 msgid "Not active state"
-msgstr "非启用的状态"
+msgstr "非有效的状态"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
 msgid "Not active state, click to change it"
-msgstr "处於非启用状态，单击以更改它"
+msgstr "处於非有效状态，单击以更改它"
 
 #. module: web
 #. odoo-javascript
@@ -4807,7 +4871,7 @@ msgstr "只刪除了 %(count)s 项记录（在全部所选的 %(total)s 项记�
 msgid ""
 "Only types %(supported_types)s are supported for category (found type "
 "%(field_type)s)"
-msgstr "只有类别 %(supported_types)s 支持于类别 (找到类别 %(field_type)s)"
+msgstr "只支持类型为%(supported_types)s的分类（发现类型为%(field_type)s）"
 
 #. module: web
 #. odoo-python
@@ -4815,7 +4879,7 @@ msgstr "只有类别 %(supported_types)s 支持于类别 (找到类别 %(field_t
 msgid ""
 "Only types %(supported_types)s are supported for filter (found type "
 "%(field_type)s)"
-msgstr "只有类型 %(supported_types)s 支持于筛选 (找到类型 %(field_type)s)"
+msgstr "只支持类型为 %(supported_types)s 的筛选条件 (发现类型为 %(field_type)s)"
 
 #. module: web
 #. odoo-javascript
@@ -5035,12 +5099,6 @@ msgstr "数据透视表设置"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/char/char_field.js:0
-msgid "Placeholder field"
-msgstr "占位符字段"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 msgid "Please be patient."
 msgstr "请耐心等待。"
@@ -5161,13 +5219,13 @@ msgstr "上一个 (左箭头)"
 #. odoo-javascript
 #: code:addons/web/static/src/search/utils/dates.js:0
 msgid "Previous Period"
-msgstr "前一期间"
+msgstr "上一期间"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/utils/dates.js:0
 msgid "Previous Year"
-msgstr "前一年"
+msgstr "上一年"
 
 #. module: web
 #. odoo-javascript
@@ -5472,7 +5530,7 @@ msgstr "移除"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 msgid "Remove Cover Image"
-msgstr "移除封面图像"
+msgstr "移除封面图片"
 
 #. module: web
 #. odoo-javascript
@@ -5584,18 +5642,6 @@ msgstr "运行Click Everywhere"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_providers.js:0
-msgid "Run QUnit Mobile Tests (legacy)"
-msgstr "运行移动端单元测试(旧版本)"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_providers.js:0
-msgid "Run QUnit Tests (legacy)"
-msgstr "运行单元测试(旧版本)"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_providers.js:0
 #: code:addons/web/static/src/webclient/debug/debug_items.js:0
 msgid "Run Unit Tests"
 msgstr "运行单元测试"
@@ -5677,14 +5723,14 @@ msgstr "保存"
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
 msgid "Save & Close"
-msgstr "保存和关闭"
+msgstr "保存并关闭"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
 msgid "Save & New"
-msgstr "保存和新建"
+msgstr "保存并新建"
 
 #. module: web
 #. odoo-javascript
@@ -5752,6 +5798,12 @@ msgstr "搜索更多..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
+msgid "Search emoji"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 msgid "Search for a command..."
 msgstr "搜索一个命令..."
@@ -5761,12 +5813,6 @@ msgstr "搜索一个命令..."
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 msgid "Search for a menu..."
 msgstr "搜索菜单..."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "Search for an emoji"
-msgstr "搜索表情符号"
 
 #. module: web
 #. odoo-javascript
@@ -5970,7 +6016,7 @@ msgstr "设置默认值"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 msgid "Set a Cover Image"
-msgstr "设置一张封面图像"
+msgstr "设置一张封面图片"
 
 #. module: web
 #. odoo-javascript
@@ -6211,7 +6257,7 @@ msgstr "呆在这里"
 #: code:addons/web/static/src/views/fields/float/float_field.js:0
 #: code:addons/web/static/src/views/fields/integer/integer_field.js:0
 msgid "Step"
-msgstr "步骤"
+msgstr "步长"
 
 #. module: web
 #. odoo-javascript
@@ -6368,7 +6414,7 @@ msgstr "金牛座"
 #: model_terms:ir.ui.view,arch_db:web.external_layout_striped
 #: model_terms:ir.ui.view,arch_db:web.external_layout_wave
 msgid "Tax ID"
-msgstr "税项ID"
+msgstr "税务识别码"
 
 #. module: web
 #. odoo-javascript
@@ -6890,6 +6936,12 @@ msgid "Unselect All"
 msgstr "全不选"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/json.py:0
+msgid "Unsupported server action"
+msgstr "服务器动作不支持"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_view.js:0
 #: code:addons/web/static/src/views/pivot/pivot_view.js:0
@@ -7003,7 +7055,7 @@ msgstr "打开这个视图时请使用默认过滤器"
 msgid ""
 "Use to override the display value (e.g. if your progress bar is a computed "
 "percentage but you want to display the actual field value instead)."
-msgstr "用于覆盖显示值（例如，如果进度条是计算的百分比，但您想显示实际字段值）。"
+msgstr "用于覆盖显示值（例如：如果进度条是计算的百分比，但您想显示实际字段值）。"
 
 #. module: web
 #. odoo-javascript
@@ -7381,7 +7433,7 @@ msgstr "更新这些属性字段需要父文档的编辑权限"
 
 #. module: web
 #. odoo-python
-#: code:addons/web/controllers/home.py:0
+#: code:addons/web/controllers/json.py:0
 msgid "You need export permissions to use the /json route"
 msgstr "你需要有导出权限才能使用 /json 路由"
 
@@ -7512,7 +7564,7 @@ msgstr "吸收"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "access"
-msgstr "查看"
+msgstr "存取"
 
 #. module: web
 #. odoo-javascript
@@ -10305,37 +10357,37 @@ msgstr "合上的书"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "closed letterbox with lowered flag"
-msgstr "标志降低的封闭信箱"
+msgstr "没有新邮件"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "closed letterbox with raised flag"
-msgstr "带升旗的封闭信箱"
+msgstr "未读信件"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "closed mailbox with lowered flag"
-msgstr "标志降低的封闭信箱"
+msgstr "没有新邮件"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "closed mailbox with raised flag"
-msgstr "标志升起的封闭信箱"
+msgstr "期待接收邮件"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "closed postbox with lowered flag"
-msgstr "标志降低的封闭邮箱"
+msgstr "没有新邮件"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "closed postbox with raised flag"
-msgstr "标志升起的封闭邮箱"
+msgstr "期待接收邮件"
 
 #. module: web
 #. odoo-javascript
@@ -11115,13 +11167,13 @@ msgstr "卷曲的环"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "currency"
-msgstr "货币"
+msgstr "币别"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "currency exchange"
-msgstr "货币兑换"
+msgstr "币别兑换"
 
 #. module: web
 #. odoo-javascript
@@ -11265,7 +11317,7 @@ msgstr "日期"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "days"
-msgstr "天数"
+msgstr "天"
 
 #. module: web
 #. odoo-javascript
@@ -18663,37 +18715,37 @@ msgstr "张开手"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "open letterbox with lowered flag"
-msgstr "旗帜下降、打开的信箱"
+msgstr "已读邮件"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "open letterbox with raised flag"
-msgstr "旗帜上升、打开的信箱"
+msgstr "有新的邮件"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "open mailbox with lowered flag"
-msgstr "旗帜下降、打开的邮箱"
+msgstr "已读邮件"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "open mailbox with raised flag"
-msgstr "旗帜上升、打开的邮箱"
+msgstr "有新的邮件"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "open postbox with lowered flag"
-msgstr "旗帜下降、打开的邮箱"
+msgstr "已读邮件"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "open postbox with raised flag"
-msgstr "旗帜上升、打开的邮箱"
+msgstr "未读邮件"
 
 #. module: web
 #. odoo-javascript
@@ -20862,7 +20914,7 @@ msgstr "提醒"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "reminder ribbon"
-msgstr "提示丝带"
+msgstr "提醒标识"
 
 #. module: web
 #. odoo-javascript
@@ -20958,7 +21010,7 @@ msgstr "犀牛"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "ribbon"
-msgstr "丝带"
+msgstr "特别提示"
 
 #. module: web
 #. odoo-javascript
@@ -23151,7 +23203,7 @@ msgstr "有弦的"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "stripe"
-msgstr "条纹"
+msgstr "Stripe支付"
 
 #. module: web
 #. odoo-javascript

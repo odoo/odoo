@@ -32,7 +32,7 @@ async function mockLang(lang) {
 }
 
 test("lang is given by the user context", async () => {
-    onRpc("/web/webclient/translations", (request) => {
+    onRpc("/web/webclient/translations/*", (request) => {
         const urlParams = new URLSearchParams(new URL(request.url).search);
         expect.step(urlParams.get("lang"));
     });
@@ -42,7 +42,7 @@ test("lang is given by the user context", async () => {
 
 test("lang is given by an attribute on the DOM root node", async () => {
     serverState.lang = null;
-    onRpc("/web/webclient/translations", (request) => {
+    onRpc("/web/webclient/translations/*", (request) => {
         const urlParams = new URLSearchParams(new URL(request.url).search);
         expect.step(urlParams.get("lang"));
     });
@@ -60,7 +60,7 @@ test("url is given by the session", async () => {
         translationURL: "/get_translations",
     });
     onRpc(
-        "/get_translations",
+        "/get_translations/*",
         function (request) {
             expect(request.url).toInclude("/get_translations/");
             return this.mockLoadTranslations();

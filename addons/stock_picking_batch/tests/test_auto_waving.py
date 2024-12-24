@@ -367,3 +367,37 @@ class TestAutoWaving(TransactionCase):
         self.assertEqual(len(wave_8.move_line_ids), 1)
         self.assertEqual(wave_8.picking_ids.partner_id, self.fr_client)
         self.assertEqual(wave_8.move_line_ids.product_id, self.product_2)
+
+    def test_group_only_when_auto_batch_is_enable(self):
+        """ This test ensures wave grouping is only done when the `auto_batch`
+        field is true, no matter what the other fields value is."""
+        # Update quantity in stock to have enough for fullfil all pickings and their copies.
+        for location, products in [
+            [self.stock_location, [self.product_1]],
+            [self.child_location_1, [self.product_1, self.product_2, self.product_4]],
+            [self.child_location_2, [self.product_1, self.product_2]],
+            [self.grandchild_location, [self.product_1, self.product_3]],
+        ]:
+            for product in products:
+                self.env['stock.quant']._update_available_quantity(product, location, 99)
+        # Set `wave_group_by_product` on true even if `auto_batch` is false.
+        self.picking_type_out.write({
+            'auto_batch': False,
+            'batch_group_by_destination': False,
+            'batch_group_by_partner': False,
+            'batch_group_by_src_loc': False,
+            'batch_group_by_dest_loc': False,
+            'wave_group_by_category': False,
+            'wave_group_by_location': False,
+            'wave_group_by_product': True,
+        })
+        # Auto batch is disabled -> pickings' products shouldn't be batched in wave.
+        all_pickings_copy = self.all_pickings.copy()
+        all_pickings_copy.action_assign()
+        waves = self.env['stock.picking.batch'].search([('is_wave', '=', True)])
+        self.assertEqual(len(waves), 0)
+        # Set auto batch on true -> pickings' products should be batched in wave.
+        self.picking_type_out.auto_batch = True
+        self.all_pickings.action_assign()
+        waves = self.env['stock.picking.batch'].search([('is_wave', '=', True)])
+        self.assertEqual(len(waves), 4)

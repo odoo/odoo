@@ -32,7 +32,8 @@ describe("move selection with tab/shift+tab", () => {
                 `),
             });
         });
-        test.tags("iframe")("should move cursor to the end of next cell in an iframe", async () => {
+        test.tags("iframe");
+        test("should move cursor to the end of next cell in an iframe", async () => {
             await testEditor({
                 props: { iframe: true },
                 contentBefore: unformat(`

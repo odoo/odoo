@@ -22,7 +22,7 @@ class L10nARWebsiteSale(WebsiteSale):
         rendering_values = super()._prepare_address_form_values(
             *args, address_type=address_type, **kwargs
         )
-        if address_type == 'billing' and request.website.sudo().company_id.country_id.code == 'AR':
+        if (kwargs.get('use_delivery_as_billing') and address_type == 'delivery' or address_type == 'billing') and request.website.sudo().company_id.account_fiscal_country_id.code == 'AR':
             can_edit_vat = rendering_values['can_edit_vat']
             LatamIdentificationType = request.env['l10n_latam.identification.type'].sudo()
             rendering_values.update({
@@ -67,6 +67,10 @@ class L10nARWebsiteSale(WebsiteSale):
             id_type = request.env['l10n_latam.identification.type'].browse(
                 address_values.get('l10n_latam_identification_type_id')
             )
+
+            if not id_type or not afip_resp:
+                # Those two values were not provided and are not required, skip the validation
+                return invalid_fields, missing_fields, error_messages
 
             # Check if the AFIP responsibility is different from Final Consumer or Foreign Customer,
             # and if the identification type is different from CUIT

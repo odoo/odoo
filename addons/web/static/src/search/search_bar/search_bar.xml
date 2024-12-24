@@ -3,7 +3,7 @@
 
     <t t-name="web.SearchBar.Facets">
         <t t-foreach="env.searchModel.facets" t-as="facet" t-key="facet_index">
-            <div class="o_searchview_facet position-relative d-inline-flex align-items-stretch rounded-2 bg-200 text-nowrap opacity-trigger-hover"
+            <div class="o_searchview_facet position-relative d-inline-flex align-items-stretch rounded-2 bg-200 text-nowrap opacity-trigger-hover mw-100"
                 t-att-class="{o_facet_with_domain: facet.domain }"
                 role="listitem"
                 aria-label="search"
@@ -42,10 +42,10 @@
                     </span>
                 </div>
 
-                <div class="o_facet_values position-relative d-flex flex-wrap align-items-center ps-2 rounded-end-2 text-wrap">
+                <div class="o_facet_values position-relative d-flex flex-wrap align-items-center ps-2 rounded-end-2 text-wrap overflow-hidden">
                     <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
                         <em t-if="!facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-esc="facet.separator"/>
-                        <small class="o_facet_value" t-esc="facetValue"/>
+                        <small class="o_facet_value text-truncate" t-esc="facetValue" t-att-title="facetValue"/>
                     </t>
                     <button class="o_facet_remove oi oi-close btn btn-link py-0 px-2 text-danger d-print-none"
                         role="button"
@@ -102,7 +102,7 @@
     </t>
 
     <t t-name="web.SearchBar">
-        <div class="o_cp_searchview d-flex input-group mt-1 mt-md-0" role="search" t-ref="root">
+        <div t-if="visibilityState.showSearchBar" class="o_cp_searchview d-flex input-group mt-1 mt-md-0" role="search" t-ref="root">
             <div class="o_searchview form-control d-print-contents d-flex align-items-center py-1 border-end-0"
                  role="search" aria-autocomplete="list">
                 <button class="d-print-none btn border-0 p-0"
@@ -115,7 +115,7 @@
                         role="img"
                     />
                 </button>
-                <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1">
+                <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1 mw-100">
                     <t t-call="web.SearchBar.Facets"/>
                     <t t-call="web.SearchBar.Input"/>
                     <t t-if="items.length">

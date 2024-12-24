@@ -82,8 +82,8 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: '.o_kanban_quick_create .o_kanban_add',
     run: "click",
 }, {
-    trigger: '.o_kanban_group:nth-child(2) .o_kanban_header .o_kanban_config .dropdown-toggle',
-    run: "click",
+    trigger: ".o_kanban_group:nth-child(2) .o_kanban_header",
+    run: "hover && click .o_kanban_group:nth-child(2) .o_kanban_header .dropdown-toggle",
 }, {
     trigger: ".dropdown-item.o_column_edit",
     run: "click",
@@ -128,7 +128,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
     run: "edit New milestone",
 }, {
     trigger: "input[data-field=deadline]",
-    run: "edit 12/12/2099 && click body",
+    run: "edit 12/12/2099",
 }, {
     trigger: ".modal-footer .o_form_button_save",
     run: "click",

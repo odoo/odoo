@@ -103,6 +103,9 @@ export class TicketScreen extends Component {
     async onSearch(search) {
         this.state.search = search;
         this.state.page = 1;
+        if (this.state.filter == "SYNCED") {
+            await this._fetchSyncedOrders();
+        }
     }
     onClickOrder(clickedOrder) {
         this.state.selectedOrder = clickedOrder;
@@ -403,6 +406,7 @@ export class TicketScreen extends Component {
             (orders.length === 1 && orders[0].lines.length === 0) ||
             (this.ui.isSmall && order != this.state.selectedOrder) ||
             this.isDefaultOrderEmpty(order) ||
+            order.finalized ||
             order.payment_ids.some(
                 (payment) => payment.is_electronic() && payment.get_payment_status() === "done"
             ) ||

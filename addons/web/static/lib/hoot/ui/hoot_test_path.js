@@ -45,7 +45,7 @@ export class HootTestPath extends Component {
                 <t t-foreach="getTestPath()" t-as="suite" t-key="suite.id">
                     <t t-if="props.inert">
                         <span
-                            class="text-muted whitespace-nowrap font-bold p-1 select-text hidden md:inline transition-colors"
+                            class="text-muted whitespace-nowrap font-bold p-1 hidden md:inline transition-colors"
                             t-esc="suite.name"
                         />
                     </t>
@@ -53,7 +53,7 @@ export class HootTestPath extends Component {
                         <HootLink
                             type="'suite'"
                             id="suite.id"
-                            class="'hoot-link text-muted whitespace-nowrap font-bold p-1 select-text hidden md:inline transition-colors'"
+                            class="'hoot-link text-muted whitespace-nowrap font-bold p-1 hidden md:inline transition-colors'"
                             title="'Run ' + suite.fullName"
                             t-esc="suite.name"
                         />

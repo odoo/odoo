@@ -6,23 +6,22 @@ import { nextLeaf } from "@html_editor/utils/dom_info";
 import { isBlock } from "@html_editor/utils/blocks";
 
 export class FilePlugin extends Plugin {
-    static name = "file";
-    static dependencies = ["embedded_components", "dom", "selection"];
+    static id = "file";
+    static dependencies = ["embeddedComponents", "dom", "selection", "history"];
     resources = {
-        powerboxItems: [
+        user_commands: [
             {
-                category: "media",
-                name: _t("File"),
-                priority: 20,
+                id: "openMediaDialog",
+                title: _t("File"),
                 description: _t("Upload a file"),
-                fontawesome: "fa-file",
-                isAvailable: (node) => {
+                icon: "fa-file",
+                isAvailable: (selection) => {
                     return (
                         !this.config.disableFile &&
-                        !!closestElement(node, "[data-embedded='clipboard']")
+                        !closestElement(selection.anchorNode, "[data-embedded='clipboard']")
                     );
                 },
-                action: () => {
+                run: () => {
                     this.openMediaDialog({
                         noVideos: true,
                         noImages: true,
@@ -32,25 +31,23 @@ export class FilePlugin extends Plugin {
                 },
             },
         ],
+        powerbox_items: [
+            {
+                categoryId: "media",
+                commandId: "openMediaDialog",
+            },
+        ],
+        mount_component_handlers: this.setupNewFile.bind(this),
     };
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "SETUP_NEW_COMPONENT":
-                this.setupNewFile(payload);
-                break;
-        }
-        super.handleCommand(command);
-    }
 
     get recordInfo() {
         return this.config.getRecordInfo ? this.config.getRecordInfo() : {};
     }
 
     openMediaDialog(params = {}) {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const restoreSelection = () => {
-            this.shared.setSelection(selection);
+            this.dependencies.selection.setSelection(selection);
         };
         const { resModel, resId, field, type } = this.recordInfo;
         this.services.dialog.add(FileMediaDialog, {
@@ -74,8 +71,8 @@ export class FilePlugin extends Plugin {
 
     onSaveMediaDialog(element, { restoreSelection }) {
         restoreSelection();
-        this.shared.domInsert(element);
-        this.dispatch("ADD_STEP");
+        this.dependencies.dom.insert(element);
+        this.dependencies.history.addStep();
     }
 
     setupNewFile({ name, env }) {
@@ -90,7 +87,7 @@ export class FilePlugin extends Plugin {
                             }
                             const leafEl = isBlock(leaf) ? leaf : leaf.parentElement;
                             if (isBlock(leafEl) && leafEl.isContentEditable) {
-                                this.shared.setSelection({
+                                this.dependencies.selection.setSelection({
                                     anchorNode: leafEl,
                                     anchorOffset: 0,
                                 });

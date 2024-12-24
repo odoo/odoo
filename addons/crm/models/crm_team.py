@@ -227,7 +227,7 @@ class Team(models.Model):
         :return action: a client notification giving some insights on assign
           process;
         """
-        teams_data, members_data = self._action_assign_leads(force_quota=True)
+        teams_data, members_data = self._action_assign_leads(force_quota=True, creation_delta_days=0)
 
         # format result messages
         logs = self._action_assign_leads_logs(teams_data, members_data)

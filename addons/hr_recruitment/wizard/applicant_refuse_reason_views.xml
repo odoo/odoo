@@ -10,21 +10,27 @@
                         <group invisible="not refuse_reason_id">
                             <label for="send_mail" class="me-2" invisible="not refuse_reason_id"/>
                             <div class="d-flex">
-                                <field name="send_mail"/>
+                                <field name="send_mail" readonly="applicant_ids.length > 1 and applicant_without_email"/>
                                 <span class="mx-2" style="padding-top: 1px; padding-bottom: 1px;">to</span>
                                 <field name="applicant_emails" invisible="applicant_ids.length == 1"/>
-                                <field name="single_applicant_email" placeholder="Provide an email" invisible="applicant_ids.length != 1"/>
+                                <field
+                                    name="single_applicant_email"
+                                    placeholder="Provide an email"
+                                    invisible="applicant_ids.length != 1"
+                                    required="applicant_ids.length == 1 and send_mail"/>
+                            </div>
+                            <field name="template_id" invisible="not send_mail" required="send_mail"/>
+                            <label for="duplicates" invisible="duplicates_count == 0"/>
+                            <div class="d-flex" invisible="duplicates_count == 0">
+                                <field name="duplicates" nolabel="1"/>
+                                <span>Refuse the<field name="duplicates_count" class="oe_inline mx-1"/>other application(s)</span>
                             </div>
                         </group>
-                        <field name="template_id" invisible="not send_mail" required="send_mail"/>
-                        <field name="applicant_ids" invisible="1"/>
-                        <label for="duplicates" invisible="duplicates_count == 0"/>
-                        <div class="o_row" invisible="duplicates_count == 0">
-                          <field name="duplicates" nolabel="1"/>
-                             <span>Refuse the <field name="duplicates_count" class="oe_inline"/> other application(s)</span>
-                        </div>
                     </group>
-                    <div class="alert alert-danger" role="alert" invisible="not applicant_without_email">
+                    <div
+                        class="alert alert-danger"
+                        role="alert"
+                        invisible="applicant_ids.length == 1 or not applicant_without_email or not refuse_reason_id">
                         <field name="applicant_without_email" class="mr4"/>
                     </div>
                     <footer>

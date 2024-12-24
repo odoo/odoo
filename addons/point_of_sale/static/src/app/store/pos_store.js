@@ -3,6 +3,7 @@
 import { Mutex } from "@web/core/utils/concurrency";
 import { markRaw } from "@odoo/owl";
 import { floatIsZero } from "@web/core/utils/numbers";
+import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { deduceUrl, random5Chars, uuidv4, getOnNotified } from "@point_of_sale/utils";
@@ -34,6 +35,7 @@ import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
 import { ClosePosPopup } from "../navbar/closing_popup/closing_popup";
+import { user } from "@web/core/user";
 
 const { DateTime } = luxon;
 
@@ -233,9 +235,10 @@ export class PosStore extends Reactive {
         this.config = this.data.models["pos.config"].getFirst();
         this.company = this.data.models["res.company"].getFirst();
         this.user = this.data.models["res.users"].getFirst();
-        this.currency = this.data.models["res.currency"].getFirst();
+        this.currency = this.config.currency_id;
         this.pickingType = this.data.models["stock.picking.type"].getFirst();
         this.models = this.data.models;
+        this.models["pos.session"].getFirst().login_number = parseInt(odoo.login_number);
 
         // Check cashier
         this.checkPreviousLoggedCashier();
@@ -530,6 +533,7 @@ export class PosStore extends Reactive {
         }
 
         const openOrders = this.data.models["pos.order"].filter((order) => !order.finalized);
+        this.syncAllOrders();
 
         if (!this.config.module_pos_restaurant) {
             this.selectedOrderUuid = openOrders.length
@@ -636,6 +640,7 @@ export class PosStore extends Reactive {
         if (!order) {
             order = this.add_new_order();
         }
+        this.addPendingOrder([order.id]);
         return await this.addLineToOrder(vals, order, opts, configure);
     }
 
@@ -797,8 +802,8 @@ export class PosStore extends Reactive {
         // It will return an instance of pos.pack.operation.lot
         // ---
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
-        if (values.product_id.isTracked() && configure) {
-            const code = opts.code;
+        const code = opts.code;
+        if (values.product_id.isTracked() && (configure || code)) {
             let pack_lot_ids = {};
             const packLotLinesToEdit =
                 (!values.product_id.isAllowOnlyOneLot() &&
@@ -847,10 +852,9 @@ export class PosStore extends Reactive {
                     ScaleScreen,
                     this.scaleData
                 );
-                if (!weight) {
-                    return;
+                if (weight) {
+                    values.qty = weight;
                 }
-                values.qty = weight;
                 this.isScaleScreenVisible = false;
                 this.scaleWeight = 0;
                 this.scaleTare = 0;
@@ -1485,7 +1489,11 @@ export class PosStore extends Reactive {
         const baseUrl = this.session._base_url;
         return order.export_for_printing(baseUrl, headerData);
     }
-    async printReceipt({ basic = false, order = this.get_order() } = {}) {
+    async printReceipt({
+        basic = false,
+        order = this.get_order(),
+        printBillActionTriggered = false,
+    } = {}) {
         await this.printer.print(
             OrderReceipt,
             {
@@ -1495,8 +1503,10 @@ export class PosStore extends Reactive {
             },
             { webPrintFallback: true }
         );
-        const nbrPrint = order.nb_print;
-        await this.data.write("pos.order", [order.id], { nb_print: nbrPrint + 1 });
+        if (!printBillActionTriggered) {
+            const nbrPrint = order.nb_print;
+            await this.data.write("pos.order", [order.id], { nb_print: nbrPrint + 1 });
+        }
         return true;
     }
     getOrderChanges(skipped = false, order = this.get_order()) {
@@ -1506,26 +1516,13 @@ export class PosStore extends Reactive {
     async sendOrderInPreparation(order, cancelled = false) {
         if (this.printers_category_ids_set.size) {
             try {
-                const changes = changesToOrder(
+                const orderChange = changesToOrder(
                     order,
                     false,
                     this.orderPreparationCategories,
                     cancelled
                 );
-                if (changes.cancelled.length > 0 || changes.new.length > 0) {
-                    const isPrintSuccessful = await order.printChanges(
-                        false,
-                        this.orderPreparationCategories,
-                        cancelled,
-                        this.unwatched.printers
-                    );
-                    if (!isPrintSuccessful) {
-                        this.dialog.add(AlertDialog, {
-                            title: _t("Printing failed"),
-                            body: _t("Failed in printing the changes in the order"),
-                        });
-                    }
-                }
+                this.printChanges(order, orderChange);
             } catch (e) {
                 console.info("Failed in printing the changes in the order", e);
             }
@@ -1539,11 +1536,153 @@ export class PosStore extends Reactive {
 
         if (order) {
             await this.sendOrderInPreparation(order, cancelled);
-            order.updateLastOrderChange();
+            const getOrder = (uuid) => this.models["pos.order"].getBy("uuid", uuid);
+            getOrder(uuid).updateLastOrderChange();
             this.addPendingOrder([order.id]);
             await this.syncAllOrders();
+            getOrder(uuid).updateSavedQuantity();
         }
     }
+
+    async printChanges(order, orderChange) {
+        const unsuccedPrints = [];
+        const lastChangedLines = order.last_order_preparation_change.lines;
+        orderChange.new.sort((a, b) => {
+            const sequenceA = a.pos_categ_sequence;
+            const sequenceB = b.pos_categ_sequence;
+            if (sequenceA === 0 && sequenceB === 0) {
+                return a.pos_categ_id - b.pos_categ_id;
+            }
+
+            return sequenceA - sequenceB;
+        });
+
+        for (const printer of this.unwatched.printers) {
+            const changes = this._getPrintingCategoriesChanges(
+                printer.config.product_categories_ids,
+                orderChange
+            );
+            const diningModeUpdate = orderChange.modeUpdate;
+            if (diningModeUpdate || !Object.keys(lastChangedLines).length) {
+                const printed = await this.printReceipts(
+                    order,
+                    printer,
+                    "New",
+                    changes.new,
+                    true,
+                    diningModeUpdate
+                );
+                if (!printed) {
+                    unsuccedPrints.push("Detailed Receipt");
+                }
+            } else {
+                // Print all receipts related to line changes
+                const toPrintArray = this.preparePrintingData(order, changes);
+                for (const [key, value] of Object.entries(toPrintArray)) {
+                    const printed = await this.printReceipts(order, printer, key, value, false);
+                    if (!printed) {
+                        unsuccedPrints.push(key);
+                    }
+                }
+                // Print Order Note if changed
+                if (orderChange.generalNote) {
+                    const printed = await this.printReceipts(order, printer, "Message", []);
+                    if (!printed) {
+                        unsuccedPrints.push("General Message");
+                    }
+                }
+            }
+        }
+
+        // printing errors
+        if (unsuccedPrints.length) {
+            const failedReceipts = unsuccedPrints.join(", ");
+            this.dialog.add(AlertDialog, {
+                title: _t("Printing failed"),
+                body: _t("Failed in printing %s changes of the order", failedReceipts),
+            });
+        }
+    }
+
+    async printReceipts(order, printer, title, lines, fullReceipt = false, diningModeUpdate) {
+        let time;
+        if (order.write_date) {
+            time = order.write_date?.split(" ")[1].split(":");
+            time = time[0] + "h" + time[1];
+        }
+
+        const printingChanges = {
+            table_name: order.table_id ? order.table_id.table_number : "",
+            config_name: order.config.name,
+            time: order.write_date ? time : "",
+            tracking_number: order.tracking_number,
+            takeaway: order.config.takeaway && order.takeaway,
+            employee_name: order.employee_id?.name || order.user_id?.name,
+            order_note: order.general_note,
+            diningModeUpdate: diningModeUpdate,
+        };
+
+        const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
+            operational_title: title,
+            changes: printingChanges,
+            changedlines: lines,
+            fullReceipt: fullReceipt,
+        });
+        const result = await printer.printReceipt(receipt);
+        return result.successful;
+    }
+
+    preparePrintingData(order, changes) {
+        const order_modifications = {};
+        const pdisChangedLines = order.last_order_preparation_change.lines;
+
+        if (changes["new"].length) {
+            order_modifications["New"] = changes["new"];
+        }
+        if (changes["noteUpdated"].length) {
+            order_modifications["Note"] = changes["noteUpdated"];
+        }
+        // Handle removed lines
+        if (changes["cancelled"].length) {
+            if (changes["new"].length) {
+                order_modifications["Cancelled"] = changes["cancelled"];
+            } else {
+                const allCancelled = changes["cancelled"].every((line) => {
+                    const pdisLine = pdisChangedLines[line.uuid + " - " + line.note];
+                    return !pdisLine || pdisLine.quantity <= line.quantity;
+                });
+                if (
+                    allCancelled &&
+                    Object.keys(pdisChangedLines).length == changes["cancelled"].length
+                ) {
+                    order_modifications["Cancel"] = changes["cancelled"];
+                } else {
+                    order_modifications["Cancelled"] = changes["cancelled"];
+                }
+            }
+        }
+        return order_modifications;
+    }
+
+    _getPrintingCategoriesChanges(categories, currentOrderChange) {
+        const filterFn = (change) => {
+            const product = this.models["product.product"].get(change["product_id"]);
+            const categoryIds = product.parentPosCategIds;
+
+            for (const categoryId of categoryIds) {
+                if (categories.includes(categoryId)) {
+                    return true;
+                }
+            }
+        };
+
+        return {
+            new: currentOrderChange["new"].filter(filterFn),
+            cancelled: currentOrderChange["cancelled"].filter(filterFn),
+            noteUpdated: currentOrderChange["noteUpdated"].filter(filterFn),
+        };
+    }
+
     closeScreen() {
         this.addOrderIfEmpty();
         const { name: screenName } = this.get_order().get_screen_data();
@@ -1627,6 +1766,9 @@ export class PosStore extends Reactive {
             }
         );
     }
+    async allowProductCreation() {
+        return await user.hasGroup("base.group_system");
+    }
     async orderDetails(order) {
         this.dialog.add(FormViewDialog, {
             resModel: "pos.order",
@@ -1707,10 +1849,16 @@ export class PosStore extends Reactive {
 
         let existingLots = [];
         try {
-            existingLots = await this.data.call("pos.order.line", "get_existing_lots", [
-                this.company.id,
-                product.id,
-            ]);
+            existingLots = await this.data.call(
+                "pos.order.line",
+                "get_existing_lots",
+                [this.company.id, product.id],
+                {
+                    context: {
+                        config_id: this.config.id,
+                    },
+                }
+            );
             if (!canCreateLots && (!existingLots || existingLots.length === 0)) {
                 this.dialog.add(AlertDialog, {
                     title: _t("No existing serial/lot number"),
@@ -1842,7 +1990,7 @@ export class PosStore extends Reactive {
     getReceiptHeaderData(order) {
         return {
             company: this.company,
-            cashier: _t("Served by %s", this.get_cashier()?.name),
+            cashier: _t("Served by %s", order?.getCashierName() || this.get_cashier()?.name),
             header: this.config.receipt_header,
         };
     }
@@ -1853,8 +2001,8 @@ export class PosStore extends Reactive {
             qr = await this.data.call("pos.payment.method", "get_qr_code", [
                 [payment.payment_method_id.id],
                 payment.amount,
-                payment.pos_order_id.name,
-                payment.pos_order_id.name,
+                payment.pos_order_id.name + " " + payment.pos_order_id.tracking_number,
+                "",
                 this.currency.id,
                 payment.pos_order_id.partner_id?.id,
             ]);
@@ -1896,14 +2044,7 @@ export class PosStore extends Reactive {
             if (this._shouldLoadOrders()) {
                 try {
                     this.setLoadingOrderState(true);
-                    const orders = await this.getServerOrders();
-                    if (orders && orders.length > 0) {
-                        const message = _t(
-                            "%s orders have been loaded from the server. ",
-                            orders.length
-                        );
-                        this.notification.add(message);
-                    }
+                    await this.getServerOrders();
                 } finally {
                     this.setLoadingOrderState(false);
                     this.showScreen("TicketScreen");
@@ -1928,6 +2069,14 @@ export class PosStore extends Reactive {
 
     getDisplayDeviceIP() {
         return this.config.proxy_ip;
+    }
+
+    isProductVariant(product) {
+        return (
+            this.models["product.product"].filter(
+                (p) => p.raw.product_tmpl_id === product.raw.product_tmpl_id
+            ).length > 1
+        );
     }
 }
 

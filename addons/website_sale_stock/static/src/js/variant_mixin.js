@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
-import publicWidget from "@web/legacy/js/public/public_widget";
 import { renderToFragment } from "@web/core/utils/render";
 import { formatFloat } from "@web/core/utils/numbers";
 
-import "@website_sale/js/website_sale";
 
 import { markup } from "@odoo/owl";
 
@@ -85,27 +83,5 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         combination
     ));
 };
-
-publicWidget.registry.WebsiteSale.include({
-    /**
-     * Adds the stock checking to the regular _onChangeCombination method
-     * @override
-     */
-    _onChangeCombination: function () {
-        this._super.apply(this, arguments);
-        VariantMixin._onChangeCombinationStock.apply(this, arguments);
-    },
-    /**
-     * Recomputes the combination after adding a product to the cart
-     * @override
-     */
-    _onClickAdd(ev) {
-        return this._super.apply(this, arguments).then(() => {
-            if ($('div.availability_messages').length) {
-                this._getCombinationInfo(ev);
-            }
-        });
-    }
-});
 
 export default VariantMixin;

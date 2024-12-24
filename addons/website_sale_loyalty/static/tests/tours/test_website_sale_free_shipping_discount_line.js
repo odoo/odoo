@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add('check_shipping_discount', {
         wsTourUtils.goToCheckout(),
         {
             content: "select delivery2",
-            trigger: 'li label:contains(delivery2)',
+            trigger: 'li[name=o_delivery_method]:contains(delivery2) input',
             run: "click",
         },
         {
@@ -57,16 +57,16 @@ registry.category("web_tour.tours").add('check_shipping_discount', {
         },
         {
             content: "check eWallet discount",
-            trigger: '[data-reward-type=discount] .oe_currency_value:contains(- 349.60)',
+            trigger: "[data-reward-type=discount] .oe_currency_value:contains(- 304.00)",
         },
         {
             content: "select delivery1",
-            trigger: 'li label:contains(delivery1)',
+            trigger: 'li[name=o_delivery_method]:contains(delivery1) input',
             run: 'click',
         },
         {
             content: "check for eWallet update after shipping cost change",
-            trigger: '[data-reward-type=discount] .oe_currency_value:contains(- 345.00)',
+            trigger: "[data-reward-type=discount] .oe_currency_value:contains(- 300.00)",
         },
         {
             content: "check if new delivery price is correct",

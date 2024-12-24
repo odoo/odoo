@@ -1286,7 +1286,7 @@ describe(`new urls`, () => {
         ]);
         expect(`.o-overlay-container .dropdown-menu a`).toHaveAttribute(
             "data-tooltip",
-            'Back to "Partners Action 27"'
+            "Back to “Partners Action 27”"
         );
         expect(queryAllAttributes(".o_breadcrumb li.breadcrumb-item a", "data-tooltip")).toEqual([
             'Back to "Second record" form',

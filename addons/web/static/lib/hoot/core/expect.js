@@ -283,15 +283,6 @@ const regexMatchOrStrictEqual = (value, matcher) =>
     matcher instanceof RegExp ? matcher.test(value) : strictEqual(value, matcher);
 
 /**
- * @param {TestResult} result
- * @param {Assertion} assertion
- */
-const registerAssertion = (result, assertion) => {
-    result.assertions.push(assertion);
-    result.pass &&= assertion.pass;
-};
-
-/**
  * @param {number} value
  * @param {number} digits
  */
@@ -330,7 +321,7 @@ export function makeExpect(params) {
     function afterTest(options) {
         const { test } = currentResult;
 
-        currentResult.duration = $now() - currentResult.ts;
+        currentResult.done();
 
         // Expect without matchers
         if (unconsumedMatchers.size) {
@@ -345,115 +336,91 @@ export function makeExpect(params) {
                 default:
                     times = [unconsumedMatchers.size, r`times`];
             }
-            registerAssertion(
-                currentResult,
-                new Assertion({
-                    label: "expect",
-                    message: [r`called`, ...times, r`without calling any matchers`],
-                    pass: false,
-                })
-            );
+            currentResult.registerAssertion({
+                label: "expect",
+                message: [r`called`, ...times, r`without calling any matchers`],
+                pass: false,
+            });
             unconsumedMatchers.clear();
         }
 
         // Steps
         if (currentResult.steps.length) {
-            registerAssertion(
-                currentResult,
-                new Assertion({
-                    label: "step",
-                    message: "unverified steps",
-                    pass: false,
-                    failedDetails: [Markup.red("Steps:", currentResult.steps)],
-                })
-            );
+            currentResult.registerAssertion({
+                label: "step",
+                message: "unverified steps",
+                pass: false,
+                failedDetails: [Markup.red("Steps:", currentResult.steps)],
+            });
         }
 
         // Assertions count
         if (!currentResult.assertions.length) {
-            registerAssertion(
-                currentResult,
-                new Assertion({
-                    label: "assertions",
-                    message: [r`expected at least`, 1, r`assertion, but none were run`],
-                    pass: false,
-                })
-            );
+            currentResult.registerAssertion({
+                label: "assertions",
+                message: [r`expected at least`, 1, r`assertion, but none were run`],
+                pass: false,
+            });
         } else if (
             currentResult.expectedAssertions &&
             currentResult.assertions.length !== currentResult.expectedAssertions
         ) {
-            registerAssertion(
-                currentResult,
-                new Assertion({
-                    label: "assertions",
-                    message: [
-                        r`expected`,
-                        currentResult.expectedAssertions,
-                        r`assertions, but`,
-                        currentResult.assertions.length,
-                        r`were run`,
-                    ],
-                    pass: false,
-                })
-            );
+            currentResult.registerAssertion({
+                label: "assertions",
+                message: [
+                    r`expected`,
+                    currentResult.expectedAssertions,
+                    r`assertions, but`,
+                    currentResult.assertions.length,
+                    r`were run`,
+                ],
+                pass: false,
+            });
         }
 
         // Errors count
         const errorCount = currentResult.caughtErrors;
         if (currentResult.expectedErrors) {
             if (currentResult.expectedErrors !== errorCount) {
-                registerAssertion(
-                    currentResult,
-                    new Assertion({
-                        label: "errors",
-                        message: [
-                            r`expected`,
-                            currentResult.expectedErrors,
-                            r`errors, but`,
-                            errorCount,
-                            r`were thrown`,
-                        ],
-                        pass: false,
-                    })
-                );
+                currentResult.registerAssertion({
+                    label: "errors",
+                    message: [
+                        r`expected`,
+                        currentResult.expectedErrors,
+                        r`errors, but`,
+                        errorCount,
+                        r`were thrown`,
+                    ],
+                    pass: false,
+                });
             }
         } else if (errorCount) {
-            registerAssertion(
-                currentResult,
-                new Assertion({
-                    label: "errors",
-                    message: [errorCount, r`unverified error(s)`],
-                    pass: false,
-                })
-            );
+            currentResult.registerAssertion({
+                label: "errors",
+                message: [errorCount, r`unverified error(s)`],
+                pass: false,
+            });
         }
 
         // "Todo" tag
         if (test?.config.todo) {
             if (currentResult.pass) {
-                registerAssertion(
-                    currentResult,
-                    new Assertion({
-                        label: "TODO",
-                        message: `all assertions passed: remove "todo" test modifier`,
-                        pass: false,
-                    })
-                );
+                currentResult.registerAssertion({
+                    label: "TODO",
+                    message: `all assertions passed: remove "todo" test modifier`,
+                    pass: false,
+                });
             } else {
                 currentResult.pass = true;
             }
         }
 
         if (options?.aborted) {
-            registerAssertion(
-                currentResult,
-                new Assertion({
-                    label: "aborted",
-                    message: "test was aborted, results may not be relevant",
-                    pass: false,
-                })
-            );
+            currentResult.registerAssertion({
+                label: "aborted",
+                message: "test was aborted, results may not be relevant",
+                pass: false,
+            });
         }
 
         if (test) {
@@ -510,12 +477,12 @@ export function makeExpect(params) {
      */
     function beforeTest(test) {
         if (test) {
-            test.results.push(new TestResult(test));
+            test.results.push(new CaseResult(test));
 
             // Must be retrieved from the list to be proxified
             currentResult = test.results.at(-1);
         } else {
-            currentResult = new TestResult();
+            currentResult = new CaseResult();
         }
     }
 
@@ -539,7 +506,7 @@ export function makeExpect(params) {
             throw scopeError("expect.step");
         }
 
-        currentResult.steps.push(deepCopy(value));
+        currentResult.registerStep(value);
     }
 
     /**
@@ -557,8 +524,7 @@ export function makeExpect(params) {
         }
         ensureArguments(arguments, "any[]");
 
-        const actualErrors = currentResult.errors;
-        currentResult.errors = [];
+        const actualErrors = currentResult.consumeErrors();
         const pass =
             actualErrors.length === errors.length &&
             actualErrors.every(
@@ -571,12 +537,11 @@ export function makeExpect(params) {
                 ? listJoin(errors, "->")
                 : "no errors"
             : "expected the following errors";
-        const assertion = new Assertion({
+        const assertion = {
             label: "verifyErrors",
             message,
             pass,
-        });
-
+        };
         if (!pass) {
             const fActual = actualErrors.map(formatError);
             const fExpected = errors.map(formatError);
@@ -586,8 +551,7 @@ export function makeExpect(params) {
                 Markup.red("Source:", Markup.text(formattedStack, { technical: true })),
             ];
         }
-
-        registerAssertion(currentResult, assertion);
+        currentResult.registerAssertion(assertion);
     }
 
     /**
@@ -605,20 +569,18 @@ export function makeExpect(params) {
         }
         ensureArguments(arguments, "any[]");
 
-        const actualSteps = currentResult.steps;
-        currentResult.steps = [];
+        const actualSteps = currentResult.consumeSteps();
         const pass = deepEqual(actualSteps, steps);
         const message = pass
             ? steps.length
                 ? listJoin(steps, "->")
                 : "no steps"
             : "expected the following steps";
-        const assertion = new Assertion({
+        const assertion = {
             label: "verifySteps",
             message,
             pass,
-        });
-
+        };
         if (!pass) {
             const formattedStack = formatStack(new Error().stack);
             assertion.failedDetails = [
@@ -626,8 +588,7 @@ export function makeExpect(params) {
                 Markup.red("Source:", Markup.text(formattedStack, { technical: true })),
             ];
         }
-
-        registerAssertion(currentResult, assertion);
+        currentResult.registerAssertion(assertion);
     }
 
     /**
@@ -641,7 +602,7 @@ export function makeExpect(params) {
      * @template [R=unknown]
      * @param {R} received
      * @example
-     *  expect([1, 2, 3]).toEqual(1, 2, 3);
+     *  expect([1, 2, 3]).toEqual([1, 2, 3]);
      */
     function expect(received) {
         if (arguments.length > 1) {
@@ -667,7 +628,7 @@ export function makeExpect(params) {
         before: beforeTest,
     };
 
-    /** @type {TestResult | null} */
+    /** @type {CaseResult | null} */
     let currentResult = null;
 
     return [enrichedExpect, expectHooks];
@@ -735,6 +696,76 @@ export class Assertion {
     }
 }
 
+export class CaseResult {
+    duration = 0;
+    pass = true;
+    /** @type {Test | null} */
+    test = null;
+    ts = $now();
+
+    // Assertions
+    /** @type {Assertion[]} */
+    assertions = [];
+    expectedAssertions = 0;
+    /** @type {any[]} */
+    steps = [];
+
+    // Errors
+    caughtErrors = 0;
+    /** @type {Error[]} */
+    errors = [];
+    expectedErrors = 0;
+
+    /**
+     * @param {Test | null} [test]
+     */
+    constructor(test) {
+        if (test) {
+            this.test = test;
+        }
+    }
+
+    consumeErrors() {
+        const errors = this.errors;
+        this.errors = [];
+        return errors;
+    }
+
+    consumeSteps() {
+        const steps = this.steps;
+        this.steps = [];
+        return steps;
+    }
+
+    done() {
+        this.duration = $now() - this.ts;
+    }
+
+    /**
+     * @param {Partial<Assertion>} assertionSpecs
+     */
+    registerAssertion(assertionSpecs) {
+        const assertion = new Assertion(assertionSpecs);
+        this.assertions.push(assertion);
+        this.pass &&= assertion.pass;
+    }
+
+    /**
+     * @param {Error} error
+     */
+    registerError(error) {
+        this.errors.push(error);
+        this.caughtErrors++;
+    }
+
+    /**
+     * @param {any} value
+     */
+    registerStep(value) {
+        this.steps.push(deepCopy(value));
+    }
+}
+
 /**
  * @template R
  * @template [A=R]
@@ -748,7 +779,7 @@ export class Matcher {
     _received = null;
     /**
      * @private
-     * @type {TestResult}
+     * @type {CaseResult}
      */
     _result;
     /**
@@ -766,7 +797,7 @@ export class Matcher {
     };
 
     /**
-     * @param {TestResult} result
+     * @param {CaseResult} result
      * @param {R} received
      * @param {Modifiers<Async>} modifiers
      * @param {boolean} headless
@@ -1976,17 +2007,14 @@ export class Matcher {
                 /** @param {PromiseFulfilledResult<R>} reason */
                 (result) => {
                     if (this._modifiers.rejects) {
-                        registerAssertion(
-                            this._result,
-                            new Assertion({
-                                label: "rejects",
-                                message: [
-                                    r`expected promise to reject, instead resolved with:`,
-                                    result,
-                                ],
-                                pass: false,
-                            })
-                        );
+                        this._result.registerAssertion({
+                            label: "rejects",
+                            message: [
+                                r`expected promise to reject, instead resolved with:`,
+                                result,
+                            ],
+                            pass: false,
+                        });
                     } else {
                         this._received = result;
                         this._resolveFinalResult(specCallback);
@@ -1995,17 +2023,14 @@ export class Matcher {
                 /** @param {PromiseRejectedResult} reason */
                 (reason) => {
                     if (this._modifiers.resolves) {
-                        registerAssertion(
-                            this._result,
-                            new Assertion({
-                                label: "resolves",
-                                message: [
-                                    r`expected promise to resolve, instead rejected with:`,
-                                    reason,
-                                ],
-                                pass: false,
-                            })
-                        );
+                        this._result.registerAssertion({
+                            label: "resolves",
+                            message: [
+                                r`expected promise to resolve, instead rejected with:`,
+                                reason,
+                            ],
+                            pass: false,
+                        });
                     } else {
                         this._received = reason;
                         this._resolveFinalResult(specCallback);
@@ -2041,13 +2066,12 @@ export class Matcher {
         if (not) {
             pass = !pass;
         }
-
-        const assertion = new Assertion({
+        const assertion = {
             label: name,
             message,
             modifiers: this._modifiers,
             pass,
-        });
+        };
         if (!pass) {
             const formattedStack = formatStack(currentStack);
             assertion.failedDetails = [
@@ -2055,8 +2079,7 @@ export class Matcher {
                 Markup.red("Source:", Markup.text(formattedStack, { technical: true })),
             ].filter(Boolean);
         }
-
-        registerAssertion(this._result, assertion);
+        this._result.registerAssertion(assertion);
     }
 
     /**
@@ -2104,31 +2127,5 @@ export class Matcher {
                     elMap.getValues((val) => detailsFromValuesWithDiff(expected, val)),
             };
         });
-    }
-}
-
-export class TestResult {
-    /** @type {Assertion[]} */
-    assertions = [];
-    caughtErrors = 0;
-    duration = 0;
-    /** @type {Error[]} */
-    errors = [];
-    expectedAssertions = 0;
-    expectedErrors = 0;
-    pass = true;
-    /** @type {string[]} */
-    steps = [];
-    /** @type {Test | null} */
-    test = null;
-    ts = $now();
-
-    /**
-     * @param {Test | null} [test]
-     */
-    constructor(test) {
-        if (test) {
-            this.test = test;
-        }
     }
 }

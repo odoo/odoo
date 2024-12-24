@@ -19,7 +19,6 @@ $o-discuss-talkingColor: lighten($success, 5%);
     background-color: var(--o-discuss-badge-bg) !important;
     align-items: center;
     justify-content: center;
-    min-width: 2.1ch;
 
     &.o-muted {
         --o-discuss-badge-bg: #{$gray-400};
@@ -32,7 +31,7 @@ $o-discuss-talkingColor: lighten($success, 5%);
 }
 
 .o-discuss-separator {
-    opacity: $hr-opacity / 2;
+    opacity: $hr-opacity / 3;
 }
 
 .o-discuss-badge, .o-discuss-badgeShape {
@@ -48,6 +47,15 @@ $o-discuss-talkingColor: lighten($success, 5%);
 
 .o-min-width-0 {
     min-width: 0;
+}
+
+.o-gap-0_5 {
+    gap: map-get($spacers, 1) / 2;
+}
+
+.o-py-0_5 {
+    padding-top: map-get($spacers, 1) / 2;
+    padding-bottom: map-get($spacers, 1) / 2;
 }
 
 .o-hover-text-underline:hover {
@@ -110,6 +118,7 @@ a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention {
     padding: 0rem 0.1875rem;
     border: 1px solid;
     font-weight: $font-weight-bold;
+    display: inline-block;
 }
 
 a.o_mail_redirect, a.o_channel_redirect {
@@ -166,5 +175,5 @@ a.o-discuss-mention {
 
 .o-mail-Discuss-threadActionPopover {
     width: Min(95vw, 400px);
-    max-height: Min(calc(100vh - 140px), 530px);
+    max-height: Min(50vh, 530px);
 }

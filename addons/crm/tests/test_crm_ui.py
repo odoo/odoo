@@ -8,6 +8,11 @@ from odoo.tests.common import tagged
 @tagged('post_install', '-at_install')
 class TestUi(HttpCase, TestCrmCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.ref('base.user_admin').tour_enabled = False
+
     def test_01_crm_tour(self):
         # TODO: The tour is raising a JS error when selecting Brandon Freeman
         # but with the demo data it succeeds to continue if there is already another lead

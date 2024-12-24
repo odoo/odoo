@@ -86,7 +86,10 @@ class Pony extends models.Model {
         { id: 9, name: "Fluttershy" },
     ];
     _views = {
-        "list,false": `<list><field name="name"/></list>`,
+        "list,false": `<list>
+                            <field name="name"/>
+                            <button name="action_test" type="object" string="Action Test" column_invisible="not context.get('display_button')"/>
+                        </list>`,
         "kanban,false": `<kanban>
                             <templates>
                                 <t t-name="card">
@@ -137,6 +140,18 @@ defineActions([
             [false, "form"],
         ],
     },
+    {
+        id: 4,
+        xml_id: "action_4",
+        name: "Ponies",
+        res_model: "pony",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "list"],
+            [false, "kanban"],
+            [false, "form"],
+        ],
+    },
 ]);
 
 defineEmbeddedActions([
@@ -148,6 +163,9 @@ defineEmbeddedActions([
         type: "ir.embedded.actions",
         parent_action_id: 1,
         action_id: 3,
+        context: {
+            display_button: true,
+        },
     },
     {
         id: 3,
@@ -157,12 +175,19 @@ defineEmbeddedActions([
         parent_action_id: 1,
         python_method: "do_python_method",
     },
+    {
+        id: 4,
+        name: "Custom Embedded Action 4",
+        type: "ir.embedded.actions",
+        user_id: user.userId,
+        parent_action_id: 4,
+        action_id: 4,
+    },
 ]);
 
 test("can display embedded actions linked to the current action", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    browser.localStorage.clear();
     expect(".o_control_panel").toHaveCount(1, { message: "should have rendered a control panel" });
     expect(".o_kanban_view").toHaveCount(1, { message: "should have rendered a kanban view" });
     expect(".o_control_panel_navigation > button > i.fa-sliders").toHaveCount(1, {
@@ -179,7 +204,6 @@ test("can display embedded actions linked to the current action", async () => {
 test("can toggle visibility of embedded actions", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    browser.localStorage.clear();
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
     await contains(".o_embedded_actions .dropdown").click();
     expect(".o_popover.dropdown-menu .dropdown-item").toHaveCount(4, {
@@ -199,7 +223,6 @@ test("can toggle visibility of embedded actions", async () => {
 test("can click on a embedded action and execute the corresponding action (with xml_id)", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    browser.localStorage.clear();
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
     await contains(".o_embedded_actions .dropdown").click();
     await contains(
@@ -229,7 +252,6 @@ test("can click on a embedded action and execute the corresponding action (with 
         };
     });
     await getService("action").doAction(1);
-    browser.localStorage.clear();
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
     await contains(".o_embedded_actions .dropdown").click();
     await contains(
@@ -259,7 +281,6 @@ test("breadcrumbs are updated when clicking on embeddeds", async () => {
         };
     });
     await getService("action").doAction(1);
-    browser.localStorage.clear();
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
     await contains(".o_embedded_actions .dropdown").click();
     await contains(
@@ -306,7 +327,6 @@ test("a view coming from a embedded can be saved in the embedded actions", async
     });
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    browser.localStorage.clear();
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
     await contains(".o_embedded_actions .dropdown").click();
     await contains(
@@ -365,7 +385,6 @@ test("a view coming from a embedded with python_method can be saved in the embed
     });
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    browser.localStorage.clear();
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
     await contains(".o_embedded_actions .dropdown").click();
     await contains(
@@ -397,7 +416,6 @@ test("a view coming from a embedded with python_method can be saved in the embed
 test("the embedded actions should not be displayed when switching view", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    browser.localStorage.clear();
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
     await contains(".o_embedded_actions .dropdown").click();
     await contains(
@@ -414,7 +432,6 @@ test("the embedded actions should not be displayed when switching view", async (
 test("User can move the main (first) embedded action", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    browser.localStorage.clear();
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
     await contains(".o_embedded_actions .dropdown").click();
     await contains(
@@ -432,7 +449,6 @@ test("User can move the main (first) embedded action", async () => {
 test("User can unselect the main (first) embedded action", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    browser.localStorage.clear();
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
     await contains(".o_embedded_actions .dropdown").click();
     const dropdownItem =
@@ -448,7 +464,6 @@ test("User can unselect the main (first) embedded action", async () => {
 
 test("User should be redirected to the first embedded action set in localStorage", async () => {
     await mountWithCleanup(WebClient);
-    browser.localStorage.clear();
     browser.localStorage.setItem(`orderEmbedded1++${user.userId}`, JSON.stringify([2, false, 3])); // set embedded action 2 in first
     await getService("action").doActionButton({
         name: 1,
@@ -462,6 +477,60 @@ test("User should be redirected to the first embedded action set in localStorage
         message: "First embedded action in order should be 'Embedded Action 2'",
     });
     expect(".o_last_breadcrumb_item > span").toHaveText("Favorite Ponies", {
+        message: "'Favorite Ponies' view should be loaded",
+    });
+    expect(".o_list_renderer .btn-link").toHaveCount(3, {
+        message:
+            "The button should be displayed since `display_button` is true in the context of the embedded action 2",
+    });
+});
+
+test("execute a regular action from an embedded action", async () => {
+    Pony._views["form,false"] = `
+        <form>
+            <button type="action" name="2" string="Execute another action"/>
+            <field name="name"/>
+        </form>`;
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(".o_kanban_view").toHaveCount(1);
+
+    await contains(".o_control_panel_navigation button .fa-sliders").click();
+    expect(".o_control_panel .o_embedded_actions button:not(.dropdown-toggle)").toHaveCount(1);
+
+    await contains(".o_embedded_actions .dropdown").click();
+    await contains(".dropdown-menu .dropdown-item span:contains('Embedded Action 2')").click();
+    expect(".o_control_panel .o_embedded_actions button:not(.dropdown-toggle)").toHaveCount(2);
+
+    await contains(".o_control_panel .o_embedded_actions button:eq(1)").click();
+    expect(".o_list_view").toHaveCount(1);
+
+    await contains(".o_data_row .o_data_cell").click();
+    expect(".o_form_view").toHaveCount(1);
+
+    await contains(".o_form_view button[type=action]").click();
+    expect(".o_control_panel .o_embedded_actions").toHaveCount(0);
+});
+
+test("custom embedded action loaded first", async () => {
+    await mountWithCleanup(WebClient);
+    browser.localStorage.setItem(`orderEmbedded4++${user.userId}`, JSON.stringify([4, false])); // set embedded action 4 in first
+    await getService("action").doActionButton({
+        name: 4,
+        type: "action",
+    });
+    expect(".o_list_view").toHaveCount(1);
+    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    expect(".o_embedded_actions > button:first-child").toHaveClass("active", {
+        message: "First embedded action in order should have the 'active' class",
+    });
+    expect(".o_embedded_actions > button:first-child > span").toHaveText(
+        "Custom Embedded Action 4",
+        {
+            message: "First embedded action in order should be 'Embedded Action 4'",
+        }
+    );
+    expect(".o_last_breadcrumb_item > span").toHaveText("Ponies", {
         message: "'Favorite Ponies' view should be loaded",
     });
 });

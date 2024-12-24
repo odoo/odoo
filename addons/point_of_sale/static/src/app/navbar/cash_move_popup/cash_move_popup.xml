@@ -4,21 +4,23 @@
     <t t-name="point_of_sale.CashMovePopup">
         <Dialog header="false">
             <div class="input-amount d-flex mb-2 gap-2">
-                <div class="input-group">
-                    <button t-on-click="() => this.onClickButton('in')" class="input-type btn btn-secondary btn-lg lh-lg" t-att-class="{ 'highlight btn-success': state.type === 'in' }">
+                <div class="input-group" t-att-class="{ 'w-50' : this.ui.isSmall }">
+                    <button t-on-click="() => this.onClickButton('in')" t-attf-class="input-type btn btn-secondary lh-lg #{this.ui.isSmall ? 'btn-md' : 'btn-lg'} #{state.type === 'in' ? 'highlight btn-success' : '' }">
                         Cash In
                     </button>
-                    <button t-on-click="() => this.onClickButton('out')" class="input-type btn btn-secondary btn-lg lh-lg" t-att-class="{ 'red-highlight btn-danger': state.type === 'out' }">
+                    <button t-on-click="() => this.onClickButton('out')" t-attf-class="input-type btn btn-secondary lh-lg #{this.ui.isSmall ? 'btn-md' : 'btn-lg'} #{state.type === 'out' ? 'red-highlight btn-danger' : '' }">
                         Cash Out
                     </button>
                 </div>
-                <Input tModel="[state, 'amount']"
-                    icon="{type: 'string', value: pos.currency.symbol}"
-                    iconOnLeftSide="pos.currency.position === 'before'"
-                    isValid.bind="env.utils.isValidFloat"
-                    autofocus="true"
-                    getRef="(ref) => this.inputRef = ref" />
-            </div>
+                <div t-attf-class="{{this.ui.isSmall ? 'mw-50 h-50' : 'w-25'}}">
+                    <Input tModel="[state, 'amount']"
+                        icon="{type: 'string', value: pos.currency.symbol}"
+                        iconOnLeftSide="pos.currency.position === 'before'"
+                        isValid.bind="env.utils.isValidFloat"
+                        autofocus="true"
+                        getRef="(ref) => this.inputRef = ref" />
+                </div>
+            </div> 
             <div class="form-floating">
                 <textarea class="form-control cash-reason" placeholder="Leave a reason here" name="reason" id="reason" t-model="state.reason" style="height:100px;" />
                 <label for="reason">Reason</label>
@@ -26,7 +28,7 @@
             <t t-set-slot="footer">
                 <button class="button confirm btn btn-lg lh-lg btn-primary"
                     t-on-click="confirm"
-                    t-att-disabled="!env.utils.isValidFloat(state.amount) or !state.reason">
+                    t-att-disabled="!isValidCashMove()">
                     Confirm
                 </button>
                 <button class="button cancel btn btn-lg lh-lg btn-secondary" t-on-click="props.close">

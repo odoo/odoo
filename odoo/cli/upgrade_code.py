@@ -1,22 +1,66 @@
 #!/usr/bin/env python3
+"""
+Rewrite the entire source code using the scripts found at
+/odoo/upgrade_code
+
+Each script is named {version}-{name}.py and exposes an upgrade function
+that takes a single argument, the file_manager, and returns nothing.
+
+The file_manager acts as a list of files, files have 3 attributes:
+* path: the pathlib.Path where the file is on the file system;
+* addon: the odoo addon in which the file is;
+* content: the re-writtable content of the file (lazy).
+
+There are additional utilities on the file_manager, such as:
+* print_progress(current, total)
+
+Example:
+
+    def upgrade(file_manager):
+        files = [f for f in file_manager if f.path.suffix == '.py']
+        for fileno, file in enumerate(files, start=1):
+            file.content = file.content.replace(..., ...)
+            file_manager.print_progress(fileno, len(files))
+
+The command line offers a way to select and run those scripts.
+
+Please note that all the scripts are doing a best-effort a migrating the
+source code, they only help do the heavy-lifting, they are not silver
+bullets.
+"""
+
 import argparse
 import sys
 
-import os.path
 from importlib.machinery import SourceFileLoader
 from pathlib import Path
-from typing import Iterator
 from types import ModuleType
+from typing import Iterator
 
-from . import Command
+ROOT = Path(__file__).parent.parent
 
-"""
-Script method is add into the /upgrade/code directory.
-Every script should be in a file corresponding to his upgrade version (script for the )
+try:
+    import odoo.addons
+    from . import Command
+    from odoo import release
+    from odoo.modules import initialize_sys_path
+    from odoo.tools import config, parse_version
+except ImportError:
+    # Assume the script is directy executed (by opposition to be
+    # executed via odoo-bin), happily release/parse_version are
+    # standalone so we can hack our way there without importing odoo
+    sys.path.insert(0, str(ROOT))
+    sys.path.insert(0, str(ROOT / 'tools'))
+    import release
+    from parse_version import parse_version
+    class Command:
+        pass
+    config = {'addons_path': ''}
+    initialize_sys_path = None
 
-"""
 
-AVAILABLE_EXT = ('py', 'js', 'css', 'scss', 'xml', 'csv')
+UPGRADE = ROOT / 'upgrade_code'
+AVAILABLE_EXT = ('.py', '.js', '.css', '.scss', '.xml', '.csv')
 
 
 class FileAccessor:
@@ -24,17 +68,16 @@ class FileAccessor:
     path: Path
     content: str
 
-    def __init__(self, path: Path, addon: Path) -> None:
+    def __init__(self, path: Path, addon_path: Path) -> None:
         self.path = path
-        self.addon = addon
+        self.addon = addon_path / path.relative_to(addon_path).parts[0]
         self._content = None
         self.dirty = False
 
     @property
     def content(self):
         if self._content is None:
-            with self.path.open("r") as f:
-                self._content = f.read()
+            self._content = self.path.read_text()
         return self._content
 
     @content.setter
@@ -52,34 +95,36 @@ class FileManager:
         self.addons_path = addons_path
         self.glob = glob
         self._files = {
-            str(path): FileAccessor(path, addon)
+            str(path): FileAccessor(path, Path(addon_path))
             for addon_path in addons_path
-            for addon in Path(addon_path).iterdir()
-            for path in addon.glob(glob)
-            if path.is_file() and path.name.rsplit('.')[-1] in AVAILABLE_EXT
+            for path in Path(addon_path).glob(glob)
+            if '__pycache__' not in path.parts
+            if path.suffix in AVAILABLE_EXT
+            if path.is_file()
         }
 
     def __iter__(self) -> Iterator[FileAccessor]:
         return iter(self._files.values())
 
+    def __len__(self):
+        return len(self._files)
+
     def get_file(self, path):
         return self._files.get(str(path))
 
-    def print_progress(self, current, total):
-        if sys.stdout.isatty():
-            print(f'\033[F{round(current / total * 100)}%')  # noqa: T201
-
-
-def get_version(value: str) -> tuple[int | str, ...]:
-    return tuple(int(x) if x.isnumeric() else x for x in value.split('.'))
+    if sys.stdout.isatty():
+        def print_progress(self, current, total=None):
+            total = total or len(self) or 1
+            print(f'{current / total:>4.0%}', end='\r', file=sys.stderr)  # noqa: T201
+    else:
+        def print_progress(self, current, total=None):
+            pass
 
 
 def get_upgrade_code_scripts(from_version: tuple[int, ...], to_version: tuple[int, ...]) -> list[tuple[str, ModuleType]]:
     modules: list[tuple[str, ModuleType]] = []
-    script_paths = list(Path(__file__).parent.parent.glob('upgrade_code/*.py'))
-    script_paths.sort(key=str)
-    for script_path in script_paths:
-        version = get_version(script_path.name.split('-', 1)[0])
+    for script_path in sorted(UPGRADE.glob('*.py')):
+        version = parse_version(script_path.name.partition('-')[0])
         if from_version <= version <= to_version:
             module = SourceFileLoader(script_path.name, str(script_path)).load_module()
             modules.append((script_path.name, module))
@@ -87,55 +132,100 @@ def get_upgrade_code_scripts(from_version: tuple[int, ...], to_version: tuple[in
 
 
 def migrate(
-        from_version: tuple[int, ...],
-        to_version: tuple[int, ...],
-        addons_path: list[str],
-        glob: str,
-        test: bool = False):
+    addons_path: list[str],
+    glob: str,
+    from_version: tuple[int, ...] | None = None,
+    to_version: tuple[int, ...] | None = None,
+    script: str | None = None,
+    dry_run: bool = False,
+):
+    if script:
+        script_path = next(UPGRADE.glob(f'*{script.removesuffix(".py")}*.py'), None)
+        if not script_path:
+            raise FileNotFoundError(script)
+        script_path.relative_to(UPGRADE)  # safeguard, prevent going up
+        module = SourceFileLoader(script_path.name, str(script_path)).load_module()
+        modules = [(script_path.name, module)]
+    else:
+        modules = get_upgrade_code_scripts(from_version, to_version)
 
-    modules = get_upgrade_code_scripts(from_version, to_version)
     file_manager = FileManager(addons_path, glob)
     for (name, module) in modules:
-        print(f'update script: {name}\n')  # noqa: T201
+        file_manager.print_progress(0)  # 0%
         module.upgrade(file_manager)
+        file_manager.print_progress(len(file_manager))  # 100%
 
     for file in file_manager:
         if file.dirty:
-            print('updated: ', file.path)  # noqa: T201
-            if not test:
+            print(file.path)  # noqa: T201
+            if not dry_run:
                 with file.path.open("w") as f:
                     f.write(file.content)
 
+    return any(file.dirty for file in file_manager)
+
 
 class UpgradeCode(Command):
+    """ Rewrite the entire source code using the scripts found at /odoo/upgrade_code """
     name = 'upgrade_code'
+    prog_name = Path(sys.argv[0]).name
 
-    def run(self, cmdargs):
-        odoo = Path(__file__).parent.parent.parent
-        to_version = SourceFileLoader('release', str(next(odoo.glob('odoo/release.py')))).load_module().version_info
-        from_version = (to_version[0] if to_version[1] else to_version[0] - 1,)
-        addons_path = [
-            str(next(odoo.glob('odoo/addons'))),
-            str(next(odoo.glob('addons'))),
-        ]
-
-        parser = argparse.ArgumentParser()
-        parser.add_argument('--addons-path', default=','.join(addons_path),
-            help="[str] comma separated string representing the odoo addons path")
-        parser.add_argument('-g', '--glob', default='**/*',
-            help="[str] glob filter to apply changes")
-        parser.add_argument('--from', default='.'.join(map(str, from_version)),
-            help="[typle[int, ...]] odoo version")
-        parser.add_argument('--to', default='.'.join(map(str, to_version)),
-            help="[typle[int, ...]] odoo version")
-        parser.add_argument(
-            '-t', '--test', action='store_true', default=False,
-            help="Test the script and display the number of files impacted without making the modification"
+    def __init__(self):
+        self.parser = argparse.ArgumentParser(
+            prog=(
+                f"{self.prog_name} [--addons-path=PATH,...] {self.name}"
+                if initialize_sys_path else
+                self.prog_name
+            ),
+            description=__doc__.replace('/odoo/upgrade_code', str(UPGRADE)),
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+        )
+        group = self.parser.add_mutually_exclusive_group(required=True)
+        group.add_argument(
+            '--script',
+            metavar='NAME',
+            help="run this single script")
+        group.add_argument(
+            '--from',
+            dest='from_version',
+            type=parse_version,
+            metavar='VERSION',
+            help="run all scripts starting from this version, inclusive")
+        self.parser.add_argument(
+            '--to',
+            dest='to_version',
+            type=parse_version,
+            default=parse_version(release.version),
+            metavar='VERSION',
+            help=f"run all scripts until this version, inclusive (default: {release.version})")
+        self.parser.add_argument(
+            '--glob',
+            default='**/*',
+            help="select the files to rewrite (default: %(default)s)")
+        self.parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            help="list the files that would be re-written, but rewrite none")
+        self.parser.add_argument(
+            '--addons-path',
+            default=config['addons_path'],
+            metavar='PATH,...',
+            help="specify additional addons paths (separated by commas)",
         )
 
-        args = vars(parser.parse_args(cmdargs))
-        args['addons_path'] = tuple(os.path.abspath(os.path.expanduser(path)) for path in args['addons_path'].split(','))
-        args['from'] = get_version(args['from'])
-        args['to'] = get_version(args['to'])
+    def run(self, cmdargs):
+        options = self.parser.parse_args(cmdargs)
+        if initialize_sys_path:
+            config['addons_path'] = options.addons_path
+            initialize_sys_path()
+            options.addons_path = odoo.addons.__path__
+        else:
+            options.addons_path = [p for p in options.addons_path.split(',') if p]
+        if not options.addons_path:
+            self.parser.error("--addons-path is required when used standalone")
+        is_dirty = migrate(**vars(options))
+        sys.exit(int(is_dirty))
 
-        migrate(args['from'], args['to'], args['addons_path'], args['glob'], args['test'])
+
+if __name__ == '__main__':
+    UpgradeCode().run(sys.argv[1:])

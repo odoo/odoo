@@ -1,4 +1,3 @@
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import {
     assertSteps,
     click,
@@ -17,9 +16,10 @@ import {
     step,
     triggerEvents,
 } from "@mail/../tests/mail_test_helpers";
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { queryFirst } from "@odoo/hoot-dom";
+import { queryFirst, queryValue } from "@odoo/hoot-dom";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import { Command, makeKwArgs, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 
@@ -136,9 +136,7 @@ test("auto-scroll to last read message on thread load", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "message 100" });
-    const thread = document.querySelector(".o-mail-Thread");
-    const message = queryFirst(".o-mail-Message:contains(message 100)");
-    expect(isInViewportOf(thread, message)).toBe(true);
+    await isInViewportOf(".o-mail-Message:contains(message 100)", ".o-mail-Thread");
 });
 
 test("display day separator before first message of the day", async () => {
@@ -213,13 +211,13 @@ test("scroll position is kept when navigating from one channel to another [CAN F
     await start();
     await openDiscuss(channelId_1);
     await contains(".o-mail-Message", { count: 20 });
-    const scrollValue1 = $(".o-mail-Thread")[0].scrollHeight / 2;
+    const scrollValue1 = queryFirst(".o-mail-Thread").scrollHeight / 2;
     await contains(".o-mail-Thread", { scroll: 0 });
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", scrollValue1);
     await click(".o-mail-DiscussSidebarChannel", { text: "channel-2" });
     await contains(".o-mail-Message", { count: 30 });
-    const scrollValue2 = $(".o-mail-Thread")[0].scrollHeight / 3;
+    const scrollValue2 = queryFirst(".o-mail-Thread").scrollHeight / 3;
     await contains(".o-mail-Thread", { scroll: 0 });
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", scrollValue2);
@@ -249,7 +247,7 @@ test("thread is still scrolling after scrolling up then to bottom", async () => 
     await contains(".o-mail-Message", { count: 20 });
     await contains(".o-mail-Thread", { scroll: 0 });
     await tick(); // wait for the scroll to first unread to complete
-    await scroll(".o-mail-Thread", $(".o-mail-Thread")[0].scrollHeight / 2);
+    await scroll(".o-mail-Thread", queryFirst(".o-mail-Thread").scrollHeight / 2);
     await scroll(".o-mail-Thread", "bottom");
     await insertText(".o-mail-Composer-input", "123");
     await click(".o-mail-Composer-send:enabled");
@@ -296,9 +294,9 @@ test("mark channel as fetched when a new message is loaded", async () => {
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/mail/action", (args) => {
+    onRpcBefore("/mail/data", (args) => {
         if (args.init_messaging) {
-            step(`/mail/action - ${JSON.stringify(args)}`);
+            step(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     onRpcBefore("/discuss/channel/mark_as_read", (args) => {
@@ -312,7 +310,7 @@ test("mark channel as fetched when a new message is loaded", async () => {
     await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await assertSteps([
-        `/mail/action - ${JSON.stringify({
+        `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
@@ -334,9 +332,10 @@ test("mark channel as fetched when a new message is loaded", async () => {
     await assertSteps(["rpc:mark_as_read"]);
 });
 
-test("mark channel as fetched when a new message is loaded and thread is focused [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("mark channel as fetched when a new message is loaded and thread is focused", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
@@ -582,8 +581,8 @@ test("mention a channel when replacing the space after the mention by another ch
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "#General good " });
-    const text = $(".o-mail-Composer-input").val();
-    $(".o-mail-Composer-input").val(text.slice(0, -1));
+    const text = queryValue(".o-mail-Composer-input:first");
+    queryFirst(".o-mail-Composer-input").value = text.slice(0, -1);
     await insertText(".o-mail-Composer-input", ", test");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message-body .o_channel_redirect", { text: "General good" });
@@ -672,7 +671,7 @@ test("basic rendering of canceled notification", async () => {
     await contains(".o-mail-MessageNotificationPopover", { text: "Someone" });
 });
 
-test("first unseen message should be directly preceded by the new message separator if there is a transient message just before it while composer is not focused [REQUIRE FOCUS]", async () => {
+test("first unseen message should be directly preceded by the new message separator if there is a transient message just before it while composer is not focused", async () => {
     // The goal of removing the focus is to ensure the thread is not marked as seen automatically.
     // Indeed that would trigger set_last_seen_message no matter what, which is already covered by other tests.
     // The goal of this test is to cover the conditions specific to transient messages,
@@ -702,7 +701,7 @@ test("first unseen message should be directly preceded by the new message separa
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message", { count: 2 });
     // composer is focused by default, we remove that focus
-    $(".o-mail-Composer-input")[0].blur();
+    queryFirst(".o-mail-Composer-input").blur();
     // simulate receiving a message
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -716,7 +715,8 @@ test("first unseen message should be directly preceded by the new message separa
     await contains(".o-mail-Message[aria-label='Note'] + .o-mail-Thread-newMessage");
 });
 
-test("composer should be focused automatically after clicking on the send button [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("composer should be focused automatically after clicking on the send button", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     await start();
@@ -809,7 +809,8 @@ test("Thread messages are only loaded once", async () => {
     await assertSteps([`load messages - ${channelIds[0]}`, `load messages - ${channelIds[1]}`]);
 });
 
-test("Opening thread with needaction messages should mark all messages of thread as read [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("Opening thread with needaction messages should mark all messages of thread as read", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
@@ -876,7 +877,8 @@ test("[technical] Opening thread without needaction messages should not mark all
     await assertSteps([]);
 });
 
-test("can be marked as read while loading [REQUIRE FOCUS]", async () => {
+test.tags("focus required");
+test("can be marked as read while loading", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({

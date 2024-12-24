@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_stripe
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:38+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: payment_stripe
@@ -51,6 +53,12 @@ msgid "Enable Apple Pay"
 msgstr "Включите Apple Pay"
 
 #. module: payment_stripe
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/express_checkout_form.js:0
+msgid "Free Shipping"
+msgstr "Бесплатная доставка"
+
+#. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Generate your webhook"
 msgstr "Создайте свой веб-хук"
@@ -62,8 +70,12 @@ msgstr "Получите секретный и публикуемый ключи
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_webhook_secret
-msgid "If a webhook is enabled on your Stripe account, this signing secret must be set to authenticate the messages sent from Stripe to Odoo."
-msgstr "Если на вашем аккаунте Stripe включен веб-хук, этот секрет подписи должен быть установлен для аутентификации сообщений, отправляемых из Stripe в Odoo."
+msgid ""
+"If a webhook is enabled on your Stripe account, this signing secret must be "
+"set to authenticate the messages sent from Stripe to Odoo."
+msgstr ""
+"Если на вашем аккаунте Stripe включен веб-хук, этот секрет подписи должен "
+"быть установлен для аутентификации сообщений, отправляемых из Stripe в Odoo."
 
 #. module: payment_stripe
 #. odoo-javascript
@@ -91,7 +103,9 @@ msgstr "Поставщик платежей"
 #. module: payment_stripe
 #: model:ir.actions.act_window,name:payment_stripe.action_payment_provider_onboarding
 msgid "Payment Providers"
-msgstr "Выберите поставщиков платежных услуг и включите способы оплаты при оформлении заказа"
+msgstr ""
+"Выберите поставщиков платежных услуг и включите способы оплаты при "
+"оформлении заказа"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
@@ -101,7 +115,7 @@ msgstr "Платежный токен"
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "платеж"
+msgstr "Платеж"
 
 #. module: payment_stripe
 #. odoo-javascript
@@ -151,8 +165,12 @@ msgstr "Stripe"
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
-msgid "Stripe Connect is not available in your country, please use another payment provider."
-msgstr "Stripe Connect недоступен в вашей стране, пожалуйста, воспользуйтесь другим платежным провайдером."
+msgid ""
+"Stripe Connect is not available in your country, please use another payment "
+"provider."
+msgstr ""
+"Stripe Connect недоступен в вашей стране, пожалуйста, воспользуйтесь другим "
+"платежным провайдером."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_mandate
@@ -174,7 +192,8 @@ msgstr "Ошибка Stripe Proxy: %(error)s"
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 msgid "Stripe Proxy: An error occurred when communicating with the proxy."
-msgstr "Прокси-сервер Stripe: Произошла ошибка при взаимодействии с прокси-сервером."
+msgstr ""
+"Прокси-сервер Stripe: Произошла ошибка при взаимодействии с прокси-сервером."
 
 #. module: payment_stripe
 #. odoo-python
@@ -209,8 +228,13 @@ msgstr "Ключ, используемый исключительно для и�
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
-msgid "The refund did not go through. Please log into your Stripe Dashboard to get more information on that matter, and address any accounting discrepancies."
-msgstr "Возврат средств не был осуществлен. Пожалуйста, войдите в свою панель Stripe Dashboard, чтобы получить дополнительную информацию по этому вопросу и устранить все бухгалтерские несоответствия."
+msgid ""
+"The refund did not go through. Please log into your Stripe Dashboard to get "
+"more information on that matter, and address any accounting discrepancies."
+msgstr ""
+"Возврат средств не был осуществлен. Пожалуйста, войдите в свою панель Stripe"
+" Dashboard, чтобы получить дополнительную информацию по этому вопросу и "
+"устранить все бухгалтерские несоответствия."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__code
@@ -243,20 +267,31 @@ msgstr "Вы успешно настроили Stripe Webhook!"
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
-msgid "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
-msgstr "Вы не сможете создать Stripe Webhook, если у вас не установлен секретный ключ Stripe."
+msgid ""
+"You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
+msgstr ""
+"Вы не сможете создать Stripe Webhook, если у вас не установлен секретный "
+"ключ Stripe."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
-msgid "You cannot set the provider state to Enabled until your onboarding to Stripe is completed."
-msgstr "Вы не можете установить состояние провайдера на Enabled до тех пор, пока не завершится процесс подключения к Stripe."
+msgid ""
+"You cannot set the provider state to Enabled until your onboarding to Stripe"
+" is completed."
+msgstr ""
+"Вы не можете установить состояние провайдера на Enabled до тех пор, пока не "
+"завершится процесс подключения к Stripe."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
-msgid "You cannot set the provider to Test Mode while it is linked with your Stripe account."
-msgstr "Вы не можете перевести провайдера в тестовый режим, пока он связан с вашим аккаунтом Stripe."
+msgid ""
+"You cannot set the provider to Test Mode while it is linked with your Stripe"
+" account."
+msgstr ""
+"Вы не можете перевести провайдера в тестовый режим, пока он связан с вашим "
+"аккаунтом Stripe."
 
 #. module: payment_stripe
 #. odoo-python

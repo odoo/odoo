@@ -40,7 +40,7 @@ export class HootConfigDropdown extends Component {
                 class="flex bg-btn rounded p-2 transition-colors"
                 title="Configuration"
             >
-                <i class="fa fa-cog" />
+                <i class="fa fa-cog transition" t-att-class="{ 'rotate-90': state.open }" />
             </button>
             <t t-if="state.open">
                 <form
@@ -58,7 +58,7 @@ export class HootConfigDropdown extends Component {
                                 class="px-1 transition-colors"
                                 t-att-class="{ 'border rounded text-primary border-primary': config.order === order.value }"
                                 t-att-title="order.title"
-                                t-on-click="() => this.setExecutionOrder(order.value)"
+                                t-on-click.stop="() => this.setExecutionOrder(order.value)"
                             >
                                 <i class="fa transition" t-att-class="{ [order.icon]: true }"/>
                             </button>
@@ -99,7 +99,7 @@ export class HootConfigDropdown extends Component {
                             <button
                                 type="button"
                                 title="Generate new random seed"
-                                t-on-click="resetSeed"
+                                t-on-click.stop="resetSeed"
                             >
                                 <i class="fa fa-repeat" />
                             </button>
@@ -207,7 +207,7 @@ export class HootConfigDropdown extends Component {
                         type="button"
                         class="p-1 hover:bg-gray-300 dark:hover:bg-gray-700"
                         title="Toggle the color scheme of the UI"
-                        t-on-click="toggleColorScheme"
+                        t-on-click.stop="toggleColorScheme"
                     >
                         <i t-attf-class="fa fa-{{ color.scheme === 'light' ? 'moon' : 'sun' }}-o" />
                         Color scheme
@@ -248,14 +248,18 @@ export class HootConfigDropdown extends Component {
                 this.state.open = false;
             }
         });
-        useWindowListener("click", (ev) => {
-            const path = ev.composedPath();
-            if (!path.includes(this.rootRef.el)) {
-                this.state.open = false;
-            } else if (path.includes(this.togglerRef.el)) {
-                this.state.open = !this.state.open;
-            }
-        });
+        useWindowListener(
+            "click",
+            (ev) => {
+                const path = ev.composedPath();
+                if (!path.includes(this.rootRef.el)) {
+                    this.state.open = false;
+                } else if (path.includes(this.togglerRef.el)) {
+                    this.state.open = !this.state.open;
+                }
+            },
+            { capture: true }
+        );
     }
 
     /**

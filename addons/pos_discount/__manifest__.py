@@ -25,6 +25,9 @@ discount to a customer.
         'point_of_sale._assets_pos': [
             'pos_discount/static/src/**/*',
         ],
+        'web.assets_tests': [
+            'pos_discount/static/tests/tours/**/*',
+        ],
     },
     'license': 'LGPL-3',
 }

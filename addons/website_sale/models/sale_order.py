@@ -719,3 +719,6 @@ class SaleOrder(models.Model):
 
         if not self.only_services and not self.carrier_id:
             raise ValidationError(_("No shipping method is selected."))
+
+    def _is_delivery_ready(self):
+        return not self._has_deliverable_products() or self.carrier_id

@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
 
-    repair_type_id = fields.Many2one('stock.picking.type', 'Repair Operation Type', check_company=True)
+    repair_type_id = fields.Many2one('stock.picking.type', 'Repair Operation Type', check_company=True, copy=False)
     repair_mto_pull_id = fields.Many2one(
         'stock.rule', 'Repair MTO Rule', copy=False)
 
@@ -17,7 +17,7 @@ class StockWarehouse(models.Model):
         values.update({
             'repair_type_id': {
                 'name': _('%(name)s Sequence repair', name=self.name),
-                'prefix': self.code + '/RO/',
+                'prefix': self.code + '/' + (self.repair_type_id.sequence_code or 'RO') + '/',
                 'padding': 5,
                 'company_id': self.company_id.id
                 },
@@ -67,7 +67,7 @@ class StockWarehouse(models.Model):
             'repair_mto_pull_id': {
                 'depends': ['repair_type_id'],
                 'create_values': {
-                    'procure_method': 'mts_else_mto',
+                    'procure_method': 'make_to_order',
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',

@@ -719,6 +719,27 @@ test(`width computation: button columns don't have a max width`, async () => {
     expect(columnWidths[1]).toBeGreaterThan(330);
 });
 
+test(`width computation: button with width in arch`, async () => {
+    Foo._records = [];
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <button string="choucroute"/>
+                <button icon="fa-heart" width="25px"/>
+                <button icon="fa-cog" width="59px"/>
+                <button icon="fa-list"/>
+                <button icon="fa-play"/>
+            </list>
+        `,
+    });
+
+    expect(getColumnWidths()).toEqual([40, 216, 216, 34, 68, 227]);
+});
+
 // freeze column widths
 test(`freeze widths: add first record`, async () => {
     Foo._records = []; // in this scenario, we start with no records
@@ -1304,6 +1325,41 @@ test(`resize column and toggle one checkbox`, async () => {
     expect(getColumnWidths()).toEqual(widthsAfterResize, {
         message: "Width must not have been changed after selecting a row",
     });
+});
+
+test(`resize column, then resize window`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="int_field"/>
+                <field name="foo"/>
+            </list>
+        `,
+    });
+
+    expect(getColumnWidths()).toEqual([40, 80, 680]);
+
+    // Resize column foo to middle of column int_field.
+    await contains(`th:eq(1) .o_resize`, { visible: false }).dragAndDrop(`th:eq(2)`);
+    expect(getColumnWidths()).toEqual([40, 520, 679]);
+
+    // Resize the window
+    resize({ width: 1200 });
+    await runAllTimers();
+    await animationFrame();
+    expect(getColumnWidths()).toEqual([40, 80, 1080]); // all available space should be used again
+
+    // Reduce size of column foo
+    await contains(`th:eq(2) .o_resize`, { visible: false }).dragAndDrop(`th:eq(2)`);
+    expect(getColumnWidths()).toEqual([40, 80, 591]);
+
+    // Resize the window
+    resize({ width: 1000 });
+    await runAllTimers();
+    await animationFrame();
+    expect(getColumnWidths()).toEqual([40, 80, 880]); // all available space should be used again
 });
 
 test(`resize column and toggle check all`, async () => {

@@ -104,7 +104,7 @@ const dragAndDropHookParams = {
         helper: [Function],
         extraWindow: [Object, Function],
     },
-    edgeScrolling: { enabled: true },
+    edgeScrolling: { enabled: true, speed: 20 },
     onComputeParams({ ctx, params }) {
         // The helper is mandatory and will follow the cursor instead
         ctx.followCursor = false;

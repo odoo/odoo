@@ -13,4 +13,5 @@ mount(Homepage, document.body, {
     env: {
         store: createStore(),
     },
+    dev: new URLSearchParams(window.location.search).has("debug"),
 });

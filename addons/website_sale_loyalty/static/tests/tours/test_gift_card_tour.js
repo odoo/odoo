@@ -39,7 +39,11 @@ registry.category("web_tour.tours").add('shop_sale_gift_card', {
         },
         {
             content: 'check gift card amount',
-            trigger: '.oe_website_sale .oe_cart',
+            trigger: '.oe_website_sale .oe_cart:contains(10% on your order)',
+        },
+        {
+            trigger: "a:contains(continue shopping)",
+            run: "click",
         },
         ...tourUtils.addToCart({productName: "TEST - Gift Card"}),
         tourUtils.goToCart({quantity: 2}),

@@ -10,6 +10,7 @@
     ],
     'data': [
         'report/din5008_repair_templates.xml',
+        'report/din5008_repair_order_layout.xml',
     ],
     'auto_install': True,
     'license': 'LGPL-3',

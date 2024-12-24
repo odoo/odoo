@@ -100,6 +100,7 @@
                                     <field name="application_count"/> Applications
                                 </div>
                                 <a t-if="record.activities_today.raw_value > 0" name="action_open_today_activities" type="object" class="text-warning"><field name="activities_today"/> Activities Today</a>
+                                <br t-if="record.activities_today.raw_value > 0 and record.activities_overdue.raw_value > 0"/>
                                 <a t-if="record.activities_overdue.raw_value > 0" name="action_open_late_activities" type="object" class="text-danger"><field name="activities_overdue"/> Late Activities</a>
                             </div>
                         </div>

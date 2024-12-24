@@ -1,9 +1,11 @@
 /** @odoo-module **/
 
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { onWillStart, useState, onWillRender } from "@odoo/owl";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useTrackedAsync } from "@point_of_sale/app/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -58,12 +60,29 @@ export class PosKanbanRenderer extends KanbanRenderer {
         onWillRender(() => this.checkDisplayedResult());
     }
 
+    async clickLoadScenario(item) {
+        await this.loadScenario.call(item);
+        if (this.loadScenario.status == "error") {
+            throw this.loadScenario.result;
+        }
+    }
+
     checkDisplayedResult() {
         this.posState.show_predefined_scenarios = this.props.list.count === 0;
     }
 
     async callWithViewUpdate(func) {
         try {
+            const isPosManager = await user.hasGroup("point_of_sale.group_pos_manager");
+            if (!isPosManager) {
+                this.dialog.add(AlertDialog, {
+                    title: _t("Access Denied"),
+                    body: _t(
+                        "It seems like you don't have enough rights to create point of sale configurations."
+                    ),
+                });
+                return;
+            }
             await func();
             await updatePosKanbanViewState(this.orm, this.posState);
         } finally {
@@ -80,7 +99,7 @@ export class PosKanbanRenderer extends KanbanRenderer {
                 iconFile: "clothes-icon.png",
             },
             {
-                name: _t("Furnitures"),
+                name: _t("Furniture"),
                 description: _t("Stock, product configurator, replenishment, discounts"),
                 functionName: "load_onboarding_furniture_scenario",
                 iconFile: "furniture-icon.png",

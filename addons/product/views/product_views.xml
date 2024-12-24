@@ -71,11 +71,11 @@
                         </h1>
                     </div>
                     <div name="options">
-                        <span class="d-inline-block">
+                        <span class="d-inline-flex">
                             <field name="sale_ok"/>
                             <label for="sale_ok"/>
                         </span>
-                        <span class="d-inline-block" invisible="type == 'combo'">
+                        <span class="d-inline-flex" invisible="type == 'combo'">
                             <field name="purchase_ok"/>
                             <label for="purchase_ok"/>
                         </span>
@@ -123,14 +123,25 @@
                                             />
                                         </span>
                                     </div>
+
+                                    <!--
+                                        `id` condition to prevent invisibility on new products
+                                        when `product_variant_count` is 0.
+                                        `product_variant_count != 1` to handle cases with dynamic
+                                        / multiple variants since id will be set after saving.
+                                        #TODO : revert this and create a compute field in master
+                                        to ensure invisivility for dynamic variants only.
+                                    -->
                                     <label
                                         for="standard_price"
-                                        invisible="(product_variant_count &gt; 1 and not is_product_variant) or type == 'combo'"
+                                        invisible="(id and product_variant_count != 1
+                                                    and not is_product_variant) or type == 'combo'"
                                         id="standard_price_label"
                                     />
                                     <div
                                         name="standard_price_uom"
-                                        invisible="(product_variant_count &gt; 1 and not is_product_variant) or type == 'combo'"
+                                        invisible="(id and product_variant_count != 1
+                                                    and not is_product_variant) or type == 'combo'"
                                     >
                                         <field
                                             name="standard_price"

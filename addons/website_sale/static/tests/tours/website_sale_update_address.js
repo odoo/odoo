@@ -23,9 +23,7 @@ registry.category("web_tour.tours").add('update_billing_shipping_address', {
         {
             content: "Empty the phone field",
             trigger: 'input[name="phone"]',
-            run: () => {
-                document.querySelector('input[name="phone"]').value = "";
-            },
+            run: "clear",
         },
         {
             content: "Save address",

@@ -258,7 +258,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             down_payment_values.append([
                 taxes - fixed_taxes,
                 base_line_values['analytic_distribution'],
-                tax_details['total_excluded_currency'],
+                tax_details['raw_total_excluded_currency'],
                 account,
             ])
             for fixed_tax in fixed_taxes:

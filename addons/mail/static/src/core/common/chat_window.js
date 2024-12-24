@@ -76,6 +76,15 @@ export class ChatWindow extends Component {
         return undefined;
     }
 
+    get hasActionsMenu() {
+        return (
+            this.partitionedActions.group.length > 0 ||
+            this.partitionedActions.other.length > 0 ||
+            (this.ui.isSmall && this.partitionedActions.quick.length > 2) ||
+            (!this.ui.isSmall && this.partitionedActions.quick.length > 3)
+        );
+    }
+
     get thread() {
         return this.props.chatWindow.thread;
     }
@@ -91,6 +100,11 @@ export class ChatWindow extends Component {
 
     onKeydown(ev) {
         const chatWindow = toRaw(this.props.chatWindow);
+        if (ev.key === "Escape" && this.threadActions.activeAction) {
+            this.threadActions.activeAction.close();
+            ev.stopPropagation();
+            return;
+        }
         if (ev.target.closest(".o-dropdown") || ev.target.closest(".o-dropdown--menu")) {
             return;
         }

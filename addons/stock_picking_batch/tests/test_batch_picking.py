@@ -4,6 +4,7 @@
 from datetime import datetime, timedelta
 
 from odoo import Command
+from odoo.tools import float_round
 
 from odoo.exceptions import UserError
 from odoo.tests import Form, HttpCase, tagged
@@ -701,6 +702,13 @@ class TestBatchPicking02(TransactionCase):
             'is_storable': True,
             'categ_id': self.env.ref('product.product_category_all').id,
         })
+        self.package_type = self.env['stock.package.type'].create({
+            'name': 'Big box',
+            'base_weight': 10,
+            'packaging_length': 500,
+            'width': 500,
+            'height': 500,
+        })
 
     def test_same_package_several_pickings(self):
         """
@@ -711,10 +719,14 @@ class TestBatchPicking02(TransactionCase):
         """
         package = self.env['stock.quant.package'].create({
             'name': 'superpackage',
+            'package_type_id': self.package_type.id,
         })
+        self.productA.weight = 10
+        self.productB.weight = 15
 
         loc1, loc2 = self.stock_location.child_ids
         self.env['stock.quant']._update_available_quantity(self.productA, loc1, 10, package_id=package)
+        self.env['stock.quant']._update_available_quantity(self.productB, loc1, 10)
 
         pickings = self.env['stock.picking'].create([{
             'location_id': loc1.id,
@@ -727,7 +739,14 @@ class TestBatchPicking02(TransactionCase):
                 'product_id': self.productA.id,
                 'product_uom': self.productA.uom_id.id,
                 'product_uom_qty': qty,
-            })]
+            }), (0, 0, {
+                'name': 'test_put_in_pack_from_multiple_pages',
+                'location_id': loc1.id,
+                'location_dest_id': loc2.id,
+                'product_id': self.productB.id,
+                'product_uom': self.productB.uom_id.id,
+                'product_uom_qty': qty,
+            }) ]
         } for qty in (3, 7)])
         pickings.action_confirm()
         pickings.action_assign()
@@ -738,14 +757,19 @@ class TestBatchPicking02(TransactionCase):
         batch = batch_form.save()
         batch.action_confirm()
 
-        pickings.move_line_ids[0].quantity = 3
-        pickings.move_line_ids[1].quantity = 7
         pickings.move_ids.picked = True
-        pickings.move_line_ids.result_package_id = package
+        # put productA in a package but not productB
+        pickings.move_line_ids.filtered(lambda l: l.product_id == self.productA).result_package_id = package
 
         batch.action_done()
+        self.assertEqual(batch.estimated_shipping_weight, 10 + 10*10 + 10*15)
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        volume = float_round((500*500*500)/1000**3, precision_digits=precision)
+        self.assertEqual(batch.estimated_shipping_volume, volume)
         self.assertRecordValues(pickings.move_ids, [
             {'state': 'done', 'quantity': 3},
+            {'state': 'done', 'quantity': 3},
+            {'state': 'done', 'quantity': 7},
             {'state': 'done', 'quantity': 7},
         ])
         self.assertEqual(pickings.move_line_ids.result_package_id, package)
@@ -826,8 +850,11 @@ class TestBatchPicking02(TransactionCase):
         })
         batch.action_confirm()
         action = batch.action_done()
+        # Picking_1 should be detached from the batch after the wizard and picking_2 are validated.
+        self.assertEqual(batch.picking_ids, picking_1 | picking_2)
         Form.from_action(self.env, action).save().process_cancel_backorder()
         self.assertEqual(batch.state, 'done')
+        self.assertEqual(batch.picking_ids, picking_2)
 
     def test_backorder_batching(self):
         """

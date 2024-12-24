@@ -28,13 +28,12 @@
     </t>
 
     <t t-name="mail.DiscussSidebarCallParticipants.participant">
-        <t t-set="channelMember" t-value="session.channelMember"/>
-        <div class="d-flex text-reset overflow-hidden align-items-center" t-att-class="{ 'justify-content-center bg-inherit': compact, 'me-2': !compact and props.compact === undefined }">
+        <div class="o-mail-DiscussSidebarCallParticipants-participant d-flex text-reset overflow-hidden align-items-center" t-att-class="{ 'justify-content-center bg-inherit': compact, 'me-2': !compact and props.compact === undefined }">
             <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:24px;height:24px">
-                <img class="o-mail-DiscussSidebarCallParticipants-avatar w-100 h-100 rounded-circle o_object_fit_cover" t-att-src="channelMember.persona.avatarUrl" t-att-class="{'o-isTalking': !session.isMute and session.isTalking}" alt="Participant avatar"/>
+                <img class="o-mail-DiscussSidebarCallParticipants-avatar w-100 h-100 rounded-circle o_object_fit_cover" t-att-src="session.channelMember.persona.avatarUrl" t-att-class="{'o-isTalking': !session.isMute and session.isTalking}" alt="Participant avatar"/>
             </div>
-            <span t-if="!compact" class="o-mail-DiscussSidebarCallParticipants-name mx-1 text-truncate fw-bolder smaller user-select-none" t-att-title="channelMember.persona.name" t-att-class="{ 'o-isTalking': !session.isMute and session.isTalking }">
-                <t t-esc="channelMember.persona.name"/>
+            <span t-if="!compact" class="o-mail-DiscussSidebarCallParticipants-name mx-1 text-truncate fw-bolder smaller user-select-none" t-att-title="session.channelMember.persona.name" t-att-class="{ 'o-isTalking': !session.isMute and session.isTalking }">
+                <t t-esc="session.channelMember.persona.name"/>
             </span>
             <div t-if="!compact" class="flex-grow-1"/>
             <div class="o-mail-DiscussSidebarCallParticipants-status" t-att-class="{ 'position-absolute bg-inherit p-0 rounded-circle o-compact d-flex smaller start-0 text-start': compact, 'ms-1 d-flex align-items-center justify-content-center': !compact }">

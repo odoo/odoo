@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,13 +29,13 @@ msgstr "%(platform)s 上的 %(browser)s"
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_wizard
 msgid "2-Factor Setup Wizard"
-msgstr "2-Factor 設置嚮導"
+msgstr "雙重要素驗證設置精靈"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 msgid "2-Factor authentication is now enabled."
-msgstr "現在啟用了 Two-factor身份驗證。"
+msgstr "雙重要素身份驗證現已啟用。"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -168,7 +169,7 @@ msgstr "停用 2FA"
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable two-factor authentication"
-msgstr "停用Two-factor驗證"
+msgstr "停用雙重要素驗證"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
@@ -304,7 +305,7 @@ msgstr "已驗證設備"
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-Factor Authentication Activation"
-msgstr "Two-factor身份驗證啟動"
+msgstr "啟動雙重要素驗證"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -321,9 +322,9 @@ msgid ""
 "                        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "                        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
 msgstr ""
-"Two-factor身份驗證（“2FA”）是一種雙重身份驗證系統。\n"
-"                        第一個是使用您的密碼完成的，第二個是使用您從專用移動應用程序獲得的代碼。\n"
-"                        流行的包括 Authy、Google Authenticator 或 Microsoft Authenticator。"
+"雙重要素身份驗證（two-factor authentication，簡稱 2FA）是一種對身份進行雙重驗證的系統。\n"
+"                        第一重驗證是核對個人密碼；第二重驗證是利用你指定的流動裝置上專用的應用程式，產生臨時代碼，以驗證身份。\n"
+"                        目前較流行的專用驗證程式包括：Authy、Google Authenticator 以及 Microsoft Authenticator。"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
@@ -333,12 +334,12 @@ msgstr "兩步驟驗證"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Disabled"
-msgstr "Two-factor身份驗證已停用"
+msgstr "雙重要素驗證已停用"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Enabled"
-msgstr "啟用Two-factor身份驗證"
+msgstr "雙重要素驗證已啟用"
 
 #. module: auth_totp
 #. odoo-python
@@ -356,7 +357,7 @@ msgstr "只能為自己啟用兩步驟身份驗證"
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-factor authentication disabled for the following user(s): %s"
-msgstr "為以下用戶停用了Two-factor驗證：%s"
+msgstr "已為以下使用者停用雙重要素驗證：%s"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url
@@ -381,7 +382,7 @@ msgstr "驗證碼"
 #: code:addons/auth_totp/models/res_users.py:0
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 msgid "Verification failed, please double-check the 6-digit code"
-msgstr "驗證失敗,請仔細檢查 6 位元碼"
+msgstr "驗證失敗，請再檢查 6 位數字驗證碼。"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form

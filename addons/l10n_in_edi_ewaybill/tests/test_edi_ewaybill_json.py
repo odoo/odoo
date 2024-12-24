@@ -24,7 +24,7 @@ class TestEdiEwaybillJson(TestEdiJson):
             "transMode": "1",
             "vehicleNo": "GJ11AA1234",
             "vehicleType": "R",
-            "docNo": "INV/18-19/0002",
+            "docNo": "INV/18-19/0001",
             "docDate": "01/01/2019",
             "fromGstin": "24AAGCC7144L6ZE",
             "fromTrdName": "Default Company",
@@ -79,10 +79,10 @@ class TestEdiEwaybillJson(TestEdiJson):
         #=================================== Full discount test =====================================
         json_value = self.env["account.edi.format"]._l10n_in_edi_ewaybill_generate_json(self.invoice_full_discount)
         expected.update({
-            "docNo": "INV/18-19/0003",
+            "docNo": "INV/18-19/0002",
             "itemList": [{
                 "productName": "product_a", "hsnCode": "111111", "productDesc": "product_a", "quantity": 1.0,
-                "qtyUnit": "UNT", "taxableAmount": 0.0, "cgstRate": 0.0, "sgstRate": 0.0
+                "qtyUnit": "UNT", "taxableAmount": 0.0, "cgstRate": 0.0, "sgstRate": 0.0, 'igstRate': 0.0,
             }],
             "totalValue": 0.0,
             "cgstValue": 0.0,
@@ -98,10 +98,10 @@ class TestEdiEwaybillJson(TestEdiJson):
         #=================================== Zero quantity test =============================================
         json_value = self.env["account.edi.format"]._l10n_in_edi_ewaybill_generate_json(self.invoice_zero_qty)
         expected.update({
-            "docNo": "INV/18-19/0004",
+            "docNo": "INV/18-19/0003",
             "itemList": [{
                 "productName": "product_a", "hsnCode": "111111", "productDesc": "product_a", "quantity": 0.0,
-                "qtyUnit": "UNT", "taxableAmount": 0.0, "cgstRate": 0.0, "sgstRate": 0.0
+                "qtyUnit": "UNT", "taxableAmount": 0.0, "cgstRate": 0.0, "sgstRate": 0.0, 'igstRate': 0.0,
             }],
             "totalValue": 0.0,
             "cgstValue": 0.0,

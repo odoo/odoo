@@ -8,8 +8,8 @@
 # Гэрэлтцог Цогтбаатар, 2024
 # Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2024
 # Minj P <pminj322@gmail.com>, 2024
-# Onii Onii <onii0223@yahoo.com>, 2024
 # Ganbaatar Buriad <Ganbaatar@asterisk-tech.mn>, 2024
+# Onii Onii <onii0223@yahoo.com>, 2024
 # Батболд <batbold.ts@gmail.com>, 2024
 # Otgonchimeg Davaanyam <laotgoo1212@gmail.com>, 2024
 # hish, 2024
@@ -18,20 +18,20 @@
 # Munkhbilguun Altankhuyag <munkhbilguunaltankhuyag@gmail.com>, 2024
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2024
 # Ochirsukh Batbold <ochirsuh727@gmail.com>, 2024
-# Bayarkhuu Bataa, 2024
 # Torbat Jargalsaikhan, 2024
 # Otgonbayar.A <gobi.mn@gmail.com>, 2024
-# Martin Trigaux, 2024
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2024
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024
+# Bayarkhuu Bataa, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: tserendavaa tsogtoo <tseegii011929@gmail.com>, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,11 +90,6 @@ msgid "12 days / year, including <br>6 of your choice."
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "12345678901"
-msgstr ""
-
-#. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
 #: model_terms:hr.job,job_details:hr.job_consultant
 #: model_terms:hr.job,job_details:hr.job_cto
@@ -123,7 +118,7 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
-"<b>Баяр хүргэе!</b> Танд <a href=\"%s\">чиглүүлэх хөтөлбөр</a>тохируулахыг "
+"<b>Баяр хүргэе!</b> Танд <a href=\"%s\">чиглүүлэх хөтөлбөр</a> тохируулахыг "
 "зөвлөж байна?"
 
 #. module: hr
@@ -633,6 +628,11 @@ msgstr "Үнэмлэхний дугаар"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account"
 msgstr "Банкны данс"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Банкны дансууд"
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -1172,6 +1172,12 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Divorced"
+msgstr "Салсан"
+
+#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__doctor
 msgid "Doctor"
 msgstr "Доктор"
@@ -1322,17 +1328,17 @@ msgstr "Ажилтны мэдээлэл засах эрх"
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_id
 #: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_id
 msgid "Employee bank account to pay salaries"
-msgstr ""
+msgstr "Ажилтны цалин олгох банкны данс"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_id
 msgid "Employee's Bank Account Number"
-msgstr "Ажилтаны банкны дансны дугаар"
+msgstr "Ажилтны банкны дансны дугаар"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_country_id
 msgid "Employee's Country"
-msgstr "Ажилтаны улс"
+msgstr "Ажилтны улс"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -1719,7 +1725,7 @@ msgstr "Ажилбар дээр сануулга гарсныг илэрхийл
 #: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
 #: model:ir.model.fields,field_description:hr.field_res_users__identification_id
 msgid "Identification No"
-msgstr "Хувийн дугаар"
+msgstr "Регистрийн дугаар"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction
@@ -1956,6 +1962,12 @@ msgid "Lead the entire sales cycle"
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Legal Cohabitant"
+msgstr "Албан ёсны хамтран амьдрагч"
+
+#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
 msgstr "Ажлын байр шинээр үүсгэцгээе."
@@ -2024,11 +2036,6 @@ msgid "Manager of employee %s is not set."
 msgstr "Ажилтны менежер %s тохируулагдаагүй байна."
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Marc Demo"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
 #: model:ir.model.fields,field_description:hr.field_res_users__marital
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2039,6 +2046,12 @@ msgstr "Гэрлэлтийн байдал"
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
 msgstr "Маркетинг, олон нийтийн менежер"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Married"
+msgstr "Гэрлэсэн"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__master
@@ -2845,7 +2858,7 @@ msgstr "Тэтгэвэртээ гарсан"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sinid
 msgid "SIN No"
-msgstr "Даатгалын дугаар"
+msgstr "SIN дугаар"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_has_sms_error
@@ -2858,7 +2871,7 @@ msgstr "SMS илгээлтийн алдаа"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
 #: model:ir.model.fields,field_description:hr.field_res_users__ssnid
 msgid "SSN No"
-msgstr "Регистрын дугаар"
+msgstr "SSN дугаар"
 
 #. module: hr
 #: model:hr.department,name:hr.dep_sales
@@ -2939,6 +2952,12 @@ msgid "Show employees"
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Single"
+msgstr "Ганц бие"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
 msgid "Skills Management"
 msgstr "Чадварын менежмент"
@@ -2952,12 +2971,7 @@ msgstr "Нийгмийн даатгалын дугаар"
 #: model:ir.model.fields,help:hr.field_hr_employee__ssnid
 #: model:ir.model.fields,help:hr.field_res_users__ssnid
 msgid "Social Security Number"
-msgstr "Регистрийн дугаар"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Software Developer"
-msgstr ""
+msgstr "Нийгмийн хамгааллын дугаар"
 
 #. module: hr
 #. odoo-python
@@ -3113,7 +3127,9 @@ msgstr ""
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
-msgid "The Badge ID must be a sequence of digits."
+msgid ""
+"The Badge ID must be alphanumeric without any accents and no longer than 18 "
+"characters."
 msgstr ""
 
 #. module: hr
@@ -3158,7 +3174,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "The employee %s should be linked to a user."
-msgstr ""
+msgstr "Ажилтан %sнь хэрэглэгчтэй холбогдсон байх ёстой."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
@@ -3183,7 +3199,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "The manager of %s should be linked to a user."
-msgstr ""
+msgstr "%s ажилтны менежер нь хэрэглэгчтэй холбогдсон байх ёстой."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_name_company_uniq
@@ -3448,6 +3464,12 @@ msgid ""
 "Whether the employee is a member of the active user's department or one of "
 "it's child department."
 msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Widower"
+msgstr "Бэлэвсэн"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id

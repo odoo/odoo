@@ -13,6 +13,16 @@
     .o_task_state_widget {
         font-size: large;
     }
+    @include media-breakpoint-up(xxl) {
+        .o_widget_todo_chatter_panel {
+            width: 35%;
+        }
+    }
+    @include media-breakpoint-down(xxl, $o-extra-grid-breakpoints) {
+        .o_widget_todo_chatter_panel {
+            min-width: 100%;
+        }
+    }
 }
 
 .o_todo_hide_avatar .o_avatar {

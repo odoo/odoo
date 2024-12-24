@@ -932,18 +932,20 @@ class TestExpenses(TestExpenseCommon):
         expense_sheet.action_approve_expense_sheets()
         expense_sheet.action_sheet_move_post()
 
-        self.assertRecordValues(expense_sheet.account_move_ids[0].attachment_ids, [{
+        expense_move = expense_sheet.account_move_ids.filtered(lambda am: am.invoice_line_ids[0].ref == 'Company expense')
+        expense_2_move = expense_sheet.account_move_ids.filtered(lambda am: am.invoice_line_ids[0].ref == 'Company expense 2')
+        self.assertRecordValues(expense_move.attachment_ids, [{
             'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
             'name': 'file1.png',
             'res_model': 'account.move',
-            'res_id': expense_sheet.account_move_ids[0].id
+            'res_id': expense_move.id
         }])
 
-        self.assertRecordValues(expense_sheet.account_move_ids[1].attachment_ids, [{
+        self.assertRecordValues(expense_2_move.attachment_ids, [{
             'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
             'name': 'file2.png',
             'res_model': 'account.move',
-            'res_id': expense_sheet.account_move_ids[1].id
+            'res_id': expense_2_move.id
         }])
 
     def test_expense_payment_method(self):
@@ -982,6 +984,7 @@ class TestExpenses(TestExpenseCommon):
         expense_sheet.action_sheet_move_post()
         self.assertRecordValues(expense_sheet.account_move_ids.origin_payment_id, [{'payment_method_line_id': new_payment_method_line.id}])
 
+    @freeze_time('2024-01-01')
     def test_expense_vendor(self):
         """ This test will do a basic flow when a vendor is set on the expense """
         vendor_a = self.env['res.partner'].create({'name': 'Ruben'})
@@ -995,15 +998,17 @@ class TestExpenses(TestExpenseCommon):
                     'employee_id': self.expense_employee.id,
                     'product_id': self.product_c.id,
                     'payment_mode': 'company_account',
+                    'date': '2024-01-02',
                     'total_amount': 100,
                     'tax_ids': [self.tax_purchase_a.id, self.tax_purchase_b.id],
                     'vendor_id': vendor_a.id,
                 }),
                 Command.create({
-                    'name': 'Expense test',
+                    'name': 'Expense test 2',
                     'employee_id': self.expense_employee.id,
                     'product_id': self.product_c.id,
                     'payment_mode': 'company_account',
+                    'date': '2024-01-01',
                     'total_amount': 100,
                     'tax_ids': [self.tax_purchase_a.id, self.tax_purchase_b.id],
                     'vendor_id': vendor_b.id,
@@ -1639,6 +1644,36 @@ class TestExpenses(TestExpenseCommon):
 
         expense_sheet.expense_line_ids.analytic_distribution = {self.analytic_account_1.id: 100.00}
         expense_sheet.with_context(validate_analytic=True).action_approve_expense_sheets()
+
+    def test_expense_no_stealing_from_employees(self):
+        """
+        Test to check that the company doesn't steal their employee when the commercial_partner_id of the employee partner
+        is the company
+        """
+        self.expense_employee.user_partner_id.parent_id = self.env.company.partner_id
+        self.assertEqual(self.env.company.partner_id, self.expense_employee.user_partner_id.commercial_partner_id)
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Company Cash Basis Expense Report',
+            'employee_id': self.expense_employee.id,
+            'payment_mode': 'own_account',
+            'state': 'approve',
+            'expense_line_ids': [Command.create({
+                'name': 'Company Cash Basis Expense',
+                'product_id': self.product_c.id,
+                'payment_mode': 'own_account',
+                'total_amount': 20.0,
+                'employee_id': self.expense_employee.id,
+            })]
+        })
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_post()
+        move = expense_sheet.account_move_ids
+
+        self.assertNotEqual(move.commercial_partner_id, self.env.company.partner_id)
+        self.assertEqual(move.partner_id, self.expense_employee.user_partner_id)
+        self.assertEqual(move.commercial_partner_id, self.expense_employee.user_partner_id)
 
     def test_expense_sheet_with_line_ids(self):
         """

@@ -68,3 +68,6 @@ class ProductCategory(models.Model):
         expense_category = self.env.ref('product.cat_expense', raise_if_not_found=False)
         if expense_category and expense_category in self:
             raise UserError(_("You cannot delete the %s product category.", expense_category.name))
+        saleable_category = self.env.ref('product.product_category_1', raise_if_not_found=False)
+        if saleable_category and saleable_category in self:
+            raise UserError(_("You cannot delete the %s product category.", saleable_category.name))

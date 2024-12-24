@@ -94,12 +94,12 @@ class IrModule(models.Model):
         unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
 
         if unmet_dependencies:
-            if (unmet_dependencies == set(['web_studio']) and
-                    _is_studio_custom(path)):
-                err = _("Studio customizations require Studio")
-            else:
-                to_install = known_mods.filtered(lambda mod: mod.name in unmet_dependencies)
-                to_install.button_immediate_install()
+            wrong_dependencies = unmet_dependencies.difference(known_mods.mapped("name"))
+            if wrong_dependencies:
+                err = _("Unknown module dependencies:") + "\n - " + "\n - ".join(wrong_dependencies)
+                raise UserError(err)
+            to_install = known_mods.filtered(lambda mod: mod.name in unmet_dependencies)
+            to_install.button_immediate_install()
         elif 'web_studio' not in installed_mods and _is_studio_custom(path):
             raise UserError(_("Studio customizations require the Odoo Studio app."))
 
@@ -141,11 +141,13 @@ class IrModule(models.Model):
                         convert_xml_import(self.env, module, fp, idref, mode, noupdate)
                         if filename in exclude_list:
                             self.env['ir.model.data'].create([{
-                                'name': f"cloc_exclude_{key}",
+                                'name': f"{module}_{key}",
                                 'model': self.env['ir.model.data']._xmlid_lookup(f"{module}.{key}")[0],
                                 'module': "__cloc_exclude__",
                                 'res_id': value,
-                            } for key, value in idref.items()])
+                            } for key, value in idref.items() if not self.env.ref(
+                                f"__cloc_exclude__.{module}_{key}", raise_if_not_found=False
+                            )])
 
         path_static = opj(path, 'static')
         IrAttachment = self.env['ir.attachment']

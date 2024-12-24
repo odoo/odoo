@@ -34,11 +34,13 @@ class TestControllersRoute(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         req = self.url_open(url)
         self.assertEqual(req.status_code, 200, "Response should = OK")
 
+        # changed behavior in Odoo 16+: the GET request to /rate/{access_token}/int
+        # will not trigger a consume of the rating. User needs to submit the Form
         details = [
             (self.user_demo.login, rating_test_1, rating_test_1.access_token, False),
-            (self.user.login, rating_test_1, rating_test_1.access_token, True),
-            (None, rating_test_2, rating_test_2.access_token, True),
-            (self.user_portal.login, rating_test_3, rating_test_3.access_token, True)
+            (self.user.login, rating_test_1, rating_test_1.access_token, False),
+            (None, rating_test_2, rating_test_2.access_token, False),
+            (self.user_portal.login, rating_test_3, rating_test_3.access_token, False)
         ]
 
         for login, rating_test, access_token, expected_consume in details:

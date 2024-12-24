@@ -7,12 +7,13 @@ from werkzeug.exceptions import NotFound
 from odoo import http
 from odoo.http import request
 from odoo.tools import frozendict
+from odoo.tools import email_normalize
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 from odoo.addons.mail.tools.discuss import Store
 
 
 class ThreadController(http.Controller):
-    @http.route("/mail/thread/data", methods=["POST"], type="json", auth="public")
+    @http.route("/mail/thread/data", methods=["POST"], type="json", auth="public", readonly=True)
     def mail_thread_data(self, thread_model, thread_id, request_list, **kwargs):
         thread = request.env[thread_model]._get_thread_with_access(thread_id, **kwargs)
         if not thread:
@@ -84,10 +85,14 @@ class ThreadController(http.Controller):
         if "body" in post_data:
             post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
         if "partner_emails" in kwargs and request.env.user.has_group("base.group_partner_manager"):
+            additional_values = {
+                email_normalize(email, strict=False) or email: values
+                for email, values in kwargs.get("partner_additional_values", {}).items()
+            }
             partners |= request.env["res.partner"].browse(
                 partner.id
                 for partner in request.env["res.partner"]._find_or_create_from_emails(
-                    kwargs["partner_emails"], kwargs.get("partner_additional_values", {})
+                    kwargs["partner_emails"], additional_values
                 )
             )
         if not request.env.user._is_internal():

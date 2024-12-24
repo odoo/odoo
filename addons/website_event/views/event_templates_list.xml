@@ -370,8 +370,10 @@
                                 <span t-field="event.name" itemprop="name"/>
                             </h5>
                             <!-- Start Date & Time -->
-                            <small class="o_not_editable opacity-75" itemprop="description" t-out="event.subtitle">
+                            <!-- TODO remove t-out one in master -->
+                            <small t-if="False" class="o_not_editable opacity-75" itemprop="description" t-out="event.subtitle">
                             </small>
+                            <small class="opacity-75" itemprop="description" t-field="event.subtitle"/>
                         </div>
                         <!-- Location -->
                         <t t-set="has_city_or_country" t-value="event.address_id.sudo().city or event.address_id.sudo().country_id"/>
@@ -461,14 +463,14 @@
         <h6 class="o_wevent_sidebar_title">Photos</h6>
         <a href="/event">
             <figure class="o_wevent_sidebar_block o_wevent_sidebar_figure figure">
-                <img class="figure-img img-fluid rounded" src="/website_event/static/src/img/event_past_0.jpg" alt=""/>
-                <figcaption class="figure-caption">A past event</figcaption>
+                <img class="figure-img img-fluid rounded oe_unremovable" src="/website_event/static/src/img/event_past_0.jpg" alt=""/>
+                <figcaption class="figure-caption oe_unremovable">A past event</figcaption>
             </figure>
         </a>
         <a href="/event">
             <figure class="o_wevent_sidebar_block o_wevent_sidebar_figure figure">
-                <img class="figure-img img-fluid rounded" src="/website_event/static/src/img/event_training_0.jpg" alt=""/>
-                <figcaption class="figure-caption">Our Trainings</figcaption>
+                <img class="figure-img img-fluid rounded oe_unremovable" src="/website_event/static/src/img/event_training_0.jpg" alt=""/>
+                <figcaption class="figure-caption oe_unremovable">Our Trainings</figcaption>
             </figure>
         </a>
     </xpath>

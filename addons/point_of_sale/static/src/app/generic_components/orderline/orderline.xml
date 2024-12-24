@@ -33,7 +33,7 @@
                         <t t-if="line.unit" t-esc="line.unit" />
                     </li>
                     <li t-if="line.price !== 0 and line.discount and line.discount !== '0' and !props.basic_receipt">
-                        With a <em><t t-esc="line.discount" />% </em> discount
+                        <t t-esc="line.price_without_discount"/> With a <em><t t-esc="line.discount" />% </em> discount
                     </li>
                     <li t-if="line.customerNote" class="customer-note w-100 p-2 mt-2 rounded text-break text-bg-warning bg-opacity-25">
                         <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>

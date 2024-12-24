@@ -35,7 +35,7 @@
                     <span class="department_name ms-2">
                         <t t-esc="dept.name"/>
                     </span>
-                    <a class="badge rounded-pill bg-300 border px-2" role="button"
+                    <a class="badge rounded-pill bg-300 border px-2 cursor-pointer" role="button"
                         title="Show employees"
                         t-on-click.prevent="() => this.openDepartmentEmployees(dept.id)">
                         <t t-esc="dept.employees"/>

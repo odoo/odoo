@@ -1483,11 +1483,13 @@ class Request:
     def _open_registry(self):
         try:
             registry = Registry(self.db)
-            cr_readonly = registry.cursor(readonly=True)
-            registry = registry.check_signaling(cr_readonly)
+            # use a RW cursor! Sequence data is not replicated and would
+            # be invalid if accessed on a readonly replica. Cfr task-4399456
+            cr_readwrite = registry.cursor(readonly=False)
+            registry = registry.check_signaling(cr_readwrite)
         except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError) as e:
             raise RegistryError(f"Cannot get registry {self.db}") from e
-        return registry, cr_readonly
+        return registry, cr_readwrite
 
     # =====================================================
     # Getters and setters
@@ -1858,7 +1860,7 @@ class Request:
         Prepare the user session and load the ORM before forwarding the
         request to ``_serve_ir_http``.
         """
-        cr_readonly = None
+        cr_readwrite = None
         rule = None
         args = None
         not_found = None
@@ -1866,15 +1868,16 @@ class Request:
         # reuse the same cursor for building+checking the registry and
         # for matching the controller endpoint
         try:
-            self.registry, cr_readonly = self._open_registry()
-            self.env = odoo.api.Environment(cr_readonly, self.session.uid, self.session.context)
+            self.registry, cr_readwrite = self._open_registry()
+            threading.current_thread().dbname = self.registry.db_name
+            self.env = odoo.api.Environment(cr_readwrite, self.session.uid, self.session.context)
             try:
                 rule, args = self.registry['ir.http']._match(self.httprequest.path)
             except NotFound as not_found_exc:
                 not_found = not_found_exc
         finally:
-            if cr_readonly is not None:
-                cr_readonly.close()
+            if cr_readwrite is not None:
+                cr_readwrite.close()
 
         if not_found:
             # no controller endpoint matched -> fallback or 404

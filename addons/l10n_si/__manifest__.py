@@ -15,7 +15,11 @@ Chart of accounts and taxes for Slovenia.
     ],
     'auto_install': ['account'],
     'data': [
+        'data/account_account_tag.xml',
         'data/account_tax_report_data.xml',
+        'data/account_tax_report_ir_data.xml',
+        'data/account_tax_report_pd_data.xml',
+        'data/account_tax_report_pr_data.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

@@ -25,7 +25,7 @@ class PosConfig(models.Model):
         return warehouse
 
     def _default_picking_type_id(self):
-        return self.env['stock.warehouse'].with_context(active_test=False).search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).pos_type_id.id
+        return self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).pos_type_id.id
 
     def _default_sale_journal(self):
         journal = self.env['account.journal']._ensure_company_account_journal()
@@ -187,7 +187,8 @@ class PosConfig(models.Model):
         "product lead time. Otherwise, it will be based on the shortest.")
     auto_validate_terminal_payment = fields.Boolean(default=True, help="Automatically validates orders paid with a payment terminal.")
     trusted_config_ids = fields.Many2many("pos.config", relation="pos_config_trust_relation", column1="is_trusting",
-                                          column2="is_trusted", string="Trusted Point of Sale Configurations")
+                                          column2="is_trusted", string="Trusted Point of Sale Configurations",
+                                          domain="[('company_id', '=', company_id)]")
     access_token = fields.Char("Access Token", default=lambda self: uuid4().hex[:16])
     show_product_images = fields.Boolean(string="Show Product Images", help="Show product images in the Point of Sale interface.", default=True)
     show_category_images = fields.Boolean(string="Show Category Images", help="Show category images in the Point of Sale interface.", default=True)
@@ -286,21 +287,6 @@ class PosConfig(models.Model):
                 pos_config.pos_session_state = False
                 pos_config.pos_session_duration = 0
                 pos_config.current_user_id = False
-
-    @api.constrains('rounding_method')
-    def _check_rounding_method_strategy(self):
-        for config in self:
-            if config.cash_rounding and config.rounding_method.strategy != 'add_invoice_line':
-                selection_value = "Add a rounding line"
-                for key, val in self.env["account.cash.rounding"]._fields["strategy"]._description_selection(config.env):
-                    if key == "add_invoice_line":
-                        selection_value = val
-                        break
-                raise ValidationError(_(
-                    "The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'",
-                    pos=config.name,
-                    value=selection_value,
-                ))
 
     def _check_profit_loss_cash_journal(self):
         if self.cash_control and self.payment_method_ids:
@@ -675,7 +661,7 @@ class PosConfig(models.Model):
             return {
                 'name': _('Rescue Sessions'),
                 'res_model': 'pos.session',
-                'view_mode': 'tree,form',
+                'view_mode': 'list,form',
                 'domain': [('id', 'in', rescue_session_ids.ids)],
                 'type': 'ir.actions.act_window',
             }

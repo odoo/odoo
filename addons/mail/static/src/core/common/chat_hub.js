@@ -8,7 +8,6 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { ChatBubble } from "./chat_bubble";
-import { _t } from "@web/core/l10n/translation";
 
 export class ChatHub extends Component {
     static components = { ChatBubble, ChatWindow, Dropdown };
@@ -23,6 +22,7 @@ export class ChatHub extends Component {
         super.setup();
         this.store = useState(useService("mail.store"));
         this.ui = useState(useService("ui"));
+        this.busMonitoring = useState(useService("bus.monitoring_service"));
         this.bubblesHover = useHover("bubbles");
         this.moreHover = useHover(["more-button", "more-menu*"], {
             onHover: () => (this.more.isOpen = true),
@@ -52,10 +52,6 @@ export class ChatHub extends Component {
         this.chatHub.onRecompute();
     }
 
-    get chatSizeTransitionText() {
-        return this.chatHub.isBig ? _t("Make chats smaller") : _t("Make chats bigger");
-    }
-
     get compactCounter() {
         let counter = 0;
         const cws = this.chatHub.opened.concat(this.chatHub.folded);
@@ -63,10 +59,6 @@ export class ChatHub extends Component {
             counter += chatWindow.thread.importantCounter > 0 ? 1 : 0;
         }
         return counter;
-    }
-
-    toggleChatSize() {
-        this.chatHub.isBig = !this.chatHub.isBig;
     }
 
     get hiddenCounter() {

@@ -1,6 +1,6 @@
 {
     'name': 'Spain - Modelo 130 Tax report',
-    'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations/spain.html',
+    'website': 'https://www.odoo.com/documentation/18.0/applications/finance/fiscal_localizations/spain.html',
     'version': '1.0',
     'icon': '/account/static/description/l10n.png',
     'countries': ['es'],

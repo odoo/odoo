@@ -301,7 +301,10 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
      * @override
      */
     destroy() {
+        this.options.wysiwyg?.odooEditor.observerUnactive("destroyStandardHeader");
         this.$el.css('transform', '');
+        this.el.classList.remove("o_transformed_not_affixed");
+        this.options.wysiwyg?.odooEditor.observerActive("destroyStandardHeader");
         this._super(...arguments);
     },
 
@@ -329,7 +332,11 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
         const fixedUpdate = (this.fixedHeader !== mainPosScrolled);
         const showUpdate = (this.fixedHeaderShow !== reachPosScrolled);
 
+        this.options.wysiwyg?.odooEditor.observerUnactive("updateHeaderOnScroll");
         if (fixedUpdate || showUpdate) {
+            if (fixedUpdate && (reachPosScrolled || mainPosScrolled)) {
+                this.el.classList.add("o_transformed_not_affixed");
+            }
             this.$el.css('transform',
                 reachPosScrolled
                 ? `translate(0, -${this.topGap}px)`
@@ -344,9 +351,11 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
 
         if (fixedUpdate) {
             this._toggleFixedHeader(mainPosScrolled);
+            this.el.classList.remove("o_transformed_not_affixed");
         } else if (showUpdate) {
             this._adaptToHeaderChange();
         }
+        this.options.wysiwyg?.odooEditor.observerActive("updateHeaderOnScroll");
     },
 });
 

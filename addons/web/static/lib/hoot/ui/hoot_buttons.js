@@ -37,15 +37,20 @@ export class HootButtons extends Component {
     static props = {};
 
     static template = xml`
-        <div class="${HootButtons.name} relative">
-            <t t-set="isRunning" t-value="runnerState.status === 'running'" />
-            <t t-set="showAll" t-value="env.runner.hasFilter" />
-            <t t-set="showFailed" t-value="runnerState.failedIds.size" />
-            <t t-set="failedSuites" t-value="getFailedSuiteIds()" />
+        <t t-set="isRunning" t-value="runnerState.status === 'running'" />
+        <t t-set="showAll" t-value="env.runner.hasFilter" />
+        <t t-set="showFailed" t-value="runnerState.failedIds.size" />
+        <t t-set="failedSuites" t-value="getFailedSuiteIds()" />
+        <div
+            class="${HootButtons.name} relative"
+            t-on-mouseenter="() => !isRunning and (state.open = true)"
+            t-on-mouseleave="() => state.open = false"
+        >
             <div class="flex rounded gap-px overflow-hidden">
             <button
+                type="button"
                 class="flex items-center bg-btn gap-2 px-2 py-1 transition-colors"
-                t-on-click="onRunClick"
+                t-on-click.stop="onRunClick"
                 t-att-title="isRunning ? 'Stop (Esc)' : 'Run'"
                 t-att-disabled="state.disable"
             >
@@ -54,10 +59,11 @@ export class HootButtons extends Component {
             </button>
             <t t-if="showAll or showFailed">
                 <button
+                    type="button"
                     class="bg-btn px-2 py-1 transition-colors animate-slide-left"
-                    t-on-click="() => state.open = !state.open"
+                    t-on-click.stop="() => state.open = !state.open"
                 >
-                    <i class="fa fa-caret-down" />
+                    <i class="fa fa-caret-down transition" t-att-class="{ 'rotate-180': state.open }" />
                 </button>
             </t>
             </div>
@@ -75,7 +81,7 @@ export class HootButtons extends Component {
                             type="'test'"
                             id="runnerState.failedIds"
                             class="'bg-btn p-2 whitespace-nowrap transition-colors'"
-                            title.translate="Run failed tests"
+                            title="'Run failed tests'"
                             onClick="onRunFailedClick"
                         >
                             Run failed <strong>tests</strong>
@@ -84,7 +90,7 @@ export class HootButtons extends Component {
                             type="'suite'"
                             id="failedSuites"
                             class="'bg-btn p-2 whitespace-nowrap transition-colors'"
-                            title.translate="Run failed suites"
+                            title="'Run failed suites'"
                             onClick="onRunFailedClick"
                         >
                             Run failed <strong>suites</strong>

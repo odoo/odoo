@@ -431,7 +431,8 @@ test("press enter on autocomplete with empty source (2)", async () => {
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
 });
 
-test.tags("desktop")("autofocus=true option work as expected", async () => {
+test.tags("desktop");
+test("autofocus=true option work as expected", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`
@@ -449,7 +450,8 @@ test.tags("desktop")("autofocus=true option work as expected", async () => {
     expect(".o-autocomplete input").toBeFocused();
 });
 
-test.tags("desktop")("autocomplete in edition keep edited value before select option", async () => {
+test.tags("desktop");
+test("autocomplete in edition keep edited value before select option", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`
@@ -493,7 +495,8 @@ test.tags("desktop")("autocomplete in edition keep edited value before select op
     expect(".o-autocomplete input").toHaveValue("My Click");
 });
 
-test.tags("desktop")("autocomplete in edition keep edited value before blur", async () => {
+test.tags("desktop");
+test("autocomplete in edition keep edited value before blur", async () => {
     let count = 0;
     class Parent extends Component {
         static components = { AutoComplete };
@@ -642,4 +645,31 @@ test("autocomplete always closes on click away", async () => {
     expect(".o-autocomplete--dropdown-item").toHaveCount(2);
     await contains(document.body).click();
     expect(".o-autocomplete--dropdown-item").toHaveCount(0);
+});
+
+test("autocomplete trim spaces for search", async () => {
+    class Parent extends Component {
+        static template = xml`
+            <AutoComplete value="state.value" sources="sources" onSelect="() => {}"/>
+        `;
+        static props = ["*"];
+        static components = { AutoComplete };
+        setup() {
+            this.state = useState({ value: " World" });
+        }
+        get sources() {
+            return [
+                {
+                    options(search) {
+                        return [{ label: "World" }, { label: "Hello" }].filter(({ label }) =>
+                            label.startsWith(search)
+                        );
+                    },
+                },
+            ];
+        }
+    }
+    await mountWithCleanup(Parent);
+    await contains(`.o-autocomplete input`).click();
+    expect(queryAllTexts(`.o-autocomplete--dropdown-item`)).toEqual(["World", "Hello"]);
 });

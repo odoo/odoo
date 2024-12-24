@@ -350,7 +350,8 @@ test("can use custom handlers for report actions", async () => {
     ]);
 });
 
-test.tags("desktop")("context is correctly passed to the client action report", async (assert) => {
+test.tags("desktop");
+test("context is correctly passed to the client action report", async (assert) => {
     patchWithCleanup(download, {
         _download: (options) => {
             expect.step(options.url);

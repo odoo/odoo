@@ -52,6 +52,19 @@
             </field>
         </record>
 
+        <record id="view_in_bill_tree_inherit" model="ir.ui.view">
+            <field name="name">account.move.tree.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_in_invoice_bill_tree" />
+            <field name="arch" type="xml">
+                <field name="status_in_payment" position="before">
+                    <field name="edi_state" optional="hide"/>
+                    <field name="edi_blocking_level" optional="hide"/>
+                    <field name="edi_error_message" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
         <record id="view_account_invoice_filter" model="ir.ui.view">
             <field name="name">account.invoice.select.inherit</field>
             <field name="model">account.move</field>
