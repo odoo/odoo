@@ -24,13 +24,6 @@ const DynamicSnippetEvents = DynamicSnippet.extend({
         }
         return searchDomain;
     },
-    /**
-     * @override
-     * @private
-     */
-    _getMainPageUrl() {
-        return "/event";
-    },
 });
 
 publicWidget.registry.events = DynamicSnippetEvents;
