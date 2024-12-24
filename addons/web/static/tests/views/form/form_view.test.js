@@ -8468,9 +8468,15 @@ test(`form rendering with groups with col/colspan`, async () => {
 
     // Verify .group_4 content
     expect(`.group_4 > div.o_cell`).toHaveCount(4);
-    expect(`.group_4 > div.o_cell:first-child`).toHaveAttribute("style", "grid-column: span 3;");
-    expect(`.group_4 > div.o_cell:nth-child(2)`).toHaveAttribute("style", "grid-column: span 2;");
-    expect(`.group_4 > div.o_cell:last-child`).toHaveAttribute("style", "grid-column: span 4;");
+    expect(`.group_4 > div.o_cell:first-child`).toHaveAttribute(
+        "style",
+        "--o-grid-column-span: 3;"
+    );
+    expect(`.group_4 > div.o_cell:nth-child(2)`).toHaveAttribute(
+        "style",
+        "--o-grid-column-span: 2;"
+    );
+    expect(`.group_4 > div.o_cell:last-child`).toHaveAttribute("style", "--o-grid-column-span: 4;");
 
     // Verify .group_3 content
     expect(`.group_3 > *`).toHaveCount(3);
