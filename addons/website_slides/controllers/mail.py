@@ -11,13 +11,6 @@ from odoo.tools import plaintext2html, html2plaintext
 
 class SlidesPortalChatter(PortalChatter):
 
-    def _portal_post_has_content(self, thread_model, thread_id, message, attachment_ids=None, **kw):
-        """ Relax constraint on slide model: having a rating value is sufficient
-        to consider we have a content. """
-        if thread_model == 'slide.channel' and kw.get('rating_value'):
-            return True
-        return super()._portal_post_has_content(thread_model, thread_id, message, attachment_ids=attachment_ids, **kw)
-
     @http.route([
         '/slides/mail/update_comment',
         ], type='jsonrpc', auth="user", methods=['POST'])
@@ -29,7 +22,7 @@ class SlidesPortalChatter(PortalChatter):
         thread_id = int(thread_id)
         attachment_ids = post_data.get('attachment_ids', [])
 
-        self._portal_post_check_attachments(attachment_ids, post.get('attachment_tokens', []))
+        request.env['ir.attachment'].browse(attachment_ids)._check_attachments_access(post.get('attachment_tokens', []))
 
         channel = ThreadController._get_thread_with_access(
             "slide.channel", thread_id,
