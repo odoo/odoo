@@ -174,7 +174,18 @@ class L10nInEwaybill(models.Model):
 
     def _get_seller_buyer_details(self):
         self.ensure_one()
-        return self.account_move_id._get_l10n_in_seller_buyer_party()
+        move = self.account_move_id
+        if move.is_outbound():
+            return {
+                'seller_details':  move.partner_id,
+                'dispatch_details': move.partner_shipping_id or move.partner_id,
+                'buyer_details': move.company_id.partner_id,
+                'ship_to_details': (
+                    move._l10n_in_get_warehouse_address()
+                    or move.company_id.partner_id
+                ),
+            }
+        return move._get_l10n_in_seller_buyer_party()
 
     def _is_incoming(self):
         self.ensure_one()
