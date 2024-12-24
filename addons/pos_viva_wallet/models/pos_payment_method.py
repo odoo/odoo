@@ -68,7 +68,7 @@ class PosPaymentMethod(models.Model):
             self.viva_wallet_bearer_token = access_token
             return {'Authorization': f"Bearer {access_token}"}
         else:
-            raise UserError(_('Not receive Bearer Token'))
+            raise UserError(_('Unable to retrieve Viva Wallet Bearer Token: Please verify that the Client ID and Client Secret are correct'))
 
     def _get_verification_key(self, endpoint, viva_wallet_merchant_id, viva_wallet_api_key):
         # Get a key to configure the webhook.
