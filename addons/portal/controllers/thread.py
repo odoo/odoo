@@ -16,7 +16,11 @@ class ThreadController(thread.ThreadController):
                 post_data["author_id"] = partner.id
         return post_data
 
-    def _is_message_editable(self, message, **kwargs):
-        if message._is_editable_in_portal(**kwargs):
-            return True
-        return super()._is_message_editable(message, **kwargs)
+    @classmethod
+    def _can_edit_message(cls, message, hash=None, pid=None, token=None, **kwargs):
+        if message.model and message.res_id and message.env.user._is_public():
+            thread = request.env[message.model].browse(message.res_id)
+            partner = get_portal_partner(thread, _hash=hash, pid=pid, token=token)
+            if partner and message.author_id == partner:
+                return True
+        return super()._can_edit_message(message, hash=hash, pid=pid, token=token, **kwargs)

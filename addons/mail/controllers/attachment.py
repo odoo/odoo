@@ -101,7 +101,7 @@ class AttachmentController(http.Controller):
         # sudo: ir.attachment: access is validated below with membership of message or access token
         attachment_sudo = attachment.sudo()
         if message:
-            if not self._is_allowed_to_delete(message, **kwargs):
+            if not ThreadController._can_delete_attachment(message, **kwargs):
                 raise NotFound()
         else:
             if (
@@ -113,9 +113,6 @@ class AttachmentController(http.Controller):
             if attachment_sudo.res_model != "mail.compose.message" or attachment_sudo.res_id != 0:
                 raise NotFound()
         attachment_sudo._delete_and_notify(message)
-
-    def _is_allowed_to_delete(self, message, **kwargs):
-        return message.is_current_user_or_guest_author
 
     @http.route(['/mail/attachment/zip'], methods=["POST"], type="http", auth="public")
     def mail_attachment_get_zip(self, file_ids, zip_name, **kw):
