@@ -560,11 +560,31 @@ class account_journal(models.Model):
         for journal_type, journals in [('sale', sale_journals), ('purchase', purchase_journals)]:
             if not journals:
                 continue
+<<<<<<< 18.0
 
             query, selects = journals._get_open_sale_purchase_query(journal_type)
             sql = SQL("""%s
                     GROUP BY account_move.company_id, account_move.journal_id, account_move.currency_id, late, to_pay""",
                       query.select(*selects),
+||||||| 747351ca8f905a3dd5b2aab5ca42f774f7db7c21
+            query, params = journals._get_open_sale_purchase_query(journal_type).select(
+                SQL("account_move_line.journal_id"),
+                SQL("account_move_line.company_id"),
+                SQL("account_move_line.currency_id AS currency"),
+                SQL("account_move_line.date_maturity < %s AS late", fields.Date.context_today(self)),
+                SQL("SUM(account_move_line.amount_residual) AS amount_total_company"),
+                SQL("SUM(account_move_line.amount_residual_currency) AS amount_total"),
+                SQL("COUNT(*)"),
+=======
+            query, params = journals._get_open_sale_purchase_query(journal_type).select(
+                SQL("account_move_line.journal_id"),
+                SQL("account_move_line.company_id"),
+                SQL("account_move_line.currency_id AS currency"),
+                SQL("account_move_line.date_maturity < %s AND account_move_line.amount_residual != 0 AS late", fields.Date.context_today(self)),
+                SQL("SUM(account_move_line.amount_residual) AS amount_total_company"),
+                SQL("SUM(account_move_line.amount_residual_currency) AS amount_total"),
+                SQL("COUNT(*)"),
+>>>>>>> 8a56c88d886b1990a87a8bb13903896c0ab40fec
             )
             self.env.cr.execute(sql)
             query_result = group_by_journal(self.env.cr.dictfetchall())
