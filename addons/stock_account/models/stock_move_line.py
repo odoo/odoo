@@ -44,7 +44,7 @@ class StockMoveLine(models.Model):
                 if float_compare(vals['qty_done'], move_line.qty_done, precision_rounding=move.product_uom.rounding) == 0:
                     continue
                 rounding = move.product_id.uom_id.rounding
-                diff = move.product_uom._compute_quantity(vals['qty_done'] - move_line.qty_done, move.product_id.uom_id, rounding_method='HALF-UP')
+                diff = move.product_uom._compute_quantity(vals['qty_done'] - move_line.qty_done, move_line.product_uom_id, rounding_method='HALF-UP')
                 if float_is_zero(diff, precision_rounding=rounding):
                     continue
                 self._create_correction_svl(move, diff)
