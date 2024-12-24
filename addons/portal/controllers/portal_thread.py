@@ -10,14 +10,6 @@ from odoo.addons.portal.utils import get_portal_partner
 
 class PortalChatter(http.Controller):
 
-
-    def _portal_post_check_attachments(self, attachment_ids, attachment_tokens):
-        request.env['ir.attachment'].browse(attachment_ids)._check_attachments_access(attachment_tokens)
-
-    def _portal_post_has_content(self, thread_model, thread_id, message, attachment_ids=None, **kw):
-        """ Tells if we can effectively post on the model based on content. """
-        return bool(message) or bool(attachment_ids)
-
     @http.route('/mail/avatar/mail.message/<int:res_id>/author_avatar/<int:width>x<int:height>', type='http', auth='public')
     def portal_avatar(self, res_id=None, height=50, width=50, access_token=None, _hash=None, pid=None):
         """Get the avatar image in the chatter of the portal"""
