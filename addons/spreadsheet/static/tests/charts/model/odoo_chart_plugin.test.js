@@ -26,6 +26,16 @@ import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 
 const { toZone } = spreadsheet.helpers;
 
+const fr_FR = {
+    name: "French",
+    code: "fr_FR",
+    thousandsSeparator: " ",
+    decimalSeparator: ",",
+    dateFormat: "dd/mm/yyyy",
+    timeFormat: "hh:mm:ss",
+    formulaArgSeparator: ";",
+};
+
 describe.current.tags("headless");
 defineSpreadsheetModels();
 defineSpreadsheetActions();
@@ -865,6 +875,25 @@ test("Show values is taken into account in the runtime", async () => {
     });
     const runtime = model.getters.getChartRuntime(chartId);
     expect(runtime.chartJsConfig.options.plugins.chartShowValuesPlugin.showValues).toBe(true);
+});
+
+test("Displays correct thousand separator for positive value in Odoo Bar chart Y-axis", async () => {
+    const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const runtime = model.getters.getChartRuntime(chartId);
+    expect(runtime.chartJsConfig.options.scales.y?.ticks.callback(60000000)).toBe("60,000,000");
+    expect(runtime.chartJsConfig.options.scales.y?.ticks.callback(-60000000)).toBe("-60,000,000");
+});
+
+test("Thousand separator in Odoo Bar chart Y-axis is locale-dependent", async () => {
+    const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+    model.dispatch("UPDATE_LOCALE", { locale: fr_FR });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const runtime = model.getters.getChartRuntime(chartId);
+    expect(runtime.chartJsConfig.options.scales.y?.ticks.callback(60000000)).toBe("60 000 000");
+    expect(runtime.chartJsConfig.options.scales.y?.ticks.callback(-60000000)).toBe("-60 000 000");
 });
 
 test("Chart data source is recreated when chart type is updated", async () => {

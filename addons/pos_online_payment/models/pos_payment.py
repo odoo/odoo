@@ -20,7 +20,8 @@ class PosPayment(models.Model):
             pm_id = vals['payment_method_id']
             if pm_id not in online_account_payments_by_pm:
                 online_account_payments_by_pm[pm_id] = set()
-            online_account_payments_by_pm[pm_id].add(vals.get('online_account_payment_id'))
+            if vals.get('online_account_payment_id'):
+                online_account_payments_by_pm[pm_id].add(vals['online_account_payment_id'])
 
         opms_read_id = self.env['pos.payment.method'].search_read(['&', ('id', 'in', list(online_account_payments_by_pm.keys())), ('is_online_payment', '=', True)], ["id"])
         opms_id = {opm_read_id['id'] for opm_read_id in opms_read_id}
