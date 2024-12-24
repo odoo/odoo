@@ -18,6 +18,10 @@ export class OrderReceipt extends Component {
     };
     static props = {
         order: Object,
+        basic_receipt: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        basic_receipt: false,
     };
 
     get header() {

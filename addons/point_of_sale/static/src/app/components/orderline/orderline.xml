@@ -18,7 +18,7 @@
                         <span class="text-wrap" t-esc="line.getFullProductName()"/>
                         <t t-slot="product-name" />
                     </div>
-                    <div t-if="!line.config.basic_receipt" t-esc="line.getPriceString()" class="product-price price fw-bolder"/>
+                    <div t-if="!props.basic_receipt" t-esc="line.getPriceString()" class="product-price price fw-bolder"/>
                     <div t-if="props.showTaxGroup" t-esc="this.taxGroup" class="text-end" style="width: 2rem"/>
                 </div>
                 <ul class="info-list d-flex flex-column">
