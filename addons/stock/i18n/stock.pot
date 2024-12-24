@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
-"PO-Revision-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 15:31+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -282,12 +282,18 @@ msgid "(serial barcode)"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
+#: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+msgid ")^FS"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
 #: model:ir.model.fields,help:stock.field_stock_move_line__state
 msgid ""
 "* New: The stock move is created but not confirmed.\n"
 "* Waiting Another Move: A linked stock move should be done before this one.\n"
-"* Waiting Availability: The stock move is confirmed but the product can't be reserved.\n"
+"* Waiting: The stock move is confirmed but the product can't be reserved.\n"
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
@@ -467,33 +473,33 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br><br>\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
 "        We are glad to inform you that your order has been shipped.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
-"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
-"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
 "                </t>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
 "            </t>\n"
 "            </strong>\n"
 "        </t>\n"
-"        <br><br>\n"
-"        Please find your delivery order attached for more details.<br><br>\n"
+"        <br/><br/>\n"
+"        Please find your delivery order attached for more details.<br/><br/>\n"
 "        Thank you,\n"
-"        <t t-if=\"user.signature\">\n"
-"            <br>\n"
-"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"            <br/>\n"
+"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -684,7 +690,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "<strong>Delivery Address</strong>"
+msgid "<strong>Delivery Address:</strong>"
 msgstr ""
 
 #. module: stock
@@ -974,6 +980,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot_report__address
+#: model:ir.model.fields,field_description:stock.field_stock_picking__warehouse_address_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__partner_id
 #: model_terms:ir.ui.view,arch_db:stock.search_customer_lot_filter
 msgid "Address"
@@ -1079,6 +1086,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_route_ids
 #: model:ir.model.fields,field_description:stock.field_stock_replenish_mixin__allowed_route_ids
 msgid "Allowed Route"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__alternative
+msgid "Alternative (2.00\" x 1.00\")"
 msgstr ""
 
 #. module: stock
@@ -1709,7 +1721,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/models/stock_move_line.py:0
 msgid "Choose destination location"
 msgstr ""
 
@@ -2541,7 +2553,8 @@ msgid ""
 "\n"
 "FIFO: products/lots that were stocked first will be moved out first.\n"
 "LIFO: products/lots that were stocked last will be moved out first.\n"
-"Closet location: products/lots closest to the target location will be moved out first.\n"
+"Closest Location: products/lots closest to the target location will be moved out first.\n"
+"Least Packages: products/lots that were stocked in package with least amount of qty will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
 
@@ -2853,6 +2866,11 @@ msgid "Detailed Operations"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Details"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_details_visible
 msgid "Details Visible"
 msgstr ""
@@ -2917,15 +2935,32 @@ msgid "Display Lots & Serial Numbers on Delivery Slips"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_barcode_rule__display_name
+#: model:ir.model.fields,field_description:stock.field_ir_actions_report__display_name
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__display_name
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__display_name
 #: model:ir.model.fields,field_description:stock.field_procurement_group__display_name
+#: model:ir.model.fields,field_description:stock.field_product_category__display_name
+#: model:ir.model.fields,field_description:stock.field_product_label_layout__display_name
+#: model:ir.model.fields,field_description:stock.field_product_packaging__display_name
+#: model:ir.model.fields,field_description:stock.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock.field_product_removal__display_name
 #: model:ir.model.fields,field_description:stock.field_product_replenish__display_name
+#: model:ir.model.fields,field_description:stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock.field_report_stock_label_lot_template_view__display_name
+#: model:ir.model.fields,field_description:stock.field_report_stock_label_product_product_view__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__display_name
+#: model:ir.model.fields,field_description:stock.field_report_stock_report_reception__display_name
+#: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__display_name
+#: model:ir.model.fields,field_description:stock.field_res_company__display_name
+#: model:ir.model.fields,field_description:stock.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:stock.field_res_partner__display_name
+#: model:ir.model.fields,field_description:stock.field_res_users__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__display_name
+#: model:ir.model.fields,field_description:stock.field_stock_forecasted_product_product__display_name
+#: model:ir.model.fields,field_description:stock.field_stock_forecasted_product_template__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_adjustment_name__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_conflict__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_warning__display_name
@@ -2945,6 +2980,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__display_name
+#: model:ir.model.fields,field_description:stock.field_stock_replenish_mixin__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__display_name
@@ -2962,7 +2998,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_track_line__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__display_name
+#: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__display_name
+#: model:ir.model.fields,field_description:stock.field_uom_uom__display_name
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "Display Name"
 msgstr ""
@@ -3670,15 +3708,32 @@ msgid "How products in transfers of this operation type should be reserved."
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_barcode_rule__id
+#: model:ir.model.fields,field_description:stock.field_ir_actions_report__id
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__id
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__id
 #: model:ir.model.fields,field_description:stock.field_procurement_group__id
+#: model:ir.model.fields,field_description:stock.field_product_category__id
+#: model:ir.model.fields,field_description:stock.field_product_label_layout__id
+#: model:ir.model.fields,field_description:stock.field_product_packaging__id
+#: model:ir.model.fields,field_description:stock.field_product_product__id
 #: model:ir.model.fields,field_description:stock.field_product_removal__id
 #: model:ir.model.fields,field_description:stock.field_product_replenish__id
+#: model:ir.model.fields,field_description:stock.field_product_template__id
+#: model:ir.model.fields,field_description:stock.field_report_stock_label_lot_template_view__id
+#: model:ir.model.fields,field_description:stock.field_report_stock_label_product_product_view__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__id
+#: model:ir.model.fields,field_description:stock.field_report_stock_report_reception__id
+#: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__id
+#: model:ir.model.fields,field_description:stock.field_res_company__id
+#: model:ir.model.fields,field_description:stock.field_res_config_settings__id
+#: model:ir.model.fields,field_description:stock.field_res_partner__id
+#: model:ir.model.fields,field_description:stock.field_res_users__id
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__id
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__id
+#: model:ir.model.fields,field_description:stock.field_stock_forecasted_product_product__id
+#: model:ir.model.fields,field_description:stock.field_stock_forecasted_product_template__id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_adjustment_name__id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_conflict__id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_warning__id
@@ -3698,6 +3753,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__id
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__id
+#: model:ir.model.fields,field_description:stock.field_stock_replenish_mixin__id
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__id
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__id
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__id
@@ -3715,7 +3771,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_track_line__id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__id
+#: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__id
+#: model:ir.model.fields,field_description:stock.field_uom_uom__id
 msgid "ID"
 msgstr ""
 
@@ -4378,6 +4436,11 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__1
 msgid "January"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__jewelry
+msgid "Jewelry (2.20\" x 0.50\")"
 msgstr ""
 
 #. module: stock
@@ -5493,6 +5556,11 @@ msgid "Normal"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__normal
+msgid "Normal (2.25\" x 1.25\")"
+msgstr ""
+
+#. module: stock
 #. odoo-javascript
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
@@ -6238,7 +6306,6 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__picking_ids
 #: model:ir.model.fields,field_description:stock.field_stock_lot_report__picking_id
-#: model:ir.model.fields,field_description:stock.field_stock_package_destination__picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__picking_id
@@ -6285,6 +6352,12 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Planning Issues"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_warehouse.py:0
+msgid "Please contact your administrator to configure your warehouse."
 msgstr ""
 
 #. module: stock
@@ -6792,6 +6865,7 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
+#: model:ir.actions.act_window,name:stock.action_putaway_tree
 #: model:ir.actions.act_window,name:stock.category_open_putaway
 #: model:ir.actions.act_window,name:stock.location_open_putaway
 #: model:ir.model.fields,field_description:stock.field_product_category__putaway_rule_ids
@@ -6809,11 +6883,6 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Putaway:"
-msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_putaway_tree
-msgid "Putaways Rules"
 msgstr ""
 
 #. module: stock
@@ -8170,6 +8239,11 @@ msgid "Show all records which has next action date is before today"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
+msgid "Show details"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_m2o
 msgid "Show lot_id"
 msgstr ""
@@ -8209,6 +8283,11 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Size: Length × Width × Height"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__small
+msgid "Small (1.25\" x 1.00\")"
 msgstr ""
 
 #. module: stock
@@ -8673,6 +8752,12 @@ msgid "Template"
 msgstr ""
 
 #. module: stock
+#: model_terms:res.company,sign_terms:stock.res_company_1
+#: model_terms:res.company,sign_terms_html:stock.res_company_1
+msgid "Terms &amp; Conditions"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
@@ -8968,7 +9053,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/models/stock_move_line.py:0
 msgid ""
 "There is nothing eligible to put in a pack. Either there are no quantities "
 "to put in a pack or all products are already in a pack."
@@ -9949,6 +10034,7 @@ msgid "WH/Stock"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_move__state__confirmed
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__confirmed
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -9963,11 +10049,6 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__waiting
 msgid "Waiting Another Operation"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields.selection,name:stock.selection__stock_move__state__confirmed
-msgid "Waiting Availability"
 msgstr ""
 
 #. module: stock
@@ -10558,15 +10639,6 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-msgid ""
-"You cannot directly pack quantities from different transfers into the same "
-"package through this view. Try adding them to a batch picking and pack it "
-"there."
-msgstr ""
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "You cannot duplicate stock quants."
 msgstr ""
@@ -10587,10 +10659,10 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/models/stock_move_line.py:0
 msgid ""
 "You cannot pack products into the same package when they are from different "
-"transfers with different operation types."
+"transfers with different operation types"
 msgstr ""
 
 #. module: stock
@@ -10774,6 +10846,12 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model_terms:res.company,sign_terms:stock.res_company_1
+#: model_terms:res.company,sign_terms_html:stock.res_company_1
+msgid "Your conditions..."
+msgstr ""
+
+#. module: stock
 #: model_terms:res.company,lunch_notify_message:stock.res_company_1
 msgid ""
 "Your lunch has been delivered.\n"
@@ -10815,8 +10893,106 @@ msgid "ZPL Labels with price"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_label_layout__zpl_preview
+msgid "ZPL Preview"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_label_layout__zpl_template
+msgid "ZPL Template"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "]<br/>min:"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
+msgid "^FO150,165 ^A0N,25^FH ^FD"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+msgid "^FO150,210 ^A0N,25^FH ^FD("
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
+msgid "^FO160,185 ^A0N,18^FH ^FD("
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
+msgid "^FO290,165 ^A0N,30^FH ^FD"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
+msgid "^FO290,50 ^A0N,30^FH ^FD"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+msgid "^FO300,200 ^A0N,40^FH ^FD"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
+msgid "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
+msgid "^FO35,55^BY2 ^BCN,100,Y,N,N ^FD"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
+msgid "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+msgid "^FO35,77^BY2 ^BCN,100,Y,N,N ^FD"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
+#: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
+#: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+#: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
+msgid "^FS"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
+msgid ""
+"^FS\n"
+"^FT35,48^A0N,15^FD"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+msgid ""
+"^FS\n"
+"^FT35,65^A0N,20^FD"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
+msgid "^FT210,30^A0N,25^FD"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
+#: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
+msgid "^FT35,30^A0N,20^FD"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+msgid "^FT35,40^A0N,25^FD"
 msgstr ""
 
 #. module: stock
