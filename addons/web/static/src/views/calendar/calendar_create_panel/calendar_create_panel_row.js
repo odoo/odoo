@@ -3,10 +3,6 @@
 import { Component } from "@odoo/owl";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
-/**
- * Renders a single row with a label + input widget, based on field type.
- * For many2one, we use Many2XAutocomplete in a generic way.
- */
 export class FieldRow extends Component {
     static template = "my_module.CalendarSuperQuickPanelFieldRow";
     static components = { Many2XAutocomplete };
@@ -19,9 +15,6 @@ export class FieldRow extends Component {
         model: { type: Object, optional: true },
     };
 
-    /**
-     * For convenience, let's define a few getters for detecting field type
-     */
     get isMany2One() {
         return this.props.fieldInfo.type === "many2one";
     }
@@ -36,7 +29,8 @@ export class FieldRow extends Component {
     }
 
     get many2XProps() {
-        const displayName = (this.props.value && this.props.value.display_name) ? this.props.value.display_name : "";
+        const displayName =
+            this.props.value && this.props.value.display_name ? this.props.value.display_name : "";
         return {
             value: displayName,
             resModel: this.props.model.fields[this.props.fieldName].relation,
@@ -49,9 +43,9 @@ export class FieldRow extends Component {
     }
 
     onMany2XUpdate(recordListOrFalse) {
-        console.log(recordListOrFalse)
+        console.log(recordListOrFalse);
         if (!recordListOrFalse) {
-            this.triggerChange(null );
+            this.triggerChange(null);
         } else {
             const [rec] = recordListOrFalse;
             const display_name = rec.display_name || rec.label || "";
@@ -71,23 +65,5 @@ export class FieldRow extends Component {
 
     triggerChange(newVal, raw_value) {
         this.props.onChange(this.props.fieldName, newVal, raw_value);
-    }
-
-    parseDomain(domainDef) {
-        if (!domainDef) {
-            return [];
-        }
-        if (Array.isArray(domainDef)) {
-            return domainDef;
-        }
-        if (typeof domainDef === "string") {
-            try {
-                return JSON.parse(domainDef);
-            } catch {
-                // fallback
-                return [];
-            }
-        }
-        return [];
     }
 }
