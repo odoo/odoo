@@ -40,4 +40,7 @@ patch(PosData.prototype, {
             ? await super.getLocalDataFromIndexedDB(...arguments)
             : {};
     },
+    async missingRecursive(recordMap) {
+        return recordMap;
+    },
 });
