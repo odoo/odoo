@@ -19,20 +19,6 @@ class AccountMove(models.Model):
     )
     l10n_in_ewaybill_expiry_date = fields.Datetime(compute='_compute_l10n_in_ewaybill_details')
 
-    def _get_l10n_in_seller_buyer_party(self):
-        res = super()._get_l10n_in_seller_buyer_party()
-        if self.is_outbound():
-            res = {
-                'seller_details':  self.partner_id,
-                'dispatch_details': self.partner_shipping_id or self.partner_id,
-                'buyer_details': self.company_id.partner_id,
-                'ship_to_details': (
-                    self._l10n_in_get_warehouse_address()
-                    or self.company_id.partner_id
-                ),
-            }
-        return res
-
     def _get_l10n_in_ewaybill_form_action(self):
         return self.env.ref('l10n_in_ewaybill.l10n_in_ewaybill_form_action')._get_action_dict()
 
