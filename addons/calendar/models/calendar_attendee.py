@@ -122,16 +122,19 @@ class CalendarAttendee(models.Model):
     def _send_invitation_emails(self):
         """ Hook to be able to override the invitation email sending process.
          Notably inside appointment to use a different mail template from the appointment type. """
-        self._send_mail_to_attendees(
+        self._notify_attendees(
             self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False),
             force_send=True,
         )
 
-    def _send_mail_to_attendees(self, mail_template, force_send=False):
-        """ Send mail for event invitation to event attendees.
-            :param mail_template: a mail.template record
-            :param force_send: if set to True, the mail(s) will be sent immediately (instead of the next queue processing)
+    def _notify_attendees(self, mail_template, notify_author=False, force_send=False):
+        """ Notify attendees about event main changes (invite, cancel, ...) based
+        on template.
+
+        :param mail_template: a mail.template record
+        :param force_send: if set to True, the mail(s) will be sent immediately (instead of the next queue processing)
         """
+        # TDE FIXME: check this
         if force_send:
             force_send_limit = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail_force_send_limit', 100))
         notified_attendees = self
@@ -163,7 +166,7 @@ class CalendarAttendee(models.Model):
 
         mail_messages = self.env['mail.message']
         for attendee in notified_attendees:
-            if attendee.email and attendee._should_notify_attendee():
+            if attendee.email and attendee._should_notify_attendee(notify_author=notify_author):
                 event_id = attendee.event_id.id
                 ics_file = ics_files.get(event_id)
 
@@ -197,6 +200,7 @@ class CalendarAttendee(models.Model):
                     author_id=attendee.event_id.user_id.partner_id.id or self.env.user.partner_id.id,
                     body=body,
                     subject=subject,
+                    notify_author=notify_author,
                     partner_ids=attendee.partner_id.ids,
                     email_layout_xmlid='mail.mail_notification_light',
                     attachment_ids=attachment_ids,
@@ -206,7 +210,7 @@ class CalendarAttendee(models.Model):
         if force_send and len(notified_attendees) < force_send_limit:
             mail_messages.sudo().mail_ids.send_after_commit()
 
-    def _should_notify_attendee(self):
+    def _should_notify_attendee(self, notify_author=False):
         """ Utility method that determines if the attendee should be notified.
             By default, we do not want to notify (aka no message and no mail) the current user
             if he is part of the attendees. But for reminders, mail_notify_author could be forced
@@ -214,8 +218,7 @@ class CalendarAttendee(models.Model):
         """
         self.ensure_one()
         partner_not_sender = self.partner_id != self.env.user.partner_id
-        mail_notify_author = self.env.context.get('mail_notify_author')
-        return partner_not_sender or mail_notify_author
+        return partner_not_sender or notify_author
 
     # ------------------------------------------------------------
     # STATE MANAGEMENT

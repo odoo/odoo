@@ -184,12 +184,10 @@ class CalendarAlarm_Manager(models.AbstractModel):
         alarms = self.env['calendar.alarm'].browse(events_by_alarm.keys())
         for alarm in alarms:
             alarm_attendees = attendees.filtered(lambda attendee: attendee.event_id.id in events_by_alarm[alarm.id])
-            alarm_attendees.with_context(
-                calendar_template_ignore_recurrence=True,
-                mail_notify_author=True,
-            )._send_mail_to_attendees(
+            alarm_attendees.with_context(calendar_template_ignore_recurrence=True)._notify_attendees(
                 alarm.mail_template_id,
-                force_send=len(attendees) <= force_send_limit
+                force_send=len(attendees) <= force_send_limit,
+                notify_author=True,
             )
 
         for event in events:
