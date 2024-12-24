@@ -185,7 +185,10 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
             the buyer VAT registration number or buyer group VAT registration number must not exist in the Invoice
         """
         if role != 'customer' or partner.country_id.code == 'SA':
-            return super()._get_partner_party_tax_scheme_vals_list(partner, role)
+            vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
+            for vals in vals_list:
+                vals['tax_scheme_vals'] = {'id': 'VAT'}
+            return vals_list
         return []
 
     def _apply_invoice_tax_filter(self, base_line, tax_values):
