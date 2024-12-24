@@ -57,9 +57,11 @@ export class HtmlField extends Component {
         codeview: { type: Boolean, optional: true },
         editorConfig: { type: Object, optional: true },
         embeddedComponents: { type: Boolean, optional: true },
+        disableCheckbox: { type: Boolean, optional: true },
     };
     static defaultProps = {
         dynamicPlaceholder: false,
+        disableCheckbox: false,
     };
     static components = {
         Wysiwyg,
@@ -241,6 +243,7 @@ export class HtmlField extends Component {
             },
             dropImageAsAttachment: true, // @todo @phoenix always true ?
             dynamicPlaceholder: this.dynamicPlaceholder,
+            disableCheckbox: this.props.disableCheckbox,
             dynamicPlaceholderResModel:
                 this.props.record.data[this.props.dynamicPlaceholderModelReferenceField || "model"],
             direction: localization.direction || "ltr",
@@ -340,6 +343,9 @@ export const htmlField = {
         }
         if ("baseContainer" in options) {
             editorConfig.baseContainer = options.baseContainer;
+        }
+        if ("disable_checkbox" in options) {
+            editorConfig.disableCheckbox = Boolean(options.disable_checkbox);
         }
         return {
             editorConfig,
