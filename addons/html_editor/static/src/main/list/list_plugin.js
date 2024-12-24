@@ -70,6 +70,7 @@ export class ListPlugin extends Plugin {
                 title: _t("Checklist"),
                 description: _t("Track tasks with a checklist"),
                 icon: "fa-check-square-o",
+                isAvailable: () => !this.config.disableCheckbox,
                 run: () => this.toggleListCommand({ mode: "CL" }),
             },
         ],
