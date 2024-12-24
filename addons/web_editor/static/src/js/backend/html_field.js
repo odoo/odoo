@@ -392,6 +392,10 @@ export class HtmlField extends Component {
                     await this.updateValue();
                 }
                 await savePendingImagesPromise;
+                if (this.state.showCodeView) {
+                    const codeViewEl = this._getCodeViewEl();
+                    codeViewEl.value = this.wysiwyg.getValue();
+                }
                 if (this.props.isInlineStyle) {
                     await toInlinePromise;
                 }
