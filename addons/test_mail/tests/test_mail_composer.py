@@ -166,6 +166,7 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.mail_server_id)
         self.assertEqual(composer_form.model, self.test_record._name)
         self.assertFalse(composer_form.notify_author)
+        self.assertFalse(composer_form.notify_author_mention)
         self.assertFalse(composer_form.partner_ids)
         self.assertEqual(composer_form.record_alias_domain_id, self.mail_alias_domain)
         self.assertEqual(composer_form.record_company_id, self.env.company)
@@ -275,6 +276,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_record._name)
         self.assertFalse(composer_form.notify_author)
+        self.assertFalse(composer_form.notify_author_mention)
         self.assertEqual(composer_form.partner_ids[:], self.partner_1)
         self.assertEqual(composer_form.record_alias_domain_id, self.mail_alias_domain)
         self.assertEqual(composer_form.record_company_id, self.env.company)
@@ -311,6 +313,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_record._name)
         self.assertFalse(composer_form.notify_author)
+        self.assertFalse(composer_form.notify_author_mention)
         self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: comment in batch mode should have void alias domain')
         self.assertFalse(composer_form.record_company_id, 'MailComposer: comment in batch mode should have void company')
         self.assertFalse(composer_form.record_name, 'MailComposer: comment in batch mode should have void record name')
@@ -346,6 +349,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_record._name)
         self.assertFalse(composer_form.notify_author)
+        self.assertFalse(composer_form.notify_author_mention)
         self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: comment in batch mode should have void alias domain')
         self.assertFalse(composer_form.record_company_id, 'MailComposer: comment in batch mode should have void company')
         self.assertFalse(composer_form.record_name, 'MailComposer: comment in batch mode should have void record name')
@@ -379,6 +383,7 @@ class TestComposerForm(TestMailComposer):
         self.assertTrue(composer_form.force_send)
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertFalse(composer_form.notify_author)
+        self.assertFalse(composer_form.notify_author_mention)
         self.assertEqual(composer_form.model, self.test_record._name)
         self.assertFalse(composer_form.partner_ids[:])
         self.assertFalse(composer_form.record_alias_domain_id)
@@ -411,6 +416,7 @@ class TestComposerForm(TestMailComposer):
         self.assertTrue(composer_form.force_send, 'MailComposer: mass mode sends emails right away')
         self.assertFalse(composer_form.mail_server_id)
         self.assertFalse(composer_form.notify_author)
+        self.assertFalse(composer_form.notify_author_mention)
         self.assertEqual(composer_form.model, self.test_records._name)
         self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: mass mode should have void alias domain')
         self.assertFalse(composer_form.record_company_id, 'MailComposer: mass mode should have void company')
@@ -444,6 +450,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_records._name)
         self.assertFalse(composer_form.notify_author)
+        self.assertFalse(composer_form.notify_author_mention)
         self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: mass mode should have void alias domain')
         self.assertFalse(composer_form.record_company_id, 'MailComposer: mass mode should have void company')
         self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
@@ -480,6 +487,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_records._name)
         self.assertFalse(composer_form.notify_author)
+        self.assertFalse(composer_form.notify_author_mention)
         self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: mass mode should have void alias domain')
         self.assertFalse(composer_form.record_company_id, 'MailComposer: mass mode should have void company')
         self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
@@ -516,6 +524,7 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.mail_server_id, self.mail_server_domain)
         self.assertEqual(composer_form.model, self.test_records._name)
         self.assertFalse(composer_form.notify_author)
+        self.assertFalse(composer_form.notify_author_mention)
         self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: mass mode should have void alias domain')
         self.assertFalse(composer_form.record_company_id, 'MailComposer: mass mode should have void company')
         self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
@@ -1587,19 +1596,27 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
 
         # check author notification parameter support
         self.assertTrue(self.user_employee.partner_id in self.test_record.message_partner_ids)
-        for notify_author in [False, True]:
-            with self.subTest(notify_author=notify_author):
+        for notify_author, notify_author_mention, add_pid, should_mention in [
+            (False, False, False, False),  # never add, even in pids
+            (False, False, True, False),  # never add, even in pids
+            (False, True, False, False),  # needs to be in pids
+            (False, True, True, True),  # needs to be in pids
+            (True, False, False, True),
+        ]:
+            with self.subTest(notify_author=notify_author, notify_author_mention=notify_author_mention, add_pid=add_pid):
                 composer = self.env['mail.compose.message'].with_user(self.env.user).with_context(
                     self._get_web_context(self.test_record),
                 ).create({
                     'body': 'Test Own Notify',
                     'message_type': 'comment',
                     'notify_author': notify_author,
+                    'notify_author_mention': notify_author_mention,
+                    'partner_ids': [(4, self.env.user.partner_id.id)] if add_pid else [],
                     'subtype_id': self.env.ref('mail.mt_comment').id,
                 })
                 _mail, message = composer._action_send_mail()
                 self.assertEqual(message.author_id, self.user_employee.partner_id)
-                if notify_author:
+                if should_mention:
                     self.assertTrue(self.user_employee.partner_id in message.notified_partner_ids)
                 else:
                     self.assertFalse(self.user_employee.partner_id in message.notified_partner_ids)

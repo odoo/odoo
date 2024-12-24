@@ -711,7 +711,7 @@ class CalendarEvent(models.Model):
         current_attendees = self.filtered('active').attendee_ids
         if 'partner_ids' in values:
             # we send to all partners and not only the new ones
-            (current_attendees - previous_attendees)._send_mail_to_attendees(
+            (current_attendees - previous_attendees)._notify_attendees(
                 self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False),
                 force_send=True,
             )
@@ -721,7 +721,7 @@ class CalendarEvent(models.Model):
             if start_date and start_date >= fields.Datetime.now():
                 (current_attendees & previous_attendees).with_context(
                     calendar_template_ignore_recurrence=not update_recurrence
-                )._send_mail_to_attendees(
+                )._notify_attendees(
                     self.env.ref('calendar.calendar_template_meeting_changedate', raise_if_not_found=False),
                     force_send=True,
                 )
@@ -957,9 +957,8 @@ class CalendarEvent(models.Model):
         return False
 
     def action_sendmail(self):
-        email = self.env.user.email
-        if email:
-            self.attendee_ids._send_mail_to_attendees(
+        if self.env.user.email:
+            self.attendee_ids._notify_attendees(
                 self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False),
             )
         return True
