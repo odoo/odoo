@@ -247,7 +247,7 @@
         <field name="domain">[('user_ids', 'in', [uid]), ('project_id', '=', False), ('parent_id', '=', False)]</field>
         <field name="view_mode">kanban,form,tree,activity</field>
         <field name="search_view_id" ref="project_task_view_todo_search"/>
-        <field name="context">{'search_default_open_tasks': 1, 'tree_view_ref': 'project_todo.project_task_view_todo_tree'}</field>
+        <field name="context">{'search_default_open_tasks': 1, 'tree_view_ref': 'project_todo.project_task_view_todo_tree', 'default_project_id': False}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No to-do found. Let's create one!
