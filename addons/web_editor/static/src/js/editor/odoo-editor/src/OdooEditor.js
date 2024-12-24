@@ -5041,7 +5041,7 @@ export class OdooEditor extends EventTarget {
             if (fragment.hasChildNodes()) {
                 this._applyCommand('insert', fragment);
             }
-        } else if (files.length || clipboardHtml) {
+        } else if ((files.length || clipboardHtml) && this.options.allowCommandImage) {
             const clipboardElem = this._prepareClipboardData(clipboardHtml);
             // When copy pasting a table from the outside, a picture of the
             // table can be included in the clipboard as an image file. In that
