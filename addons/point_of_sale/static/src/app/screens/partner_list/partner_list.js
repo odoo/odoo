@@ -134,7 +134,7 @@ export class PartnerList extends Component {
             ];
             domain = [
                 ...Array(search_fields.length - 1).fill("|"),
-                ...search_fields.map((field) => [field, "ilike", this.state.query + "%"]),
+                ...search_fields.map((field) => [field, "ilike", field === "phone_mobile_search" ? this.state.query : this.state.query + "%"]),
             ];
         }
 
