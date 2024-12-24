@@ -96,6 +96,8 @@ class PosConfig(models.Model):
             error_message = _("No reward can be claimed with this coupon.")
         elif program.pricelist_ids and pricelist_id not in program.pricelist_ids.ids:
             error_message = _("This coupon is not available with the current pricelist.")
+        elif coupon and program.program_type == 'promo_code':
+            error_message = _("This programs requires a code to be applied.")
 
         if error_message:
             return {
