@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from freezegun import freeze_time
 from odoo.addons.l10n_in.tests.common import L10nInTestInvoicingCommon
 from odoo.tests import tagged
 
@@ -12,8 +13,12 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
         super().setUpClass()
         cls.invoice = cls.init_invoice("out_invoice", post=False, products=cls.product_a + cls.product_with_cess)
         cls.invoice.write({
-            "invoice_line_ids": [(1, l_id, {"discount": 10}) for l_id in cls.invoice.invoice_line_ids.ids]})
+            "invoice_line_ids": [(1, l_id, {"discount": 10}) for l_id in cls.invoice.invoice_line_ids.ids]
+        })
         cls.invoice.action_post()
+        with freeze_time('2023-12-25'):
+            cls.invoice_reverse = cls.invoice._reverse_moves()
+            cls.invoice_reverse.action_post()
         cls.invoice_full_discount = cls.init_invoice("out_invoice", post=False, products=cls.product_a)
         cls.invoice_full_discount.write({
             "invoice_line_ids": [(1, l_id, {"discount": 100}) for l_id in cls.invoice_full_discount.invoice_line_ids.ids]})
@@ -34,6 +39,10 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
         Ewaybill = self.env['l10n.in.ewaybill']
         ewaybill_invoice = Ewaybill.create({
             'account_move_id': self.invoice.id,
+            **default_ewaybill_vals
+        })
+        ewaybill_credit_note = Ewaybill.create({
+            'account_move_id': self.invoice_reverse.id,
             **default_ewaybill_vals
         })
         ewaybill_invoice_full_discount = Ewaybill.create({
@@ -106,6 +115,34 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
         }
         self.assertDictEqual(json_value, expected, "Indian EDI send json value is not matched")
 
+        # =================================== Full discount test =====================================
+        credit_note_expected = expected.copy()
+        credit_note_expected.update({
+            'docDate': '25/12/2023',
+            'docNo': 'RINV/23-24/0001',
+            'supplyType': 'I',
+            "fromGstin": expected['toGstin'],
+            "fromTrdName": expected['toTrdName'],
+            "fromAddr1": expected['toAddr1'],
+            "fromAddr2": expected['toAddr2'],
+            "fromPlace": expected['toPlace'],
+            "fromPincode": expected['toPincode'],
+            "fromStateCode": expected['toStateCode'],
+            "actFromStateCode": expected['actToStateCode'],
+            "toGstin": expected['fromGstin'],
+            "toTrdName": expected['fromTrdName'],
+            "toAddr1": expected['fromAddr1'],
+            "toAddr2": expected['fromAddr2'],
+            "toPlace": expected['fromPlace'],
+            "toPincode": expected['fromPincode'],
+            "toStateCode": expected['fromStateCode'],
+            "actToStateCode": expected['actFromStateCode'],
+        })
+        self.assertDictEqual(
+            ewaybill_credit_note._ewaybill_generate_direct_json(),
+            credit_note_expected,
+            "Indian E-waybill Credit Note send json value is not matched",
+        )
         # =================================== Full discount test =====================================
         json_value = ewaybill_invoice_full_discount._ewaybill_generate_direct_json()
         expected.update({
