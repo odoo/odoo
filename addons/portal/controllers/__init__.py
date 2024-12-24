@@ -1,4 +1,3 @@
-from . import attachment
 from . import mail
 from . import message_reaction
 from . import portal
