@@ -577,6 +577,7 @@ export class PaymentScreen extends Component {
         );
         if (isCancelSuccessful) {
             line.set_payment_status("retry");
+            this.pos.paymentTerminalInProgress = false;
         } else {
             line.set_payment_status("waitingCard");
         }
