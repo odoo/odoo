@@ -195,12 +195,6 @@ const DynamicSnippet = publicWidget.Widget.extend({
         this.trigger_up('widgets_stop_request', {
             $target: $templateArea,
         });
-        const mainPageUrl = this._getMainPageUrl();
-        const allContentLink = this.el.querySelector(".s_dynamic_snippet_main_page_url");
-        if (allContentLink && mainPageUrl) {
-            allContentLink.href = mainPageUrl;
-            allContentLink.classList.remove("d-none");
-        }
         $templateArea.html(this.renderedContent);
         // TODO this is probably not the only public widget which creates DOM
         // which should be attached to another public widget. Maybe a generic
@@ -248,14 +242,6 @@ const DynamicSnippet = publicWidget.Widget.extend({
      */
     _toggleVisibility: function (visible) {
         this.$el.toggleClass('o_dynamic_snippet_empty', !visible);
-    },
-    /**
-     * Returns the main URL of the module related to the active filter.
-     *
-     * @private
-     */
-    _getMainPageUrl() {
-        return '';
     },
 
     //------------------------------------- -------------------------------------

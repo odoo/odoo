@@ -105,13 +105,6 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
             productTemplateId: productTemplateId && productTemplateId.length ? productTemplateId[0].value : undefined,
         });
     },
-    /**
-     * @override
-     * @private
-     */
-    _getMainPageUrl() {
-        return "/shop";
-    },
 });
 
 const DynamicSnippetProductsCard = publicWidget.Widget.extend({

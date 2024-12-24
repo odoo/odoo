@@ -23,13 +23,6 @@ const DynamicSnippetBlogPosts = DynamicSnippet.extend({
         }
         return searchDomain;
     },
-    /**
-     * @override
-     * @private
-     */
-    _getMainPageUrl() {
-        return "/blog";
-    },
 });
 publicWidget.registry.blog_posts = DynamicSnippetBlogPosts;
 
