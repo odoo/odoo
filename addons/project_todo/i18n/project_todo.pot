@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
-"PO-Revision-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 15:31+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -305,6 +305,8 @@ msgstr ""
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__display_name
+#: model:ir.model.fields,field_description:project_todo.field_project_task__display_name
+#: model:ir.model.fields,field_description:project_todo.field_res_users__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -330,6 +332,8 @@ msgstr ""
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__id
+#: model:ir.model.fields,field_description:project_todo.field_project_task__id
+#: model:ir.model.fields,field_description:project_todo.field_res_users__id
 msgid "ID"
 msgstr ""
 
@@ -482,6 +486,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/project_todo/models/project_task.py:0
 msgid "Untitled to-do"
+msgstr ""
+
+#. module: project_todo
+#: model:ir.model.fields,help:project_todo.field_project_task__display_name
+msgid ""
+"Use these keywords in the title to set new tasks:\n"
+"\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a high priority\n"
+"\n"
+"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
 
 #. module: project_todo

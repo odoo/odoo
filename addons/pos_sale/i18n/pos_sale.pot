@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
-"PO-Revision-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 15:31+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,20 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/sale_order.py:0
+msgid "%(line_description)s (Cancelled)"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/account_move.py:0
+msgid "%(old_name)s (Cancelled)"
+msgstr ""
+
+#. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/components/orderline/orderline.xml:0
+#: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
 msgid "(tax incl.)"
 msgstr ""
 
@@ -28,7 +40,7 @@ msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "A new order has been created."
 msgstr ""
 
@@ -44,13 +56,13 @@ msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Apply a down payment (fixed amount)"
 msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Apply a down payment (percentage)"
 msgstr ""
 
@@ -75,14 +87,30 @@ msgid "Delivery Quantity"
 msgstr ""
 
 #. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_stock_picking__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Do you want to load the SN/Lots linked to the Sales Order?"
 msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Down Payment"
 msgstr ""
 
@@ -113,13 +141,13 @@ msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Due balance: %s"
 msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Error amount too high"
 msgstr ""
 
@@ -129,16 +157,38 @@ msgid "From"
 msgstr ""
 
 #. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_account_move__id
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_sale.field_product_template__id
+#: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__id
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__id
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__id
+#: model:ir.model.fields,field_description:pos_sale.field_stock_picking__id
+msgid "ID"
+msgstr ""
+
+#. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_subscription_report__state__invoiced
 msgid "Invoiced"
 msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale configuration to choose one."
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_account_move
+msgid "Journal Entry"
 msgstr ""
 
 #. module: pos_sale
@@ -160,7 +210,7 @@ msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "No down payment product"
 msgstr ""
 
@@ -176,7 +226,7 @@ msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+#: code:addons/pos_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Optional Products:"
 msgstr ""
 
@@ -193,11 +243,13 @@ msgstr ""
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_subscription_report__order_reference__pos_order
 msgid "POS Order"
 msgstr ""
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_subscription_report__state__paid
 msgid "Paid"
 msgstr ""
 
@@ -233,29 +285,30 @@ msgstr ""
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__done
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_subscription_report__state__done
 msgid "Posted"
 msgstr ""
 
 #. module: pos_sale
-#: model:ir.model,name:pos_sale.model_product_product
-msgid "Product Variant"
+#: model:ir.model,name:pos_sale.model_product_template
+msgid "Product"
 msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/components/control_buttons/control_buttons.xml:0
+#: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Quotation/Order"
 msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "SN/Lots Loading"
 msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/components/orderline/orderline.xml:0
+#: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
 msgid "SO"
 msgstr ""
 
@@ -320,13 +373,13 @@ msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/components/control_buttons/control_buttons.xml:0
+#: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Set Sale Order"
 msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Settle the order"
 msgstr ""
 
@@ -386,13 +439,13 @@ msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "What do you want to do?"
 msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid ""
 "You have tried to charge a down payment of %s but only %s remains to be "
 "paid, %s will be applied to the purchase order line."
@@ -400,6 +453,6 @@ msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+#: code:addons/pos_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "from"
 msgstr ""
