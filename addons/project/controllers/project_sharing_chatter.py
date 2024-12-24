@@ -4,7 +4,7 @@ from werkzeug.exceptions import Forbidden
 
 from odoo.http import request
 
-from odoo.addons.portal.controllers.mail import PortalChatter
+from odoo.addons.portal.controllers.portal_thread import PortalChatter
 from .portal import ProjectCustomerPortal
 
 
