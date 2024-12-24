@@ -12,12 +12,25 @@
                     <field name="tenant_code_id" string="Tenant ID"/>
                     <field name="site_code_id" string="Site Code"/>
                 </xpath>
-                <xpath expr="//field[@name='move_ids_without_package']//tree//field[@name='product_uom_qty']" position="after">
-                    <field name="remaining_qty" />
+                <xpath expr="//field[@name='move_ids_without_package']//tree//field[@name='product_uom_qty']"
+                       position="after">
+                    <field name="remaining_qty"/>
                     <field name="delivery_receipt_state"/>
                     <field name="packed" optional="hide" column_invisible="parent.state=='draft'"/>
                     <field name="released_manual" optional="hide" column_invisible="parent.state=='draft'"/>
                 </xpath>
+
+                <!--
+                    Update the attributes for the `product_id` field in the `move_ids_without_package` tree view
+                    to prevent the creation of new products directly from the picking model.
+                    The changes include disabling quick creation, full creation, and creation with edit options.
+                -->
+                <xpath expr="//field[@name='move_ids_without_package']//tree//field[@name='product_id']"
+                       position="attributes">
+                    <attribute name="options">{'no_create': True, 'no_quick_create': True, 'no_create_edit': True}
+                    </attribute>
+                </xpath>
+
 
                 <!-- Add the Pack button in the header -->
                 <xpath expr="//form/header" position="inside">
