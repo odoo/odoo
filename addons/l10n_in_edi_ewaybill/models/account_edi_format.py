@@ -380,7 +380,7 @@ class AccountEdiFormat(models.Model):
 
     def _get_l10n_in_edi_saler_buyer_party(self, move):
         res = super()._get_l10n_in_edi_saler_buyer_party(move)
-        if move.is_outbound():
+        if move.is_outbound() and self.code == 'in_ewaybill_1_03':
             res = {
                 "seller_details":  move.partner_id,
                 "dispatch_details": move.partner_shipping_id or move.partner_id,
