@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.DiscussSidebarMailboxes">
-        <div class="d-flex flex-column flex-grow-0 gap-1 mt-2">
+        <div class="d-flex flex-column flex-grow-0 o-gap-0_5 mt-2">
             <Mailbox mailbox="store.inbox"/>
             <Mailbox mailbox="store.starred"/>
             <Mailbox mailbox="store.history"/>
@@ -27,8 +27,8 @@
             t-att-class="{
                 'bg-inherit': mailbox.notEq(store.discuss.thread),
                 'o-active': mailbox.eq(store.discuss.thread),
-                'mx-2 justify-content-center position-relative': store.discuss.isSidebarCompact,
-                'mx-3 py-0': !store.discuss.isSidebarCompact,
+                'mx-2 justify-content-center position-relative o-compact': store.discuss.isSidebarCompact,
+                'mx-3 o-py-0_5': !store.discuss.isSidebarCompact,
                 'o-unread': mailbox.counter,
             }"
             t-on-click="(ev) => this.openThread(ev)"
