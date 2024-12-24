@@ -76,15 +76,12 @@ export class CalendarModel extends Model {
             aggregates[typeName] += dur;
         }
 
-        // 3) Convert that object into an array
         const result = Object.entries(aggregates).map(([typeName, totalDur]) => {
             return { name: typeName, total_duration: totalDur };
         });
 
-        // 4) Sort or do any logic if you want
         result.sort((a, b) => a.name.localeCompare(b.name));
 
-        // 5) Store in state so the template can render it
         this.aggreg = result;
 
         this.notify();
