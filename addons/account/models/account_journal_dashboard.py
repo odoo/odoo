@@ -543,7 +543,7 @@ class account_journal(models.Model):
                 SQL("account_move_line.journal_id"),
                 SQL("account_move_line.company_id"),
                 SQL("account_move_line.currency_id AS currency"),
-                SQL("account_move_line.date_maturity < %s AS late", fields.Date.context_today(self)),
+                SQL("CASE WHEN account_move_line.date_maturity < %s AND account_move_line.amount_residual != 0 THEN TRUE ELSE FALSE END AS late", fields.Date.context_today(self)),
                 SQL("SUM(account_move_line.amount_residual) AS amount_total_company"),
                 SQL("SUM(account_move_line.amount_residual_currency) AS amount_total"),
                 SQL("COUNT(*)"),
