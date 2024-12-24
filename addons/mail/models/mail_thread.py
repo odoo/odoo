@@ -103,6 +103,10 @@ class MailThread(models.AbstractModel):
        partners (e.g. following a document on which they post) i.e. controls
        'notify_author' parameter of '_notify_get_recipients'. False by default
        as people should not be notified of what they typed;
+     - ``mail_notify_author_mention``: notify author if they are in direct
+       recipients ('partner_ids') i.e. controls 'notify_author_mention'. Used
+       in flows involving auto replies where author could be used to contact
+       themselves. False by default;
     # Post side effects
      - ``mail_auto_subscribe_no_notify``: skip notifications linked to auto
        subscription. False by default, notifications are intended;
@@ -726,6 +730,8 @@ class MailThread(models.AbstractModel):
 
             composition_mode = post_kwargs.pop('composition_mode', default_composition_mode)
             post_kwargs.setdefault('message_type', 'auto_comment')
+            # by default, allow sending stage updates to author
+            post_kwargs.setdefault('notify_author_mention', True)
             if composition_mode == 'mass_mail':
                 cleaned_self.message_mail_with_source(template, **post_kwargs)
             else:
@@ -2798,6 +2804,8 @@ class MailThread(models.AbstractModel):
         # split message additional values from notify additional values
         msg_kwargs = {key: val for key, val in kwargs.items() if key in self.env['mail.message']._fields}
         notif_kwargs = {key: val for key, val in kwargs.items() if key not in msg_kwargs}
+        # consider users mentionning themselves should receive notifications
+        notif_kwargs['notify_author_mention'] = notif_kwargs.get('notify_author_mention', True)
 
         author_id, email_from = self._message_compute_author(author_id, email_from, raise_on_email=True)
 
@@ -3175,6 +3183,7 @@ class MailThread(models.AbstractModel):
             'mail_auto_delete',
             'model_description',
             'notify_author',
+            'notify_author_mention',
             'resend_existing',
             'scheduled_date',
             'send_after_commit',
@@ -3927,6 +3936,8 @@ class MailThread(models.AbstractModel):
             default as we don't want people to receive their own content. It is
             used notably when impersonating partners or having automated
             notifications send by current user, targeting current user;
+          * ``notify_author_mention``: allows to notify the author if in direct
+            recipients i.e. in 'partner_ids';
           * ``skip_existing``: check existing notifications and skip them in order
             to avoid having several notifications / partner as it would make
             constraints crash. This is disabled by default to optimize speed;
@@ -3969,14 +3980,18 @@ class MailThread(models.AbstractModel):
             return recipients_data
 
         # notify author of its own messages, False by default
+        skip_author_id = False
         notify_author = kwargs.get('notify_author') or self.env.context.get('mail_notify_author')
-        real_author_id = False
         if not notify_author:
+            notify_author_mention = kwargs.get('notify_author_mention') or self.env.context.get('mail_notify_author_mention')
             author_id = msg_vals.get('author_id') or message.author_id.id
-            real_author_id = self._message_compute_real_author(author_id).id
+            skip_author_id = self._message_compute_real_author(author_id).id
+            # allow mention of author if in direct recipients
+            if notify_author_mention and skip_author_id in pids:
+                skip_author_id = False
 
         for pid, pdata in res.items():
-            if pid and pid == real_author_id:
+            if pid and pid == skip_author_id:
                 continue
             if pdata['active'] is False:
                 continue

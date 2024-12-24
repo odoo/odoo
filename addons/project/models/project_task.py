@@ -1332,6 +1332,7 @@ class ProjectTask(models.Model):
                     body=body,
                     partner_ids=partner_ids,
                     email_layout_xmlid='mail.mail_notification_layout',
+                    notify_author_mention=False,
                     record_name=task.display_name,
                )
         return result
@@ -1656,7 +1657,6 @@ class ProjectTask(models.Model):
         # found.
         create_context = dict(self.env.context or {})
         create_context['default_user_ids'] = False
-        create_context['mail_notify_author'] = True  # Allows sending stage updates to the author
         if custom_values is None:
             custom_values = {}
         # Auto create partner if not existent when the task is created from email

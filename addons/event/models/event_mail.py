@@ -447,7 +447,7 @@ class EventMail(models.Model):
             self.event_id.message_post(
                 body=body,
                 force_send=False,  # use email queue, especially it could be cause of error
-                notify_author=True,  # in case of event responsible creating attendees
+                notify_author_mention=True,  # in case of event responsible creating attendees
                 partner_ids=recipients.ids,
             )
             self.error_datetime = now
