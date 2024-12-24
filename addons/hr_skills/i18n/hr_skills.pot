@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
-"PO-Revision-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"PO-Revision-Date: 2024-12-24 15:31+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -471,14 +471,20 @@ msgid "Display"
 msgstr ""
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_report_hr_skills_report_employee_cv__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_res_users__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_resource_resource__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -532,11 +538,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
 msgid "Employee"
-msgstr ""
-
-#. module: hr_skills
-#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__display_name
-msgid "Employee Name"
 msgstr ""
 
 #. module: hr_skills
@@ -798,7 +799,9 @@ msgid "Human resources officer"
 msgstr ""
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__id
@@ -807,6 +810,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__id
+#: model:ir.model.fields,field_description:hr_skills.field_report_hr_skills_report_employee_cv__id
+#: model:ir.model.fields,field_description:hr_skills.field_res_users__id
+#: model:ir.model.fields,field_description:hr_skills.field_resource_resource__id
 msgid "ID"
 msgstr ""
 
@@ -1874,12 +1880,12 @@ msgid "Turkish"
 msgstr ""
 
 #. module: hr_skills
-#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill__unique_skill
+#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_HrEmployeeSkill__unique_skill
 msgid "Two levels for the same skill is not allowed"
 msgstr ""
 
 #. module: hr_skills
-#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_log__unique_skill_log
+#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_log_HrEmployeeSkillLog__unique_skill_log
 msgid "Two levels for the same skill on the same day is not allowed"
 msgstr ""
 
