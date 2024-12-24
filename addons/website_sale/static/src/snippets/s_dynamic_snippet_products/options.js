@@ -36,9 +36,26 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
      * @private
      * @override
      */
-     _computeWidgetVisibility(widgetName, params) {
+     async _computeWidgetVisibility(widgetName, params) {
         if (this.isAlternativeProductSnippet && alternativeSnippetRemovedOptions.includes(widgetName)) {
             return false;
+        }
+        if (widgetName === 'show_price_opt') {
+            const template = this._getCurrentTemplate();
+            return template && template.showPriceOpt;
+        }
+        if (widgetName === 'show_description_opt') {
+            const template = this._getCurrentTemplate();
+            return template && template.showDescriptionOpt;
+        }
+        if (widgetName === 'show_reviews_opt') {
+            const template = this._getCurrentTemplate();
+            // If later new templates are added and don't display the reviews,
+            // maybe refactor this the same way as showPriceOpt and showDescriptionOpt
+            if( template && template.key === "website_sale.dynamic_filter_template_product_product_mini_image" ){
+                return false;
+            }
+            return this._getEnabledCustomizeValues(['website_sale.product_comment',''], true);
         }
         return this._super(...arguments);
     },

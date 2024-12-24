@@ -3,7 +3,10 @@
 
         <!-- Templates for Dynamic Snippet -->
         <template id="dynamic_filter_template_product_product_add_to_cart" name="Classic Card">
-            <t t-foreach="records" t-as="data" data-thumb="/website_sale/static/src/img/snippets_options/product_add_to_cart.svg">
+            <t t-foreach="records" t-as="data"
+               title="Classic Card"
+               data-show-price-opt="true"
+               data-thumb="/website_sale/static/src/img/snippets_options/product_add_to_cart.svg">
                 <t t-set="record" t-value="data['_record']"/>
                 <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
                 <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
@@ -57,7 +60,12 @@
         </template>
 
         <template id="dynamic_filter_template_product_product_view_detail" name="Classic Card - Detailed">
-            <t t-foreach="records" t-as="data" data-number-of-elements="3" data-thumb="/website_sale/static/src/img/snippets_options/product_view_detail.svg">
+            <t t-foreach="records" t-as="data"
+               title="Classic Card - Detailed"
+               data-show-price-opt="true"
+               data-show-description-opt="true"
+               data-number-of-elements="3"
+               data-thumb="/website_sale/static/src/img/snippets_options/product_view_detail.svg">
                 <t t-set="record" t-value="data['_record']" data-arrow-position="bottom"/>
                 <div class="o_carousel_product_card card h-100 w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
@@ -93,7 +101,11 @@
         </template>
 
         <template id="dynamic_filter_template_product_product_mini_image" name="Image only">
-            <t t-foreach="records" t-as="data" data-number-of-elements="4" data-number-of-elements-sm="1" data-thumb="/website_sale/static/src/img/snippets_options/product_image_only.svg">
+            <t t-foreach="records" t-as="data"
+               title="Image only"
+               data-number-of-elements="4"
+               data-number-of-elements-sm="1"
+               data-thumb="/website_sale/static/src/img/snippets_options/product_image_only.svg">
                 <t t-set="record" t-value="data['_record']"/>
                 <div class="card h-100 border-0 w-100 rounded-0 bg-transparent" t-att-data-url="record.website_url">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
@@ -105,7 +117,10 @@
         </template>
 
         <template id="dynamic_filter_template_product_product_mini_price" name="Image with price">
-            <t t-foreach="records" t-as="data" data-thumb="/website_sale/static/src/img/snippets_options/product_image_with_price.svg">
+            <t t-foreach="records" t-as="data"
+               title="Image with price"
+               data-show-price-opt="true"
+               data-thumb="/website_sale/static/src/img/snippets_options/product_image_with_price.svg">
                 <t t-set="record" t-value="data['_record']"/>
                 <div class="card h-100 border-0 w-100 rounded-0 bg-transparent o_dynamic_product_hovered" t-att-data-url="record.website_url">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
@@ -131,7 +146,9 @@
         </template>
 
         <template id="dynamic_filter_template_product_product_mini_name" name="Image with name">
-            <t t-foreach="records" t-as="data" data-thumb="/website_sale/static/src/img/snippets_options/product_image_with_name.svg">
+            <t t-foreach="records" t-as="data"
+               title="Image with name"
+               data-thumb="/website_sale/static/src/img/snippets_options/product_image_with_name.svg">
                 <t t-set="record" t-value="data['_record']"/>
                 <div class="card h-100 border-0 w-100 rounded-0 bg-transparent o_dynamic_product_hovered" t-att-data-url="record.website_url">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
@@ -152,7 +169,11 @@
         </template>
 
         <template id="dynamic_filter_template_product_product_centered" name="Centered Product">
-            <t t-foreach="records" t-as="data" data-arrow-position="bottom" data-thumb="/website_sale/static/src/img/snippets_options/product_centered.svg">
+            <t t-foreach="records" t-as="data"
+               title="Centered Product"
+               data-show-price-opt="true"
+               data-arrow-position="bottom"
+               data-thumb="/website_sale/static/src/img/snippets_options/product_centered.svg">
                 <t t-set="record" t-value="data['_record']"/>
                 <div class="o_carousel_product_card card w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
@@ -190,7 +211,10 @@
         </template>
 
         <template id="dynamic_filter_template_product_product_borderless_1" name="Borderless Product n°1">
-            <t t-foreach="records" t-as="data" data-thumb="/website_sale/static/src/img/snippets_options/product_borderless_1.svg">
+            <t t-foreach="records" t-as="data"
+               title="Borderless Product n°1"
+               data-show-price-opt="true"
+               data-thumb="/website_sale/static/src/img/snippets_options/product_borderless_1.svg">
                 <t t-set="record" t-value="data['_record']"/>
                 <div class="o_carousel_product_card bg-transparent w-100 card border-0">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
@@ -222,7 +246,10 @@
         </template>
 
         <template id="dynamic_filter_template_product_product_borderless_2" name="Borderless Product n°2">
-            <t t-foreach="records" t-as="data" data-thumb="/website_sale/static/src/img/snippets_options/product_borderless_2.svg">
+            <t t-foreach="records" t-as="data"
+               title="Borderless Product n°2"
+               data-show-price-opt="true"
+               data-thumb="/website_sale/static/src/img/snippets_options/product_borderless_2.svg">
                 <t t-set="record" t-value="data['_record']"/>
                 <div class="o_carousel_product_card card w-100 border-0 bg-transparent" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
@@ -274,7 +301,13 @@
         </template>
 
         <template id="dynamic_filter_template_product_product_banner" name="Large Banner">
-            <t t-foreach="records" t-as="data" data-number-of-elements="1" data-number-of-elements-sm="1" data-thumb="/website_sale/static/src/img/snippets_options/product_banner.svg">
+            <t t-foreach="records" t-as="data"
+               title="Large Banner"
+               data-show-price-opt="true"
+               data-show-description-opt="true"
+               data-number-of-elements="1"
+               data-number-of-elements-sm="1"
+               data-thumb="/website_sale/static/src/img/snippets_options/product_banner.svg">
                 <t t-set="record" t-value="data['_record']"/>
                 <div class="o_carousel_product_card card w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
@@ -330,12 +363,14 @@
 
         <template id="dynamic_filter_template_product_product_horizontal_card" name="Horizontal Card">
             <t t-foreach="records" t-as="data"
-                data-number-of-elements="3"
-                data-number-of-elements-sm="1"
-                data-row-per-slide="2"
-                data-arrow-position="bottom"
-                data-extra-classes="o_carousel_multiple_rows"
-                data-thumb="/website_sale/static/src/img/snippets_options/product_horizontal_card.svg">
+               title="Horizontal Card"
+               data-show-price-opt="true"
+               data-number-of-elements="3"
+               data-number-of-elements-sm="1"
+               data-row-per-slide="2"
+               data-arrow-position="bottom"
+               data-extra-classes="o_carousel_multiple_rows"
+               data-thumb="/website_sale/static/src/img/snippets_options/product_horizontal_card.svg">
                 <t t-set="record" t-value="data['_record']"/>
                 <div class="o_carousel_product_card card w-100 border-0 bg-light p-3" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
@@ -389,12 +424,15 @@
         </template>
         <template id="dynamic_filter_template_product_product_horizontal_card_2" name="Horizontal Card width covered image">
             <t t-foreach="records" t-as="data"
-                data-row-per-slide="2"
-                data-arrow-position="bottom"
-                data-number-of-elements="2"
-                data-number-of-elements-sm="1"
-                data-extra-classes="o_carousel_multiple_rows"
-                data-thumb="/website_sale/static/src/img/snippets_options/product_horizontal_card_2.svg">
+               title="Horizontal Card width covered image"
+               data-show-price-opt="true"
+               data-show-description-opt="true"
+               data-row-per-slide="2"
+               data-arrow-position="bottom"
+               data-number-of-elements="2"
+               data-number-of-elements-sm="1"
+               data-extra-classes="o_carousel_multiple_rows"
+               data-thumb="/website_sale/static/src/img/snippets_options/product_horizontal_card_2.svg">
                 <t t-set="record" t-value="data['_record']"/>
                 <div class="o_carousel_product_card card w-100 border-0 o_dynamic_product_hovered o_cc o_cc5">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
@@ -444,6 +482,9 @@
 
         <template id="dynamic_filter_template_product_product_card_group" name="Card group">
             <t t-foreach="records" t-as="data"
+                title="Card group"
+                data-show-price-opt="true"
+                data-show-description-opt="true"
                 data-row-per-slide="2"
                 data-number-of-elements="2"
                 data-number-of-elements-sm="1"

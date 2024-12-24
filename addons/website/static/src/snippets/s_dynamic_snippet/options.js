@@ -15,6 +15,8 @@ const dynamicSnippetOptions = options.Class.extend({
      * @property {string} rowPerSlide - number of rows per slide
      * @property {string} arrowPosition - position of the arrows
      * @property {string} extraClasses - classes to be added to the <section>
+     * @property {string} showPriceOpt - should the option for price showing be displayed
+     * @property {string} showDescriptionOpt - should the option for price showing be displayed
      */
 
     /**
@@ -240,6 +242,9 @@ const dynamicSnippetOptions = options.Class.extend({
                 button.dataset.img = data[id].thumb;
             } else {
                 button.innerText = data[id].name;
+            }
+            if (data[id].title) {
+                button.title = data[id].title;
             }
             selectUserValueWidgetElement.appendChild(button);
         }

@@ -445,6 +445,9 @@ class Website(Home):
             t['extraClasses'] = attribs.get('data-extra-classes')
             t['columnClasses'] = attribs.get('data-column-classes')
             t['thumb'] = attribs.get('data-thumb')
+            t['title'] = attribs.get('title')
+            t['showPriceOpt'] = attribs.get('data-show-price-opt')
+            t['showDescriptionOpt'] = attribs.get('data-show-description-opt')
         return templates
 
     @http.route('/website/get_current_currency', type='jsonrpc', auth="public", website=True, readonly=True)
