@@ -11,7 +11,7 @@
 
     <t t-name="l10n_fr_pos_cert.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
         <xpath expr="//Orderline" position="inside">
-            <t t-if="line.order_id.l10n_fr_hash !== false and line.price_type === 'manual' and !line.config.basic_receipt">
+            <t t-if="line.order_id.l10n_fr_hash !== false and line.price_type === 'manual' and !props.basic_receipt">
                 <div class="pos-receipt-right-padding">
                     Old unit price:
                     <span class="oldPrice">
