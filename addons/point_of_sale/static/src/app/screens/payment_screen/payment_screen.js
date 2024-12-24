@@ -613,6 +613,7 @@ export class PaymentScreen extends Component {
         );
         if (isCancelSuccessful) {
             line.setPaymentStatus("retry");
+            this.pos.paymentTerminalInProgress = false;
         } else {
             line.setPaymentStatus("waitingCard");
         }
