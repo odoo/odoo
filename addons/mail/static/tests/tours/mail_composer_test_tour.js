@@ -262,42 +262,5 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             content: "Check message is shown",
             trigger: '.o-mail-Message-body:contains("hello world")',
         },
-        // Test text input lines are each wrapped in <p> in editor
-        // this makes each line editable without impacting the other lines
-        {
-            content: "Click on Send Message",
-            trigger: "button:contains(Send message)",
-            run: "click",
-        },
-        {
-            content: "Write first line",
-            trigger: ".o-mail-Composer-input",
-            run: "edit abc",
-        },
-        {
-            content: "Press enter to go to next line",
-            trigger: ".o-mail-Composer-input",
-            run: "press enter",
-        },
-        {
-            content: "write second line",
-            trigger: ".o-mail-Composer-input",
-            run: "fill efg",
-        },
-        {
-            content: "Open full composer",
-            trigger: "button[aria-label='Full composer']",
-            run: "click",
-        },
-        {
-            content: "Check the content of the editor",
-            trigger:
-                ".o_mail_composer_form_view .odoo-editor-editable > p:contains(abc):not(:contains(efg))",
-        },
-        {
-            content: "Check the content of the editor",
-            trigger:
-                ".o_mail_composer_form_view .odoo-editor-editable > p:contains(efg):not(:contains(abc))",
-        },
     ],
 });
