@@ -585,7 +585,7 @@ class HrApplicant(models.Model):
         # do not want to explicitly set user_id to False; however we do not
         # want the gateway user to be responsible if no other responsible is
         # found.
-        self = self.with_context(default_user_id=False, mail_notify_author=True)  # Allows sending stage updates to the author
+        self = self.with_context(default_user_id=False)
         stage = False
         candidate_defaults = {}
         if custom_values and 'job_id' in custom_values:
