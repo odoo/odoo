@@ -2,6 +2,7 @@
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from freezegun import freeze_time
 
 
 @tagged("post_install_l10n", "post_install", "-at_install")
@@ -80,6 +81,9 @@ class TestEdiJson(AccountTestInvoicingCommon):
         cls.invoice.write({
             "invoice_line_ids": [(1, l_id, {"discount": 10}) for l_id in cls.invoice.invoice_line_ids.ids]})
         cls.invoice.action_post()
+        with freeze_time('2023-12-25'):
+            cls.invoice_reverse = cls.invoice._reverse_moves()
+            cls.invoice_reverse.action_post()
         cls.invoice_full_discount = cls.init_invoice("out_invoice", post=False, products=cls.product_a)
         cls.invoice_full_discount.write({
             "invoice_line_ids": [(1, l_id, {"discount": 100}) for l_id in cls.invoice_full_discount.invoice_line_ids.ids]})
@@ -217,6 +221,15 @@ class TestEdiJson(AccountTestInvoicingCommon):
         }
         self.assertDictEqual(json_value, expected, "Indian EDI send json value is not matched")
         expected_copy_rounding = expected.copy()
+
+        # ================================== Credit Note ============================================
+        credit_note_expected = expected.copy()
+        credit_note_expected['DocDtls'] = {"Typ": "CRN", "No": "RINV/2023/00001", "Dt": "25/12/2023"}
+        self.assertDictEqual(
+            self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_reverse),
+            credit_note_expected
+        )
+
         #=================================== Full discount test =====================================
         json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_full_discount)
         expected.update({
