@@ -38,6 +38,22 @@
                     placeholder="e.g. lamp,bin" title="Comma-separated list of parts of product names, barcodes or internal reference"/>
             </t>
         </xpath>
+        <xpath expr="//we-select[@data-name='template_opt']" position="after">
+            <t t-if="snippet_name == 'dynamic_snippet_products'">
+                    <we-checkbox data-name="show_description_opt" string="Show Description" class="o_we_sublevel_1"
+                                 data-select-data-attribute="true"
+                                 data-attribute-name="showDescription"
+                                 data-no-preview="true"/>
+                    <we-checkbox data-name="show_price_opt" string="Show Price" class="o_we_sublevel_1"
+                                 data-select-data-attribute="true"
+                                 data-attribute-name="showPrice"
+                                 data-no-preview="true"/>
+                    <we-checkbox data-name="show_reviews_opt" string="Show Reviews" class="o_we_sublevel_1"
+                                 data-select-data-attribute="true"
+                                 data-attribute-name="showReviews"
+                                 data-no-preview="true"/>
+            </t>
+        </xpath>
     </template>
 
     <record id="website_sale.s_dynamic_snippet_products_000_js" model="ir.asset">

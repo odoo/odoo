@@ -79,6 +79,9 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
     _setOptionsDefaultValues: function () {
         this._setOptionValue('productCategoryId', 'all');
         this._setOptionValue('showVariants', true);
+        this._setOptionValue('showDescription', true);
+        this._setOptionValue('showPrice', true);
+        this._setOptionValue('showReviews', true);
         this._super.apply(this, arguments);
     },
 });

@@ -105,6 +105,9 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
         const productTemplateId = $("#product_details").find(".product_template_id");
         return Object.assign(this._super.apply(this, arguments), {
             productTemplateId: productTemplateId && productTemplateId.length ? productTemplateId[0].value : undefined,
+            showDescription: this.el.dataset.showDescription,
+            showPrice: this.el.dataset.showPrice,
+            showReviews: this.el.dataset.showReviews,
         });
     },
     /**
