@@ -1420,6 +1420,7 @@ export class PosStore extends WithLazyGetterTrap {
             OrderReceipt,
             {
                 order,
+                basic_receipt: basic,
             },
             { webPrintFallback: true }
         );
