@@ -5,6 +5,7 @@
     <t t-call="website.s_dynamic_snippet_template">
         <t t-set="snippet_name" t-value="'s_events'"/>
         <t t-set="snippet_classes" t-value="'s_event_upcoming_snippet s_event_event_picture'"/>
+        <t t-set="main_page_url" t-value="'/event'"/>
         <t t-set="custom_template_data" t-valuef='{"events_event_time_active":true}'/>
         <t t-call="website_event.s_event_upcoming_snippet_preview_data"/>
     </t>
