@@ -31,6 +31,19 @@ OVERWRITE_FILES_AFTER_INIT_DIR="${__dir}/overwrite_after_init"
 VERSION=17.0
 VERSION_IOTBOX=24.10
 
+if [[ "${1:-}" == "-c" || "${1:-}" == "--cleanup" ]]; then
+    echo "Cleaning up..."
+    umount -fv "${MOUNT_POINT}/boot/" > /dev/null 2>&1 || true
+    umount -lv "${MOUNT_POINT}/" > /dev/null 2>&1 || true
+    rm -rfv "${MOUNT_POINT}"
+    rm -rf overwrite_before_init/usr
+    rm -rf overwrite_before_init/home/pi/odoo
+    rm -rfv iotbox.img
+    sudo kpartx -d /dev/loop1 > /dev/null 2>&1 || true
+    losetup -d /dev/loop1 > /dev/null 2>&1 || true
+    echo "Cleanup done."
+    exit 0
+fi
 
 # ask user for the branch/version
 current_branch="$(git branch --show-current)"
@@ -69,6 +82,7 @@ addons/point_of_sale/tools/posbox/configuration
 odoo/
 odoo-bin" | tee --append .git/info/sparse-checkout > /dev/null
     git read-tree -mu HEAD
+    git remote set-url origin "https://github.com/odoo/odoo.git" # ensure remote is the original repo
 fi
 
 cd "${__dir}"
@@ -167,17 +181,17 @@ find "${MOUNT_POINT}"/ -type f -name "*.iotpatch"|while read iotpatch; do
     done
 done
 
-# cleanup
-umount -fv "${MOUNT_POINT}"/boot/
-umount -lv "${MOUNT_POINT}"/
-rm -rfv "${MOUNT_POINT}"
-
 echo "Running zerofree..."
 zerofree -v "${LOOP_IOT_ROOT}" || true
 
 sleep 10
 
-kpartx -dv "${LOOP_IOT_PATH}"
+# cleanup
+umount -fv "${MOUNT_POINT}"/boot/
+umount -lv "${MOUNT_POINT}"/
+rm -rfv "${MOUNT_POINT}"
 kpartx -dv "${LOOP_RASPIOS_PATH}"
+kpartx -dv "${LOOP_IOT_PATH}"  # /dev/loop1
+losetup -d "${LOOP_IOT_PATH}"  # /dev/loop1
 
 echo "Image build finished."
