@@ -17,7 +17,7 @@ import { Component, onPatched, onWillDestroy, onWillPatch, useRef, useState } fr
 import { evaluateExpr } from "@web/core/py_js/py";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
-const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
+const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one", "date", "datetime"];
 
 function validateColumnQuickCreateExamples(data) {
     const { allowedGroupBys = [], examples = [], foldField = "" } = data;

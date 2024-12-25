@@ -4851,6 +4851,7 @@ test("prevent drag and drop of record if grouped by readonly", async () => {
     expect.verifySteps([]);
 });
 
+test.tags("desktop");
 test("prevent drag and drop if grouped by date/datetime field", async () => {
     Partner._records[0].date = "2017-01-08";
     Partner._records[1].date = "2017-01-09";
@@ -4893,10 +4894,10 @@ test("prevent drag and drop if grouped by date/datetime field", async () => {
     );
 
     // should not drag&drop record
-    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2, {
+    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1, {
         message: "Should remain same records in first column (2 records)",
     });
-    expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(2, {
+    expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(3, {
         message: "Should remain same records in 2nd column (2 record)",
     });
 
@@ -4918,10 +4919,10 @@ test("prevent drag and drop if grouped by date/datetime field", async () => {
     );
 
     // should not drag&drop record
-    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2, {
+    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1, {
         message: "Should remain same records in first column(2 records)",
     });
-    expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(2, {
+    expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(3, {
         message: "Should remain same records in 2nd column(2 record)",
     });
 });
