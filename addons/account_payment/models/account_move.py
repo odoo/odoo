@@ -129,7 +129,6 @@ class AccountMove(models.Model):
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
             'open_installments': open_installments,
-            'installment_state': installment_state,
             'amount': next_amount_to_pay,
             'amount_max': amount_max,
             **additional_info
