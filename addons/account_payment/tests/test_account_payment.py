@@ -246,7 +246,6 @@ class TestAccountPayment(AccountPaymentCommon):
             'currency_id': invoice.currency_id.id,
             'partner_id': invoice.partner_id.id,
             'open_installments': [],
-            'installment_state': None,
             'amount': None,
             'amount_max': None,
         })
