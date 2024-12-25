@@ -2,10 +2,11 @@ import { withSequence } from "@html_editor/utils/resource";
 import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { ColorSelector } from "../font/color_selector";
+import { MediaDialog } from "./media_dialog/media_dialog";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
-    static dependencies = ["history", "selection", "color"];
+    static dependencies = ["history", "selection", "color", "dialog"];
     resources = {
         user_commands: [
             {
@@ -39,6 +40,11 @@ export class IconPlugin extends Plugin {
                 icon: "fa-play",
                 run: this.toggleSpinIcon.bind(this),
             },
+            {
+                id: "replaceIcon",
+                title: _t("Replace icon"),
+                run: this.openIconDialog.bind(this),
+            },
         ],
         toolbar_namespaces: [
             {
@@ -63,6 +69,7 @@ export class IconPlugin extends Plugin {
                 namespace: "icon",
             }),
             withSequence(3, { id: "icon_spin", namespace: "icon" }),
+            withSequence(3, { id: "icon_replace", namespace: "icon" }),
         ],
         toolbar_items: [
             {
@@ -119,6 +126,12 @@ export class IconPlugin extends Plugin {
                 groupId: "icon_spin",
                 commandId: "toggleSpinIcon",
                 isActive: () => this.hasSpinIcon(),
+            },
+            {
+                id: "icon_replace",
+                groupId: "icon_replace",
+                commandId: "replaceIcon",
+                text: _t("Replace"),
             },
         ],
         color_apply_overrides: this.applyIconColor.bind(this),
@@ -181,5 +194,26 @@ export class IconPlugin extends Plugin {
         }
         this.dependencies.color.colorElement(selectedIcon, color, mode);
         return true;
+    }
+
+    openIconDialog() {
+        const selectedIcon = this.getSelectedIcon();
+        if (!selectedIcon) {
+            return;
+        }
+        this.dependencies.dialog.addDialog(MediaDialog, {
+            noVideos: true,
+            noImages: true,
+            noDocuments: true,
+            media: selectedIcon,
+            save: (el) => this.onSaveIcon(el, selectedIcon),
+        });
+    }
+
+    onSaveIcon(icon, prevIcon) {
+        for (const attribute of icon.attributes) {
+            prevIcon.setAttribute(attribute.nodeName, attribute.nodeValue);
+        }
+        this.dependencies.history.addStep();
     }
 }

@@ -4,6 +4,7 @@ import { setupEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setContent } from "./_helpers/selection";
 import { undo } from "./_helpers/user_actions";
+import { contains } from "@web/../tests/web_test_helpers";
 
 test("icon toolbar is displayed", async () => {
     await setupEditor(`<p><span class="fa fa-glass">[]</span></p>`);
@@ -97,4 +98,35 @@ test("Can undo to 1x size after applying 2x size", async () => {
     undo(editor);
     expect("span.fa-glass").toHaveCount(1);
     expect("span.fa-glass.fa-2x").toHaveCount(0);
+});
+
+test("Can replace icon using toolbar", async () => {
+    const { editor } = await setupEditor(`<p><span class="fa fa-heart">[]</span></p>`);
+    await waitFor(".o-we-toolbar");
+    await contains("button[name='icon_replace']").click();
+    await animationFrame();
+    expect("main.modal-body").toHaveCount(1);
+    expect("main.modal-body a.nav-link.active").toHaveText("Icons");
+    // Corresponding icon should be highlighted in dialog
+    expect("main.modal-body span.fa-heart.o_we_attachment_selected").toHaveCount(1);
+
+    await contains("main.modal-body span.fa-search").click();
+    await animationFrame();
+    expect("main.modal-body").toHaveCount(0);
+    expect("span.fa-search").toHaveCount(1); // Replace icon
+    expect("span.fa-heart").toHaveCount(0);
+
+    undo(editor);
+    expect("span.fa-search").toHaveCount(0);
+    expect("span.fa-heart").toHaveCount(1);
+});
+
+test("Styles should be preserved when replacing icon", async () => {
+    await setupEditor(`<p><span class="fa fa-heart fa-3x">[]</span></p>`);
+    await waitFor(".o-we-toolbar");
+    await contains("button[name='icon_replace']").click();
+    await animationFrame();
+    await contains("main.modal-body span.fa-search").click();
+    await animationFrame();
+    expect("span.fa-search.fa-3x").toHaveCount(1);
 });
