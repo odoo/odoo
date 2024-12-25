@@ -532,12 +532,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 'product_template_image_ids': image_create_data
             })
 
-    @route('/shop/check_email_exists', type='jsonrpc', auth='public')
-    def email_exists(self, email):
-        Partner = request.env['res.partner'].sudo()
-        existing_partner = Partner.search([('email', '=', email), ('active', '=', True)], limit=1)
-        return bool(existing_partner)
-
     @route(['/shop/product/clear-images'], type='jsonrpc', auth='user', website=True)
     def clear_product_images(self, product_product_id, product_template_id):
         """

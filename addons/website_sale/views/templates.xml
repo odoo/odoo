@@ -2402,7 +2402,24 @@
                                     t-att-data-company-country-code="res_company.country_id.code"
                                 >
                                     <t t-if="is_anonymous_cart">
-                                        <h4 class="mb-1 mt-5">Contact Details</h4>
+                                        <div
+                                            class="d-flex flex-column flex-md-row
+                                                align-items-center justify-content-between mb-1 mt-5"
+                                        >
+                                            <h4>Contact Details</h4>
+                                            <div
+                                                t-if="website.account_on_checkout != 'disabled'"
+                                            >
+                                                <span>Already have an account?</span>
+                                                <a
+                                                    role="button"
+                                                    href='/web/login?redirect=/shop/checkout'
+                                                    class="btn btn-primary ms-2"
+                                                >
+                                                    Sign in
+                                                </a>
+                                            </div>
+                                        </div>
                                     </t>
                                     <div class="row">
                                         <div id="div_name" class="col-lg-12 mb-2">

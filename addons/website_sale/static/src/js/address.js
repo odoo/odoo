@@ -9,7 +9,6 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
         'change select[name="country_id"]': '_onChangeCountry',
         'click #save_address': '_onSaveAddress',
         "change select[name='state_id']": "_onChangeState",
-        'input input[name="email"]': '_onEmailInput',
     },
 
     /**
@@ -23,9 +22,6 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
         this._changeCountry = debounce(this._changeCountry.bind(this), 500);
         this.addressForm = document.querySelector('form.checkout_autoformat');
         this.errorsDiv = document.getElementById('errors');
-        this._checkEmailExists = debounce(this._checkEmailExists.bind(this), 500);
-        this.emailExistsMessage = document.getElementById('email-exists-message');
-        this.emailInput = this.addressForm.querySelector('input[name="email"]');
         this.addressType = this.addressForm['address_type'].value;
         this.countryCode = this.addressForm.dataset.companyCountryCode;
         this.requiredFields = this.addressForm.required_fields.value.split(',');
@@ -45,10 +41,6 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
         })
         this._changeCountry(true);
 
-        if(this.emailInput.value && this.emailExistsMessage && this.anonymousCart) {
-            this._checkEmailExists(this.emailInput.value);
-        }
-
         if (this.wantInvoiceCheckbox){
             this.wantInvoiceCheckbox.addEventListener(
                 'change', this._toggleInvoiceFields.bind(this)
@@ -61,35 +53,6 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
-    /**
-     * Handle email input event, check if email exists after user stops typing.
-     * @private
-     * @param {Event} ev
-     */
-    _onEmailInput(ev) {
-        if (this.emailExistsMessage) {
-            const email = ev.target.value.trim();
-            if (email) {
-                this._checkEmailExists(email);
-            }
-        }
-    },
-
-    /**
-     * Check if the email already exists in the database and show message if it does.
-     * @private
-     * @param {String} email
-     */
-    async _checkEmailExists(email) {
-        try {
-            const emailExists = await rpc('/shop/check_email_exists', { email });
-            this.emailExistsMessage.classList.toggle('d-none', !emailExists);
-        } catch (error) {
-            console.error("Error checking email existence:", error);
-            this.emailExistsMessage.classList.add('d-none');
-        }
-    },
 
     /**
      * @private
