@@ -357,7 +357,7 @@
                                 <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
                                     context="{'selection': 'viva_wallet', 'config_ids': [pos_config_id], 'provider_name': 'Viva Wallet'}" invisible="not module_pos_viva_wallet" />
                             </setting>
-                            <setting id="pos_razorpay_setting" title="The transactions are processed by Razorpay. Set your Razorpay credentials on the related payment method." string="Razorpay" help="Accept payments with a Razorpay payment terminal">
+                            <setting id="pos_razorpay_setting" title="The transactions are processed by Razorpay. Set your Razorpay credentials on the related payment method." string="Razorpay" help="Accept payments with a Razorpay payment terminal" documentation="/applications/sales/point_of_sale/payment_methods/terminals/razorpay.html">
                                 <field name="module_pos_razorpay"/>
                                 <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
                                     context="{'selection': 'paytm', 'config_ids': [pos_config_id], 'provider_name': 'Razorpay'}" invisible="not module_pos_razorpay" />
