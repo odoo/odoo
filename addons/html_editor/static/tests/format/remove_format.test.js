@@ -769,4 +769,12 @@ describe("Toolbar", () => {
             `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="" class="o_selected_td"><p>[\u200b</p></td><td style="" class="o_selected_td"><p>]\u200b</p></td></tr></tbody></table>`
         );
     });
+
+    test("Should remove text-align style from a block", async () => {
+        const { el } = await setupEditor(
+            `<p style="text-align: right;">[test</p><p style="text-align: right;"><br>]</p>`
+        );
+        await removeFormatClick();
+        expect(getContent(el)).toBe(`<p style="">[test</p><p style=""><br>]</p>`);
+    });
 });
