@@ -61,6 +61,12 @@ export class ColorPlugin extends Plugin {
         /** Handlers */
         selectionchange_handlers: this.updateSelectedColor.bind(this),
         remove_format_handlers: this.removeAllColor.bind(this),
+
+        /** Predicates */
+        has_format_predicates: [
+            (nodes) => hasAnyNodesColor(nodes, "color"),
+            (nodes) => hasAnyNodesColor(nodes, "backgroundColor"),
+        ],
     };
 
     setup() {
