@@ -7,9 +7,6 @@ import { accountTaxHelpers } from "@account/helpers/account_tax";
 patch(Order.prototype, {
     export_for_printing() {
         const result = super.export_for_printing(...arguments);
-        if (this.get_partner()) {
-            result.partner = this.get_partner();
-        }
         if (this.pos.company.country_id?.code === "IN") {
             result.l10n_in_hsn_summary = this._prepareL10nInHsnSummary();
             result.tax_details.forEach((tax) => {
