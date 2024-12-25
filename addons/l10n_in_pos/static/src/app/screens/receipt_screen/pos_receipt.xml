@@ -4,11 +4,11 @@
         <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
             <t t-if="order.partner_id and order.company?.country_id?.code == 'IN'">
                 <div class="pos-receipt-center-align">
-                    <div><t t-out="order.parnter_id.name" /></div>
-                    <t t-if="order.parnter_id.phone">
+                    <div><t t-out="order.partner_id.name" /></div>
+                    <t t-if="order.partner_id.phone">
                         <div>
                             <span>Phone: </span>
-                            <t t-out="order.parnter_id.phone" />
+                            <t t-out="order.partner_id.phone" />
                         </div>
                     </t>
                     <br />
