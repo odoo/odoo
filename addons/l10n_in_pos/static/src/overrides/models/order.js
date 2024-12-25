@@ -11,9 +11,6 @@ patch(Order.prototype, {
                 tax.tax.letter = tax.tax.tax_group_id[1]
             })
         }
-        if (this.get_partner()) {
-            result.partner = this.get_partner();
-        }
         return result;
     },
 });
