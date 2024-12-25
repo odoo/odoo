@@ -1,0 +1,30 @@
+<templates>
+    <t t-name="website_event.s_live_event_template">
+        <t t-if="event">
+            <div class="o_not_editable">
+                <div class="d-flex justify-content-center m-2">
+                    <div class="d-flex align-items-center w-75 w-sm-50">
+                        <h4 class="text-white bg-danger rounded px-3 py-1 m-2 text-nowrap">
+                            <i class="fa fa-circle me-2"/>LIVE
+                        </h4>
+                        <h2 class="mt-2 text-truncate" style="max-width: 800px;">
+                            <t t-out="event.name"/>
+                        </h2>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center m-3">
+                    <a t-attf-href="/event/{{event.id}}/get_live_event_track" target="_blank" class="w-75 w-sm-50">
+                        <div class="rounded overflow-hidden" style="aspect-ratio: 2/1;">
+                            <div t-attf-style="background: {{ background_image }}; width: 100%; height: 100%; object-fit: cover;" class="img-fluid rounded" style=""/>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </t>
+        <t t-else="">
+            <h3 class="d-flex justify-content-center m-5">
+                No Live Events!
+            </h3>
+        </t>
+    </t>
+</templates>
