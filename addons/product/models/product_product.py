@@ -394,7 +394,7 @@ class ProductProduct(models.Model):
             if product.image_variant_1920 and not product.product_tmpl_id.image_1920:
                 product.product_tmpl_id.image_1920 = product.image_variant_1920
             # Check if the product is last product of this template...
-            has_other_products = product_ids_by_template_id[product.product_tmpl_id.id] - {product.id}
+            has_other_products = product_ids_by_template_id.get(product.product_tmpl_id.id, set()) - {product.id}
             # ... and do not delete product template if it's configured to be created "on demand"
             if not has_other_products and not product.product_tmpl_id.has_dynamic_attributes():
                 unlink_templates_ids.add(product.product_tmpl_id.id)
