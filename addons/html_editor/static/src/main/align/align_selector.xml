@@ -1,0 +1,27 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.AlignSelector">
+        <Dropdown menuClass="'o_align_selector_menu'">
+            <button class="btn btn-light" t-att-title="props.title">
+                <span class="px-1 d-flex align-items-center">
+                    <i t-att-class="`fa fa-align-${state.displayName}`"/>
+                </span>
+            </button>
+            <t t-set-slot="content">
+                <div class="d-flex px-1">
+                    <t t-foreach="items" t-as="item" t-key="item_index">
+                        <DropdownItem
+                            class="{
+                                'oe_dropdown_item_menu': true,
+                                'oe_dropdown_item_menu_selected': item.mode === state.displayName,
+                            }"
+                            onSelected="() => this.onSelected(item)"
+                            t-on-pointerdown.prevent="() => {}"
+                        >
+                            <i t-att-class="`fa fa-align-${item.mode}`"/>
+                        </DropdownItem>
+                    </t>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+</templates>
