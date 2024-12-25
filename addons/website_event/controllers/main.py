@@ -410,6 +410,10 @@ class WebsiteEventController(http.Controller):
             'iCal_url': urls.get('iCal_url')
         }
 
+    @http.route(['/event/<model("event.event"):event>/get_live_event_track'], type='http', auth="public", website=True, sitemap=False, readonly=True)
+    def live_event_redirect(self, event):
+        return request.redirect(event.website_url)
+
     # ------------------------------------------------------------
     # TOOLS (HELPERS)
     # ------------------------------------------------------------
