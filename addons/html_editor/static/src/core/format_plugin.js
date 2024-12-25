@@ -1,6 +1,5 @@
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
-import { hasAnyNodesColor } from "@html_editor/utils/color";
 import { cleanTextNode, splitTextNode, unwrapContents } from "../utils/dom";
 import {
     areSimilarElements,
@@ -194,9 +193,6 @@ export class FormatPlugin extends Plugin {
         );
     }
 
-    // @todo: issues:
-    // - the calls to hasAnyColor should probably be replaced by calls to predicates
-    //   registered as resources (e.g. by the ColorPlugin).
     hasAnyFormat(traversedNodes) {
         for (const format of Object.keys(formatsSpecs)) {
             if (
@@ -206,9 +202,8 @@ export class FormatPlugin extends Plugin {
                 return true;
             }
         }
-        return (
-            hasAnyNodesColor(traversedNodes, "color") ||
-            hasAnyNodesColor(traversedNodes, "backgroundColor")
+        return traversedNodes.some((node) =>
+            this.getResource("has_format_predicates").some((predicate) => predicate(node))
         );
     }
 
