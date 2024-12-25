@@ -15,9 +15,10 @@ import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Component, onPatched, onWillDestroy, onWillPatch, useRef, useState } from "@odoo/owl";
 import { evaluateExpr } from "@web/core/py_js/py";
+import { getGroupBy } from "@web/search/utils/group_by";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
-const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
+const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one", "date", "datetime"];
 
 function validateColumnQuickCreateExamples(data) {
     const { allowedGroupBys = [], examples = [], foldField = "" } = data;
@@ -229,6 +230,13 @@ export class KanbanRenderer extends Component {
         const fieldNodes = Object.values(this.props.archInfo.fieldNodes).filter(
             (fieldNode) => fieldNode.name === groupByField.name
         );
+        const groupByInfo = this.props.list.groupBy.map((gb) =>
+            typeof gb === "string" ? getGroupBy(gb, this.props.list.fields) : gb
+        );
+        //only day interval is supported for date groupbys in drag and drop
+        if (["date", "datetime"].includes(groupByField.type) && groupByInfo[0].interval !== "day") {
+            return false;
+        }
         let isReadonly = this.props.list.fields[groupByField.name].readonly;
         if (!isReadonly && fieldNodes.length) {
             isReadonly = fieldNodes.every((fieldNode) => {
