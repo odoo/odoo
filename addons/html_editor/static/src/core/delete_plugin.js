@@ -58,6 +58,15 @@ import { compareListTypes } from "@html_editor/main/list/utils";
  * @property { DeletePlugin['deleteSelection'] } deleteSelection
  */
 
+// @todo @phoenix: move these predicates to different plugins
+export const unremovableNodePredicates = [
+    (node) => node.classList?.contains("oe_unremovable"),
+    // Website stuff?
+    (node) => node.classList?.contains("o_editable"),
+    // Monetary field
+    (node) => node.matches?.("[data-oe-type='monetary'] > span"),
+];
+
 export class DeletePlugin extends Plugin {
     static dependencies = ["selection", "history", "input"];
     static id = "delete";
@@ -92,14 +101,7 @@ export class DeletePlugin extends Plugin {
         delete_forward_word_overrides: this.deleteForwardUnmergeable.bind(this),
         delete_forward_line_overrides: this.deleteForwardUnmergeable.bind(this),
 
-        // @todo @phoenix: move these predicates to different plugins
-        unremovable_node_predicates: [
-            (node) => node.classList?.contains("oe_unremovable"),
-            // Website stuff?
-            (node) => node.classList?.contains("o_editable"),
-            // Monetary field
-            (node) => node.matches?.("[data-oe-type='monetary'] > span"),
-        ],
+        unremovable_node_predicates: unremovableNodePredicates,
     };
 
     setup() {

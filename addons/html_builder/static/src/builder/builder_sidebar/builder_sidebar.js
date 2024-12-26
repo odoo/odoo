@@ -30,6 +30,7 @@ import { MediaWebsitePlugin } from "../plugins/media_website_plugin";
 import { MovePlugin } from "../plugins/move/move_plugin";
 import { OperationPlugin } from "../plugins/operation_plugin";
 import { OverlayButtonsPlugin } from "../plugins/overlay_buttons/overlay_buttons_plugin";
+import { RemovePlugin } from "../plugins/remove/remove_plugin";
 import { SetupEditorPlugin } from "../plugins/setup_editor_plugin";
 import { SnippetLifecyclePlugin } from "../plugins/snippet_lifecycle_plugin";
 import { VisibilityPlugin } from "../plugins/visibility_plugin";
@@ -46,6 +47,7 @@ const BUILDER_PLUGIN = [
     OverlayButtonsPlugin,
     MovePlugin,
     GridLayoutPlugin,
+    RemovePlugin,
     DropZonePlugin,
     MediaWebsitePlugin,
     SetupEditorPlugin,
@@ -187,7 +189,7 @@ export class BuilderSidebar extends Component {
                     "If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."
                 ),
                 confirm: () => this.props.closeEditor(),
-                cancel: () => {},
+                cancel: () => { },
             });
         } else {
             this.props.closeEditor();
@@ -195,9 +197,8 @@ export class BuilderSidebar extends Component {
     }
 
     getInvisibleSelector(isMobile = this.props.isMobile) {
-        return `.o_snippet_invisible, ${
-            isMobile ? ".o_snippet_mobile_invisible" : ".o_snippet_desktop_invisible"
-        }`;
+        return `.o_snippet_invisible, ${isMobile ? ".o_snippet_mobile_invisible" : ".o_snippet_desktop_invisible"
+            }`;
     }
 
     async save() {

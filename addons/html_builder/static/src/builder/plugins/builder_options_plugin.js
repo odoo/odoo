@@ -4,6 +4,7 @@ import { uniqueId } from "@web/core/utils/functions";
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builder-options";
     static dependencies = ["selection", "overlay"];
+    static shared = ["getContainers"];
     resources = {
         step_added_handlers: () => this.updateContainers(),
         update_containers: this.updateContainers.bind(this),
@@ -62,6 +63,10 @@ export class BuilderOptionsPlugin extends Plugin {
                 options,
             }));
         this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
+    }
+
+    getContainers() {
+        return this.lastContainers;
     }
 }
 

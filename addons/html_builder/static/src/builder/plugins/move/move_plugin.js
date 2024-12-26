@@ -42,6 +42,25 @@ function getMoveDirection(el) {
     return canMoveVertically ? "vertical" : "horizontal";
 }
 
+export function getVisibleSibling(target, direction) {
+    const siblingEls = [...target.parentNode.children];
+    const visibleSiblingEls = siblingEls.filter(
+        (el) => window.getComputedStyle(el).display !== "none"
+    );
+    const targetMobileOrder = target.style.order;
+    // On mobile, if the target has a mobile order (which is independent
+    // from desktop), consider these orders instead of the DOM order.
+    if (targetMobileOrder && isMobileView(target)) {
+        visibleSiblingEls.sort((a, b) => parseInt(a.style.order) - parseInt(b.style.order));
+    }
+    const targetIndex = visibleSiblingEls.indexOf(target);
+    const siblingIndex = direction === "prev" ? targetIndex - 1 : targetIndex + 1;
+    if (siblingIndex === -1 || siblingIndex === visibleSiblingEls.length) {
+        return false;
+    }
+    return visibleSiblingEls[siblingIndex];
+}
+
 export class MovePlugin extends Plugin {
     static id = "move";
     static dependencies = ["overlay", "history"];
@@ -118,30 +137,11 @@ export class MovePlugin extends Plugin {
     }
 
     hasPreviousSibling() {
-        return !!this.getPreviousOrNextVisibleSibling("prev");
+        return !!getVisibleSibling(this.target, "prev");
     }
 
     hasNextSibling() {
-        return !!this.getPreviousOrNextVisibleSibling("next");
-    }
-
-    getPreviousOrNextVisibleSibling(direction) {
-        const siblingEls = [...this.target.parentNode.children];
-        const visibleSiblingEls = siblingEls.filter(
-            (el) => window.getComputedStyle(el).display !== "none"
-        );
-        const targetMobileOrder = this.target.style.order;
-        // On mobile, if the target has a mobile order (which is independent
-        // from desktop), consider these orders instead of the DOM order.
-        if (targetMobileOrder && this.isMobileView) {
-            visibleSiblingEls.sort((a, b) => parseInt(a.style.order) - parseInt(b.style.order));
-        }
-        const targetIndex = visibleSiblingEls.indexOf(this.target);
-        const siblingIndex = direction === "prev" ? targetIndex - 1 : targetIndex + 1;
-        if (siblingIndex === -1 || siblingIndex === visibleSiblingEls.length) {
-            return false;
-        }
-        return visibleSiblingEls[siblingIndex];
+        return !!getVisibleSibling(this.target, "next");
     }
 
     /**
@@ -168,7 +168,7 @@ export class MovePlugin extends Plugin {
             hasMobileOrder = false;
         }
 
-        const siblingEl = this.getPreviousOrNextVisibleSibling(direction);
+        const siblingEl = getVisibleSibling(this.target, direction);
         if (hasMobileOrder) {
             // Swap the mobile orders.
             const currentOrder = this.target.style.order;

@@ -19,6 +19,9 @@ const isUnsplittableQWebElement = (node) =>
             "t-raw",
         ].some((attr) => node.getAttribute(attr)));
 
+export const isUnremovableQWebElement = (node) =>
+    node.getAttribute?.("t-set") || node.getAttribute?.("t-call");
+
 export class QWebPlugin extends Plugin {
     static id = "qweb";
     static dependencies = ["overlay", "selection"];
@@ -35,8 +38,7 @@ export class QWebPlugin extends Plugin {
         normalize_handlers: this.normalize.bind(this),
 
         savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
-        unremovable_node_predicates: (node) =>
-            node.getAttribute?.("t-set") || node.getAttribute?.("t-call"),
+        unremovable_node_predicates: isUnremovableQWebElement,
         unsplittable_node_predicates: isUnsplittableQWebElement,
     };
 
