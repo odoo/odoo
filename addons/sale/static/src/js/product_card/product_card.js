@@ -10,6 +10,7 @@ export class ProductCard extends Component {
         extraPrice: { type: Number, optional: true },
         onClick: Function,
         isSelected: { type: Boolean, optional: true },
+        imageSrc: { type: String, optional: true },
     };
 
     /**
