@@ -64,7 +64,7 @@ class AuthSignupHome(Home):
             except UserError as e:
                 qcontext['error'] = e.args[0]
             except (SignupError, AssertionError) as e:
-                if request.env["res.users"].sudo().search_count([("login", "=", qcontext.get("login"))], limit=1):
+                if request.env["res.users"].sudo().search_count([('login', '=ilike', qcontext.get('login',"").replace('%','\\%').replace('_','\\_').strip())], limit=1):
                     qcontext["error"] = _("Another user is already registered using this email address.")
                 else:
                     _logger.warning("%s", e)
@@ -152,6 +152,8 @@ class AuthSignupHome(Home):
             raise UserError(_("The form was not properly filled in."))
         if values.get('password') != qcontext.get('confirm_password'):
             raise UserError(_("Passwords do not match; please retype them."))
+        if not values.get('login'):
+            raise UserError(_("Please enter a proper login."))
         supported_lang_codes = [code for code, _ in request.env['res.lang'].get_installed()]
         lang = request.context.get('lang', '')
         if lang in supported_lang_codes:

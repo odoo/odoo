@@ -10,6 +10,8 @@ from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUs
 from odoo.exceptions import AccessError, UserError
 
 from datetime import datetime, timedelta
+from odoo.exceptions import AccessError
+from odoo.tools import mute_logger
 
 class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
@@ -97,3 +99,29 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
             u.create_date = datetime.now() - timedelta(days=5, minutes=10)
         with self.registry.cursor() as cr:
             users.with_env(users.env(cr=cr)).send_unregistered_user_reminder(after_days=5, batch_size=100)
+
+    def test_duplicate_user_signup(self):
+        self._activate_free_signup()
+
+        # Get csrf_token
+        self.authenticate(None, None)
+        csrf_token = http.Request.csrf_token(self)
+
+        # Values from login form
+        payload = {
+            'login': 'unique@example.com',
+            'name': 'user',
+            'password': 'mypassword',
+            'confirm_password': 'mypassword',
+            'csrf_token': csrf_token,
+        }
+
+        url_free_signup = self._get_free_signup_url()
+        self.url_open(url_free_signup, data=payload)
+
+        # Change the login to capitalized login
+        payload['login'] = 'Unique@example.com'
+        with mute_logger('odoo.sql_db'):
+            res = self.url_open(url_free_signup, data=payload)
+            # Check that error is shown in the UI
+            self.assertIn(b'Another user is already registered using this email address.', res.content)
