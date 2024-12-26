@@ -4,6 +4,7 @@ from freezegun import freeze_time
 import logging
 from pytz import timezone
 
+from odoo import Command
 from odoo.tests import tagged
 from odoo.tools import misc
 
@@ -31,6 +32,65 @@ class TestEdiZatca(TestSaEdiCommon):
             current_tree = self.with_applied_xpath(current_tree, self.remove_ubl_extensions_xpath)
 
             self.assertXmlTreeEqual(current_tree, expected_tree)
+
+    def testInvoiceWithDownpayment(self):
+
+        if 'sale' not in self.env["ir.module.module"]._installed():
+            self.skipTest("Sale module is not installed")
+
+        with freeze_time(datetime(year=2022, month=9, day=5, hour=8, minute=20, second=2, tzinfo=timezone('Etc/GMT-3'))):
+            self.partner_us.vat = 'US12345677'
+
+            pricelist = self.env['product.pricelist'].create({'name': 'SAR', 'currency_id': self.env.ref('base.SAR').id})
+            sale_order = self.env['sale.order'].create({
+                'partner_id': self.partner_us.id,
+                'pricelist_id': pricelist.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product_a.id,
+                        'price_unit': 1000,
+                        'product_uom_qty': 1,
+                        'tax_id': [Command.set(self.tax_15.ids)],
+                    })
+                ]
+            })
+            sale_order.action_confirm()
+
+            context = {
+                'active_model': 'sale.order',
+                'active_ids': [sale_order.id],
+                'active_id': sale_order.id,
+                'default_journal_id': self.company_data['default_journal_sale'].id,
+            }
+            downpayment = self.env['sale.advance.payment.inv'].with_context(context).create({
+                'advance_payment_method': 'fixed',
+                'fixed_amount': 115,
+                'deposit_taxes_id': [Command.set(self.tax_15.ids)],
+            })._create_invoices(sale_order)
+
+            final = self.env['sale.advance.payment.inv'].with_context(context).create({})._create_invoices(sale_order)
+
+            for move, test_file in (
+                (downpayment, "downpayment_invoice"),
+                (final, "final_invoice")
+            ):
+                move.write({
+                    'invoice_date': '2022-09-05',
+                    'invoice_date_due': '2022-09-22',
+                    'state': 'posted',
+                    'l10n_sa_confirmation_datetime': datetime.now(),
+                })
+                move._l10n_sa_generate_unsigned_data()
+
+                generated_file = self.env['account.edi.format']._l10n_sa_generate_zatca_template(move)
+                current_tree = self.get_xml_tree_from_string(generated_file)
+                current_tree = self.with_applied_xpath(current_tree, self.remove_ubl_extensions_xpath)
+
+                expected_file = misc.file_open(f'l10n_sa_edi/tests/test_files/{test_file}.xml', 'rb').read()
+                expected_tree = self.get_xml_tree_from_string(expected_file)
+                expected_tree = self.with_applied_xpath(expected_tree, self.invoice_applied_xpath)
+
+                self.assertXmlTreeEqual(current_tree, expected_tree)
 
     def testCreditNoteStandard(self):
 
