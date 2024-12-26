@@ -198,8 +198,8 @@
                 <t t-foreach="track.tag_ids" t-as="tag">
                     <span t-if="tag.color" t-att-title="tag.name"
                         t-attf-class="me-1 mt-1 badge o_badge_clickable #{'o_color_'+str(tag.color)}" t-out="tag.name"
-                        t-attf-onclick="
-                        var value = '#{tag.name}' ;
+                        onclick="
+                        var value = this.title;
                         var target = $('#event_track_search');
                         if (target.val() == value) { target.val(''); } else { target.val(value); }
                         target.trigger('input');
