@@ -1039,9 +1039,43 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
         self.assertEqual(len(invoices), 2, "The number of invoices created should be equal to the number of sales orders.")
 
+    def test_timesheet_with_negative_time_spent(self):
+        """ Check the billable type of a timesheet with negative time spent """
+        sale_order = self.env['sale.order'].create([{
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_delivery_timesheet2.id,
+            })],
+        }])
+        sale_order.action_confirm()
+        task1 = sale_order.tasks_ids
+        timesheet = self.env['account.analytic.line'].create([
+            {
+                'name': 'Timesheet',
+                'task_id': task1.id,
+                'project_id': task1.project_id.id,
+                'unit_amount': -1,
+                'employee_id': self.employee_user.id,
+            },
+        ])
+        self.assertEqual(timesheet.timesheet_invoice_type, 'billable_time')
+
+
+@tagged('-at_install', 'post_install')
+class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.plan_b, cls.plan_c = cls.env['account.analytic.plan'].create([
+            {'name': 'plan 2'},
+            {'name': 'plan 3'},
+        ])
+
     def test_timesheet_get_accounts_from_sol(self):
         project_analytic_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
-        other_analytic_plan2 = self.env['account.analytic.plan'].create({'name': 'Analytic Plan 2'})
+        other_analytic_plan2 = self.plan_b
         analytic_account1, analytic_account2 = self.env['account.analytic.account'].create([
             {
                 'name': 'Analytic Account 1',
@@ -1073,7 +1107,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertEqual(timesheet[other_analytic_plan2._column_name()], analytic_account2)
 
         # Create another analytic account and a new SOL to assign it to the timesheet
-        other_analytic_plan3 = self.env['account.analytic.plan'].create({'name': 'Analytic Plan 3'})
+        other_analytic_plan3 = self.plan_c
         analytic_account3 = self.env['account.analytic.account'].create({
             'name': 'Analytic Account 3',
             'plan_id': other_analytic_plan3.id,
@@ -1091,7 +1125,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
     def test_timesheet_get_accounts_from_sol_fallback_on_project(self):
         _project_analytic_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
-        other_analytic_plan2 = other_plans[0] if other_plans else self.env['account.analytic.plan'].create({'name': 'Analytic Plan 2'})
+        other_analytic_plan2 = self.plan_b
         analytic_account2 = self.env['account.analytic.account'].create({
             'name': 'Analytic Account 2',
             'plan_id': other_analytic_plan2.id,
@@ -1121,13 +1155,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         )
 
     def test_mandatory_plan_timesheet_applicability_from_sol(self):
-        AnalyticPlan = self.env['account.analytic.plan']
         plan_a = self.analytic_plan
-        plan_b = AnalyticPlan.sudo().search([
-            ('parent_id', '=', False),
-            ('id', '!=', plan_a.id),
-        ], limit=1)
-        plan_b = plan_b or AnalyticPlan.create({'name': 'Q'})
+        plan_b = self.plan_b
         analytic_account, _dummy = self.env['account.analytic.account'].create([{
             'name': 'account',
             'plan_id': plan.id,
@@ -1156,24 +1185,3 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'employee_id': self.employee_manager.id,
             'so_line': so_line.id,
         })
-
-    def test_timesheet_with_negative_time_spent(self):
-        """ Check the billable type of a timesheet with negative time spent """
-        sale_order = self.env['sale.order'].create([{
-            'partner_id': self.partner_a.id,
-            'order_line': [Command.create({
-                'product_id': self.product_delivery_timesheet2.id,
-            })],
-        }])
-        sale_order.action_confirm()
-        task1 = sale_order.tasks_ids
-        timesheet = self.env['account.analytic.line'].create([
-            {
-                'name': 'Timesheet',
-                'task_id': task1.id,
-                'project_id': task1.project_id.id,
-                'unit_amount': -1,
-                'employee_id': self.employee_user.id,
-            },
-        ])
-        self.assertEqual(timesheet.timesheet_invoice_type, 'billable_time')

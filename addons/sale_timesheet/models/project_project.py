@@ -33,8 +33,13 @@ class ProjectProject(models.Model):
         compute='_compute_pricing_type',
         search='_search_pricing_type',
         help='The task rate is perfect if you would like to bill different services to different customers at different rates. The fixed rate is perfect if you bill a service at a fixed rate per hour or day worked regardless of the employee who performed it. The employee rate is preferable if your employees deliver the same service at a different rate. For instance, junior and senior consultants would deliver the same service (= consultancy), but at a different rate because of their level of seniority.')
-    sale_line_employee_ids = fields.One2many('project.sale.line.employee.map', 'project_id', copy=False, export_string_translation=False,
-        string="Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+    sale_line_employee_ids = fields.One2many(
+        'project.sale.line.employee.map',
+        'project_id',
+        'Sale line/Employee map',
+        copy=False,
+        export_string_translation=False,
+        help="Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
              "If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
              "You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee.")
     timesheet_product_id = fields.Many2one(

@@ -94,7 +94,7 @@ export class ProductCard extends Component {
 
         if (product.isCombo()) {
             this.router.navigate("combo_selection", { id: product.id });
-        } else if (product.needToConfigure()) {
+        } else if (product.isConfigurable()) {
             this.router.navigate("product", { id: product.id });
         } else {
             if (!this.selfOrder.ordering) {
@@ -118,7 +118,6 @@ export class ProductCard extends Component {
     showProductInfo() {
         this.dialog.add(ProductInfoPopup, {
             product: this.props.product,
-            title: this.props.product.display_name,
             addToCart: (qty) => {
                 this.selectProduct(qty);
             },

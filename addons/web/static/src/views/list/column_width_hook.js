@@ -255,6 +255,7 @@ export function useMagicColumnWidths(tableRef, getState) {
     let columnWidths = null;
     let allowedWidth = 0;
     let hasAlwaysBeenEmpty = true;
+    let parentWidthFixed = false;
     let hash;
     let _resizing = false;
 
@@ -316,8 +317,11 @@ export function useMagicColumnWidths(tableRef, getState) {
      */
     function resetWidths() {
         columnWidths = null;
-        // Unset width that might have been set on the table by resizing a column
+        // Unset widths that might have been set on the table by resizing a column
         tableRef.el.style.width = null;
+        if (parentWidthFixed) {
+            tableRef.el.parentElement.style.width = null;
+        }
     }
 
     /**
@@ -343,6 +347,7 @@ export function useMagicColumnWidths(tableRef, getState) {
 
         // Fix the width so that if the resize overflows, it doesn't affect the layout of the parent
         if (!table.parentElement.style.width) {
+            parentWidthFixed = true;
             table.parentElement.style.width = `${Math.floor(
                 table.parentElement.getBoundingClientRect().width
             )}px`;

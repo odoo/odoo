@@ -10,6 +10,7 @@ import {
     models,
     mountView,
     patchWithCleanup,
+    preloadBundle,
 } from "@web/../tests/web_test_helpers";
 
 import { CalendarController } from "@web/views/calendar/calendar_controller";
@@ -27,7 +28,7 @@ class Event extends models.Model {
 }
 
 defineModels([Event]);
-
+preloadBundle("web.fullcalendar_lib");
 beforeEach(() => {
     mockDate("2021-08-14T08:00:00");
 });

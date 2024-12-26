@@ -144,12 +144,10 @@ test("many2one_avatar_resource widget in kanban view", async () => {
     );
     await contains(".o_card_user_infos > a", { text: "Pierre@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+32487898933" });
-    expect(queryFirst(".o_avatar_card_buttons button").textContent).toBe("Send message");
+    expect(".o_avatar_card_buttons button:first").toHaveText("Send message");
     await click(".o_avatar_card_buttons button");
     await contains(".o-mail-ChatWindow");
     expect(
-        queryFirst(
-            ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate"
-        ).textContent
-    ).toBe("Pierre");
+        ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate:first"
+    ).toHaveText("Pierre");
 });

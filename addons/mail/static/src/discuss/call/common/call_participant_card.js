@@ -76,9 +76,18 @@ export class CallParticipantCard extends Component {
     }
 
     get showConnectionState() {
-        return Boolean(
-            this.isOfActiveCall && !HIDDEN_CONNECTION_STATES.has(this.rtcSession.connectionState)
-        );
+        if (
+            !this.rtcSession ||
+            !this.isOfActiveCall ||
+            HIDDEN_CONNECTION_STATES.has(this.rtcSession.connectionState)
+        ) {
+            return false;
+        }
+        if (this.rtc.connectionType === CONNECTION_TYPES.SERVER) {
+            return this.rtcSession.eq(this.rtc?.selfSession);
+        } else {
+            return this.rtcSession.notEq(this.rtc?.selfSession);
+        }
     }
 
     get showServerState() {

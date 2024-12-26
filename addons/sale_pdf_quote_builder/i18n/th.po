@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -47,6 +47,7 @@ msgid ""
 "A form field set as used in product documents can't be linked to a quotation"
 " document."
 msgstr ""
+"ฟิลด์ฟอร์มที่ใช้ในเอกสารผลิตภัณฑ์ไม่สามารถเชื่อมโยงกับเอกสารใบเสนอราคาได้"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -55,6 +56,7 @@ msgid ""
 "A form field set as used in quotation documents can't be linked to a product"
 " document."
 msgstr ""
+"ฟิลด์ฟอร์มที่ใช้ในเอกสารใบเสนอราคาไม่สามารถเชื่อมโยงกับเอกสารผลิตภัณฑ์ได้"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__access_token
@@ -262,7 +264,7 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model:ir.model.constraint,message:sale_pdf_quote_builder.constraint_sale_pdf_form_field_unique_name_per_doc_type
 msgid "Form field name must be unique for a given document type."
-msgstr ""
+msgstr "ชื่อฟิลด์แบบฟอร์มจะต้องไม่ซ้ำกันสำหรับประเภทเอกสารที่กำหนด"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_form_field
@@ -284,7 +286,7 @@ msgstr "ส่วนหัว"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__sale_pdf_form_field__document_type__quotation_document
 msgid "Header/Footer"
-msgstr ""
+msgstr "ส่วนหัว/ส่วนท้าย"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__quotation_document_ids
@@ -315,7 +317,7 @@ msgstr "ไอดี"
 msgid ""
 "If unchecked, it will allow you to hide the header or footer without "
 "removing it."
-msgstr ""
+msgstr "หากไม่เลือกไว้ คุณสามารถซ่อนส่วนหัวหรือส่วนท้ายโดยไม่ต้องลบออก"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__image_height
@@ -349,6 +351,8 @@ msgid ""
 "Invalid form field name %(field_name)s. A form field name in a header or a "
 "footer can not start with \"sol_id_\"."
 msgstr ""
+"ชื่อฟิลด์ฟอร์มไม่ถูกต้อง %(field_name)s "
+"ชื่อฟิลด์ฟอร์มในส่วนหัวหรือส่วนท้ายไม่สามารถเริ่มต้นด้วย \"sol_id_\" ได้"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -357,6 +361,8 @@ msgid ""
 "Invalid form field name %(field_name)s. It should only contain "
 "alphanumerics, hyphens or underscores."
 msgstr ""
+"ชื่อฟิลด์ฟอร์มไม่ถูกต้อง %(field_name)s ควรประกอบด้วยตัวอักษรและตัวเลข "
+"เครื่องหมายขีดกลาง หรือเครื่องหมายขีดล่างเท่านั้น"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -365,6 +371,8 @@ msgid ""
 "Invalid path %(path)s. It should only contain alphanumerics, hyphens, "
 "underscores or points."
 msgstr ""
+"เส้นทาง %(path)s ไม่ถูกต้อง ควรประกอบด้วยตัวอักษรและตัวเลข "
+"เครื่องหมายยัติภังค์ เครื่องหมายขีดล่าง หรือจุดเท่านั้น"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__is_pdf_quote_builder_available
@@ -453,12 +461,15 @@ msgid ""
 "                <br>\n"
 "                to boost your sales."
 msgstr ""
+"ปรับแต่งใบเสนอราคาของคุณด้วยหน้าส่วนหัวและส่วนท้ายที่สะดุดตาเพื่อ\n"
+"                <br>\n"
+"                เพิ่มยอดขายของคุณ"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid "Please use only relational fields until the last value of your path."
-msgstr ""
+msgstr "กรุณาใช้เฉพาะฟิลด์ที่สัมพันธ์กันจนถึงค่าสุดท้ายของเส้นทางของคุณ"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -569,6 +580,8 @@ msgstr "การขาย : มองเห็นได้ที่"
 #: model:ir.actions.server,name:sale_pdf_quote_builder.cron_post_upgrade_assign_missing_form_fields_ir_actions_server
 msgid "Sale Pdf Quote Builder: assign form fields to documents post upgrade"
 msgstr ""
+"โปรแกรมสร้างใบเสนอราคา PDF สำหรับการขาย: "
+"กำหนดฟิลด์ฟอร์มให้กับเอกสารหลังการอัปเกรด"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
@@ -607,13 +620,15 @@ msgid ""
 "The path to follow to dynamically fill the form field. \n"
 "Leave empty to be able to customized it in the quotation form."
 msgstr ""
+"เส้นทางที่ต้องปฏิบัติตามเพื่อกรอกช่องฟอร์มแบบไดนามิก \n"
+"เว้นว่างไว้เพื่อสามารถปรับแต่งในแบบฟอร์มใบเสนอราคาได้"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_order_line__product_document_ids
 msgid ""
 "The product documents for this order line that will be merged in the PDF "
 "quote."
-msgstr ""
+msgstr "เอกสารผลิตภัณฑ์สำหรับบรรทัดคำสั่งซื้อนี้ที่จะรวมอยู่ในใบเสนอราคา PDF"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__theme_template_id
@@ -639,6 +654,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__url
 msgid "Url"
 msgstr "Url"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
+msgid "Visible to all"
+msgstr ""
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__voice_ids

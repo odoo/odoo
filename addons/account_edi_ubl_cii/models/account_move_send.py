@@ -40,7 +40,7 @@ class AccountMoveSend(models.AbstractModel):
             )
             if not_configured_partners:
                 alerts['account_edi_ubl_cii_configure_partner'] = {
-                    'message': _("These partners are missing Peppol EAS or Peppol Endpoint field. "
+                    'message': _("These partners are missing Peppol Address. "
                                  "Please check those in their Accounting tab. "
                                  "Otherwise, the generated files will be incomplete."),
                     'level': 'info',
@@ -49,7 +49,7 @@ class AccountMoveSend(models.AbstractModel):
                 }
 
         ubl_formats = set(self.env['res.partner']._get_ubl_cii_formats())
-        if moves_without_bank := moves.filtered(lambda m: moves_data[m]['invoice_edi_format'] in ubl_formats and not m.partner_bank_id):
+        if moves_without_bank := moves.filtered(lambda m: m.move_type == 'out_invoice' and moves_data[m]['invoice_edi_format'] in ubl_formats and not m.partner_bank_id):
             alerts['account_edi_ubl_cii_configure_bank'] = {
                 'message': _("Please add a Recipient bank in the 'Other Info' tab to generate a complete file."),
                 'level': 'danger' if len(moves_without_bank) == 1 else 'warning',

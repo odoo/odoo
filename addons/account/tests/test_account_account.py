@@ -16,13 +16,12 @@ class TestAccountAccount(TestAccountMergeCommon):
         cls.company_data_2 = cls.setup_other_company()
         cls.other_currency = cls.setup_other_currency('EUR')
 
-    def test_account_company(self):
+    def test_shared_accounts(self):
         ''' Test that creating an account with a given company in company_ids sets the code for that company.
         Test that copying an account creates a new account with the code set for the new account's company_ids company,
         and that copying an account that belongs to multiple companies works, even if the copied account had
         check_company fields that had values belonging to several companies.
-        Test that you can't have an account without a company set.
-        Test that you can't remove a company from an account if there are some journal items in the company. '''
+        '''
 
         company_1 = self.company_data['company']
         company_2 = self.company_data_2['company']
@@ -32,7 +31,6 @@ class TestAccountAccount(TestAccountMergeCommon):
         account = self.env['account.account'].create({
             'code': '180001',
             'name': 'My Account in Company 2',
-            'account_type': 'asset_current',
             'company_ids': [Command.link(company_2.id)]
         })
         self.assertRecordValues(
@@ -60,8 +58,8 @@ class TestAccountAccount(TestAccountMergeCommon):
                 Command.create({'company_id': company_3.id, 'code': '180023'}),
             ],
             'name': 'My second account',
-            'account_type': 'asset_current',
             'company_ids': [Command.set([company_1.id, company_2.id, company_3.id])],
+            'tax_ids': [Command.set([self.company_data_2['default_tax_sale'].id])],
         })
         self.assertRecordValues(account_2, [{'code': '180021', 'company_ids': [company_1.id, company_2.id, company_3.id]}])
         self.assertRecordValues(account_2.with_company(company_2), [{'code': '180022'}])
@@ -92,6 +90,112 @@ class TestAccountAccount(TestAccountMergeCommon):
         self.assertRecordValues(account_copy_3.with_company(company_2), [{'code': '180023'}])
         self.assertRecordValues(account_copy_3.with_company(company_3), [{'code': '180024'}])
 
+        # Test that you can modify the code of an account in another company by writing on `code_mapping_ids`.
+        account_copy_3.code_mapping_ids[2].code = '180025'
+        self.assertRecordValues(account_copy_3.with_company(company_3), [{'code': '180025'}])
+
+        # Test that you can modify the code of an account in another company by passing a CREATE value to `code_mapping_ids` (needed for import).
+        account_copy_3.write({'code_mapping_ids': [Command.create({'company_id': company_3.id, 'code': '180026'})]})
+        self.assertRecordValues(account_copy_3.with_company(company_3), [{'code': '180026'}])
+
+    def test_ensure_code_unique(self):
+        ''' Test the `_ensure_code_unique` check method.
+
+            Check that it allows a code to be set on an account if and only if
+            there is no other account accessible from the child or parent companies of the account
+            that has the same code in that company.
+
+            Simultaneously, check that the `_search_new_account_code` method proposes codes that
+            would be accepted and skips codes that would be disallowed.
+        '''
+        # Create company hierarchy:
+        # parent_company -> {child_company_1, child_company_2}
+        # other_company is disjoint.
+
+        parent_company = self.company_data['company']
+        child_company_1 = self.env['res.company'].create([{
+            'name': 'Child Company 1',
+            'parent_id': parent_company.id,
+        }])
+        child_company_2 = self.env['res.company'].create([{
+            'name': 'Child Company 2',
+            'parent_id': parent_company.id,
+        }])
+        other_company = self.company_data_2['company']
+
+        # Set up an existing account in the other company.
+        self.env['account.account'].with_context({'allowed_company_ids': other_company.ids}).create([{
+            'name': 'Existing account in other company',
+            'company_ids': [Command.set(other_company.ids)],
+            'code_mapping_ids': [
+                Command.create({'company_id': other_company.id, 'code': '180001'}),
+                Command.create({'company_id': parent_company.id, 'code': '180001'}),
+            ]
+        }])
+
+        # 1. Check that the existing account in the other company does not prevent
+        # an account from being created with the same code in `parent_company`.
+        self.assertEqual(
+            self.env['account.account'].with_company(parent_company)._search_new_account_code('180001', cache=set()),
+            '180001',
+        )
+        self.env['account.account'].create([{
+            'name': 'Account in parent company',
+            'code': '180001',
+            'company_ids': [Command.set(parent_company.ids)],
+        }])
+
+        # 2. Check that now that there is an account in `parent_company` with code
+        # 180001, because that account is accessible in `child_company_1`, we cannot
+        # create another account with the same code in `child_company_1`.
+        self.assertEqual(
+            self.env['account.account'].with_company(child_company_1)._search_new_account_code('180001', cache=set()),
+            '180002',
+        )
+        with self.assertRaises(ValidationError):
+            self.env['account.account'].create([{
+                'name': 'Account in child company 1 (this should fail)',
+                'code': '180001',
+                'company_ids': [Command.set(child_company_1.ids)],
+            }])
+
+        # Now, create an account in `child_company_1` with a new code.
+        self.env['account.account'].create([{
+            'name': 'Account in child company 1',
+            'code': '180002',
+            'company_ids': [Command.set(child_company_1.ids)],
+        }])
+
+        # 3. Check that now that there is an account in `child_company_1` with code
+        # 180002, because any new accounts in `parent_company` are also accessible
+        # from `child_company_1`, we cannot create another account with the same
+        # code in `parent_company`.
+        self.assertEqual(
+            self.env['account.account'].with_company(parent_company)._search_new_account_code('180002', cache=set()),
+            '180003',
+        )
+        with self.assertRaises(ValidationError):
+            self.env['account.account'].create([{
+                'name': 'Account in parent company (this should fail)',
+                'code': '180002',
+                'company_ids': [Command.set(child_company_1.ids)],
+            }])
+
+        # 4. Check that we can create an account in `child_company_2` with code
+        # 180002, because it will not interfere with the account in `child_company_1`
+        # with code 180002.
+        self.assertEqual(
+            self.env['account.account'].with_company(child_company_2)._search_new_account_code('180002', cache=set()),
+            '180002',
+        )
+        self.env['account.account'].create([{
+            'name': 'Account in child company 2',
+            'code': '180002',
+            'company_ids': [Command.set(child_company_2.ids)],
+        }])
+
+    def test_account_company(self):
+        ''' Test the constraint on `account.company_ids`. '''
         # Test that at least one company is required on accounts.
         with self.assertRaises(UserError):
             self.company_data['default_account_revenue'].company_ids = False
@@ -114,7 +218,7 @@ class TestAccountAccount(TestAccountMergeCommon):
         })
 
         with self.assertRaises(UserError):
-            self.company_data['default_account_revenue'].company_ids = company_2
+            self.company_data['default_account_revenue'].company_ids = self.company_data_2['company']
 
     def test_toggle_reconcile(self):
         ''' Test the feature when the user sets an account as reconcile/not reconcile with existing journal entries. '''
@@ -283,9 +387,6 @@ class TestAccountAccount(TestAccountMergeCommon):
             'name': 'This name will be erase',
         })
 
-        self.env['account.account']._get_closest_parent_account(account_to_process, "name", default_value='The name was not given by the parent')
-        self.assertEqual(account_to_process.name, 'This name will be transferred to the child one')
-
         #  The account type and tags will be transferred automatically with the computes
         self.assertEqual(account_to_process.account_type, 'expense')
         self.assertEqual(account_to_process.tag_ids.name, 'Test tag')
@@ -415,7 +516,11 @@ class TestAccountAccount(TestAccountMergeCommon):
         """
         Test various scenarios when creating an account via a form
         """
-        account_form = Form(self.env['account.account'])
+        # We set `allowed_company_ids` here so that the `with_company(other_company)` in
+        # `account.code.mapping._inverse_code` creates a context with both the first active
+        # company and the other company, rather than with just the other company.
+        # In a client-side form, 'allowed_company_ids' will always be set in the context.
+        account_form = Form(self.env['account.account'].with_context({'allowed_company_ids': self.env.company.ids}))
         account_form.name = "A New Account 1"
 
         # code should not be set
@@ -777,3 +882,58 @@ class TestAccountAccount(TestAccountMergeCommon):
         self.assertEqual(group_10.parent_id, group_1)
         self.assertEqual(group_100.parent_id, group_10)
         self.assertEqual(group_101.parent_id, group_10)
+
+        # The root becomes a child and vice versa
+        group_3 = create_account_group('group_3', 3, self.env.company)
+        group_31 = create_account_group('group_31', 31, self.env.company)
+        group_3.code_prefix_start = 312
+        self.assertEqual(len(group_31.parent_id), 0)
+        self.assertEqual(group_3.parent_id, group_31)
+
+    def test_muticompany_account_groups(self):
+        """
+            Ensure that account groups are always in a root company
+            Ensure that accounts and account groups from a same company tree match
+        """
+
+        branch_company = self.env['res.company'].create({
+            'name': 'Branch Company',
+            'parent_id': self.env.company.id,
+        })
+
+        parent_group = self.env['account.group'].create({
+            'name': 'Parent Group',
+            'code_prefix_start': '123',
+            'code_prefix_end': '124'
+        })
+        child_group = self.env['account.group'].with_company(branch_company).create({
+            'name': 'Child Group',
+            'code_prefix_start': '125',
+            'code_prefix_end': '126',
+        })
+        self.assertEqual(
+            child_group.company_id,
+            child_group.company_id.root_id,
+            "company_id should never be a branch company"
+        )
+
+        branch_account = self.env['account.account'].with_company(branch_company).create({
+            'name': 'Branch Account',
+            'code': '1234',
+        })
+        self.assertEqual(
+            branch_account.group_id,
+            parent_group,
+            "group_id computation should work for accounts that are not in the root company"
+        )
+
+        parent_account = self.env['account.account'].create({
+            'name': 'Parent Account',
+            'code': '1235'
+        })
+        parent_account.with_company(branch_company).code = '1256'
+        self.assertEqual(
+            parent_account.with_company(branch_company).group_id,
+            child_group,
+            "group_id computation should work if company_id is not in self.env.companies"
+        )

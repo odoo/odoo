@@ -8,16 +8,16 @@
 # Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2024
 # Andy Yiu, 2024
 # Wil Odoo, 2024
-# Junko Augias, 2024
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -840,12 +840,6 @@ msgid ""
 "All the dates should be greater or equal to the first date in cashflow_dates"
 " (%s)."
 msgstr "全ての日付は cashflow_dates (%s)の最初の日付以上である必要があります。"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "All the ranges and the range values must have the same size"
-msgstr "全ての範囲と範囲値は同じサイズでなければなりません。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3192,6 +3186,7 @@ msgstr "フィールド %(field)sはそのタイプ  (%(type)s)故にサポー�
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/odoo_pivot.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_helpers.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 msgid "Field %s does not exist"
 msgstr "フィールド %s は存在しません"
 
@@ -6451,6 +6446,12 @@ msgstr "テーブルのような範囲から単一の値。"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+msgid "Some measures are not available: %s"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Some used characters are not allowed in a sheet name (Forbidden characters "
@@ -6615,7 +6616,7 @@ msgstr "積み上げ棒グラフ"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Stacked column chart"
-msgstr ""
+msgstr "積み上げ棒グラフ"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7717,7 +7718,7 @@ msgstr "最初の被乗数"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The first number in the sequence"
-msgstr "シーケンスの始めの値"
+msgstr "シーケンスの最初の番号"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8236,6 +8237,21 @@ msgstr "最小値、または引き算する数。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The minute component of the time."
 msgstr "時刻の構成要素、分"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/data_sources/data_source.js:0
+#: code:addons/spreadsheet/static/src/pivot/odoo_pivot_loader.js:0
+msgid "The model \"%(model)s\" does not exist."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/global_filters/components/filter_value/filter_value.js:0
+msgid ""
+"The model (%(model)s) of this global filter is not valid (it may have been "
+"renamed/deleted)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10821,7 +10837,7 @@ msgstr "Vertical lookup."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "View"
-msgstr "ビュー"
+msgstr "表示"
 
 #. module: spreadsheet
 #. odoo-javascript

@@ -3,8 +3,14 @@
 # 	* snailmail
 # 
 # Translators:
+# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2024
+# Davor Bojkić <davor.bojkic@storm.hr>, 2024
+# Tina Milas, 2024
+# Igor Krizanovic <krizanovic.igor@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Bole <bole@dajmi5.com>, 2024
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2024
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2024\n"
+"Last-Translator: Karolina Tonković <karolina.tonkovic@storm.hr>, 2024\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +43,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "Address"
 msgstr "Adresa"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/failure_model_patch.js:0
+msgid ""
+"An error occurred when sending a letter with Snailmail on “%(record_name)s”"
+msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
@@ -92,7 +105,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid "Buy credits"
-msgstr ""
+msgstr "Kupi kredite"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__credit_error
@@ -210,12 +223,12 @@ msgstr "Dokument"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__res_id
 msgid "Document ID"
-msgstr ""
+msgstr "ID dokumenta"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "Nit e-pošte"
 
 #. module: snailmail
 #. odoo-javascript
@@ -223,7 +236,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__error_code
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__error
 msgid "Error"
-msgstr ""
+msgstr "Greška"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__format_error
@@ -262,12 +275,12 @@ msgstr "ID"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__pending
 msgid "In Queue"
-msgstr ""
+msgstr "U redu čekanja"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__info_msg
 msgid "Information"
-msgstr ""
+msgstr "Informacija"
 
 #. module: snailmail
 #. odoo-python
@@ -294,7 +307,7 @@ msgstr "Promijenjeno"
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__letter_ids
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__letter_id
 msgid "Letter"
-msgstr ""
+msgstr "Pismo"
 
 #. module: snailmail
 #. odoo-python
@@ -321,7 +334,7 @@ msgstr "Poruka"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_mail_notification
 msgid "Message Notifications"
-msgstr ""
+msgstr "Obavjesti poruka"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -347,7 +360,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__notification_ids
 msgid "Notifications"
-msgstr ""
+msgstr "Obavijesti"
 
 #. module: snailmail
 #. odoo-python
@@ -358,7 +371,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__report_template
 msgid "Optional report to print and attach"
-msgstr ""
+msgstr "Izborno izvješće za ispisati i pridodati"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
@@ -382,12 +395,12 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
 msgid "Print Both sides"
-msgstr ""
+msgstr "Ispis obje strane"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_color
 msgid "Print In Color"
-msgstr ""
+msgstr "Ispis u boji"
 
 #. module: snailmail
 #. odoo-javascript
@@ -398,7 +411,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
 msgid "Recipient"
-msgstr ""
+msgstr "Primatelj"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__reference
@@ -413,7 +426,7 @@ msgstr "Akcija izvještaja"
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
 msgid "Send Now"
-msgstr ""
+msgstr "Pošalji odmah"
 
 #. module: snailmail
 #: model:iap.service,description:snailmail.iap_service_snailmail
@@ -425,7 +438,7 @@ msgstr ""
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__sent
 msgid "Sent"
-msgstr ""
+msgstr "Poslano"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__user_id
@@ -442,7 +455,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_message__message_type__snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__notification_type__snail
 msgid "Snailmail"
-msgstr ""
+msgstr "Obična pošta"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
@@ -457,6 +470,12 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
 msgid "Snailmail Credit Error"
+msgstr ""
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/messaging_menu/messaging_menu_patch.js:0
+msgid "Snailmail Failure: %(modelName)s"
 msgstr ""
 
 #. module: snailmail
@@ -555,7 +574,7 @@ msgstr "Ulica..."
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__street2
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__street2
 msgid "Street2"
-msgstr ""
+msgstr "Ulica2"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__trial_error

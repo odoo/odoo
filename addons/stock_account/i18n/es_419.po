@@ -490,7 +490,7 @@ msgstr "Línea de factura"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__price_diff_value
 msgid "Invoice value correction with invoice currency"
-msgstr "Corrección de valor de factura en la divisa de la factura"
+msgstr "Corrección de valor de factura en la moneda de la factura"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
@@ -550,7 +550,7 @@ msgstr "Valor del lote modificado manualmente (de %(old)s a %(new)s)"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_lot
 msgid "Lot/Serial"
-msgstr "Número de lote/serie "
+msgstr "Número de serie/lote"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__lot_id
@@ -645,7 +645,7 @@ msgstr "Categoría del producto"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Movimientos de producto (línea de movimiento de inventario)"
+msgstr "Movimientos de producto (línea de movimiento de stock)"
 
 #. module: stock_account
 #. odoo-python
@@ -805,7 +805,7 @@ msgstr "Diario de existencias"
 #: model:ir.model.fields,field_description:stock_account.field_account_move__stock_move_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_move_id
 msgid "Stock Move"
-msgstr "Movimiento de existencias"
+msgstr "Movimiento de stock"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -869,7 +869,7 @@ msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
-"Campo técnico para mostrar de forma correcta la divisa seleccionada de la "
+"Campo técnico para mostrar de forma correcta la moneda seleccionada de la "
 "empresa que corresponde al valor total de las capas de valoración del "
 "producto"
 
@@ -948,6 +948,20 @@ msgid ""
 msgstr ""
 "Es necesario que configure las cuentas de inventario para usar la valoración"
 " automática."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"The stock valuation of a move is based on the type of the source and "
+"destination locations. As the move is already processed, you cannot modify "
+"the locations in a way that changes the valuation logic defined during the "
+"initial processing."
+msgstr ""
+"La valoración de existencias de un movimiento se basa en el tipo de "
+"ubicación de origen y destino. El movimiento ya está procesado, así que no "
+"puede modificar las ubicaciones para cambiar la lógica de valoración "
+"definida durante el procesamiento inicial."
 
 #. module: stock_account
 #. odoo-python

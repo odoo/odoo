@@ -284,6 +284,7 @@ class Users(models.Model):
                             "isAdmin",
                             "name",
                             "notification_type",
+                            "signature",
                             "user",
                             "write_date",
                         ],

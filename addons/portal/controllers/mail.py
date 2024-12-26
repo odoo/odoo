@@ -43,10 +43,8 @@ class PortalChatter(http.Controller):
     def portal_chatter_init(self, thread_model, thread_id, **kwargs):
         store = Store()
         thread = request.env[thread_model]._get_thread_with_access(thread_id, **kwargs)
-        if not thread:
-            raise NotFound()
         partner = request.env.user.partner_id
-        if request.env.user._is_public():
+        if thread and request.env.user._is_public():
             if portal_partner := get_portal_partner(
                 thread, kwargs.get("hash"), kwargs.get("pid"), kwargs.get("token")
             ):

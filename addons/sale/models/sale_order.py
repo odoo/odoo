@@ -732,7 +732,7 @@ class SaleOrder(models.Model):
                            order.company_id.account_use_credit_limit
             if show_warning:
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
-                    order,
+                    order.sudo(),  # ensure access to `credit` & `credit_limit` fields
                     current_amount=(order.amount_total / order.currency_rate),
                 )
 
@@ -1306,8 +1306,7 @@ class SaleOrder(models.Model):
     def _recompute_prices(self):
         lines_to_recompute = self._get_update_prices_lines()
         lines_to_recompute.invalidate_recordset(['pricelist_item_id'])
-        lines_to_recompute.technical_price_unit = 0.0
-        lines_to_recompute._compute_price_unit()
+        lines_to_recompute.with_context(force_price_recomputation=True)._compute_price_unit()
         # Special case: we want to overwrite the existing discount on _recompute_prices call
         # i.e. to make sure the discount is correctly reset
         # if pricelist rule is different than when the price was first computed.
@@ -1584,7 +1583,10 @@ class SaleOrder(models.Model):
         # We do this after the moves have been created since we need taxes, etc. to know if the total
         # is actually negative or not
         if final:
-            moves.sudo().filtered(lambda m: m.amount_total < 0).action_switch_move_type()
+            if moves_to_switch := moves.sudo().filtered(lambda m: m.amount_total < 0):
+                moves_to_switch.action_switch_move_type()
+                self.invoice_ids._set_reversed_entry(moves_to_switch)
+
         for move in moves:
             if final:
                 # Downpayment might have been determined by a fixed amount set by the user.

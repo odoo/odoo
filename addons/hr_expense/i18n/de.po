@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -159,6 +159,18 @@ msgid "<span>The total amount doesn't match the original amount.</span>"
 msgstr ""
 "<span>Der Gesamtbetrag stimmt nicht mit dem ursprünglichen Betrag "
 "überein.</span>"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid ""
+"A default outstanding account must be defined in the settings for company-"
+"paid expenses. Or specify one in the Journal for the %(method)s payment "
+"method."
+msgstr ""
+"Ein Standardkonto für offene Rechnungen muss in den Einstellungen für vom "
+"Unternehmen bezahlte Ausgaben definiert werden. Oder geben Sie eins im "
+"Journal für die Zahlungsmethode %(method)s an."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -605,9 +617,9 @@ msgstr "Standardbuchungsjournal für von Mitarbeitern übernommene Spesen."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Default outstanding account for expenses paid by employees."
+msgid "Default outstanding account for expenses paid by company."
 msgstr ""
-"Standardkonto für offene Rechnungen für von Mitarbeitern bezahlte Ausgaben."
+"Standardkonto für offene Rechnungen für vom Unternehmen bezahlte Ausgaben."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -716,11 +728,6 @@ msgid "Employee Expense Journal"
 msgstr "Journal für Mitarbeiterspesen"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Employee Expense Oustanding Account"
-msgstr "Konto für offene Rechnungen für Mitarbeiterspesen"
-
-#. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_account_employee_expenses
 msgid "Employee Expenses"
@@ -804,6 +811,11 @@ msgstr "Ausgabenzeilen sind vom aktuellen Benutzer bearbeitbar"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
 msgid "Expense Manager"
 msgstr "Spesenmanager"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Expense Outstanding Account"
+msgstr "Konto für offene Rechnungen von Spesen"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -1041,6 +1053,12 @@ msgstr "Geschenke"
 #: model_terms:product.template,description:hr_expense.expense_product_gift_product_template
 msgid "Gifts to customers or vendors"
 msgstr "Kunden- oder Lieferantengeschenke"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid "Go to settings"
+msgstr "Zu den Einstellungen"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1613,6 +1631,14 @@ msgstr "Telefonrechnungen, Porto usw."
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid ""
+"Please specify an expense journal in order to generate accounting entries."
+msgstr ""
+"Bitte geben Sie das Aufwandsjournal an, um Buchungseinträge zu erstellen."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid ""
 "Please specify if the expenses for this report were paid by the company, or "
 "the employee"
 msgstr ""
@@ -1623,7 +1649,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/list.xml:0
 msgid "Post Entries"
-msgstr "Einträge buchen"
+msgstr "Posten buchen"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1890,12 +1916,6 @@ msgid "Show missing work email employees"
 msgstr "Fehlende Arbeitsmails von Mitarbeitern anzeigen"
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid "Specify expense journal to generate accounting entries."
-msgstr "Geben Sie das Aufwandsjournal an, um Buchungseinträge zu erstellen."
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__accounting_date
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__accounting_date
 msgid "Specify the bill date of the related vendor bill."
@@ -2039,10 +2059,10 @@ msgstr "Teamgenehmiger"
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_outstanding_account_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_outstanding_account_id
 msgid ""
-"The account used to record the outstanding amount of the employee expenses."
+"The account used to record the outstanding amount of the company expenses."
 msgstr ""
-"Das Konto, das zur Erfassung des ausstehenden Betrags der Mitarbeiterspesen "
-"verwendet wurde."
+"Das Konto, das zur Erfassung des ausstehenden Betrags der "
+"Unternehmensausgaben verwendet wurde."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
@@ -2092,17 +2112,6 @@ msgid "The journal used when the expense is paid by employee."
 msgstr ""
 "Das Journal, das verwendet wird, wenn die Ausgabe vom Mitarbeiter bezahlt "
 "wird."
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid ""
-"The payment method %(method)s needs an account, or a default outstanding "
-"account must be defined in the settings."
-msgstr ""
-"Die Zahlungsmethode %(method)s benötigt ein Konto oder es muss ein "
-"standardmäßiges Konto für offene Rechnungen in den Einstellungen definiert "
-"werden."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__payment_method_line_id

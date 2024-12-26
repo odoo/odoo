@@ -3,13 +3,15 @@
 # 	* hr_presence
 # 
 # Translators:
+# Igor Krizanovic <krizanovic.igor@gmail.com>, 2024
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
 # Bole <bole@dajmi5.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>, 2024\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
@@ -29,11 +31,11 @@ msgstr ""
 #: model:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
 "<div>\n"
-"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
 "We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.\n"
 "Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.\n"
 "Thank you for your prompt attention to this matter.\n"
-"                    <br>Best Regards,<br><br>\n"
+"                    <br/>Best Regards,<br/><br/>\n"
 "                </div>\n"
 "            "
 msgstr ""
@@ -69,7 +71,7 @@ msgstr "Konfiguracijske postavke"
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__create_uid
 msgid "Create Uid"
-msgstr ""
+msgstr "Kreirao"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_time_off
@@ -81,7 +83,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__email_sent
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__email_sent
 msgid "Email Sent"
-msgstr ""
+msgstr "Poslan e-mail"
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
@@ -128,7 +130,7 @@ msgstr "IP adresa"
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__ip_connected
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__ip_connected
 msgid "Ip Connected"
-msgstr ""
+msgstr "IP Povezan"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_presence
@@ -179,7 +181,7 @@ msgstr "Prisutan"
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "Send SMS"
-msgstr ""
+msgstr "Pošalji SMS"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_sms
@@ -209,9 +211,15 @@ msgid "Unexpected Absence"
 msgstr "Neočekivano odsustvo"
 
 #. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "Unplanned Absence"
+msgstr ""
+
+#. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log
 msgid "Users Log"
-msgstr ""
+msgstr "Zapisnik korisnika"
 
 #. module: hr_presence
 #. odoo-python

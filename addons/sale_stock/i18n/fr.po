@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -84,7 +84,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference</strong>"
-msgstr ""
+msgstr "<strong>Référence client</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -95,7 +95,7 @@ msgstr "<strong>Incoterm</strong>"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__is_storable
 msgid "A storable product is a product for which you manage stock."
-msgstr ""
+msgstr "Un produit stockable est un produit pour lequel vous gérez le stock."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
@@ -153,6 +153,9 @@ msgid ""
 "            Orange: Partially Delivered\n"
 "            Green: Fully Delivered"
 msgstr ""
+"Bleu : Non livré/ démarré\n"
+"            Orange : Partiellement livré\n"
+"            Vert : Entièrement livré"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -433,7 +436,7 @@ msgstr "Avancer les dates de livraison prévues de"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
 msgid "No delivery yet! Automate them with sales orders."
-msgstr "Pas encore de livraison ! Automatisez-les avec des bons de commande."
+msgstr "Pas encore de livraison ! Automatisez-les avec des commandes clients."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -521,7 +524,7 @@ msgid ""
 "                replenishment propositions, shipping connectors, barcode scanner, etc."
 msgstr ""
 "Diminuez les reliquats grâce aux réservations,  à la gestion des emplacements,\n"
-"                aux propositions de réapprovisionnement intelligentes, aux connecteurs d'expédition, aux lecteurs de codes-barres, etc."
+"                aux propositions de réassort intelligentes, aux connecteurs d'expédition, aux lecteurs de codes-barres, etc."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -540,6 +543,11 @@ msgstr "Réapprovisionner sur commande (MTO)"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Reserved"
 msgstr "Réservé"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Transfert de retour"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -580,7 +588,7 @@ msgstr "Rapport d'analyse des ventes"
 #: model:ir.model,name:sale_stock.model_sale_order
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
 msgid "Sales Order"
-msgstr "Bon de commande"
+msgstr "Commande client"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_cancel
@@ -601,7 +609,7 @@ msgstr "Lignes de commande"
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__sale_order_ids
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
 msgid "Sales Orders"
-msgstr "Bons de commande"
+msgstr "Commandes clients"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead
@@ -788,12 +796,16 @@ msgstr "Quand commencer la livraison"
 msgid ""
 "You must have a warehouse for line using a delivery in different company."
 msgstr ""
+"Vous devez disposer d'un entrepôt pour les lignes utilisant une livraison "
+"dans une autre société."
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid "You must set a warehouse on your sale order to proceed."
 msgstr ""
+"Vous devez définir un entrepôt sur votre commande client pour pouvoir "
+"continuer."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so

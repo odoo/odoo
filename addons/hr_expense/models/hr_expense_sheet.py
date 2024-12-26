@@ -586,14 +586,22 @@ class HrExpenseSheet(models.Model):
 
     def action_sheet_move_post(self):
         # When a move has been deleted
-        self.filtered(lambda sheet: not sheet.account_move_ids).with_prefetch()._do_create_moves()
-        self.account_move_ids.action_post()
+        self.filtered(lambda sheet: not sheet.account_move_ids)._do_create_moves()
+
+        company_sheets = self.filtered(lambda sheet: sheet.payment_mode == 'company_account')
+        employee_sheets = self - company_sheets
+
+        # Post the employee-paid expenses moves
+        employee_sheets.account_move_ids.action_post()
+
+        # Post the company-paid expense through the payment instead, to post both at the same time
+        company_sheets.account_move_ids.origin_payment_id.action_post()
 
     def action_reset_expense_sheets(self):
         self.filtered(lambda sheet: sheet.state not in {'draft', 'submit'})._check_can_reset_approval()
-        self._do_reverse_moves()
+        self.sudo()._do_reverse_moves()
         self._do_reset_approval()
-        self.account_move_ids = [Command.clear()]
+        self.sudo().account_move_ids = [Command.clear()]
 
     def action_register_payment(self):
         ''' Open the account.payment.register wizard to pay the selected journal entries.
@@ -602,7 +610,7 @@ class HrExpenseSheet(models.Model):
         :return: An action opening the account.payment.register wizard.
         '''
         return self.account_move_ids.with_context(default_partner_bank_id=(
-            self.employee_id.sudo().bank_account_id.id if len(self.employee_id.sudo().bank_account_id.ids) <= 1 else None
+            self.account_move_ids.partner_bank_id.id if len(self.account_move_ids.partner_bank_id.ids) <= 1 else None
         )).action_register_payment()
 
     def action_open_expense_view(self):
@@ -757,12 +765,21 @@ class HrExpenseSheet(models.Model):
                 expense._prepare_payments_vals()
                 for expense in company_account_sheets.expense_line_ids
             ])
+
+            payment_moves_sudo = self.env['account.move'].sudo().create(move_vals_list)
+            for payment_vals, move in zip(payment_vals_list, payment_moves_sudo):
+                payment_vals['move_id'] = move.id
+
             payments_sudo = self.env['account.payment'].sudo().create(payment_vals_list)
-            moves_sudo = self.env['account.move'].sudo().create(move_vals_list)
-            for payment, move in zip(payments_sudo, moves_sudo):
-                payment.write({'move_id': move.id, 'state': 'in_process'})
-                move.origin_payment_id = payment
-            moves_sudo |= payments_sudo.move_id
+            for payment_sudo, move_sudo in zip(payments_sudo, payment_moves_sudo):
+                move_sudo.update({
+                    'origin_payment_id': payment_sudo.id,
+                    # We need to put the journal_id because editing origin_payment_id triggers a re-computation chain
+                    # that voids the company_currency_id of the lines
+                    'journal_id': move_sudo.journal_id.id,
+                })
+
+            moves_sudo |= payment_moves_sudo
 
         # returning the move with the super user flag set back as it was at the origin of the call
         return moves_sudo.sudo(self.env.su)
@@ -806,13 +823,16 @@ class HrExpenseSheet(models.Model):
 
     def _prepare_bills_vals(self):
         self.ensure_one()
-
+        move_vals = self._prepare_move_vals()
+        if self.employee_id.sudo().bank_account_id:
+            move_vals['partner_bank_id'] = self.employee_id.sudo().bank_account_id.id
         return {
-            **self._prepare_move_vals(),
+            **move_vals,
             'journal_id': self.journal_id.id,
             'ref': self.name,
             'move_type': 'in_invoice',
             'partner_id': self.employee_id.sudo().work_contact_id.id,
+            'commercial_partner_id': self.employee_id.user_partner_id.id,
             'currency_id': self.currency_id.id,
             'line_ids': [Command.create(expense._prepare_move_lines_vals()) for expense in self.expense_line_ids],
             'attachment_ids': [
@@ -862,11 +882,16 @@ class HrExpenseSheet(models.Model):
                 or journal.company_id.expense_outstanding_account_id
             )
             if not account_dest:
-                raise UserError(_(
-                    "The payment method %(method)s needs an account, "
-                    "or a default outstanding account must be defined in the settings.",
+                error_msg = _(
+                    "A default outstanding account must be defined in the settings for company-paid expenses. "
+                    "Or specify one in the Journal for the %(method)s payment method.",
                     method=self.payment_method_line_id.display_name,
-                ))
+                )
+                if self.env['res.config.settings'].has_access('write'):
+                    action = self.env.ref('hr_expense.action_hr_expense_configuration')
+                    raise RedirectWarning(error_msg, action=action.id, button_text=_("Go to settings"))
+                else:
+                    raise UserError(error_msg)
         else:
             if not self.employee_id.sudo().work_contact_id:
                 raise UserError(_("No work contact found for the employee %s, please configure one.", self.employee_id.name))

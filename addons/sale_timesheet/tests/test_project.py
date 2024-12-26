@@ -186,6 +186,28 @@ class TestProject(TestCommonSaleTimesheet):
         ))
         self.assertEqual('delivered_timesheet', form.service_policy)
 
+    def test_open_product_form_with_default_uom_id(self):
+        """ Test default product uom fallback when product is not service type """
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        product_form = Form(self.env['product.product'].with_context(
+            default_uom_id=uom_dozen.id,
+        ))
+        self.assertEqual(uom_dozen, product_form.uom_id, "Default uom should be Dozen")
+        product_form.type = 'service'
+        product_form.service_policy = 'delivered_timesheet'
+        uom_hour = self.env.ref('uom.product_uom_hour')
+        self.assertEqual(
+            uom_hour,
+            product_form.uom_id,
+            "Uom should be updated to Hour for service_type=`timesheet` product"
+        )
+        product_form.type = 'consu'
+        self.assertEqual(
+            uom_dozen,
+            product_form.uom_id,
+            "Uom should be updated to Dozen for `Goods` type product"
+        )
+
     def test_duplicate_project_allocated_hours(self):
         self.project_global.allocated_hours = 10
         self.assertEqual(self.project_global.copy().allocated_hours, 10)

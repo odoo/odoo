@@ -3,15 +3,15 @@
 # 	* sale_stock
 # 
 # Translators:
-# Manon Rondou, 2024
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -154,6 +154,9 @@ msgid ""
 "            Orange: Partially Delivered\n"
 "            Green: Fully Delivered"
 msgstr ""
+"Blauw: Niet geleverd/gestart\n"
+"            Oranje: Gedeeltelijk Geleverd\n"
+"            Groen: Volledig geleverd"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -540,6 +543,11 @@ msgid "Reserved"
 msgstr "Gereserveerd"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Retour picking"
+
+#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Returns"
 msgstr "Retouren"
@@ -698,7 +706,7 @@ msgid ""
 msgstr ""
 "Het afleveradres is gewijzigd op de verkooporder <br/>\n"
 " Van \"<strong>\" %(old_address)s\"</strong> naar <strong>\"%(new_address)s\"</strong>,\n"
-" Je moet waarschijnlijk de relatie in dit document bijwerken."
+" Je moet waarschijnlijk het contact in dit document bijwerken."
 
 #. module: sale_stock
 #. odoo-javascript

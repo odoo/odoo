@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Wil Odoo, 2024
 # Manon Rondou, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -143,7 +143,7 @@ msgstr "%(name)s Volgorde verpakking"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence picking"
-msgstr ""
+msgstr "%(name)s Pickingnummer"
 
 #. module: stock
 #. odoo-python
@@ -427,7 +427,7 @@ msgstr "2 x 7 met prijs"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "2021-9-01"
-msgstr "01-09-2021"
+msgstr "2021-9-01"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -437,7 +437,7 @@ msgstr "01-01-2023"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "2023-09-24"
-msgstr "24-09-2023"
+msgstr "2023-09-24"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -498,7 +498,7 @@ msgid ""
 "                Want to speed up operations?"
 msgstr ""
 "<br/>\n"
-"                Wil je de operaties versnellen?"
+"                Wil je de bewerkingen versnellen?"
 
 #. module: stock
 #. odoo-python
@@ -515,10 +515,10 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
 "<br>If the products are not available in <b>%s</b>, a rule will be triggered"
-" to bring products in this location."
+" to bring the missing quantity in this location."
 msgstr ""
-"<br>Als de producten niet beschikbaar zijn in <b>%s</b>, zal een regel "
-"worden geactiveerd om producten naar deze locatie te brengen."
+"<br>Als de producten niet beschikbaar zijn in <b>%s</b>, wordt een regel "
+"geactiveerd om de ontbrekende hoeveelheid naar deze locatie te verplaatsen."
 
 #. module: stock
 #. odoo-python
@@ -535,71 +535,38 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br><br>\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
 "        We are glad to inform you that your order has been shipped.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
-"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
-"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
 "                </t>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
 "            </t>\n"
 "            </strong>\n"
 "        </t>\n"
-"        <br><br>\n"
-"        Please find your delivery order attached for more details.<br><br>\n"
+"        <br/><br/>\n"
+"        Please find your delivery order attached for more details.<br/><br/>\n"
 "        Thank you,\n"
-"        <t t-if=\"user.signature\">\n"
-"            <br>\n"
-"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"            <br/>\n"
+"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 "        "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hallo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br><br>\n"
-"        We zijn blij je te informeren dat je bestelling is verzonden.\n"
-"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
-"            Je trackingreferentie is\n"
-"            <strong>\n"
-"            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
-"                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
-"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
-"                    </t>\n"
-"                </t>\n"
-"                <t t-else=\"\">\n"
-"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
-"                </t>\n"
-"            </t>\n"
-"            <t t-else=\"\">\n"
-"                <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
-"            </t>\n"
-"            </strong>\n"
-"        </t>\n"
-"        <br><br>\n"
-"        Als bijlage kan je je leveringsbon vinden met meer details.<br><br>\n"
-"        Hartelijk dank,\n"
-"        <t t-if=\"user.signature\">\n"
-"            <br>\n"
-"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -691,7 +658,7 @@ msgstr "<span class=\"o_stat_text\">Boekingen</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Next Transfer</span>"
-msgstr "<span class=\"o_stat_text\">Volgende Transfer</span>"
+msgstr "<span class=\"o_stat_text\">Volgende verplaatsing</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -736,6 +703,12 @@ msgstr "<span class=\"o_stat_text\">Opslagcapaciteiten</span>"
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "<span class=\"o_stat_text\">Traceability</span>"
 msgstr "<span class=\"o_stat_text\">Traceerbaarheid</span>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "<span><strong>Delivery Address:</strong></span>"
+msgstr "<span><strong>Afleveradres:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
@@ -788,12 +761,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Customer Address</strong>"
 msgstr "<strong>Klant Adres</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "<strong>Delivery Address</strong>"
-msgstr "<strong>Afleveradres</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -951,7 +918,7 @@ msgstr "Een houdbaar product is een product waarvan je de voorraad beheert."
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
 msgid "A warning can be set on a partner (Stock)"
-msgstr "Een waarschuwing kan worden ingesteld op een relatie (voorraad)"
+msgstr "Een waarschuwing kan worden ingesteld op een contact (voorraad)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__action
@@ -1092,6 +1059,7 @@ msgstr "Aanvullende informatie"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot_report__address
+#: model:ir.model.fields,field_description:stock.field_stock_picking__warehouse_address_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__partner_id
 #: model_terms:ir.ui.view,arch_db:stock.search_customer_lot_filter
 msgid "Address"
@@ -1610,7 +1578,7 @@ msgstr "Bruto gewicht"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__lot
 msgid "By Lots"
-msgstr "Op partijnummers"
+msgstr "Op partijnummer"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__none
@@ -1773,7 +1741,7 @@ msgid ""
 "Changing the Lot/Serial number for move lines with different products is not"
 " allowed."
 msgstr ""
-"Je kan het partij/serienummer niet wijzigen voor boekingsregels met "
+"Je kunt het partij/serienummer niet wijzigen voor boekingsregels met "
 "verschillende producten."
 
 #. module: stock
@@ -1835,7 +1803,7 @@ msgstr "Controleer het bestaan van verpakkingbewerkingen op de picking"
 msgid ""
 "Check this box if you want to generate shipping label in this operation."
 msgstr ""
-"Vink dit vakje aan als je tijdens deze operatie een verzendlabel wilt "
+"Vink dit vakje aan als je tijdens deze bewerking een verzendlabel wilt "
 "genereren."
 
 #. module: stock
@@ -2466,7 +2434,7 @@ msgstr "Rapport klantpartij"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_lot_report
 msgid "Customer lots"
-msgstr "Kavels voor klanten"
+msgstr "Klantpartijen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -2644,7 +2612,7 @@ msgstr "December"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Default Barcode Name"
-msgstr "Standaard streepjescodenaam"
+msgstr "Standaard barccodenaam"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
@@ -2718,7 +2686,7 @@ msgid ""
 msgstr ""
 "Definieer je locaties om je magazijnstructuur en organisatie\n"
 "te reflecteren. Odoo kan fysieke locaties beheren\n"
-"(magazijnen, planken, bakken, enz), relatielocaties (klanten,\n"
+"(magazijnen, planken, bakken, enz), contactlocaties (klanten,\n"
 "leveranciers) en virtuele locaties die de tegenhanger zijn van de\n"
 "voorraadbewerkingen zoals productieorders\n"
 "consumpties, voorraden enz."
@@ -3353,7 +3321,7 @@ msgstr ""
 "Elke voorraadbewerking in Odoo verplaatst het product van een locatie naar een \n"
 "andere. Bijvoorbeeld, als je producten ontvangt van een leverancier, zal Odoo de \n"
 "producten verplaatsen van de leverancierslocatie naar de voorraadlocatie. Elk rapport\n"
-"kan toegepast worden op fysieke, relatie of virtuele locaties."
+"kan toegepast worden op fysieke, contact of virtuele locaties."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -3489,7 +3457,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_partner_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Relaties)"
+msgstr "Volgers (Contacten)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_type_icon
@@ -3754,7 +3722,7 @@ msgstr "Krijg een volledige tracering van leveranciers naar klanten"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get informative or blocking warnings on partners"
-msgstr "Krijg informatieve of blokkerende waarschuwingen op relaties"
+msgstr "Krijg informatieve of blokkerende waarschuwingen op contacten"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_putaway_rule__sequence
@@ -4167,7 +4135,7 @@ msgid ""
 "Numbers, so you can provide them in a text field. "
 msgstr ""
 "Als enkel dit is aangevinkt, wordt verondersteld dat je nieuwe "
-"Serienummer/Partijnummers wilt aanmaken, dus je kan deze ingeven in het "
+"Serienummer/Partijnummers wilt aanmaken, dus je kunt deze ingeven in het "
 "tekstveld. "
 
 #. module: stock
@@ -4227,7 +4195,7 @@ msgstr "Directe overdracht"
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Import"
-msgstr "Importeren"
+msgstr "Records importeren"
 
 #. module: stock
 #. odoo-javascript
@@ -4794,7 +4762,7 @@ msgstr "Laatste teldatum"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__last_delivery_partner_id
 msgid "Last Delivery Partner"
-msgstr "Laatste leveringsrelatie"
+msgstr "Laatste levering aan contact"
 
 #. module: stock
 #: model:product.removal,name:stock.removal_lifo
@@ -5253,7 +5221,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_product_replenish
 msgid "Low on stock? Let's replenish."
-msgstr "Weinig voorraad? Laten we aanvullen."
+msgstr "Te weinig voorraad? Laten we aanvullen."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__mto_pull_id
@@ -6001,7 +5969,7 @@ msgstr "Openen"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__move
 msgid "Operation Quantities"
-msgstr "Operatiehoeveelheden"
+msgstr "Bewerkinghoeveelheden"
 
 #. module: stock
 #. odoo-python
@@ -6176,7 +6144,7 @@ msgstr "Originele verplaatsing"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__orderpoint_id
 msgid "Original Reordering Rule"
-msgstr "Originele aanvulopdrachtregel"
+msgstr "Originele aanvulregel"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6544,12 +6512,12 @@ msgstr "Gedeeltelijk beschikbaar"
 #: model:ir.model.fields,field_description:stock.field_stock_lot_report__partner_id
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Partner"
-msgstr "Relatie"
+msgstr "Contact"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__partner_address_id
 msgid "Partner Address"
-msgstr "Relatieadres"
+msgstr "Contactadres"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_action_inventory_tree
@@ -6691,8 +6659,8 @@ msgid ""
 "Press the CREATE button to define quantity for each product in your stock or"
 " import them from a spreadsheet throughout Favorites"
 msgstr ""
-"Druk op de knop AANMAKEN om de hoeveelheid voor elk product in de voorraad "
-"te definiëren of importeer ze vanuit een spreadsheet in Favorieten"
+"Druk op de knop NIEUW om de hoeveelheid voor elk product in de voorraad te "
+"definiëren of importeer ze vanuit een spreadsheet via de actieknop"
 
 #. module: stock
 #. odoo-javascript
@@ -6729,7 +6697,7 @@ msgstr "Labels afdrukken"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Print label as:"
-msgstr "Etiket afdrukken als:"
+msgstr "Label afdrukken als:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -7622,7 +7590,7 @@ msgstr "Gekoppelde voorraadverplaatsingen"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Relocate"
-msgstr "Verhuizen"
+msgstr "Verplaatsen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -7676,7 +7644,7 @@ msgstr "Aanvullen min. hoeveelheid"
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rule"
-msgstr "Aanvulopdrachtregel"
+msgstr "Aanvulregel"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_orderpoint
@@ -7685,12 +7653,12 @@ msgstr "Aanvulopdrachtregel"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Reordering Rules"
-msgstr "Aanvulopdrachtregels"
+msgstr "Aanvulregels"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rules Search"
-msgstr "Aanvulopdrachtregels zoeken"
+msgstr "Aanvulregels zoeken"
 
 #. module: stock
 #. odoo-javascript
@@ -7880,7 +7848,7 @@ msgstr "Bevoorrading"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_wh_ids
 msgid "Resupply From"
-msgstr "Bevoorraden van"
+msgstr "Bevoorraden vanuit"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__warehouseinfo_ids
@@ -8016,8 +7984,8 @@ msgid ""
 "Routes will be created automatically to resupply this warehouse from the "
 "warehouses ticked"
 msgstr ""
-"Routes worden automatisch aangemaakt om dit magazijn te bevoorraden van de "
-"aangevinkte magazijnen"
+"Routes worden automatisch aangemaakt om dit magazijn te bevoorraden vanuit "
+"de aangevinkte magazijnen"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__warehouseinfo_ids
@@ -9293,14 +9261,14 @@ msgid ""
 "The operation brings the products to the intermediate location.But this "
 "operation is part of a chain of operations targeting the final location."
 msgstr ""
-"De operatie brengt de producten naar de tussenliggende locatie. Maar deze "
-"operatie maakt deel uit van een keten van operaties die gericht zijn op de "
-"eindlocatie."
+"De bewerking brengt de producten naar de tussenliggende locatie. Maar deze "
+"bewerking maakt deel uit van een keten van bewerkingen die gericht zijn op "
+"de eindlocatie."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 msgid "The operation takes and suggests products from this location."
-msgstr "De operatie neemt en biedt producten aan vanuit deze locatie."
+msgstr "De bewerking neemt en biedt producten aan vanuit deze locatie."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -9311,14 +9279,14 @@ msgid ""
 "            if it should show the customer."
 msgstr ""
 "Met het systeem van het bewerkingssoort kun je elke voorraad toewijzen\n"
-"            operatie een specifiek type dat zijn standpunten dienovereenkomstig zal veranderen.\n"
-"            Op het type operatie kun je bijv specificeren of de verpakking standaard nodig is,\n"
+"            bewerking een specifiek type dat zijn standpunten dienovereenkomstig zal veranderen.\n"
+"            Op de bewerkingssoort kun je bijv. specificeren of de verpakking standaard nodig is,\n"
 "            als het de klant moet laten zien."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "The operations brings product to this location"
-msgstr "De operaties leveren producten aan deze locatie"
+msgstr "De bewerkingen leveren producten aan deze locatie"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__package_id
@@ -9539,6 +9507,9 @@ msgid ""
 "created. However, it is possible to change it afterwards or that the routes "
 "use another one by default."
 msgstr ""
+"Dit is de standaardbestemmingslocatie wanneer deze bewerking handmatig wordt"
+" gemaakt. Het is echter mogelijk om deze later te wijzigen of dat de routes "
+"standaard een andere gebruiken."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -9547,6 +9518,9 @@ msgid ""
 " However, it is possible to change it afterwards or that the routes use "
 "another one by default."
 msgstr ""
+"Dit is de standaardbronlocatie wanneer deze bewerking handmatig wordt "
+"gemaakt. Het is echter mogelijk om deze later te wijzigen of dat de routes "
+"standaard een andere locatie gebruiken."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -9602,7 +9576,7 @@ msgid ""
 "                operations on a specific product. You can filter on the product\n"
 "                to see all the past or future movements for the product."
 msgstr ""
-"Deze menu geeft je de volledige traceerbaarheid van voorraadbewerking op een specifiek product. Je kunt op het product\n"
+"Dit menu geeft je de volledige traceerbaarheid van voorraadbewerkingen op een specifiek product. Je kunt op het product\n"
 "filteren om alle vorige en toekomstige verplaatsingen voor het product te zien."
 
 #. module: stock
@@ -9611,7 +9585,7 @@ msgid ""
 "This menu gives you the full traceability of inventory operations on a specific product.\n"
 "                    You can filter on the product to see all the past movements for the product."
 msgstr ""
-"Deze menu geeft je de volledige traceerbaarheid van voorraadbewerking op een specifiek product. Je kunt op het product\n"
+"Dit menu geeft je de volledige traceerbaarheid van voorraadbewerkingen op een specifiek product. Je kunt op het product\n"
 "filteren om alle vorige verplaatsingen voor het product te zien."
 
 #. module: stock
@@ -11034,7 +11008,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "You can either :"
-msgstr "Je kan of :"
+msgstr "Je kunt of :"
 
 #. module: stock
 #. odoo-python
@@ -11073,7 +11047,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 msgid "You can not delete moves linked to another operation"
 msgstr ""
-"Je kan geen verplaatsingen verwijderen die gekoppeld zijn aan een andere "
+"Je kunt geen verplaatsingen verwijderen die gekoppeld zijn aan een andere "
 "bewerking"
 
 #. module: stock
@@ -11105,8 +11079,8 @@ msgid ""
 "You can only move a lot/serial to a new location if it exists in a single "
 "location."
 msgstr ""
-"Je kan een partij/serienummer alleen naar een nieuwe locatie verplaatsen als"
-" het op één locatie bestaat."
+"Je kunt een partij/serienummer alleen naar een nieuwe locatie verplaatsen "
+"als het op één locatie bestaat."
 
 #. module: stock
 #. odoo-python
@@ -11326,8 +11300,8 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
-"Je kan een voorraadverplaatsing die ingesteld is op 'Gereed' of 'Annuleren' "
-"niet splitsen."
+"Je kunt een voorraadverplaatsing die ingesteld is op 'Gereed' of 'Annuleren'"
+" niet splitsen."
 
 #. module: stock
 #. odoo-python
@@ -11479,8 +11453,7 @@ msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
 msgstr ""
-"Je hebt nog aanvulopdrachtregels op dit product. Archiveer of verwijder deze"
-" eerst."
+"Je hebt nog aanvulregels op dit product. Archiveer of verwijder deze eerst."
 
 #. module: stock
 #. odoo-javascript

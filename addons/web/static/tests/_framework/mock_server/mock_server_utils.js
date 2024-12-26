@@ -123,5 +123,3 @@ export function unmakeKwArgs(kwargs) {
 export class MockServerError extends Error {
     name = "MockServerError";
 }
-
-export const FIELD_NOT_FOUND = Symbol("FIELD_NOT_FOUND");

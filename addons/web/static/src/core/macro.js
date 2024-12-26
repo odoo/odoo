@@ -77,10 +77,10 @@ export class Macro {
         this.onStep = this.onStep || (() => {});
         this.stepElFound = new Array(this.steps.length).fill(false);
         this.stepHasStarted = new Array(this.steps.length).fill(false);
+        this.observer = new MacroMutationObserver(() => this.debounceAdvance("mutation"));
     }
 
     async start(target = document) {
-        this.observer = new MacroMutationObserver(() => this.debounceAdvance("mutation"));
         this.observer.observe(target);
         this.debounceAdvance("next");
     }
@@ -117,8 +117,8 @@ export class Macro {
         }
         if (proceedToAction) {
             this.safeCall(this.onStep, this.currentElement, this.currentStep);
-            const actionResult = await this.performAction();
             this.clearTimer();
+            const actionResult = await this.performAction();
             if (!actionResult) {
                 // If falsy action result, it means the action worked properly.
                 // So we can proceed to the next step.
@@ -252,9 +252,7 @@ export class Macro {
     stop(error) {
         this.clearTimer();
         this.isComplete = true;
-        if (this.observer) {
-            this.observer.disconnect();
-        }
+        this.observer.disconnect();
         if (!this.calledBack) {
             this.calledBack = true;
             if (error) {
@@ -278,83 +276,6 @@ export class Macro {
             }
         }
         return;
-    }
-}
-
-export class MacroEngine {
-    constructor(params = {}) {
-        this.isRunning = false;
-        this.timeout = null;
-        this.target = params.target || document.body;
-        this.defaultCheckDelay = params.defaultCheckDelay ?? 750;
-        this.macros = new Set();
-        this.macroMutationObserver = new MacroMutationObserver(() => this.delayedCheck());
-    }
-
-    async activate(descr, exclusive = false) {
-        if (this.exclusive) {
-            return;
-        }
-        this.exclusive = exclusive;
-        // micro task tick to make sure we add the macro in a new call stack,
-        // so we are guaranteed that we are not iterating on the current macros
-        await Promise.resolve();
-        const macro = new Macro(descr);
-        if (exclusive) {
-            this.macros = new Set([macro]);
-        } else {
-            this.macros.add(macro);
-        }
-        this.start();
-    }
-
-    start() {
-        if (!this.isRunning) {
-            this.isRunning = true;
-            this.macroMutationObserver.observe(this.target);
-        }
-        this.delayedCheck();
-    }
-
-    stop() {
-        if (this.isRunning) {
-            this.isRunning = false;
-            browser.clearTimeout(this.timeout);
-            this.timeout = null;
-            this.macroMutationObserver.disconnect();
-        }
-    }
-
-    delayedCheck() {
-        if (this.timeout) {
-            browser.clearTimeout(this.timeout);
-        }
-        this.timeout = browser.setTimeout(
-            () => mutex.exec(this.advanceMacros.bind(this)),
-            this.getCheckDelay() || this.defaultCheckDelay
-        );
-    }
-
-    getCheckDelay() {
-        // If a macro has a checkDelay different from 0, use it. Select the minimum.
-        // For example knowledge has a macro with a delay of 10ms. We don't want to wait
-        // longer because of other running tours.
-        return [...this.macros]
-            .map((m) => m.checkDelay)
-            .filter((delay) => delay > 0)
-            .reduce((m, v) => Math.min(m, v), this.defaultCheckDelay);
-    }
-
-    async advanceMacros() {
-        await Promise.all([...this.macros].map((macro) => macro.advance()));
-        for (const macro of this.macros) {
-            if (macro.isComplete) {
-                this.macros.delete(macro);
-            }
-        }
-        if (this.macros.size === 0) {
-            this.stop();
-        }
     }
 }
 

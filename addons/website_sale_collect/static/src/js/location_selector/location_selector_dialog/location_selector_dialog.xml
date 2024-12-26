@@ -5,7 +5,7 @@
         <button id="submit_location_small" position="attributes">
             <attribute
                 name="t-att-disabled"
-                add="!selectedLocation?.additional_data?.in_store_stock?.in_stock"
+                add="!(selectedLocation?.additional_data?.in_store_stock?.in_stock ?? true)"
                 separator=" || "
             />
         </button>

@@ -28,7 +28,8 @@ describe("reset", () => {
         expect(historyPlugin.currentStep.mutations.length).toBe(0);
     });
 
-    test.tags("desktop")("open table picker shouldn't add mutations", async () => {
+    test.tags("desktop");
+    test("open table picker shouldn't add mutations", async () => {
         const { editor, el, plugins } = await setupEditor("<p>[]</p>");
 
         await insertText(editor, "/tab");

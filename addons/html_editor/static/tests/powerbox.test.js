@@ -39,7 +39,8 @@ test("should open the Powerbox on type `/`", async () => {
     expect(".o-we-powerbox").toHaveCount(1);
 });
 
-test.tags("iframe")("in iframe: should open the Powerbox on type `/`", async () => {
+test.tags("iframe");
+test("in iframe: should open the Powerbox on type `/`", async () => {
     const { el, editor } = await setupEditor("<p>ab[]</p>", { props: { iframe: true } });
     expect("iframe").toHaveCount(1);
     expect(".o-we-powerbox").toHaveCount(0);
@@ -73,7 +74,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(28);
+        expect(commandNames(el).length).toBe(27);
         await insertText(editor, "head");
         await animationFrame();
         expect(commandNames(el)).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
@@ -83,7 +84,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(28);
+        expect(commandNames(el).length).toBe(27);
         expect(".o-we-category").toHaveCount(8);
         expect(queryAllTexts(".o-we-category")).toEqual([
             "STRUCTURE",
@@ -102,11 +103,12 @@ describe("search", () => {
         expect(".o-we-category").toHaveCount(0);
     });
 
-    test.tags("iframe")("should filter the Powerbox contents with term, in iframe", async () => {
+    test.tags("iframe");
+    test("should filter the Powerbox contents with term, in iframe", async () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>", { props: { iframe: true } });
         await insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(28);
+        expect(commandNames(el).length).toBe(27);
         await insertText(editor, "head");
         await animationFrame();
         expect(commandNames(el)).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
@@ -158,7 +160,7 @@ describe("search", () => {
         await insertText(editor, "/");
         await animationFrame();
         expect(".o-we-powerbox").toHaveCount(1);
-        expect(commandNames(el).length).toBe(28);
+        expect(commandNames(el).length).toBe(27);
 
         await insertText(editor, "headx");
         await animationFrame();
@@ -454,7 +456,8 @@ test.todo("should close the powerbox if keyup event is called on other block", a
     expect(".o-we-powerbox").toHaveCount(0);
 });
 
-test.tags("desktop")("should insert a 3x3 table on type `/table`", async () => {
+test.tags("desktop");
+test("should insert a 3x3 table on type `/table`", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>");
     expect(getContent(el)).toBe(`<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`);
 
@@ -471,7 +474,8 @@ test.tags("desktop")("should insert a 3x3 table on type `/table`", async () => {
     );
 });
 
-test.tags("mobile")("should insert a 3x3 table on type `/table` in mobile view", async () => {
+test.tags("mobile");
+test("should insert a 3x3 table on type `/table` in mobile view", async () => {
     const { el, editor } = await setupEditor("<p>[]<br></p>");
     await insertText(editor, "/table");
     await waitFor(".o-we-powerbox ");
@@ -688,7 +692,8 @@ test("press 'arrowright' should close PowerBox", async () => {
     expect(".o-we-powerbox").toHaveCount(0);
 });
 
-test.tags("desktop")("select command with 'mouseenter'", async () => {
+test.tags("desktop");
+test("select command with 'mouseenter'", async () => {
     const { editor, el } = await setupEditor("<p>ab[]</p>");
 
     // Hoot don't trigger a mousemove event at the start of an hover, if we don't hover

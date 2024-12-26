@@ -563,23 +563,25 @@ Please change the quantity done or the rounding precision of your unit of measur
             ls = move.move_line_ids.lot_id
             for lot in move.lot_ids:
                 if lot not in ls:
-                    sml_location_id = lot.location_id.id \
-                        if lot.location_id and lot.location_id._child_of(move.location_id) \
-                        else move.location_id.id
-                    sml_lot_vals = {
-                        'location_id': sml_location_id,
-                        'lot_name': lot.name,
-                        'lot_id': lot.id,
-                        'product_uom_id': move.product_id.uom_id.id,
-                        'quantity': 1,
-                    }
                     if mls_without_lots[:1]:  # Updates an existing line without serial number.
                         move_line = mls_without_lots[:1]
-                        move_lines_commands.append(Command.update(move_line.id, sml_lot_vals))
+                        move_lines_commands.append(Command.update(move_line.id, {
+                            'lot_name': lot.name,
+                            'lot_id': lot.id,
+                            'product_uom_id': move.product_id.uom_id.id,
+                            'quantity': 1,
+                        }))
                         mls_without_lots -= move_line
                     else:  # No line without serial number, creates a new one.
-                        move_line_vals = self._prepare_move_line_vals(quantity=0)
-                        move_line_vals.update(**sml_lot_vals)
+                        reserved_quants = self.env['stock.quant']._get_reserve_quantity(move.product_id, move.location_id, 1.0, lot_id=lot)
+                        if reserved_quants:
+                            move_line_vals = self._prepare_move_line_vals(quantity=0, reserved_quant=reserved_quants[0][0])
+                        else:
+                            move_line_vals = self._prepare_move_line_vals(quantity=0)
+                            move_line_vals['lot_id'] = lot.id
+                            move_line_vals['lot_name'] = lot.name
+                        move_line_vals['product_uom_id'] = move.product_id.uom_id.id
+                        move_line_vals['quantity'] = 1
                         move_lines_commands.append((0, 0, move_line_vals))
                 else:
                     move_line = move.move_line_ids.filtered(lambda line: line.lot_id.id == lot.id)
@@ -1123,13 +1125,14 @@ Please change the quantity done or the rounding precision of your unit of measur
         :return: Recordset of moves passed to this method. If some of the passed moves were merged
         into another existing one, return this one and not the (now unlinked) original.
         """
-        distinct_fields = self._prepare_merge_moves_distinct_fields()
 
         candidate_moves_set = set()
         if not merge_into:
             self._update_candidate_moves_list(candidate_moves_set)
         else:
             candidate_moves_set.add(merge_into | self)
+
+        distinct_fields = (self | self.env['stock.move'].concat(*candidate_moves_set))._prepare_merge_moves_distinct_fields()
 
         # Move removed after merge
         moves_to_unlink = self.env['stock.move']
@@ -1683,9 +1686,22 @@ Please change the quantity done or the rounding precision of your unit of measur
         taken_quantity = 0
         rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         # Find a candidate move line to update or create a new one.
-        for reserved_quant, quantity in quants:
+        candidate_lines = {}
+        for line in self.move_line_ids:
+            if line.result_package_id or line.product_id.tracking == 'serial':
+                continue
+            candidate_lines[line.location_id, line.lot_id, line.package_id, line.owner_id] = line
+        move_line_vals = []
+        grouped_quants = {}
+        # Handle quants duplication
+        for quant, quantity in quants:
+            if (quant.location_id, quant.lot_id, quant.package_id, quant.owner_id) not in grouped_quants:
+                grouped_quants[quant.location_id, quant.lot_id, quant.package_id, quant.owner_id] = [quant, quantity]
+            else:
+                grouped_quants[quant.location_id, quant.lot_id, quant.package_id, quant.owner_id][1] += quantity
+        for reserved_quant, quantity in grouped_quants.values():
             taken_quantity += quantity
-            to_update = next((line for line in self.move_line_ids if line._reservation_is_updatable(quantity, reserved_quant)), False)
+            to_update = candidate_lines.get((reserved_quant.location_id, reserved_quant.lot_id, reserved_quant.package_id, reserved_quant.owner_id))
             if to_update:
                 uom_quantity = self.product_id.uom_id._compute_quantity(quantity, to_update.product_uom_id, rounding_method='HALF-UP')
                 uom_quantity = float_round(uom_quantity, precision_digits=rounding)
@@ -1696,9 +1712,11 @@ Please change the quantity done or the rounding precision of your unit of measur
                 if self.product_id.tracking == 'serial' and (self.picking_type_id.use_create_lots or self.picking_type_id.use_existing_lots):
                     vals_list = self._add_serial_move_line_to_vals_list(reserved_quant, quantity)
                     if vals_list:
-                        self.env['stock.move.line'].with_context(reserved_quant=reserved_quant).create(vals_list)
+                        move_line_vals += vals_list
                 else:
-                    self.env['stock.move.line'].with_context(reserved_quant=reserved_quant).create(self._prepare_move_line_vals(quantity=quantity, reserved_quant=reserved_quant))
+                    move_line_vals.append(self._prepare_move_line_vals(quantity=quantity, reserved_quant=reserved_quant))
+        if move_line_vals:
+            self.env['stock.move.line'].create(move_line_vals)
         return taken_quantity
 
     def _add_serial_move_line_to_vals_list(self, reserved_quant, quantity):
@@ -1945,6 +1963,13 @@ Please change the quantity done or the rounding precision of your unit of measur
         return self.is_inventory or self.move_dest_ids and any(m.location_id._child_of(self.location_dest_id) for m in self.move_dest_ids) or\
             self.location_final_id and self.location_final_id._child_of(self.location_dest_id)
 
+    def _check_quantity(self):
+        return self.env['stock.quant'].search([
+            ('product_id', 'in', self.product_id.ids),
+            ('location_id', 'child_of', self.location_dest_id.ids),
+            ('lot_id', 'in', self.lot_ids.ids)
+        ]).check_quantity()
+
     def _action_done(self, cancel_backorder=False):
         moves = self.filtered(
             lambda move: move.state == 'draft'
@@ -2007,6 +2032,8 @@ Please change the quantity done or the rounding precision of your unit of measur
             backorder = picking._create_backorder()
             if any([m.state == 'assigned' for m in backorder.move_ids]):
                 backorder._check_entire_pack()
+        if moves_todo:
+            moves_todo._check_quantity()
         return moves_todo
 
     def _create_backorder(self):
@@ -2198,9 +2225,12 @@ Please change the quantity done or the rounding precision of your unit of measur
         # These new SMLs need to be redirected thanks to putaway rules
         (self.move_line_ids - existing_smls)._apply_putaway_strategy()
 
-    def _adjust_procure_method(self):
+    def _adjust_procure_method(self, picking_type_code=False):
         """ This method will try to apply the procure method MTO on some moves if
         a compatible MTO route is found. Else the procure method will be set to MTS
+        picking_type_code (str, optional): Adjusts the procurement method based on
+            the specified picking type code. The code to specify the picking type for
+            the procurement group. Defaults to False.
         """
         # Prepare the MTSO variables. They are needed since MTSO moves are handled separately.
         # We need 2 dicts:
@@ -2214,6 +2244,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                 ('location_dest_id', '=', move.location_dest_id.id),
                 ('action', '!=', 'push')
             ]
+            if picking_type_code:
+                domain.append(('picking_type_id.code', '=', picking_type_code))
             rule = self.env['procurement.group']._search_rule(False, move.product_packaging_id, product_id, move.warehouse_id, domain)
             if not rule:
                 move.procure_method = 'make_to_stock'

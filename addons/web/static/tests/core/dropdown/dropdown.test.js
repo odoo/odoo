@@ -1,18 +1,20 @@
-import { after, destroy, expect, getFixture, mountOnFixture, test } from "@odoo/hoot";
+import { expect, getFixture, test } from "@odoo/hoot";
 import {
     click,
     hover,
+    keyDown,
     leave,
+    pointerDown,
     press,
     queryAll,
     queryAllTexts,
     queryOne,
     resize,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { App, Component, onMounted, onPatched, useState, xml } from "@odoo/owl";
+import { Deferred, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
+import { Component, onMounted, onPatched, useState, xml } from "@odoo/owl";
 
-import { getMockEnv, makeMockEnv } from "@web/../tests/_framework/env_test_helpers";
+import { makeMockEnv } from "@web/../tests/_framework/env_test_helpers";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import { defineParams, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
@@ -20,9 +22,6 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
-import { MainComponentsContainer } from "@web/core/main_components_container";
-import { getTemplate } from "@web/core/templates";
 
 const DROPDOWN_TOGGLE = ".o-dropdown.dropdown-toggle";
 const DROPDOWN_MENU = ".o-dropdown--menu.dropdown-menu";
@@ -163,7 +162,8 @@ test("close on item selection", async () => {
     expect(DROPDOWN_MENU).toHaveCount(0);
 });
 
-test.tags("desktop")("hold position on hover", async () => {
+test.tags("desktop");
+test("hold position on hover", async () => {
     // Disable popover animations for this test
     patchWithCleanup(Popover.prototype, {
         onPositioned(el, solution) {
@@ -249,7 +249,8 @@ test("unlock position after close", async () => {
     expect(menuBox2.left - menuBox1.left).toBe(0);
 });
 
-test.tags("desktop")("dropdowns keynav", async () => {
+test.tags("desktop");
+test("dropdowns keynav", async () => {
     expect.assertions(39);
 
     class Parent extends Component {
@@ -274,6 +275,7 @@ test.tags("desktop")("dropdowns keynav", async () => {
     expect(DROPDOWN_MENU).toHaveCount(0);
 
     await press("alt+m");
+    await tick();
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
@@ -300,6 +302,7 @@ test.tags("desktop")("dropdowns keynav", async () => {
     for (let i = 0; i < scenarioSteps.length; i++) {
         const step = scenarioSteps[i];
         await press(step.hotkey);
+        await tick();
         await animationFrame();
 
         expect(".dropdown-menu > .focus").toHaveClass(step.expected, {
@@ -315,16 +318,19 @@ test.tags("desktop")("dropdowns keynav", async () => {
 
     // Reopen dropdown
     await press("alt+m");
+    await tick();
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
     // Select second item through data-hotkey attribute
     await press("alt+2");
+    await tick();
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 
     // Reopen dropdown
     await press("alt+m");
+    await tick();
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
@@ -336,7 +342,8 @@ test.tags("desktop")("dropdowns keynav", async () => {
     expect.verifySteps(["1", "2"]);
 });
 
-test.tags("desktop")("dropdowns keynav is not impacted by bootstrap", async () => {
+test.tags("desktop");
+test("dropdowns keynav is not impacted by bootstrap", async () => {
     class Parent extends Component {
         static components = { Dropdown };
         static props = [];
@@ -361,33 +368,19 @@ test.tags("desktop")("dropdowns keynav is not impacted by bootstrap", async () =
     // This class presence makes bootstrap ignore the below event
     expect(DROPDOWN_MENU).toHaveClass("o-dropdown--menu");
 
-    let ev = new KeyboardEvent("keydown", {
-        bubbles: true,
-        // Define the ArrowDown key with standard API (for hotkey_service)
-        key: "ArrowDown",
-        code: "ArrowDown",
-        // Define the ArrowDown key with deprecated API (for bootstrap)
-        keyCode: 40,
-        which: 40,
-    });
-    queryOne("select").dispatchEvent(ev);
+    await pointerDown("select");
+
+    await keyDown("ArrowDown");
     await animationFrame();
 
-    ev = new KeyboardEvent("keydown", {
-        bubbles: true,
-        // Define the ESC key with standard API (for hotkey_service)
-        key: "Escape",
-        code: "Escape",
-        // Define the ESC key with deprecated API (for bootstrap)
-        keyCode: 27,
-        which: 27,
-    });
-    queryOne("select").dispatchEvent(ev);
+    await keyDown("Escape");
     await animationFrame();
+
     expect(DROPDOWN_MENU).toHaveCount(0);
 });
 
-test.tags("desktop")("refocus toggler on close with keynav", async () => {
+test.tags("desktop");
+test("refocus toggler on close with keynav", async () => {
     await mountWithCleanup(SimpleDropdown);
     expect(DROPDOWN_TOGGLE).not.toBeFocused();
 
@@ -404,7 +397,8 @@ test.tags("desktop")("refocus toggler on close with keynav", async () => {
     expect(DROPDOWN_TOGGLE).toBeFocused();
 });
 
-test.tags("desktop")("navigationProps changes navigation behaviour", async () => {
+test.tags("desktop");
+test("navigationProps changes navigation behaviour", async () => {
     class Parent extends SimpleDropdown {
         setup() {
             this.dropdownProps = {
@@ -521,7 +515,8 @@ test("direction class set to default when closed", async () => {
     expect(DROPDOWN_TOGGLE).toHaveClass("dropdown");
 });
 
-test.tags("desktop")("tooltip on toggler", async () => {
+test.tags("desktop");
+test("tooltip on toggler", async () => {
     class Parent extends Component {
         static components = { Dropdown };
         static props = [];
@@ -964,35 +959,6 @@ test("multi-level dropdown: parent closing modes on item selection", async () =>
 });
 
 test("multi-level dropdown: recursive template can be rendered", async () => {
-    // FIXME: There is currently no way to register additional templates
-    // in mountWithCleanup nor mountOnFixture.
-    async function mountWithTemplate(ComponentClass, template) {
-        const config = {
-            env: getMockEnv() || (await makeMockEnv()),
-            props: {},
-            translateFn: _t,
-            getTemplate,
-        };
-
-        getFixture().classList.add("o_web_client");
-
-        const app = new App(ComponentClass, {
-            name: `TEST: ${ComponentClass.name}`,
-            test: true,
-            warnIfNoStaticProps: true,
-            ...config,
-        });
-
-        after(() => destroy(app));
-
-        app.addTemplates(template);
-
-        const component = app.mount(getFixture());
-        await mountOnFixture(MainComponentsContainer, { ...config, props: {} });
-
-        return component;
-    }
-
     class Parent extends Component {
         static template = "recursive.Template";
         static props = [];
@@ -1030,27 +996,28 @@ test("multi-level dropdown: recursive template can be rendered", async () => {
         }
     }
 
-    await mountWithTemplate(
-        Parent,
-        `<t t-name="recursive.Template">
-            <Dropdown state="dropdown">
-                <button><t t-esc="name" /></button>
-                <t t-set-slot="content">
-                    <t t-foreach="items" t-as="item" t-key="item_index">
+    await mountWithCleanup(Parent, {
+        templates: {
+            ["recursive.Template"]: /* xml */ `
+                <Dropdown state="dropdown">
+                    <button><t t-esc="name" /></button>
+                    <t t-set-slot="content">
+                        <t t-foreach="items" t-as="item" t-key="item_index">
 
-                        <t t-if="!item.children.length">
-                            <DropdownItem><t t-esc="item.name"/></DropdownItem>
-                        </t>
+                            <t t-if="!item.children.length">
+                                <DropdownItem><t t-esc="item.name"/></DropdownItem>
+                            </t>
 
-                        <t t-else="" t-call="recursive.Template">
-                            <t t-set="name" t-value="item.name" />
-                            <t t-set="items" t-value="item.children" />
+                            <t t-else="" t-call="recursive.Template">
+                                <t t-set="name" t-value="item.name" />
+                                <t t-set="items" t-value="item.children" />
+                            </t>
                         </t>
                     </t>
-                </t>
-            </Dropdown>
-        </t>`
-    );
+                </Dropdown>
+            `,
+        },
+    });
 
     // Each sub-dropdown needs a tick to open
     await animationFrame();
@@ -1075,7 +1042,8 @@ test("multi-level dropdown: recursive template can be rendered", async () => {
     ]);
 });
 
-test.tags("desktop")("multi-level dropdown: keynav", async () => {
+test.tags("desktop");
+test("multi-level dropdown: keynav", async () => {
     expect.assertions(211);
     class Parent extends Component {
         onItemSelected(value) {
@@ -1165,6 +1133,7 @@ test.tags("desktop")("multi-level dropdown: keynav", async () => {
 
     for (const [stepIndex, step] of scenarioSteps.entries()) {
         await press(step.hotkey);
+        await tick();
         await animationFrame();
 
         if (step.highlighted !== undefined) {
@@ -1198,7 +1167,8 @@ test.tags("desktop")("multi-level dropdown: keynav", async () => {
     }
 });
 
-test.tags("desktop")("multi-level dropdown: keynav when rtl direction", async () => {
+test.tags("desktop");
+test("multi-level dropdown: keynav when rtl direction", async () => {
     expect.assertions(10);
     class Parent extends Component {
         static components = { Dropdown, DropdownItem };
@@ -1372,7 +1342,8 @@ test("multi-level dropdown: mouseentering a dropdown item should close any subdr
     });
 });
 
-test.tags("desktop")("multi-level dropdown: unsubscribe all keynav when root close", async () => {
+test.tags("desktop");
+test("multi-level dropdown: unsubscribe all keynav when root close", async () => {
     class Parent extends Component {
         static components = { Dropdown };
         static props = [];

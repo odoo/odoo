@@ -832,8 +832,8 @@ class AccountMoveLine(models.Model):
 
             base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
             AccountTax._add_tax_details_in_base_line(base_line, line.company_id)
-            line.price_subtotal = base_line['tax_details']['total_excluded_currency']
-            line.price_total = base_line['tax_details']['total_included_currency']
+            line.price_subtotal = base_line['tax_details']['raw_total_excluded_currency']
+            line.price_total = base_line['tax_details']['raw_total_included_currency']
 
     @api.depends('product_id', 'product_uom_id')
     def _compute_price_unit(self):
@@ -1157,7 +1157,7 @@ class AccountMoveLine(models.Model):
         lines_to_modify = self.env['account.move.line'].browse([
             line.id for line in self if line.parent_state == "posted"
         ])
-        lines_to_modify.analytic_line_ids.with_context(force_analytic_line_delete=True).unlink()
+        lines_to_modify.analytic_line_ids.unlink()
 
         context = dict(self.env.context)
         context.pop('default_account_id', None)

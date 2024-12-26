@@ -32,7 +32,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -879,7 +879,7 @@ msgstr "Kaikki"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "All sheets"
-msgstr ""
+msgstr "Kaikki sivut"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -890,12 +890,6 @@ msgid ""
 msgstr ""
 "Kaikkien päivämäärien on oltava vähintään yhtä suuria kuin cashflow_dates-"
 "kohdan (%s) ensimmäinen päivämäärä."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "All the ranges and the range values must have the same size"
-msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1227,7 +1221,7 @@ msgstr "Haluatko varmasti poistaa tämän arkin?"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Area"
-msgstr ""
+msgstr "Alue"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1744,6 +1738,8 @@ msgid ""
 "Changing the pivot definition requires to reload the data. It may take some "
 "time."
 msgstr ""
+"Pivot-määrityksen muuttaminen edellyttää tietojen lataamista uudelleen. Tämä"
+" voi kestää jonkin aikaa."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2716,7 +2712,7 @@ msgstr "Pienentää desimaalien määrää"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Defer updates"
-msgstr ""
+msgstr "Lykkää päivityksiä"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3290,6 +3286,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/odoo_pivot.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_helpers.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 msgid "Field %s does not exist"
 msgstr "Kenttää %s ei ole olemassa"
 
@@ -3944,7 +3941,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Horizontal axis"
-msgstr ""
+msgstr "Vaaka-akseli"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4770,7 +4767,7 @@ msgstr "Sijainti"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Logarithmic"
-msgstr ""
+msgstr "Logaritminen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5133,7 +5130,7 @@ msgstr "Kuukausi"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Month & Year"
-msgstr ""
+msgstr "Kuukausi ja vuosi"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5710,7 +5707,7 @@ msgstr "Valitse vain yksi solualue"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Polynomial"
-msgstr ""
+msgstr "Polynomi"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5866,7 +5863,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Quarter & Year"
-msgstr ""
+msgstr "Neljännes ja vuosi"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5914,13 +5911,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Re-insert dynamic pivot"
-msgstr ""
+msgstr "Aseta uudelleen dynaaminen nivel"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Re-insert static pivot"
-msgstr ""
+msgstr "Aseta uudelleen staattinen nivel"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6582,13 +6579,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Show trend line"
-msgstr ""
+msgstr "Näytä trendiviiva"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Show values"
-msgstr ""
+msgstr "Näytä arvot"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6613,6 +6610,12 @@ msgstr "Yksi väri"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Single value from a table-like range."
 msgstr "Yksittäinen arvo taulukkomaisesta alueesta."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+msgid "Some measures are not available: %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6748,7 +6751,7 @@ msgstr "Taulukkolaskenta-asetukset"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Stacked Area"
-msgstr ""
+msgstr "Pinottu alue"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6760,13 +6763,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Stacked Column"
-msgstr ""
+msgstr "Pinottu pylväs"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Stacked Line"
-msgstr ""
+msgstr "Pinottu viiva"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8507,6 +8510,21 @@ msgstr "Minuutti tai luku, josta vähennetään."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The minute component of the time."
 msgstr "Ajan minuuttikomponentti."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/data_sources/data_source.js:0
+#: code:addons/spreadsheet/static/src/pivot/odoo_pivot_loader.js:0
+msgid "The model \"%(model)s\" does not exist."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/global_filters/components/filter_value/filter_value.js:0
+msgid ""
+"The model (%(model)s) of this global filter is not valid (it may have been "
+"renamed/deleted)."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10645,7 +10663,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "This pivot is not used"
-msgstr ""
+msgstr "Tätä niveltä ei käytetä"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11171,7 +11189,7 @@ msgstr "Pystysuora kohdistus"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Vertical axis"
-msgstr ""
+msgstr "Pystyakseli"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11247,7 +11265,7 @@ msgstr "Viikko"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Week & Year"
-msgstr ""
+msgstr "Viikko ja vuosi"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11603,13 +11621,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "activeSheet"
-msgstr ""
+msgstr "activeSheet"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "allSheets"
-msgstr ""
+msgstr "allSheets"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11717,7 +11735,7 @@ msgstr "tarkka päivämäärä"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "exponential"
-msgstr ""
+msgstr "eksponentiaalinen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11771,13 +11789,13 @@ msgstr "vasen"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "linear"
-msgstr ""
+msgstr "lineaarinen"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "logarithmic"
-msgstr ""
+msgstr "logaritminen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11867,7 +11885,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "polynomial"
-msgstr ""
+msgstr "polynomi"
 
 #. module: spreadsheet
 #. odoo-javascript

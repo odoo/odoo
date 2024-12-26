@@ -371,8 +371,9 @@
         margin-bottom: 10px;
 
         .img {
-            max-width: $o-form-picture-size;
-            max-height: $o-form-picture-size;
+            width: $o-form-picture-size;
+            height: $o-form-picture-size;
+            object-fit: contain;
             vertical-align: top;
             border: 1px solid $o-gray-300;
         }
@@ -467,7 +468,6 @@
         display: flex;
 
         @include media-breakpoint-down(sm) {
-            flex-wrap: wrap;
             .o_field_boolean {
                 order: -1;
             }
@@ -619,6 +619,15 @@
                     }
                 }
             }
+        }
+
+        &.o_field_many2one_avatar {
+            --fieldWidget-display: inline;
+        }
+
+        &.o_field_many2many_tags_avatar {
+            --fieldWidget-display: inline-flex;
+            min-height: calc(var(--Avatar-size, #{$o-avatar-size}) + #{$o-input-padding-y} * 2 + #{$input-border-width});
         }
     }
     .o_field_widget, .btn {
@@ -1153,4 +1162,9 @@
 .o_field_section_and_note_one2many ~ .row.o_group {
     clear: both;
     justify-content: space-between;
+}
+
+// This ensures correct alignment with the cog button when there is no breadcrumb displayed.
+.o_breadcrumb:not(:has(.breadcrumb)) + .o_form_status_indicator {
+    align-self: center !important;
 }

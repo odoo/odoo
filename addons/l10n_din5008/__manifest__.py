@@ -12,6 +12,7 @@
     'data': [
         'report/din5008_base_document_layout.xml',
         'report/din5008_report.xml',
+        'report/din5008_account_move_layout.xml',
         'data/report_layout.xml',
     ],
     'assets': {

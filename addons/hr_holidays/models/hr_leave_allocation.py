@@ -601,7 +601,7 @@ class HolidaysAllocation(models.Model):
             return 0
 
         fake_allocation = self.env['hr.leave.allocation'].with_context(default_date_from=accrual_date).new(origin=self)
-        fake_allocation.sudo()._process_accrual_plans(accrual_date, log=False)
+        fake_allocation.sudo().with_context(default_date_from=accrual_date)._process_accrual_plans(accrual_date, log=False)
         if self.type_request_unit in ['hour']:
             return float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
         res = round((fake_allocation.number_of_days - self.number_of_days), 2)
@@ -748,26 +748,6 @@ class HolidaysAllocation(models.Model):
     # Business methods
     ####################################################
 
-    def action_validate(self):
-        if any(allocation.state not in ['confirm', 'validate1'] and allocation.validation_type != 'no_validation' for allocation in self):
-            raise UserError(_('Allocation must be "To Approve" or "Second Approval" in order to validate it.'))
-
-        to_validate = self.filtered(lambda alloc: alloc.state == 'confirm' and alloc.validation_type != 'both')
-        to_second_validate = self.filtered(lambda alloc: alloc.state == 'validate1' and alloc.validation_type == 'both')
-        if to_validate:
-            to_validate.write({
-                'state': 'validate',
-                'approver_id': self.env.user.employee_id.id
-            })
-            to_validate.activity_update()
-        if to_second_validate:
-            to_second_validate.write({
-                'state': 'validate',
-                'second_approver_id': self.env.user.employee_id.id
-            })
-            to_second_validate.activity_update()
-        return True
-
     def action_set_to_confirm(self):
         if any(allocation.state != 'refuse' for allocation in self):
             raise UserError(_('Allocation state must be "Refused" in order to be reset to "To Approve".'))
@@ -780,18 +760,32 @@ class HolidaysAllocation(models.Model):
         return True
 
     def action_approve(self):
-        # if allocation_validation_type == 'both': this method is the first approval
-        # if allocation_validation_type != 'both': this method calls action_validate() below
+        self._action_approve()
+        return True
 
-        if any(allocation.validation_type != 'no_validation' and allocation.state != 'confirm' for allocation in self):
-            raise UserError(_('Allocation must be confirmed ("To Approve") in order to approve it.'))
+    def action_validate(self):
+        # We don't know all the places in all the apps where `action_validate` is called.
+        # Hence, `action_validate` is kept and not removed.
+        self._action_approve()
+        return True
+
+    def _action_approve(self):
+
+        if any(allocation.state not in ['confirm', 'validate1'] and allocation.validation_type != 'no_validation' for allocation in self):
+            raise UserError(_('Allocation must be confirmed "To Approve" or validated once "Second Approval" in order to approve it.'))
 
         current_employee = self.env.user.employee_id
-        self.filtered(lambda alloc: alloc.validation_type == 'both').write({'state': 'validate1', 'approver_id': current_employee.id})
+        # If a time-off type had validation_type = 'both' and after first validation the validation_type was changed to be != both,
+        # then it should be considered as a single_validate_allocation.
+        single_validate_allocs = self.filtered(lambda alloc: alloc.state == 'confirm' and alloc.validation_type != 'both')
+        first_validate_allocs = self.filtered(lambda alloc: alloc.state == 'confirm' and alloc.validation_type == 'both')
+        second_validate_allocs = self.filtered(lambda alloc: alloc.state == 'validate1')
 
-        self.filtered(lambda alloc: alloc.validation_type != 'both').action_validate()
+        single_validate_allocs.write({'state': 'validate', 'approver_id': current_employee.id})
+        first_validate_allocs.write({'state': 'validate1', 'approver_id': current_employee.id})
+        second_validate_allocs.write({'state': 'validate', 'second_approver_id': current_employee.id})
+
         self.activity_update()
-        return True
 
     def action_refuse(self):
         current_employee = self.env.user.employee_id

@@ -24,6 +24,6 @@ def _get_form_fields_from_pdf(pdf_data):
     :return: set of form fields that are in the pdf.
     :rtype: set
     """
-    reader = pdf.PdfFileReader(io.BytesIO(base64.b64decode(pdf_data)))
+    reader = pdf.PdfFileReader(io.BytesIO(base64.b64decode(pdf_data)), strict=False)
 
     return set(reader.getFormTextFields() or {})

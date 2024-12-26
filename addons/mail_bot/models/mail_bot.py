@@ -17,21 +17,23 @@ class MailBot(models.AbstractModel):
         The logic will only be applied if odoobot is in a chat with a user or
         if someone pinged odoobot.
 
-         :param record: the mail_thread (or discuss_channel) where the user
-            message was posted/odoobot will answer.
+         :param record: the discuss channel where the user message was posted/odoobot will answer.
          :param values: msg_values of the message_post or other values needed by logic
          :param command: the name of the called command if the logic is not triggered by a message_post
         """
+        record.ensure_one()
         odoobot_id = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
-        if len(record) != 1 or values.get("author_id") == odoobot_id or values.get("message_type") != "comment" and not command:
+        if values.get("author_id") == odoobot_id or values.get("message_type") != "comment" and not command:
             return
-        if self._is_bot_pinged(values) or self._is_bot_in_private_channel(record):
-            body = values.get("body", "").replace(u'\xa0', u' ').strip().lower().strip(".!")
-            answer = self._get_answer(record, body, values, command)
-            if answer:
-                message_type = 'comment'
-                subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
-                record.with_context(mail_create_nosubscribe=True).sudo().message_post(body=answer, author_id=odoobot_id, message_type=message_type, subtype_id=subtype_id)
+        body = values.get("body", "").replace("\xa0", " ").strip().lower().strip(".!")
+        if answer := self._get_answer(record, body, values, command):
+            record.sudo().message_post(
+                author_id=odoobot_id,
+                body=answer,
+                message_type="comment",
+                silent=True,
+                subtype_xmlid="mail.mt_comment",
+            )
 
     @staticmethod
     def _get_style_dict():
@@ -49,9 +51,11 @@ class MailBot(models.AbstractModel):
         }
 
     def _get_answer(self, record, body, values, command=False):
+        odoobot = self.env.ref("base.partner_root")
         # onboarding
         odoobot_state = self.env.user.odoobot_state
-        if self._is_bot_in_private_channel(record):
+
+        if record.channel_type == "chat" and odoobot in record.channel_member_ids.partner_id:
             # main flow
             source = _("Thanks")
             description = _("This is a temporary canned response to see how canned responses work.")
@@ -69,7 +73,7 @@ class MailBot(models.AbstractModel):
                     _("Wow you are a natural!%(new_line)sPing someone with @username to grab their attention. "
                       "%(bold_start)sTry to ping me using%(bold_end)s %(command_start)s@OdooBot%(command_end)s"
                       " in a sentence.")) % self._get_style_dict()
-            elif odoobot_state == 'onboarding_ping' and self._is_bot_pinged(values):
+            elif odoobot_state == "onboarding_ping" and odoobot.id in values.get("partner_ids", []):
                 self.env.user.odoobot_state = "onboarding_attachement"
                 self.env.user.odoobot_failed = False
                 return html_escape(

@@ -154,8 +154,8 @@ class AccountChartTemplate(models.AbstractModel):
 
         template_code = template_code or company and self._guess_chart_template(company.country_id)
 
-        if template_code == 'syscohada' and template_code != company.chart_template:
-            raise UserError(_("The Syscohada chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country."))
+        if template_code in {'syscohada', 'syscebnl'} and template_code != company.chart_template:
+            raise UserError(_("The %s chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country.", template_code))
 
         return self._load(template_code, company, install_demo)
 
@@ -201,10 +201,17 @@ class AccountChartTemplate(models.AbstractModel):
         company.chart_template = template_code
 
         if not reload_template and (not company.root_id._existing_accounting() or self.env.ref('base.module_account').demo):
+            children_companies = self.env['res.company'].search([('id', 'child_of', company.id)])
             for model in ('account.move',) + TEMPLATE_MODELS[::-1]:
                 if not company.parent_id:
                     company_field = 'company_id' if 'company_id' in self.env[model] else 'company_ids'
-                    self.env[model].sudo().with_context(active_test=False).search([(company_field, 'child_of', company.id)]).with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
+                    records = self.env[model].sudo().with_context(active_test=False).search([(company_field, 'child_of', company.id)])
+                    if company_field == 'company_ids':
+                        records_to_keep = records.filtered(lambda r: r.company_ids - children_companies)
+                        records -= records_to_keep
+                        for records_for_companies in records_to_keep.grouped('company_ids').values():
+                            records_for_companies.company_ids -= children_companies
+                    records.with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
 
         data = self._get_chart_template_data(template_code)
         template_data = data.pop('template_data')
@@ -463,11 +470,12 @@ class AccountChartTemplate(models.AbstractModel):
             if model in data:
                 data[model] = data.pop(model)
 
-        # Remove data of unknown fields present in the company template
-        company_data = data.get('res.company')
-        if company_data and not self.env.context.get('l10n_check_fields_complete'):
-            for fname in list(company_data.get(company.id)):
-                if fname not in company._fields:
+        if data.get('res.company', {}).get(company.id):
+            # Filter out default values that we don't want to ignore if the field is not present, in any case.
+            company_data_to_filter = {'account_production_wip_account_id', 'account_production_wip_overhead_account_id'}
+            # Remove data of unknown fields present in the company template
+            for fname in list(data['res.company'][company.id]):
+                if fname not in company._fields and (not self.env.context.get('l10n_check_fields_complete') or fname in company_data_to_filter):
                     del data['res.company'][company.id][fname]
 
         # Translate the untranslatable fields we want to translate anyway

@@ -30,7 +30,8 @@ test("cannot reattach a destroyed editor", async () => {
     expect(() => editor.attachTo(el)).toThrow("Cannot re-attach an editor");
 });
 
-test.tags("iframe")("can instantiate a Editor in an iframe", async () => {
+test.tags("iframe");
+test("can instantiate a Editor in an iframe", async () => {
     const { el, editor } = await setupEditor("<p>hel[lo] world</p>", { props: { iframe: true } });
     expect("iframe").toHaveCount(1);
     expect(el.innerHTML).toBe(`<p>hello world</p>`);

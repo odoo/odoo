@@ -1,26 +1,20 @@
 import {
+    SIZES,
     assertSteps,
     click,
     contains,
     defineMailModels,
     isInViewportOf,
     openDiscuss,
+    patchUiSize,
     scroll,
     start,
     startServer,
     step,
 } from "@mail/../tests/mail_test_helpers";
-import { Thread } from "@mail/core/common/thread";
 import { describe, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-mock";
-import {
-    Command,
-    getService,
-    onRpc,
-    patchWithCleanup,
-    serverState,
-    withUser,
-} from "@web/../tests/web_test_helpers";
+import { Command, getService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
@@ -66,47 +60,6 @@ test("mark thread as read from unread messages banner", async () => {
         parent: ["span", { text: "30 new messagesMark as Read" }],
     });
     await contains(".o-mail-Thread-jumpToUnread", { count: 0 });
-});
-
-test("scroll to the first unread message (slow ref registration)", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    const messageIds = [];
-    for (let i = 0; i < 201; i++) {
-        messageIds.push(
-            pyEnv["mail.message"].create({
-                body: `message ${i}`,
-                model: "discuss.channel",
-                res_id: channelId,
-            })
-        );
-    }
-    const [selfMember] = pyEnv["discuss.channel.member"].search([
-        ["partner_id", "=", serverState.partnerId],
-        ["channel_id", "=", channelId],
-    ]);
-    pyEnv["discuss.channel.member"].write([selfMember], { new_message_separator: messageIds[100] });
-    let slowRegisterMessageRef = false;
-    patchWithCleanup(Thread.prototype, {
-        async registerMessageRef() {
-            if (slowRegisterMessageRef) {
-                // Ensure scroll is made even when messages are mounted later.
-                await new Promise((res) => setTimeout(res, 500));
-            }
-            super.registerMessageRef(...arguments);
-        },
-    });
-    await start();
-    await openDiscuss(channelId);
-    await click("[title='Jump to Present']");
-    await scroll(".o-mail-Thread", "bottom");
-    await contains(".o-mail-Thread", { scroll: "bottom" });
-    slowRegisterMessageRef = true;
-    await click("span", {
-        text: "101 new messages",
-        parent: ["span", { text: "101 new messagesMark as Read" }],
-    });
-    await isInViewportOf(".o-mail-Message:contains(message 100)", ".o-mail-Thread");
 });
 
 test("scroll to unread notification", async () => {
@@ -268,4 +221,31 @@ test("sidebar and banner counters display same value", async () => {
         text: "31",
         parent: [".o-mail-DiscussSidebarChannel", { text: "Bob" }],
     });
+});
+
+test("mobile: mark as read when opening chat", async () => {
+    const pyEnv = await startServer();
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "bob" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+    });
+    pyEnv["mail.message"].create({
+        body: "Hello!",
+        model: "discuss.channel",
+        author_id: bobPartnerId,
+        res_id: channelId,
+    });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await openDiscuss();
+    await contains("button.active", { text: "Inbox" });
+    await click("button", { text: "Chat" });
+    await contains(".o-mail-NotificationItem:has(.badge:contains(1))", { text: "bob" });
+    await click(".o-mail-NotificationItem", { text: "bob" });
+    await click(".o-mail-ChatWindow-command[title*='Close Chat Window']");
+    await contains(".o-mail-NotificationItem:has(.badge:contains(1))", { text: "bob", count: 0 });
 });

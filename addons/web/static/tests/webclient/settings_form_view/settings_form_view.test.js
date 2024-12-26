@@ -1,5 +1,14 @@
 import { after, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
-import { click, edit, queryAllProperties, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
+import {
+    click,
+    edit,
+    manuallyDispatchProgrammaticEvent,
+    on,
+    queryAllProperties,
+    queryAllTexts,
+    queryFirst,
+    resize,
+} from "@odoo/hoot-dom";
 import { animationFrame, Deferred, mockSendBeacon, runAllTimers } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -13,8 +22,8 @@ import {
     mockService,
     models,
     mountView,
-    mountWithCleanup,
     mountWebClient,
+    mountWithCleanup,
     onRpc,
     patchWithCleanup,
     serverState,
@@ -24,9 +33,9 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { pick } from "@web/core/utils/objects";
-import { WebClient } from "@web/webclient/webclient";
-import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings_form_compiler";
 import { redirect } from "@web/core/utils/urls";
+import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings_form_compiler";
+import { WebClient } from "@web/webclient/webclient";
 
 const MOCK_IMAGE =
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
@@ -487,13 +496,13 @@ test("resIds should contains only 1 id", async () => {
     serverState.multiLang = true;
 
     onRpc("get_installed", () => {
-        return Promise.resolve([
+        return [
             ["en_US", "English"],
             ["fr_BE", "French (Belgium)"],
-        ]);
+        ];
     });
     onRpc("get_field_translations", () => {
-        return Promise.resolve([
+        return [
             [
                 {
                     lang: "en_US",
@@ -510,7 +519,7 @@ test("resIds should contains only 1 id", async () => {
                 translation_type: "char",
                 translation_show_source: true,
             },
-        ]);
+        ];
     });
     onRpc("execute", ({ args }) => {
         expect(args[0].length).toBe(1);
@@ -692,7 +701,7 @@ test("Auto save: don't save on closing tab/browser", async () => {
         message: "checkbox should be checked",
     });
 
-    window.dispatchEvent(new Event("beforeunload"));
+    manuallyDispatchProgrammaticEvent(window, "beforeunload");
     await animationFrame();
     expect.verifySteps([]);
 });
@@ -1768,10 +1777,8 @@ test("settings form doesn't autofocus", async () => {
     const onFocusIn = (ev) => {
         expect.step(`focusin: ${ev.target.outerHTML}`);
     };
-    document.addEventListener("focusin", onFocusIn);
-    after(() => {
-        document.removeEventListener("focusin", onFocusIn);
-    });
+
+    getFixture().addEventListener("focusin", onFocusIn);
 
     await mountView({
         type: "form",
@@ -1796,12 +1803,7 @@ test("settings form doesn't autofocus", async () => {
 });
 
 test("settings form keeps scrolling by app", async () => {
-    const target = getFixture();
-    const oldHeight = target.style.getPropertyValue("height");
-    target.style.setProperty("height", "200px");
-    after(() => {
-        target.style.setProperty("height", oldHeight);
-    });
+    await resize({ height: 200 });
 
     await mountView({
         type: "form",
@@ -1913,8 +1915,7 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
             message: "we should download the correct data",
         });
 
-        const responseBody = new Blob([body.get("data")], { type: "text/plain" });
-        return new Response(responseBody, { status: 200 });
+        return new Blob([body.get("data")], { type: "text/plain" });
     });
 
     await mountView({
@@ -1949,22 +1950,16 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
 
     // Testing the download button in the field
     // We must avoid the browser to download the file effectively
-    const prom = new Deferred();
-    const downloadOnClick = (ev) => {
-        const target = ev.target;
-        if (target.tagName === "A" && "download" in target.attributes) {
+    const def = new Deferred();
+    const onDownloadClick = (ev) => {
+        if (ev.target.tagName === "A" && "download" in ev.target.attributes) {
             ev.preventDefault();
-            document.removeEventListener("click", downloadOnClick);
-            prom.resolve();
+            def.resolve();
         }
     };
-    document.addEventListener("click", downloadOnClick);
-    after(() => {
-        document.removeEventListener("click", downloadOnClick);
-    });
+    after(on(document, "click", onDownloadClick));
     await click(".fa-download");
-    await animationFrame();
-    await prom;
+    await def;
 
     await click(".o_field_binary .o_clear_file_button");
     await animationFrame();

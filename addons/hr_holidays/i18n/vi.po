@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -710,19 +710,9 @@ msgstr "Loại phân bổ"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Allocation must be \"To Approve\" or \"Second Approval\" in order to "
-"validate it."
+"Allocation must be confirmed \"To Approve\" or validated once \"Second "
+"Approval\" in order to approve it."
 msgstr ""
-"Để có thể được xác thực, Phân bổ phải có trạng thái là \"Cần phê duyệt\" "
-"hoặc \"Phê duyệt lần hai\"."
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Allocation must be confirmed (\"To Approve\") in order to approve it."
-msgstr ""
-"Phân bổ phải được xác nhận (\"Cần phê duyệt\") trước khi có thể được phê "
-"duyệt."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1349,13 +1339,13 @@ msgstr "Tạo phân bổ"
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
 msgid "Create a new time off allocation"
-msgstr "Tạo một phân bổ nghỉ phép mới"
+msgstr "Tạo một phân bổ thời gian nghỉ phép mới"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
 msgid "Create a new time off allocation request"
-msgstr "Tạo một đơn phân bổ nghỉ phép mới"
+msgstr "Tạo một đơn phân bổ thời gian nghỉ phép mới"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__create_uid
@@ -1857,7 +1847,7 @@ msgstr "Tạo nghỉ phép"
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid "Generate time off allocations for multiple employees"
-msgstr "Tạo phân bổ nghỉ phép cho nhiều nhân viên"
+msgstr "Tạo phân bổ thời gian nghỉ phép cho nhiều nhân viên"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_generate_multi_wizard
@@ -2307,7 +2297,7 @@ msgstr "Tối đa được phép"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_allowed_negative
 msgid "Maximum Excess Amount"
-msgstr ""
+msgstr "Thời gian thâm hụt tối đa"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
@@ -2877,6 +2867,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
 msgid "Rate"
 msgstr "Tỷ giá"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__rating_ids
+msgid "Ratings"
+msgstr "Đánh giá"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__reason
@@ -3458,6 +3454,8 @@ msgid ""
 "The maximum excess amount should be greater than 0. If you want to set 0, "
 "disable the negative cap instead."
 msgstr ""
+"Thời gian thâm hụt tối đa phải lớn hơn 0. Nếu bạn muốn đặt là 0, thay vào đó"
+" hãy tắt giới hạn thâm hụt."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__expiring_carryover_days
@@ -3533,6 +3531,16 @@ msgstr "Đơn nghỉ phép đã bị hủy: %s"
 msgid ""
 "The type with the smallest sequence is the default value in time off request"
 msgstr "Loại có số thứ tự nhỏ nhất là giá trị mặc định trong đơn nghỉ phép"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"There is no employee set on the time off. Please make sure you're logged in "
+"the correct company."
+msgstr ""
+"Không có nhân viên được đặt trong nghỉ phép. Bảo đảm là bạn đã đăng nhập vào"
+" đúng công ty."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3656,7 +3664,7 @@ msgstr "Nghỉ phép"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation
 msgid "Time Off Allocation"
-msgstr "Phân bổ nghỉ phép"
+msgstr "Phân bổ thời gian nghỉ phép"
 
 #. module: hr_holidays
 #. odoo-python

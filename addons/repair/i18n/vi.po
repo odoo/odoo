@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -250,7 +250,7 @@ msgstr "Trước"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.product_view_search_catalog
 msgid "BoM Components"
-msgstr "Nguyên liệu ĐMNL"
+msgstr "Nguyên liệu DMVT"
 
 #. module: repair
 #. odoo-python
@@ -307,7 +307,7 @@ msgstr "Công ty"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
 msgid "Component Destination Location"
-msgstr ""
+msgstr "Địa điểm đích của nguyên liệu"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
@@ -663,6 +663,7 @@ msgid "Location"
 msgstr "Địa điểm"
 
 #. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Locations"
 msgstr "Vị trí"
@@ -983,7 +984,7 @@ msgstr "Tái chế"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_recycle_location_dest_id
 msgid "Recycle Destination Location"
-msgstr ""
+msgstr "Địa điểm đích tái chế"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__recycle_location_id
@@ -998,7 +999,7 @@ msgstr "Xóa"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_remove_location_dest_id
 msgid "Remove Destination Location"
-msgstr ""
+msgstr "Xoá địa điểm đích"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_location_id
@@ -1343,6 +1344,8 @@ msgid ""
 "This is the default destination location for the product to be repaired in "
 "repair orders with this operation type."
 msgstr ""
+"Đây là địa điểm đích mặc định dành cho sản phẩm được sửa chữa trong lệnh sửa"
+" chữa với loại hoạt động này."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_recycle_location_dest_id
@@ -1368,6 +1371,8 @@ msgid ""
 "This is the default source location for the product to be repaired in repair"
 " orders with this operation type."
 msgstr ""
+"Đây là địa điểm nguồn mặc định dành cho sản phẩm được sửa chữa trong lệnh "
+"sửa chữa với loại hoạt động này."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id

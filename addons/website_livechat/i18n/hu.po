@@ -1,28 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_livechat
-#
+# 
 # Translators:
-# Zsolt Godó <zsolttokio@gmail.com>, 2022
-# krnkris, 2022
-# Martin Trigaux, 2022
-# gezza <geza.nagy@oregional.hu>, 2022
-# Tamás Németh <ntomasz81@gmail.com>, 2022
-# Ákos Nagy <akos.nagy@oregional.hu>, 2022
-# Szabolcs Rádi, 2023
-#
+# krnkris, 2024
+# 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2024
+# Martin Trigaux, 2024
+# Tamás Németh <ntomasz81@gmail.com>, 2024
+# gezza <geza.nagy@oregional.hu>, 2024
+# Ákos Nagy <akos.nagy@oregional.hu>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Szabolcs Rádi, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:42+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
-"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_livechat
@@ -34,8 +33,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
 msgid ""
-"%s started a conversation with %s.\n"
-"                        The chat request has been canceled."
+"%(visitor)s started a conversation with %(operator)s.\n"
+"The chat request has been cancelled"
 msgstr ""
 
 #. module: website_livechat
@@ -83,7 +82,7 @@ msgstr "Csatorna neve"
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_tree
 msgid "Chat"
-msgstr "Társalgás"
+msgstr "Csevegés"
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_chatbot_script
@@ -104,7 +103,7 @@ msgstr ""
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_res_config_settings
 msgid "Config Settings"
-msgstr "Beállítások módosítása"
+msgstr "Beállítások"
 
 #. module: website_livechat
 #: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_description
@@ -209,8 +208,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid ""
-"Recipients are not available. Please refresh the page to get latest visitors "
-"status."
+"Recipients are not available. Please refresh the page to get latest visitors"
+" status."
 msgstr ""
 
 #. module: website_livechat
@@ -261,7 +260,8 @@ msgstr "A csapat"
 #. module: website_livechat
 #: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_url
 msgid "The full URL to access the document through the website."
-msgstr "A teljes elérési út/URL a dokumentum weboldalon keresztüli eléréséhez."
+msgstr ""
+"A teljes elérési út/URL a dokumentum weboldalon keresztüli eléréséhez."
 
 #. module: website_livechat
 #. odoo-python
@@ -291,6 +291,18 @@ msgstr "Látogató"
 
 #. module: website_livechat
 #. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor #%(id)d left the conversation."
+msgstr ""
+
+#. module: website_livechat
+#. odoo-python
+#: code:addons/website_livechat/models/discuss_channel.py:0
+msgid "Visitor #%(id)d."
+msgstr ""
+
+#. module: website_livechat
+#. odoo-python
 #: code:addons/website_livechat/controllers/main.py:0
 #: code:addons/website_livechat/models/website_visitor.py:0
 msgid "Visitor #%d"
@@ -298,16 +310,14 @@ msgstr ""
 
 #. module: website_livechat
 #. odoo-python
-#. odoo-javascript
 #: code:addons/website_livechat/controllers/main.py:0
-#: code:addons/website_livechat/static/src/web/persona_model_patch.js:0
 msgid "Visitor #%s"
 msgstr ""
 
 #. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/models/discuss_channel.py:0
-msgid "Visitor %s left the conversation."
+msgid "Visitor left the conversation."
 msgstr ""
 
 #. module: website_livechat
@@ -330,7 +340,7 @@ msgstr "Látogatók"
 #: code:addons/website_livechat/static/src/web/thread_patch.xml:0
 #: model:ir.model,name:website_livechat.model_website
 msgid "Website"
-msgstr "Honlap"
+msgstr "Weboldal"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__channel_id
@@ -345,14 +355,14 @@ msgstr "Weboldal élő csevegési csatornája"
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_url
 msgid "Website URL"
-msgstr "Honlap címe"
+msgstr "Weboldal címe"
 
 #. module: website_livechat
 #. odoo-python
 #: code:addons/website_livechat/tests/test_livechat_basic_flow.py:0
 #: model:ir.model,name:website_livechat.model_website_visitor
 msgid "Website Visitor"
-msgstr ""
+msgstr "Weboldal látogató"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_description

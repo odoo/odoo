@@ -42,6 +42,6 @@ class TestMailFullComposer(MailCommon, HttpCase):
                 "mail/static/tests/tours/mail_composer_test_tour.js",
                 login=self.user_employee.login
             )
-        message = self._new_msgs.filtered(lambda message: message.author_id == self.user_employee.partner_id)
-        self.assertEqual(len(message), 1)
-        self.assertIn(user.partner_id, message.partner_ids)
+        messages = self._new_msgs.filtered(lambda message: message.author_id == self.user_employee.partner_id)
+        self.assertEqual(len(messages), 3)
+        self.assertIn(user.partner_id, messages[0].partner_ids)

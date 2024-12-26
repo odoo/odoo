@@ -42,6 +42,7 @@ from .tools.mimetypes import guess_mimetype
 from .tools.misc import unquote, has_list_types, Sentinel, SENTINEL
 from .tools.translate import html_translate
 
+from odoo import SUPERUSER_ID
 from odoo.exceptions import CacheMiss
 from odoo.osv import expression
 
@@ -783,7 +784,10 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
 
     def get_company_dependent_fallback(self, records):
         assert self.company_dependent
-        fallback = records.env['ir.default']._get_model_defaults(records._name).get(self.name)
+        fallback = records.env['ir.default'] \
+            .with_user(SUPERUSER_ID) \
+            .with_company(records.env.company) \
+            ._get_model_defaults(records._name).get(self.name)
         fallback = self.convert_to_cache(fallback, records, validate=False)
         return self.convert_to_record(fallback, records)
 
@@ -1490,6 +1494,11 @@ class Boolean(Field[bool]):
     def convert_to_column(self, value, record, values=None, validate=True):
         return bool(value)
 
+    def convert_to_column_update(self, value, record):
+        if self.company_dependent:
+            value = {k: bool(v) for k, v in value.items()}
+        return super().convert_to_column_update(value, record)
+
     def convert_to_cache(self, value, record, validate=True):
         return bool(value)
 
@@ -1513,6 +1522,11 @@ class Integer(Field[int]):
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return int(value or 0)
+
+    def convert_to_column_update(self, value, record):
+        if self.company_dependent:
+            value = {k: int(v or 0) for k, v in value.items()}
+        return super().convert_to_column_update(value, record)
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, dict):
@@ -1619,6 +1633,11 @@ class Float(Field[float]):
         if self.company_dependent:
             return value_float
         return value
+
+    def convert_to_column_update(self, value, record):
+        if self.company_dependent:
+            value = {k: float(v or 0.0) for k, v in value.items()}
+        return super().convert_to_column_update(value, record)
 
     def convert_to_cache(self, value, record, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
@@ -4562,11 +4581,12 @@ class One2many(_RelationalMulti[M]):
                 ))
 
     def get_domain_list(self, records):
-        comodel = records.env.registry[self.comodel_name]
-        inverse_field = comodel._fields[self.inverse_name]
-        domain = super(One2many, self).get_domain_list(records)
-        if inverse_field.type == 'many2one_reference':
-            domain = domain + [(inverse_field.model_field, '=', records._name)]
+        domain = super().get_domain_list(records)
+        if self.comodel_name and self.inverse_name:
+            comodel = records.env.registry[self.comodel_name]
+            inverse_field = comodel._fields[self.inverse_name]
+            if inverse_field.type == 'many2one_reference':
+                domain = domain + [(inverse_field.model_field, '=', records._name)]
         return domain
 
     def __get__(self, records, owner=None):

@@ -3,16 +3,16 @@
 # 	* hr_holidays
 # 
 # Translators:
-# Wil Odoo, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +24,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid " to %(date_to_utc)s"
-msgstr " tot en met %(date_to_utc)s"
+msgstr " t/m%(date_to_utc)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -55,25 +55,25 @@ msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "%(allocation_name)s (from %(date_from)s to %(date_to)s)"
-msgstr "%(allocation_name)s (van %(date_from)s tot en met %(date_to)s)"
+msgstr "%(allocation_name)s (van %(date_from)s t/m %(date_to)s)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "%(allocation_name)s (from %(date_from)s to No Limit)"
-msgstr "%(allocation_name)s (van %(date_from)s tot Geen Limiet)"
+msgstr "%(allocation_name)s (van %(date_from)s tot geen Limiet)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(employee)s on Time Off : %(duration)s"
-msgstr "%(employee)s op Verlof: %(duration)s"
+msgstr "%(employee)s met verlof: %(duration)s"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(employee_name)s - from %(date_from)s to %(date_to)s - %(state)s"
-msgstr "%(employee_name)s - van %(date_from)s tot %(date_to)s - %(state)s"
+msgstr "%(employee_name)s - van %(date_from)s t/m %(date_to)s - %(state)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -104,13 +104,13 @@ msgstr "%(name)s (%(duration)s %(request_unit)s(s))"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "%(name)s (%(duration)s day(s))"
-msgstr "%(name)s (%(duration)s dagen"
+msgstr "%(name)s (%(duration)s dag(en))"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "%(name)s (%(duration)s hour(s))"
-msgstr "%(name)s (%(duration)s uren"
+msgstr "%(name)s (%(duration)s uren)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -343,7 +343,7 @@ msgid ""
 "<span>You can only take this time off in whole days, so if your schedule has"
 " half days, it won't be used efficiently.</span>"
 msgstr ""
-"<span>Je kan dit verlof alleen in hele dagen opnemen, dus als je rooster "
+"<span>Je kunt dit verlof alleen in hele dagen opnemen, dus als je rooster "
 "halve dagen heeft, zal deze niet efficiënt worden gebruikt.</span>"
 
 #. module: hr_holidays
@@ -712,24 +712,15 @@ msgstr "Soort toewijzing"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Allocation must be \"To Approve\" or \"Second Approval\" in order to "
-"validate it."
+"Allocation must be confirmed \"To Approve\" or validated once \"Second "
+"Approval\" in order to approve it."
 msgstr ""
-"De toewijzing moet 'Goed te keuren' of 'Tweede goedkeuring' zijn om zijn om "
-"deze te valideren."
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Allocation must be confirmed (\"To Approve\") in order to approve it."
-msgstr ""
-"Toewijzing moet bevestigd zijn ('Goed te keuren') om het te goed te keuren."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation of %(leave_type)s: %(amount).2f %(unit)s to %(target)s"
-msgstr "Type toewijzing %(leave_type)s: %(amount).2f %(unit)s %(target)s"
+msgstr "Toewijzing van %(leave_type)s: %(amount).2f %(unit)s aan %(target)s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__week_day
@@ -1161,7 +1152,7 @@ msgstr "Overgedragen dagen vervaldatum"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Carry Over Validity"
-msgstr "Carry Over Geldigheid"
+msgstr "Geldigheid overdraagbaarheid"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__action_with_unused_accruals
@@ -1804,7 +1795,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_partner_ids
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Relaties)"
+msgstr "Volgers (Contacten)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_type_icon
@@ -2206,7 +2197,7 @@ msgstr "Verloftype verhoogt duur"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__holiday_status__left
 msgid "Left"
-msgstr "Links"
+msgstr "Overgebleven"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2315,7 +2306,7 @@ msgstr "Maximum toegestaan"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_allowed_negative
 msgid "Maximum Excess Amount"
-msgstr ""
+msgstr "Maximaal overtollig bedrag"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
@@ -2886,6 +2877,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
 msgid "Rate"
 msgstr "Hoeveel"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__rating_ids
+msgid "Ratings"
+msgstr "Beoordelingen"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__reason
@@ -3474,6 +3471,8 @@ msgid ""
 "The maximum excess amount should be greater than 0. If you want to set 0, "
 "disable the negative cap instead."
 msgstr ""
+"Het maximale overschotbedrag moet groter zijn dan 0. Als je 0 wilt "
+"instellen, schakelt je in plaats daarvan de negatieve limiet uit."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__expiring_carryover_days
@@ -3554,6 +3553,16 @@ msgid ""
 msgstr ""
 "De soort met de kleinste volgordenummer is de standaardwaarde in de "
 "verlofaanvraag"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"There is no employee set on the time off. Please make sure you're logged in "
+"the correct company."
+msgstr ""
+"Er is geen werknemer op de verlofaanvraag ingesteld. Zorg ervoor dat je bij "
+"het juiste bedrijf bent ingelogd."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4332,7 +4341,7 @@ msgid ""
 "You can select the period you need to take off, from start date to end date"
 msgstr ""
 "Je kunt de periode selecteren die je nodig hebt om op te stijgen, van "
-"startdatum tot einddatum"
+"startdatum t/m einddatum"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4420,7 +4429,7 @@ msgid ""
 "You cannot refuse this allocation request since the employee has already "
 "taken leaves for it. Please refuse or delete those leaves first."
 msgstr ""
-"Je kan deze toewijzingsaanvraag niet weigeren omdat de werknemer reeds "
+"Je kunt deze toewijzingsaanvraag niet weigeren omdat de werknemer reeds "
 "verlof heeft genomen. Weiger of verwijder eerst het verlof."
 
 #. module: hr_holidays
@@ -4606,13 +4615,13 @@ msgstr "bijv. Extra recuperatie, onbeschikbaarheid van het bedrijf, ..."
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "e.g. Time Off type (From validity start to validity end / no limit)"
 msgstr ""
-"b.v. Type verlof (Van begin geldigheid tot einde geldigheid / geen limiet)"
+"b.v. Type verlof (Van begin geldigheid t/m einde geldigheid / geen limiet)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "from %(date_from)s to %(date_to)s - %(state)s"
-msgstr "van %(date_from)s tot %(date_to)s - %(state)s"
+msgstr "van %(date_from)s t/m %(date_to)s - %(state)s"
 
 #. module: hr_holidays
 #. odoo-javascript

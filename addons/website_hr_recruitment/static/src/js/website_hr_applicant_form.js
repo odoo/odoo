@@ -31,13 +31,13 @@ publicWidget.registry.hrRecruitment = publicWidget.Widget.extend({
 
     hideWarningMessage(targetEl, messageContainerId) {
         targetEl.classList.remove("border-warning");
-        document.querySelector(messageContainerId).classList.add("d-none");
+        document.querySelector(messageContainerId)?.classList.add("d-none");
     },
 
     showWarningMessage(targetEl, messageContainerId, message) {
         targetEl.classList.add("border-warning");
         document.querySelector(messageContainerId).textContent = message;
-        document.querySelector(messageContainerId).classList.remove("d-none");
+        document.querySelector(messageContainerId)?.classList.remove("d-none");
     },
 
     async _onFocusOutName(ev) {

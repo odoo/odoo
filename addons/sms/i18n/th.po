@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -37,6 +37,8 @@ msgid ""
 "%(count)s out of the %(total)s selected SMS Text Messages have successfully "
 "been resent."
 msgstr ""
+"%(count)s จากข้อความ SMS ที่เลือกจำนวน %(total)s "
+"ข้อความได้ถูกส่งใหม่สำเร็จแล้ว"
 
 #. module: sms
 #. odoo-python
@@ -56,11 +58,19 @@ msgid "+1 555-555-555"
 msgstr ""
 
 #. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+msgid ", fits in"
+msgstr ""
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
 msgid ""
 "<i class=\"fa fa-warning\"/> An error occurred with your account. Please "
 "contact the support for more information..."
 msgstr ""
+"<i class=\"fa fa-warning\"/> เกิดข้อผิดพลาดกับบัญชีของคุณ "
+"โปรดติดต่อฝ่ายสนับสนุนเพื่อขอข้อมูลเพิ่มเติม..."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -68,6 +78,8 @@ msgid ""
 "<i class=\"fa fa-warning\"/> You cannot send SMS while your account is not "
 "registered."
 msgstr ""
+"<i class=\"fa fa-warning\"/> คุณไม่สามารถส่ง SMS ได้ "
+"หากบัญชีของคุณไม่ได้ลงทะเบียน"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -194,12 +206,20 @@ msgid "An error occurred when sending an SMS"
 msgstr "เกิดข้อผิดพลาดขณะส่งข้อความ SMS"
 
 #. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/core/failure_model_patch.js:0
+msgid "An error occurred when sending an SMS on “%(record_name)s”"
+msgstr ""
+
+#. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid ""
 "An unknown error occurred. Please contact Odoo support if this error "
 "persists."
 msgstr ""
+"เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ โปรดติดต่อฝ่ายสนับสนุน Odoo "
+"หากข้อผิดพลาดนี้ยังคงเกิดขึ้น"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
@@ -465,7 +485,7 @@ msgstr "เปิดใช้งาน SMS"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Enter a phone number to get an SMS with a verification code."
-msgstr ""
+msgstr "กรอกหมายเลขโทรศัพท์เพื่อรับ SMS พร้อมรหัสยืนยัน"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
@@ -816,6 +836,8 @@ msgid ""
 "Note that this is not required, if you don't set a sender name, your SMS "
 "will be sent from a short code."
 msgstr ""
+"โปรดทราบว่าไม่จำเป็นต้องทำเช่นนี้ ถ้าคุณไม่ได้ตั้งชื่อผู้ส่ง SMS "
+"ของคุณจะถูกส่งจากรหัสแบบสั้น"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
@@ -1139,6 +1161,12 @@ msgstr "ข้อผิดพลาดในการส่ง SMS"
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/messaging_menu/messaging_menu_patch.js:0
+msgid "SMS Failure: %(modelName)s"
+msgstr ""
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/messaging_menu/messaging_menu_patch.js:0
 msgid "SMS Failures"
 msgstr "SMS ล้มเหลว"
 
@@ -1438,6 +1466,8 @@ msgid ""
 "The SMS Service is currently unavailable for new users and new accounts "
 "registrations are suspended."
 msgstr ""
+"ขณะนี้บริการ SMS ไม่สามารถใช้งานได้กับผู้ใช้งานรายใหม่ "
+"และการลงทะเบียนบัญชีใหม่ถูกระงับ"
 
 #. module: sms
 #. odoo-python
@@ -1492,12 +1522,12 @@ msgstr "SMS นี้ถูกลบออกแล้ว เนื่องจ�
 #: code:addons/sms/tools/sms_api.py:0
 msgid ""
 "This account already has an existing sender name and it cannot be changed."
-msgstr ""
+msgstr "บัญชีนี้มีชื่อผู้ส่งอยู่แล้วและไม่สามารถเปลี่ยนแปลงได้"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_iap_account__sender_name
 msgid "This is the name that will be displayed as the sender of the SMS."
-msgstr ""
+msgstr "นี่คือชื่อที่จะแสดงเป็นผู้ส่ง SMS"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
@@ -1620,7 +1650,7 @@ msgstr "คำเตือน"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "We were not able to find your account in our database."
-msgstr ""
+msgstr "เราไม่พบบัญชีของคุณในฐานข้อมูลของเรา"
 
 #. module: sms
 #. odoo-python
@@ -1629,6 +1659,8 @@ msgid ""
 "We were not able to reach you via your phone number. If you have requested "
 "multiple codes recently, please retry later."
 msgstr ""
+"เราไม่สามารถติดต่อคุณผ่านหมายเลขโทรศัพท์ของคุณได้ "
+"หากคุณได้ขอรหัสหลายรหัสเมื่อเร็วๆ นี้ โปรดลองอีกครั้งในภายหลัง"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__website_message_ids
@@ -1702,6 +1734,8 @@ msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain "
 "alphanumeric characters."
 msgstr ""
+"ชื่อผู้ส่งของคุณต้องมีความยาวระหว่าง 3 ถึง 11 "
+"ตัวอักษรและประกอบด้วยอักขระตัวอักษรและตัวเลขเท่านั้น"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
@@ -1721,8 +1755,8 @@ msgstr ""
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
-msgid "characters, fits in"
-msgstr "ตัวอักษร พอดีใน"
+msgid "characters"
+msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

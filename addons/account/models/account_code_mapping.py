@@ -1,6 +1,8 @@
 from odoo import fields, models, api
 from odoo.tools import Query
 
+COMPANY_OFFSET = 10000
+
 
 class AccountCodeMapping(models.Model):
     # This model is used purely for UI, to display the account codes for each company.
@@ -15,7 +17,7 @@ class AccountCodeMapping(models.Model):
     account_id = fields.Many2one(
         comodel_name='account.account',
         string="Account",
-        store=False,
+        compute='_compute_account_id',
         # suppress warning about field not being searchable (due to being used in depends);
         # searching is actually implemented in the `_search` override.
         search=True,
@@ -23,7 +25,8 @@ class AccountCodeMapping(models.Model):
     company_id = fields.Many2one(
         comodel_name='res.company',
         string="Company",
-        store=False,
+        compute='_compute_company_id',
+        readonly=False,  # TODO remove in master (kept in stable because of view change)
     )
     code = fields.Char(
         string="Code",
@@ -31,37 +34,33 @@ class AccountCodeMapping(models.Model):
         inverse='_inverse_code',
     )
 
-    def browse(self, ids=()):
-        if isinstance(ids, str):
-            ids = (ids,)
-        return super().browse(ids)
+    @api.model_create_multi
+    def create(self, vals_list):
+        mappings = self.browse([
+            vals['account_id'] * COMPANY_OFFSET + vals['company_id']
+            for vals in vals_list
+        ])
+        for mapping, vals in zip(mappings, vals_list):
+            mapping.code = vals['code']
+        return mappings
 
     def _search(self, domain, offset=0, limit=None, order=None) -> Query:
-        # This method will populate this model's records in cache when the `code_mapping_ids`
-        # One2many on `account_account` is accessed. Any existing records that correspond to the
-        # search domain will be returned, and additional ones will be created in cache as needed.
         match domain:
-            case [('account_id', 'in', account_ids)]:
-                companies = self.env.user.company_ids
-                existing_code_mappings = self.env.cache.get_records(self, self._fields['account_id']).filtered(
-                    lambda m: m.account_id.id in account_ids and m.company_id in companies
-                )
-                keys = {(m.account_id.id, m.company_id.id) for m in existing_code_mappings}
-                missing_keys = [
-                    (account_id, company_id)
+            case [('account_id', 'in', account_ids), *remaining_domain]:
+                return self.browse([
+                    account_id * COMPANY_OFFSET + company.id
                     for account_id in account_ids
-                    for company_id in companies.ids
-                    if (account_id, company_id) not in keys
-                ]
-                max_existing_id = max(existing_code_mappings.ids, default=0)
-                new_code_mappings = self.browse(range(max_existing_id + 1, max_existing_id + len(missing_keys) + 1))
-
-                self.env.cache.update(new_code_mappings, self._fields['account_id'], [account_id for account_id, _ in missing_keys])
-                self.env.cache.update(new_code_mappings, self._fields['company_id'], [company_id for _, company_id in missing_keys])
-
-                mappings = existing_code_mappings | new_code_mappings
-                return mappings.sorted(lambda m: (m.account_id.id, m.company_id.sequence, m.company_id.name))._as_query()
+                    for company in self.env.user.company_ids.sorted(lambda c: (c.sequence, c.name))
+                ]).filtered_domain(remaining_domain)._as_query()
         raise NotImplementedError
+
+    def _compute_account_id(self):
+        for record in self:
+            record.account_id = record._origin.id // COMPANY_OFFSET
+
+    def _compute_company_id(self):
+        for record in self:
+            record.company_id = record._origin.id % COMPANY_OFFSET
 
     @api.depends('account_id.code')
     def _compute_code(self):
@@ -71,4 +70,4 @@ class AccountCodeMapping(models.Model):
 
     def _inverse_code(self):
         for record in self:
-            record.account_id.with_company(record.company_id._origin).code = record.code
+            record.account_id.with_company(record.company_id).write({'code': record.code})

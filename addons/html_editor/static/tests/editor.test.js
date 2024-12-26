@@ -96,3 +96,31 @@ test("clean_for_save_listeners is done last", async () => {
     const el = editor.getElContent();
     expect(getContent(el)).toBe(`<div><c-div>a</c-div><c-div>b</c-div></div>`);
 });
+
+test("Convert self closing a elements to opening/closing tags", async () => {
+    const { el, editor } = await setupEditor(`
+        <ul>
+            <li><a href="xyz" t-out="xyz"/></li>
+        </ul>
+    `);
+    expect(el.innerHTML.trim().replace(/\s+/g, " ")).toBe(
+        `<ul> <li> <a href="xyz" t-out="xyz"> </a> </li> </ul>`
+    );
+    expect(editor.getContent().trim().replace(/\s+/g, " ")).toBe(
+        '<ul> <li><a href="xyz" t-out="xyz"></a></li> </ul>'
+    );
+});
+
+test("Convert self closing t elements to opening/closing tags", async () => {
+    const { el, editor } = await setupEditor(`
+        <div>
+            <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"/>
+        </div>
+    `);
+    expect(el.innerHTML.trim().replace(/\s+/g, " ")).toBe(
+        `<div> <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"></t> </div>`
+    );
+    expect(editor.getContent().trim().replace(/\s+/g, " ")).toBe(
+        '<div> <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"></t> </div>'
+    );
+});

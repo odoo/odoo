@@ -3,16 +3,17 @@
 # 	* hr
 # 
 # Translators:
-# Wil Odoo, 2024
+# Yaroslav Husyar, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,11 +70,6 @@ msgstr "1 Телефонний дзвінок"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
 msgstr "12 днів/рік, включаючи <br>6 на ваш вибір."
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "12345678901"
-msgstr "12345678901"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -634,6 +630,11 @@ msgid "Bank Account"
 msgstr "Банківський рахунок"
 
 #. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Банківські рахунки"
+
+#. module: hr
 #: model:ir.model,name:hr.model_base
 msgid "Base"
 msgstr "База"
@@ -1115,7 +1116,7 @@ msgstr "Причина звільнення"
 #: model:ir.actions.act_window,name:hr.hr_departure_reason_action
 #: model:ir.ui.menu,name:hr.menu_hr_departure_reason_tree
 msgid "Departure Reasons"
-msgstr "Причини від'їзду"
+msgstr "Причини звільнення"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_departure_wizard
@@ -1181,6 +1182,12 @@ msgstr ""
 "Відображати налаштування віддаленої роботи для кожного співробітника та "
 "спеціальні звіти. Піктограми присутності будуть оновлені з віддаленим місцем"
 " роботи."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Divorced"
+msgstr "Розлучений"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__doctor
@@ -1474,7 +1481,7 @@ msgstr "Поле освіти"
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_fired
 msgid "Fired"
-msgstr "Звільнено"
+msgstr "Звільнення за ініціативою роботодавця"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
@@ -1632,7 +1639,7 @@ msgstr "Високо креативний та автономний"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__work_location_type__home
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__home
 msgid "Home"
-msgstr "Головна"
+msgstr "На дому"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__distance_home_work
@@ -1968,6 +1975,12 @@ msgid "Lead the entire sales cycle"
 msgstr "Ведіть весь цикл продажів"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Legal Cohabitant"
+msgstr "Цивільний шлюб"
+
+#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
 msgstr "Давайте створимо вакансію."
@@ -2035,18 +2048,13 @@ msgstr "Управління"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Manager"
-msgstr "Керівник співробітника"
+msgstr "Керівник структурного підрозділу"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 msgid "Manager of employee %s is not set."
 msgstr "Керівник співробітника %s не встановлений."
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Marc Demo"
-msgstr "Marc Demo"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
@@ -2059,6 +2067,12 @@ msgstr "Цивільний стан"
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
 msgstr "Маркетинг та менеджер спільноти"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Married"
+msgstr "Одружений(заміжня)"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__master
@@ -2328,7 +2342,7 @@ msgstr "Кількість нових співробітників, яких в�
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__work_location_type__office
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__office
 msgid "Office"
-msgstr "Відділ"
+msgstr "Офіс"
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -2829,7 +2843,7 @@ msgstr "Пошук і розробка"
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_resigned
 msgid "Resigned"
-msgstr "У відставці"
+msgstr "Звільнення за власним бажанням"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_id
@@ -2869,7 +2883,7 @@ msgstr "Відповідальний користувач"
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_retired
 msgid "Retired"
-msgstr "Відсторонений"
+msgstr "Вихід на пенсію"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sinid
@@ -2970,6 +2984,12 @@ msgid "Show employees"
 msgstr "Показати співробітників"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Single"
+msgstr "Неодружений(незаміжня)"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
 msgid "Skills Management"
 msgstr "Управління навичками"
@@ -2984,11 +3004,6 @@ msgstr "Номер соціального страхування"
 #: model:ir.model.fields,help:hr.field_res_users__ssnid
 msgid "Social Security Number"
 msgstr "Номер соціального страхування"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Software Developer"
-msgstr "Розробка програмного забезпечення"
 
 #. module: hr
 #. odoo-python
@@ -3146,7 +3161,9 @@ msgstr "Тимчасовий"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
-msgid "The Badge ID must be a sequence of digits."
+msgid ""
+"The Badge ID must be alphanumeric without any accents and no longer than 18 "
+"characters."
 msgstr ""
 
 #. module: hr
@@ -3491,6 +3508,12 @@ msgid ""
 msgstr ""
 "Чи є співробітник членом відділу активного користувача чи одного з його "
 "дочірніх відділів."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Widower"
+msgstr "Вдівець/вдова"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id

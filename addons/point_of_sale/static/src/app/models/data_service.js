@@ -8,7 +8,8 @@ import IndexedDB from "./utils/indexed_db";
 import { DataServiceOptions } from "./data_service_options";
 import { uuidv4 } from "@point_of_sale/utils";
 import { browser } from "@web/core/browser/browser";
-import { ConnectionLostError } from "@web/core/network/rpc";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
+import { _t } from "@web/core/l10n/translation";
 
 const { DateTime } = luxon;
 const INDEXED_DB_VERSION = 1;
@@ -39,6 +40,7 @@ export class PosData extends Reactive {
         };
 
         this.initIndexedDB();
+        await this.verifyCurrentSession();
         await this.initData();
 
         effect(
@@ -60,6 +62,21 @@ export class PosData extends Reactive {
         browser.addEventListener("offline", () => {
             this.network.offline = true;
         });
+    }
+
+    async verifyCurrentSession() {
+        // If another device close the session we need to invalided the indexedDB on
+        // on the current device during the next reload
+        const localSessionId = localStorage.getItem(`pos.session.${odoo.pos_config_id}`);
+        if (
+            parseInt(localSessionId) &&
+            parseInt(localSessionId) !== parseInt(odoo.pos_session_id)
+        ) {
+            await this.resetIndexedDB();
+            localStorage.removeItem(`pos.session.${odoo.pos_config_id}`);
+            window.location.reload();
+        }
+        localStorage.setItem(`pos.session.${odoo.pos_config_id}`, odoo.pos_session_id);
     }
 
     async resetIndexedDB() {
@@ -110,16 +127,18 @@ export class PosData extends Reactive {
             return { ...serializedData, JSONuiState: JSON.stringify(uiState), id: record.id };
         };
 
-        for (const [model, params] of Object.entries(this.opts.databaseTable)) {
-            const nbrRecords = records[model].size;
+        const dataToDelete = {};
 
-            if (!nbrRecords) {
+        for (const [model, params] of Object.entries(this.opts.databaseTable)) {
+            const modelRecords = Array.from(records[model].values());
+
+            if (!modelRecords.length) {
                 continue;
             }
 
-            const data = dataSorter(this.models[model].getAll(), params.condition, params.key);
+            const data = dataSorter(modelRecords, params.condition, params.key);
             this.indexedDB.create(model, data.put);
-            this.indexedDB.delete(model, data.remove);
+            dataToDelete[model] = data.remove;
         }
 
         this.indexedDB.readAll(Object.keys(this.opts.databaseTable)).then((data) => {
@@ -129,12 +148,21 @@ export class PosData extends Reactive {
 
             for (const [model, records] of Object.entries(data)) {
                 const key = this.opts.databaseTable[model].key;
+                let keysToDelete = [];
+
+                if (dataToDelete[model]) {
+                    const keysInIndexedDB = new Set(records.map((record) => record[key]));
+                    keysToDelete = dataToDelete[model].filter((key) => keysInIndexedDB.has(key));
+                }
                 for (const record of records) {
                     const localRecord = this.models[model].get(record.id);
-
                     if (!localRecord) {
-                        this.indexedDB.delete(model, [record[key]]);
+                        keysToDelete.push(record[key]);
                     }
+                }
+
+                if (keysToDelete.length) {
+                    this.indexedDB.delete(model, keysToDelete);
                 }
             }
         });
@@ -189,10 +217,20 @@ export class PosData extends Reactive {
     }
 
     async loadInitialData() {
-        return await this.orm.call("pos.session", "load_data", [
-            odoo.pos_session_id,
-            PosData.modelToLoad,
-        ]);
+        try {
+            return await this.orm.call("pos.session", "load_data", [
+                odoo.pos_session_id,
+                PosData.modelToLoad,
+            ]);
+        } catch (error) {
+            let message = _t("An error occurred while loading the Point of Sale: \n");
+            if (error instanceof RPCError) {
+                message += error.data.message;
+            } else {
+                message += error.message;
+            }
+            window.alert(message);
+        }
     }
     async initData() {
         const modelClasses = {};
@@ -306,9 +344,9 @@ export class PosData extends Reactive {
                 result = values;
             }
 
+            const nonExistentRecords = [];
             if (limitedFields) {
                 const X2MANY_TYPES = new Set(["many2many", "one2many"]);
-                const nonExistentRecords = [];
 
                 for (const record of result) {
                     const localRecord = this.models[model].get(record.id);
@@ -355,7 +393,11 @@ export class PosData extends Reactive {
                 }
             }
 
-            if (this.models[model] && this.opts.autoLoadedOrmMethods.includes(type)) {
+            if (
+                this.models[model] &&
+                this.opts.autoLoadedOrmMethods.includes(type) &&
+                (!limitedFields || nonExistentRecords.length)
+            ) {
                 const data = await this.missingRecursive({ [model]: result });
                 const results = this.models.loadData(data);
                 result = results[model];
@@ -395,6 +437,10 @@ export class PosData extends Reactive {
 
     async missingRecursive(recordMap, idsMap = {}, acc = {}) {
         const missingRecords = {};
+        const recordInMapByModelIds = Object.entries(recordMap).reduce((acc, [model, records]) => {
+            acc[model] = new Set(records.map((r) => r.id));
+            return acc;
+        }, {});
 
         for (const [model, records] of Object.entries(recordMap)) {
             if (!acc[model]) {
@@ -423,7 +469,9 @@ export class PosData extends Reactive {
                     }
 
                     const record = this.models[rel.relation].get(value);
-                    return !record || !record.id;
+                    return (
+                        (!record || !record.id) && !recordInMapByModelIds[rel.relation]?.has(value)
+                    );
                 });
 
                 if (missing.length > 0) {

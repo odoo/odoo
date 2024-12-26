@@ -109,7 +109,7 @@ async function fetchInternalMetaData(url) {
 
 export class LinkPlugin extends Plugin {
     static id = "link";
-    static dependencies = ["dom", "history", "selection", "split", "lineBreak", "overlay"];
+    static dependencies = ["dom", "history", "input", "selection", "split", "lineBreak", "overlay"];
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
     static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
     resources = {
@@ -189,6 +189,9 @@ export class LinkPlugin extends Plugin {
         this.overlay = this.dependencies.overlay.createOverlay(LinkPopover, {}, { sequence: 50 });
         this.addDomListener(this.editable, "click", (ev) => {
             if (ev.target.tagName === "A" && ev.target.isContentEditable) {
+                if (ev.ctrlKey || ev.metaKey) {
+                    window.open(ev.target.href, "_blank");
+                }
                 ev.preventDefault();
                 this.toggleLinkTools({ link: ev.target });
             }
@@ -216,17 +219,6 @@ export class LinkPlugin extends Plugin {
 
     destroy() {
         this.removeLinkShortcut();
-    }
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "NORMALIZE":
-                this.normalizeLink();
-                break;
-            case "CLEAN_FOR_SAVE":
-                this.removeEmptyLinks(payload.root);
-                break;
-        }
     }
 
     // -------------------------------------------------------------------------
@@ -592,7 +584,10 @@ export class LinkPlugin extends Plugin {
                 continue;
             }
             const classes = [...link.classList].filter((c) => !this.ignoredClasses.has(c));
-            if (!classes.length) {
+            const attributes = [...link.attributes].filter(
+                (a) => !["style", "href", "class"].includes(a.name)
+            );
+            if (!classes.length && !attributes.length) {
                 link.remove();
             }
         }

@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* calendar_sms
-#
+# 
 # Translators:
-# Igor Sheludko <igor.sheludko@gmail.com>, 2023
-# Ивайло Малинов <iv.malinov@gmail.com>, 2023
-# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
-# Albena Mincheva <albena_vicheva@abv.bg>, 2023
-# Martin Trigaux, 2023
-#
+# Martin Trigaux, 2024
+# Igor Sheludko <igor.sheludko@gmail.com>, 2024
+# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2024
+# Ивайло Малинов <iv.malinov@gmail.com>, 2024
+# Albena Mincheva <albena_vicheva@abv.bg>, 2024
+# Petko Karamotchev, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"POT-Creation-Date: 2024-09-26 12:52+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Petko Karamotchev, 2024\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
-"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: calendar_sms
@@ -51,7 +52,9 @@ msgstr ""
 
 #. module: calendar_sms
 #: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
-msgid "Event reminder: {{ object.name }}, {{ object.get_display_time_tz(object.partner_id.tz) }}"
+msgid ""
+"Event reminder: {{ object.name }}, {{ "
+"object.get_display_time_tz(object.partner_id.tz) }}"
 msgstr ""
 
 #. module: calendar_sms
@@ -59,7 +62,7 @@ msgstr ""
 #: code:addons/calendar_sms/models/calendar_alarm.py:0
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_notify_responsible
 msgid "Notify Responsible"
-msgstr ""
+msgstr "Уведомете отговорния"
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
@@ -69,7 +72,7 @@ msgstr "SMS"
 #. module: calendar_sms
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_template_id
 msgid "SMS Template"
-msgstr ""
+msgstr "SMS шаблон"
 
 #. module: calendar_sms
 #: model:ir.model.fields.selection,name:calendar_sms.selection__calendar_alarm__alarm_type__sms
@@ -77,15 +80,11 @@ msgid "SMS Text Message"
 msgstr "Тексови съобщения"
 
 #. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_tree_inherited
 msgid "Send SMS"
 msgstr "Изпращане на SMS"
-
-#. module: calendar_sms
-#. odoo-python
-#: code:addons/calendar_sms/models/calendar_event.py:0
-msgid "Send SMS Text Message"
-msgstr ""
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
@@ -96,12 +95,13 @@ msgstr "Изпрати SMS на присъстващите"
 #: model:ir.model.fields,help:calendar_sms.field_calendar_alarm__sms_template_id
 msgid "Template used to render SMS reminder content."
 msgstr ""
+"Шаблон, използван за изобразяване на съдържание за напомняне чрез SMS."
 
 #. module: calendar_sms
 #. odoo-python
 #: code:addons/calendar_sms/models/calendar_event.py:0
 msgid "There are no attendees on these events"
-msgstr ""
+msgstr "Няма присъстващи на тези събития"
 
 #. module: calendar_sms
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type

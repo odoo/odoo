@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Marta Wacławek, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Marta Wacławek, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -873,7 +874,7 @@ msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
 msgstr ""
-"Działanie to daje sygnał do utworzenia wpisu w dzienniku, do którego "
+"Działanie to daje lead do utworzenia wpisu w dzienniku, do którego "
 "użytkownik nie ma praw dostępu."
 
 #. module: stock_account
@@ -919,6 +920,16 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 msgid ""
 "The stock accounts should be set in order to use the automatic valuation."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"The stock valuation of a move is based on the type of the source and "
+"destination locations. As the move is already processed, you cannot modify "
+"the locations in a way that changes the valuation logic defined during the "
+"initial processing."
 msgstr ""
 
 #. module: stock_account
@@ -1230,7 +1241,7 @@ msgid ""
 "rights."
 msgstr ""
 "Nie można zaktualizować kosztu produktu w automatycznej wycenie, ponieważ "
-"daje to sygnał do utworzenia wpisu w dzienniku, do którego nie ma się praw "
+"daje to lead do utworzenia wpisu w dzienniku, do którego nie ma się praw "
 "dostępu."
 
 #. module: stock_account

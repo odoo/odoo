@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import re
 from pytz import timezone, UTC
 from datetime import datetime, time
 from random import choice
@@ -242,7 +243,7 @@ class HrEmployeePrivate(models.Model):
 
     def _inverse_km_home_work(self):
         for employee in self:
-            employee.distance_home_work = employee.km_home_work / 1.609 if employee.distance_home_work_unit == "miles" else employee.distance_home_work
+            employee.distance_home_work = employee.km_home_work / 1.609 if employee.distance_home_work_unit == "miles" else employee.km_home_work
 
     def _get_partner_count_depends(self):
         return ['user_id']
@@ -427,8 +428,9 @@ class HrEmployeePrivate(models.Model):
     @api.constrains('barcode')
     def _verify_barcode(self):
         for employee in self:
-            if employee.barcode and not employee.barcode.isdigit():
-                raise ValidationError(_("The Badge ID must be a sequence of digits."))
+            if employee.barcode:
+                if not (re.match(r'^[A-Za-z0-9]+$', employee.barcode) and len(employee.barcode) <= 18):
+                    raise ValidationError(_("The Badge ID must be alphanumeric without any accents and no longer than 18 characters."))
 
     @api.constrains('ssnid')
     def _check_ssnid(self):
@@ -658,11 +660,11 @@ class HrEmployeePrivate(models.Model):
 
     def _get_marital_status_selection(self):
         return [
-            ('single', 'Single'),
-            ('married', 'Married'),
-            ('cohabitant', 'Legal Cohabitant'),
-            ('widower', 'Widower'),
-            ('divorced', 'Divorced')
+            ('single', _('Single')),
+            ('married', _('Married')),
+            ('cohabitant', _('Legal Cohabitant')),
+            ('widower', _('Widower')),
+            ('divorced', _('Divorced')),
         ]
 
     def _load_scenario(self):

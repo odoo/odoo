@@ -66,6 +66,9 @@ $table-color: inherit !default;
 // With BS5.3, $table-bg is set $body-bg by default, and we want it transparent.
 $table-bg: transparent !default;
 
+// Buttons
+$btn-hover-bg-shade-amount: 15% !default;
+
 // Forms
 
 $input-transition: background-color .05s ease-in-out, border-color .05s ease-in-out, box-shadow .05s ease-in-out !default;
@@ -92,6 +95,9 @@ $form-range-thumb-border: $border-width solid $primary !default;
 $form-range-thumb-bg: $body-bg !default;
 $form-range-thumb-active-bg: $primary !default;
 $form-range-thumb-disabled-bg: $input-disabled-bg !default;
+
+$form-file-button-bg: mix($input-color, $input-bg, $btn-hover-bg-shade-amount * 0.3) !default;
+$form-file-button-hover-bg: mix($input-color, $input-bg, $btn-hover-bg-shade-amount) !default;
 
 // Figures
 

@@ -413,9 +413,10 @@ class MrpWorkorder(models.Model):
         if self.date_start and self.workcenter_id:
             self.date_finished = self._calculate_date_finished()
 
-    def _calculate_date_finished(self, date_finished=False):
-        return self.workcenter_id.resource_calendar_id.plan_hours(
-            self.duration_expected / 60.0, date_finished or self.date_start,
+    def _calculate_date_finished(self, date_start=False):
+        workcenter = self.env.context.get('new_workcenter_id') or self.workcenter_id
+        return workcenter.resource_calendar_id.plan_hours(
+            self.duration_expected / 60.0, date_start or self.date_start,
             compute_leaves=True, domain=[('time_type', 'in', ['leave', 'other'])]
         )
 
@@ -442,17 +443,19 @@ class MrpWorkorder(models.Model):
                 return res
 
     def write(self, values):
+        new_workcenter = False
         if 'production_id' in values and any(values['production_id'] != w.production_id.id for w in self):
             raise UserError(_('You cannot link this work order to another manufacturing order.'))
         if 'workcenter_id' in values:
+            new_workcenter = self.env['mrp.workcenter'].browse(values['workcenter_id'])
             for workorder in self:
                 if workorder.workcenter_id.id != values['workcenter_id']:
                     if workorder.state in ('progress', 'done', 'cancel'):
                         raise UserError(_('You cannot change the workcenter of a work order that is in progress or done.'))
-                    workorder.leave_id.resource_id = self.env['mrp.workcenter'].browse(values['workcenter_id']).resource_id
+                    workorder.leave_id.resource_id = new_workcenter.resource_id
                     workorder.duration_expected = workorder._get_duration_expected()
                     if workorder.date_start:
-                        workorder.date_finished = workorder._calculate_date_finished()
+                        workorder.date_finished = workorder.with_context(new_workcenter_id=new_workcenter)._calculate_date_finished()
         if 'date_start' in values or 'date_finished' in values:
             for workorder in self:
                 date_start = fields.Datetime.to_datetime(values.get('date_start', workorder.date_start))
@@ -461,7 +464,7 @@ class MrpWorkorder(models.Model):
                     raise UserError(_('The planned end date of the work order cannot be prior to the planned start date, please correct this to save the work order.'))
                 if 'duration_expected' not in values and not self.env.context.get('bypass_duration_calculation'):
                     if values.get('date_start') and values.get('date_finished'):
-                        computed_finished_time = workorder._calculate_date_finished(date_start)
+                        computed_finished_time = workorder.with_context(new_workcenter_id=new_workcenter)._calculate_date_finished(date_start=date_start)
                         values['date_finished'] = computed_finished_time
                     elif date_start and date_finished:
                         computed_duration = workorder._calculate_duration_expected(date_start=date_start, date_finished=date_finished)

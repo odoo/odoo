@@ -1569,7 +1569,7 @@ class BaseModel(metaclass=MetaModel):
             xid = record.get('id', False)
             # dbid
             dbid = False
-            if '.id' in record:
+            if record.get('.id'):
                 try:
                     dbid = int(record['.id'])
                 except ValueError:
@@ -1782,13 +1782,31 @@ class BaseModel(metaclass=MetaModel):
         search_fnames = self._rec_names_search or ([self._rec_name] if self._rec_name else [])
         if not search_fnames:
             _logger.warning("Cannot search on display_name, no _rec_name or _rec_names_search defined on %s", self._name)
-            return expression.FALSE_DOMAIN
+            # do not restrain anything
+            return expression.TRUE_DOMAIN
         if operator.endswith('like') and not value and '=' not in operator:
             # optimize out the default criterion of ``like ''`` that matches everything
             # return all when operator is positive
             return expression.FALSE_DOMAIN if operator in expression.NEGATIVE_TERM_OPERATORS else expression.TRUE_DOMAIN
         aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
-        return aggregator([[(field_name, operator, value)] for field_name in search_fnames])
+        domains = []
+        for field_name in search_fnames:
+            # field_name may be a sequence of field names (partner_id.name)
+            # retrieve the last field in the sequence
+            model = self
+            for fname in field_name.split('.'):
+                field = model._fields[fname]
+                model = self.env.get(field.comodel_name)
+            if field.relational:
+                # relational fields will trigger a _name_search on their comodel
+                domains.append([(field_name, operator, value)])
+                continue
+            try:
+                domains.append([(field_name, operator, field.convert_to_write(value, self))])
+            except ValueError:
+                pass  # ignore that case if the value doesn't match the field type
+
+        return aggregator(domains)
 
     @api.model
     def name_create(self, name) -> tuple[int, str] | typing.Literal[False]:
@@ -2961,8 +2979,6 @@ class BaseModel(metaclass=MetaModel):
                     fallback=fallback,
                     column_type=SQL(field._column_type[1]),
                 )
-            if field.type in ('boolean', 'integer', 'float', 'monetary'):
-                return SQL('(%s)::%s', sql_field, SQL(field._column_type[1]))
             # here the specified value for a company might be NULL e.g. '{"1": null}'::jsonb
             # the result of current sql_field might be 'null'::jsonb
             # ('null'::jsonb)::text == 'null'
@@ -5439,7 +5455,7 @@ class BaseModel(metaclass=MetaModel):
             existing_modules = self.env['ir.module.module'].sudo().search([]).mapped('name')
             for data in to_create:
                 xml_id = data.get('xml_id')
-                if xml_id:
+                if xml_id and not data.get('noupdate'):
                     module_name, sep, record_id = xml_id.partition('.')
                     if sep and module_name in existing_modules:
                         raise UserError(

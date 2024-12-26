@@ -801,9 +801,9 @@ msgid ""
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "Les revenus seront créés automatiquement quand vous créerez des factures\n"
-" clients. Les factures clients peuvent être créées en fonction des bons de commande\n"
+" clients. Les factures clients peuvent être créées en fonction des commandes clients\n"
 " (factures au forfait), des feuilles de temps (sur la base du travail effectué) ou\n"
-" des dépenses (p. ex. : la refacturation des frais de déplacement)."
+" des dépenses (par ex. la refacturation des frais de déplacement)."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__root_id
@@ -923,6 +923,13 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas définir une société différente sur votre compte "
 "analytique car certaines écritures analytiques y sont liées."
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+#, python-format
+msgid "You cannot add a parent to the base plan '%s'"
+msgstr ""
 
 #. module: analytic
 #. odoo-python

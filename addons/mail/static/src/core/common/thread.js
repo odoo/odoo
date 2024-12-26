@@ -422,6 +422,7 @@ export class Thread extends Component {
             } else if (snapshot && messagesAtBottom) {
                 setScroll(snapshot.scrollTop);
             } else if (
+                !this.scrollingToHighlight &&
                 !this.env.messageHighlight?.highlightedMessageId &&
                 thread.scrollTop !== undefined
             ) {
@@ -544,6 +545,7 @@ export class Thread extends Component {
         this.props.thread.loadNewer = false;
         this.props.thread.scrollTop = "bottom";
         this.state.showJumpPresent = false;
+        this.scrollingToHighlight = false;
     }
 
     async onClickUnreadMessagesBanner() {

@@ -1207,7 +1207,7 @@ class ChromeBrowser:
             switches['--touch-events'] = ''
         if debug is not False:
             switches['--auto-open-devtools-for-tabs'] = ''
-            switches['--start-maximized'] = ''
+            switches['--start-fullscreen'] = ''
 
         cmd = [self.executable]
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]
@@ -1529,9 +1529,13 @@ which leads to stray network requests and inconsistencies."""
 
     def take_screenshot(self, prefix='sc_'):
         def handler(f):
-            base_png = f.result(timeout=0)['data']
+            try:
+                base_png = f.result(timeout=0)['data']
+            except Exception as e:
+                self._logger.runbot("Couldn't capture screenshot: %s", e)
+                return
             if not base_png:
-                self._logger.warning("Couldn't capture screenshot: expected image data, got ?? error ??")
+                self._logger.runbot("Couldn't capture screenshot: expected image data, got %r", base_png)
                 return
             decoded = base64.b64decode(base_png, validate=True)
             save_test_file(type(self.test_case).__name__, decoded, prefix, logger=self._logger)
@@ -2060,10 +2064,16 @@ class HttpCase(TransactionCase):
             'keepWatchBrowser': kwargs.get('watch', False),
             'debug': kwargs.get('debug', False),
             'startUrl': url_path,
+            'delayToCheckUndeterminisms': kwargs.pop('delay_to_check_undeterminisms', int(os.getenv("ODOO_TOUR_DELAY_TO_CHECK_UNDETERMINISMS", "0")) or 0),
         }
         code = kwargs.pop('code', f"odoo.startTour({tour_name!r}, {json.dumps(options)})")
         ready = kwargs.pop('ready', f"odoo.isTourReady({tour_name!r})")
-        return self.browser_js(url_path=url_path, code=code, ready=ready, success_signal="tour succeeded", **kwargs)
+        timeout = kwargs.pop('timeout', 60)
+
+        if options["delayToCheckUndeterminisms"] > 0:
+            timeout = timeout + 1000 * options["delayToCheckUndeterminisms"]
+            _logger.runbot("Tour %s is launched with mode: check for undeterminisms.", tour_name)
+        return self.browser_js(url_path=url_path, code=code, ready=ready, timeout=timeout, success_signal="tour succeeded", **kwargs)
 
     def profile(self, **kwargs):
         """

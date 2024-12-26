@@ -160,7 +160,8 @@ test("FavoriteField in form view", async () => {
     });
 });
 
-test.tags("desktop")("FavoriteField in editable list view without label", async () => {
+test.tags("desktop");
+test("FavoriteField in editable list view without label", async () => {
     onRpc("has_group", () => true);
 
     await mountView({
@@ -195,7 +196,8 @@ test.tags("desktop")("FavoriteField in editable list view without label", async 
     });
 });
 
-test.tags("desktop")("FavoriteField in list has a fixed width if no label", async () => {
+test.tags("desktop");
+test("FavoriteField in list has a fixed width if no label", async () => {
     onRpc("has_group", () => true);
     Partner._fields.char = fields.Char();
 

@@ -3,16 +3,16 @@
 # 	* sale_stock
 # 
 # Translators:
-# Wil Odoo, 2024
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,6 +66,9 @@ msgid ""
 "                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"small badge rounded-pill text-bg-success orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> จัดส่งแล้ว\n"
+"                                    </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
@@ -511,6 +514,8 @@ msgid ""
 "Reduce back orders with reservations, locations management, smart\n"
 "                replenishment propositions, shipping connectors, barcode scanner, etc."
 msgstr ""
+"ลดคำสั่งซื้อย้อนหลังด้วยการจอง การจัดการสถานที่ ข้อเสนอการเติมสินค้าอัจฉริยะ \n"
+"              ตัวเชื่อมต่อการจัดส่ง เครื่องสแกนบาร์โค้ด ฯลฯ"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -529,6 +534,11 @@ msgstr "เติมสินค้าตามคำสั่งขาย (MTO)
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Reserved"
 msgstr "สำรองแล้ว"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr "ส่งคืนการรับ"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -640,7 +650,7 @@ msgstr "นโยบายการจัดส่ง"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
 msgid "Started"
-msgstr ""
+msgstr "เริ่มต้นแล้ว"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -687,6 +697,9 @@ msgid ""
 "                        From <strong>\"%(old_address)s\"</strong> to <strong>\"%(new_address)s\"</strong>,\n"
 "                        You should probably update the partner on this document."
 msgstr ""
+"ที่อยู่จัดส่งในใบสั่งซื้อได้รับการเปลี่ยนแปลงแล้ว<br/>\n"
+"                        จาก <strong>\"%(old_address)s\"</strong> เป็น <strong>\"%(new_address)s\"</strong>,\n"
+"                        คุณควรอัปเดตเอกสารนี้กับพาร์ทเนอร์"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -773,7 +786,7 @@ msgstr "เมื่อไหร่จะเริ่มจัดส่ง"
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid ""
 "You must have a warehouse for line using a delivery in different company."
-msgstr ""
+msgstr "จะต้องมีคลังสินค้าสำหรับใช้ส่งของในบริษัทอื่น"
 
 #. module: sale_stock
 #. odoo-python

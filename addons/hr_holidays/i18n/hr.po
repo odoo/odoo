@@ -3,16 +3,23 @@
 # 	* hr_holidays
 # 
 # Translators:
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
-# Tina Milas, 2024
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2024
+# Braulio D. López Vázquez <bdl@odoo.com>, 2024
+# 0ba0ac30481a756f36528ba6f9a4317e_6443a87 <52eefe24349934c364624ef40611b7a3_1010754>, 2024
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2024
+# Matija Gudlin, 2024
 # Martin Trigaux, 2024
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
+# Milan Tribuson <one.mile.code@gmail.com>, 2024
+# Tina Milas, 2024
+# Kristina Palaš, 2024
 # Bole <bole@dajmi5.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>, 2024\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
@@ -281,7 +288,7 @@ msgid ""
 "<span class=\"o_stat_text\">\n"
 "                            Time Off\n"
 "                        </span>"
-msgstr ""
+msgstr "Odsustva"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
@@ -290,6 +297,9 @@ msgid ""
 "                           Time Off\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                           Odsustvo\n"
+"                        </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -391,7 +401,7 @@ msgstr "Odsustvo do danas"
 msgid ""
 "Absent Employee(s), Whose time off requests are either confirmed or "
 "validated on today"
-msgstr ""
+msgstr "Odsutni zaposlenici čiji su zahtjevi za odsustvom danas odobreni"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
@@ -694,19 +704,9 @@ msgstr "Vrsta dodjele"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Allocation must be \"To Approve\" or \"Second Approval\" in order to "
-"validate it."
+"Allocation must be confirmed \"To Approve\" or validated once \"Second "
+"Approval\" in order to approve it."
 msgstr ""
-"Zahtjev za dodjelu mora biti u statusu \"Za odobrenje\" ili  \"Drugo "
-"odobravanje\" kako biste ga mogli ovjeriti."
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Allocation must be confirmed (\"To Approve\") in order to approve it."
-msgstr ""
-"Dodjela dana mora biti potvrđena (\"Za odobriti\") kako bi se mogli "
-"odobriti."
 
 #. module: hr_holidays
 #. odoo-python
@@ -766,6 +766,11 @@ msgid ""
 "- By Department: all employees of the specified department\n"
 "- By Employee Tag: all employees of the specific employee group category"
 msgstr ""
+"Grupno kreiranja zahtjeva:\n"
+"- Po zaposleniku: za pojedinog zaposlenika\n"
+"- Po tvrtci: svim zaposlenicima odabrane tvrtke\n"
+"- Po odjelu: svim zaposlenicima odabranog odjela\n"
+"- Po oznaci zaposlenika: za sve zaposlenike koji imaju odabranu oznaku zaposlenika"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__already_accrued
@@ -793,7 +798,7 @@ msgstr "Analiziraj iz"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_evaluation_report_graph
 msgid "Appraisal Analysis"
-msgstr ""
+msgstr "Procjena analize"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_validation_type
@@ -1746,12 +1751,12 @@ msgstr "Prvi mjesec"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__first_month_day
 msgid "First Month Day"
-msgstr ""
+msgstr "Dan u tekućem mjesecu"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__first_month_day_display
 msgid "First Month Day Display"
-msgstr ""
+msgstr "Prikaz svih dana u tekućem mjesecu"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_follower_ids
@@ -1911,7 +1916,7 @@ msgstr "Status praznika"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_report_hr_holidays_report_holidayssummary
 msgid "Holidays Summary Report"
-msgstr ""
+msgstr "Izvještaj odsustava"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_hour_from
@@ -1944,7 +1949,7 @@ msgstr "Sati"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__hr_icon_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__hr_icon_display
 msgid "Hr Icon Display"
-msgstr ""
+msgstr "Prikaz HR ikone"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__id
@@ -1973,7 +1978,7 @@ msgstr "Ikona"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_exception_icon
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona za prikaz iznimki."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1981,7 +1986,7 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/avatar_card_resource_popover.xml:0
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
 msgid "Idle"
-msgstr ""
+msgstr "Prazan"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
@@ -2185,7 +2190,7 @@ msgstr "Upoznajmo aplikaciju Odsustva"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "Let's go validate it"
-msgstr ""
+msgstr "Odobrimo"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2675,7 +2680,7 @@ msgstr "Na dopustu"
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
 #: code:addons/hr_holidays/static/src/thread_icon.patch.xml:0
 msgid "Online"
-msgstr ""
+msgstr "Online"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2838,7 +2843,13 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
 msgid "Rate"
-msgstr ""
+msgstr "Omjer"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__rating_ids
+msgid "Ratings"
+msgstr "Ocjene"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__reason
@@ -3001,7 +3012,7 @@ msgstr "Obračunaj do"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_sms_error
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Greška u slanju SMSa"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__sat
@@ -3047,27 +3058,27 @@ msgstr "Drugo odobrenje"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_day
 msgid "Second Day"
-msgstr ""
+msgstr "Sljedeći dan"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_day_display
 msgid "Second Day Display"
-msgstr ""
+msgstr "Prikaz podataka za sljedeći dan"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_month
 msgid "Second Month"
-msgstr ""
+msgstr "Sljedeći mjesec"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_month_day
 msgid "Second Month Day"
-msgstr ""
+msgstr "Dan u sljedećem mjesecu"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_month_day_display
 msgid "Second Month Day Display"
-msgstr ""
+msgstr "Prikaz svih dana u sljedećem mjesecu"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3283,7 +3294,7 @@ msgstr "Nedjelja"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__supported_attachment_ids_count
 msgid "Supported Attachment Ids Count"
-msgstr ""
+msgstr "Broj podržanih ID-ova privitaka"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__leave_type_support_document
@@ -3471,6 +3482,14 @@ msgid ""
 "The type with the smallest sequence is the default value in time off request"
 msgstr ""
 "Vrsta sa najnižom sekvencom je zadana vrijednost u zahtjevu za odsustvom"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"There is no employee set on the time off. Please make sure you're logged in "
+"the correct company."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -3954,12 +3973,12 @@ msgstr "Vrsta aktivnosti iznimke na zapisu."
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__tz
 msgid "Tz"
-msgstr ""
+msgstr "Tz"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__tz_mismatch
 msgid "Tz Mismatch"
-msgstr ""
+msgstr "Tz Nesukladnosti"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -3975,7 +3994,7 @@ msgstr "Neplaćeno"
 #: model:mail.message.subtype,description:hr_holidays.mt_leave_unpaid
 #: model:mail.message.subtype,name:hr_holidays.mt_leave_unpaid
 msgid "Unpaid Time Off"
-msgstr ""
+msgstr "Neplaćena odsustva"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -4007,7 +4026,7 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/avatar_card_resource_popover.xml:0
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
 msgid "User is online"
-msgstr ""
+msgstr "Korisnik je dostupan"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4015,7 +4034,7 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/avatar_card_resource_popover.xml:0
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
 msgid "User is out of office"
-msgstr ""
+msgstr "Korisnik je izvan ureda"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4071,7 +4090,7 @@ msgstr "Valjanost završava"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
 msgid "Virtual Remaining Time Off"
-msgstr ""
+msgstr "Preostalo trajanje odsustava"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__confirm
@@ -4195,6 +4214,9 @@ msgid ""
 "\n"
 "              No Limit: Time Off requests can be taken without any prior allocation."
 msgstr ""
+"Da: Zahtjevi za odsustvo trebaju imati važeću dodjelu .\n"
+"\n"
+"              Bez ograničenja: Zahtjevi za odsustvo mogu se kreirati bez ikakve prethodne dodjele."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4227,13 +4249,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You cannot delete a time off which is in %s state"
-msgstr ""
+msgstr "Ne možete obrisati odsustvo u statusu %s"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You cannot delete a time off which is in the past"
-msgstr ""
+msgstr "Ne možete obrisati odsustvo sa datumima iz prošlosti"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4241,12 +4263,14 @@ msgstr ""
 msgid ""
 "You cannot delete an allocation request which has some validated leaves."
 msgstr ""
+"Ne možete obrisati zahtjev za dodjelu temeljem kojeg su unesena i potvrđena "
+"odsustva."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "You cannot delete an allocation request which is in %s state."
-msgstr ""
+msgstr "Ne možete obrisati zahtjev za dodjelom koja je u statusu %s."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4255,6 +4279,8 @@ msgid ""
 "You cannot first approve a time off for %s, because you are not his time off"
 " manager"
 msgstr ""
+"Ne možete napraviti prvo odobrenje za ovo odsustvo %s, jer niste osoba "
+"odobravanje odsustava ovom zaposleniku"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4301,13 +4327,13 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "You don't have the rights to apply second approval on a time off request"
-msgstr ""
+msgstr "Nemate dovoljne ovlasti za drugo odobrenje zahtjeva za odsustvom."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Manager to approve this leave"
-msgstr ""
+msgstr "Morate biti %s voditelj da bi odobrili ovo odsustvo"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4315,6 +4341,8 @@ msgstr ""
 msgid ""
 "You must be either %s's manager or Time off Manager to approve this leave"
 msgstr ""
+"Morate imati ovlasti administratora sustava%s ili administratora za odsustva"
+" kako biste odobrili ovo odsustvo"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4323,6 +4351,8 @@ msgid ""
 "You must either be a Time off Officer or Time off Manager to approve this "
 "leave"
 msgstr ""
+"Korisnik s ovlastima službenik za odsustvo ili administrator može odobriti "
+"ovo odsustvo."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
@@ -4336,6 +4366,8 @@ msgid ""
 "You must have manager rights to modify/validate a time off that already "
 "begun"
 msgstr ""
+"Morate imati prava menadžera kako bi mogli uređivati/odobriti odsustva koja "
+"su već započela"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4350,13 +4382,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Your %(leave_type)s planned on %(date)s has been accepted"
-msgstr ""
+msgstr "Vaš %(leave_type)s odmor planiran %(date)s je prihvaćen"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Your %(leave_type)s planned on %(date)s has been refused"
-msgstr ""
+msgstr "Vaš %(leave_type)s odmor planiran %(date)s je odbijen"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4378,7 +4410,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "after allocation start date"
-msgstr ""
+msgstr "nakon datuma početka dodjele"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -4388,29 +4420,29 @@ msgstr "sve"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "and"
-msgstr ""
+msgstr "i"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "and on the"
-msgstr ""
+msgstr "i na"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "available"
-msgstr ""
+msgstr "dostupno"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 msgid "by Employee"
-msgstr ""
+msgstr "Po zaposleniku"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_summary_all
 msgid "by Type"
-msgstr ""
+msgstr "Po tipu"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4427,13 +4459,13 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "day of the month"
-msgstr ""
+msgstr "dan u mjesecu"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "day(s)"
-msgstr ""
+msgstr "dan(a)"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4449,7 +4481,7 @@ msgstr "dana"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "days of the months"
-msgstr ""
+msgstr "dani u mjesecima"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
@@ -4468,6 +4500,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "e.g. Time Off type (From validity start to validity end / no limit)"
 msgstr ""
+"npr. Vrsta odsustva (Od početnog do završnog datuma odsustva / bez "
+"ograničenja)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4488,7 +4522,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "hours"
-msgstr ""
+msgstr "sati"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4505,7 +4539,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan_level.py:0
 msgid "last day"
-msgstr ""
+msgstr "zadnji dan"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4516,7 +4550,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "no"
-msgstr ""
+msgstr "ne"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -4527,35 +4561,35 @@ msgstr "od"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "of the"
-msgstr ""
+msgstr "od"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "of the month"
-msgstr ""
+msgstr "mjeseca"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "on"
-msgstr ""
+msgstr "na"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "on the"
-msgstr ""
+msgstr "na"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "refused"
-msgstr ""
+msgstr "odbijeno"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__sequence
 msgid "sequence"
-msgstr ""
+msgstr "sekvenca"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4572,12 +4606,12 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "to"
-msgstr ""
+msgstr "do"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "to refuse"
-msgstr ""
+msgstr "odbiti"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -4588,15 +4622,15 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "valid until"
-msgstr ""
+msgstr "vrijedi do"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
-msgstr ""
+msgstr "za odobriti"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "validated"
-msgstr ""
+msgstr "odobreno"

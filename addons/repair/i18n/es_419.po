@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -308,7 +308,7 @@ msgstr "Empresa"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
 msgid "Component Destination Location"
-msgstr ""
+msgstr "Ubicación de destino del componente"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
@@ -667,6 +667,7 @@ msgid "Location"
 msgstr "Ubicación"
 
 #. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Locations"
 msgstr "Ubicaciones"
@@ -675,7 +676,7 @@ msgstr "Ubicaciones"
 #: model:ir.model,name:repair.model_stock_lot
 #: model:ir.model.fields,field_description:repair.field_repair_order__lot_id
 msgid "Lot/Serial"
-msgstr "Número de lote/serie "
+msgstr "Número de serie/lote"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error
@@ -900,7 +901,7 @@ msgstr "Movimientos de producto"
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Movimientos de producto (línea de movimiento de inventario)"
+msgstr "Movimientos de producto (línea de movimiento de stock)"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_qty
@@ -989,7 +990,7 @@ msgstr "Reciclar"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_recycle_location_dest_id
 msgid "Recycle Destination Location"
-msgstr ""
+msgstr "Ubicación de reciclaje predeterminada"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__recycle_location_id
@@ -1004,7 +1005,7 @@ msgstr "Eliminar"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__default_remove_location_dest_id
 msgid "Remove Destination Location"
-msgstr ""
+msgstr "Ubicación de destino de eliminación"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_location_id
@@ -1289,7 +1290,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move
 msgid "Stock Move"
-msgstr "Movimiento de existencias"
+msgstr "Movimiento de stock"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_forecasted_product_product
@@ -1351,6 +1352,8 @@ msgid ""
 "This is the default destination location for the product to be repaired in "
 "repair orders with this operation type."
 msgstr ""
+"Esta es la ubicación de destino predeterminada para el producto a reparar en"
+" las órdenes de reparación con este tipo de operación."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_recycle_location_dest_id
@@ -1376,6 +1379,8 @@ msgid ""
 "This is the default source location for the product to be repaired in repair"
 " orders with this operation type."
 msgstr ""
+"Esta es la ubicación de origen predeterminada para el producto a reparar en "
+"las órdenes de reparación con este tipo de operación."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id

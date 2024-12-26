@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,7 +103,7 @@ msgstr "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "2023-08-11"
-msgstr "11-08-2023"
+msgstr "2023-08-11"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -122,7 +122,7 @@ msgstr "<i class=\"oi oi-arrow-right\"/> Stel je aliasdomein in"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_payment_form_inherit_expense
 msgid "<span class=\"o_stat_text\">Expense Report</span>"
-msgstr "<span class=\"o_stat_text\">Onkostendeclaratie</span>"
+msgstr "<span class=\"o_stat_text\">Declaratierapport</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -160,6 +160,18 @@ msgid "<span>The total amount doesn't match the original amount.</span>"
 msgstr ""
 "<span>Het totaalbedrag komt niet overeen met het oorspronkelijke "
 "bedrag.</span>"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid ""
+"A default outstanding account must be defined in the settings for company-"
+"paid expenses. Or specify one in the Journal for the %(method)s payment "
+"method."
+msgstr ""
+"Een standaard openstaande rekening moet worden gedefinieerd in de "
+"instellingen voor door het bedrijf betaalde kosten. Of specificeer er een in"
+" het dagboek voor de %(method)s betaalmethode."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -242,8 +254,8 @@ msgstr "Alle rapportages"
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid "All expenses in an expense report must have the same \"paid by\" criteria."
 msgstr ""
-"Alle onkosten in een onkostendeclaratie moeten hetzelfde criterium \"betaald"
-" door\" hebben."
+"Alle declaraties in een declaratierapport moeten hetzelfde criterium "
+"\"betaald door\" hebben."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -283,8 +295,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid "An expense report must contain only lines from the same company."
-msgstr ""
-"Een onkostendeclaratie moet alleen regels bevatten van hetzelfde bedrijf."
+msgstr "Een declaratie moet alleen regels bevatten van hetzelfde bedrijf."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_analytic_account
@@ -393,7 +404,7 @@ msgstr "Bijlagen"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
 msgid "Attachments of expenses"
-msgstr "Onkostenbijlages"
+msgstr "Declaratiebijlages"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee_base
@@ -520,7 +531,7 @@ msgstr "Rapport aanmaken"
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
 msgid "Create a new expense report"
-msgstr "Maak een nieuwe onkostendeclaratie"
+msgstr "Maak een nieuwe declaratie"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -606,8 +617,9 @@ msgstr "Standaard dagboek voor declaraties betaald door werknemers."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Default outstanding account for expenses paid by employees."
-msgstr "Standaard openstaande rekening voor onkosten betaald door werknemers."
+msgid "Default outstanding account for expenses paid by company."
+msgstr ""
+"Standaard openstaande rekening voor declaraties betaald door het bedrijf."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -662,8 +674,8 @@ msgid ""
 "again."
 msgstr ""
 "Wens je echt je eigen bedrijf te factureren? Verwijder de “Bedrijfsnaam” van"
-" de relatie om de configuratie te herstellen. Annuleer deze factuur en begin"
-" opnieuw."
+" het contact om de configuratie te herstellen. Annuleer deze factuur en "
+"begin opnieuw."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__business_domain
@@ -713,11 +725,6 @@ msgstr "Werknemer (terug te betalen)"
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Employee Expense Journal"
 msgstr "Kostendagboek voor werknemers"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Employee Expense Oustanding Account"
-msgstr "Werknemerskosten Uitgavenrekening"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
@@ -805,6 +812,11 @@ msgid "Expense Manager"
 msgstr "Declaratiebeheerder"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Expense Outstanding Account"
+msgstr "Openstaande rekening declaraties"
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
 msgid "Expense Refuse Reason Wizard"
 msgstr "Declaratie reden van afwijzen wizard"
@@ -815,12 +827,12 @@ msgstr "Declaratie reden van afwijzen wizard"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Report"
-msgstr "Onkostendeclaratie"
+msgstr "Declaratie"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__accounting_date
 msgid "Expense Report Date"
-msgstr "Datum Onkostendeclaratie"
+msgstr "Datum declaratie"
 
 #. module: hr_expense
 #: model:ir.actions.report,name:hr_expense.action_report_expense_sheet_img
@@ -830,7 +842,7 @@ msgstr "Afbeelding declaratie"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__name
 msgid "Expense Report Summary"
-msgstr "Samenvatting onkostendeclaratie"
+msgstr "Samenvatting declaratie"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_report
@@ -897,22 +909,22 @@ msgstr "Reden van afwijzen van de declaratie"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense report approved, entry created for accountant"
-msgstr "Onkostendeclaratie goedgekeurd, boeking gemaakt voor boekhouder"
+msgstr "Declaratie goedgekeurd, boeking gemaakt voor boekhouder"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
 msgid "Expense report paid"
-msgstr "Betaalde onkostendeclaratie"
+msgstr "Betaalde declaratie"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense report refused"
-msgstr "Afgewezen onkostendeclaratie"
+msgstr "Afgewezen declaratie"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_reset
 msgid "Expense report reset to Draft"
-msgstr "Onkostendeclaratie teruggezet naar Concept"
+msgstr "Declaratie teruggezet naar concept"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
@@ -960,7 +972,7 @@ msgstr "Declaratiesanalyse"
 #: model:ir.actions.report,name:hr_expense.action_report_hr_expense_sheet
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Expenses Report"
-msgstr "Onkostendeclaratie"
+msgstr "Declaratie"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__expense_sheets_to_approve_count
@@ -982,7 +994,7 @@ msgstr "Declaraties van je teamleden"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expenses with a similar receipt to %(other_expense_name)s"
-msgstr "Onkosten met een soortgelijk bewijs als %(other_expense_name)s"
+msgstr "Declaraties met een soortgelijk bewijs als %(other_expense_name)s"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__filter_for_expense
@@ -1006,7 +1018,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_partner_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Relaties)"
+msgstr "Volgers (Contacten)"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_type_icon
@@ -1041,6 +1053,12 @@ msgstr "Cadeau's"
 #: model_terms:product.template,description:hr_expense.expense_product_gift_product_template
 msgid "Gifts to customers or vendors"
 msgstr "Geschenken aan klanten of verkopers"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid "Go to settings"
+msgstr "Ga naar instellingen"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1113,7 +1131,7 @@ msgstr "In betaling"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_ids
 msgid "Included taxes"
-msgstr "Inclusief BTW"
+msgstr "Inclusief btw"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1413,12 +1431,12 @@ msgstr "Geen declaratiecategorieën gevonden. Laten we er een maken!"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
 msgid "No expense report found. Let's create one!"
-msgstr "Geen onkostendeclaratie gevonden. Laten we er één maken!"
+msgstr "Geen declaratie gevonden. Laten we er één maken!"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
 msgid "No expense reports found. Let's create one!"
-msgstr "Geen onkostendeclaratie gevonden. Laten we er één maken!"
+msgstr "Geen declaratie gevonden. Laten we er één maken!"
 
 #. module: hr_expense
 #. odoo-python
@@ -1509,8 +1527,8 @@ msgid ""
 "Once your <b>Expense Report</b> is ready, you can submit it to your manager "
 "and wait for approval."
 msgstr ""
-"Zodra je <b>Onkostendeclaratie</b> gereed is, kun je deze indienen bij je "
-"manager en wachten op goedkeuring."
+"Zodra je <b>Declaratie</b> gereed is, kun je deze indienen bij je manager en"
+" wachten op goedkeuring."
 
 #. module: hr_expense
 #. odoo-python
@@ -1603,6 +1621,13 @@ msgstr "Betalingen"
 #: model_terms:product.template,description:hr_expense.expense_product_communication_product_template
 msgid "Phone bills, postage, etc."
 msgstr "Telefoonrekeningen, portokosten, etc."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid ""
+"Please specify an expense journal in order to generate accounting entries."
+msgstr "Specificeer een kostendagboek om boekingen te genereren."
 
 #. module: hr_expense
 #. odoo-python
@@ -1804,7 +1829,7 @@ msgstr "Verkoopprijs"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__same_receipt_expense_ids
 msgid "Same Receipt Expense"
-msgstr "Zelfde onkostennota"
+msgstr "Zelfde declaratie"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1871,7 +1896,7 @@ msgstr "Formulier"
 #: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__show_commercial_partner_warning
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__show_commercial_partner_warning
 msgid "Show Commercial Partner Warning"
-msgstr "Waarschuwing commerciële relatie tonen"
+msgstr "Waarschuwing commerciële contact tonen"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1884,12 +1909,6 @@ msgstr "Toon alle records welke een actiedatum voor vandaag hebben"
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid "Show missing work email employees"
 msgstr "Toon werknemers met ontbrekende werkmail"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid "Specify expense journal to generate accounting entries."
-msgstr "Geef een kostendagboek op om boekingen te genereren."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__accounting_date
@@ -1987,33 +2006,33 @@ msgstr "Subtotaal in valuta"
 #: model:ir.model,name:hr_expense.model_account_tax
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__tax_ids
 msgid "Tax"
-msgstr "BTW"
+msgstr "Btw"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Tax 15%"
-msgstr "BTW 15%"
+msgstr "Btw 15%"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_amount
 msgid "Tax amount"
-msgstr "BTW-bedrag"
+msgstr "Btw-bedrag"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_amount_currency
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__tax_amount_currency
 msgid "Tax amount in Currency"
-msgstr "BTW-bedrag in valuta"
+msgstr "Btw-bedrag in valuta"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_amount
 msgid "Tax amount in company currency"
-msgstr "BTW-bedrag in bedrijfsvaluta"
+msgstr "Btw-bedrag in bedrijfsvaluta"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_amount_currency
 msgid "Tax amount in currency"
-msgstr "BTW-bedrag in valuta"
+msgstr "Btw-bedrag in valuta"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_tax_amount
@@ -2022,7 +2041,7 @@ msgstr "BTW-bedrag in valuta"
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Taxes"
-msgstr "BTW"
+msgstr "Btw"
 
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_team_approver
@@ -2033,10 +2052,10 @@ msgstr "Goedkeurder team"
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_outstanding_account_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_outstanding_account_id
 msgid ""
-"The account used to record the outstanding amount of the employee expenses."
+"The account used to record the outstanding amount of the company expenses."
 msgstr ""
-"De rekening die wordt gebruikt om het uitstaande bedrag van de "
-"personeelskosten op te nemen."
+"De rekening die wordt gebruikt om het openstaande bedrag aan declaraties te "
+"registreren die door het bedrijf betaald worden."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
@@ -2085,16 +2104,6 @@ msgid "The journal used when the expense is paid by employee."
 msgstr "Het gebruikte dagboek als de declaratie is betaald door de werknemer."
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid ""
-"The payment method %(method)s needs an account, or a default outstanding "
-"account must be defined in the settings."
-msgstr ""
-"De betaalmethode %(method)s heeft een rekening nodig, of er moet een "
-"standaard openstaande rekening worden gedefinieerd in de instellingen."
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__payment_method_line_id
 msgid "The payment method used when the expense is paid by the company."
 msgstr ""
@@ -2129,9 +2138,9 @@ msgid ""
 "category cost will change expense amounts. Make sure it is what you want to "
 "do."
 msgstr ""
-"Er zijn nog niet ingediende kosten gekoppeld aan deze categorie. Als je de "
-"categoriekosten bijwerkt, veranderen de onkostenbedragen. Zorg ervoor dat "
-"dit is wat je wilt doen."
+"Er zijn nog niet ingediende declaraties gekoppeld aan deze categorie. Als je"
+" de categoriekosten bijwerkt, veranderen de declaratiebedragen. Zorg ervoor "
+"dat dit is wat je wilt doen."
 
 #. module: hr_expense
 #: model_terms:web_tour.tour,rainbow_man_message:hr_expense.hr_expense_tour
@@ -2145,8 +2154,8 @@ msgid ""
 "This expense report is empty. You cannot submit or approve an empty expense "
 "report."
 msgstr ""
-"Deze onkostendeclaratie is leeg. Je kunt geen leeg onkostendeclaratie "
-"indienen of goedkeuren."
+"Deze declaratie is leeg. Je kunt geen leeg declaratie indienen of "
+"goedkeuren."
 
 #. module: hr_expense
 #: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
@@ -2208,7 +2217,7 @@ msgstr "Totaal in valuta"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 msgid "Total Taxes"
-msgstr "Totaal BTW"
+msgstr "Totaal btw"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount_currency
@@ -2257,7 +2266,7 @@ msgstr "Maateenheid"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__untaxed_amount
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Untaxed Amount"
-msgstr "Excl. BTW"
+msgstr "Excl. btw"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_category_id
@@ -2274,7 +2283,7 @@ msgstr "Upload"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 msgid "Upload or drop an expense receipt"
-msgstr "Een onkostennota uploaden of droppen"
+msgstr "Een declaratie uploaden of droppen"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2337,11 +2346,11 @@ msgid ""
 "allowances for mileage, per diem, accommodation"
 "                                             or meal."
 msgstr ""
-"Als de kosten van een onkostenproduct anders zijn dan 0, dan kan de "
+"Als de kosten van een declaratieproduct anders zijn dan 0, dan kan de "
 "gebruiker                                             dit product gebruikt "
 "het bedrag van de declaratie niet wijzigen,"
 "                                             alleen de hoeveelheid. Gebruik "
-"een kostprijs anders dan 0 voor onkostencategorieën die door"
+"een kostprijs anders dan 0 voor declaratiecategorieën die door"
 "                                            het bedrijf worden gefinancierd "
 "tegen vaste kosten, zoals kilometervergoedingen, dagvergoedingen, "
 "huisvesting                                             of maaltijden."
@@ -2350,7 +2359,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__product_has_tax
 msgid "Whether tax is defined on a selected product"
-msgstr "Of er BTW is gedefinieerd voor een geselecteerd product"
+msgstr "Of er btw is gedefinieerd voor een geselecteerd product"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__wizard_id
@@ -2361,7 +2370,7 @@ msgstr "Wizard"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You are not authorized to edit this expense report."
-msgstr "Je bent niet gemachtigd om deze onkostendeclaratie te bewerken."
+msgstr "Je bent niet gemachtigd om deze declaratiedeclaratie te bewerken."
 
 #. module: hr_expense
 #. odoo-python
@@ -2400,7 +2409,7 @@ msgid ""
 "You cannot approve:\n"
 " %s"
 msgstr ""
-"Je kan niet goedkeuren:\n"
+"Je kunt niet goedkeuren:\n"
 " %s"
 
 #. module: hr_expense
@@ -2408,16 +2417,14 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid "You cannot cancel an expense sheet linked to a posted journal entry"
 msgstr ""
-"Je kunt een onkostendeclaratie die aan een boeking is gekoppeld niet "
-"annuleren"
+"Je kunt een declaratie die aan een boeking is gekoppeld niet annuleren"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid ""
 "You cannot create accounting entries for an expense report without expenses."
-msgstr ""
-"Je kunt geen boekingen aanmaken voor een onkostendeclaratie zonder onkosten."
+msgstr "Je kunt geen boekingen aanmaken voor een declaratie zonder kosten."
 
 #. module: hr_expense
 #. odoo-python
@@ -2437,7 +2444,7 @@ msgstr ""
 #: code:addons/hr_expense/models/analytic.py:0
 msgid "You cannot delete an analytic account that is used in an expense."
 msgstr ""
-"Je kan geen analytische rekening verwijderen die in een onkost gebruikt "
+"Je kunt geen analytische rekening verwijderen die in een onkost gebruikt "
 "wordt."
 
 #. module: hr_expense
@@ -2447,7 +2454,7 @@ msgid ""
 "You cannot delete only some entries linked to an expense report. All entries"
 " must be deleted at the same time."
 msgstr ""
-"Je kan niet slechts bepaalde boekingen gekoppeld aan een declaratie "
+"Je kunt niet slechts bepaalde boekingen gekoppeld aan een declaratie "
 "verwijderen. Alle boekingen moeten tegelijkertijd worden verwijderd."
 
 #. module: hr_expense
@@ -2457,7 +2464,7 @@ msgid ""
 "You cannot delete only some payments linked to an expense report. All "
 "payments must be deleted at the same time."
 msgstr ""
-"Je kan niet slechts bepaalde betalingen gekoppeld aan een declaratie "
+"Je kunt niet slechts bepaalde betalingen gekoppeld aan een declaratie "
 "verwijderen. Alle betalingen moeten tegelijkertijd worden verwijderd."
 
 #. module: hr_expense
@@ -2467,8 +2474,8 @@ msgid ""
 "You cannot do this modification since the payment is linked to an expense "
 "report."
 msgstr ""
-"Je kan deze wijziging niet doorvoeren omdat de betaling gekoppeld is aan een"
-" onkostendeclaratie."
+"Je kunt deze wijziging niet doorvoeren omdat de betaling gekoppeld is aan "
+"een declaratie."
 
 #. module: hr_expense
 #. odoo-python
@@ -2488,14 +2495,14 @@ msgid ""
 "report."
 msgstr ""
 "Je kunt alle uitgaven niet verwijderen uit een ingediende, goedgekeurde of "
-"betaalde onkostendeclaratie."
+"betaalde declaratie."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot report expenses for different companies in the same report."
 msgstr ""
-"Je kan geen onkosten melden voor verschillende bedrijven in dezelfde "
+"Je kunt geen declaratie indienen voor verschillende bedrijven in dezelfde "
 "declaratie."
 
 #. module: hr_expense
@@ -2503,14 +2510,14 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot report expenses for different employees in the same report."
 msgstr ""
-"Je kunt geen onkosten melden voor verschillende werknemers in dezelfde "
+"Je kunt geen declaratie indienen voor verschillende werknemers in dezelfde "
 "declaratie."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot report the expenses without amount!"
-msgstr "Je kunt de onkosten niet zonder bedrag aangeven!"
+msgstr "Je kunt de declaratie niet zonder bedrag indienen!"
 
 #. module: hr_expense
 #. odoo-python
@@ -2525,7 +2532,7 @@ msgid ""
 "You cannot set the expense total in currency to 0 if it's linked to a "
 "report."
 msgstr ""
-"Je kunt het onkostentotaal in valuta niet op 0 instellen als het aan een "
+"Je kunt het declaratietotaal in valuta niet op 0 instellen als het aan een "
 "rapport is gekoppeld."
 
 #. module: hr_expense
@@ -2533,7 +2540,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot set the expense total to 0 if it's linked to a report."
 msgstr ""
-"Je kunt het onkostentotaal niet op 0 instellen als het aan een rapport is "
+"Je kunt het declaratietotaal niet op 0 instellen als het aan een rapport is "
 "gekoppeld."
 
 #. module: hr_expense
@@ -2544,7 +2551,7 @@ msgid ""
 "paid expense report."
 msgstr ""
 "Je hebt het recht niet om uitgaven toe te voegen of te verwijderen uit een "
-"goedgekeurde of betaalde onkostendeclaratie."
+"goedgekeurde of betaalde declaratie."
 
 #. module: hr_expense
 #. odoo-python
@@ -2572,7 +2579,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense Report"
-msgstr "Je onkostendeclaratie"
+msgstr "Je declaratie"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2612,7 +2619,7 @@ msgstr "bijv. mycompany.com"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "expense"
-msgstr "onkosten"
+msgstr "declaratie"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason

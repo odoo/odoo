@@ -29,6 +29,7 @@ from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationErro
 from odoo.http import request, DEFAULT_LANG
 from odoo.osv import expression
 from odoo.tools import is_html_empty, partition, frozendict, lazy_property, SQL, SetDefinitions
+from odoo.tools.misc import OrderedSet
 
 _logger = logging.getLogger(__name__)
 
@@ -1143,13 +1144,16 @@ class Users(models.Model):
 
     @check_identity
     def action_revoke_all_devices(self):
-        return self._action_revoke_all_devices()
+        # self.env.user is sudo by default
+        # Need sudo to bypass access error for removing the devices of portal user
+        return (self.env.user if self.id == self.env.uid else self)._action_revoke_all_devices()
 
     def _action_revoke_all_devices(self):
         devices = self.env["res.device"].search([("user_id", "=", self.id)])
         devices.filtered(lambda d: not d.is_current)._revoke()
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
+    @api.readonly
     def has_groups(self, group_spec: str) -> bool:
         """ Return whether user ``self`` satisfies the given group restrictions
         ``group_spec``, i.e., whether it is member of at least one of the groups,
@@ -1181,6 +1185,7 @@ class Users(models.Model):
             return True
         return not positives
 
+    @api.readonly
     def has_group(self, group_ext_id: str) -> bool:
         """ Return whether user ``self`` belongs to the given group (given by its
         fully-qualified external ID).
@@ -1480,6 +1485,8 @@ class GroupsImplied(models.Model):
         res = super(GroupsImplied, self).write(values)
         if values.get('users') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
+            updated_group_ids = OrderedSet()
+            updated_user_ids = OrderedSet()
             for group in self:
                 self._cr.execute("""
                     WITH RECURSIVE group_imply(gid, hid) AS (
@@ -1500,7 +1507,22 @@ class GroupsImplied(models.Model):
                            FROM res_groups_users_rel r
                            JOIN group_imply i ON (r.gid = i.hid)
                           WHERE i.gid = %(gid)s
+                    RETURNING gid, uid
                 """, dict(gid=group.id))
+                updated = self.env.cr.fetchall()
+                gids, uids = zip(*updated) if updated else ([], [])
+                updated_group_ids.update(gids)
+                updated_user_ids.update(uids)
+            # notify the ORM about the updated users and groups
+            updated_groups = self.env['res.groups'].browse(updated_group_ids)
+            updated_groups.invalidate_recordset(['users'])
+            updated_groups.modified(['users'])
+            updated_users = self.env['res.users'].browse(updated_user_ids)
+            updated_users.invalidate_recordset(['groups_id'])
+            updated_users.modified(['groups_id'])
+            # explicitly check constraints
+            updated_groups._validate_fields(['users'])
+            updated_users._validate_fields(['groups_id'])
             self._check_one_user_type()
         if 'implied_ids' in values:
             self.env.registry.clear_cache('groups')
@@ -2469,6 +2491,7 @@ class APIKeyDescription(models.TransientModel):
             }
             return {'warning': warning}
 
+    @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
         self.env['res.users.apikeys']._check_expiration_date(res.expiration_date)

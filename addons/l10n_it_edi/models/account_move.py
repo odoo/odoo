@@ -10,7 +10,7 @@ from odoo import _, api, Command, fields, models, modules
 from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.exceptions import UserError
-from odoo.tools import float_repr, cleanup_xml_node, float_is_zero
+from odoo.tools import float_compare, float_repr, cleanup_xml_node, float_is_zero
 
 _logger = logging.getLogger(__name__)
 
@@ -292,7 +292,7 @@ class AccountMove(models.Model):
 
             # Discount.
             discount_list = it_values['sconto_maggiorazione_list'] = []
-            delta_discount = base_line['discount_amount'] - base_line['discount_amount_before_dispatching']
+            delta_discount = base_line.get('discount_amount', 0.0) - base_line.get('discount_amount_before_dispatching', 0.0)
             if discount:
                 discount_list.append({
                     'tipo': 'SC' if discount > 0 else 'MG',
@@ -443,13 +443,14 @@ class AccountMove(models.Model):
         AccountTax = self.env['account.tax']
         AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
 
+        downpayment_lines = []
         # Prepare for '_dispatch_negative_lines'
         for base_line in base_lines:
             tax_details = base_line['tax_details']
             discount = base_line['discount']
             price_unit = base_line['price_unit']
             quantity = base_line['quantity']
-            price_subtotal = base_line['price_subtotal'] = tax_details['total_excluded_currency']
+            price_subtotal = base_line['price_subtotal'] = tax_details['raw_total_excluded_currency']
 
             if discount == 100.0:
                 gross_price_subtotal_before_discount = price_unit * quantity
@@ -467,11 +468,25 @@ class AccountMove(models.Model):
                 tax_data['_tax_amount'] = tax.amount
                 if tax.amount == -11.5:
                     tax_data['_tax_amount'] = -23.0
-                    tax_data['base_amount'] *= 0.5
-                    tax_data['base_amount_currency'] *= 0.5
+                    tax_data['raw_base_amount'] *= 0.5
+                    tax_data['raw_base_amount_currency'] *= 0.5
+
+            if not is_downpayment:
+                # Negative lines linked to down payment should stay negative
+                line = base_line['record']
+                if line.price_subtotal < 0 and line._get_downpayment_lines():
+                    downpayment_lines.append(base_line)
+                    base_lines.remove(base_line)
+
+            if float_compare(quantity, 0, 2) < 0:
+                # Negative quantity is refused by SDI, so we invert quantity and price_unit to keep the price_subtotal
+                base_line.update({
+                    'quantity': -quantity,
+                    'price_unit': -price_unit,
+                })
 
         dispatched_results = self.env['account.tax']._dispatch_negative_lines(base_lines)
-        base_lines = dispatched_results['result_lines'] + dispatched_results['orphan_negative_lines']
+        base_lines = dispatched_results['result_lines'] + dispatched_results['orphan_negative_lines'] + downpayment_lines
         AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, self._l10n_it_edi_grouping_function_base_lines)
         self._l10n_it_edi_add_base_lines_xml_values(base_lines_aggregated_values, is_downpayment)

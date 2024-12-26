@@ -71,7 +71,7 @@ paymentForm.include({
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (providerCode !== 'xendit' || flow === 'token' || paymentMethodCode !== 'card') {
             // Tokens are handled by the generic flow and other payment methods have no inline form.
-            this._super(...arguments);
+            await this._super(...arguments);
             return;
         }
 
@@ -121,7 +121,7 @@ paymentForm.include({
                 ...this._xenditGetPaymentDetails(paymentOptionId),
                 // Allow reusing tokens when the users wants to tokenize.
                 is_multiple_use: this.paymentContext.tokenizationRequested,
-                amount: processingValues.amount,
+                amount: processingValues['rounded_amount'],
             },
             (err, token) => this._xenditHandleResponse(err, token, processingValues),
         );
@@ -138,7 +138,12 @@ paymentForm.include({
      */
     _xenditHandleResponse(err, token, processingValues) {
         if (err) {
-            this._displayErrorDialog(_t("Payment processing failed"), err.message);
+            let errMessage = err.message;
+
+            if (err.error_code === 'API_VALIDATION_ERROR') {  // Invalid user input
+                errMessage = err.errors[0].message // Wrong field format
+            }
+            this._displayErrorDialog(_t("Payment processing failed"), errMessage);
             this._enableButton();
             return;
         }

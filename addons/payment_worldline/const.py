@@ -55,8 +55,10 @@ REDIRECT_PAYMENT_METHODS = {
 # Mapping of transaction states to Worldline's payment statuses.
 # See https://docs.direct.worldline-solutions.com/en/integration/api-developer-guide/statuses.
 PAYMENT_STATUS_MAPPING = {
-    'pending': ('CREATED', 'AUTHORIZATION_REQUESTED'),
+    'pending': (
+        'CREATED', 'REDIRECTED', 'AUTHORIZATION_REQUESTED', 'PENDING_CAPTURE', 'CAPTURE_REQUESTED'
+    ),
     'done': ('CAPTURED',),
     'cancel': ('CANCELLED',),
-    'declined': ('REJECTED',),
+    'declined': ('REJECTED', 'REJECTED_CAPTURE'),
 }

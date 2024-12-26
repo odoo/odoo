@@ -213,8 +213,8 @@ export class Message extends Record {
     }
 
     get dateDay() {
-        let dateDay = this.datetime.toLocaleString(DateTime.DATE_FULL);
-        if (dateDay === DateTime.now().toLocaleString(DateTime.DATE_FULL)) {
+        let dateDay = this.datetime.toLocaleString(DateTime.DATE_MED);
+        if (dateDay === DateTime.now().toLocaleString(DateTime.DATE_MED)) {
             dateDay = _t("Today");
         }
         return dateDay;
@@ -224,6 +224,30 @@ export class Message extends Record {
         return this.datetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
             locale: user.lang,
         });
+    }
+
+    get dateSimpleWithDay() {
+        const userLocale = { locale: user.lang };
+        if (this.datetime.hasSame(DateTime.now(), "day")) {
+            return _t("Today at %(time)s", {
+                time: this.datetime.toLocaleString(DateTime.TIME_24_SIMPLE, userLocale),
+            });
+        }
+        if (this.datetime.hasSame(DateTime.now().minus({ day: 1 }), "day")) {
+            return _t("Yesterday at %(time)s", {
+                time: this.datetime.toLocaleString(DateTime.TIME_24_SIMPLE, userLocale),
+            });
+        }
+        if (this.datetime?.year === DateTime.now().year) {
+            return this.datetime.toLocaleString(
+                { ...DateTime.DATETIME_MED, hourCycle: "h23", year: undefined },
+                userLocale
+            );
+        }
+        return this.datetime.toLocaleString(
+            { ...DateTime.DATETIME_MED, hourCycle: "h23" },
+            userLocale
+        );
     }
 
     get datetime() {

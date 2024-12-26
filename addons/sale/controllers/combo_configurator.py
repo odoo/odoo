@@ -57,7 +57,7 @@ class SaleComboConfiguratorController(Controller):
             'quantity': quantity,
             'price': product_template._get_configurator_display_price(
                 product_template, quantity, date, currency, pricelist, **kwargs
-            ),
+            )[0],
             'combos': [{
                 'id': combo.id,
                 'name': combo.name,
@@ -114,7 +114,7 @@ class SaleComboConfiguratorController(Controller):
 
         return product_template._get_configurator_display_price(
             product_template, quantity, date, currency, pricelist, **kwargs
-        )
+        )[0]
 
     def _get_combo_item_data(
         self, combo, combo_item, selected_combo_item, date, currency, pricelist, **kwargs
@@ -131,10 +131,14 @@ class SaleComboConfiguratorController(Controller):
         """
         ptals_data = self._get_ptals_data(combo_item.product_id, selected_combo_item)
         # If the combo choice has only one combo item, and that combo item can't be configured (i.e.
-        # it has no `no_variant` attributes), then it should be preselected, as the user has to
-        # select it anyway.
-        is_preselected = len(combo.combo_item_ids) == 1 and not any(
-            ptal['create_variant'] == 'no_variant' for ptal in ptals_data
+        # it has no configurable `no_variant` attributes), then it should be preselected, as the
+        # user has to select it anyway.
+        is_preselected = (
+            len(combo.combo_item_ids) == 1
+            and not any(
+                ptal.attribute_id.create_variant == 'no_variant' and ptal._is_configurable()
+                for ptal in combo_item.product_id.attribute_line_ids
+            )
         )
 
         return {

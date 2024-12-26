@@ -104,7 +104,7 @@ registerWebsitePreviewTour('link_tools', {
     {
         content: "Link tools, should be open, change the url",
         trigger: '#o_link_dialog_url_input',
-        run: "edit odoo.be && click body",
+        run: "edit odoo.be",
     },
 
     ...clickOnSave(),
@@ -372,9 +372,7 @@ registerWebsitePreviewTour('link_tools', {
     {
         content: "Edit link label",
         trigger: ":iframe .s_text_image p a",
-        run() {
-            // TODO: use run: "click", instead
-            this.anchor.click();
+        run: "click",
             // See SHOPS_STEP_DISABLED. TODO. These steps do not consistently
             // update the link for some reason... to investigate.
             /*
@@ -387,7 +385,6 @@ registerWebsitePreviewTour('link_tools', {
             // Trigger editor's '_onInput' handler, which leads to a history step.
             link.dispatchEvent(new InputEvent('input', {inputType: 'insertText', bubbles: true}));
             */
-        },
     },
     // See SHOPS_STEP_DISABLED. TODO.
     /*

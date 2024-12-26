@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2024-11-19 15:46+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -66,7 +66,7 @@ msgstr " %(url)sへの接続に失敗しました。モジュール %(module)s �
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Connection to %s failed The list of industry modules cannot be fetched"
-msgstr "%sへの接続に失敗しました。産業モジュールのリストを取得できません。"
+msgstr "%sへの接続に失敗しました。インダストリーモジュールのリストを取得できません。"
 
 #. module: base_import_module
 #. odoo-python
@@ -118,7 +118,7 @@ msgstr "初期化を強制"
 #: model:ir.model.fields,help:base_import_module.field_base_import_module__force
 msgid ""
 "Force init mode even if installed. (will update `noupdate='1'` records)"
-msgstr "インストールされても強制初期化モード ( `noupdate='1'` とレコードがアップデートされます)"
+msgstr "インストールされても強制初期化モード ( `noupdate='1'` とレコードが更新されます)"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__id
@@ -263,12 +263,6 @@ msgstr "状態"
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
-msgid "Studio customizations require Studio"
-msgstr "StudioのカスタマイズにはStudioが必要です"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
 msgid "Studio customizations require the Odoo Studio app."
 msgstr "StudioのカスタマイズにはOdoo Studioアプリが必要です"
 
@@ -294,6 +288,12 @@ msgid "The module %s cannot be downloaded"
 msgstr "このモジュール%sはダウンロードできません。"
 
 #. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "Unknown module dependencies:"
+msgstr "モジュールの依存関係が不明です:"
+
+#. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
 msgid "Upgrade"
@@ -302,7 +302,7 @@ msgstr "アップグレード"
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_ui_view
 msgid "View"
-msgstr "ビュー"
+msgstr "照会"
 
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__base_import_module__state__done

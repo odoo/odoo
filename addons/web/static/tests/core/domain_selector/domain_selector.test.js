@@ -2119,8 +2119,7 @@ test(`any operator (edit) with invalid domain as value`, async () => {
     expect(SELECTORS.valueEditor).toHaveCount(1);
     expect(SELECTORS.clearNotSupported).toHaveCount(1);
     await contains(SELECTORS.clearNotSupported).click();
-    const rows = queryAll(SELECTORS.connector);
-    expect(rows[1].textContent).toBe("all records");
+    expect(`${SELECTORS.connector}:eq(1)`).toHaveText("all records");
 });
 
 test(`any operator (edit) test getDefaultPath`, async () => {
@@ -2305,4 +2304,72 @@ test(`within operator (edit) for datetime with invalid period`, async () => {
     expect.verifySteps([
         `["&", ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("datetime", "<=", datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
     ]);
+});
+
+test("shorten descriptions of long lists", async (assert) => {
+    const values = new Array(500).fill(42525245);
+    await makeDomainSelector({
+        domain: `[("id", "in", [${values}])]`,
+        readonly: true,
+    });
+    expect(".o_tree_editor_condition").toHaveText(
+        `Id\nis in\n(\n${values.slice(0, 20).join("\n,\n")}\n,\n...\n)`
+    );
+});
+
+test("many2one: no domain in autocompletion", async () => {
+    Partner._fields.product_id.domain = `[("display_name", "ilike", "xpa")]`;
+    await makeDomainSelector({
+        domain: `[("product_id", "=", False)]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    expect(getCurrentOperator()).toBe("=");
+    expect(getCurrentValue()).toBe("");
+    expect.verifySteps([]);
+    expect(".dropdown-menu").toHaveCount(0);
+
+    await editValue("x", { confirm: false });
+    await runAllTimers();
+
+    expect(".dropdown-menu").toHaveCount(1);
+    expect(queryAllTexts(".dropdown-menu li")).toEqual(["xphone", "xpad"]);
+    expect(getCurrentOperator()).toBe("=");
+    expect(getCurrentValue()).toBe("x");
+
+    await contains(".dropdown-menu li").click();
+    expect(getCurrentOperator()).toBe("=");
+    expect(getCurrentValue()).toBe("xphone");
+    expect.verifySteps([`[("product_id", "=", 37)]`]);
+    expect(".dropdown-menu").toHaveCount(0);
+});
+
+test("many2many: domain in autocompletion", async () => {
+    addProductIds();
+    Partner._fields.product_ids.domain = `[("display_name", "ilike", "xpa")]`;
+    await makeDomainSelector({
+        domain: `[("product_ids", "=", [])]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    expect(getCurrentOperator()).toBe("=");
+    expect(getCurrentValue()).toBe("");
+    expect.verifySteps([]);
+    expect(".dropdown-menu").toHaveCount(0);
+
+    await editValue("x", { confirm: false });
+    await runAllTimers();
+
+    expect(".dropdown-menu").toHaveCount(1);
+    expect(queryAllTexts(".dropdown-menu li")).toEqual(["xpad"]);
+    expect(getCurrentOperator()).toBe("=");
+    expect(getCurrentValue()).toBe("x");
+
+    await contains(".dropdown-menu li").click();
+    expect(getCurrentOperator()).toBe("=");
+    expect(getCurrentValue()).toBe("xpad");
+    expect.verifySteps([`[("product_ids", "=", [41])]`]);
+    expect(".dropdown-menu").toHaveCount(0);
 });

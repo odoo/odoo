@@ -55,11 +55,22 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         }
 
     def _get_partner_party_tax_scheme_vals_list(self, partner, role):
+        # [BR-CO-09] if the PartyTaxScheme/TaxScheme/ID == 'VAT', CompanyID must start with a country code prefix.
+        # In some countries however, the CompanyID can be with or without country code prefix and still be perfectly
+        # valid (RO, HU, non-EU countries).
+        # We have to handle their cases by changing the TaxScheme/ID to 'something other than VAT',
+        # preventing the trigger of the rule.
+        tax_scheme_id = 'VAT'
+        if (
+            partner.country_id
+            and partner.vat and not partner.vat[:2].isalpha()
+        ):
+            tax_scheme_id = 'NOT_EU_VAT'
         return [{
             'registration_name': partner.name,
             'company_id': partner.vat,
             'registration_address_vals': self._get_partner_address_vals(partner),
-            'tax_scheme_vals': {'id': 'VAT'},
+            'tax_scheme_vals': {'id': tax_scheme_id},
         }]
 
     def _get_partner_party_legal_entity_vals_list(self, partner):
@@ -104,10 +115,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _get_delivery_vals_list(self, invoice):
         # the data is optional, except for ubl bis3 (see the override, where we need to set a default delivery address)
         return [{
-            'actual_delivery_date': None,
+            'actual_delivery_date': invoice.delivery_date,
             'delivery_location_vals': {
                 'delivery_address_vals': self._get_partner_address_vals(invoice.partner_shipping_id),
             },
+            'delivery_party_vals': self._get_partner_party_vals(invoice.partner_shipping_id, 'delivery') if invoice.partner_shipping_id else {},
         }]
 
     def _get_bank_address_vals(self, bank):
@@ -150,9 +162,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         return vals
 
     def _get_invoice_payment_means_vals_list(self, invoice):
+        payment_means_code, payment_means_name = (30, 'credit transfer') if invoice.move_type == 'out_invoice' else (57, 'standing agreement')
         # in Denmark payment code 30 is not allowed. we hardcode it to 1 ("unknown") for now
         # as we cannot deduce this information from the invoice
-        payment_means_code, payment_means_name = 30, 'credit transfer'
         if invoice.partner_id.country_code == 'DK':
             payment_means_code, payment_means_name = 1, 'unknown'
 
@@ -184,7 +196,24 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'tax_amount': taxes_vals['tax_amount_currency'],
             'tax_subtotal_vals': [],
         }
-        epd_tax_to_discount = self._get_early_payment_discount_grouped_by_tax_rate(invoice)
+
+        # If it's not on the whole invoice, don't manage the EPD.
+        epd_tax_to_discount = {}
+        if not taxes_vals.get('invoice_line'):
+            epd_tax_to_discount = self._get_early_payment_discount_grouped_by_tax_rate(invoice)
+            epd_base_tax_amounts = defaultdict(lambda: {
+                'base_amount_currency': 0.0,
+                'tax_amount_currency': 0.0,
+            })
+            if epd_tax_to_discount:
+                for percentage, base_amount_currency in epd_tax_to_discount.items():
+                    epd_base_tax_amounts[percentage]['base_amount_currency'] += base_amount_currency
+                epd_accounted_tax_amount = 0.0
+                for percentage, amounts in epd_base_tax_amounts.items():
+                    amounts['tax_amount_currency'] = invoice.currency_id.round(
+                        amounts['base_amount_currency'] * percentage / 100.0)
+                    epd_accounted_tax_amount += amounts['tax_amount_currency']
+
         for grouping_key, vals in taxes_vals['tax_details'].items():
             if grouping_key['tax_amount_type'] != 'fixed' or not self._context.get('convert_fixed_taxes'):
                 subtotal = {
@@ -197,18 +226,15 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 }
                 if epd_tax_to_discount:
                     # early payment discounts: need to recompute the tax/taxable amounts
-                    taxable_amount_after_epd = subtotal['taxable_amount'] - epd_tax_to_discount.get(subtotal['percent'], 0)
-                    tax_amount_after_epd = taxable_amount_after_epd * subtotal['tax_category_vals']['percent'] / 100
+                    epd_base_amount = epd_base_tax_amounts.get(subtotal['percent'], {}).get('base_amount_currency', 0.0)
+                    taxable_amount_after_epd = subtotal['taxable_amount'] - epd_base_amount
                     subtotal.update({
                         'taxable_amount': taxable_amount_after_epd,
-                        'tax_amount': tax_amount_after_epd,
                     })
                 tax_totals_vals['tax_subtotal_vals'].append(subtotal)
 
         if epd_tax_to_discount:
-            # early payment discounts: hence, need to recompute the total tax amount...
-            tax_totals_vals['tax_amount'] = sum([subtot['tax_amount'] for subtot in tax_totals_vals['tax_subtotal_vals']])
-            # ... and add a subtotal section
+            # early payment discounts: hence, need to add a subtotal section
             tax_totals_vals['tax_subtotal_vals'].append({
                 'currency': invoice.currency_id,
                 'currency_dp': invoice.currency_id.decimal_places,
@@ -248,7 +274,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'classified_tax_category_vals': tax_category_vals_list,
         }
 
-    def _get_document_allowance_charge_vals_list(self, invoice):
+    def _get_document_allowance_charge_vals_list(self, invoice, taxes_vals=None):
         """
         https://docs.peppol.eu/poacc/billing/3.0/bis/#_document_level_allowance_or_charge
         Usage for early payment discounts:
@@ -361,7 +387,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # Price subtotal with discount / quantity:
         gross_price_unit = gross_price_subtotal / line.quantity if line.quantity else 0.0
 
-        uom = super()._get_uom_unece_code(line.product_uom_id)
+        uom = self._get_uom_unece_code(line.product_uom_id)
 
         return {
             'currency': line.currency_id,
@@ -392,12 +418,17 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         """
         allowance_charge_vals_list = self._get_invoice_line_allowance_vals_list(line, tax_values_list=taxes_vals)
 
-        uom = super()._get_uom_unece_code(line.product_uom_id)
+        uom = self._get_uom_unece_code(line.product_uom_id)
         total_fixed_tax_amount = sum(
             vals['amount']
             for vals in allowance_charge_vals_list
             if vals.get('charge_indicator') == 'true'
         )
+        period_vals = {}
+        # deferred_start_date & deferred_end_date are enterprise-only fields
+        if line._fields.get('deferred_start_date') and (line.deferred_start_date or line.deferred_end_date):
+            period_vals.update({'start_date': line.deferred_start_date})
+            period_vals.update({'end_date': line.deferred_end_date})
         return {
             'currency': line.currency_id,
             'currency_dp': self._get_currency_decimal_places(line.currency_id),
@@ -409,6 +440,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'tax_total_vals': self._get_invoice_line_tax_totals_vals_list(line, taxes_vals),
             'item_vals': self._get_invoice_line_item_vals(line, taxes_vals),
             'price_vals': self._get_invoice_line_price_vals(line),
+            'invoice_period_vals_list': [period_vals] if period_vals else []
         }
 
     def _get_invoice_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount):
@@ -496,11 +528,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         line_extension_amount = 0.0
 
         invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section') and line._check_edi_line_tax_required())
-        document_allowance_charge_vals_list = self._get_document_allowance_charge_vals_list(invoice)
+        document_allowance_charge_vals_list = self._get_document_allowance_charge_vals_list(invoice, taxes_vals)
         invoice_line_vals_list = []
         for line_id, line in enumerate(invoice_lines):
             line_taxes_vals = taxes_vals['tax_details_per_record'][line]
-            line_vals = self._get_invoice_line_vals(line, line_id, line_taxes_vals)
+            line_vals = self._get_invoice_line_vals(line, line_id, {**line_taxes_vals, 'invoice_line': line})
             invoice_line_vals_list.append(line_vals)
 
             line_extension_amount += line_vals['line_extension_amount']
@@ -674,6 +706,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         invoice_values['narration'] = self._import_description(tree, xpaths=['./{*}Note', './{*}PaymentTerms/{*}Note'])
         invoice_values['payment_reference'] = tree.findtext('./{*}PaymentMeans/{*}PaymentID')
 
+        # ==== Delivery ====
+        delivery_date = tree.find('.//{*}Delivery/{*}ActualDeliveryDate')
+        invoice.delivery_date = delivery_date is not None and delivery_date.text
+
         # ==== invoice_incoterm_id ====
         incoterm_code = tree.findtext('./{*}TransportExecutionTerms/{*}DeliveryTerms/{*}ID')
         if incoterm_code:
@@ -704,7 +740,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         tax_nodes = tree.findall('.//{*}Item/{*}ClassifiedTaxCategory/{*}Percent')
         if not tax_nodes:
             for elem in tree.findall('.//{*}TaxTotal'):
-                tax_nodes += elem.findall('.//{*}TaxSubtotal/{*}TaxCategory/{*}Percent')
+                percentage_nodes = elem.findall('.//{*}TaxSubtotal/{*}TaxCategory/{*}Percent')
+                if not percentage_nodes:
+                    percentage_nodes = elem.findall('.//{*}TaxSubtotal/{*}Percent')
+                tax_nodes += percentage_nodes
         return tax_nodes
 
     def _get_document_allowance_charge_xpaths(self):
@@ -752,6 +791,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # For each tax in our tax total, get the amount as well as the total in the xml.
         for elem in tree.findall('.//{*}TaxTotal/{*}TaxSubtotal'):
             percentage = elem.find('.//{*}TaxCategory/{*}Percent')
+            if percentage is None:
+                percentage = elem.find('.//{*}Percent')
             amount = elem.find('.//{*}TaxAmount')
             if (percentage is not None and percentage.text is not None) and (amount is not None and amount.text is not None):
                 tax_percent = float(percentage.text)

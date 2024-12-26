@@ -80,6 +80,7 @@ const updateTitle = (failed) => {
     setTitle(`${toAdd} ${title}`);
 };
 
+const TIMER_PRECISION = 100; // in ms
 const TITLE_PREFIX = {
     fail: "✖",
     pass: "✔",
@@ -109,6 +110,7 @@ export class HootStatusPanel extends Component {
                         role="status"
                         title="Running"
                     />
+                    <strong class="text-primary" t-esc="env.runner.totalTime" />
                 </t>
                 <t t-else="">
                     <span class="hidden md:block">
@@ -219,8 +221,9 @@ export class HootStatusPanel extends Component {
 
             currentTestStart = $now();
             intervalId = setInterval(() => {
-                this.state.timer = $floor($now() - currentTestStart);
-            }, 1000);
+                this.state.timer =
+                    $floor(($now() - currentTestStart) / TIMER_PRECISION) * TIMER_PRECISION;
+            }, TIMER_PRECISION);
         };
 
         const stopTimer = () => {

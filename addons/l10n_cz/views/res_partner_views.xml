@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="before">
-                <field name="company_registry" invisible="'CZ' not in fiscal_country_codes"/>
+                <field name="company_registry" invisible="country_code != 'CZ'"/>
             </xpath>
         </field>
     </record>

@@ -45,12 +45,21 @@ msgid ""
 "            <h6>4 Days after Interview</h6>\n"
 "        "
 msgstr ""
+"\n"
+"            <span class=\"text-muted small\">Tid att svara</span>\n"
+"            <h6>2 öppna dagar</h6>\n"
+"            <span class=\"text-muted small\">Process</span>\n"
+"            <h6>1 telefonsamtal</h6>\n"
+"            <h6>1 intervju på plats</h6>\n"
+"            <span class=\"text-muted small\">Dagar för att få ett erbjudande</span>\n"
+"            <h6>4 dagar efter intervjun</h6>\n"
+"        "
 
 #. module: website_hr_recruitment
 #. odoo-python
 #: code:addons/website_hr_recruitment/controllers/main.py:0
 msgid " In case of issue, contact %(contact_infos)s"
-msgstr ""
+msgstr " Vid problem, kontakta %(contact_infos)s"
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -71,7 +80,7 @@ msgstr "+1 (650) 555-0187"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "12 days / year, including <br/>6 of your choice."
-msgstr "12 dagar per år, inklusive 6 dagar efter eget val."
+msgstr "12 dagar per år, inklusive <br/>6 dagar efter eget val."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_kanban_referal_extends
@@ -79,7 +88,7 @@ msgid ""
 "<i class=\"fa fa-fw fa-external-link\" role=\"img\"/>\n"
 "                        Job Page"
 msgstr ""
-"<i class=\"fa fa-fw fa-extern-länk\" role=\"img\"/>\n"
+"<i class=\"fa fa-fw fa-external-link\" role=\"img\"/>\n"
 "                        Jobbsida"
 
 #. module: website_hr_recruitment
@@ -98,8 +107,8 @@ msgid ""
 "<i class=\"fa fa-suitcase fa-fw\" title=\"Employment type\" role=\"img\" "
 "aria-label=\"Employment type\"/>"
 msgstr ""
-"<i class=\"fa fa-suitcase fa-fw\" title=\"Anställningstyp\" role=\"img\" "
-"aria-label=\"Anställningstyp\"/>"
+"<i class=\"fa fa-suitcase fa-fw\" title=\"Employment type\" role=\"img\" "
+"aria-label=\"Employment type\"/>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -217,12 +226,16 @@ msgstr ""
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
 msgid "A clickable label for the toggle. Contains text for the false state."
 msgstr ""
+"En klickbar etikett för växlingen. Innehåller text för det falska "
+"tillståndet."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
 msgid "A clickable label for the toggle. Contains text for the true state."
 msgstr ""
+"En klickbar etikett för växlingsfunktionen. Innehåller text för det verkliga"
+" tillståndet."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -281,6 +294,8 @@ msgid ""
 "An application already exists for %(value)s. Duplicates might be rejected. "
 "%(recruiter_contact)s"
 msgstr ""
+"Det finns redan en ansökan för %(value)s. Duplikat kan komma att avvisas. "
+"%(recruiter_contact)s"
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_applicant
@@ -290,7 +305,7 @@ msgstr "Sökande"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_form_inherit
 msgid "Application Info"
-msgstr ""
+msgstr "Applikationsinformation"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -434,6 +449,11 @@ msgid ""
 "                    Several activities are often organized all over the year, such as weekly\n"
 "                    sports sessions, team building events, monthly drink, and much more"
 msgstr ""
+"Varje anställd har en chans att se effekterna av sitt arbete.\n"
+"                    Du kan göra ett verkligt bidrag till företagets framgång.\n"
+"                    <br/>\n"
+"                    Flera aktiviteter organiseras ofta under hela året, till exempel veckovisa\n"
+"                    sportsessioner, teambuilding-evenemang, månadsdrink och mycket mer"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -468,7 +488,7 @@ msgstr "Följ oss"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Fruit, coffee and <br/>snacks provided."
-msgstr "Frukt, kaffe och snacks tillhandahålls."
+msgstr "Frukt, kaffe och <br/>snacks tillhandahålls."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -773,7 +793,7 @@ msgstr "Ställ in om ansökan ska publiceras på företagets webbplats."
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
 msgid "Share Job"
-msgstr ""
+msgstr "Dela jobb"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -815,7 +835,7 @@ msgstr "Fullständig URL för åtkomst av dokument via webbplatsen."
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
 msgid "The job link has been copied to the clipboard."
-msgstr ""
+msgstr "Jobblänken har kopierats till urklipp."
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -827,7 +847,7 @@ msgstr "Jobberbjudandet har stängts."
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_applicant_form.js:0
 msgid "The profile that you gave us doesn't seems like a linkedin profile"
-msgstr ""
+msgstr "Profilen som du gav oss verkar inte som en linkedin-profil"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -842,12 +862,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
 msgid "ToggleLabeled"
-msgstr ""
+msgstr "ToggleLabeled"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__url
 msgid "Tracker URL"
-msgstr ""
+msgstr "Tracker URL"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -885,6 +905,8 @@ msgid ""
 "We found a recent application with a similar name, email, phone number. You "
 "can continue if it's not a mistake."
 msgstr ""
+"Vi hittade en ny ansökan med liknande namn, e-post, telefonnummer. Du kan "
+"fortsätta om det inte är ett misstag."
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -893,6 +915,9 @@ msgid ""
 "We've found a previous closed application in our system within the last 6 "
 "months. Please consider before applying in order not to duplicate efforts."
 msgstr ""
+"Vi har hittat en tidigare stängd ansökan i vårt system under de senaste 6 "
+"månaderna. Vänligen överväg innan du ansöker för att inte duplicera "
+"ansträngningarna."
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_website
@@ -982,11 +1007,13 @@ msgid ""
 "e.g. Summarize the position in one or two lines that will be displayed on "
 "the Jobs list page..."
 msgstr ""
+"t.ex. Sammanfatta tjänsten på en eller två rader som kommer att visas på "
+"sidan med jobblistan..."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "e.g. https://www.linkedin.com/in/fpodoo"
-msgstr ""
+msgstr "t.ex. https://www.linkedin.com/in/fpodoo"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
@@ -996,7 +1023,7 @@ msgstr "info@yourcompany.example.com"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__full_url
 msgid "job URL"
-msgstr ""
+msgstr "jobb-URL"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index

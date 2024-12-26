@@ -142,7 +142,7 @@ export class DiscussChannelMember extends models.ServerModel {
                             "persona",
                         ].includes(field)
                 ),
-                makeKwArgs({ load: false })
+                false
             );
             if ("channel" in fields) {
                 data.thread = mailDataHelpers.Store.one(

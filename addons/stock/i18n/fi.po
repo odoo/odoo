@@ -31,7 +31,6 @@
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2024
 # Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2024
 # Marko Happonen <marko.happonen@sprintit.fi>, 2024
-# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2024
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
@@ -39,14 +38,15 @@
 # Martin Trigaux, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Last-Translator: Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,49 +145,49 @@ msgstr "%(name)s (kopio)(%(id)s)"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence cross dock"
-msgstr ""
+msgstr "%(name)s Läpivirtausterminaalin (cross dock) sekvenssi"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence in"
-msgstr ""
+msgstr "%(name)s Sisään tuleva sekvenssi"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence internal"
-msgstr ""
+msgstr "%(name)s Sisäinen sekvenssi"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence out"
-msgstr ""
+msgstr "%(name)s Ulos menevä sekvenssi"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence packing"
-msgstr ""
+msgstr "%(name)s Pakkauksen sekvenssi"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence picking"
-msgstr ""
+msgstr "%(name)s Poiminnan sekvenssi"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence quality control"
-msgstr ""
+msgstr "%(name)s Laadunvalvonnan sekvenssi"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence storage"
-msgstr ""
+msgstr "%(name)s Varastoinnin sekvenssi"
 
 #. module: stock
 #. odoo-python
@@ -203,7 +203,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "%(product)s: Insufficient Quantity To Scrap"
-msgstr ""
+msgstr "%(product)s: Riittämätön määrä romutettavaksi"
 
 #. module: stock
 #. odoo-python
@@ -221,7 +221,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "%(warehouse)s Sequence %(code)s"
-msgstr ""
+msgstr "%(warehouse)s Sekvenssi %(code)s"
 
 #. module: stock
 #. odoo-python
@@ -544,10 +544,10 @@ msgstr "<br>Tarve on luotu <b> %s</b> ja sääntö aktivoituu täyttääkseen se
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
 "<br>If the products are not available in <b>%s</b>, a rule will be triggered"
-" to bring products in this location."
+" to bring the missing quantity in this location."
 msgstr ""
-"<br>Jos tuotteita ei ole saatavilla <b>%s</b>, käynnistyy sääntö, joka tuo "
-"tuotteet tähän sijaintiin."
+"<br>Jos tuotteita ei ole saatavilla <b>%s</b>, käynnistetään sääntö, joka "
+"tuo puuttuvan määrän tähän paikkaan."
 
 #. module: stock
 #. odoo-python
@@ -564,71 +564,38 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br><br>\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
 "        We are glad to inform you that your order has been shipped.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
-"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
-"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
 "                </t>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
 "            </t>\n"
 "            </strong>\n"
 "        </t>\n"
-"        <br><br>\n"
-"        Please find your delivery order attached for more details.<br><br>\n"
+"        <br/><br/>\n"
+"        Please find your delivery order attached for more details.<br/><br/>\n"
 "        Thank you,\n"
-"        <t t-if=\"user.signature\">\n"
-"            <br>\n"
-"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"            <br/>\n"
+"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 "        "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hei <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br><br>\n"
-"        Olemme iloisia voidessamme ilmoittaa, että tilauksesi on lähetetty.\n"
-"       <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\"> \n"
-"            Seurantaviitteesi on\n"
-"           <strong> \n"
-"           <t t-if=\"object.carrier_tracking_url\"> \n"
-"               <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
-"               <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
-"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
-"                    </t>\n"
-"                </t>\n"
-"               <t t-else=\"\"> \n"
-"                   <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
-"               </t>\n"
-"           </t>\n"
-"           <t t-else=\"\"> \n"
-"               <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
-"           </t>\n"
-"           </strong>\n"
-"       </t>\n"
-"       <br><br>\n"
-"        Lisätietoja saat liitteenä olevasta toimitustilauksesta.<br><br>\n"
-"        Kiitos,\n"
-"        <t t-if=\"user.signature\">\n"
-"            <br>\n"
-"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -765,6 +732,12 @@ msgid "<span class=\"o_stat_text\">Traceability</span>"
 msgstr "<span class=\"o_stat_text\">Jäljitettävyys</span>"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "<span><strong>Delivery Address:</strong></span>"
+msgstr "<span><strong>Toimitusosoite:</strong></span>"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "<span>OBTRETU</span>"
 msgstr "<span>OBTRETU</span>"
@@ -792,7 +765,7 @@ msgstr "<span>Jäljellä olevat, toimittamattomat määrät:</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "<span>days</span>"
-msgstr ""
+msgstr "<span> päivää</span>."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -814,13 +787,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Customer Address</strong>"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "<strong>Delivery Address</strong>"
-msgstr ""
+msgstr "<strong>Asiakkaan osoite</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -862,7 +829,7 @@ msgstr "<strong>Vähimmäismäärä:</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Order</strong>"
-msgstr ""
+msgstr "<strong>Tilaus</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -904,7 +871,7 @@ msgstr "<strong>Suunniteltu pvm</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Shipping Date</strong>"
-msgstr ""
+msgstr "<strong>Toimituspäivä</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -914,7 +881,7 @@ msgstr "<strong>Allekirjoitus</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Status</strong>"
-msgstr ""
+msgstr "<strong>Tila</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_head
@@ -935,13 +902,13 @@ msgstr "<strong>Seurattavat tuotteet:</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Vendor Address</strong>"
-msgstr ""
+msgstr "<strong>Myyjän osoite</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Warehouse Address</strong>"
-msgstr ""
+msgstr "<strong>Varaston osoite</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -973,7 +940,7 @@ msgstr "Tälle tuotteelle on jo olemassa täydennyssääntö tässä paikassa."
 #: model:ir.model.fields,help:stock.field_product_template__is_storable
 #: model:ir.model.fields,help:stock.field_stock_move__is_storable
 msgid "A storable product is a product for which you manage stock."
-msgstr ""
+msgstr "Varastoitava tuote on tuote, jonka varastoa hallinnoit."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -1118,6 +1085,7 @@ msgstr "Lisätiedot"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot_report__address
+#: model:ir.model.fields,field_description:stock.field_stock_picking__warehouse_address_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__partner_id
 #: model_terms:ir.ui.view,arch_db:stock.search_customer_lot_filter
 msgid "Address"
@@ -1271,7 +1239,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Any Category"
-msgstr ""
+msgstr "Kaikki osastot"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -1586,7 +1554,7 @@ msgstr "Viivakoodi on kelvollinen EAN"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch, Wave & Cluster Transfers"
-msgstr ""
+msgstr "Erä-, aalto- ja klusterisiirrot"
 
 #. module: stock
 #. odoo-python
@@ -1792,6 +1760,8 @@ msgid ""
 "Changing the Lot/Serial number for move lines with different products is not"
 " allowed."
 msgstr ""
+"Erä-/sarjanumeron muuttaminen eri tuotteita sisältävien siirtorivien osalta "
+"ei ole sallittua."
 
 #. module: stock
 #. odoo-python
@@ -2395,6 +2365,9 @@ msgid ""
 "Creation date of this move line until updated due to: quantity being "
 "increased, 'picked' status has updated, or move line is done."
 msgstr ""
+"Tämän siirtorivin luontipäivämäärä, kunnes sitä päivitetään seuraavista "
+"syistä: määrä on kasvanut, \"poimittu\"-tilaa on päivitetty tai siirtorivi "
+"on valmis."
 
 #. module: stock
 #. odoo-python
@@ -2471,12 +2444,12 @@ msgstr "Asiakkaan paikat"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_lot_report
 msgid "Customer Lot Report"
-msgstr ""
+msgstr "Asiakkaan erien raportti"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_lot_report
 msgid "Customer lots"
-msgstr ""
+msgstr "Asiakkaan erät"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -2544,7 +2517,7 @@ msgstr "Päivämäärä"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__search_date_category
 msgid "Date Category"
-msgstr ""
+msgstr "Päivämäärän luokka"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -2616,7 +2589,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Päivä(ä)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before
@@ -2770,7 +2743,7 @@ msgstr "Viive päällä %s"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__ship_only
 msgid "Deliver (1 step)"
-msgstr ""
+msgstr "Toimita (1 vaihe)"
 
 #. module: stock
 #. odoo-python
@@ -2858,7 +2831,7 @@ msgstr "Toimitustapa"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_customer_lot_filter
 msgid "Delivery date"
-msgstr ""
+msgstr "Toimituspäivä"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__sale_delay
@@ -2901,7 +2874,7 @@ msgstr "Demo Näytön nimi"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
 msgid "Demo Lot/SN"
-msgstr ""
+msgstr "Demo erä- tai sarjanumero"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
@@ -3455,7 +3428,7 @@ msgstr "Suotimet"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_final_id
 msgid "Final Location"
-msgstr ""
+msgstr "Lopullinen sijainti"
 
 #. module: stock
 #: model:product.removal,name:stock.removal_fifo
@@ -3582,7 +3555,7 @@ msgstr "Ennustettu päivä"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Forecasted Date + Visibility Days"
-msgstr ""
+msgstr "Ennustettu päivämäärä + näkyvyyspäivät"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__out
@@ -3756,7 +3729,7 @@ msgstr "Sarjojen/erien luominen"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
 msgid "Generate Shipping Labels"
-msgstr ""
+msgstr "Luo lähetystarroja"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3786,7 +3759,7 @@ msgstr "Antaa tämän rivin järjestyksen varastoja näytettäessä."
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Go to Warehouses"
-msgstr ""
+msgstr "Siirry varastoihin"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_customer_lot_filter
@@ -3842,7 +3815,7 @@ msgstr "On paketteja"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot_report__has_return
 msgid "Has Return"
-msgstr ""
+msgstr "Sisältää palautuksen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_scrap_move
@@ -3904,7 +3877,7 @@ msgstr "Historia"
 #. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_orderpoint_search_panel.xml:0
 msgid "Horizon"
-msgstr ""
+msgstr "Horisontti"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_method
@@ -4525,7 +4498,7 @@ msgstr "Inventaariopäivä"
 #: model:ir.model.fields,field_description:stock.field_stock_quant__cyclic_inventory_frequency
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Inventory Frequency"
-msgstr ""
+msgstr "Inventoinnin tiheys"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
@@ -4669,6 +4642,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_picking_type__move_type
 msgid "It specifies goods to be transferred partially or all at once"
 msgstr ""
+"Siinä määritellään tavarat, jotka siirretään osittain tai kokonaan kerralla"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__json_popover
@@ -4795,7 +4769,7 @@ msgstr "Last In First Out (LIFO)"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__last_inventory_date
 msgid "Last Inventory"
-msgstr ""
+msgstr "Viimeisin inventaario"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__write_uid
@@ -5102,13 +5076,13 @@ msgstr "Logistiikka"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__lot
 msgid "Lot"
-msgstr "Erä/sarjanumero"
+msgstr "Erä"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_customer_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.stock_lot_customer_report_view_list
 msgid "Lot / Serial Number"
-msgstr ""
+msgstr "Erä- tai sarjanumero"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__lot_label_format
@@ -5211,7 +5185,7 @@ msgstr "Erä- ja sarjanumerot näkyvät toimituslomakkeessa"
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
 #: model:ir.ui.menu,name:stock.menu_action_production_lot_form
 msgid "Lots / Serial Numbers"
-msgstr ""
+msgstr "Erät tai sarjanumerot"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lots_visible
@@ -5466,7 +5440,7 @@ msgstr "Siirtorivien määrä"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__move_quantity
 msgid "Move Quantity"
-msgstr ""
+msgstr "Siirrettävä määrä"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__origin_returned_move_id
@@ -5607,7 +5581,7 @@ msgstr "Ei koskaan"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__never_product_template_attribute_value_ids
 msgid "Never attribute Values"
-msgstr ""
+msgstr "Ei koskaan luotavien attribuuttien arvot"
 
 #. module: stock
 #. odoo-python
@@ -5623,7 +5597,7 @@ msgstr "Uusi"
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "New Move: %(product)s"
-msgstr ""
+msgstr "Uusi siirto: %(product)s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__new_quantity
@@ -5662,7 +5636,7 @@ msgstr "Seuraavan toimenpiteen tyyppi"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__next_inventory_date
 msgid "Next Expected"
-msgstr ""
+msgstr "Seuraava odotettu"
 
 #. module: stock
 #. odoo-python
@@ -5953,7 +5927,7 @@ msgstr "Varastossa oleva määrä"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "On hand Quantity"
-msgstr ""
+msgstr "Käsillä oleva määrä"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__available_quantity
@@ -6065,6 +6039,8 @@ msgid ""
 "Optimize your transfers by grouping operations together and assigning jobs "
 "to workers"
 msgstr ""
+"Optimoi siirrot ryhmittelemällä toimintoja yhteen ja jakamalla töitä "
+"työntekijöille"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__partner_id
@@ -6508,7 +6484,7 @@ msgstr "Ylempi polku"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__parent_route_ids
 msgid "Parent Routes"
-msgstr ""
+msgstr "Ylemmän tason reitit"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__procurement_group__move_type__direct
@@ -6562,12 +6538,12 @@ msgstr "Keräilyn tyyppi"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
 msgid "Pick then Deliver (2 steps)"
-msgstr ""
+msgstr "Poimi ja toimita (2 vaihetta)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_pack_ship
 msgid "Pick, Pack, then Deliver (3 steps)"
-msgstr ""
+msgstr "Poimi, pakkaa ja toimita (3 vaihetta)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picked
@@ -6631,7 +6607,7 @@ msgstr "Suunnitteluongelmia"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Please create a warehouse for company %s."
-msgstr ""
+msgstr "Luo varasto yritykselle %s."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
@@ -7108,7 +7084,7 @@ msgstr "Pull-sääntö"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__push_domain
 msgid "Push Applicability"
-msgstr ""
+msgstr "Push-toiminnon sovellettavuus"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -7489,7 +7465,7 @@ msgstr "Vastaanota sijainnista"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__one_step
 msgid "Receive and Store (1 step)"
-msgstr ""
+msgstr "Vastaanota ja varastoi (1 vaihe)"
 
 #. module: stock
 #. odoo-python
@@ -7512,12 +7488,12 @@ msgstr "Vastaanota 3 vaiheessa (vastaanotto + laaduntarkistus + varastossa)"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__two_steps
 msgid "Receive then Store (2 steps)"
-msgstr ""
+msgstr "Vastaanota ja varastoi (2 vaihetta)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__three_steps
 msgid "Receive, Quality Control, then Store (3 steps)"
-msgstr ""
+msgstr "Vastaanotto, laadunvalvonta ja varastointi (3 vaihetta)"
 
 #. module: stock
 #. odoo-python
@@ -8156,12 +8132,12 @@ msgstr "Romuta tuotteet"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__scrap_reason_tag_ids
 msgid "Scrap Reason"
-msgstr ""
+msgstr "Romutuksen syy"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_scrap_reason_tag
 msgid "Scrap Reason Tag"
-msgstr ""
+msgstr "Romutuksen syyn tunnus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrap_id
@@ -8310,7 +8286,7 @@ msgstr "Järjestys"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Sequence %(code)s"
-msgstr ""
+msgstr "Sekvenssi %(code)s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_code
@@ -8440,7 +8416,7 @@ msgstr "Hyllyt (Y)"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_lot_report
 msgid "Ship a lot to a customer."
-msgstr ""
+msgstr "Toimita erä asiakkaalle."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -8995,6 +8971,8 @@ msgid ""
 "Store and retrieve information regarding every Lot/Serial Number (condition,"
 " product info, ...)."
 msgstr ""
+"Tallenna ja hae tietoja jokaisesta erästä tai sarjanumerosta (kunto, "
+"tuotetiedot, ...)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_multi_locations
@@ -9117,7 +9095,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "The Lot/Serial number (%s) is linked to another product."
-msgstr ""
+msgstr "Erä- tai sarjanumero (%s) liittyy toiseen tuotteeseen."
 
 #. module: stock
 #. odoo-python
@@ -9162,6 +9140,9 @@ msgid ""
 "The following combinations contain duplicates:\n"
 "%(error_lines)s"
 msgstr ""
+"Erän tai ssarjanumeron ja tuotteen yhdistelmän on oltava yksilöllinen yrityksen sisällä, myös silloin, kun yritystä ei ole määritelty.\n"
+"Seuraavat yhdistelmät sisältävät kaksoiskappaleita:\n"
+"%(error_lines)s"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
@@ -9234,7 +9215,7 @@ msgstr "Sijainnin inventointitiheyden (päivinä) on oltava ei-negatiivinen"
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid ""
 "The minimum quantity must be less than or equal to the maximum quantity."
-msgstr ""
+msgstr "Vähimmäismäärän on oltava pienempi tai yhtä suuri kuin enimmäismäärä."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_name_uniq
@@ -9253,6 +9234,8 @@ msgid ""
 "The operation brings the products to the intermediate location.But this "
 "operation is part of a chain of operations targeting the final location."
 msgstr ""
+"Toiminto tuo tuotteet välipaikkaan. Tämä toiminto on kuitenkin osa "
+"toimintojen ketjua, joka tähtää lopulliseen paikkaan."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
@@ -9489,6 +9472,9 @@ msgid ""
 "created. However, it is possible to change it afterwards or that the routes "
 "use another one by default."
 msgstr ""
+"Tämä on oletuskohdepaikka, kun tämä toiminto luodaan manuaalisesti. Sitä on "
+"kuitenkin mahdollista muuttaa jälkikäteen tai että reitit käyttävät "
+"oletusarvoisesti jotakin muuta."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -9497,6 +9483,9 @@ msgid ""
 " However, it is possible to change it afterwards or that the routes use "
 "another one by default."
 msgstr ""
+"Tämä on lähteen oletussijainti, kun tämä toiminto luodaan manuaalisesti. "
+"Sitä on kuitenkin mahdollista muuttaa jälkikäteen tai että reitit käyttävät "
+"oletusarvoisesti jotain muuta."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -9702,13 +9691,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 msgid "Time Horizon"
-msgstr ""
+msgstr "Aikahorisontti"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_1
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_1
 msgid "Tip: Monitor Lot details"
-msgstr ""
+msgstr "Vihje: Seuraa erän yksityiskohtia"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_0
@@ -9787,7 +9776,7 @@ msgstr "Tilaa käsin"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "To Order with Visibility Days"
-msgstr ""
+msgstr "Tilaa näkyvissä olevana aikana"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -9839,7 +9828,7 @@ msgstr "Huomenna"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "Total Available"
-msgstr ""
+msgstr "Yhteensä käytettävissä"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
@@ -10139,6 +10128,8 @@ msgid ""
 "Unavailable Serial numbers. Please correct the serial numbers encoded: "
 "%(serial_numbers_to_locations)s"
 msgstr ""
+"Ei käytettävissä oleva sarjanumero. Korjatkaa koodatut sarjanumerot: "
+"%(serial_numbers_to_locations)s"
 
 #. module: stock
 #. odoo-javascript
@@ -10231,6 +10222,8 @@ msgid ""
 "Unless previously specified by the source document, this will be the default"
 " picking policy for this operation type."
 msgstr ""
+"Ellei lähdeasiakirjassa ole aiemmin määritetty, tämä on toimintatyypin "
+"oletusarvoinen poimintakäytäntö."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -10248,7 +10241,7 @@ msgstr "Peruuta varaus"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_customer_lot_filter
 msgid "Unreturned"
-msgstr ""
+msgstr "Palauttamattomat"
 
 #. module: stock
 #. odoo-python
@@ -10310,6 +10303,9 @@ msgid ""
 "\n"
 "To avoid this, please discard the source location change before saving."
 msgstr ""
+"Tämän siirron sijainnin päivittäminen johtaa siihen, että tällä hetkellä osoitettujen kohteiden varaukset poistetaan. Kohteita yritetään varata uuteen sijaintiin, ja yhteys edellisiin siirtoihin poistetaan.\n"
+"\n"
+"Välttääksesi tämän, hävitä lähteen sijaintimuutos ennen tallentamista."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__1
@@ -10442,7 +10438,7 @@ msgstr "Näkyvyyspäivät"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Visibility days"
-msgstr ""
+msgstr "Näkyvyyden päivät"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__shipping_volume
@@ -10635,7 +10631,7 @@ msgstr "Varoitus!"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Warning: change source location"
-msgstr ""
+msgstr "Varoitus: muuta lähteen sijainti"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10744,6 +10740,8 @@ msgid ""
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
 "the need."
 msgstr ""
+"Kun tuotteita tarvitaan <b>%(destination)s</b>, <br/> <b>%(operation)s</b> "
+"luodaan <b>%(source_location)s</b> täyttämään tarve."
 
 #. module: stock
 #. odoo-python
@@ -10752,6 +10750,8 @@ msgid ""
 "When products arrive in <b>%(source_location)s</b>, <br> "
 "<b>%(operation)s</b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
+"Kun tuotteet saapuvat <b>%(source_location)s</b>, <br/> <b>%(operation)s</b>"
+" luodaan lähettämään ne osoitteeseen <b>%(destination)s</b>."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
@@ -11162,7 +11162,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "You cannot duplicate stock quants."
-msgstr ""
+msgstr "Varaston määrän asetuksen kirjauksia (quants) ei voi monistaa."
 
 #. module: stock
 #. odoo-python
@@ -11348,6 +11348,8 @@ msgid ""
 "You need to supply a Lot/Serial Number for product:\n"
 "%(products)s"
 msgstr ""
+"Sinun on annettava tuotteen erä- tai sarjanumero:\n"
+"%(products)s"
 
 #. module: stock
 #. odoo-python
@@ -11634,7 +11636,7 @@ msgstr "olisi täydennettävä"
 #. module: stock
 #: model:ir.actions.server,name:stock.click_dashboard_graph
 msgid "stock.click_dashboard_graph"
-msgstr ""
+msgstr "stock.click_dashboard_graphi"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.method_action_picking_tree_incoming

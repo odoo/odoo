@@ -3,16 +3,16 @@
 # 	* hr
 # 
 # Translators:
-# Wil Odoo, 2024
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,11 +69,6 @@ msgstr "1 สายเรียกเข้า"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
 msgstr "12 วัน/ ปี รวมถึง <br>6 ของตัวเลือกของคุณ"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "12345678901"
-msgstr "12345678901"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -140,12 +135,12 @@ msgstr "<small><b>อ่าน</b></small>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"flex-shrink-0 ml8 me-2\">IP Addresses</span>"
-msgstr ""
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">ที่อยู่ IP</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"flex-shrink-0 ml8 me-2\">Sent Emails</span>"
-msgstr ""
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">ส่งอีเมลแล้ว</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -295,7 +290,7 @@ msgstr "จำเป็นต้องดำเนินการ"
 #: model_terms:digest.tip,tip_description:hr.digest_tip_hr_0
 msgid ""
 "Activate Remote Work to let Employees specify where they are working from."
-msgstr ""
+msgstr "เปิดใช้งานการทำงานระยะไกลเพื่อให้พนักงานระบุได้ว่าตนเองทำงานจากที่ใด"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
@@ -462,7 +457,7 @@ msgstr "นำไปใช้"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_apprenticeship
 msgid "Apprenticeship"
-msgstr ""
+msgstr "การฝึกงาน"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -632,6 +627,11 @@ msgstr "ไอดีเหรียญรางวัล"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account"
+msgstr "บัญชีธนาคาร"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
 msgstr "บัญชีธนาคาร"
 
 #. module: hr
@@ -1015,11 +1015,13 @@ msgid ""
 "Define the allowed IP to be displayed as Present. In case of multiple "
 "addresses, separate them by a coma."
 msgstr ""
+"กำหนด IP ที่อนุญาตให้แสดงเป็นปัจจุบัน ในกรณีที่มีหลายที่อยู่ "
+"ให้คั่นด้วยเครื่องหมายจุลภาค"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Define the minimum number of sent emails to be displayed as Present."
-msgstr ""
+msgstr "กำหนดจำนวนอีเมลที่ส่งขั้นต่ำที่จะแสดงเป็น \"ปัจจุบัน\""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
@@ -1185,6 +1187,12 @@ msgid ""
 msgstr ""
 "แสดงการตั้งค่าการทำงานระยะไกลสำหรับพนักงานแต่ละคนและรายงานเฉพาะ "
 "ไอคอนการแสดงตัวตนจะได้รับการอัปเดตด้วยสถานที่ทำงานระยะไกล"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Divorced"
+msgstr "หย่าร้าง"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__doctor
@@ -1653,13 +1661,13 @@ msgstr "ระยะห่างระหว่างบ้าน-ที่ท�
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 #: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Home-Work Distance in Km"
-msgstr ""
+msgstr "ระยะทางบ้าน-ที่ทำงาน กม."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__distance_home_work_unit
 #: model:ir.model.fields,field_description:hr.field_res_users__distance_home_work_unit
 msgid "Home-Work Distance unit"
-msgstr ""
+msgstr "หน่วยระยะทางบ้าน-ที่ทำงาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
@@ -1672,7 +1680,7 @@ msgstr "แสดงไอคอน Hr"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_manager_department_report
 msgid "Hr Manager Department Report"
-msgstr ""
+msgstr "รายงานฝ่ายผู้จัดการฝ่ายทรัพยากรบุคคล"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
@@ -1816,14 +1824,14 @@ msgstr "ชั่วคราว"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_part_time
 msgid "Intern"
-msgstr ""
+msgstr "นักศึกษาฝึกงาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__is_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_flexible
 msgid "Is Flexible"
-msgstr ""
+msgstr "มีความยืดหยุ่น"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
@@ -1837,7 +1845,7 @@ msgstr "เป็นผู้ติดตาม"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__is_fully_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_fully_flexible
 msgid "Is Fully Flexible"
-msgstr ""
+msgstr "มีความยืดหยุ่นแบบสมบูรณ์"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_manager
@@ -1976,6 +1984,12 @@ msgid "Lead the entire sales cycle"
 msgstr "เป็นผู้นำในด้านวงจรการขายทั้งหมด"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Legal Cohabitant"
+msgstr "การอยู่กินฉันสามีภริยา"
+
+#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
 msgstr "มาสร้างตำแหน่งงานกันเถอะ"
@@ -2053,11 +2067,6 @@ msgid "Manager of employee %s is not set."
 msgstr "ผู้จัดการของพนักงาน %s ยังไม่ได้ตั้งค่า"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Marc Demo"
-msgstr "Marc Demo"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
 #: model:ir.model.fields,field_description:hr.field_res_users__marital
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2068,6 +2077,12 @@ msgstr "สถานภาพ"
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
 msgstr "ผู้จัดการฝ่ายการตลาดและชุมชน"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Married"
+msgstr "แต่งงาน"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__master
@@ -2405,7 +2420,7 @@ msgstr "นอกเวลาทำการ"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_out_of_working_hour
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__out_of_working_hour
 msgid "Out of Working hours"
-msgstr ""
+msgstr "นอกเวลาทำการ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
@@ -2591,12 +2606,12 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Condition"
-msgstr ""
+msgstr "เงื่อนไขการแสดงตัวตน"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Display"
-msgstr ""
+msgstr "แสดงการแสดงตัวตน"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2984,6 +2999,12 @@ msgid "Show employees"
 msgstr "แสดงพนักงาน"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Single"
+msgstr "โสด"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
 msgid "Skills Management"
 msgstr "การจัดการทักษะ"
@@ -2998,11 +3019,6 @@ msgstr "หมายเลขประกันสังคม"
 #: model:ir.model.fields,help:hr.field_res_users__ssnid
 msgid "Social Security Number"
 msgstr "หมายเลขประจำตัวผู้เสียภาษี"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Software Developer"
-msgstr "นักพัฒนาซอฟต์แวร์"
 
 #. module: hr
 #. odoo-python
@@ -3067,7 +3083,7 @@ msgstr ""
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_statutaire
 msgid "Statutory"
-msgstr ""
+msgstr "ตามกฏหมาย"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -3099,6 +3115,8 @@ msgid ""
 "Structure Employees per department and have an overview of e.g.\n"
 "                    expenses, timesheets, time off, recruitment, etc."
 msgstr ""
+"จัดโครงสร้างพนักงานในแต่ละแผนกและมีภาพรวม เช่น\n"
+"                    ค่าใช้จ่าย ตารางเวลา เวลาพัก การสรรหาบุคลากร ฯลฯ"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_student
@@ -3158,7 +3176,9 @@ msgstr "ชั่วคราว"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
-msgid "The Badge ID must be a sequence of digits."
+msgid ""
+"The Badge ID must be alphanumeric without any accents and no longer than 18 "
+"characters."
 msgstr ""
 
 #. module: hr
@@ -3220,6 +3240,7 @@ msgid ""
 "The fields “%s”, which you are trying to read, are not available for "
 "employee public profiles."
 msgstr ""
+"ฟิลด์ “%s” ที่คุณพยายามอ่านนั้นไม่พร้อมใช้งานสำหรับโปรไฟล์สาธารณะของพนักงาน"
 
 #. module: hr
 #. odoo-python
@@ -3265,7 +3286,7 @@ msgstr "ใบอนุญาตทำงานของ %(employee)s จะห�
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_thesis
 msgid "Thesis"
-msgstr ""
+msgstr "วิทยานิพนธ์"
 
 #. module: hr
 #. odoo-python
@@ -3289,12 +3310,12 @@ msgstr "ฟิลด์นี้ใช้เพื่อกำหนดโซน
 msgid ""
 "This report gives you an overview of your employees based on the measures of"
 " your choice."
-msgstr ""
+msgstr "รายงานนี้ช่วยให้คุณเห็นภาพรวมของพนักงานของคุณตามมาตรการที่คุณเลือก"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "This setting block is utilized to manage the frontend design."
-msgstr ""
+msgstr "บล็อกการตั้งค่านี้ใช้ในการจัดการการออกแบบส่วนหน้า"
 
 #. module: hr
 #. odoo-python
@@ -3313,7 +3334,7 @@ msgstr "โซนเวลา"
 #: model:digest.tip,name:hr.digest_tip_hr_0
 #: model_terms:digest.tip,tip_description:hr.digest_tip_hr_0
 msgid "Tip: Where's Bryan?"
-msgstr ""
+msgstr "เคล็ดลับ: ไบรอันอยู่ไหน?"
 
 #. module: hr
 #. odoo-python
@@ -3500,6 +3521,12 @@ msgstr ""
 "ไม่ว่าพนักงานจะเป็นสมาชิกของแผนกของผู้ใช้ที่ใช้งานอยู่หรือแผนกย่อยก็ตาม"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Widower"
+msgstr "หม้าย"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__address_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__address_id
@@ -3635,6 +3662,8 @@ msgid ""
 "You are not allowed to create an employee because the user does not have "
 "access rights for %s"
 msgstr ""
+"คุณไม่ได้รับอนุญาตให้สร้างพนักงานเนื่องจากผู้ใช้ไม่มีสิทธิ์การเข้าถึงสำหรับ "
+"%s"
 
 #. module: hr
 #. odoo-python
@@ -3724,7 +3753,7 @@ msgstr "แผนก"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Building 2, Remote, etc."
-msgstr ""
+msgstr "เช่น อาคาร 2, ระยะไกล อื่นๆ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -3740,17 +3769,17 @@ msgstr "เช่น ผู้จัดการฝ่ายขาย"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Summarize the position in one or two lines..."
-msgstr ""
+msgstr "เช่น สรุปตำแหน่งเป็นหนึ่งหรือสองบรรทัด..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. johndoe@example.com"
-msgstr ""
+msgstr "เช่น johndoe@example.com"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. myprivateemail@example.com"
-msgstr ""
+msgstr "เช่น myprivateemail@example.com"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__distance_home_work_unit__kilometers

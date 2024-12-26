@@ -5,7 +5,7 @@
         <div t-att-class="className" t-ref="root">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
                 <t t-set-slot="control-panel-create-button">
-                    <t t-if="!model.root.editedRecord and activeActions.create and props.showButtons">
+                    <t t-if="!editedRecord and activeActions.create and props.showButtons">
                         <button type="button" class="btn btn-primary o_list_button_add" data-hotkey="c" t-on-click="onClickCreate" data-bounce-button="">
                             New
                         </button>
@@ -34,7 +34,7 @@
                 </t>
 
                 <t t-set-slot="layout-actions">
-                    <SearchBar t-if="searchBarToggler.state.showSearchBar" autofocus="firstLoad"/>
+                    <SearchBar toggler="searchBarToggler" autofocus="firstLoad"/>
                 </t>
                 <t t-set-slot="control-panel-navigation-additional">
                     <t t-if="!hasSelectedRecords" t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
@@ -104,7 +104,7 @@
 
     <t t-name="web.ListView.Buttons">
         <div t-if="props.showButtons" class="o_list_buttons d-flex gap-1 d-empty-none align-items-baseline" role="toolbar" aria-label="Main actions">
-            <t t-if="model.root.editedRecord">
+            <t t-if="editedRecord">
                 <button type="button" class="btn btn-primary o_list_button_save" data-hotkey="s" t-on-click.stop="onClickSave">
                     Save
                 </button>

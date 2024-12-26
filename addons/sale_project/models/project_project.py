@@ -146,6 +146,36 @@ class ProjectProject(models.Model):
         if not self.reinvoiced_sale_order_id and self.sale_line_id:
             self.reinvoiced_sale_order_id = self.sale_line_id.order_id
 
+    def _ensure_sale_order_linked(self, sol_ids):
+        """ Orders created from project/task are supposed to be confirmed to match the typical flow from sales, but since
+        we allow SO creation from the project/task itself we want to confirm newly created SOs immediately after creation.
+        However this would leads to SOs being confirmed without a single product, so we'd rather do it on record save.
+        """
+        quotations = self.env['sale.order.line'].sudo()._read_group(
+            domain=[('state', '=', 'draft'), ('id', 'in', sol_ids)],
+            aggregates=['order_id:recordset'],
+        )[0][0]
+        if quotations:
+            quotations.action_confirm()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        projects = super().create(vals_list)
+        sol_ids = {
+            vals['sale_line_id']
+            for vals in vals_list
+            if vals.get('sale_line_id')
+        }
+        if sol_ids:
+            projects._ensure_sale_order_linked(list(sol_ids))
+        return projects
+
+    def write(self, vals):
+        project = super().write(vals)
+        if sol_id := vals.get('sale_line_id'):
+            self._ensure_sale_order_linked([sol_id])
+        return project
+
     def action_view_sols(self):
         self.ensure_one()
         all_sale_order_lines = self._fetch_sale_order_items({'project.task': [('is_closed', '=', False)]})
@@ -189,7 +219,7 @@ class ProjectProject(models.Model):
                 "show_sale": True,
                 'default_partner_id': self.partner_id.id,
                 'default_project_id': self.id,
-                "create_for_project_id": self.id if embedded_action_context else False,
+                "create_for_project_id": self.id if not embedded_action_context else False,
                 "from_embedded_action": embedded_action_context
             },
             'help': "<p class='o_view_nocontent_smiling_face'>%s</p><p>%s<br/>%s</p>" %

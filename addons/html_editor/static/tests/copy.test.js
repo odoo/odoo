@@ -40,6 +40,7 @@ describe("range not collapsed", () => {
         expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe("<p>abc<br>efg</p>");
     });
 
+    test.tags("focus required");
     test("should copy a selection as text/plain, text/html and application/vnd.odoo.odoo-editor in table", async () => {
         await setupEditor(
             `]<table><tbody><tr><td><ul><li>a[</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table>`
@@ -52,6 +53,20 @@ describe("range not collapsed", () => {
         );
         expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
             "<table><tbody><tr><td><ul><li>a</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table>"
+        );
+    });
+
+    test("should copy a selection as text/html and application/vnd.odoo.odoo-editor in table", async () => {
+        await setupEditor(
+            "<p>[abcd</p><table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>]"
+        );
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("text/html")).toBe(
+            "<p>abcd</p><table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>"
+        );
+        expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
+            "<p>abcd</p><table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>"
         );
     });
 

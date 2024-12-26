@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Junko Augias, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,7 @@ msgid ""
 "Affected valuation layers: %s"
 msgstr ""
 "\n"
-"影響を受ける評価レイヤ: %s"
+"影響を受ける評価レイヤー: %s"
 
 #. module: stock_account
 #. odoo-python
@@ -762,7 +762,7 @@ msgstr "在庫勘定自動"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
 msgid "Stock Input Account"
-msgstr "在庫受入勘定"
+msgstr "在庫入力勘定"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
@@ -780,7 +780,7 @@ msgstr "在庫移動"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_output_categ_id
 msgid "Stock Output Account"
-msgstr "在庫払出勘定"
+msgstr "在庫出力勘定"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quantity_history
@@ -905,6 +905,16 @@ msgstr "自動評価を使用するには、在庫勘定を設定する必要が
 
 #. module: stock_account
 #. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"The stock valuation of a move is based on the type of the source and "
+"destination locations. As the move is already processed, you cannot modify "
+"the locations in a way that changes the valuation logic defined during the "
+"initial processing."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid ""
 "The value of a stock valuation layer cannot be negative. Landed cost could "
@@ -917,7 +927,7 @@ msgstr "在庫評価レイヤーの値を負にすることはできません。
 msgid ""
 "There are no valuation layers. Valuation layers are created when there are "
 "product moves that impact the valuation of the stock."
-msgstr "評価レイヤがありません。評価レイヤは在庫評価に影響を与えるプロダクト移動がある時に作成されます。"
+msgstr "評価レイヤーがありません。評価レイヤーは在庫評価に影響を与えるプロダクト移動がある時に作成されます。"
 
 #. module: stock_account
 #. odoo-javascript
@@ -1049,7 +1059,7 @@ msgstr "評価通貨"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
 msgid "Valuation Layers"
-msgstr "評価レイヤ"
+msgstr "評価レイヤー"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account

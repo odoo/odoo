@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import json
 
 from werkzeug.urls import url_encode
 
@@ -458,6 +459,9 @@ class TestUi(odoo.tests.HttpCase):
     def test_16_website_edit_megamenu(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_megamenu', login='admin')
 
+    def test_website_megamenu_active_nav_link(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'megamenu_active_nav_link', login='admin')
+
     def test_17_website_edit_menus(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_menus', login='admin')
 
@@ -481,12 +485,11 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_24_snippet_cache_across_websites(self):
         default_website = self.env.ref('website.default_website')
-        if self.env['website'].search_count([]) == 1:
-            self.env['website'].create({
-                'name': 'My Website 2',
-                'domain': '',
-                'sequence': 20,
-            })
+        website = self.env['website'].create({
+            'name': 'Test Website',
+            'domain': '',
+            'sequence': 20
+        })
         self.env['ir.ui.view'].with_context(website_id=default_website.id).save_snippet(
             name='custom_snippet_test',
             arch="""
@@ -497,9 +500,20 @@ class TestUi(odoo.tests.HttpCase):
             thumbnail_url='/website/static/src/img/snippets_thumbs/s_text_block.svg',
             snippet_key='s_text_block',
             template_key='website.snippets')
-        self.start_tour('/@/', 'snippet_cache_across_websites', login='admin')
+        self.start_tour('/@/', 'snippet_cache_across_websites', login='admin', cookies={
+            'websiteIdMapping': json.dumps({'Test Website': website.id})
+        })
 
     def test_26_website_media_dialog_icons(self):
+        self.env.ref('website.default_website').write({
+            'social_twitter': 'https://twitter.com/Odoo',
+            'social_facebook': 'https://www.facebook.com/Odoo',
+            'social_linkedin': 'https://www.linkedin.com/company/odoo',
+            'social_youtube': 'https://www.youtube.com/user/OpenERPonline',
+            'social_github': 'https://github.com/odoo',
+            'social_instagram': 'https://www.instagram.com/explore/tags/odoo/',
+            'social_tiktok': 'https://www.tiktok.com/@odoo',
+        })
         self.start_tour("/", 'website_media_dialog_icons', login='admin')
 
     def test_27_website_clicks(self):
@@ -526,8 +540,14 @@ class TestUi(odoo.tests.HttpCase):
     def test_31_website_edit_megamenu_big_icons_subtitles(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_megamenu_big_icons_subtitles', login='admin')
 
+    def test_32_website_background_colorpicker(self):
+        self.start_tour(self.env['website'].get_client_action_url("/"), "website_background_colorpicker", login="admin")
+
     def test_website_media_dialog_image_shape(self):
         self.start_tour("/", 'website_media_dialog_image_shape', login='admin')
+
+    def test_website_media_dialog_insert_media(self):
+        self.start_tour("/", "website_media_dialog_insert_media", login="admin")
 
     def test_website_text_font_size(self):
         self.start_tour('/@/', 'website_text_font_size', login='admin', timeout=300)
@@ -680,3 +700,9 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_snippet_carousel(self):
         self.start_tour('/', 'snippet_carousel', login='admin')
+
+    def test_media_iframe_video(self):
+        self.start_tour("/", "website_media_iframe_video", login="admin")
+
+    def test_snippet_visibility_option(self):
+        self.start_tour("/", "snippet_visibility_option", login="admin")

@@ -72,6 +72,12 @@
                     <t t-set-slot="icon">
                         <ImStatus persona="notificationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
                     </t>
+                    <t t-set-slot="requestContent">
+                        <a t-if="ui.isSmall" class="btn fa fa-bell" />
+                        <t t-else="">
+                            <a class="btn btn-primary px-2 py-1 smaller">Enable</a>
+                        </t>
+                    </t>
                 </NotificationItem>
                 <t t-set="itemIndex" t-value="itemIndex + 1"/>
             </t>
@@ -87,7 +93,7 @@
                         onClick="(isMarkAsRead) => isMarkAsRead ? this.cancelNotifications(failure) : this.onClickFailure(failure)"
                         onSwipeRight="hasTouch() ? { action: () => this.cancelNotifications(failure), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
                     >
-                        <t t-set-slot="name"><t t-esc="failure.modelName"/></t>
+                        <t t-set-slot="name"><t t-esc="getFailureNotificationName(failure)"/></t>
                     </NotificationItem>
                     <t t-set="itemIndex" t-value="itemIndex + 1"/>
                 </t>

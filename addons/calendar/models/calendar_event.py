@@ -752,9 +752,10 @@ class Meeting(models.Model):
     def _check_private_event_conditions(self):
         """ Checks if the event is private, returning True if the conditions match and False otherwise. """
         self.ensure_one()
-        event_is_private = (self.privacy == 'private' or (not self.privacy and self.user_id and self.user_id.calendar_default_privacy == 'private'))
+        event_is_private = self.privacy == 'private'
+        calendar_is_private = not self.privacy and self.sudo().user_id.calendar_default_privacy == 'private'
         user_is_not_partner = self.user_id.id != self.env.uid and self.env.user.partner_id not in self.partner_ids
-        return event_is_private and user_is_not_partner
+        return (event_is_private or calendar_is_private) and user_is_not_partner
 
     @api.depends('privacy', 'user_id')
     def _compute_display_name(self):

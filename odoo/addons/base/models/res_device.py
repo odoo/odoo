@@ -142,6 +142,7 @@ class ResDevice(models.Model):
     _inherit = ["res.device.log"]
     _description = "Devices"
     _auto = False
+    _order = 'last_activity desc'
 
     @check_identity
     def revoke(self):
@@ -188,15 +189,9 @@ class ResDevice(models.Model):
                 AND D.revoked = False
         """
 
-    @api.model
-    def _order_by(self):
-        return """
-            ORDER BY D.last_activity DESC
-        """
-
     @property
     def _query(self):
-        return "%s %s %s %s" % (self._select(), self._from(), self._where(), self._order_by())
+        return "%s %s %s" % (self._select(), self._from(), self._where())
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)

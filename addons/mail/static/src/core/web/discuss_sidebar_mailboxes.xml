@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.DiscussSidebarMailboxes">
-        <div class="d-flex flex-column flex-grow-0 gap-1 mt-2">
+        <div class="d-flex flex-column flex-grow-0 o-gap-0_5 mt-2">
             <Mailbox mailbox="store.inbox"/>
             <Mailbox mailbox="store.starred"/>
             <Mailbox mailbox="store.history"/>
@@ -27,13 +27,14 @@
             t-att-class="{
                 'bg-inherit': mailbox.notEq(store.discuss.thread),
                 'o-active': mailbox.eq(store.discuss.thread),
-                'justify-content-center position-relative': store.discuss.isSidebarCompact,
-                'py-0': !store.discuss.isSidebarCompact,
+                'justify-content-center position-relative o-compact': store.discuss.isSidebarCompact,
+                'o-py-0_5': !store.discuss.isSidebarCompact,
+                'o-unread': mailbox.counter,
             }"
             t-on-click="(ev) => this.openThread(ev)"
             t-ref="root"
         >
-            <ThreadIcon className="'bg-inherit ' + (store.discuss.isSidebarCompact ? '' : 'ms-3 me-2')" thread="mailbox"/>
+            <ThreadIcon className="'bg-inherit ' + (store.discuss.isSidebarCompact ? '' : 'mx-2')" thread="mailbox"/>
             <t t-if="!store.discuss.isSidebarCompact">
                 <div class="me-2 text-truncate small" style="line-height: 1.65;" t-esc="mailbox.name"/>
                 <div t-attf-class="flex-grow-1 {{ mailbox.counter === 0 ? 'me-3': '' }}"/>

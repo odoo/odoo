@@ -1514,7 +1514,7 @@
                 </div>
             </t>
             <t t-call="website.template_header_mobile">
-                <t t-set="_extra_navbar_classes" t-valuef="o_full_border mx-1 rounded-pill"/>
+                <t t-set="_extra_navbar_classes" t-valuef="o_full_border mx-1 rounded-pill px-3"/>
             </t>
         </div>
     </xpath>
@@ -2660,7 +2660,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </template>
 
 <template id="search_text_with_highlight" name="Website Searchbox item highlight">
-    <span t-foreach="enumerate(parts)" t-as="part" t-att-class="'text-primary' if part[0] % 2 else None" t-esc="part[1]"/>
+    <span t-foreach="enumerate(parts)" t-as="part" t-att-class="'text-primary text-primary-emphasis' if part[0] % 2 else None" t-esc="part[1]"/>
 </template>
 
 <template id="list_website_public_pages" name="Website Pages">

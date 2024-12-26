@@ -49,7 +49,8 @@ class Users extends models.Model {
 
 defineModels([Partner, Users]);
 
-test.tags("desktop")("basic form view flow", async () => {
+test.tags("desktop");
+test("basic form view flow", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -182,7 +183,8 @@ test("Many2OneAvatar with placeholder", async () => {
     expect(".o_field_widget[name='user_id'] input").toHaveAttribute("placeholder", "Placeholder");
 });
 
-test.tags("desktop")("click on many2one_avatar in a list view (multi_edit='1')", async () => {
+test.tags("desktop");
+test("click on many2one_avatar in a list view (multi_edit='1')", async () => {
     const listView = registry.category("views").get("list");
     patchWithCleanup(listView.Controller.prototype, {
         openRecord() {
@@ -275,7 +277,8 @@ test("readonly many2one_avatar in list view should not contain a link", async ()
     expect("[name='user_id'] a").toHaveCount(0);
 });
 
-test.tags("desktop")("cancelling create dialog should clear value in the field", async () => {
+test.tags("desktop");
+test("cancelling create dialog should clear value in the field", async () => {
     Users._views = {
         form: `
             <form>
@@ -302,7 +305,8 @@ test.tags("desktop")("cancelling create dialog should clear value in the field",
     expect(".o_field_widget[name=user_id] span.o_m2o_avatar_empty").toHaveCount(1);
 });
 
-test.tags("desktop")("widget many2one_avatar in kanban view (load more dialog)", async () => {
+test.tags("desktop");
+test("widget many2one_avatar in kanban view (load more dialog)", async () => {
     expect.assertions(1);
 
     for (let id = 3; id <= 12; id++) {

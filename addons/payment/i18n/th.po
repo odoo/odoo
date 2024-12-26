@@ -45,6 +45,8 @@ msgid ""
 "Number: %(account_number)s</li><li>Account Holder: "
 "%(account_holder)s</li></ul>"
 msgstr ""
+"<h3>กรุณาชำระเงินไปที่: </h3><ul><li>ธนาคาร: %(bank)s</li><li>หมายเลขบัญชี: "
+"%(account_number)s</li><li>เจ้าของบัญชี: %(account_holder)s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -1134,7 +1136,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__partial
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__partial
 msgid "Full & Partial"
-msgstr ""
+msgstr "เต็มและบางส่วน"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__full_only
@@ -2760,6 +2762,7 @@ msgid ""
 "This action will also archive %s tokens that are registered with this "
 "payment method."
 msgstr ""
+"การดำเนินการนี้จะเก็บถาวรโทเค็น %s ที่ลงทะเบียนด้วยวิธีการชำระเงินนี้ด้วย"
 
 #. module: payment
 #. odoo-python
@@ -2767,7 +2770,7 @@ msgstr ""
 msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider. "
-msgstr ""
+msgstr "การดำเนินการนี้จะเก็บถาวรโทเค็น %s ที่ลงทะเบียนกับผู้ให้บริการนี้ด้วย"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -3053,6 +3056,7 @@ msgid ""
 "You can't unarchive tokens linked to inactive payment methods or disabled "
 "providers."
 msgstr ""
+"คุณไม่สามารถยกเลิกการเก็บถาวรโทเค็นที่เชื่อมโยงกับวิธีการชำระเงินที่ไม่ได้ใช้งานหรือผู้ให้บริการที่ถูกปิดการใช้งานได้"
 
 #. module: payment
 #. odoo-python
@@ -3090,6 +3094,8 @@ msgid ""
 "You should receive an email confirming your payment within a few\n"
 "                                    minutes."
 msgstr ""
+"คุณควรได้รับอีเมลยืนยันการชำระเงินของคุณภายใน\n"
+"                                    ไม่กี่นาที"
 
 #. module: payment
 #. odoo-python

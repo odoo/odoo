@@ -3,13 +3,19 @@
 # 	* website_sale_collect
 # 
 # Translators:
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
+# Vladimir Vrgoč, 2024
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2024
+# Davor Bojkić <davor.bojkic@storm.hr>, 2024
+# Servisi RAM d.o.o. <support@servisiram.hr>, 2024
+# Kristina Palaš, 2024
 # Bole <bole@dajmi5.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:50+0000\n"
+"POT-Creation-Date: 2024-12-16 13:41+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>, 2024\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
@@ -22,8 +28,8 @@ msgstr ""
 #. module: website_sale_collect
 #: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
 msgid ""
-"<i>Your order has been saved.</i> Please come to the store to pay for your "
-"products."
+"<i>Your order has been confirmed.</i><br>Please come to the store to pay for"
+" your products."
 msgstr ""
 
 #. module: website_sale_collect
@@ -98,7 +104,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
 msgid "Out of stock"
-msgstr ""
+msgstr "Nema na zalihi"
 
 #. module: website_sale_collect
 #: model:payment.provider,name:website_sale_collect.payment_provider_on_site
@@ -115,6 +121,11 @@ msgstr ""
 #: model:ir.model,name:website_sale_collect.model_payment_provider
 msgid "Payment Provider"
 msgstr "Pružatelj usluge naplate"
+
+#. module: website_sale_collect
+#: model:ir.model,name:website_sale_collect.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transakcija plaćanja"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -139,7 +150,7 @@ msgstr "Proizvod"
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__delivery_type
 msgid "Provider"
-msgstr ""
+msgstr "Davatelj "
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
@@ -154,7 +165,7 @@ msgstr "Prodajni nalog"
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_delivery_carrier
 msgid "Shipping Methods"
-msgstr ""
+msgstr "Načini dostave"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
@@ -200,7 +211,7 @@ msgstr "Skladište"
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_website
 msgid "Website"
-msgstr ""
+msgstr "Web stranica"
 
 #. module: website_sale_collect
 #. odoo-python
@@ -213,12 +224,12 @@ msgstr ""
 #. module: website_sale_collect
 #: model_terms:payment.provider,auth_msg:website_sale_collect.payment_provider_on_site
 msgid "Your payment has been authorized."
-msgstr ""
+msgstr "Vaše plaćanje je odobreno."
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,cancel_msg:website_sale_collect.payment_provider_on_site
 msgid "Your payment has been cancelled."
-msgstr ""
+msgstr "Vaše plaćanje je otkazano."
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,done_msg:website_sale_collect.payment_provider_on_site
@@ -230,7 +241,7 @@ msgstr ""
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
 msgid "available"
-msgstr ""
+msgstr "dostupno"
 
 #. module: website_sale_collect
 #. odoo-python

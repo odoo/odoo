@@ -3,17 +3,16 @@
 # 	* hr_timesheet
 # 
 # Translators:
-# Wil Odoo, 2024
-# Jolien De Paepe, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 08:17+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -109,7 +108,7 @@ msgstr "2 uren"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "2021-09-01"
-msgstr "01-09-2021"
+msgstr "2021-09-01"
 
 #. module: hr_timesheet
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
@@ -154,9 +153,9 @@ msgid ""
 "                    </span>"
 msgstr ""
 "<span invisible=\"not has_timesheet\">\n"
-"                        Je kan geen werknemers verwijderen die urenstaten hebben.\n"
+"                        Je kunt geen werknemers verwijderen die urenstaten hebben.\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            Je kan ofwel deze werknemers archiveren, ofwel eerst al hun urenstaten verwijderen.\n"
+"                            Je kunt ofwel deze werknemers archiveren, ofwel eerst al hun urenstaten verwijderen.\n"
 "                        </span>\n"
 "                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                            Verwijder eerst al hun urenstaten.\n"
@@ -346,6 +345,11 @@ msgstr "Bedrijf"
 #: model:ir.model,name:hr_timesheet.model_res_config_settings
 msgid "Config Settings"
 msgstr "Configuratie instellingen"
+
+#. module: hr_timesheet
+#: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
+msgid "Configuration"
+msgstr "Configuratie"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -539,6 +543,11 @@ msgid "Hours / Minutes"
 msgstr "Uren / Minuten"
 
 #. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
+msgid "Hours By Task (Including Subtasks)"
+msgstr "Uren per taak (inclusief subtaken)"
+
+#. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__id
 msgid "ID"
@@ -567,16 +576,6 @@ msgstr "Ongeldige operator: %s"
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid "Invalid value: %s"
 msgstr "Ongeldige waarde: %s"
-
-#. module: hr_timesheet
-#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
-msgid ""
-"Keep track of your working hours by project every day and bill your "
-"customers for that time."
-msgstr ""
-"Houd elke dag je werkuren per project bij en factureer deze tijd aan je "
-"klanten."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -641,7 +640,7 @@ msgstr "Menu"
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__message_partner_ids
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__message_partner_ids
 msgid "Message Partner"
-msgstr "Berichtpartner"
+msgstr "Bericht van contact"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__milestone_id
@@ -684,17 +683,17 @@ msgid "No Task"
 msgstr "Geen taak"
 
 #. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
+msgid "No activities found. Let's start a new one!"
+msgstr "Geen activiteiten gevonden. Laten we een nieuwe beginnen!"
+
+#. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "No data yet!"
 msgstr "Nog geen gegevens!"
-
-#. module: hr_timesheet
-#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
-msgid "No timesheets found. Let's create one!"
-msgstr "Geen urenstaat gevonden. Maak er één aan!"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -725,7 +724,7 @@ msgstr "Hoofdtaak"
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__partner_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__partner_id
 msgid "Partner"
-msgstr "Relatie"
+msgstr "Contact"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
@@ -871,13 +870,12 @@ msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
-#: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
 msgid "Settings"
 msgstr "Instellingen"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
-msgid "Sub-Task of '<t t-out=\"title\"/>': "
+msgid "Sub-Task of '"
 msgstr ""
 
 #. module: hr_timesheet
@@ -1317,17 +1315,14 @@ msgid "Total Time Spent"
 msgstr "Totaal bestede tijd"
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
-msgid "Hours By Task (Including Subtasks)"
-msgstr "Uren per taak (inclusief subtaken)"
-
-#. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "Total:"
 msgstr "Totaal:"
 
 #. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."
@@ -1390,7 +1385,7 @@ msgid ""
 "                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
 "                    customers if required."
 msgstr ""
-"Je kan elke dag je werkuren per project registreren en opvolgen.\n"
+"Je kunt elke dag je werkuren per project registreren en opvolgen.\n"
 "                    Alle tijd die gespendeerd wordt op een project wordt als kosten geboekt en kan opnieuw gefactureerd worden aan\n"
 "                    klanten indien nodig."
 
@@ -1404,7 +1399,7 @@ msgstr "Je kunt geen urenstaten bekijken die niet van jezelf zijn."
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_employee.py:0
 msgid "You cannot delete employees who have timesheets."
-msgstr "Je kan geen werknemers verwijderen die urenstaten hebben."
+msgstr "Je kunt geen werknemers verwijderen die urenstaten hebben."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
@@ -1431,7 +1426,7 @@ msgstr ""
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "You cannot set an archived employee on existing timesheets."
 msgstr ""
-"Je kan een gearchiveerde werknemers niet op bestaande urenstaten instellen."
+"Je kunt een gearchiveerde werknemers niet op bestaande urenstaten instellen."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_task

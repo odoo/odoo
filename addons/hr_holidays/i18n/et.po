@@ -6,7 +6,6 @@
 # Martin Aavastik <martin@avalah.ee>, 2024
 # Siim Raasuke, 2024
 # Leaanika Randmets, 2024
-# Stevin Lilla, 2024
 # Arma Gedonsky <armagedonsky@hot.ee>, 2024
 # Eneli Õigus <enelioigus@gmail.com>, 2024
 # Tairi Tiimann, 2024
@@ -16,17 +15,18 @@
 # Martin Trigaux, 2024
 # Triine Aavik <triine@avalah.ee>, 2024
 # Katrin Kampura, 2024
-# JanaAvalah, 2024
 # Anna, 2024
 # Rivo Zängov <eraser@eraser.ee>, 2024
+# JanaAvalah, 2024
+# Stevin Lilla, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Rivo Zängov <eraser@eraser.ee>, 2024\n"
+"Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,13 +75,13 @@ msgstr "%(allocation_name)s (alates %(date_from)s kuni %(date_to)s)"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "%(allocation_name)s (from %(date_from)s to No Limit)"
-msgstr ""
+msgstr "%(allocation_name)s (alates %(date_from)s kuni piiranguta)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(employee)s on Time Off : %(duration)s"
-msgstr ""
+msgstr "%(employee)s on puudumas: %(duration)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -130,13 +130,13 @@ msgstr "%(name)s (%(duration)s tundi)"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 msgid "%(name)s (%(time)g remaining out of %(maximum)g days)"
-msgstr ""
+msgstr "%(name)s (%(time)g järelejäänud %(maximum)g päevast)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 msgid "%(name)s (%(time)g remaining out of %(maximum)g hours)"
-msgstr ""
+msgstr "%(name)s (%(time)g järelejäänud %(maximum)g tunnist)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -268,6 +268,8 @@ msgid ""
 "<span class=\"ml8\" invisible=\"request_unit == 'hour'\">Days</span>\n"
 "                            <span class=\"ml8\" invisible=\"request_unit != 'hour'\">Hours</span>"
 msgstr ""
+"<span class=\"ml8\" invisible=\"request_unit == 'hour'\">Päevad</span>\n"
+"<span class=\"ml8\" invisible=\"request_unit != 'hour'\">Tunnid</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -287,6 +289,9 @@ msgid ""
 "                            Back On\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"Tagasi\n"
+"</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
@@ -343,6 +348,8 @@ msgid ""
 "<span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone</span>\n"
 "                    ("
 msgstr ""
+"<span>Töötajal on sinust erinev ajatsoon! Siin on kuupäevad ja kellaajad antud töötaja ajatsoonis </span>\n"
+"("
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -362,7 +369,7 @@ msgstr "<strong>Osakonnad ja töötajad</strong>"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "A cancelled leave cannot be modified."
-msgstr ""
+msgstr "Tühistatud puudumist ei saa muuta"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_approve_department
@@ -719,14 +726,8 @@ msgstr "Taotluse tüüp"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Allocation must be \"To Approve\" or \"Second Approval\" in order to "
-"validate it."
-msgstr ""
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Allocation must be confirmed (\"To Approve\") in order to approve it."
+"Allocation must be confirmed \"To Approve\" or validated once \"Second "
+"Approval\" in order to approve it."
 msgstr ""
 
 #. module: hr_holidays
@@ -2870,6 +2871,12 @@ msgid "Rate"
 msgstr "Määr"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__rating_ids
+msgid "Ratings"
+msgstr "Hinnangud"
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__reason
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Reason"
@@ -3500,6 +3507,16 @@ msgstr ""
 msgid ""
 "The type with the smallest sequence is the default value in time off request"
 msgstr "Väikseima järjestusega tüüp on puhkusetaotluse vaikeväärtus"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"There is no employee set on the time off. Please make sure you're logged in "
+"the correct company."
+msgstr ""
+"Töötajale ei ole puudumisi määratud. Veenduge, et oleksite sisse logitud "
+"õigesse ettevõttesse."
 
 #. module: hr_holidays
 #. odoo-python

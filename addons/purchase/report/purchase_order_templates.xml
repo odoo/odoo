@@ -88,7 +88,7 @@
                                     <span class="text-align-bottom"><span t-field="line.discount"/>%</span>
                                 </td>
                                 <td class="text-end">
-                                    <span t-esc="', '.join([(tax.invoice_label or tax.name) for tax in line.taxes_id])"/>
+                                    <span t-out="', '.join([(tax.invoice_label or tax.name) for tax in line.taxes_id])"/>
                                 </td>
                                 <td class="text-end">
                                     <span t-field="line.price_subtotal"
@@ -113,7 +113,7 @@
                                 <td colspan="99" id="subtotal">
                                     <strong class="mr16">Subtotal</strong>
                                     <span
-                                        t-esc="current_subtotal"
+                                        t-out="current_subtotal"
                                         t-options='{"widget": "monetary", "display_currency": o.currency_id}'
                                     />
                                 </td>

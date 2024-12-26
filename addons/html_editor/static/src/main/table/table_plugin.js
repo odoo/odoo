@@ -475,6 +475,9 @@ export class TablePlugin extends Plugin {
     hanldeFirefoxSelection(ev = null) {
         const selection = this.document.getSelection();
         if (isBrowserFirefox()) {
+            if (!this.dependencies.selection.isSelectionInEditable(selection)) {
+                return false;
+            }
             if (selection.rangeCount > 1) {
                 // In Firefox, selecting multiple cells within a table using the mouse can create multiple ranges.
                 // This behavior can cause the original selection (where the selection started) to be lost.
@@ -696,11 +699,15 @@ export class TablePlugin extends Plugin {
         return didDeselectTable;
     }
 
-    applyTableColor(color, mode) {
+    applyTableColor(color, mode, previewMode) {
         const selectedTds = [...this.editable.querySelectorAll("td.o_selected_td")].filter(
             (node) => node.isContentEditable
         );
         if (selectedTds.length && mode === "backgroundColor") {
+            if (previewMode) {
+                // Temporarily remove backgroundColor applied by "o_selected_td" class with !important.
+                selectedTds.forEach((td) => td.classList.remove("o_selected_td"));
+            }
             for (const td of selectedTds) {
                 this.dependencies.color.colorElement(td, color, mode);
             }

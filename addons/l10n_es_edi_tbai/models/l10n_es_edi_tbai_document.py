@@ -534,7 +534,7 @@ class L10nEsEdiTbaiDocument(models.Model):
         total_amount = 0.0
         total_retention = 0.0
         for values in values_per_grouping_key.values():
-            if values['grouping_key'] and values['grouping_key']['l10n_es_type'] == 'retention':
+            if values['grouping_key'] and values['grouping_key']['l10n_es_type'] == 'retencion':
                 total_retention += values['tax_amount']
             else:
                 total_amount += values['base_amount'] + values['tax_amount']

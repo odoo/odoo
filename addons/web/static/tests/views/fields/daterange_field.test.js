@@ -1,5 +1,6 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import {
+    click,
     queryAll,
     queryAllProperties,
     queryAllTexts,
@@ -7,6 +8,7 @@ import {
     queryFirst,
     queryValue,
     resize,
+    select,
 } from "@odoo/hoot-dom";
 import { animationFrame, Deferred, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import { getTimePickers } from "@web/../tests/core/datetime/datetime_test_helpers";
@@ -61,7 +63,8 @@ beforeEach(() => {
     mockTimeZone(+5.5);
 });
 
-test.tags("desktop")("Datetime field - interaction with the datepicker", async () => {
+test.tags("desktop");
+test("Datetime field - interaction with the datepicker", async () => {
     Partner._records[0].datetime_end = "2017-03-13 00:00:00";
 
     await mountView({
@@ -86,12 +89,12 @@ test.tags("desktop")("Datetime field - interaction with the datepicker", async (
 
     expect(".o_date_item_cell.o_select_start").toHaveText("8");
     let [hourSelectStart, minuteSelectStart] = getTimePickers().at(0);
-    expect(hourSelectStart.value).toBe("15");
-    expect(minuteSelectStart.value).toBe("30");
+    expect(hourSelectStart).toHaveValue("15");
+    expect(minuteSelectStart).toHaveValue("30");
     expect(".o_date_item_cell.o_select_end").toHaveText("13");
     let [hourSelectEnd, minuteSelectEnd] = getTimePickers().at(1);
-    expect(hourSelectEnd.value).toBe("5");
-    expect(minuteSelectEnd.value).toBe("30");
+    expect(hourSelectEnd).toHaveValue("5");
+    expect(minuteSelectEnd).toHaveValue("30");
     expect(queryAll("option", { root: minuteSelectStart })).toHaveCount(12);
     // Close picker
     await contains(".o_form_view_container").click();
@@ -104,12 +107,12 @@ test.tags("desktop")("Datetime field - interaction with the datepicker", async (
 
     expect(".o_date_item_cell.o_select_start").toHaveText("8");
     [hourSelectStart, minuteSelectStart] = getTimePickers().at(0);
-    expect(hourSelectStart.value).toBe("15");
-    expect(minuteSelectStart.value).toBe("30");
+    expect(hourSelectStart).toHaveValue("15");
+    expect(minuteSelectStart).toHaveValue("30");
     expect(".o_date_item_cell.o_select_end").toHaveText("13");
     [hourSelectEnd, minuteSelectEnd] = getTimePickers().at(1);
-    expect(hourSelectEnd.value).toBe("5");
-    expect(minuteSelectEnd.value).toBe("30");
+    expect(hourSelectEnd).toHaveValue("5");
+    expect(minuteSelectEnd).toHaveValue("30");
     expect(queryAll("option", { root: minuteSelectStart })).toHaveCount(12);
     // Select a new range and check that inputs are updated
     await contains(getPickerCell("8").at(0)).click(); // 02/08/2017
@@ -123,7 +126,8 @@ test.tags("desktop")("Datetime field - interaction with the datepicker", async (
     expect("input[data-field=datetime_end]").toHaveValue("02/09/2017 05:30:00");
 });
 
-test.tags("desktop")("Date field - interaction with the datepicker", async () => {
+test.tags("desktop");
+test("Date field - interaction with the datepicker", async () => {
     Partner._fields.date_end = fields.Date({ string: "Date end" });
     Partner._records[0].date_end = "2017-02-08";
 
@@ -444,7 +448,8 @@ test("initial empty date with optional end date", async () => {
     ]);
 });
 
-test.tags("desktop")("select a range in the month on the right panel", async () => {
+test.tags("desktop");
+test("select a range in the month on the right panel", async () => {
     mockDate("2014-08-14 12:34:56", +0);
 
     Partner._records[0].datetime = false;
@@ -480,7 +485,8 @@ test.tags("desktop")("select a range in the month on the right panel", async () 
     expect(queryAllTexts(".o_header_part")).toEqual(["March 2017", "April 2017"]);
 });
 
-test.tags("desktop")("Datetime field - open datepicker and switch page", async () => {
+test.tags("desktop");
+test("Datetime field - open datepicker and switch page", async () => {
     Partner._records[0].datetime_end = "2017-03-13 00:00:00";
     Partner._records.push({
         id: 2,
@@ -1008,7 +1014,8 @@ test("invalid empty date with optional start date", async () => {
     expect(".o_field_daterange").toHaveClass("o_field_invalid");
 });
 
-test.tags("desktop")("date values are selected eagerly and do not flicker", async () => {
+test.tags("desktop");
+test("date values are selected eagerly and do not flicker", async () => {
     Partner._onChanges.datetime = () => {};
 
     const def = new Deferred();
@@ -1087,4 +1094,47 @@ test("daterange field in kanban with show_time option", async () => {
     });
 
     expect(queryAllTexts(".o_field_daterange span")).toEqual(["02/08/2017", "03/13/2017"]);
+});
+
+test("updating time keeps selected dates", async () => {
+    Partner._records[0].datetime_end = "2017-03-13 00:02:00";
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <field name="datetime" options="{'end_date_field': 'datetime_end'}"/>
+            </form>
+        `,
+    });
+
+    expect("input[data-field=datetime]").toHaveValue("02/08/2017 15:30:00");
+    expect("input[data-field=datetime_end]").toHaveValue("03/13/2017 05:32:00");
+
+    await contains("input[data-field=datetime_end]").click();
+
+    expect(".o_time_picker:first .o_time_picker_select:last").toHaveValue("30");
+    expect(".o_time_picker:last .o_time_picker_select:last").not.toHaveValue();
+
+    await click(getPickerCell("16").at(-1));
+    await animationFrame();
+    await click(".o_time_picker:last .o_time_picker_select:last");
+    await select("5");
+    await animationFrame();
+
+    expect("input[data-field=datetime]").toHaveValue("02/08/2017 15:30:00");
+    expect("input[data-field=datetime_end]").toHaveValue("03/16/2017 05:05:00");
+    expect(".o_time_picker:first .o_time_picker_select:last").toHaveValue("30");
+    expect(".o_time_picker:last .o_time_picker_select:last").toHaveValue("5");
+
+    await click(".o_time_picker:first .o_time_picker_select:last");
+    await select("35");
+    await animationFrame();
+
+    expect("input[data-field=datetime]").toHaveValue("02/08/2017 15:35:00");
+    expect("input[data-field=datetime_end]").toHaveValue("03/16/2017 05:05:00");
+    expect(".o_time_picker:first .o_time_picker_select:last").toHaveValue("35");
+    expect(".o_time_picker:last .o_time_picker_select:last").toHaveValue("5");
 });

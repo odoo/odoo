@@ -821,6 +821,7 @@ class WebsocketRequest:
 
         try:
             self.registry = Registry(self.db)
+            threading.current_thread().dbname = self.registry.db_name
             self.registry.check_signaling()
         except (
             AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError
@@ -889,7 +890,7 @@ class WebsocketConnectionHandler:
     # Latest version of the websocket worker. This version should be incremented
     # every time `websocket_worker.js` is modified to force the browser to fetch
     # the new worker bundle.
-    _VERSION = "18.0-2"
+    _VERSION = "18.0-3"
 
     @classmethod
     def websocket_allowed(cls, request):

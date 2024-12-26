@@ -36,7 +36,7 @@ class ProjectProject(models.Model):
             'res_model': 'mrp.bom',
             'domain': [('project_id', '=', self.id)],
             'name': self.env._('Bills of Materials'),
-            'view_mode': 'list,form',
+            'view_mode': 'list,kanban,form',
             'context': {'default_project_id': self.id},
             'help': "<p class='o_view_nocontent_smiling_face'>%s</p><p>%s</p>" % (
                 _("No bill of materials found. Let's create one."),

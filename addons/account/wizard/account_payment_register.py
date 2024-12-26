@@ -179,7 +179,7 @@ class AccountPaymentRegister(models.TransientModel):
         '''
         if len(lines.move_id) == 1:
             move = lines.move_id
-            label = (len(lines) == 1 and lines.name) or move.ref or move.name
+            label = move.payment_reference or move.ref or move.name
         else:
             label = self.company_id.get_next_batch_payment_communication()
         return label
@@ -252,7 +252,7 @@ class AccountPaymentRegister(models.TransientModel):
             # Receiving money on a bank account linked to the journal.
             return journal.bank_account_id
         else:
-            company = min(batch_result['lines'].company_id, key=lambda c: len(c.parent_ids))
+            company = min(batch_result['lines'].company_id, key=lambda c: len(c.sudo().parent_ids))
             # Sending money to a bank account owned by a partner.
             return batch_result['lines'].partner_id.bank_ids.filtered(lambda x: x.company_id.id in (False, company.id))._origin
 

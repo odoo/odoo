@@ -91,7 +91,7 @@ class StockMove(models.Model):
         draft_repair_moves = repair_moves.filtered(lambda m: m.state == 'draft' and m.repair_id.state in ('confirmed', 'under_repair'))
         other_repair_moves = repair_moves - draft_repair_moves
         draft_repair_moves._check_company()
-        draft_repair_moves._adjust_procure_method()
+        draft_repair_moves._adjust_procure_method(picking_type_code='repair_operation')
         res = draft_repair_moves._action_confirm()
         res._trigger_scheduler()
         confirmed_repair_moves = (res | other_repair_moves)

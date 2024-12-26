@@ -19,7 +19,7 @@ import { user } from "@web/core/user";
 export const AVATAR_SIZE = 25;
 
 export class CollaborationSelectionAvatarPlugin extends Plugin {
-    static id = "collaboration_selection_avatar";
+    static id = "collaborationSelectionAvatar";
     static dependencies = ["history", "position", "localOverlay", "collaborationOdoo"];
     resources = {
         /** Handlers */
@@ -69,11 +69,14 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
      */
     drawPeerAvatar(selectionInfo) {
         const { selection, peerId } = selectionInfo;
-        const { avatarUrl, peerName = _t("Anonymous") } =
-            this.dependencies.collaborationOdoo.getPeerMetadata(peerId);
+        const peerMetadata = this.dependencies.collaborationOdoo.getPeerMetadata(peerId);
+        if (!peerMetadata) {
+            return;
+        }
+        const { avatarUrl, peerName = _t("Anonymous") } = peerMetadata;
         const anchorNode = this.dependencies.history.getNodeById(selection.anchorNodeId);
         const focusNode = this.dependencies.history.getNodeById(selection.focusNodeId);
-        if (!anchorNode || !focusNode) {
+        if (!anchorNode || !focusNode || !anchorNode.isConnected || !focusNode.isConnected) {
             return;
         }
         const anchorBlock = closestBlock(anchorNode);

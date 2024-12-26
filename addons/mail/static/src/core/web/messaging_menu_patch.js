@@ -6,7 +6,6 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { MessagingMenuQuickSearch } from "@mail/core/web/messaging_menu_quick_search";
-import { isDisplayStandalone, isIOS, isIosApp } from "@web/core/browser/feature_detection";
 
 Object.assign(MessagingMenu.components, { MessagingMenuQuickSearch });
 
@@ -78,8 +77,8 @@ patch(MessagingMenu.prototype, {
     },
     get installationRequest() {
         return {
-            body: _t("Come here often? Install Odoo on your device!"),
-            displayName: _t("%s has a suggestion", this.store.odoobot.name),
+            body: _t("Come here often? Install the app for quick and easy access!"),
+            displayName: _t("Install Odoo"),
             onClick: () => {
                 this.pwa.show();
             },
@@ -90,8 +89,8 @@ patch(MessagingMenu.prototype, {
     },
     get notificationRequest() {
         return {
-            body: _t("Enable desktop notifications to chat"),
-            displayName: _t("%s has a request", this.store.odoobot.name),
+            body: _t("Stay tuned! Enable push notifications to never miss a message."),
+            displayName: _t("Turn on notifications"),
             iconSrc: this.store.odoobot.avatarUrl,
             partner: this.store.odoobot,
             isShown: this.store.discuss.activeTab === "main" && this.shouldAskPushPermission,
@@ -178,10 +177,12 @@ patch(MessagingMenu.prototype, {
         return this.store.discuss.activeTab !== "channel" && !this.state.adding;
     },
     get shouldAskPushPermission() {
-        if (isIOS() && !isDisplayStandalone() && !isIosApp()) {
-            // iOS browser apps do not have push notifications: Only PWA and apps have them.
-            return false;
-        }
         return this.notification.permission === "prompt";
+    },
+    getFailureNotificationName(failure) {
+        if (failure.type === "email") {
+            return _t("Email Failure: %(modelName)s", { modelName: failure.modelName });
+        }
+        return _t("Failure: %(modelName)s", { modelName: failure.modelName });
     },
 });

@@ -52,7 +52,8 @@ test("close on click away", async () => {
     expect(".o_popover #comp").toHaveCount(0);
 });
 
-test.tags("desktop")("close on 'Escape' keydown", async () => {
+test.tags("desktop");
+test("close on 'Escape' keydown", async () => {
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
         static props = ["*"];

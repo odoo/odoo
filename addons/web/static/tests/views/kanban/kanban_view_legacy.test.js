@@ -211,10 +211,11 @@ test("display full is supported on fields", async () => {
     });
 
     expect(".o_kanban_record span.o_text_block").toHaveCount(4);
-    expect(queryFirst("span.o_text_block").textContent).toBe("yop");
+    expect("span.o_text_block:first").toHaveText("yop");
 });
 
-test.tags("desktop")("basic grouped rendering", async () => {
+test.tags("desktop");
+test("basic grouped rendering", async () => {
     expect.assertions(16);
 
     patchWithCleanup(KanbanRenderer.prototype, {
@@ -735,8 +736,7 @@ test("many2many_tags in kanban views", async () => {
     expect(".o_kanban_record:nth-child(2) .o_tag").toHaveCount(1, {
         message: "there should be only one tag in second record",
     });
-    const tag = queryFirst(".o_kanban_record:nth-child(2) .o_tag");
-    expect(tag.innerText).toBe("silver");
+    expect(".o_kanban_record:nth-child(2) .o_tag:first").toHaveText("silver");
 
     // Write on the record using the priority widget to trigger a re-render in readonly
     await contains(".o_kanban_record:first-child .o_priority_star:first-child").click();
@@ -745,9 +745,8 @@ test("many2many_tags in kanban views", async () => {
     expect(".o_kanban_record:first-child .o_field_many2many_tags .o_tag").toHaveCount(2, {
         message: "first record should still contain only 2 tags",
     });
-    const tags = queryAll(".o_kanban_record:first-child .o_tag");
-    expect(tags[0].innerText).toBe("gold");
-    expect(tags[1].innerText).toBe("silver");
+    expect(".o_kanban_record:first-child .o_tag:eq(0)").toHaveText("gold");
+    expect(".o_kanban_record:first-child .o_tag:eq(1)").toHaveText("silver");
 
     // click on a tag (should trigger switch_view)
     await contains(".o_kanban_record:first-child .o_tag:first-child").click();
@@ -1133,8 +1132,8 @@ test("rendering date and datetime (value)", async () => {
             </kanban>`,
     });
 
-    expect(getKanbanRecord({ index: 0 }).querySelector(".date").innerText).toBe("01/25/2017");
-    expect(getKanbanRecord({ index: 1 }).querySelector(".datetime").innerText).toBe(
+    expect(getKanbanRecord({ index: 0 }).querySelector(".date")).toHaveText("01/25/2017");
+    expect(getKanbanRecord({ index: 1 }).querySelector(".datetime")).toHaveText(
         "12/12/2016 11:55:05"
     );
 });
@@ -1161,10 +1160,10 @@ test("rendering date and datetime (raw value)", async () => {
             </kanban>`,
     });
 
-    expect(getKanbanRecord({ index: 0 }).querySelector(".date").innerText).toBe(
+    expect(getKanbanRecord({ index: 0 }).querySelector(".date")).toHaveText(
         "2017-01-25T00:00:00.000+01:00"
     );
-    expect(getKanbanRecord({ index: 1 }).querySelector(".datetime").innerText).toBe(
+    expect(getKanbanRecord({ index: 1 }).querySelector(".datetime")).toHaveText(
         "2016-12-12T11:55:05.000+01:00"
     );
 });
@@ -1301,9 +1300,7 @@ test("basic support for widgets (being Owl Components)", async () => {
             </kanban>`,
     });
 
-    expect(getKanbanRecord({ index: 2 }).querySelector(".o_widget").innerText).toBe(
-        '{"foo":"gnap"}'
-    );
+    expect(getKanbanRecord({ index: 2 }).querySelector(".o_widget")).toHaveText('{"foo":"gnap"}');
 });
 
 test("kanban card: record value should be updated", async () => {
@@ -1539,7 +1536,8 @@ test("test displaying image from m2o field (m2o field not set)", async () => {
     ]);
 });
 
-test.tags("desktop")("set cover image", async () => {
+test.tags("desktop");
+test("set cover image", async () => {
     expect.assertions(9);
 
     IrAttachment._records = [
@@ -1635,7 +1633,8 @@ test.tags("desktop")("set cover image", async () => {
     expect.verifySteps(["1", "2"]);
 });
 
-test.tags("desktop")("open file explorer if no cover image", async () => {
+test.tags("desktop");
+test("open file explorer if no cover image", async () => {
     expect.assertions(2);
 
     Partner._fields.displayed_image_id = fields.Many2one({
@@ -1693,7 +1692,8 @@ test.tags("desktop")("open file explorer if no cover image", async () => {
     });
 });
 
-test.tags("desktop")("unset cover image", async () => {
+test.tags("desktop");
+test("unset cover image", async () => {
     IrAttachment._records = [
         {
             id: 1,
@@ -1782,7 +1782,8 @@ test.tags("desktop")("unset cover image", async () => {
     expect.verifySteps(["1", "2"]);
 });
 
-test.tags("desktop")("ungrouped kanban with handle field", async () => {
+test.tags("desktop");
+test("ungrouped kanban with handle field", async () => {
     expect.assertions(3);
 
     onRpc("/web/dataset/resequence", async (request) => {
@@ -2042,7 +2043,7 @@ test("kanban widget can extract props from attrs", async () => {
     });
 
     expect(".o-test-widget-option").toHaveCount(4);
-    expect(queryFirst(".o-test-widget-option").textContent).toBe("Widget with Option");
+    expect(".o-test-widget-option:first").toHaveText("Widget with Option");
 });
 
 test("action/type attributes on kanban arch, type='object'", async () => {
@@ -2140,7 +2141,7 @@ test("Missing t-key is automatically filled with a warning", async () => {
     });
 
     expect.verifySteps(["warning"]);
-    expect(getKanbanRecord({ index: 0 }).innerText).toBe("123");
+    expect(getKanbanRecord({ index: 0 })).toHaveText("123");
 });
 
 test("Allow use of 'editable'/'deletable' in ungrouped kanban", async () => {

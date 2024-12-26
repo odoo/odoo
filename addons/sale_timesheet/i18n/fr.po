@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -74,6 +74,9 @@ msgid ""
 "distribution of the sale order item '%(so_line_name)s' linked to the "
 "timesheet."
 msgstr ""
+"Les plans analytiques '%(missing_plan_names)s' sont requis dans la "
+"distribution analytique de l'article de commande client '%(so_line_name)s' "
+"lié à la feuille de temps."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
@@ -137,7 +140,7 @@ msgstr ""
 "<i class=\"fa fa-lightbulb-o\"/>\n"
 "                        <span>\n"
 "Définissez le taux auquel le temps d'un employé est facturé en fonction de son expertise, de ses compétences ou de son expérience.\n"
-"                        Pour facturer le même service à un taux différent, créez des articles de bon de commande distincts.\n"
+"                        Pour facturer le même service à un taux différent, créez des articles de commande client distincts.\n"
 "</span>"
 
 #. module: sale_timesheet
@@ -154,8 +157,8 @@ msgid ""
 "order associated with this timesheet entry has been cancelled.\" "
 "invisible=\"sale_order_state != 'cancel'\"/>"
 msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"Le bon de "
-"commande associé à cette entrée de feuille de temps a été annulé.\" "
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"La commande "
+"client associée à cette entrée de feuille de temps a été annulée.\" "
 "invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_timesheet
@@ -172,7 +175,7 @@ msgstr "<span class=\"o_stat_text\">Enregistré</span>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
-msgstr "<span class=\"o_stat_text\">Bon de commande</span>"
+msgstr "<span class=\"o_stat_text\">Commande client</span>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,job_details:sale_timesheet.job_engineer
@@ -213,7 +216,7 @@ msgstr "<strong>Factures :</strong>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Sales Order:</strong>"
-msgstr "<strong>Bon de commande :</strong>"
+msgstr "<strong>Commande client :</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
@@ -417,7 +420,7 @@ msgstr "Par type de facturation"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__sale_order_id
 msgid "Choose the Sales Order to invoice"
-msgstr "Choisissez le bon de commande à facturer"
+msgstr "Choisissez la commande client à facturer"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__commercial_partner_id
@@ -458,7 +461,7 @@ msgstr "Créer une facture depuis le projet"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
 msgid "Create Sales Order from Project"
-msgstr "Créer un bon de commande depuis le projet"
+msgstr "Créer une commande client depuis le projet"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -550,6 +553,11 @@ msgid ""
 "                    Several activities are often organized all over the year, such as weekly\n"
 "                    sports sessions, team building events, monthly drink, and much more"
 msgstr ""
+"Chaque employé a la chance de voir l'impact qu'a son travail.\n"
+"                    Vous pouvez réellement contribuer au succès de la société.\n"
+"                    <br>\n"
+"                    De nombreuses activités sont organisées au cours de l'année, comme des sessions de sports hebdomadaires,\n"
+"                    des événements de team-building, des after-works et bien plus encore"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1131,7 +1139,7 @@ msgstr "Facture de paiement d'avance"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Sales Order"
-msgstr "Bon de commande"
+msgstr "Commande client"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1144,7 +1152,7 @@ msgstr "Bon de commande"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_sale_order
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Sales Order Item"
-msgstr "Article du bon de commande"
+msgstr "Article de la commande client"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
@@ -1154,7 +1162,18 @@ msgstr "Ligne de commande"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet_so_button
 msgid "Sales Orders"
-msgstr "Bons de commande"
+msgstr "Commandes clients"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
+msgid ""
+"Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+"If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
+"You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
+msgstr ""
+"L'article de la commande qui sera sélectionné par défaut sur les feuilles de temps de l'employé correspondant. Il contourne l'article de la commande défini sur le projet et la tâche et peut être modifié sur chaque entrée de feuille de temps si nécessaire. En d'autres termes, il définit le taux auquel le temps d'un employé est facturé en fonction de son expertise, ses compétences ou son expérience par exemple. \n"
+"Si vous voulez facturer le même service à des taux différents, vous devez créer deux articles de commande séparés puisque chaque article de commande ne peut avoir qu'un seul prix unitaire à la fois.\n"
+"Vous pouvez également définir le coût horaire de l'entreprise de vos employés pour leurs feuilles de temps sur ce projet spécifiquement. Il contourne le coût de feuille de temps défini pour l'employé."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
@@ -1170,7 +1189,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr "Bon de commande auquel la tâche est liée."
+msgstr "Commande client à laqudelle la tâche est liée."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1182,7 +1201,7 @@ msgstr "Rechercher dans la facture"
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 msgid "Search in Sales Order"
-msgstr "Rechercher dans le bon de commande"
+msgstr "Rechercher dans la commande client"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -1221,7 +1240,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
 #: model:project.project,label_tasks:sale_timesheet.project_support
 msgid "Services"
-msgstr "Interventions"
+msgstr "Services"
 
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_engineer
@@ -1294,7 +1313,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
 msgid "The selected Sales Order should contain something to invoice."
-msgstr "Le bon de commande sélectionné doit contenir un élément à facturer."
+msgstr "La commande client sélectionnée doit contenir un élément à facturer."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__pricing_type
@@ -1502,6 +1521,7 @@ msgstr "Feuilles de temps prises en compte lorsque le temps passé est facturé"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Timesheets without a sales order item are reported as"
 msgstr ""
+"Les feuilles de temps sans article de commande client sont rapportées comme"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -1525,7 +1545,7 @@ msgid ""
 "Total amount to invoice on the sales order, including all items (services, "
 "storables, expenses, ...)"
 msgstr ""
-"Le montant total à facture sur le bon de commande, incluant tous les "
+"Le montant total à facture sur la commande client, incluant tous les "
 "articles (services, notes de frais, stockables,...)"
 
 #. module: sale_timesheet

@@ -3,7 +3,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component, onMounted, useState, reactive, onWillRender } from "@odoo/owl";
+import { Component, onMounted, useEffect, useState, reactive, onWillRender } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/generic_components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
 import {
@@ -53,6 +53,7 @@ export class ProductScreen extends Component {
         this.state = useState({
             previousSearchWord: "",
             currentOffset: 0,
+            quantityByProductTmplId: {},
         });
         onMounted(() => {
             this.pos.openOpeningControl();
@@ -85,6 +86,18 @@ export class ProductScreen extends Component {
         this.numberBuffer.use({
             useWithBarcode: true,
         });
+
+        useEffect(
+            () => {
+                this.state.quantityByProductTmplId = this.currentOrder?.lines?.reduce((acc, ol) => {
+                    acc[ol.product_id.raw.product_tmpl_id]
+                        ? (acc[ol.product_id.raw.product_tmpl_id] += ol.qty)
+                        : (acc[ol.product_id.raw.product_tmpl_id] = ol.qty);
+                    return acc;
+                }, {});
+            },
+            () => [this.currentOrder.totalQuantity]
+        );
     }
     getAncestorsAndCurrent() {
         const selectedCategory = this.pos.selectedCategory;
@@ -346,21 +359,33 @@ export class ProductScreen extends Component {
             ...this.pos.session._pos_special_products_ids,
         ];
 
-        list = list
-            .filter(
-                (product) => !excludedProductIds.includes(product.id) && product.available_in_pos
-            )
-            .slice(0, 100);
+        const filteredList = [];
+        for (const product of list) {
+            if (filteredList.length >= 100) {
+                break;
+            }
+            if (!excludedProductIds.includes(product.id) && product.available_in_pos) {
+                filteredList.push(product);
+            }
+        }
 
         return this.searchWord !== ""
-            ? list
-            : list.sort((a, b) => a.display_name.localeCompare(b.display_name));
+            ? filteredList
+            : filteredList.sort((a, b) => a.display_name.localeCompare(b.display_name));
     }
 
     getProductsBySearchWord(searchWord) {
-        return fuzzyLookup(unaccent(searchWord, false), this.products, (product) =>
+        const exactMatches = this.products.filter((product) => product.exactMatch(searchWord));
+
+        if (exactMatches.length > 0 && searchWord.length > 2) {
+            return exactMatches;
+        }
+
+        const fuzzyMatches = fuzzyLookup(unaccent(searchWord, false), this.products, (product) =>
             unaccent(product.searchString, false)
         );
+
+        return Array.from(new Set([...exactMatches, ...fuzzyMatches]));
     }
 
     addMainProductsToDisplay(products) {

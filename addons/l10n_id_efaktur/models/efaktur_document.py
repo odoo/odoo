@@ -143,7 +143,7 @@ class EfakturDocument(models.Model):
             eTax['TANGGAL_FAKTUR'] = move.invoice_date.strftime("%-d/%-m/%Y")
             eTax['NPWP'] = invoice_npwp
             eTax['NAMA'] = etax_name
-            eTax['ALAMAT_LENGKAP'] = move.partner_id.contact_address.replace('\n', '').strip()
+            eTax['ALAMAT_LENGKAP'] = move.partner_id._display_address(without_company=True).replace('\n', ' ').replace('  ', ' ').strip()
             eTax['JUMLAH_DPP'] = int(float_round(move.amount_untaxed, 0))  # currency rounded to the unit
             eTax['JUMLAH_PPN'] = int(float_round(move.amount_tax, 0, rounding_method="DOWN"))  # tax amount ALWAYS rounded down
             eTax['ID_KETERANGAN_TAMBAHAN'] = '1' if move.l10n_id_kode_transaksi == '07' else ''

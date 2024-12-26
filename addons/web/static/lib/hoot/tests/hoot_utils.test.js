@@ -97,7 +97,34 @@ describe(parseUrl(import.meta.url), () => {
             `{
   a: true,
   b: 2,
-}`
+}`.trim()
+        );
+
+        expect(formatTechnical(["a", "b"])).toBe(
+            `[
+  "a",
+  "b",
+]`.trim()
+        );
+
+        class List extends Array {}
+
+        expect(formatTechnical(new List("a", "b"))).toBe(
+            `List [
+  "a",
+  "b",
+]`.trim()
+        );
+
+        function toArguments() {
+            return arguments;
+        }
+
+        expect(formatTechnical(toArguments("a", "b"))).toBe(
+            `Arguments [
+  "a",
+  "b",
+]`.trim()
         );
     });
 

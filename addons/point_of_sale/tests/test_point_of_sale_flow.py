@@ -268,7 +268,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 line.qty = 0
         refund = refund_form.save()
 
-        self.assertEqual(refund.amount_total, -16.0)
+        self.assertEqual(refund.amount_total, -15.0)
 
         payment_context = {"active_ids": refund.ids, "active_id": refund.id}
         refund_payment = self.PosMakePayment.with_context(**payment_context).create({
@@ -823,139 +823,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         # I close the session to generate the journal entries
         current_session.action_pos_session_closing_control()
-
-    def test_sync_from_ui(self):
-        """
-        Simulation of sales coming from the interface, even after closing the session
-        """
-
-        # I click on create a new session button
-        self.pos_config.open_ui()
-
-        current_session = self.pos_config.current_session_id
-        num_starting_orders = len(current_session.order_ids)
-
-        current_session.set_opening_control(0, None)
-
-        untax, atax = self.compute_tax(self.led_lamp, 0.9)
-        carrot_order = {
-            'amount_paid': untax + atax,
-            'amount_return': 0,
-            'amount_tax': atax,
-            'amount_total': untax + atax,
-            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
-            'fiscal_position_id': False,
-            'lines': [[0, 0,
-                {'discount': 0,
-                'pack_lot_ids': [],
-                'price_unit': 0.9,
-                'product_id': self.led_lamp.id,
-                'price_subtotal': 0.9,
-                'price_subtotal_incl': 1.04,
-                'qty': 1,
-                'tax_ids': [(6, 0, self.led_lamp.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)]}]],
-            'name': 'Order 00042-003-0014',
-            'partner_id': False,
-            'session_id': current_session.id,
-            'sequence_number': 2,
-            'payment_ids': [[0, 0,
-                {'amount': untax + atax,
-                'name': fields.Datetime.now(),
-                'payment_method_id': self.cash_payment_method.id}]],
-            'uuid': '00042-003-0014',
-            'last_order_preparation_change': '{}',
-            'user_id': self.env.uid
-        }
-
-        untax, atax = self.compute_tax(self.whiteboard_pen, 1.2)
-        zucchini_order = {
-            'amount_paid': untax + atax,
-            'amount_return': 0,
-            'amount_tax': atax,
-            'amount_total': untax + atax,
-            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
-            'fiscal_position_id': False,
-            'lines': [[0, 0,
-                {'discount': 0,
-                'pack_lot_ids': [],
-                'price_unit': 1.2,
-                'product_id': self.whiteboard_pen.id,
-                'price_subtotal': 1.2,
-                'price_subtotal_incl': 1.38,
-                'qty': 1,
-                'tax_ids': [(6, 0, self.whiteboard_pen.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)]}]],
-            'name': 'Order 00043-003-0014',
-            'partner_id': self.partner1.id,
-            'session_id': current_session.id,
-            'sequence_number': self.pos_config.journal_id.id,
-            'payment_ids': [[0, 0,
-                {'amount': untax + atax,
-                'name': fields.Datetime.now(),
-                'payment_method_id': self.credit_payment_method.id}]],
-            'uuid': '00043-003-0014',
-            'last_order_preparation_change': '{}',
-            'user_id': self.env.uid
-        }
-
-        untax, atax = self.compute_tax(self.newspaper_rack, 1.28)
-        newspaper_rack_order = {
-            'amount_paid': untax + atax,
-            'amount_return': 0,
-            'amount_tax': atax,
-            'amount_total': untax + atax,
-            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
-            'fiscal_position_id': False,
-            'lines': [[0, 0,
-                {'discount': 0,
-                'pack_lot_ids': [],
-                'price_unit': 1.28,
-                'product_id': self.newspaper_rack.id,
-                'price_subtotal': 1.28,
-                'price_subtotal_incl': 1.47,
-                'qty': 1,
-                'tax_ids': [[6, False, self.newspaper_rack.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids]]}]],
-            'name': 'Order 00044-003-0014',
-            'partner_id': False,
-            'session_id': current_session.id,
-            'sequence_number': self.pos_config.journal_id.id,
-            'payment_ids': [[0, 0,
-                {'amount': untax + atax,
-                'name': fields.Datetime.now(),
-                'payment_method_id': self.bank_payment_method.id}]],
-            'uuid': '00044-003-0014',
-            'last_order_preparation_change': '{}',
-            'user_id': self.env.uid
-        }
-
-        # I create an order on an open session
-        self.PosOrder.sync_from_ui([carrot_order])
-        self.assertEqual(num_starting_orders + 1, len(current_session.order_ids), "Submitted order not encoded")
-
-        # I close the session
-        total_cash_payment = sum(current_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
-        current_session.post_closing_cash_details(total_cash_payment)
-        current_session.close_session_from_ui()
-        self.assertEqual(current_session.state, 'closed', "Session was not properly closed")
-        self.assertFalse(self.pos_config.current_session_id, "Current session not properly recomputed")
-
-        # I keep selling after the session is closed
-        with mute_logger('odoo.addons.point_of_sale.models.pos_order'):
-            self.PosOrder.sync_from_ui([zucchini_order, newspaper_rack_order])
-        rescue_session = self.PosSession.search([
-            ('config_id', '=', self.pos_config.id),
-            ('state', '=', 'opened'),
-            ('rescue', '=', True)
-        ])
-        self.assertEqual(len(rescue_session), 1, "One (and only one) rescue session should be created for orphan orders")
-        self.assertIn("(RESCUE FOR %s)" % current_session.name, rescue_session.name, "Rescue session is not linked to the previous one")
-        self.assertEqual(len(rescue_session.order_ids), 2, "Rescue session does not contain both orders")
-
-        # I close the rescue session
-        total_cash_payment = sum(rescue_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.type == 'cash').mapped('amount'))
-        rescue_session.post_closing_cash_details(total_cash_payment)
-        rescue_session.close_session_from_ui()
-        self.assertEqual(rescue_session.state, 'closed', "Rescue session was not properly closed")
-        self.assertEqual(rescue_session.cash_register_balance_start, current_session.cash_register_balance_end_real, "Rescue session does not start with the same amount as the previous session")
 
     def test_order_to_payment_currency(self):
         """

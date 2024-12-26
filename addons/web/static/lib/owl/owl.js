@@ -1628,6 +1628,13 @@
                 fibersInError.delete(current);
                 fibersInError.delete(root);
                 current.appliedToDom = false;
+                if (current instanceof RootFiber) {
+                    // it is possible that this fiber is a fiber that crashed while being
+                    // mounted, so the mounted list is possibly corrupted. We restore it to
+                    // its normal initial state (which is empty list or a list with a mount
+                    // fiber.
+                    current.mounted = current instanceof MountFiber ? [current] : [];
+                }
             }
             return current;
         }
@@ -1744,6 +1751,7 @@
             const node = this.node;
             this.locked = true;
             let current = undefined;
+            let mountedFibers = this.mounted;
             try {
                 // Step 1: calling all willPatch lifecycle hooks
                 for (current of this.willPatch) {
@@ -1763,7 +1771,6 @@
                 node._patch();
                 this.locked = false;
                 // Step 4: calling all mounted lifecycle hooks
-                let mountedFibers = this.mounted;
                 while ((current = mountedFibers.pop())) {
                     current = current;
                     if (current.appliedToDom) {
@@ -1784,6 +1791,15 @@
                 }
             }
             catch (e) {
+                // if mountedFibers is not empty, this means that a crash occured while
+                // calling the mounted hooks of some component. So, there may still be
+                // some component that have been mounted, but for which the mounted hooks
+                // have not been called. Here, we remove the willUnmount hooks for these
+                // specific component to prevent a worse situation (willUnmount being
+                // called even though mounted has not been called)
+                for (let fiber of mountedFibers) {
+                    fiber.node.willUnmount = [];
+                }
                 this.locked = false;
                 node.app.handleError({ fiber: current || this, error: e });
             }
@@ -3200,7 +3216,7 @@
                         if (line[columnIndex]) {
                             msg +=
                                 `\nThe error might be located at xml line ${lineNumber} column ${columnIndex}\n` +
-                                `${line}\n${"-".repeat(columnIndex - 1)}^`;
+                                    `${line}\n${"-".repeat(columnIndex - 1)}^`;
                         }
                     }
                 }
@@ -3230,6 +3246,9 @@
                 }
             }
             this.getRawTemplate = config.getTemplate;
+            this.customDirectives = config.customDirectives || {};
+            this.runtimeUtils = { ...helpers, __globals__: config.globalValues || {} };
+            this.hasGlobalValues = Boolean(config.globalValues && Object.keys(config.globalValues).length);
         }
         static registerTemplate(name, fn) {
             globalTemplates[name] = fn;
@@ -3286,7 +3305,7 @@
                 this.templates[name] = function (context, parent) {
                     return templates[name].call(this, context, parent);
                 };
-                const template = templateFn(this, bdom, helpers);
+                const template = templateFn(this, bdom, this.runtimeUtils);
                 this.templates[name] = template;
             }
             return this.templates[name];
@@ -3334,10 +3353,10 @@
      * only expressive enough to understand the shape of objects, of arrays, and
      * various operators.
      */
-        //------------------------------------------------------------------------------
-        // Misc types, constants and helpers
-        //------------------------------------------------------------------------------
-    const RESERVED_WORDS = "true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,eval,void,Math,RegExp,Array,Object,Date".split(",");
+    //------------------------------------------------------------------------------
+    // Misc types, constants and helpers
+    //------------------------------------------------------------------------------
+    const RESERVED_WORDS = "true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,eval,void,Math,RegExp,Array,Object,Date,__globals__".split(",");
     const WORD_REPLACEMENT = Object.assign(Object.create(null), {
         and: "&&",
         or: "||",
@@ -3809,6 +3828,9 @@
             this.dev = options.dev || false;
             this.ast = ast;
             this.templateName = options.name;
+            if (options.hasGlobalValues) {
+                this.helpers.add("__globals__");
+            }
         }
         generateCode() {
             const ast = this.ast;
@@ -3946,16 +3968,16 @@
             const mapping = new Map();
             return tokens
                 .map((tok) => {
-                    if (tok.varName && !tok.isLocal) {
-                        if (!mapping.has(tok.varName)) {
-                            const varId = generateId("v");
-                            mapping.set(tok.varName, varId);
-                            this.define(varId, tok.value);
-                        }
-                        tok.value = mapping.get(tok.varName);
+                if (tok.varName && !tok.isLocal) {
+                    if (!mapping.has(tok.varName)) {
+                        const varId = generateId("v");
+                        mapping.set(tok.varName, varId);
+                        this.define(varId, tok.value);
                     }
-                    return tok.value;
-                })
+                    tok.value = mapping.get(tok.varName);
+                }
+                return tok.value;
+            })
                 .join("");
         }
         translate(str) {
@@ -4062,11 +4084,11 @@
                 .split(".")
                 .slice(1)
                 .map((m) => {
-                    if (!MODS.has(m)) {
-                        throw new OwlError(`Unknown event modifier: '${m}'`);
-                    }
-                    return `"${m}"`;
-                });
+                if (!MODS.has(m)) {
+                    throw new OwlError(`Unknown event modifier: '${m}'`);
+                }
+                return `"${m}"`;
+            });
             let modifiersCode = "";
             if (modifiers.length) {
                 modifiersCode = `${modifiers.join(",")}, `;
@@ -4847,29 +4869,33 @@
     // Parser
     // -----------------------------------------------------------------------------
     const cache = new WeakMap();
-    function parse(xml) {
+    function parse(xml, customDir) {
+        const ctx = {
+            inPreTag: false,
+            customDirectives: customDir,
+        };
         if (typeof xml === "string") {
             const elem = parseXML(`<t>${xml}</t>`).firstChild;
-            return _parse(elem);
+            return _parse(elem, ctx);
         }
         let ast = cache.get(xml);
         if (!ast) {
             // we clone here the xml to prevent modifying it in place
-            ast = _parse(xml.cloneNode(true));
+            ast = _parse(xml.cloneNode(true), ctx);
             cache.set(xml, ast);
         }
         return ast;
     }
-    function _parse(xml) {
+    function _parse(xml, ctx) {
         normalizeXML(xml);
-        const ctx = { inPreTag: false };
         return parseNode(xml, ctx) || { type: 0 /* Text */, value: "" };
     }
     function parseNode(node, ctx) {
         if (!(node instanceof Element)) {
             return parseTextCommentNode(node, ctx);
         }
-        return (parseTDebugLog(node, ctx) ||
+        return (parseTCustom(node, ctx) ||
+            parseTDebugLog(node, ctx) ||
             parseTForEach(node, ctx) ||
             parseTIf(node, ctx) ||
             parseTPortal(node, ctx) ||
@@ -4908,6 +4934,35 @@
         }
         else if (node.nodeType === Node.COMMENT_NODE) {
             return { type: 1 /* Comment */, value: node.textContent || "" };
+        }
+        return null;
+    }
+    function parseTCustom(node, ctx) {
+        if (!ctx.customDirectives) {
+            return null;
+        }
+        const nodeAttrsNames = node.getAttributeNames();
+        for (let attr of nodeAttrsNames) {
+            if (attr === "t-custom" || attr === "t-custom-") {
+                throw new OwlError("Missing custom directive name with t-custom directive");
+            }
+            if (attr.startsWith("t-custom-")) {
+                const directiveName = attr.split(".")[0].slice(9);
+                const customDirective = ctx.customDirectives[directiveName];
+                if (!customDirective) {
+                    throw new OwlError(`Custom directive "${directiveName}" is not defined`);
+                }
+                const value = node.getAttribute(attr);
+                const modifiers = attr.split(".").slice(1);
+                node.removeAttribute(attr);
+                try {
+                    customDirective(node, value, modifiers);
+                }
+                catch (error) {
+                    throw new OwlError(`Custom directive "${directiveName}" throw the following error: ${error}`);
+                }
+                return parseNode(node, ctx);
+            }
         }
         return null;
     }
@@ -5542,9 +5597,11 @@
         normalizeTEscTOut(el);
     }
 
-    function compile(template, options = {}) {
+    function compile(template, options = {
+        hasGlobalValues: false,
+    }) {
         // parsing
-        const ast = parse(template);
+        const ast = parse(template, options.customDirectives);
         // some work
         const hasSafeContext = template instanceof Node
             ? !(template instanceof Element) || template.querySelector("[t-set], [t-call]") === null
@@ -5566,7 +5623,7 @@
     }
 
     // do not modify manually. This file is generated by the release script.
-    const version = "2.4.1";
+    const version = "2.5.2";
 
     // -----------------------------------------------------------------------------
     //  Scheduler
@@ -5645,7 +5702,14 @@
                 if (!hasError) {
                     fiber.complete();
                 }
-                this.tasks.delete(fiber);
+                // at this point, the fiber should have been applied to the DOM, so we can
+                // remove it from the task list. If it is not the case, it means that there
+                // was an error and an error handler triggered a new rendering that recycled
+                // the fiber, so in that case, we actually want to keep the fiber around,
+                // otherwise it will just be ignored.
+                if (fiber.appliedToDom) {
+                    this.tasks.delete(fiber);
+                }
             }
         }
     }
@@ -6029,6 +6093,8 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
             dev: this.dev,
             translateFn: this.translateFn,
             translatableAttributes: this.translatableAttributes,
+            customDirectives: this.customDirectives,
+            hasGlobalValues: this.hasGlobalValues,
         });
     };
 
@@ -6072,8 +6138,8 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.date = '2024-10-31T09:42:30.824Z';
-    __info__.hash = 'b8d09e5';
+    __info__.date = '2024-12-02T15:51:07.157Z';
+    __info__.hash = '1c5b6f2';
     __info__.url = 'https://github.com/odoo/owl';
 
 

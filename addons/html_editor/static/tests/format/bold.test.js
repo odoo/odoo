@@ -169,6 +169,54 @@ test("should not format non-editable text (bold)", async () => {
     });
 });
 
+test("should make a few characters bold inside table (bold)", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td"><p>[abc</p></td>
+                        <td class="o_selected_td"><p>def</p></td>
+                        <td class="o_selected_td"><p>]<br></p></td>
+                    </tr>
+                    <tr>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>`
+        ),
+        stepFunction: bold,
+        contentAfterEdit: unformat(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td"><p>${strong(`[abc`)}</p></td>
+                        <td class="o_selected_td"><p>${strong(`def`)}</p></td>
+                        <td class="o_selected_td"><p>${strong(`]<br>`)}</p></td>
+                    </tr>
+                    <tr>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+            </tbody>
+            </table>`
+        ),
+    });
+});
+
 test("should insert a span zws when toggling a formatting command twice", () => {
     return testEditor({
         contentBefore: `<p>[]<br></p>`,
@@ -223,7 +271,8 @@ test("should type in bold", async () => {
     expect(getContent(el)).toBe(`<p>ab${strong("xy")}z[]cd</p>`);
 });
 
-test.tags("desktop")("create bold with shortcut + selected with arrow", async () => {
+test.tags("desktop");
+test("create bold with shortcut + selected with arrow", async () => {
     const { editor, el } = await setupEditor("<p>ab[]cd</p>");
     await press(["control", "b"]);
     expect(getContent(el)).toBe(`<p>ab${strong("[]\u200B", "first")}cd</p>`);

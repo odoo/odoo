@@ -244,7 +244,7 @@ msgstr "Gearchiveerd"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Associated Partner"
-msgstr "Geassocieerde relatie"
+msgstr "Geassocieerde contact"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_asustek
@@ -504,7 +504,7 @@ msgstr "Volgers"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Relaties)"
+msgstr "Volgers (Contacten)"
 
 #. module: analytic
 #. odoo-javascript
@@ -695,7 +695,7 @@ msgstr "Een of meerdere regels vereisen een 100% analytisch verdeelmodel."
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_internal
 msgid "Operating Costs"
-msgstr "Operatie kosten"
+msgstr "Operationele kosten"
 
 #. module: analytic
 #. odoo-python
@@ -733,12 +733,12 @@ msgstr "Bovenliggend pad"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__partner_id
 msgid "Partner"
-msgstr "Relatie"
+msgstr "Contact"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_category_id
 msgid "Partner Category"
-msgstr "Relatiecategorie"
+msgstr "Contactcategorie"
 
 #. module: analytic
 #. odoo-javascript
@@ -848,9 +848,9 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
-"Selecteer een relatiecategorie waarvoor de analytisch verdeelmodel zal "
+"Selecteer een contactcategorie waarvoor de analytisch verdeelmodel zal "
 "worden gebruikt (bijv. maak een nieuwe klantfactuur of verkooporder aan als "
-"we deze relatie selecteren, neemt deze dit automatisch als een analytische "
+"we deze contact selecteren, neemt deze dit automatisch als een analytische "
 "rekening)"
 
 #. module: analytic
@@ -860,9 +860,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this partner, it "
 "will automatically take this as an analytic account)"
 msgstr ""
-"Selecteer een relatie waarvoor de analytisch verdeelmodel zal worden "
+"Selecteer een contact waarvoor de analytisch verdeelmodel zal worden "
 "gebruikt (bijv. Maak een nieuwe klantfactuur of verkooporder aan als we deze"
-" relatie selecteren, neemt deze dit automatisch als een analytische "
+" contact selecteren, neemt deze dit automatisch als een analytische "
 "rekening)"
 
 #. module: analytic
@@ -921,6 +921,13 @@ msgid ""
 msgstr ""
 "Je kunt geen ander bedrijf instellen op je analytische rekening omdat er al "
 "analytische boekingen aan zijn gekoppeld."
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+#, python-format
+msgid "You cannot add a parent to the base plan '%s'"
+msgstr ""
 
 #. module: analytic
 #. odoo-python

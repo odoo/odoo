@@ -46,7 +46,7 @@ export class SelfOrder extends Reactive {
         this.session = this.models["pos.session"].getFirst();
         this.config = this.models["pos.config"].getFirst();
         this.company = this.models["res.company"].getFirst();
-        this.currency = this.models["res.currency"].getFirst();
+        this.currency = this.config.currency_id;
 
         this.markupDescriptions();
         this.access_token = this.config.access_token;
@@ -81,7 +81,7 @@ export class SelfOrder extends Reactive {
         if (this.config.self_ordering_mode === "kiosk") {
             this.onNotified("STATUS", ({ status }) => {
                 if (status === "closed") {
-                    this.pos_session = [];
+                    this.pos_session = null;
                     this.ordering = false;
                 } else {
                     // reload to get potential new settings
@@ -132,7 +132,7 @@ export class SelfOrder extends Reactive {
                 });
                 return;
             }
-            if (product.attributes.length) {
+            if (product.isConfigurable()) {
                 this.router.navigate("product", { id: product.id });
                 return;
             }
@@ -189,7 +189,18 @@ export class SelfOrder extends Reactive {
 
         this.categoryList = new Set(availableCategories);
         this.availableCategories = availableCategories.filter((c) => {
-            return now > c.hour_after && now < c.hour_until;
+            const hourStart = c.hour_after;
+            const hourUntil = c.hour_until;
+            if (hourStart === hourUntil || (hourStart === 0 && hourUntil === 24)) {
+                // if equal, it means open the whole day
+                return true;
+            } else if (hourStart < hourUntil) {
+                // in this case, if current time is in between, then shop is open
+                return now >= hourStart && now <= hourUntil;
+            } else {
+                // in this case, if current time is in between, then shop is closed
+                return !(now >= hourStart && now <= hourUntil);
+            }
         });
         this.currentCategory = this.productCategories[0] || null;
     }
@@ -221,6 +232,21 @@ export class SelfOrder extends Reactive {
         };
 
         if (Object.entries(selectedValues).length > 0) {
+            const productVariant = this.models["product.product"].find(
+                (prd) =>
+                    prd.raw.product_tmpl_id === product.raw.product_tmpl_id &&
+                    prd.product_template_variant_value_ids.every((ptav) =>
+                        Object.values(selectedValues).some((value) => ptav.id == value)
+                    )
+            );
+            if (productVariant) {
+                Object.assign(values, {
+                    product_id: productVariant,
+                    price_unit: productVariant.lst_price,
+                    tax_ids: productVariant.taxes_id.map((tax) => ["link", tax]),
+                });
+            }
+
             values.attribute_value_ids = Object.entries(selectedValues).reduce(
                 (acc, [attributeId, options]) => {
                     const optionEntries = Object.entries(
@@ -231,8 +257,10 @@ export class SelfOrder extends Reactive {
                         const attrVal = this.models["product.template.attribute.value"].get(
                             Number(optionId)
                         );
-                        values.price_extra += attrVal.price_extra;
-                        acc.push(["link", attrVal]);
+                        if (attrVal.attribute_id.create_variant !== "always") {
+                            values.price_extra += attrVal.price_extra;
+                            acc.push(["link", attrVal]);
+                        }
                     });
                     return acc;
                 },
@@ -425,8 +453,16 @@ export class SelfOrder extends Reactive {
         this.productByCategIds = this.models["product.product"].getAllBy("pos_categ_ids");
         const isSpecialProduct = (p) => this.config._pos_special_products_ids.includes(p.id);
         for (const category_id in this.productByCategIds) {
+            const productTmplIds = new Set();
             this.productByCategIds[category_id] = this.productByCategIds[category_id].filter(
-                (p) => !isSpecialProduct(p)
+                (p) => {
+                    if (!isSpecialProduct(p) && !productTmplIds.has(p.raw.product_tmpl_id)) {
+                        productTmplIds.add(p.raw.product_tmpl_id);
+                        p.available_in_pos = false;
+                        return true;
+                    }
+                    return false;
+                }
             );
         }
         const productWoCat = this.models["product.product"].filter(
@@ -562,6 +598,11 @@ export class SelfOrder extends Reactive {
                 }
             }, 1 * 1000 * 60);
         });
+    }
+
+    resetTableIdentifier() {
+        this.router.deleteTableIdentifier();
+        this.currentTable = null;
     }
 
     async initMobileData() {
@@ -744,6 +785,9 @@ export class SelfOrder extends Reactive {
             } else if (error.data.name === "werkzeug.exceptions.NotFound") {
                 message = _t("Orders not found on server");
                 cleanOrders = true;
+            } else if (error?.data?.name === "odoo.exceptions.UserError") {
+                message = error.data.message;
+                this.resetTableIdentifier();
             }
         } else if (error instanceof ConnectionLostError) {
             message = _t("Connection lost, please try again later");
@@ -765,7 +809,7 @@ export class SelfOrder extends Reactive {
     }
 
     formatMonetary(price) {
-        return webFormatCurrency(price, this.currency_id);
+        return webFormatCurrency(price, this.currency.id);
     }
 
     verifyCart() {
@@ -805,7 +849,7 @@ export class SelfOrder extends Reactive {
 
     getProductDisplayPrice(product) {
         const pricelist = this.config.pricelist_id;
-        const price = product.get_price(pricelist, 1);
+        const price = product.get_price(pricelist, 1, 0, false, product.list_price);
 
         let taxes = product.taxes_id;
 
@@ -880,7 +924,7 @@ export class SelfOrder extends Reactive {
             OrderReceipt,
             {
                 data: this.orderExportForPrinting(order),
-                formatCurrency: this.formatMonetary,
+                formatCurrency: this.formatMonetary.bind(this),
             },
             {}
         );

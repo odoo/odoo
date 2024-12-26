@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
-# Wil Odoo, 2024
 # Fernanda Alvarez, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-19 11:53+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1282,6 +1282,18 @@ msgid "Back"
 msgstr "Regresar"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/breadcrumbs/breadcrumbs.js:0
+msgid "Back to “%s”"
+msgstr "Regresar a “%s”"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/breadcrumbs/breadcrumbs.js:0
+msgid "Back to “%s” form"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Background"
 msgstr "Fondo"
@@ -2004,6 +2016,12 @@ msgstr "No se pudo mostrar el PDF seleccionado"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+msgid "Could not display the selected spreadsheet"
+msgstr "No se pudo mostrar la hoja de cálculo seleccionada"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
 msgid "Could not display the specified image url."
 msgstr "No se pudo mostrar la URL de la imagen especifica."
@@ -2366,7 +2384,7 @@ msgstr "Herramientas de desarrollador"
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_renderer.js:0
 msgid "Different currencies cannot be aggregated"
-msgstr "No se pueden agregar distintas divisas"
+msgstr "No puede agregar distintas monedas"
 
 #. module: web
 #. odoo-javascript
@@ -3142,6 +3160,13 @@ msgstr "Obtenga esta función y mucho más con Odoo Enterprise"
 #: code:addons/web/static/src/views/fields/url/url_field.xml:0
 msgid "Go to URL"
 msgstr "Ir a la URL"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.xml:0
+msgid "Google Slide Viewer"
+msgstr "Visor de presentaciones de Google"
 
 #. module: web
 #. odoo-javascript
@@ -4087,6 +4112,12 @@ msgstr "Coincidir"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
+msgid "Max value"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
 #: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
 msgid "Max value field"
 msgstr "Campo de valor máximo"
@@ -4555,7 +4586,7 @@ msgstr "No se encontraron comandos"
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_renderer.js:0
 msgid "No currency provided"
-msgstr "No se proporcionó una divisa"
+msgstr "No proporcionó una moneda"
 
 #. module: web
 #. odoo-javascript
@@ -4584,8 +4615,8 @@ msgstr "No se encontró ningún dispositivo."
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "No emoji match your search"
-msgstr "Ningún emoji coincide con su búsqueda"
+msgid "No emoji matches your search"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4631,7 +4662,7 @@ msgstr "Sin resultados"
 #: code:addons/web/static/src/core/commands/command_palette.js:0
 #: code:addons/web/static/src/core/select_menu/select_menu.xml:0
 msgid "No result found"
-msgstr "No se ha encontrado ningún resultado"
+msgstr "No se encontraron resultados"
 
 #. module: web
 #. odoo-javascript
@@ -5839,6 +5870,12 @@ msgstr "Buscar más..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
+msgid "Search emoji"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 msgid "Search for a command..."
 msgstr "Busque un comando..."
@@ -5848,12 +5885,6 @@ msgstr "Busque un comando..."
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 msgid "Search for a menu..."
 msgstr "Buscar un menú..."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "Search for an emoji"
-msgstr "Buscar un emoji"
 
 #. module: web
 #. odoo-javascript
@@ -6462,7 +6493,7 @@ msgstr "Tauro"
 #: model_terms:ir.ui.view,arch_db:web.external_layout_striped
 #: model_terms:ir.ui.view,arch_db:web.external_layout_wave
 msgid "Tax ID"
-msgstr "NIF"
+msgstr "Número de identificación fiscal"
 
 #. module: web
 #. odoo-javascript

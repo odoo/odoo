@@ -1,24 +1,13 @@
-import {
-    before,
-    beforeEach,
-    createJobScopedGetter,
-    expect,
-    getCurrent,
-    globals,
-    registerDebugInfo,
-} from "@odoo/hoot";
+import { before, createJobScopedGetter, expect, getCurrent, registerDebugInfo } from "@odoo/hoot";
 import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
-import { assets } from "@web/core/assets";
 import { RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { ensureArray, isIterable } from "@web/core/utils/arrays";
 import { isObject } from "@web/core/utils/objects";
-import { patch } from "@web/core/utils/patch";
 import { serverState } from "../mock_server_state.hoot";
-import { fetchModelDefinitions, registerModelToFetch } from "../module_set.hoot";
+import { fetchModelDefinitions, globalCachedFetch, registerModelToFetch } from "../module_set.hoot";
 import { DEFAULT_FIELD_VALUES, FIELD_SYMBOL } from "./mock_fields";
 import {
-    FIELD_NOT_FOUND,
     MockServerError,
     getRecordQualifier,
     makeKwArgs,
@@ -26,7 +15,6 @@ import {
     safeSplit,
 } from "./mock_server_utils";
 
-const { fetch: realFetch } = globals;
 const { DateTime } = luxon;
 
 /**
@@ -285,40 +273,6 @@ const mockRpcRegistry = registry.category("mock_rpc");
 /** @type {WeakMap<() => any, MockServer>} */
 const mockServers = new WeakMap();
 const serverFields = new WeakSet();
-
-beforeEach((test) => {
-    /**
-     * @template T
-     * @param {Promise<T>} promise
-     * @returns {Promise<T>}
-     */
-    const returnIfSameTest = async (promise) => {
-        if (originalTestId) {
-            const result = await promise;
-            if (originalTestId === getCurrent().test?.id) {
-                return result;
-            }
-        }
-        return new Promise(() => {});
-    };
-
-    const originalTestId = test.id;
-
-    return patch(assets, {
-        async getBundle() {
-            return returnIfSameTest(super.getBundle(...arguments));
-        },
-        async loadBundle() {
-            return returnIfSameTest(super.loadBundle(...arguments));
-        },
-        async loadCSS() {
-            return returnIfSameTest(super.loadCSS(...arguments));
-        },
-        async loadJS() {
-            return returnIfSameTest(super.loadJS(...arguments));
-        },
-    });
-});
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -799,37 +753,26 @@ export class MockServer {
             }
         }
 
-        // Compute functions
+        // Computed & related fields
         for (const model of models) {
-            for (const field of Object.values(model._fields)) {
-                /** @type {(this: Model) => void} */
-                let computeFn = field.compute;
-                if (typeof computeFn === "string") {
-                    if (typeof model[computeFn] !== "function") {
-                        throw new MockServerError(
-                            `could not find compute function "${computeFn}" on model "${model._name}"`
-                        );
-                    }
-                    computeFn = model[computeFn];
-                } else if (field.related) {
-                    const relatedFieldName = field.name;
-                    const fieldNames = safeSplit(field.related, ".");
-                    computeFn = function () {
-                        for (const record of this) {
-                            const relatedValue = this._followRelation(record, fieldNames);
-                            if (relatedValue === FIELD_NOT_FOUND) {
-                                // The related field is not found on the record, so we
-                                // remove the compute function.
-                                model._computes.delete(computeFn);
-                                return;
-                            } else {
-                                record[relatedFieldName] = relatedValue;
-                            }
+            for (const { compute, name, related } of Object.values(model._fields)) {
+                if (compute) {
+                    // Computed field
+                    /** @type {(this: Model, fieldName: string) => void} */
+                    let computeFn = compute;
+                    if (typeof computeFn !== "function") {
+                        computeFn = model[computeFn];
+                        if (typeof computeFn !== "function") {
+                            throw new MockServerError(
+                                `could not find compute function "${computeFn}" on model "${model._name}"`
+                            );
                         }
-                    };
-                }
-                if (typeof computeFn === "function") {
-                    model._computes.add(computeFn);
+                    }
+
+                    model._computes[name] = computeFn;
+                } else if (related) {
+                    // Related field
+                    model._related.add(name);
                 }
             }
         }
@@ -1036,8 +979,17 @@ export class MockServer {
 
     /** @type {RouteCallback<"bundle_name">} */
     async mockBundle(request) {
-        // No mock here: we want to fetch the actual bundle
-        return realFetch(request.url);
+        // No mock here: we want to fetch the actual bundle (and cache it between suites),
+        // although there is a protection to ensure a bundle doesn't leak to the
+        // next test.
+        const initiatorTestId = getCurrent().test?.id;
+        if (initiatorTestId) {
+            const result = await globalCachedFetch(request.url);
+            if (initiatorTestId === getCurrent().test?.id) {
+                return result;
+            }
+        }
+        return new Promise(() => {});
     }
 
     /** @type {RouteCallback} */

@@ -280,6 +280,20 @@ browser.addEventListener("popstate", (ev) => {
 });
 
 /**
+ * When the user navigates the history using the back/forward button, some browsers (Safari iOS and
+ * Safari MacOS) can restore the page using the `bfcache` (especially when we come back from an
+ * external website). Unfortunately, Odoo wasn't designed to be compatible with this cache, which
+ * leads to inconsistencies. When the `bfcache` is used to restore a page, we reload the current
+ * page, to be sure that all the elements have been rendered correctly.
+ */
+browser.addEventListener("pageshow", (ev) => {
+    if (ev.persisted) {
+        browser.clearTimeout(pushTimeout);
+        routerBus.trigger("ROUTE_CHANGE");
+    }
+});
+
+/**
  * When clicking internal links, do a loadState instead of a full page reload.
  * This also alows the mobile app to not open an in-app browser for them.
  */

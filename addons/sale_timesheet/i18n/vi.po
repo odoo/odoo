@@ -3,16 +3,16 @@
 # 	* sale_timesheet
 # 
 # Translators:
-# Wil Odoo, 2024
 # Thi Huong Nguyen, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -558,7 +558,7 @@ msgstr ""
 "Mỗi nhân viên đều có cơ hội thấy được tầm ảnh hưởng từ công việc của mình.\n"
 "             Bạn có thể tạo ra những đóng góp thiết thực cho sự thành công của công ty.\n"
 "             <br>\n"
-"             Khá nhiều hoạt động được thường xuyên tổ chức trong năm, ví dụ như chơi\n"
+"             Nhiều hoạt động được thường xuyên tổ chức trong năm, ví dụ như chơi\n"
 "             thể thao hàng tuần, sự kiện team building, đồ uống hàng tháng, và hơn thế nữa"
 
 #. module: sale_timesheet
@@ -1161,6 +1161,17 @@ msgstr "Dòng đơn bán hàng"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet_so_button
 msgid "Sales Orders"
 msgstr "Đơn bán hàng"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
+msgid ""
+"Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+"If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
+"You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
+msgstr ""
+"Hạng mục đơn bán hàng sẽ được chọn theo mặc định trên bảng chấm công của nhân viên tương ứng. Điều này bỏ qua mục đơn bán hàng được xác định trong dự án và nhiệm vụ, đồng thời có thể được điều chỉnh trên mỗi mục nhập bảng chấm công nếu cần. Nói cách khác, nó xác định mức phí mà thời gian của nhân viên được lập hóa đơn dựa trên các yếu tố như chuyên môn, kỹ năng hoặc kinh nghiệm của họ.\n"
+"Nếu bạn muốn lập hóa đơn cho cùng một dịch vụ ở một mức phí khác, bạn cần tạo hai hạng mục đơn bán hàng riêng biệt vì tại một thời điểm, mỗi hạng mục đơn bán hàng chỉ có thể có một đơn giá duy nhất.\n"
+"Bạn cũng có thể xác định chi phí theo giờ của nhân viên cho bảng chấm công của họ chỉ trong dự án này. Điều này sẽ bỏ qua chi phí bảng chấm công đã được thiết lập cho nhân viên."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line

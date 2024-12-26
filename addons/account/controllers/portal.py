@@ -57,7 +57,7 @@ class PortalAccount(CustomerPortal):
         return [
             ('state', 'not in', ('cancel', 'draft')),
             ('move_type', 'in', ('out_invoice', 'out_receipt')),
-            ('payment_state', 'not in', ('in_payment', 'paid')),
+            ('payment_state', 'not in', ('in_payment', 'paid', 'reversed', 'blocked', 'invoicing_legacy')),
             ('invoice_date_due', '<', fields.Date.today()),
             ('partner_id', '=', partner_id or request.env.user.partner_id.id),
         ]
@@ -136,7 +136,7 @@ class PortalAccount(CustomerPortal):
             'page_name': 'invoice',
             'pager': {  # vals to define the pager.
                 "url": url,
-                "url_args": {'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
+                "url_args": {'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby},
                 "total": AccountInvoice.search_count(domain) if AccountInvoice.has_access('read') else 0,
                 "page": page,
                 "step": self._items_per_page,

@@ -3,16 +3,16 @@
 # 	* hr_holidays
 # 
 # Translators:
-# Wil Odoo, 2024
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +24,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid " to %(date_to_utc)s"
-msgstr ""
+msgstr "ถึง %(date_to_utc)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -98,31 +98,31 @@ msgstr "%(leave_type)s: %(duration)s (%(start)s)"
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_allocation_generate_multi_wizard.py:0
 msgid "%(name)s (%(duration)s %(request_unit)s(s))"
-msgstr ""
+msgstr "%(name)s (%(duration)s %(request_unit)s(s))"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "%(name)s (%(duration)s day(s))"
-msgstr ""
+msgstr "%(name)s (%(duration)s วัน)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "%(name)s (%(duration)s hour(s))"
-msgstr ""
+msgstr "%(name)s (%(duration)s ชั่วโมง)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 msgid "%(name)s (%(time)g remaining out of %(maximum)g days)"
-msgstr ""
+msgstr "%(name)s (เหลือเวลา %(time)g จาก %(max)g วัน)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 msgid "%(name)s (%(time)g remaining out of %(maximum)g hours)"
-msgstr ""
+msgstr "%(name)s (เหลือเวลา %(time)g จาก %(maximum)g ชั่วโมง)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -198,12 +198,12 @@ msgstr "(ใช้ได้ถึงวันที่"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "- Valid for"
-msgstr ""
+msgstr "- ใช้ได้สำหรับ"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "00:00"
-msgstr ""
+msgstr "00:00"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
@@ -254,6 +254,8 @@ msgid ""
 "<span class=\"ml8\" invisible=\"request_unit == 'hour'\">Days</span>\n"
 "                            <span class=\"ml8\" invisible=\"request_unit != 'hour'\">Hours</span>"
 msgstr ""
+"<span class=\"ml8\" invisible=\"request_unit == 'hour'\">วัน</span>\n"
+"                            <span class=\"ml8\" invisible=\"request_unit != 'hour'\">ชั่วโมง</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -273,6 +275,9 @@ msgid ""
 "                            Back On\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            กลับเมื่อ\n"
+"                        </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
@@ -329,6 +334,8 @@ msgid ""
 "<span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone</span>\n"
 "                    ("
 msgstr ""
+"<span>พนักงานมีเขตเวลาที่ต่างจากคุณ! ที่นี่วันที่และเวลาจะแสดงตามเขตเวลาของพนักงาน</span>\n"
+"                    ("
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -466,17 +473,17 @@ msgstr "การหยุดสะสม: อัปเดตจำนวนก�
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity
 msgid "Accrual Validity"
-msgstr ""
+msgstr "ความถูกต้องของเงินคงค้าง"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity_count
 msgid "Accrual Validity Count"
-msgstr ""
+msgstr "จำนวนความถูกต้องของเงินคงค้าง"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "Accrual Validity Type"
-msgstr ""
+msgstr "ประเภทความถูกต้องของเงินคงค้าง"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accruals_ids
@@ -688,7 +695,7 @@ msgstr "คำร้องขอจัดสรร"
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_second_approval
 msgid "Allocation Second Approval"
-msgstr ""
+msgstr "การอนุมัติการจัดสรรครั้งที่ 2"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__allocation_type
@@ -701,14 +708,8 @@ msgstr "ประเภทการจัดสรร"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Allocation must be \"To Approve\" or \"Second Approval\" in order to "
-"validate it."
-msgstr ""
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Allocation must be confirmed (\"To Approve\") in order to approve it."
+"Allocation must be confirmed \"To Approve\" or validated once \"Second "
+"Approval\" in order to approve it."
 msgstr ""
 
 #. module: hr_holidays
@@ -729,12 +730,14 @@ msgid ""
 "Allocation request must be confirmed, second approval or validated in order "
 "to refuse it."
 msgstr ""
+"คำขอจัดสรรจะต้องได้รับการยืนยัน อนุมัติครั้งที่สอง "
+"หรือผ่านการตรวจสอบจึงจะปฏิเสธได้"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation state must be \"Refused\" in order to be reset to \"To Approve\"."
-msgstr ""
+msgstr "สถานะการจัดสรรจะต้องเป็น \"ปฏิเสธ\" จึงจะรีเซ็ตเป็น \"อนุมัติ\" ได้"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -946,6 +949,8 @@ msgid ""
 "Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n"
 "%s"
 msgstr ""
+"การแบ่งเวลาหยุดงานอัตโนมัติระหว่างการสร้างชุดไม่ได้รับการจัดการสำหรับเวลาหยุดงานที่ทับซ้อนกันซึ่งประกาศเป็นชั่วโมง เวลาหยุดงานที่ขัดแย้งกัน:\n"
+"%s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -958,7 +963,7 @@ msgstr "พร้อม"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__remaining_leaves
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__remaining_leaves
 msgid "Available Time Off Days"
-msgstr ""
+msgstr "วันหยุดที่ว่าง"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -977,13 +982,13 @@ msgstr "ห่างออกไป"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Back On"
-msgstr ""
+msgstr "กลับเมื่อ"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/persona_model_patch.js:0
 msgid "Back on %s"
-msgstr ""
+msgstr "กลับเมื่อ %s"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_balance
@@ -1134,12 +1139,12 @@ msgstr "สูงสุด:"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__carried_over_days_expiration_date
 msgid "Carried over days expiration date"
-msgstr ""
+msgstr "วันหมดอายุที่ส่งต่อ"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Carry Over Validity"
-msgstr ""
+msgstr "อายุการใช้งานที่ส่งต่อ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__action_with_unused_accruals
@@ -1323,7 +1328,7 @@ msgstr "ภาพหน้าปก"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid "Create Allocations"
-msgstr ""
+msgstr "สร้างการจัดสรร"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
@@ -1832,31 +1837,31 @@ msgstr "กิจกรรมในอนาคต"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Generate Time Off"
-msgstr ""
+msgstr "สร้างการลาหยุด"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid "Generate time off allocations for multiple employees"
-msgstr ""
+msgstr "สร้างการจัดสรรเวลาการลาหยุดให้กับพนักงานหลายคน"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Generate time off for multiple employees"
-msgstr ""
+msgstr "สร้างเวลาการลาหยุดให้กับพนักงานหลายคน"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_allocation_generate_multi_wizard.py:0
 msgid "Generated Allocations"
-msgstr ""
+msgstr "การจัดสรรที่สร้างขึ้น"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
 msgid "Generated Time Off"
-msgstr ""
+msgstr "สร้างการลาหยุด"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2077,7 +2082,7 @@ msgstr "เป็นผู้ติดตาม"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_name_custom
 msgid "Is Name Custom"
-msgstr ""
+msgstr "เป็นชื่อที่กำหนดเอง"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_officer
@@ -2266,7 +2271,7 @@ msgstr "มีนาคม"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Mark as ready to approve"
-msgstr ""
+msgstr "ทำเครื่องหมายว่าพร้อมที่จะอนุมัติ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__max_leaves
@@ -2286,7 +2291,7 @@ msgstr "สูงสุดที่อนุญาต"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_allowed_negative
 msgid "Maximum Excess Amount"
-msgstr ""
+msgstr "จำนวนเงินส่วนเกินสูงสุด"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
@@ -2348,7 +2353,7 @@ msgstr "การเปลี่ยนผ่านไมล์สโตน"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time_yearly
 msgid "Milestone cap"
-msgstr ""
+msgstr "ค่าสูงสุดไมล์สโตน"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -2388,7 +2393,7 @@ msgstr "ช่วงเช้า"
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_allocation_generate_multi_wizard
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_generate_multi_wizard
 msgid "Multiple Requests"
-msgstr ""
+msgstr "คำขอหลายรายการ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__my_activity_date_deadline
@@ -2818,7 +2823,7 @@ msgstr "พิมพ์"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Provide a reason to cancel an approved time off"
-msgstr ""
+msgstr "ระบุเหตุผลในการยกเลิกเวลาการลาหยุดที่ได้รับอนุมัติ"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
@@ -2828,7 +2833,7 @@ msgstr "สาธารณะ"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__include_public_holidays_in_duration
 msgid "Public Holiday Included"
-msgstr ""
+msgstr "รวมวันหยุดนักขัตฤกษ์"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2843,12 +2848,18 @@ msgstr "วันหยุดตามกฎหมาย"
 msgid ""
 "Public holidays should be counted in the leave duration when applying for "
 "leaves"
-msgstr ""
+msgstr "วันหยุดราชการให้นับรวมในระยะเวลาการลาเมื่อยื่นคำขอการลาหยุด"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
 msgid "Rate"
 msgstr "อัตรา"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__rating_ids
+msgid "Ratings"
+msgstr "การให้คะแนน"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__reason
@@ -3083,7 +3094,7 @@ msgstr "แสดงวันที่เดือนที่สอง"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Second approval request for %(allocation_type)s"
-msgstr ""
+msgstr "คำขออนุมัติครั้งที่สองสำหรับ %(allocation_type)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3194,6 +3205,8 @@ msgid ""
 "Some of the accrual plans you're trying to delete are linked to an existing "
 "allocation. Delete or cancel them first."
 msgstr ""
+"แผนการรับเงินบางส่วนที่คุณพยายามลบเชื่อมโยงกับการจัดสรรที่มีอยู่ "
+"โปรดลบหรือยกเลิกแผนดังกล่าวก่อน"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
@@ -3424,13 +3437,15 @@ msgid ""
 "The maximum excess amount should be greater than 0. If you want to set 0, "
 "disable the negative cap instead."
 msgstr ""
+"จำนวนส่วนเกินสูงสุดควรมากกว่า 0 หากคุณต้องการตั้งค่า 0 "
+"ให้ปิดการใช้งานค่าสูงสุดที่เป็นลบแทน"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__expiring_carryover_days
 msgid ""
 "The number of carried over days that will expire on "
 "carried_over_days_expiration_date"
-msgstr ""
+msgstr "จำนวนวันคงเหลือที่จะหมดอายุในวันที่ carry_over_days_expiration_date"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -3500,6 +3515,16 @@ msgstr "ประเภทที่มีลำดับน้อยที่ส
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"There is no employee set on the time off. Please make sure you're logged in "
+"the correct company."
+msgstr ""
+"ไม่มีพนักงานตั้งเวลาการลา "
+"โปรดตรวจสอบให้แน่ใจว่าคุณได้เข้าสู่ระบบบริษัทที่ถูกต้อง"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "There is no valid allocation to cover that request."
 msgstr "ไม่มีการจัดสรรที่ถูกต้องเพื่อให้ครอบคลุมคำขอดังกล่าว"
 
@@ -3542,11 +3567,13 @@ msgid ""
 "This area is automatically filled by the user who validates the allocation "
 "with second level (If time off type need second validation)"
 msgstr ""
+"พื้นที่นี้จะถูกกรอกโดยอัตโนมัติโดยผู้ใช้ที่ตรวจสอบการจัดสรรด้วยระดับที่สอง "
+"(หากประเภทเวลาการลาจำเป็นต้องมีการตรวจสอบครั้งที่สอง)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "This field defines the unit of time after which the accrual ends."
-msgstr ""
+msgstr "ฟิลด์นี้จะกำหนดหน่วยของเวลาที่ยอดคงค้างสิ้นสุดลง"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
@@ -3835,6 +3862,8 @@ msgid ""
 "Time off request state must be \"Refused\" or \"Cancelled\" in order to be "
 "reset to \"Confirmed\"."
 msgstr ""
+"สถานะคำขอลาหยุดจะต้องเป็น \"ปฏิเสธ\" หรือ \"ยกเลิก\" จึงจะรีเซ็ตเป็น "
+"\"ยืนยัน\" ได้"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__tz
@@ -4159,6 +4188,8 @@ msgid ""
 "When the field is checked the balance of an allocation using this accrual "
 "plan will never exceed the specified amount."
 msgstr ""
+"เมื่อตรวจสอบฟิลด์แล้ว "
+"ยอดคงเหลือของการจัดสรรโดยใช้แผนการคงค้างจะไม่เกินจำนวนเงินที่ระบุ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time_yearly
@@ -4166,6 +4197,8 @@ msgid ""
 "When the field is checked the total amount accrued each year will be capped "
 "at the specified amount"
 msgstr ""
+"เมื่อตรวจสอบฟิลด์แล้ว "
+"ยอดเงินรวมที่เกิดขึ้นในแต่ละปีจะถูกจำกัดไว้ที่จำนวนเงินที่ระบุ"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__other
@@ -4200,7 +4233,7 @@ msgstr "เดือนรายปี"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__maximum_leave_yearly
 msgid "Yearly limit to"
-msgstr ""
+msgstr "ขีดจำกัดรายปี"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__start_type__year
@@ -4234,7 +4267,7 @@ msgstr "คุณไม่ได้รับอนุญาตให้ขอล
 msgid ""
 "You can define a period of time where the days carried over will be "
 "available"
-msgstr ""
+msgstr "คุณสามารถกำหนดช่วงเวลาที่สามารถใช้วันที่เหลืออยู่ได้"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_start_count_check
@@ -4298,6 +4331,7 @@ msgid ""
 "You cannot have a cap on yearly accrued time without setting a maximum "
 "amount."
 msgstr ""
+"คุณไม่สามารถกำหนดขีดจำกัดเวลาที่เกิดขึ้นต่อปีได้โดยไม่กำหนดจำนวนเงินสูงสุดได้"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4500,7 +4534,7 @@ msgstr "วัน)"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "e.g. Extra recuperation, Company unavailability, ..."
-msgstr ""
+msgstr "เช่น การฟื้นฟูเพิ่มเติม บริษัทไม่พร้อมให้บริการ ..."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -4519,7 +4553,7 @@ msgstr "จาก %(date_from)s ถึง %(date_to)s - %(state)s"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "hour(s)"
-msgstr ""
+msgstr "ชั่วโมง"
 
 #. module: hr_holidays
 #. odoo-javascript

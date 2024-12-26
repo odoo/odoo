@@ -3,16 +3,16 @@
 # 	* hr
 # 
 # Translators:
-# Wil Odoo, 2024
 # Thi Huong Nguyen, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,11 +69,6 @@ msgstr "1 cuộc điện thoại"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
 msgstr "12 ngày / năm, bao gồm <br>6 ngày do bạn tự chọn."
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "12345678901"
-msgstr "12345678901"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -460,7 +455,7 @@ msgstr "Cài đặt ứng dụng"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Apply"
-msgstr "Ứng tuyển"
+msgstr "Áp dụng"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_apprenticeship
@@ -635,6 +630,11 @@ msgstr "Mã số Thẻ"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account"
+msgstr "Tài khoản ngân hàng"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
 msgstr "Tài khoản ngân hàng"
 
 #. module: hr
@@ -1193,6 +1193,12 @@ msgstr ""
 "dụng. Biểu tượng hiện diện sẽ được cập nhật với vị trí làm việc từ xa."
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Divorced"
+msgstr "Ly hôn"
+
+#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__doctor
 msgid "Doctor"
 msgstr "Tiến sĩ"
@@ -1220,7 +1226,7 @@ msgstr ""
 "Mỗi nhân viên đều có cơ hội thấy được tầm ảnh hưởng từ công việc của mình.\n"
 "                        Bạn có thể tạo ra những đóng góp thiết thực cho sự thành công của công ty.\n"
 "                        <br>\n"
-"                        Khá nhiều hoạt động được thường xuyên tổ chức trong năm, ví dụ như chơi\n"
+"                        Nhiều hoạt động được thường xuyên tổ chức trong năm, ví dụ như chơi\n"
 "                        thể thao hàng tuần, sự kiện team building, đồ uống hàng tháng, và hơn thế nữa."
 
 #. module: hr
@@ -1985,6 +1991,12 @@ msgid "Lead the entire sales cycle"
 msgstr "Dẫn dắt toàn bộ chu trình kinh doanh"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Legal Cohabitant"
+msgstr "Đồng giới"
+
+#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
 msgstr "Hãy tạo một Chức vụ."
@@ -2061,11 +2073,6 @@ msgid "Manager of employee %s is not set."
 msgstr "Quản lý nhân viên %s chưa được chọn."
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Marc Demo"
-msgstr "Marc Demo"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
 #: model:ir.model.fields,field_description:hr.field_res_users__marital
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2076,6 +2083,12 @@ msgstr "Tình trạng hôn nhân"
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
 msgstr "Quản lý marketing và cộng đồng"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Married"
+msgstr "Đã kết hôn"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__master
@@ -2996,6 +3009,12 @@ msgid "Show employees"
 msgstr "Hiển thị nhân viên"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Single"
+msgstr "Chưa kết hôn"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
 msgid "Skills Management"
 msgstr "Quản lý Kỹ năng"
@@ -3010,11 +3029,6 @@ msgstr "Số bảo hiểm xã hội"
 #: model:ir.model.fields,help:hr.field_res_users__ssnid
 msgid "Social Security Number"
 msgstr "Số an sinh xã hội"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Software Developer"
-msgstr "Nhà phát triển phần mềm"
 
 #. module: hr
 #. odoo-python
@@ -3172,8 +3186,11 @@ msgstr "Địa chỉ tạm trú"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
-msgid "The Badge ID must be a sequence of digits."
-msgstr "ID thẻ phải là một dãy số."
+msgid ""
+"The Badge ID must be alphanumeric without any accents and no longer than 18 "
+"characters."
+msgstr ""
+"Mã số thẻ phải là chữ cái và số không có dấu và không dài quá 18 ký tự."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
@@ -3526,6 +3543,12 @@ msgstr ""
 "hay một trong những phòng ban cấp dưới của nó."
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Widower"
+msgstr "Goá"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__address_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__address_id
@@ -3642,7 +3665,7 @@ msgstr "Điện thoại công ty"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__worker
 msgid "Worker"
-msgstr "Người làm"
+msgstr "Nhân công"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_calendar_id

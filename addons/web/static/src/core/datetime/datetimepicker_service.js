@@ -346,9 +346,10 @@ export const datetimePickerService = {
 
                 /**
                  * @param {DateTimePickerProps["value"]} value
+                 * @param {"date" | "time"} unit
                  * @param {"input" | "picker"} source
                  */
-                const updateValue = (value, source) => {
+                const updateValue = (value, unit, source) => {
                     const previousValue = pickerProps.value;
                     pickerProps.value = value;
 
@@ -356,27 +357,29 @@ export const datetimePickerService = {
                         return;
                     }
 
-                    if (pickerProps.range && source === "picker") {
-                        if (
-                            pickerProps.focusedDateIndex === 0 ||
-                            (value[0] && value[1] && value[1] < value[0])
-                        ) {
-                            // If selecting either:
-                            // - the first value
-                            // - OR a second value before the first:
-                            // Then:
-                            // - Set the DATE (year + month + day) of all values
-                            // to the one that has been selected.
-                            const { year, month, day } = value[pickerProps.focusedDateIndex];
-                            for (let i = 0; i < value.length; i++) {
-                                value[i] = value[i] && value[i].set({ year, month, day });
+                    if (unit !== "time") {
+                        if (pickerProps.range && source === "picker") {
+                            if (
+                                pickerProps.focusedDateIndex === 0 ||
+                                (value[0] && value[1] && value[1] < value[0])
+                            ) {
+                                // If selecting either:
+                                // - the first value
+                                // - OR a second value before the first:
+                                // Then:
+                                // - Set the DATE (year + month + day) of all values
+                                // to the one that has been selected.
+                                const { year, month, day } = value[pickerProps.focusedDateIndex];
+                                for (let i = 0; i < value.length; i++) {
+                                    value[i] = value[i] && value[i].set({ year, month, day });
+                                }
+                                pickerProps.focusedDateIndex = 1;
+                            } else {
+                                // If selecting the second value after the first:
+                                // - simply toggle the focus index
+                                pickerProps.focusedDateIndex =
+                                    pickerProps.focusedDateIndex === 1 ? 0 : 1;
                             }
-                            pickerProps.focusedDateIndex = 1;
-                        } else {
-                            // If selecting the second value after the first:
-                            // - simply toggle the focus index
-                            pickerProps.focusedDateIndex =
-                                pickerProps.focusedDateIndex === 1 ? 0 : 1;
                         }
                     }
 
@@ -400,7 +403,7 @@ export const datetimePickerService = {
                             }
                         }
                     );
-                    updateValue(values.length === 2 ? values : values[0], "input");
+                    updateValue(values.length === 2 ? values : values[0], "date", "input");
                 };
 
                 // Hook variables
@@ -408,9 +411,9 @@ export const datetimePickerService = {
                 /** @type {DateTimePickerProps} */
                 const rawPickerProps = {
                     ...DateTimePicker.defaultProps,
-                    onSelect: (value) => {
+                    onSelect: (value, unit) => {
                         value &&= markRaw(value);
-                        updateValue(value, "picker");
+                        updateValue(value, unit, "picker");
                         if (!pickerProps.range && pickerProps.type === "date") {
                             saveAndClose();
                         }

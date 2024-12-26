@@ -5,16 +5,17 @@
 # Translators:
 # Martin Trigaux, 2024
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2024
-# Wil Odoo, 2024
+# Chill Liao <chill421@qq.com>, 2024
 # Tony Ng, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-19 11:53+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1278,6 +1279,18 @@ msgid "Back"
 msgstr "返回"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/breadcrumbs/breadcrumbs.js:0
+msgid "Back to “%s”"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/breadcrumbs/breadcrumbs.js:0
+msgid "Back to “%s” form"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Background"
 msgstr "背景"
@@ -1599,7 +1612,7 @@ msgstr "選擇檔案"
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 msgid "Choose a debug command..."
-msgstr "選擇Debug命令..."
+msgstr "選擇除錯指令⋯"
 
 #. module: web
 #. odoo-javascript
@@ -1979,6 +1992,12 @@ msgstr "無法顯示選取的 PDF"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+msgid "Could not display the selected spreadsheet"
+msgstr "無法顯示選定的試算表"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
 msgid "Could not display the specified image url."
 msgstr "無法顯示指定的圖片網址。"
@@ -2195,7 +2214,7 @@ msgstr "天內"
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_providers.js:0
 msgid "Deactivate debug mode"
-msgstr "停用debug模式"
+msgstr "停用除錯模式"
 
 #. module: web
 #. odoo-javascript
@@ -2207,7 +2226,7 @@ msgstr "取消啟動開發者模式"
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 msgid "Debug tools..."
-msgstr "Debug工具..."
+msgstr "除錯工具⋯"
 
 #. module: web
 #. odoo-javascript
@@ -3103,6 +3122,13 @@ msgstr "前往網址"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.xml:0
+msgid "Google Slide Viewer"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/colorlist/colorlist.js:0
 msgid "Green"
 msgstr "綠色"
@@ -3857,7 +3883,7 @@ msgstr "線狀圖"
 #. odoo-javascript
 #: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 msgid "Load"
-msgstr "加載"
+msgstr "載入"
 
 #. module: web
 #. odoo-javascript
@@ -3875,7 +3901,7 @@ msgstr "載入更多"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 msgid "Load more... ("
-msgstr "加載更多...("
+msgstr "載入更多⋯（"
 
 #. module: web
 #. odoo-javascript
@@ -4022,6 +4048,12 @@ msgstr "尋找"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
+msgid "Max value"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
 #: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
 msgid "Max value field"
 msgstr "最大值欄位"
@@ -4042,7 +4074,7 @@ msgstr "最大精確度"
 #. odoo-javascript
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 msgid "Maybe you should consider reloading the application by pressing F5..."
-msgstr "也許您應該考慮按下 F5 鍵重新載入網頁...ORZ"
+msgstr "請考慮按 F5 鍵，重新載入應用程式⋯"
 
 #. module: web
 #. odoo-javascript
@@ -4519,8 +4551,8 @@ msgstr "找不到任何裝置。"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "No emoji match your search"
-msgstr "找不到相符的表情符號"
+msgid "No emoji matches your search"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4834,7 +4866,7 @@ msgstr "只刪除了首 %(count)s 項記錄（在全部所選的 %(total)s 項�
 msgid ""
 "Only types %(supported_types)s are supported for category (found type "
 "%(field_type)s)"
-msgstr "僅支援類別%(supported_types)s 的類型 (found type %(field_type)s)（支援類型）"
+msgstr "僅支援類型為 %(supported_types)s 的類別 (發現類型為 %(field_type)s)"
 
 #. module: web
 #. odoo-python
@@ -4842,7 +4874,7 @@ msgstr "僅支援類別%(supported_types)s 的類型 (found type %(field_type)s)
 msgid ""
 "Only types %(supported_types)s are supported for filter (found type "
 "%(field_type)s)"
-msgstr "僅支援篩選器的類型  %(supported_types)s 找到類型  (found type %(field_type)s) "
+msgstr "僅支援類型為  %(supported_types)s 的篩選 (發現類型為 %(field_type)s) "
 
 #. module: web
 #. odoo-javascript
@@ -5760,6 +5792,12 @@ msgstr "搜尋更多⋯"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
+msgid "Search emoji"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 msgid "Search for a command..."
 msgstr "搜尋指令⋯"
@@ -5772,15 +5810,9 @@ msgstr "搜尋選單⋯"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "Search for an emoji"
-msgstr "搜尋表情符號"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one_avatar/many2one_avatar_field.js:0
 msgid "Search user..."
-msgstr "搜索用戶..."
+msgstr "搜尋使用者⋯"
 
 #. module: web
 #. odoo-javascript
@@ -6140,7 +6172,7 @@ msgstr "發生了一些問題，但先別緊張..."
 msgid ""
 "Something went wrong... If you really are stuck, share the report with your "
 "friendly support service"
-msgstr ""
+msgstr "有東西出錯了。若一直無法執行操作，請向技術支援服務提供錯誤報告。"
 
 #. module: web
 #. odoo-javascript
@@ -6436,13 +6468,13 @@ msgstr "動作 %s 不存在。"
 #. odoo-javascript
 #: code:addons/web/static/src/core/install_scoped_app/install_scoped_app.xml:0
 msgid "The app cannot be installed with this browser"
-msgstr ""
+msgstr "目前使用的瀏覽器，不能安裝此應用程式"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/install_scoped_app/install_scoped_app.xml:0
 msgid "The app seems to be installed on your device"
-msgstr ""
+msgstr "你的裝置似乎已安裝該應用程式"
 
 #. module: web
 #. odoo-python
@@ -6841,7 +6873,7 @@ msgstr "無法存取相機"
 msgid ""
 "Unable to find Wkhtmltopdf on this system. The report will be shown in "
 "html.%(link)s"
-msgstr ""
+msgstr "此系統上找不到 Wkhtmltopdf。報告將以 html 格式顯示。%(link)s"
 
 #. module: web
 #. odoo-javascript
@@ -6972,7 +7004,7 @@ msgstr "上傳錯誤"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/file_handler.xml:0
 msgid "Uploading..."
-msgstr "正在上傳..."
+msgstr "上載中⋯"
 
 #. module: web
 #. odoo-javascript
@@ -7368,7 +7400,7 @@ msgstr "你已離線"
 #. odoo-javascript
 #: code:addons/web/static/src/core/install_scoped_app/install_scoped_app.xml:0
 msgid "You can install the app from the browser menu"
-msgstr ""
+msgstr "你可從瀏覽器選單，安裝該應用程式"
 
 #. module: web
 #. odoo-javascript
@@ -7399,7 +7431,7 @@ msgstr "要更新這些屬性欄位，需要母項文件的編輯權限"
 #. odoo-python
 #: code:addons/web/controllers/json.py:0
 msgid "You need export permissions to use the /json route"
-msgstr ""
+msgstr "你需要有匯出權限，才可使用 /json 路徑"
 
 #. module: web
 #. odoo-javascript
@@ -7429,7 +7461,7 @@ msgid ""
 "You should upgrade your version of Wkhtmltopdf to at least 0.12.0 in order "
 "to get a correct display of headers and footers as well as support for "
 "table-breaking between pages.%(link)s"
-msgstr ""
+msgstr "你應該將 Wkhtmltopdf 升級至最少 0.12.0 版本，以便正確顯示頁首及頁尾，並支援表格跨頁分隔。%(link)s"
 
 #. module: web
 #. odoo-javascript
@@ -7444,7 +7476,7 @@ msgstr "你的 Odoo 操作時段已過期。本頁面即將自動重新載入。
 msgid ""
 "Your installation of Wkhtmltopdf seems to be broken. The report will be "
 "shown in html.%(link)s"
-msgstr ""
+msgstr "你安裝的 Wkhtmltopdf 似乎已損壞。報告將以 html 格式顯示。%(link)s"
 
 #. module: web
 #. odoo-javascript
@@ -11851,7 +11883,7 @@ msgstr "垂下的臉有汗滴"
 #. odoo-javascript
 #: code:addons/web/static/src/core/network/download.js:0
 msgid "downloading..."
-msgstr "下載中...."
+msgstr "下載中⋯"
 
 #. module: web
 #. odoo-javascript
@@ -14232,7 +14264,7 @@ msgstr "導盲犬"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "guitar"
-msgstr "吉他"
+msgstr "吉他/結他"
 
 #. module: web
 #. odoo-javascript

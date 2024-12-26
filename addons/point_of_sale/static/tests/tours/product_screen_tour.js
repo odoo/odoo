@@ -12,6 +12,7 @@ import {
     inLeftSide,
     selectButton,
     scan_barcode,
+    negateStep,
 } from "@point_of_sale/../tests/tours/utils/common";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/tours/utils/product_configurator_util";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
@@ -46,6 +47,12 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
                 ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "123.0", "627.3"),
                 ...[".", "5"].map(Numpad.click),
                 ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "123.5", "629.85"),
+            ]),
+            // Check effects of numpad on product card quantity
+            ProductScreen.productCardQtyIs("Desk Organizer", "123.5"),
+            inLeftSide([
+                // Re-select the order line after switching to the product screen
+                { ...ProductScreen.clickLine("Desk Organizer", "123.5")[0], isActive: ["mobile"] },
                 Numpad.click("Price"),
                 Numpad.isActive("Price"),
                 Numpad.click("1"),
@@ -271,7 +278,7 @@ registry.category("web_tour.tours").add("MultiProductOptionsTour", {
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductConfiguratorPopup.isOptionShown("Value 1"),
             ProductConfiguratorPopup.isOptionShown("Value 2"),
-            Dialog.confirm("Ok"),
+            Dialog.confirm("Add"),
 
             Chrome.endTour(),
         ].flat(),
@@ -323,7 +330,6 @@ registry.category("web_tour.tours").add("CheckProductInformation", {
             },
             {
                 trigger: ".section-product-info-title:not(:contains('On hand:'))",
-                run: () => {},
             },
         ].flat(),
 });
@@ -367,28 +373,28 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             {
-                trigger: '.category-button:eq(0) > span:contains("AAA")',
+                trigger: '.category-button > span:contains("AAA")',
             },
             {
-                trigger: '.category-button:eq(1) > span:contains("AAB")',
+                trigger: '.category-button > span:contains("AAB")',
             },
             {
-                trigger: '.category-button:eq(2) > span:contains("AAC")',
+                trigger: '.category-button > span:contains("AAC")',
             },
             {
-                trigger: '.category-button:eq(1) > span:contains("AAB")',
+                trigger: '.category-button > span:contains("AAB")',
                 run: "click",
             },
             ProductScreen.productIsDisplayed("Product in AAB and AAX", 0),
             {
-                trigger: '.category-button:eq(2) > span:contains("AAX")',
+                trigger: '.category-button > span:contains("AAX")',
             },
             {
-                trigger: '.category-button:eq(2) > span:contains("AAX")',
+                trigger: '.category-button > span:contains("AAX")',
                 run: "click",
             },
             {
-                trigger: '.category-button:eq(3) > span:contains("AAY")',
+                trigger: '.category-button > span:contains("AAY")',
             },
         ].flat(),
 });
@@ -411,5 +417,36 @@ registry.category("web_tour.tours").add("AutofillCashCount", {
                 run: "click",
             },
             ProductScreen.cashDifferenceIs(0),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("ProductSearchTour", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.searchProduct("Test Product"),
+            ProductScreen.productIsDisplayed("Apple").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 1"),
+            ProductScreen.productIsDisplayed("Test Product 2"),
+            ProductScreen.searchProduct("Apple"),
+            ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
+            ProductScreen.searchProduct("Test Produt"), // typo to test the fuzzy search
+            ProductScreen.productIsDisplayed("Test Product 1"),
+            ProductScreen.productIsDisplayed("Test Product 2"),
+            ProductScreen.searchProduct("1234567890123"),
+            ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 1"),
+            ProductScreen.searchProduct("1234567890124"),
+            ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 2"),
+            ProductScreen.searchProduct("TESTPROD1"),
+            ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 1"),
+            ProductScreen.searchProduct("TESTPROD2"),
+            ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 2"),
         ].flat(),
 });

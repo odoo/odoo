@@ -515,7 +515,7 @@
                             invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund','in_receipt')"/>
                     </header>
                     <field name="made_sequence_gap" column_invisible="True"/>
-                    <field name="name" decoration-bf="1" decoration-danger="made_sequence_gap and state == 'posted'"/>
+                    <field name="name" decoration-bf="1" decoration-danger="made_sequence_gap and state == 'posted'" widget="char_with_placeholder_field" placeholder="/"/>
                     <field name="invoice_partner_display_name" column_invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund', 'in_receipt')" groups="base.group_user" string="Vendor" />
                     <field name="invoice_partner_display_name" column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt')" groups="base.group_user" string="Customer" />
                     <field name="invoice_date" optional="show" column_invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund', 'in_receipt')" readonly="state != 'draft'" string="Bill Date" decoration-warning="abnormal_date_warning"/>
@@ -578,7 +578,7 @@
                 <xpath expr="//field[@name='name']" position="after">
                     <!-- For draft moves, name only displays '/'. Since there may be moves of differenty types,
                          it is better to use display_name indicating what move it refers to when in draft-->
-                    <field name="display_name" decoration-bf="1" string="Number" context="{'name_with_move_type': True}"/>
+                    <field name="display_name" decoration-bf="1" string="Number" context="{'name_with_move_type': True}" widget="char_with_placeholder_field" placeholder="/"/>
                 </xpath>
             </field>
         </record>
@@ -747,7 +747,7 @@
                         <!-- Preview (only customer invoices) -->
                         <button name="preview_invoice" type="object" string="Preview" data-hotkey="o"
                                 title="Preview invoice"
-                                invisible="move_type not in ('out_invoice', 'out_refund') or state == 'draft'"/>
+                                invisible="move_type not in ('out_invoice', 'out_refund') or state in ('draft', 'cancel')"/>
                         <!-- Reverse -->
                         <button name="%(action_view_account_move_reversal)d" string="Reverse Entry"
                                 type="action" groups="account.group_account_invoice" data-hotkey="z"
@@ -946,9 +946,9 @@
                             <div class="text-warning" invisible="not show_name_warning">The current highest number is <field class="oe_inline" name="highest_name"/>. You might want to put a higher number here.</div>
 
                             <h1>
-                                <field name="name" invisible="name == '/' and not posted_before and not quick_edit_mode" readonly="state != 'draft'" placeholder="Draft"/>
+                                <field name="name" invisible="not (name or name_placeholder or quick_edit_mode)" readonly="state != 'draft'" options="{'placeholder_field': 'name_placeholder'}"/>
 
-                                <span invisible="state != 'draft' or name != '/' or posted_before or quick_edit_mode">Draft</span>
+                                <span invisible="name or name_placeholder or quick_edit_mode">Draft</span>
                             </h1>
                         </div>
                         <group>
@@ -1600,7 +1600,7 @@
                     <filter name="late" string="Overdue" domain="[
                         ('invoice_date_due', '&lt;', time.strftime('%Y-%m-%d')),
                         ('state', '=', 'posted'),
-                        ('payment_state', 'in', ('not_paid', 'partial', 'in_payment'))
+                        ('payment_state', 'in', ('not_paid', 'partial'))
                     ]" help="Overdue invoices, maturity date passed"/>
                     <separator/>
                     <filter name="invoice_date" string="Invoice Date" date="invoice_date"/>
@@ -1816,6 +1816,25 @@
             <field name="view_id" ref="view_out_invoice_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="domain">[('move_type', 'in', ['out_invoice', 'out_refund'])]</field>
+            <field name="context">{'default_move_type': 'out_invoice'}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a customer invoice
+              </p><p>
+                Create invoices, register payments and keep track of the discussions with your customers.
+              </p>
+            </field>
+        </record>
+
+        <!-- ADDED IN STABLE - DO NOT USE IN 18.0 -->
+        <record id="action_move_out_invoice" model="ir.actions.act_window">
+            <field name="name">Invoices</field>
+            <field name="path">customer-invoices</field>
+            <field name="res_model">account.move</field>
+            <field name="view_mode">list,kanban,form,activity</field>
+            <field name="view_id" ref="view_out_invoice_tree"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="domain">[('move_type', 'in', ['out_invoice', 'out_refund'])]</field>
             <field name="context">{'search_default_out_invoice': 1, 'default_move_type': 'out_invoice'}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -1849,6 +1868,26 @@
             <field name="name">Bills</field>
             <field name="res_model">account.move</field>
             <field name="path">bills</field>
+            <field name="view_mode">list,kanban,form,activity</field>
+            <field name="view_id" ref="view_in_invoice_bill_tree"/>
+            <field name="search_view_id" ref="view_account_bill_filter"/>
+            <field name="domain">[('move_type', 'in', ['in_invoice', 'in_refund'])]</field>
+            <field name="context">{'default_move_type': 'in_invoice', 'display_account_trust': True}</field>
+            <field name="help" type="html">
+                <!-- An owl component should be displayed instead -->
+                <p class="o_view_nocontent_smiling_face">
+                    Create a vendor bill
+                </p><p>
+                    Capture invoices, register payments and keep track of the discussions with your vendors.
+                </p>
+            </field>
+        </record>
+
+        <!-- ADDED IN STABLE - DO NOT USE IN 18.0 -->
+        <record id="action_move_in_invoice" model="ir.actions.act_window">
+            <field name="name">Bills</field>
+            <field name="res_model">account.move</field>
+            <field name="path">vendor-bills</field>
             <field name="view_mode">list,kanban,form,activity</field>
             <field name="view_id" ref="view_in_invoice_bill_tree"/>
             <field name="search_view_id" ref="view_account_bill_filter"/>

@@ -1,3 +1,6 @@
+import { expect, test } from "@odoo/hoot";
+import { queryAllTexts } from "@odoo/hoot-dom";
+import { onMounted } from "@odoo/owl";
 import {
     defineModels,
     fields,
@@ -5,10 +8,8 @@ import {
     mountView,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { onMounted } from "@odoo/owl";
-import { expect, test } from "@odoo/hoot";
-import { queryAllTexts } from "@odoo/hoot-dom";
 import { GaugeField } from "@web/views/fields/gauge/gauge_field";
+import { setupChartJsForTests } from "../graph/graph_test_helpers";
 
 class Partner extends models.Model {
     int_field = fields.Integer({ string: "int_field" });
@@ -18,7 +19,10 @@ class Partner extends models.Model {
         { id: 2, int_field: 4, another_int_field: 10 },
     ];
 }
+
 defineModels([Partner]);
+
+setupChartJsForTests();
 
 test("GaugeField in kanban view", async () => {
     await mountView({

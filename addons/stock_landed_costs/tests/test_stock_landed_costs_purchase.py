@@ -5,7 +5,7 @@ from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsComm
 from odoo.addons.stock_landed_costs.tests.test_stockvaluationlayer import TestStockValuationLCCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 
-from odoo.fields import Date
+from odoo.fields import Command, Date
 from odoo.tests import tagged, Form
 
 
@@ -493,3 +493,116 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
 
         landed_cost_aml = bill.invoice_line_ids.filtered(lambda l: l.product_id == self.landed_cost)
         self.assertTrue(landed_cost_aml.reconciled)
+
+    def test_lc_with_avco_ordered_qty_invoice_receipt_order(self):
+        """ When using an invoicing policy that permits invoicing prior to reception, stock moves
+        for products using dynamic cost methods should account for LCs associated with the order
+        from which the move was derived.
+        """
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.purchase_method = 'purchase'
+        self.product1.categ_id.write({
+            'property_stock_account_input_categ_id': self.company_data['default_account_stock_in'].id,
+            'property_stock_account_output_categ_id': self.company_data['default_account_stock_out'].id,
+            'property_stock_valuation_account_id': self.company_data['default_account_stock_valuation'].id,
+            'property_valuation': 'real_time',
+            'property_cost_method': 'average',
+        })
+        self.landed_cost.categ_id = self.product1.categ_id.id
+        product = self.product1
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 100000,
+                'price_unit': 1.35,
+            })],
+        })
+        purchase_order.button_confirm()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids[0]
+        bill.invoice_line_ids[0].quantity = 23000
+        receipt = purchase_order.picking_ids[0]
+        receipt.picking_type_id.create_backorder = 'always'
+        receipt.move_ids.quantity = 23000
+        receipt.button_validate()
+        self.assertEqual(product.standard_price, 1.35)
+
+        bill.invoice_date = '2000-05-05'
+        with Form(bill) as bill_form:
+            with bill_form.invoice_line_ids.new() as inv_line:
+                inv_line.product_id = self.landed_cost
+                inv_line.price_unit = 23000
+                inv_line.is_landed_costs_line = True
+        bill.action_post()
+        action = bill.button_create_landed_costs()
+        lc_form = Form(self.env[action['res_model']].browse(action['res_id']))
+        lc_form.picking_ids.add(receipt)
+        lc = lc_form.save()
+        lc.button_validate()
+        self.assertEqual(product.standard_price, 2.35)
+
+        purchase_order.action_create_invoice()
+        bill2 = purchase_order.invoice_ids.filtered(lambda b: b.state == 'draft')
+        bill2.invoice_line_ids[0].quantity = 27000
+        bill2.invoice_date = Date.today()
+        bill2._post()
+        receipt2 = purchase_order.picking_ids.filtered(lambda p: p.state == 'assigned')
+        receipt2.move_ids[0].quantity = 27000
+        receipt2.button_validate()
+        self.assertEqual(product.standard_price, 1.81)
+
+    def test_landed_costs_avco_invoice_before_receipt(self):
+        """
+        Test the application of landed costs on a product with average cost (AVCO) method
+        when the bill is created and validated before the receipt and the landed costs are
+        not yet created on the bill.
+        """
+
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.purchase_method = 'purchase'
+        self.product1.categ_id.write({
+            'property_stock_account_input_categ_id': self.company_data['default_account_stock_in'].id,
+            'property_stock_account_output_categ_id': self.company_data['default_account_stock_out'].id,
+            'property_stock_valuation_account_id': self.company_data['default_account_stock_valuation'].id,
+            'property_valuation': 'real_time',
+            'property_cost_method': 'average',
+        })
+        self.landed_cost.categ_id = self.product1.categ_id.id
+        product = self.product1
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 1,
+                'price_unit': 10,
+            })],
+        })
+        purchase_order.button_confirm()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids[0]
+        bill.invoice_line_ids[0].quantity = 1
+        bill.invoice_date = '2000-05-05'
+        with Form(bill) as bill_form:
+            with bill_form.invoice_line_ids.new() as inv_line:
+                inv_line.product_id = self.landed_cost
+                inv_line.price_unit = 25
+                inv_line.is_landed_costs_line = True
+        bill.action_post()
+        receipt = purchase_order.picking_ids[0]
+        receipt.move_ids.quantity = 1
+        receipt.button_validate()
+
+        # Ensure that the product cost has not been updated yet
+        assert receipt.move_ids[0].stock_valuation_layer_ids[0].unit_cost == 10 
+
+        action = bill.button_create_landed_costs()
+        lc_form = Form(self.env[action['res_model']].browse(action['res_id']))
+        lc_form.picking_ids.add(receipt)
+        lc = lc_form.save()
+        lc.button_validate()
+
+        # 35 = Product price (10) + landed cost price (25)
+        self.assertEqual(product.standard_price, 35)

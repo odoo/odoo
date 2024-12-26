@@ -75,3 +75,51 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
         })
 
         self.assertIn(so.name, po.activity_ids.note)
+
+    def test_access_saleperson_with_orderpoint(self):
+        """
+        Suppose a user with no rights on SO creates a product with an orderpoint,
+        then creates a sale order, so the PO will be generated. After creating a second SO,
+        the PO should be updated since it has not been confirmed yet.
+        """
+        seller = self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_a.id,
+            'price': 8,
+        })
+        product = self.env['product.product'].create({
+            'name': 'SuperProduct',
+            'is_storable': True,
+            'seller_ids': [(6, 0, seller.ids)],
+        })
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'orderpoint test',
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 1,
+            'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
+        })
+        # Create a SO that will automatically generate a PO since we have an orderpoint"
+        so = self.env['sale.order'].with_user(self.user_salesperson).create({
+            'partner_id': self.partner_b.id,
+            'user_id': self.user_salesperson.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': product.id,
+                    'product_uom_qty': 10,
+                    'product_uom': product.uom_id.id,
+                    'price_unit': product.list_price,
+                })]
+        })
+        so.action_confirm()
+        # Create a second SO, and since a PO has already been created but not yet validated, it will be updated.
+        so_2 = so.copy()
+        # Find the PO that will be updated in order to invalidate its cache,
+        # so the fields will be reloaded with the sales user.
+        po = self.env['purchase.order'].search([('partner_id', '=', self.partner_a.id)])
+        self.assertEqual(po.order_line[0].product_qty, 11)
+        po.order_line[0].invalidate_recordset()
+        # Confirm the second SO and verify if PO has been updated.
+        so_2.action_confirm()
+        self.assertEqual(po.order_line[0].product_qty, 21)
+        po.button_confirm()
+        self.assertEqual(po.state, 'purchase')

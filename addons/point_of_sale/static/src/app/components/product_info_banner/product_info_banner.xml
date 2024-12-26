@@ -5,7 +5,7 @@
             class="section-product-info-title d-flex flex-column text-info bg-opacity-25 mx-n3 mt-n3 mb-3 px-3 py-3">
             <div class="d-flex" t-att-class="{ 'justify-content-between': !this.ui.isSmall }">
                 <div>
-                    <div class="h4" t-esc="props.product.name"/>
+                    <div class="h4" t-esc="props.product.productDisplayName"/>
                     <div t-if="this.props.product.is_storable" class="h4">
                         <span>On hand: </span>
                         <span t-if="this.fetchStock.status === 'success' || this.props.info"><t t-esc="this.state.available_quantity"/> Units</span>

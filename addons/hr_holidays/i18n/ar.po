@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Malaz Abuidris <msea@odoo.com>, 2024
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -709,17 +710,9 @@ msgstr "نوع المخصصات "
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Allocation must be \"To Approve\" or \"Second Approval\" in order to "
-"validate it."
+"Allocation must be confirmed \"To Approve\" or validated once \"Second "
+"Approval\" in order to approve it."
 msgstr ""
-"يجب أن تكون حالة المخصصات \"بانتظار الموافقة\" أو \"بانتظار الموافقة "
-"الثانية\" حتى تتمكن من تصديقها. "
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Allocation must be confirmed (\"To Approve\") in order to approve it."
-msgstr "يجب أن يتم تأكيد المخصصات (\"بانتظار الموافقة\") حتى تتم الموافقة عليها. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -2869,6 +2862,12 @@ msgid "Rate"
 msgstr "المعدل "
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__rating_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__rating_ids
+msgid "Ratings"
+msgstr "التقييمات "
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__reason
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Reason"
@@ -3270,7 +3269,7 @@ msgstr "البدء بعد "
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__state
 msgid "State"
-msgstr "الولاية "
+msgstr "الحالة "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__state
@@ -3518,6 +3517,16 @@ msgstr "تم إلغاء الإجازة: %s "
 msgid ""
 "The type with the smallest sequence is the default value in time off request"
 msgstr "النوع الذي يحتوي على أقل تسلسل هو القيمة الافتراضية في طلب الإجازة "
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"There is no employee set on the time off. Please make sure you're logged in "
+"the correct company."
+msgstr ""
+"لا يوجد موظف معين للإجازة. رجاءً تأكد من أنك قد قمت بتسجيل الدخول إلى الشركة"
+" الصحيحة. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -4324,7 +4333,7 @@ msgstr "لا يمكنك وضع حد أقصى للوقت المستحق دون ت
 msgid ""
 "You cannot have a cap on yearly accrued time without setting a maximum "
 "amount."
-msgstr ""
+msgstr "لا يمكنك وضع حد أقصى للوقت المستحق سنوياً دون تحديد حد أقصى للمبلغ. "
 
 #. module: hr_holidays
 #. odoo-python

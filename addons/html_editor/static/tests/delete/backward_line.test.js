@@ -28,6 +28,7 @@ test("should delete to start of paragraph with ctrl+shift+backspace (2)", async 
     });
 });
 
+test.tags("focus required");
 test("should delete to start of paragraph with ctrl+shift+backspace (3)", async () => {
     await testEditor({
         contentBefore: "<p>first paragraph</p><p>abc def[]</p>",

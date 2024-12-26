@@ -1,37 +1,37 @@
 import {
     collaborativeObject,
     Counter,
-    embedding,
     EmbeddedWrapper,
     EmbeddedWrapperMixin,
+    embedding,
     offsetCounter,
     savedCounter,
     SavedCounter,
 } from "@html_editor/../tests/_helpers/embedded_component";
+import { EmbeddedComponentPlugin } from "@html_editor/others/embedded_component_plugin";
 import {
     getEditableDescendants,
     StateChangeManager,
 } from "@html_editor/others/embedded_component_utils";
-import { EmbeddedComponentPlugin } from "@html_editor/others/embedded_component_plugin";
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { parseHTML } from "@html_editor/utils/html";
-import { unformat } from "./_helpers/format";
-import { addStep, deleteBackward, undo, redo, deleteForward } from "./_helpers/user_actions";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { click, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
+import { onMounted, onWillDestroy, xml } from "@odoo/owl";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
     applyConcurrentActions,
     mergePeersSteps,
+    renderTextualSelection,
     setupMultiEditor,
     testMultiEditor,
-    validateSameHistory,
     validateContent,
-    renderTextualSelection,
+    validateSameHistory,
 } from "./_helpers/collaboration";
-import { getContent } from "./_helpers/selection";
-import { click, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { onMounted, onWillDestroy, xml } from "@odoo/owl";
 import { dispatchClean } from "./_helpers/dispatch";
+import { unformat } from "./_helpers/format";
+import { getContent } from "./_helpers/selection";
+import { addStep, deleteBackward, deleteForward, redo, undo } from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
 
 /**
@@ -173,10 +173,10 @@ test("should not revert the step of another peer", async () => {
             mergePeersSteps(peerInfos);
             undo(peerInfos.c1.editor);
             undo(peerInfos.c2.editor);
-            expect(peerInfos.c1.editor.editable.innerHTML).toBe("<p><x>a</x><y>bd</y></p>", {
+            expect(peerInfos.c1.editor.editable).toHaveInnerHTML("<p><x>a</x><y>bd</y></p>", {
                 message: "error with peer c1",
             });
-            expect(peerInfos.c2.editor.editable.innerHTML).toBe("<p><x>ac</x><y>b</y></p>", {
+            expect(peerInfos.c2.editor.editable).toHaveInnerHTML("<p><x>ac</x><y>b</y></p>", {
                 message: "error with peer c2",
             });
         },
@@ -200,8 +200,12 @@ describe("collaborative makeSavePoint", () => {
         dispatchClean(peerInfos.c1.editor);
         dispatchClean(peerInfos.c2.editor);
         renderTextualSelection(peerInfos);
-        expect(peerInfos.c1.editor.editable.innerHTML).toBe(`<p>[c1}{c1]<br></p><p>ab[c2}{c2]</p>`);
-        expect(peerInfos.c2.editor.editable.innerHTML).toBe(`<p>[c1}{c1]<br></p><p>ab[c2}{c2]</p>`);
+        expect(peerInfos.c1.editor.editable).toHaveInnerHTML(
+            `<p>[c1}{c1]<br></p><p>ab[c2}{c2]</p>`
+        );
+        expect(peerInfos.c2.editor.editable).toHaveInnerHTML(
+            `<p>[c1}{c1]<br></p><p>ab[c2}{c2]</p>`
+        );
     });
     test("Ensure splitElement steps reversibility in the context of makeSavePoint", async () => {
         const peerInfos = await setupMultiEditor({
@@ -333,22 +337,30 @@ describe("steps whith no parent in history", () => {
     });
 });
 describe("sanitize", () => {
+    beforeEach(() => patchWithCleanup(console, { log: expect.step }));
+
+    const LOG_XSS = /* js */ `window.top.console.log("xss")`;
+
     test("should sanitize when adding a node", async () => {
+        patchWithCleanup(console, {
+            log: expect.step,
+        });
         await testMultiEditor({
             peerIds: ["c1", "c2"],
             contentBefore: "<p><x>a</x></p>",
             afterCreate: (peerInfos) => {
                 const script = document.createElement("script");
-                script.innerHTML = 'console.log("xss")';
+                script.innerHTML = LOG_XSS;
                 peerInfos.c1.editor.editable.append(script);
                 addStep(peerInfos.c1.editor);
                 expect(peerInfos.c1.historyPlugin.steps[1]).not.toBe(undefined);
                 peerInfos.c2.collaborationPlugin.onExternalHistorySteps([
                     peerInfos.c1.historyPlugin.steps[1],
                 ]);
-                expect(peerInfos.c2.editor.editable.innerHTML).toBe("<p><x>a</x></p>");
+                expect(peerInfos.c2.editor.editable).toHaveInnerHTML("<p><x>a</x></p>");
             },
         });
+        expect.verifySteps(["xss"]);
     });
     test("should sanitize when adding a script as descendant", async () => {
         await testMultiEditor({
@@ -365,7 +377,7 @@ describe("sanitize", () => {
                 ]);
             },
             afterCursorInserted: (peerInfos) => {
-                expect(peerInfos.c2.editor.editable.innerHTML).toBe(
+                expect(peerInfos.c2.editor.editable).toHaveInnerHTML(
                     "<p>a[c1}{c1][c2}{c2]</p><i><b>b</b></i>"
                 );
             },
@@ -378,15 +390,15 @@ describe("sanitize", () => {
             afterCreate: (peerInfos) => {
                 const img = peerInfos.c1.editor.editable.childNodes[0].childNodes[1];
                 img.setAttribute("class", "b");
-                img.setAttribute("onerror", 'console.log("xss")');
+                img.setAttribute("onerror", LOG_XSS);
                 addStep(peerInfos.c1.editor);
                 peerInfos.c2.collaborationPlugin.onExternalHistorySteps([
                     peerInfos.c1.historyPlugin.steps[1],
                 ]);
-                expect(peerInfos.c1.editor.editable.innerHTML).toBe(
-                    '<p>a<img class="b" onerror="console.log(&quot;xss&quot;)"></p>'
+                expect(peerInfos.c1.editor.editable).toHaveInnerHTML(
+                    `<p>a<img class="b" onerror="${LOG_XSS.replace(/"/g, "&quot;")}"></p>`
                 );
-                expect(peerInfos.c2.editor.editable.innerHTML).toBe('<p>a<img class="b"></p>');
+                expect(peerInfos.c2.editor.editable).toHaveInnerHTML('<p>a<img class="b"></p>');
             },
         });
     });
@@ -397,7 +409,7 @@ describe("sanitize", () => {
             contentBefore: "<p>a</p>",
             afterCreate: (peerInfos) => {
                 const script = document.createElement("script");
-                script.innerHTML = 'console.log("xss")';
+                script.innerHTML = LOG_XSS;
                 peerInfos.c1.editor.editable.append(script);
                 addStep(peerInfos.c1.editor);
                 script.remove();
@@ -411,9 +423,10 @@ describe("sanitize", () => {
                     peerInfos.c1.historyPlugin.steps[2],
                 ]);
                 execCommand(peerInfos.c2.editor, "historyUndo");
-                expect(peerInfos.c2.editor.editable.innerHTML).toBe("<p>a</p>");
+                expect(peerInfos.c2.editor.editable).toHaveInnerHTML("<p>a</p>");
             },
         });
+        expect.verifySteps(["xss"]);
     });
     test("should sanitize when undo is adding a descendant script node", async () => {
         await testMultiEditor({
@@ -421,7 +434,7 @@ describe("sanitize", () => {
             contentBefore: "<p>a</p>",
             afterCreate: (peerInfos) => {
                 const div = document.createElement("div");
-                div.innerHTML = '<i>b</i><script>console.log("xss")</script>';
+                div.innerHTML = `<i>b</i><script>${LOG_XSS}</script>`;
                 peerInfos.c1.editor.editable.append(div);
                 addStep(peerInfos.c1.editor);
                 div.remove();
@@ -435,7 +448,7 @@ describe("sanitize", () => {
                     peerInfos.c1.historyPlugin.steps[2],
                 ]);
                 execCommand(peerInfos.c2.editor, "historyUndo");
-                expect(peerInfos.c2.editor.editable.innerHTML).toBe("<p>a</p><div><i>b</i></div>");
+                expect(peerInfos.c2.editor.editable).toHaveInnerHTML("<p>a</p><div><i>b</i></div>");
             },
         });
     });
@@ -446,7 +459,7 @@ describe("sanitize", () => {
             afterCreate: (peerInfos) => {
                 const img = peerInfos.c1.editor.editable.childNodes[0].childNodes[1];
                 img.setAttribute("class", "b");
-                img.setAttribute("onerror", 'console.log("xss")');
+                img.setAttribute("onerror", LOG_XSS);
                 addStep(peerInfos.c1.editor);
                 img.setAttribute("class", "");
                 img.setAttribute("onerror", "");
@@ -460,7 +473,7 @@ describe("sanitize", () => {
                     peerInfos.c1.historyPlugin.steps[2],
                 ]);
                 execCommand(peerInfos.c2.editor, "historyUndo");
-                expect(peerInfos.c2.editor.editable.innerHTML).toBe('<p>a<img class="b"></p>');
+                expect(peerInfos.c2.editor.editable).toHaveInnerHTML('<p>a<img class="b"></p>');
             },
         });
     });
@@ -511,7 +524,7 @@ describe("sanitize", () => {
                 // it was protected
                 // still has its own onclick attribute doing bad stuff, because he wrote it
                 // himself
-                expect(peerInfos.c1.editor.editable.innerHTML).toBe(
+                expect(peerInfos.c1.editor.editable).toHaveInnerHTML(
                     unformat(`
                         <p>sanitycheckc1</p>
                         <div class="content" data-oe-protected="true" contenteditable="false" onclick="javascript:badStuff?.()" data-info="43">
@@ -525,7 +538,7 @@ describe("sanitize", () => {
                 // sanitized)
                 // received the `data-info="43"` from peer 1, and doing so did not sanitize
                 // the custom script doing secret stuff
-                expect(peerInfos.c2.editor.editable.innerHTML).toBe(
+                expect(peerInfos.c2.editor.editable).toHaveInnerHTML(
                     unformat(`
                         <p>sanitycheckc1</p>
                         <div class="content" data-oe-protected="true" contenteditable="false" data-info="43">

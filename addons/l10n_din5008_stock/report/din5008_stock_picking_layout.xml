@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="external_layout_din5008_deliveryslip" inherit_id="l10n_din5008.external_layout_din5008">
+            <xpath expr="//div[@id='din5008_report_main_address']" position="before">
+                <t t-if="o and o._name == 'stock.picking' and (o.should_print_delivery_address() or o.partner_id)">
+                    <t t-set="address">
+                        <t t-set="main_address" t-value="o.move_ids[0].partner_id if o.should_print_delivery_address() else o.partner_id"/>
+                        <t t-if="o.should_print_delivery_address()">
+                            <address class="mb-0" t-field="o.move_ids[0].partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                        </t>
+                        <t t-else="">
+                            <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                        </t>
+                        <div t-if="not (o.picking_type_id.code == 'outgoing' and main_address.id != o.partner_id.commercial_partner_id.id)" id="partner_vat_address_same_as_shipping">
+                            <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                            <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
+                        </div>
+                    </t>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

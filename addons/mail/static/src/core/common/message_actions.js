@@ -113,7 +113,7 @@ messageActionsRegistry
     })
     .add("unfollow", {
         condition: (component) => component.props.message.canUnfollow(component.props.thread),
-        icon: "fa-user-times",
+        icon: "fa fa-user-times",
         title: _t("Unfollow"),
         onClick: (component) => component.props.message.unfollow(),
         sequence: 60,

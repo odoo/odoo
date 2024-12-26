@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -1162,6 +1162,17 @@ msgstr "Riga ordine di vendita"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet_so_button
 msgid "Sales Orders"
 msgstr "Ordini di vendita"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
+msgid ""
+"Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+"If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
+"You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
+msgstr ""
+"Articolo dell'ordine di vendita che verrà selezionato di default nei fogli ore del dipendente corrispondente. Esso sostituisce l'articolo dell'ordine di vendita indicato nel progetto e nel lavoro per essere modificato nella voce corrispondente in ogni foglio ore, se necessario. In altre parole, definisce la tariffa di fatturazione del tempo di un dipendente in base alla specializzazione, alle competenze o all'esperienza.\n"
+"Se vuoi fatturare lo stesso servizio con una tariffa diversa devi creare due articoli diversi in quanto ognuno può avere solamente una singola unità di prezzo per volta.\n"
+"Inoltre, puoi definire il costo orario aziendale dei dipendenti per i fogli ore, sul progetto specifico. Il costo stabilito andrà a sostituire quello stabilito per il dipendente."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line

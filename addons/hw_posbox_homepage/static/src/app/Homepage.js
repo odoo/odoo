@@ -29,8 +29,7 @@ export class Homepage extends Component {
 
     setup() {
         this.store = useStore();
-        this.state = useState({ loading: true, waitRestart: false });
-        this.data = useState({});
+        this.state = useState({ data: {}, loading: true, waitRestart: false });
         this.store.advanced = localStorage.getItem("showAdvanced") === "true";
 
         onWillStart(async () => {
@@ -52,7 +51,7 @@ export class Homepage extends Component {
                 this.store.isLinux = true;
             }
 
-            this.data = data;
+            this.state.data = data;
             this.store.base = data;
             this.state.loading = false;
             this.store.update = new Date().getTime();
@@ -92,41 +91,49 @@ export class Homepage extends Component {
                 <IconButton onClick.bind="restartOdooService" icon="'fa-power-off'" />
             </div>
             <div class="d-flex mb-4 flex-column align-items-center justify-content-center">
-                <h4 class="text-center m-0">IoT Box - <t t-esc="this.data.hostname" /></h4>
+                <h4 class="text-center m-0">IoT Box - <t t-esc="state.data.hostname" /></h4>
+            </div>
+            <div t-if="!this.store.advanced and !state.data.is_certificate_ok" class="alert alert-warning" role="alert">
+                <p class="m-0 fw-bold">
+                    No subscription linked to your IoT Box.
+                </p>
+                <small>
+                    Please contact your account manager to take advantage of your IoT Box's full potential.
+                </small>
             </div>
             <div t-if="this.store.advanced" class="alert alert-warning" role="alert">
                 <p class="m-0 fw-bold">HTTPS certificate</p>
-                <small>Error code: <t t-esc="this.data.certificate_details" /></small>
+                <small>Error code: <t t-esc="state.data.certificate_details" /></small>
             </div>
-            <SingleData name="'Name'" value="this.data.hostname" icon="'fa-id-card'">
+            <SingleData name="'Name'" value="state.data.hostname" icon="'fa-id-card'">
 				<t t-set-slot="button">
 					<ServerDialog t-if="this.store.isLinux" />
 				</t>
 			</SingleData>
-            <SingleData t-if="this.store.advanced" name="'Version'" value="this.data.version" icon="'fa-microchip'">
+            <SingleData t-if="this.store.advanced" name="'Version'" value="state.data.version" icon="'fa-microchip'">
                 <t t-set-slot="button">
                     <UpdateDialog t-if="this.store.isLinux" />
                 </t>
             </SingleData>
-            <SingleData t-if="this.store.advanced" name="'IP address'" value="this.data.ip" icon="'fa-globe'" />
-            <SingleData t-if="this.store.advanced" name="'MAC address'" value="this.data.mac.toUpperCase()" icon="'fa-address-card'" />
-            <SingleData t-if="this.store.isLinux" name="'Internet Status'" value="this.data.network_status"  icon="'fa-wifi'">
+            <SingleData t-if="this.store.advanced" name="'IP address'" value="state.data.ip" icon="'fa-globe'" />
+            <SingleData t-if="this.store.advanced" name="'MAC address'" value="state.data.mac.toUpperCase()" icon="'fa-address-card'" />
+            <SingleData t-if="this.store.isLinux" name="'Internet Status'" value="state.data.network_status"  icon="'fa-wifi'">
                 <t t-set-slot="button">
                     <WifiDialog />
                 </t>
             </SingleData>
-            <SingleData name="'Odoo database connected'" value="this.data.server_status" icon="'fa-link'">
+            <SingleData name="'Odoo database connected'" value="state.data.server_status" icon="'fa-link'">
 				<t t-set-slot="button">
 					<ServerDialog />
 				</t>
 			</SingleData>
-            <SingleData t-if="this.data.pairing_code" name="'Pairing Code'" value="this.data.pairing_code" icon="'fa-code'"/>
-            <SingleData  t-if="this.store.advanced" name="'Six terminal'" value="this.data.six_terminal" icon="'fa-money'">
+            <SingleData t-if="state.data.pairing_code" name="'Pairing Code'" value="state.data.pairing_code" icon="'fa-code'"/>
+            <SingleData  t-if="this.store.advanced" name="'Six terminal'" value="state.data.six_terminal" icon="'fa-money'">
                 <t t-set-slot="button">
                     <SixDialog />
                 </t>
             </SingleData>
-            <SingleData name="'Devices'" value="this.data.iot_device_status.length + ' devices'" icon="'fa-plug'">
+            <SingleData name="'Devices'" value="state.data.iot_device_status.length + ' devices'" icon="'fa-plug'">
                 <t t-set-slot="button">
                     <DeviceDialog />
                 </t>

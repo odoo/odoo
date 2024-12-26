@@ -521,7 +521,7 @@
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <div name="options" position="inside">
-                    <span class="d-inline-block">
+                    <span class="d-inline-flex">
                         <field name="can_be_expensed"/>
                         <label for="can_be_expensed"/>
                     </span>
@@ -786,9 +786,16 @@
                     <button name="action_reset_expense_sheets"
                             string="Reset to Draft"
                             type="object"
-                            data-hotkey="c"
+                            data-hotkey="r"
                             invisible="not can_reset or state  == 'draft'"
-                            groups="account.group_account_readonly,account.group_account_invoice"/>
+                            groups="account.group_account_invoice"/>
+                    <!-- v In the case where the user has no accounting rights, we don't show the button in the post & done states  -->
+                    <button name="action_reset_expense_sheets"
+                            string="Reset to Draft"
+                            type="object"
+                            data-hotkey="r"
+                            invisible="not can_reset or state in ('draft', 'post', 'done')"
+                            groups="!account.group_account_invoice"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done"
                            force_save="1" invisible="state == 'cancel'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submit,cancel"

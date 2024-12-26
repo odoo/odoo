@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -24,28 +24,20 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "%(name)s has been noted as %(state)s today"
-msgstr ""
+msgstr "%(name)sได้รับการบันทึกเป็น %(state)s ในวันนี้"
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
 "<div>\n"
-"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
 "We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.\n"
 "Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.\n"
 "Thank you for your prompt attention to this matter.\n"
-"                    <br>Best Regards,<br><br>\n"
+"                    <br/>Best Regards,<br/><br/>\n"
 "                </div>\n"
 "            "
 msgstr ""
-"<div>\n"
-"                    เรียน <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
-"เราทราบว่าขณะนี้คุณไม่ได้อยู่ที่ทำงาน และไม่มีบันทึกการขอลางานจากคุณ เราขออภัยหากการขาดงานครั้งนี้เกิดจากความผิดพลาดของเรา\n"
-"โปรดดำเนินการตามขั้นตอนที่จำเป็นเพื่อจัดการกับการลางานโดยไม่ได้วางแผนนี้ หากคุณมีคำถามหรือต้องการความช่วยเหลือ โปรดติดต่อผู้จัดการของคุณหรือฝ่ายทรัพยากรบุคคลโดยเร็วที่สุด\n"
-"ขอขอบคุณที่คุณได้ให้ความใส่ใจในเรื่องนี้อย่างรวดเร็ว\n"
-"                    <br>ขอแสดงความนับถือ<br><br>\n"
-"                </div>\n"
-"            "
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
@@ -58,7 +50,7 @@ msgstr "ขาด"
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_log
 msgid "Add a log note"
-msgstr ""
+msgstr "เพิ่มหมายเหตุบันทึก"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee_base
@@ -83,7 +75,7 @@ msgstr "สร้าง Uid"
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_time_off
 msgid "Create a Time Off"
-msgstr ""
+msgstr "สร้างการลาหยุด"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
@@ -147,7 +139,7 @@ msgstr "เชื่อมต่อ Ip"
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__manually_set_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_presence
 msgid "Manually Set Presence"
-msgstr ""
+msgstr "ตั้งค่าการแสดงตนด้วยตนเอง"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_present
@@ -178,7 +170,7 @@ msgstr "การควบคุมการแสดงตัวตน"
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Presence/Absence"
-msgstr ""
+msgstr "การแสดงตน/การขาดงาน"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
@@ -196,7 +188,7 @@ msgstr "ส่ง SMS"
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_sms
 msgid "Send a SMS"
-msgstr ""
+msgstr "ส่ง SMS"
 
 #. module: hr_presence
 #: model:mail.template,description:hr_presence.mail_template_presence
@@ -209,17 +201,23 @@ msgstr ""
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_absent
 msgid "Set Absent"
-msgstr ""
+msgstr "ตั้งค่าว่าขาดงาน"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_present
 msgid "Set Present"
-msgstr ""
+msgstr "ตั้งค่าว่าเข้างาน"
 
 #. module: hr_presence
 #: model:mail.template,subject:hr_presence.mail_template_presence
 msgid "Unexpected Absence"
 msgstr "การขาดโดยไม่คาดคิด"
+
+#. module: hr_presence
+#. odoo-python
+#: code:addons/hr_presence/models/hr_employee.py:0
+msgid "Unplanned Absence"
+msgstr ""
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log

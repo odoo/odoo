@@ -1,21 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-#
+# 
 # Translators:
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2024
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid "%(number)s file(s) selected"
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "%(property_string)s (%(parent_name)s)"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -32,8 +47,12 @@ msgstr "%s записей успешно импортировано"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "A single column was found in the file, this often means the file separator is incorrect."
-msgstr "В файле обнаружен один столбец, что часто означает неправильный разделитель файлов."
+msgid ""
+"A single column was found in the file, this often means the file separator "
+"is incorrect."
+msgstr ""
+"В файле обнаружен один столбец, что часто означает неправильный разделитель "
+"файлов."
 
 #. module: base_import
 #. odoo-javascript
@@ -49,6 +68,13 @@ msgstr "Дополнительно"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"After each batch import, this delay is applied to avoid unthrottled calls"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Allow matching with subfields"
 msgstr "Разрешить сопоставление с подполями"
@@ -56,8 +82,16 @@ msgstr "Разрешить сопоставление с подполями"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once."
-msgstr "Во время импорта возникла неизвестная проблема (возможно, потеряно соединение, превышен лимит данных или памяти). Пожалуйста, повторите попытку, если проблема носит временный характер. Если проблема сохраняется, попробуйте разделить файл, а не импортировать его сразу."
+msgid ""
+"An unknown issue occurred during import (possibly lost connection, data "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is"
+" transient. If the issue still occurs, try to split the file rather than "
+"import it at once."
+msgstr ""
+"Во время импорта возникла неизвестная проблема (возможно, потеряно "
+"соединение, превышен лимит данных или памяти). Пожалуйста, повторите "
+"попытку, если проблема носит временный характер. Если проблема сохраняется, "
+"попробуйте разделить файл, а не импортировать его сразу."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -95,6 +129,12 @@ msgstr "Ограничение партии"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "But, you can also use .csv files"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Cancel"
 msgstr "Отменить"
 
@@ -102,19 +142,23 @@ msgstr "Отменить"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Click 'Resume' to proceed with the import, resuming at line %s."
-msgstr "Нажмите \"Возобновить\", чтобы продолжить импорт, возобновив его со строки %s."
+msgstr ""
+"Нажмите \"Возобновить\", чтобы продолжить импорт, возобновив его со строки "
+"%s."
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Column %s contains incorrect values (value: %s)"
-msgstr "Колонка %s содержит неверные значения (значение: %s)"
+msgid "Column %(column)s contains incorrect values (value: %(value)s)"
+msgstr ""
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "Столбец %s содержит неверные значения. Ошибка в строке %d: %s"
+msgid ""
+"Column %(column)s contains incorrect values. Error in line %(line)d: "
+"%(error)s"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -136,8 +180,12 @@ msgstr "Комментарии"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
-msgstr "Не удалось получить URL:%(url)s  [%(field_name)s : L%(line_number) d]:%(error)s"
+msgid ""
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
+msgstr ""
+"Не удалось получить URL: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -156,6 +204,12 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_date
 msgid "Created on"
 msgstr "Создано"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Data to import"
+msgstr ""
 
 #. module: base_import
 #. odoo-python
@@ -182,6 +236,18 @@ msgid "Decimals Separator:"
 msgstr "Разделитель десятичных дробей:"
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Defines how many megabytes can be imported in each batch import"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Delay after each batch"
+msgstr ""
+
+#. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
 msgid "Display Name"
@@ -202,6 +268,12 @@ msgstr "Скачать"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Drop or upload a file to import"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Encoding:"
 msgstr "Кодировка:"
@@ -209,26 +281,32 @@ msgstr "Кодировка:"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr "Ошибка парсинга данных [ %s: L %d]: %s"
+msgid "Error Parsing Date [%(field)s:L%(line)d]: %(error)s"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Error at row %s: \"%s\""
-msgstr "Ошибка в строке %s: \"%s\""
+msgid "Error at row %(row)s: \"%(error)s\""
+msgstr ""
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Error while importing records: Text Delimiter should be a single character."
-msgstr "Ошибка при импорте записей: Разделитель текста должен состоять из одного символа."
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr ""
+"Ошибка при импорте записей: Разделитель текста должен состоять из одного "
+"символа."
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Error while importing records: all rows should be of the same size, but the title row has %d entries while the first row has %d. You may need to change the separator character."
-msgstr "Ошибка при импорте записей: все строки должны быть одинакового размера, но в заглавной строке содержится %d записей, а в первой - %d. Возможно, необходимо изменить символ-разделитель."
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %(title_row_entries)d entries while the first row has "
+"%(first_row_entries)d. You may need to change the separator character."
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -246,7 +324,9 @@ msgstr "Вроде всё правильно."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Excel files are recommended as formatting is automatic."
-msgstr "Рекомендуется использовать файлы Excel, так как форматирование происходит автоматически."
+msgstr ""
+"Рекомендуется использовать файлы Excel, так как форматирование происходит "
+"автоматически."
 
 #. module: base_import
 #. odoo-python
@@ -289,7 +369,14 @@ msgstr "Размер файла превышает заданный максим
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr "Файл для проверки и/или импорта, необработанный двоичный файл (не base64)"
+msgstr ""
+"Файл для проверки и/или импорта, необработанный двоичный файл (не base64)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Files to import"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -312,8 +399,12 @@ msgstr "Форматирование"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Found invalid image data, images should be imported as either URLs or base64-encoded data."
-msgstr "Найденные недействительные данные изображений, изображения должны быть импортированы либо как URL, либо как данные в базовой 64-кодировке."
+msgid ""
+"Found invalid image data, images should be imported as either URLs or "
+"base64-encoded data."
+msgstr ""
+"Найденные недействительные данные изображений, изображения должны быть "
+"импортированы либо как URL, либо как данные в базовой 64-кодировке."
 
 #. module: base_import
 #. odoo-javascript
@@ -354,10 +445,23 @@ msgstr ""
 "                    особенно если файл содержит много столбцов."
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
+msgstr ""
+"Если у данной модели есть комментарии, будут настроены подписки и отправлены"
+" уведомления, но это может сильно замедлить импорт."
+
+#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Image size excessive, imported images must be smaller than 42 million pixel"
-msgstr "Размер изображения слишком велик, импортируемые изображения должны быть меньше 42 миллионов пикселей"
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr ""
+"Размер изображения слишком велик, импортируемые изображения должны быть "
+"меньше 42 миллионов пикселей"
 
 #. module: base_import
 #. odoo-javascript
@@ -397,12 +501,6 @@ msgstr "Импорт записей"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Imported file"
-msgstr "Импортированный файл"
-
-#. module: base_import
-#. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Importing"
 msgstr "Импорт"
@@ -410,8 +508,18 @@ msgstr "Импорт"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
+"format: %(cell_format)s, as (%(format_type)s) formats are not supported."
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
-msgstr "Недействительное значение ячейки в строке %(row)s, столбец %(col)s: %(cell_value)s"
+msgstr ""
+"Недействительное значение ячейки в строке %(row)s, столбец %(col)s: "
+"%(cell_value)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -428,8 +536,8 @@ msgstr "Последнее обновление"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Load File"
-msgstr "Загрузка файла"
+msgid "Load Data File"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -442,6 +550,18 @@ msgstr "Загрузка файла..."
 #: code:addons/base_import/static/src/import_block_ui.xml:0
 msgid "Loading..."
 msgstr "Загрузка..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Max size per batch"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Mb"
+msgstr "Мб"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
@@ -468,6 +588,12 @@ msgstr "Без разделителя"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid "No file selected"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "No matching records found for the following name"
 msgstr "Не найдено ни одной подходящей записи для следующего имени"
@@ -480,6 +606,18 @@ msgstr "Поле Odoo"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Please upload a single file."
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Please upload an Excel (.xls or .xlsx) or .csv file to import."
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Prevent import"
 msgstr "Предотвращение импорта"
@@ -489,6 +627,12 @@ msgstr "Предотвращение импорта"
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Preview"
 msgstr "Предпросмотр"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Progress bar"
+msgstr "Прогресс-бар"
 
 #. module: base_import
 #. odoo-javascript
@@ -511,11 +655,11 @@ msgstr "Res Model"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Resume"
-msgstr "Продолжить"
+msgstr "Резюме"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Search a field..."
 msgstr "Поиск по полю..."
 
@@ -679,13 +823,18 @@ msgstr "Отслеживание истории при импорте"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
-msgstr "Невозможно загрузить файл \"{extension}\": требуется модуль Python \"{modname}\""
+msgstr ""
+"Невозможно загрузить файл \"{extension}\": требуется модуль Python "
+"\"{modname}\""
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr "Неподдерживаемый формат файла \"{}\", импорт поддерживает только CSV, ODS, XLS и XLSX"
+msgid ""
+"Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
+msgstr ""
+"Неподдерживаемый формат файла \"{}\", импорт поддерживает только CSV, ODS, "
+"XLS и XLSX"
 
 #. module: base_import
 #. odoo-javascript
@@ -696,26 +845,41 @@ msgstr "Без названия"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Upload File"
-msgstr "Загрузить файл"
+msgid "Upload Data File"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Upload an Excel or CSV file to import"
-msgstr "Загрузите файл Excel или CSV для импорта"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-msgid "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h system. You can use a custom format in addition to the suggestions provided. Leave empty to let Odoo guess the format (recommended)"
-msgstr "Используйте HH для обозначения часов в 24-часовой системе, II в сочетании с 'p' - в 12-часовой системе. Вы можете использовать собственный формат в дополнение к предложенным. Оставьте пустым, чтобы Odoo сам догадался о формате (рекомендуется)"
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Upload your files"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Use YYYY to represent the year, MM for the month and DD for the day. Include separators such as a dot, forward slash or dash. You can use a custom format in addition to the suggestions provided. Leave empty to let Odoo guess the format (recommended)"
-msgstr "Используйте YYYY для обозначения года, MM для месяца и DD для дня. Включите разделители, такие как точка, прямая косая черта или тире. Вы можете использовать собственный формат в дополнение к предложенным. Оставить пустым, чтобы Odoo сам догадался о формате (рекомендуется)"
+msgid ""
+"Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
+"system. You can use a custom format in addition to the suggestions provided."
+" Leave empty to let Odoo guess the format (recommended)"
+msgstr ""
+"Используйте HH для обозначения часов в 24-часовой системе, II в сочетании с "
+"'p' - в 12-часовой системе. Вы можете использовать собственный формат в "
+"дополнение к предложенным. Оставьте пустым, чтобы Odoo сам догадался о "
+"формате (рекомендуется)"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"Use YYYY to represent the year, MM for the month and DD for the day. Include"
+" separators such as a dot, forward slash or dash. You can use a custom "
+"format in addition to the suggestions provided. Leave empty to let Odoo "
+"guess the format (recommended)"
+msgstr ""
+"Используйте YYYY для обозначения года, MM для месяца и DD для дня. Включите "
+"разделители, такие как точка, прямая косая черта или тире. Вы можете "
+"использовать собственный формат в дополнение к предложенным. Оставить "
+"пустым, чтобы Odoo сам догадался о формате (рекомендуется)"
 
 #. module: base_import
 #. odoo-javascript
@@ -730,6 +894,14 @@ msgstr "Пользователь"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.xml:0
 msgid "When a value cannot be matched:"
 msgstr "Когда значение не может быть сопоставлено:"
@@ -737,14 +909,20 @@ msgstr "Когда значение не может быть сопоставл�
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "You can not import images via URL, check with your administrator or support for the reason."
-msgstr "Вы не можете импортировать изображения с помощью URL, обратитесь к администратору или в техподдержку."
+msgid ""
+"You can not import images via URL, check with your administrator or support "
+"for the reason."
+msgstr ""
+"Вы не можете импортировать изображения с помощью URL, обратитесь к "
+"администратору или в техподдержку."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "You can test or reload your file before resuming the import."
-msgstr "Вы можете протестировать или перезагрузить файл перед возобновлением импорта."
+msgstr ""
+"Вы можете протестировать или перезагрузить файл перед возобновлением "
+"импорта."
 
 #. module: base_import
 #. odoo-python
@@ -791,6 +969,7 @@ msgstr "из"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "seconds"
 msgstr "секунд"
 

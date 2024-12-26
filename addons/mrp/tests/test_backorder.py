@@ -917,6 +917,9 @@ class TestMrpWorkorderBackorder(TransactionCase):
             - Create a backorder and validate op 2 partially
             - Create a backorder and validate it completely
         """
+        self.env.ref('base.group_user').implied_ids += (
+            self.env.ref('mrp.group_mrp_routings')
+        )
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = self.bom_finished1
         mo_form.product_qty = 10
@@ -962,6 +965,9 @@ class TestMrpWorkorderBackorder(TransactionCase):
         self.assertRecordValues(op_6, [{'state': 'done', 'qty_remaining': 0.0}])
 
     def test_kit_bom_order_splitting(self):
+        self.env.ref('base.group_user').implied_ids += (
+            self.env.ref('mrp.group_mrp_routings')
+        )
         water_bottle_kit_product = self.env["product.product"].create({
                 "name": "Water Bottle Kit",
                 "is_storable": True,

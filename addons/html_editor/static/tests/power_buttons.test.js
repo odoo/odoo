@@ -6,7 +6,8 @@ import { getContent } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
 import { onRpc } from "@web/../tests/web_test_helpers";
 
-describe.tags("desktop")("visibility", () => {
+describe.tags("desktop");
+describe("visibility", () => {
     test("should show power buttons on empty P tag", async () => {
         const { editor } = await setupEditor("<p>[]<br></p>");
         expect(".o_we_power_buttons").toBeVisible();
@@ -56,7 +57,8 @@ describe.tags("desktop")("visibility", () => {
     });
 });
 
-describe.tags("desktop")("buttons", () => {
+describe.tags("desktop");
+describe("buttons", () => {
     test("should create a numbered list using power buttons", async () => {
         const { el } = await setupEditor("<p>[]<br></p>");
         await click(".o_we_power_buttons .power_button.fa-list-ol");

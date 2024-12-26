@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +27,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                                    Buy Credit"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                    Acheter du crédit"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -52,6 +55,8 @@ msgid ""
 "An error occurred while reaching %s. Please contact Odoo support if this "
 "error persists."
 msgstr ""
+"Une erreur s'est produite en atteignant %s. Veuillez contacter l'assistance "
+"Odoo si cette erreur persiste."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
@@ -112,12 +117,12 @@ msgstr "Nom d'affichage"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_user_ids
 msgid "Email Alert Recipients"
-msgstr ""
+msgstr "Destinataires des alertes e-mail"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_threshold
 msgid "Email Alert Threshold"
-msgstr ""
+msgstr "Seuil d'alerte e-mail"
 
 #. module: iap
 #: model:iap.service,description:iap.iap_service_reveal
@@ -126,6 +131,10 @@ msgid ""
 "leads, generate leads based on a set of criteria and enrich the company data"
 " of your opportunities."
 msgstr ""
+"Obtenez des pistes et des opportunités de qualité : convertissez les "
+"visiteurs de votre site web en pistes, générez des pistes sur la base d'un "
+"ensemble de critères et enrichissez les données d'entreprise de vos "
+"opportunités."
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -153,7 +162,7 @@ msgstr "API d'IAP Enrichissement de pistes"
 #. module: iap
 #: model:ir.model,name:iap.model_iap_service
 msgid "IAP Service"
-msgstr ""
+msgstr "Service IAP"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
@@ -170,7 +179,7 @@ msgstr "Crédit insuffisant pour exécuter ce service."
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
 msgid "Integer Balance"
-msgstr ""
+msgstr "Solde entiers"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
@@ -188,7 +197,7 @@ msgstr "Mis à jour le"
 #. odoo-javascript
 #: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
 msgid "Manage Service & Buy Credits"
-msgstr ""
+msgstr "Gérer les services et acheter des crédits"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
@@ -208,17 +217,20 @@ msgid ""
 "One of the email alert recipients doesn't have an email address set. Users: "
 "%s"
 msgstr ""
+"L'un des destinataires de l'alerte e-mail n'a pas d'adresse e-mail définie. "
+"Utilisateurs :%s"
 
 #. module: iap
 #: model:ir.model.constraint,message:iap.constraint_iap_service_unique_technical_name
 msgid "Only one service can exist with a specific technical_name"
 msgstr ""
+"Il ne peut y avoir qu'un seul service avec un nom technique spécifique"
 
 #. module: iap
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid "Please set a positive email alert threshold."
-msgstr ""
+msgstr "Veuillez fixer un seuil d'alerte positif par e-mail."
 
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__registered
@@ -233,7 +245,7 @@ msgstr "Service"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_locked
 msgid "Service Locked"
-msgstr ""
+msgstr "Service verrouillé"
 
 #. module: iap
 #. odoo-javascript
@@ -251,6 +263,14 @@ msgstr "Statut"
 #: model:ir.model.fields,field_description:iap.field_iap_service__technical_name
 msgid "Technical Name"
 msgstr "Nom technique"
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/tools/iap_tools.py:0
+msgid ""
+"The request to the service timed out. Please contact the author of the app. "
+"The URL it tried to contact was %s"
+msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__unit_name

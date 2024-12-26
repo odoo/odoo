@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             Chrome.startPoS(),
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Addison Olson"),
+            ProductScreen.clickCustomer("Partner Full"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.validateButtonIsHighlighted(true),
@@ -114,6 +114,19 @@ registry.category("web_tour.tours").add("ReceiptScreenDiscountWithPricelistTour"
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             Order.hasLine({ oldPrice: "7" }),
+
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.addOrderline("Test Product", "1"),
+            inLeftSide([
+                { ...ProductScreen.clickLine("Test Product")[0], isActive: ["mobile"] },
+                Numpad.click("Price"),
+                Numpad.isActive("Price"),
+                Numpad.click("9"),
+            ]),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.noDiscountAmount(),
         ].flat(),
 });
 

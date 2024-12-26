@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Sarah Park, 2024
 # Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -152,6 +153,15 @@ msgstr "<span>지불자:</span>"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 msgid "<span>The total amount doesn't match the original amount.</span>"
 msgstr "<span>총 금액이 원래 금액과 일치하지 않습니다.</span>"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid ""
+"A default outstanding account must be defined in the settings for company-"
+"paid expenses. Or specify one in the Journal for the %(method)s payment "
+"method."
+msgstr "설정에서 회사 지급 비용에 대한 기본 미결제 계좌를 설정하거나 %(method)s 결제 방법에 대해 일지에 지정해야 합니다."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -587,8 +597,8 @@ msgstr "직원이 지불한 비용에 대한 기본 분개장입니다."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Default outstanding account for expenses paid by employees."
-msgstr "직원이 지불한 비용에 대한 기본 미지급 계정입니다."
+msgid "Default outstanding account for expenses paid by company."
+msgstr "회사에서 지급한 비용의 기본 미결제 계정입니다."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -694,11 +704,6 @@ msgid "Employee Expense Journal"
 msgstr "직원 경비 분개장"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Employee Expense Oustanding Account"
-msgstr "직원 경비 미지급 계정"
-
-#. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_account_employee_expenses
 msgid "Employee Expenses"
@@ -780,6 +785,11 @@ msgstr "현재 사용자가 경비 항목 편집 가능"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
 msgid "Expense Manager"
 msgstr "경비 관리"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Expense Outstanding Account"
+msgstr "미지급 계정 비용"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -1015,6 +1025,12 @@ msgstr "선물"
 #: model_terms:product.template,description:hr_expense.expense_product_gift_product_template
 msgid "Gifts to customers or vendors"
 msgstr "고객 또는 공급업체에 대한 선물"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid "Go to settings"
+msgstr "설정으로 이동"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1574,6 +1590,13 @@ msgstr "전화 요금, 우편 요금 등"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid ""
+"Please specify an expense journal in order to generate accounting entries."
+msgstr "회계 항목을 생성하려면 경비 일지를 지정해야 합니다."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid ""
 "Please specify if the expenses for this report were paid by the company, or "
 "the employee"
 msgstr "이 보고서의 비용이 회사에서 지불한 것인지 직원이 지불한 것인지 기입해주세요."
@@ -1846,12 +1869,6 @@ msgid "Show missing work email employees"
 msgstr "누락된 직원 업무용 이메일 표시"
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid "Specify expense journal to generate accounting entries."
-msgstr "회계 항목을 생성하기 위해 지정된 비용 계정 과목."
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__accounting_date
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__accounting_date
 msgid "Specify the bill date of the related vendor bill."
@@ -1993,8 +2010,8 @@ msgstr "팀 승인자"
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_outstanding_account_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_outstanding_account_id
 msgid ""
-"The account used to record the outstanding amount of the employee expenses."
-msgstr "직원 비용의 미지급 금액을 기록하는 데 사용되는 계정입니다."
+"The account used to record the outstanding amount of the company expenses."
+msgstr "회사 비용에 대한 미결제 금액을 기록하도록 지정된 계정입니다."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
@@ -2035,14 +2052,6 @@ msgstr "발행되어 있는 비용으로 전표가 설정되어야 합니다"
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__employee_journal_id
 msgid "The journal used when the expense is paid by employee."
 msgstr "직원이 비용을 지불할 때 사용하는 전표입니다."
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid ""
-"The payment method %(method)s needs an account, or a default outstanding "
-"account must be defined in the settings."
-msgstr "결제 방법 %(method)s에 계정이 필요하거나 설정에서 기본 미결제 계정을 정의해야 합니다."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__payment_method_line_id

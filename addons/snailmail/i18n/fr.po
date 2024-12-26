@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +37,13 @@ msgstr "Ajouter une page de couverture"
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "Address"
 msgstr "Adresse"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/failure_model_patch.js:0
+msgid ""
+"An error occurred when sending a letter with Snailmail on “%(record_name)s”"
+msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
@@ -414,7 +422,7 @@ msgstr "Enregistrement relatif"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_actions_report
 msgid "Report Action"
-msgstr "Signaler l'action"
+msgstr "Action de rapport"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
@@ -425,6 +433,8 @@ msgstr "Envoyer maintenant"
 #: model:iap.service,description:snailmail.iap_service_snailmail
 msgid "Send your customer invoices and follow-up reports by post, worldwide."
 msgstr ""
+"Envoyez des factures et des rapports de suivi à vos clients par la poste, "
+"dans le monde entier."
 
 #. module: snailmail
 #. odoo-javascript
@@ -458,12 +468,18 @@ msgstr "Couleur de l'envoi postal"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_cover_readonly
 msgid "Snailmail Cover Readonly"
-msgstr ""
+msgstr "Enveloppe de l'envoi postal lecture seule"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
 msgid "Snailmail Credit Error"
 msgstr "Erreur de crédit de l'envoi postal"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/messaging_menu/messaging_menu_patch.js:0
+msgid "Snailmail Failure: %(modelName)s"
+msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
@@ -480,13 +496,13 @@ msgstr "Erreur de format de l'envoi postal"
 #: model:ir.model,name:snailmail.model_snailmail_letter
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__letter_id
 msgid "Snailmail Letter"
-msgstr "Lettre par la poste"
+msgstr "Lettre postale"
 
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.action_mail_letters
 #: model:ir.ui.menu,name:snailmail.menu_snailmail_letters
 msgid "Snailmail Letters"
-msgstr "Lettres par la poste"
+msgstr "Lettres postales"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_fields

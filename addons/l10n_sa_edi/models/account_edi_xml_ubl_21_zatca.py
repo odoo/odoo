@@ -185,7 +185,10 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             the buyer VAT registration number or buyer group VAT registration number must not exist in the Invoice
         """
         if role != 'customer' or partner.country_id.code == 'SA':
-            return super()._get_partner_party_tax_scheme_vals_list(partner, role)
+            vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
+            for vals in vals_list:
+                vals['tax_scheme_vals'] = {'id': 'VAT'}
+            return vals_list
         return []
 
     def _apply_invoice_tax_filter(self, base_line, tax_values):
@@ -254,7 +257,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         non_retention_taxes = taxes.filtered(lambda t: not t.l10n_sa_is_retention)
         return super()._get_tax_category_list(customer, supplier, non_retention_taxes)
 
-    def _get_document_allowance_charge_vals_list(self, invoice):
+    def _get_document_allowance_charge_vals_list(self, invoice, taxes_vals=None):
         """
         Charge Reasons & Codes (As per ZATCA):
         https://unece.org/fileadmin/DAM/trade/untdid/d16b/tred/tred5189.htm

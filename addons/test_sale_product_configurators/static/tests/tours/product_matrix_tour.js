@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
             run: "click",
         },
         {
-            trigger: '.oe_subtotal_footer_separator:contains("248.40")',
+            trigger: 'td.o_list_monetary > span[name="Untaxed Amount"]:contains("216.00")',
         },
         {
             trigger: '.o_sale_order',
@@ -73,7 +73,7 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
             run: "click",
         },
         {
-            trigger: '.oe_subtotal_footer_separator:contains("745.20")',
+            trigger: 'td.o_list_monetary > span[name="Untaxed Amount"]:contains("648.00")',
         },
         {
             trigger: '.o_sale_order',
@@ -97,7 +97,7 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
             run: "click",
         },
         {
-            trigger: '.oe_subtotal_footer_separator:contains("248.40")',
+            trigger: 'td.o_list_monetary > span[name="Untaxed Amount"]:contains("216.00")',
         },
         {
             trigger: '.o_sale_order',

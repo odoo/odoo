@@ -3,21 +3,39 @@
 # 	* mail
 # 
 # Translators:
+# Luka Carević <luka@uvid.hr>, 2024
+# Jan Carević, 2024
+# Ivan Marijanović <ivanm101@yahoo.com>, 2024
+# hrvoje sić <hrvoje.sic@gmail.com>, 2024
+# Milan Tribuson <one.mile.code@gmail.com>, 2024
+# 0ba0ac30481a756f36528ba6f9a4317e_6443a87 <52eefe24349934c364624ef40611b7a3_1010754>, 2024
+# KRISTINA PALAŠ <kristina.palas@storm.hr>, 2024
+# Miro Sertić, 2024
+# Gordana Bilas, 2024
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2024
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2024
+# Servisi RAM d.o.o. <support@servisiram.hr>, 2024
+# Alen Komljen, 2024
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2024
+# Kristina Palaš, 2024
 # Igor Krizanovic <krizanovic.igor@gmail.com>, 2024
+# Marko Carević <marko.carevic@live.com>, 2024
+# Bole <bole@dajmi5.com>, 2024
+# Vojislav Opačić <vojislav.opacic@gmail.com>, 2024
+# Davor Bojkić <davor.bojkic@storm.hr>, 2024
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
 # Tina Milas, 2024
 # Martin Trigaux, 2024
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2024
-# Bole <bole@dajmi5.com>, 2024
-# Kristina Palaš, 2024
-# Luka Carević <luka@uvid.hr>, 2024
+# Vladimir Vrgoč, 2024
+# Matej Mijoč, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Luka Carević <luka@uvid.hr>, 2024\n"
+"Last-Translator: Matej Mijoč, 2024\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,7 +85,7 @@ msgstr "\"%(hostname)s\" zahtijeva pristup mikrofonu"
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "%(activity)s, assigned to %(name)s, due on the %(deadline)s"
-msgstr ""
+msgstr "%(activity)s, dodijeljena %(name)s, sa rokom na%(deadline)s"
 
 #. module: mail
 #. odoo-javascript
@@ -227,18 +245,6 @@ msgstr "%s dana preko roka"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-msgid "%s has a request"
-msgstr "%s ima zahtijev"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-msgid "%s has a suggestion"
-msgstr "%s ima prijedlog"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/discuss/typing/common/typing.js:0
 msgid "%s is typing..."
 msgstr "%s tipka"
@@ -373,7 +379,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
@@ -509,12 +515,15 @@ msgid ""
 "<strong>Internal communication</strong>: Replying will post an internal "
 "note. Followers won't receive any email notification."
 msgstr ""
+"<strong>Interna komunikacija</strong>: Odgovor na ovaj mail će kreirati "
+"internu poruku. Sljedbenici neće dobiti email."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
+"<strong>Snimite</strong> i osvježite stranicu za aktivaciju ove značajke"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_document_unfollowed
@@ -611,6 +620,13 @@ msgid "Accept"
 msgstr "Prihvati"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
+msgid "Accept with camera"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Access Denied"
@@ -660,7 +676,7 @@ msgstr "Potrebna radnja"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr ""
+msgstr "Radni prozor"
 
 #. module: mail
 #. odoo-javascript
@@ -999,9 +1015,58 @@ msgid "After Plan Date"
 msgstr "Nakon planiranog datuma"
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__account_move__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__account_payment__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__card_campaign__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__crm_lead__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__event_booth__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__event_event__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__event_registration__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__event_sponsor__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__event_track__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_contract__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_services__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_model__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__hr_applicant__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__hr_candidate__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__hr_contract__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__hr_department__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__hr_employee__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense_sheet__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave_allocation__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__decoration_type__warning
+#: model:ir.model.fields.selection,name:mail.selection__mailing_mailing__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_equipment__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_request__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__mrp_production__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__mrp_routing_workcenter__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__mrp_unbuild__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__pos_session__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__product_pricelist__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__product_product__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__product_template__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__purchase_order__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__purchase_requisition__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__repair_order__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__res_partner_bank__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__sale_order__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__slide_channel__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__stock_landed_cost__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__stock_lot__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking_batch__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__survey_survey__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__survey_user_input__activity_exception_decoration__warning
 msgid "Alert"
 msgstr "Upozorenje"
 
@@ -1169,6 +1234,12 @@ msgstr "Email je obavezan za pronađi_ili_kreiraj da proradi"
 #: code:addons/mail/static/src/core/common/failure_model.js:0
 msgid "An error occurred when sending an email"
 msgstr "Došlo je do greške prilikom slanja maila"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/failure_model.js:0
+msgid "An error occurred when sending an email on “%(record_name)s”"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -1397,12 +1468,14 @@ msgid ""
 "Author of the message. If not set, email_from may hold an email address that"
 " did not match any partner."
 msgstr ""
+"Autor poruke. Ako nije postavljen, email_from može sadržavati adresu e-pošte"
+" koja nije odgovarala niti jednom partneru."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__author_avatar
 #: model:ir.model.fields,field_description:mail.field_mail_message__author_avatar
 msgid "Author's avatar"
-msgstr ""
+msgstr "Avatar autora"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__group_public_id
@@ -1586,6 +1659,12 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+msgid "Blur Background"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Blur video background"
 msgstr ""
@@ -1619,7 +1698,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_users__message_bounce
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_bounce
 msgid "Bounce"
-msgstr ""
+msgstr "Odbij"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__bounce_alias
@@ -1666,7 +1745,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/notification_model.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__bounce
 msgid "Bounced"
-msgstr ""
+msgstr "Odbijeno"
 
 #. module: mail
 #. odoo-javascript
@@ -1806,7 +1885,7 @@ msgstr ""
 #: model:ir.module.category,name:mail.module_category_canned_response
 #: model:ir.ui.menu,name:mail.menu_canned_responses
 msgid "Canned Responses"
-msgstr ""
+msgstr "Gotovi odgovori"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
@@ -1880,7 +1959,7 @@ msgstr "Primatelji kopije poruke"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_cc
 msgid "Carbon copy recipients (placeholders may be used here)"
-msgstr ""
+msgstr "Carbon copy primatelji (ovdje se mogu koristiti zamjenski tekstovi)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall_formatted
@@ -1916,7 +1995,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_cc
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_cc
 msgid "Cc"
-msgstr ""
+msgstr "Cc (kopija)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__chaining_type
@@ -2161,35 +2240,37 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-msgid "Come here often? Install Odoo on your device!"
+msgid "Come here often? Install the app for quick and easy access!"
 msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated carbon copy recipients addresses"
-msgstr ""
+msgstr "Adrese primatelja u CC-u odvojene zarezom "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated ids of recipient partners"
-msgstr ""
+msgstr "Ids primatelja odvojeni zarezima"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__partner_to
 msgid ""
 "Comma-separated ids of recipient partners (placeholders may be used here)"
 msgstr ""
+"Ids primatelja odvojeni zarezima (ovdje se mogu koristiti zamjenski "
+"tekstovi)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_to
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated recipient addresses"
-msgstr ""
+msgstr "Adrese primatelja odvojene zarezom"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_to
 msgid "Comma-separated recipient addresses (placeholders may be used here)"
-msgstr ""
+msgstr "Adrese primatelja odvojene zarezom"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__comment
@@ -2234,7 +2315,7 @@ msgstr "Sastavi email"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_mode
 msgid "Composition mode"
-msgstr ""
+msgstr "Mod sastavljanja"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_config_settings
@@ -2312,7 +2393,7 @@ msgstr "Veza nije uspjela (problem sa izlaznim poslužiteljem pošte)"
 #. odoo-python
 #: code:addons/mail/models/fetchmail.py:0
 msgid "Connection test failed: %s"
-msgstr ""
+msgstr "Greška pri testiranju povezivanja: %s"
 
 #. module: mail
 #. odoo-javascript
@@ -2338,6 +2419,8 @@ msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
 msgstr ""
+"Konekcije su enkriptirane sa SSL/TLS kroz dedicirani port (default: "
+"IMAPS=993, POP3S=995)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_force_new
@@ -2431,7 +2514,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_res_partner__message_bounce
 #: model:ir.model.fields,help:mail.field_res_users__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr ""
+msgstr "Broj odbačenih e-mail poruka ovog kontakta"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__country_id
@@ -2472,7 +2555,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__create_uid
 msgid "Create Uid"
-msgstr ""
+msgstr "Kreirao"
 
 #. module: mail
 #. odoo-python
@@ -2633,12 +2716,12 @@ msgstr "Valuta"
 #: model:ir.model.fields,help:mail.field_mail_mail__starred
 #: model:ir.model.fields,help:mail.field_mail_message__starred
 msgid "Current user has a starred notification linked to this message"
-msgstr ""
+msgstr "Trenutni korisnik ima označenu obavijest povezanu sa ovom porukom."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr ""
+msgstr "Prilagođena poruka odbijanja"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2821,7 +2904,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
 msgid "Default recipients"
-msgstr ""
+msgstr "Zadani primatelji"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__use_default_to
@@ -2830,6 +2913,9 @@ msgid ""
 "- partner (using id on a partner or the partner_id field) OR\n"
 "- email (using email_from or email field)"
 msgstr ""
+"Zadani primatelji zapisnika:\n"
+"- partner (pomoću ID partnera ili partner_id polja) ILI\n"
+"- e-mail (pomoću email_from ili e-mail polje)"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
@@ -2840,6 +2926,8 @@ msgstr "Zadani korisnik"
 #: model:ir.model.fields,help:mail.field_fetchmail_server__priority
 msgid "Defines the order of processing, lower values mean higher priority"
 msgstr ""
+"Definira redoslijed procesiranja, niže vrijednosti podrazumijevaju veći "
+"prioritet"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_label
@@ -2849,7 +2937,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_from
 msgid "Delay Type"
-msgstr ""
+msgstr "Tip kašnjenja"
 
 #. module: mail
 #. odoo-javascript
@@ -2861,7 +2949,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__delay_unit
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_unit
 msgid "Delay units"
-msgstr ""
+msgstr "Jedinica kašnjenja"
 
 #. module: mail
 #. odoo-javascript
@@ -2877,7 +2965,7 @@ msgstr "Briši"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete
 msgid "Delete Emails"
-msgstr ""
+msgstr "Briši poruke"
 
 #. module: mail
 #. odoo-javascript
@@ -2902,7 +2990,7 @@ msgstr "Isporučeno"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__exception
 msgid "Delivery Failed"
-msgstr ""
+msgstr "Isporuka nije uspjela"
 
 #. module: mail
 #. odoo-javascript
@@ -2931,6 +3019,8 @@ msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
 msgstr ""
+"Opis koji će biti dodan u objavljenoj poruci za ovaj podtip. Ako nedostaje, "
+"biti će dodan naziv."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__default_display_mode
@@ -3016,7 +3106,7 @@ msgstr "Rasprave"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 msgid "Dismiss"
-msgstr ""
+msgstr "Odbaciti"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__display_name
@@ -3068,6 +3158,8 @@ msgid ""
 "Display an option on related documents to open a composition wizard with "
 "this template"
 msgstr ""
+"Na povezanim dokumentima prikaži opciju  koja poziva čarobnjak sa ovim "
+"predloškom"
 
 #. module: mail
 #. odoo-javascript
@@ -3186,6 +3278,12 @@ msgstr "Preuzmi logove"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "Download:"
 msgstr "Preuzmi:"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/mail_attachment_dropzone.xml:0
+msgid "Drop Files here"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
@@ -3317,23 +3415,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__email
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
 msgid "Email Address"
-msgstr ""
+msgstr "E-mail adresa"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_email
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_optional__alias_email
 msgid "Email Alias"
-msgstr ""
+msgstr "E-mail alias"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
 msgid "Email Aliases"
-msgstr ""
+msgstr "Alias e-maila"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
 msgid "Email Aliases Mixin"
-msgstr ""
+msgstr "Mixin za e-mail aliase"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin_optional
@@ -3344,7 +3442,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mail.mail_blacklist_menu
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
 msgid "Email Blacklist"
-msgstr ""
+msgstr "Crna lista e-pošte"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_secondary_color
@@ -3360,12 +3458,18 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Email Configuration"
-msgstr ""
+msgstr "Postavke email-a"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_domain
 #: model:ir.model.fields,field_description:mail.field_res_company__alias_domain_id
 msgid "Email Domain"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Email Failure: %(modelName)s"
 msgstr ""
 
 #. module: mail
@@ -3388,23 +3492,23 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Email Preview"
-msgstr ""
+msgstr "Pregled e-maila"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Email Search"
-msgstr ""
+msgstr "Pretraga e-pošte"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__template_id
 #: model:ir.model.fields,field_description:mail.field_ir_cron__template_id
 msgid "Email Template"
-msgstr ""
+msgstr "Predložak e-maila"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_template_preview
 msgid "Email Template Preview"
-msgstr ""
+msgstr "Pregled e-mail predloška"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_template_tree_all
@@ -3412,12 +3516,12 @@ msgstr ""
 #: model:ir.ui.menu,name:mail.menu_email_templates
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Email Templates"
-msgstr ""
+msgstr "Predlošci e-mail poruka"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "Nit e-pošte"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_blacklist_unique_email
@@ -3432,6 +3536,8 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
+"E-mail adresa pošiljatelja. Ovo se polje postavlja kada nije pronađen "
+"nijedan partner i zamjenjuje autor_id polje u chatu."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -3470,12 +3576,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__email_cc
 msgid "Email cc"
-msgstr ""
+msgstr "Email cc"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Čarobnjak za sastavljanje e-pošte"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_domain
@@ -3490,7 +3596,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
 msgid "Email message"
-msgstr ""
+msgstr "E-mail poruka"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_message
@@ -3510,7 +3616,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Emails"
-msgstr ""
+msgstr "E-mailovi"
 
 #. module: mail
 #. odoo-javascript
@@ -3532,14 +3638,14 @@ msgid "Employee Only"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
-msgid "Enable Ordered Tracking"
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
+msgid "Enable"
 msgstr ""
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-msgid "Enable desktop notifications to chat"
+#: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
+msgid "Enable Ordered Tracking"
 msgstr ""
 
 #. module: mail
@@ -3558,27 +3664,76 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_model.js:0
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__error
+#: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__account_move__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__account_payment__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__card_campaign__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__crm_lead__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__event_booth__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__event_event__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__event_registration__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__event_sponsor__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__event_track__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_contract__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_services__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_model__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__hr_applicant__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__hr_candidate__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__hr_contract__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__hr_department__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__hr_employee__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense_sheet__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave_allocation__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__decoration_type__danger
+#: model:ir.model.fields.selection,name:mail.selection__mailing_mailing__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_equipment__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_request__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__mrp_production__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__mrp_routing_workcenter__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__mrp_unbuild__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__pos_session__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__product_pricelist__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__product_product__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__product_template__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__purchase_order__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__purchase_requisition__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__repair_order__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__res_partner_bank__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__sale_order__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__slide_channel__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__stock_landed_cost__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__stock_lot__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking_batch__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__survey_survey__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__survey_user_input__activity_exception_decoration__danger
 msgid "Error"
-msgstr ""
+msgstr "Greška"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__error_msg
 msgid "Error Message"
-msgstr ""
+msgstr "Poruka greške:"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/update.py:0
 msgid "Error during communication with the publisher warranty server."
-msgstr ""
+msgstr "Greška tijekom komunikacije sa serverom nositelja održavanja."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__message
 msgid "Error message"
-msgstr ""
+msgstr "Error message"
 
 #. module: mail
 #. odoo-python
@@ -3599,18 +3754,18 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_partner_res_model_id_uniq
 msgid "Error, a partner cannot follow twice the same object."
-msgstr ""
+msgstr "Greška, partner ne može dva puta slijediti isti predmet."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__everyone
 msgid "Everyone"
-msgstr ""
+msgstr "Svi"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__exception
 #: model:mail.activity.type,name:mail.mail_activity_data_warning
 msgid "Exception"
-msgstr ""
+msgstr "Iznimka"
 
 #. module: mail
 #. odoo-javascript
@@ -3644,7 +3799,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Prošireni filtri..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
@@ -3654,12 +3809,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__fail_counter
 msgid "Fail Mail"
-msgstr ""
+msgstr "Neuspješne poruke"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Failed"
-msgstr ""
+msgstr "Neuspjelo"
 
 #. module: mail
 #. odoo-javascript
@@ -3697,7 +3852,7 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-msgid "Failed to render inline_template template: %(template_txt)s)"
+msgid "Failed to render inline_template template: %(template_txt)s"
 msgstr ""
 
 #. module: mail
@@ -3712,7 +3867,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_partner_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Failure Reason"
-msgstr ""
+msgstr "Razlog neuspjeha"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__failure_reason
@@ -3725,6 +3880,8 @@ msgid ""
 "Failure reason. This is usually the exception thrown by the email server, "
 "stored to ease the debugging of mailing issues."
 msgstr ""
+"Razlog pogreške. Ovo je vjerojatno iznimka koju je izbacio e-mail server, "
+"kako bi se olakšalo ispravljanje pogrešaka u slanju e-mailova."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_type
@@ -3733,10 +3890,16 @@ msgid "Failure type"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Failure: %(modelName)s"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__starred_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__starred_partner_ids
 msgid "Favorited By"
-msgstr ""
+msgstr "Postavio kao omiljeni"
 
 #. module: mail
 #. odoo-javascript
@@ -3753,7 +3916,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Fetch Now"
-msgstr ""
+msgstr "Dohvati poruke"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_gif_limit
@@ -3764,7 +3927,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field_id
 msgid "Field"
-msgstr ""
+msgstr "Polje"
 
 #. module: mail
 #. odoo-python
@@ -3796,6 +3959,9 @@ msgid ""
 "automatic subscription on a related document. The field is used to compute "
 "getattr(related_document.relation_field)."
 msgstr ""
+"Ovo polje se koristi za spajanje povezanog modela s podvrstom modela kada se"
+" koristi automatska pretplata na povezani dokument. Polje se koristi za "
+"račinanje getattr(related_document.relation_field). "
 
 #. module: mail
 #. odoo-python
@@ -3808,7 +3974,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model_fields
 msgid "Fields"
-msgstr ""
+msgstr "Polja"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__template_fs
@@ -3844,7 +4010,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 msgid "Files"
-msgstr ""
+msgstr "Datoteke"
 
 #. module: mail
 #. odoo-javascript
@@ -3855,13 +4021,13 @@ msgstr "Skupi"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__fold_state__folded
 msgid "Folded"
-msgstr ""
+msgstr "Omotano"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 msgid "Follow"
-msgstr ""
+msgstr "Slijedi"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_followers
@@ -3893,12 +4059,12 @@ msgstr "Pratitelji (partneri)"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_subscription_form
 msgid "Followers Form"
-msgstr ""
+msgstr "Obrazac pratitelja"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__followers
 msgid "Followers only"
-msgstr ""
+msgstr "Samo sljedbenici"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -3914,7 +4080,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter_patch.js:0
 msgid "Following"
-msgstr ""
+msgstr "Slijedi"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
@@ -3977,7 +4143,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
 msgid "Formatted Email"
-msgstr ""
+msgstr "Oblikovani e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_from
@@ -4015,7 +4181,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/activity_menu.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Future"
-msgstr ""
+msgstr "Budućnost"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
@@ -4063,7 +4229,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 msgid "Gateway"
-msgstr ""
+msgstr "Prolaz"
 
 #. module: mail
 #. odoo-javascript
@@ -4079,7 +4245,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__group
 msgid "Group"
-msgstr ""
+msgstr "Grupa"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -4092,7 +4258,7 @@ msgstr "Grupiraj po"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Group Name"
-msgstr ""
+msgstr "Naziv grupe"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_group_public_id_check
@@ -4122,11 +4288,13 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_tree
 msgid "Groups"
-msgstr ""
+msgstr "Grupe"
 
 #. module: mail
+#. odoo-javascript
 #. odoo-python
 #: code:addons/mail/controllers/discuss/public_page.py:0
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #: model:ir.model,name:mail.model_mail_guest
 #: model:ir.model.fields,field_description:mail.field_bus_presence__guest_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__guest_id
@@ -4155,7 +4323,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mail.mail_guest_menu
 #: model_terms:ir.ui.view,arch_db:mail.mail_guest_view_tree
 msgid "Guests"
-msgstr ""
+msgstr "Gosti"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_http
@@ -4165,7 +4333,7 @@ msgstr "HTTP usmjeravanje"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__email
 msgid "Handle by Emails"
-msgstr ""
+msgstr "Poslati e-poštom"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__inbox
@@ -4218,7 +4386,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__has_error
 #: model:ir.model.fields,field_description:mail.field_mail_message__has_error
 msgid "Has error"
-msgstr ""
+msgstr "Ima greške"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__has_user_on_demand
@@ -4230,7 +4398,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__headers
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Headers"
-msgstr ""
+msgstr "Zaglavlja"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -4268,7 +4436,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__hidden
 msgid "Hide the subtype in the follower options"
-msgstr ""
+msgstr "Sakrij podtip u opcijama pratitelja"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_internal
@@ -4280,7 +4448,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_config_settings__tenor_content_filter__high
 msgid "High"
-msgstr ""
+msgstr "Visok"
 
 #. module: mail
 #. odoo-javascript
@@ -4293,7 +4461,7 @@ msgstr "Povijest"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__server
 msgid "Hostname or IP of the mail server"
-msgstr ""
+msgstr "Ime ili IP adresa mail poslužitelja"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__voice_active_duration
@@ -4381,21 +4549,23 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
+"ID matične evidencije sadrži pseudonim (na primjer : projekt sadrži "
+"pseudonim pod kojim djelatnik kreira zadatak)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__im_status
 msgid "IM Status"
-msgstr ""
+msgstr "IM Status"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
 msgid "IMAP"
-msgstr ""
+msgstr "IMAP"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__fetchmail_server__server_type__imap
 msgid "IMAP Server"
-msgstr ""
+msgstr "IMAP poslužitelj"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__icon
@@ -4412,13 +4582,13 @@ msgstr "Ikona"
 #: model:ir.model.fields,help:mail.field_res_partner__activity_exception_icon
 #: model:ir.model.fields,help:mail.field_res_users__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona za prikaz iznimki."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers__res_id
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__res_id
 msgid "Id of the followed resource"
-msgstr ""
+msgstr "Id resursa koji se prati"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_form
@@ -4430,12 +4600,12 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/im_status.xml:0
 #: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
 msgid "Idle"
-msgstr ""
+msgstr "Prazan"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
 msgid "If SSL required."
-msgstr ""
+msgstr "Ako je SSL obavezan"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__message_needaction
@@ -4503,6 +4673,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
+"Ako je postavljeno, ovaj sadržaj bit će automatsku poslan neovlaštenim "
+"korisnicima umjesto zadane poruke."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -4520,6 +4692,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
+"Ako je adresa e-pošte na crnoj listi, kontakt više neće primati masovnu "
+"poštu, ni s jedne liste"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_scheduled_message__is_note
@@ -4541,6 +4715,8 @@ msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
 msgstr ""
+"Ako ste postavili catch-all domenu e-maila preusmjerenu na Odoo server, "
+"unesite naziv domene ovdje."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -4587,7 +4763,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Image is a link"
-msgstr ""
+msgstr "Slika je poveznica"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__scheduled_date
@@ -4601,12 +4777,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid "Inactive Alias"
-msgstr ""
+msgstr "Neaktivni alias"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__fetchmail_server_id
 msgid "Inbound Mail Server"
-msgstr ""
+msgstr "Poslužitelj dolaznih mail poruka"
 
 #. module: mail
 #. odoo-javascript
@@ -4614,7 +4790,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_type__inbox
 msgid "Inbox"
-msgstr ""
+msgstr "Pristigla pošta"
 
 #. module: mail
 #. odoo-javascript
@@ -4638,12 +4814,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
 msgid "Incoming Mail Server"
-msgstr ""
+msgstr "Poslužitelj dolaznih poruka"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_server_tree
 #: model:ir.ui.menu,name:mail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
+msgstr "Poslužitelj dolazne pošte"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
+msgid "Incoming Video Call..."
 msgstr ""
 
 #. module: mail
@@ -4656,7 +4838,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "Info"
-msgstr ""
+msgstr "Informacija"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__initial_res_model
@@ -4694,30 +4876,36 @@ msgid "Install"
 msgstr "Instaliraj"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Install Odoo"
+msgstr ""
+
+#. module: mail
 #: model:ir.ui.menu,name:mail.discuss_channel_integrations_menu
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Integrations"
-msgstr ""
+msgstr "Integracije"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__internal
 msgid "Internal Only"
-msgstr ""
+msgstr "Samo interno"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.notification_preview
 msgid "Internal communication:"
-msgstr ""
+msgstr "Interna komunikacija"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__delay_count
 msgid "Interval"
-msgstr ""
+msgstr "Razdoblje"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__invalid
 msgid "Invalid"
-msgstr ""
+msgstr "Neispravno"
 
 #. module: mail
 #. odoo-python
@@ -4729,7 +4917,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_invalid
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_email_invalid
 msgid "Invalid email address"
-msgstr ""
+msgstr "Nepostojeća email adresa"
 
 #. module: mail
 #. odoo-python
@@ -4744,6 +4932,8 @@ msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
 msgstr ""
+"Nevažeći izraz, to mora biti doslovna python definicija npr. \"{'field': "
+"'Vrijednost'}\""
 
 #. module: mail
 #. odoo-python
@@ -4835,13 +5025,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Invite"
-msgstr ""
+msgstr "Pozovi"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Invite People"
-msgstr ""
+msgstr "Pozovite ljude"
 
 #. module: mail
 #. odoo-javascript
@@ -4853,7 +5043,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
 msgid "Invite people"
-msgstr ""
+msgstr "Pozovi osobe"
 
 #. module: mail
 #. odoo-javascript
@@ -4870,7 +5060,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
 msgid "Invite wizard"
-msgstr ""
+msgstr "Čarobnjak za pozivanje"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__is_active
@@ -4919,7 +5109,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__is_read
 msgid "Is Read"
-msgstr ""
+msgstr "Pročitano"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__is_self
@@ -4959,7 +5149,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__is_pinned
 msgid "Is pinned on the interface"
-msgstr ""
+msgstr "Je prikvačeno na sučelje"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__is_camera_on
@@ -4997,7 +5187,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 msgid "Join"
-msgstr ""
+msgstr "Pridruži se"
 
 #. module: mail
 #. odoo-javascript
@@ -5009,12 +5199,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 msgid "Join Channel"
-msgstr ""
+msgstr "Pridruži se kanalu"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.discuss_channel_action_view
 msgid "Join a group"
-msgstr ""
+msgstr "Priključi se grupi"
 
 #. module: mail
 #. odoo-javascript
@@ -5031,7 +5221,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__attach
 msgid "Keep Attachments"
-msgstr ""
+msgstr "Zadrži privitke"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__keep_done
@@ -5046,7 +5236,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__original
 msgid "Keep Original"
-msgstr ""
+msgstr "Zadrži original"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete_keep_log
@@ -5062,7 +5252,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Key"
-msgstr ""
+msgstr "Ključ"
 
 #. module: mail
 #. odoo-python
@@ -5088,15 +5278,9 @@ msgid "Language"
 msgstr "Jezik"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/chat_hub.xml:0
-msgid "Large windows"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__date
 msgid "Last Fetch Date"
-msgstr ""
+msgstr "Zadnji datum ažuriranja poruka"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__fetched_message_id
@@ -5112,12 +5296,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__seen_message_id
 msgid "Last Seen"
-msgstr ""
+msgstr "Zadnje viđeno"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__write_date
 msgid "Last Updated On"
-msgstr ""
+msgstr "Vrijeme promjene"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__write_uid
@@ -5230,7 +5414,7 @@ msgstr "Zakašnjele aktivnosti"
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Launch Plans"
-msgstr ""
+msgstr "Planovi pokretsnja"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_layout_xmlid
@@ -5247,7 +5431,7 @@ msgstr "Odsustvo"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
 msgid "Leave Channel"
-msgstr ""
+msgstr "Napusti kanal"
 
 #. module: mail
 #. odoo-javascript
@@ -5259,7 +5443,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_commands.js:0
 msgid "Leave this channel"
-msgstr ""
+msgstr "Napusti ovaj kanal"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_link_preview_action
@@ -5287,7 +5471,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_commands.js:0
 msgid "List users in the current channel"
-msgstr ""
+msgstr "Popis korisnika na trenutnom kanalu"
 
 #. module: mail
 #. odoo-javascript
@@ -5301,7 +5485,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/recipient_list.xml:0
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
 msgid "Load more"
-msgstr ""
+msgstr "Prikaži više"
 
 #. module: mail
 #. odoo-javascript
@@ -5313,7 +5497,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__fetchmail_server__server_type__local
 msgid "Local Server"
-msgstr ""
+msgstr "Lokalni poslužitelj"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_incoming_local
@@ -5340,7 +5524,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/composer.js:0
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Log"
-msgstr ""
+msgstr "Zapisnik"
 
 #. module: mail
 #. odoo-javascript
@@ -5364,13 +5548,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 msgid "Log a note..."
-msgstr ""
+msgstr "Zabilježi napomenu..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 msgid "Log an Activity"
-msgstr ""
+msgstr "Zabilježi aktivnost"
 
 #. module: mail
 #. odoo-javascript
@@ -5383,7 +5567,7 @@ msgstr ""
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Log note"
-msgstr ""
+msgstr "Zabilješka"
 
 #. module: mail
 #. odoo-javascript
@@ -5400,12 +5584,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Login Information"
-msgstr ""
+msgstr "Podaci o prijavi"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_config_settings__tenor_content_filter__low
 msgid "Low"
-msgstr ""
+msgstr "Nizak"
 
 #. module: mail
 #. odoo-javascript
@@ -5423,7 +5607,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/activity_mail_template.xml:0
 #: model:ir.model.fields,field_description:mail.field_mail_notification__mail_mail_id
 msgid "Mail"
-msgstr ""
+msgstr "Mail"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
@@ -5435,7 +5619,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_activity_type_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__mail_activity_type_id
 msgid "Mail Activity Type"
-msgstr ""
+msgstr "Tip mail aktivnosti"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist
@@ -5451,7 +5635,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Mail Channel Form"
-msgstr ""
+msgstr "Obrazac mail kanala"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_composer_mixin
@@ -5501,7 +5685,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_ir_mail_server
 msgid "Mail Server"
-msgstr ""
+msgstr "Mail Server"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__template_id
@@ -5521,7 +5705,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Thread"
-msgstr ""
+msgstr "Rasprava e-pošte"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_tracking_value
@@ -5539,7 +5723,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_notification
 msgid "Mail has been created to notify people of an existing mail.message"
-msgstr ""
+msgstr "Mail je kreiran za obavještavanje ljudi za postojeću mail.poruku"
 
 #. module: mail
 #. odoo-python
@@ -5604,18 +5788,6 @@ msgid "Main Attachment"
 msgstr "Glavni prilog"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/chat_hub.js:0
-msgid "Make chats bigger"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/chat_hub.js:0
-msgid "Make chats smaller"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_force_new
 msgid ""
 "Manage answers as new incoming emails instead of replies going to the same "
@@ -5633,26 +5805,26 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/activity.xml:0
 #: code:addons/mail/static/src/core/web/activity_markasdone_popover.xml:0
 msgid "Mark Done"
-msgstr ""
+msgstr "Označi kao Riješeno"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_actions.js:0
 msgid "Mark all read"
-msgstr ""
+msgstr "Označi sve pročitane"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 msgid "Mark as Done"
-msgstr ""
+msgstr "Označi kao Riješeno"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 #: code:addons/mail/static/src/core/common/thread.xml:0
 msgid "Mark as Read"
-msgstr ""
+msgstr "Označi kao pročitano"
 
 #. module: mail
 #. odoo-javascript
@@ -5670,7 +5842,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.xml:0
 msgid "Mark as done"
-msgstr ""
+msgstr "Označi kao Riješeno"
 
 #. module: mail
 #. odoo-javascript
@@ -5681,7 +5853,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_config_settings__tenor_content_filter__medium
 msgid "Medium"
-msgstr ""
+msgstr "Medij"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
@@ -5708,6 +5880,8 @@ msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
 msgstr ""
+"Članovi tih grupa će biti automatski dodani kao sljedbenici. Imajte na umu "
+"da će oni prema potrebi moći ručno upravljati svojom pretplatom."
 
 #. module: mail
 #. odoo-javascript
@@ -5730,7 +5904,7 @@ msgstr "Izbornik"
 #. module: mail
 #: model:ir.model,name:mail.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr ""
+msgstr "Čarobnjak za spajanje partnera"
 
 #. module: mail
 #. odoo-python
@@ -5788,7 +5962,7 @@ msgstr "Greška pri isporuci poruke"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__mail_message_id
 msgid "Message ID"
-msgstr ""
+msgstr "ID poruke"
 
 #. module: mail
 #. odoo-javascript
@@ -5805,7 +5979,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_notification
 msgid "Message Notifications"
-msgstr ""
+msgstr "Obavjesti poruka"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_reaction
@@ -5822,7 +5996,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__record_name
 #: model:ir.model.fields,field_description:mail.field_mail_message__record_name
 msgid "Message Record Name"
-msgstr ""
+msgstr "Naziv zapisa poruke"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_translation
@@ -5838,7 +6012,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__name
 msgid "Message Type"
-msgstr ""
+msgstr "Tip poruke"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__new_message_separator
@@ -5854,12 +6028,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_to
 msgid "Message recipients (emails)"
-msgstr ""
+msgstr "Primatelji poruke (e-maila)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__references
 msgid "Message references, such as identifiers of previous messages"
-msgstr ""
+msgstr "Reference poruke, poput identifikatora prethodnih poruka"
 
 #. module: mail
 #. odoo-python
@@ -5876,6 +6050,10 @@ msgid ""
 "subtypes allow to precisely tune the notifications the user want to receive "
 "on its wall."
 msgstr ""
+"Podvrste poruka preciznije definiraju poruku, posebno za sistemske "
+"obavijesti. Na primjer, to može biti obavijesti vezane uz novi zapis (nova),"
+" ili na promjene faze u procesu (promjena faze). Podvrste poruka omogućuju "
+"precizno podešavanje obavijesti koje korisnici žele primati na svoj zid."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
@@ -5888,6 +6066,8 @@ msgid ""
 "Message subtypes followed, meaning subtypes that will be pushed onto the "
 "user's Wall."
 msgstr ""
+"Podtipovi poduka koji se prate, znači podtipovi koji će biti objavljeni na "
+"zidu korisnika."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__message_type
@@ -5895,18 +6075,20 @@ msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
 msgstr ""
+"Vrsta poruke: e-mail za e-mail poruke, priopćenja za sistemske poruke, "
+"komentari za druge poruke poput korisničkih odgovora"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__message_id
 #: model:ir.model.fields,help:mail.field_mail_message__message_id
 msgid "Message unique identifier"
-msgstr ""
+msgstr "Jedinstveni indentifikator poruke"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__message_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__message_id
 msgid "Message-Id"
-msgstr ""
+msgstr "Id-poruke"
 
 #. module: mail
 #. odoo-javascript
@@ -5931,7 +6113,7 @@ msgstr "Poruke"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Messages Search"
-msgstr ""
+msgstr "Pretraga poruka"
 
 #. module: mail
 #. odoo-javascript
@@ -5958,6 +6140,8 @@ msgid ""
 "Messages with internal subtypes will be visible only by employees, aka "
 "members of base_user group"
 msgstr ""
+"Poruke s internom podvrstom vidljive se samo zaposlenicima, odnosno "
+"članovima base_user group"
 
 #. module: mail
 #. odoo-python
@@ -5973,7 +6157,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_missing
 msgid "Missing email"
-msgstr ""
+msgstr "Nedostaje e-pošta"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_email_missing
@@ -6012,18 +6196,20 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__res_model
 msgid "Model of the followed resource"
-msgstr ""
+msgstr "Model pratećeg resursa"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__res_model
 msgid ""
 "Model the subtype applies to. If False, this subtype applies to all models."
 msgstr ""
+"Model na koji se podtip odnosi. Ako nema, ovaj podtip odnosi se na sve "
+"modele."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model
 msgid "Models"
-msgstr ""
+msgstr "Modeli"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -6035,7 +6221,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
 msgid "Module Uninstall"
-msgstr ""
+msgstr "Deinstalacija modula"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__months
@@ -6046,7 +6232,7 @@ msgstr "Mjeseci"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 msgid "More"
-msgstr ""
+msgstr "Više"
 
 #. module: mail
 #. odoo-javascript
@@ -6088,7 +6274,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mail.mail_activity_action_my
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "My Activities"
-msgstr ""
+msgstr "Moje aktivnosti"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__my_activity_date_deadline
@@ -6100,7 +6286,7 @@ msgstr "Rok za moju aktivnost"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "My Templates"
-msgstr ""
+msgstr "Moji predlošci"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
@@ -6126,7 +6312,7 @@ msgstr "Naziv"
 #: model:ir.model.fields,field_description:mail.field_mail_message__needaction
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Need Action"
-msgstr ""
+msgstr "Potrebna akcija"
 
 #. module: mail
 #. odoo-javascript
@@ -6138,13 +6324,13 @@ msgstr "Novi"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/messaging_menu_patch.xml:0
 msgid "New Channel"
-msgstr ""
+msgstr "Novi kanal"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/messaging_menu_patch.xml:0
 msgid "New Message"
-msgstr ""
+msgstr "Nova poruka"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__new_message_separator
@@ -6160,40 +6346,40 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_char
 msgid "New Value Char"
-msgstr ""
+msgstr "Nova vrijednost Char"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_datetime
 msgid "New Value Datetime"
-msgstr ""
+msgstr "Nova vrijednost Datetime"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_float
 msgid "New Value Float"
-msgstr ""
+msgstr "Nova vrijednost Float"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_integer
 msgid "New Value Integer"
-msgstr ""
+msgstr "Nova vrijednost Integer"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_text
 msgid "New Value Text"
-msgstr ""
+msgstr "Tekst nove vrijednosti"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_window_model.js:0
 #: code:addons/mail/static/src/core/common/out_of_focus_service.js:0
 msgid "New message"
-msgstr ""
+msgstr "Nova poruka"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_patch.xml:0
 msgid "New messages appear here."
-msgstr ""
+msgstr "Nove poruke se pojavljuju ovdje."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -6203,12 +6389,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Next Activities"
-msgstr ""
+msgstr "Sljedeće aktivnosti"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "Next Activity"
-msgstr ""
+msgstr "Sljedeća aktivnost"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_date_deadline
@@ -6240,7 +6426,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__has_recommended_activities
 msgid "Next activities available"
-msgstr ""
+msgstr "Sljedeće aktivnosti dostupne"
 
 #. module: mail
 #. odoo-javascript
@@ -6252,7 +6438,7 @@ msgstr "Ne"
 #. odoo-python
 #: code:addons/mail/models/mail_notification.py:0
 msgid "No Error"
-msgstr ""
+msgstr "Bez greške"
 
 #. module: mail
 #. odoo-javascript
@@ -6294,7 +6480,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 msgid "No conversation yet..."
-msgstr ""
+msgstr "Još nema razgovora..."
 
 #. module: mail
 #. odoo-javascript
@@ -6375,7 +6561,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__reply_to_force_new
 #: model:ir.model.fields,field_description:mail.field_mail_message__reply_to_force_new
 msgid "No threading for answers"
-msgstr ""
+msgstr "Bez niza mailova pri odgovoru"
 
 #. module: mail
 #. odoo-javascript
@@ -6405,6 +6591,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_patch.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__category__default
+#: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
 msgid "None"
 msgstr "Ništa"
 
@@ -6414,12 +6601,12 @@ msgstr "Ništa"
 #: model:ir.model.fields,field_description:mail.field_res_partner__email_normalized
 #: model:ir.model.fields,field_description:mail.field_res_users__email_normalized
 msgid "Normalized Email"
-msgstr ""
+msgstr "Normalizirani Email"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__fetchmail_server__state__draft
 msgid "Not Confirmed"
-msgstr ""
+msgstr "Nepotvrđeno"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__not_tested
@@ -6458,7 +6645,7 @@ msgstr "Ništa"
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Notification"
-msgstr ""
+msgstr "Obavijest"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_notification
@@ -6537,7 +6724,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mail.menu_notification_settings
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_tree
 msgid "Notifications"
-msgstr ""
+msgstr "Obavijesti"
 
 #. module: mail
 #. odoo-javascript
@@ -6653,7 +6840,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/thread_icon.xml:0
 #: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
 msgid "Offline"
-msgstr ""
+msgstr "Odspojen"
 
 #. module: mail
 #. odoo-javascript
@@ -6664,27 +6851,27 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_char
 msgid "Old Value Char"
-msgstr ""
+msgstr "Stara vrijednost Char"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_datetime
 msgid "Old Value DateTime"
-msgstr ""
+msgstr "Stara vrijednost DateTime"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_float
 msgid "Old Value Float"
-msgstr ""
+msgstr "Stara vrijednost Float"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_integer
 msgid "Old Value Integer"
-msgstr ""
+msgstr "Stara vrijednost Integer"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_text
 msgid "Old Value Text"
-msgstr ""
+msgstr "Tekst stare vrijednosti"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -6713,7 +6900,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/thread_icon.xml:0
 #: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
 msgid "Online"
-msgstr ""
+msgstr "Online"
 
 #. module: mail
 #. odoo-javascript
@@ -6786,10 +6973,16 @@ msgid "Open Channel"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Open Discuss App"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_tree
 msgid "Open Document"
-msgstr ""
+msgstr "Otvori dokument"
 
 #. module: mail
 #. odoo-javascript
@@ -6800,8 +6993,6 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
-#, python-format
 msgid "Open Link"
 msgstr "Otvori link"
 
@@ -6820,7 +7011,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/thread_actions.js:0
 msgid "Open in Discuss"
-msgstr ""
+msgstr "Otvori u modulu Diskusija"
 
 #. module: mail
 #. odoo-python
@@ -6840,6 +7031,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"Opcionalni ID zapisa na kojeg će biti povezane sve dolazne poruke, čak i ako"
+" oni nisu odgovorili na njega. Ako je postavljeno, to će onemogućiti "
+"stvaranje novih zapisa u potpunosti."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_mail_id
@@ -6852,6 +7046,8 @@ msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
 "priority one will be used."
 msgstr ""
+"Preferirani server za izlaznu poštu. Ako nije podešen koristiti će se onaj "
+"sa najvišim prioritetom."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__lang
@@ -6917,34 +7113,83 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__mail_server_id
 msgid "Outgoing Mail Server"
-msgstr ""
+msgstr "Odlazni E-mail poslužitelj"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "Odlazni mailovi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__mail_server_id
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_server_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__mail_server_id
 msgid "Outgoing mail server"
-msgstr ""
+msgstr "Izlazni poslužitelj e-pošte"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
+#: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__account_move__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__account_payment__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__card_campaign__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__crm_lead__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__event_booth__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__event_event__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__event_registration__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__event_sponsor__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__event_track__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_contract__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_services__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_model__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__hr_applicant__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__hr_candidate__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__hr_contract__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__hr_department__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__hr_employee__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense_sheet__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave_allocation__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__mailing_mailing__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_equipment__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_request__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__mrp_production__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__mrp_routing_workcenter__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__mrp_unbuild__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__pos_session__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__product_pricelist__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__product_product__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__product_template__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__purchase_order__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__purchase_requisition__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__repair_order__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__res_partner_bank__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__sale_order__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__slide_channel__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__stock_landed_cost__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__stock_lot__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking_batch__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__survey_survey__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__survey_user_input__activity_state__overdue
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Overdue"
-msgstr ""
+msgstr "Kasni"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Override author's email"
-msgstr ""
+msgstr "Prijeđi autorov e-mail"
 
 #. module: mail
 #. odoo-javascript
@@ -6956,17 +7201,17 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
 msgid "POP"
-msgstr ""
+msgstr "POP"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__fetchmail_server__server_type__pop
 msgid "POP Server"
-msgstr ""
+msgstr "POP poslužitelj"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_tree
 msgid "POP/IMAP Servers"
-msgstr ""
+msgstr "POP/IMAP Servers"
 
 #. module: mail
 #. odoo-javascript
@@ -6995,17 +7240,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__parent_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__parent_id
 msgid "Parent Message"
-msgstr ""
+msgstr "Nadređena poruka"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_model_id
 msgid "Parent Model"
-msgstr ""
+msgstr "Ishodni Model"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "ID zapisa nadređenog"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__parent_channel_id
@@ -7019,6 +7264,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"Matični model sadrži pseudonim. Model sadrži alias referencu ali nije nužno "
+"da model daje alias_model_id (na primjer: projekt ( matični_model ) kraj "
+"zadatka (model))"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
@@ -7027,6 +7275,9 @@ msgid ""
 " named. For example on a project, the parent_id of project subtypes refers "
 "to task-related subtypes."
 msgstr ""
+"Nadređena podvrsta, korištena za automatsku pretplatu. Naziv ovog polja nije"
+" točan. Npr. na nekom projektu; nadređeni_id podvrste projekta odnosi se na "
+"podvrste koje su povezane sa zadatkom."
 
 #. module: mail
 #. odoo-javascript
@@ -7050,7 +7301,7 @@ msgstr "Partner"
 #. odoo-python
 #: code:addons/mail/models/res_partner.py:0
 msgid "Partner Profile"
-msgstr ""
+msgstr "Profil partnera"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__partner_readonly
@@ -7066,13 +7317,13 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_partner_ids
 msgid "Partners"
-msgstr ""
+msgstr "Partneri"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notified_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__notified_partner_ids
 msgid "Partners with Need Action"
-msgstr ""
+msgstr "Partneri s potrebnom akcijom"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__password
@@ -7088,7 +7339,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_player.xml:0
 msgid "Pause"
-msgstr ""
+msgstr "Pauza"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push__payload
@@ -7168,7 +7419,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Plan Name"
-msgstr ""
+msgstr "Naziv plana"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_summary
@@ -7183,9 +7434,58 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
+#: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__account_move__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__account_payment__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__card_campaign__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__crm_lead__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__event_booth__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__event_event__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__event_registration__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__event_sponsor__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__event_track__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_contract__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_services__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_model__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__hr_applicant__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__hr_candidate__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__hr_contract__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__hr_department__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__hr_employee__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense_sheet__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave_allocation__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__planned
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__mailing_mailing__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_equipment__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_request__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__mrp_production__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__mrp_routing_workcenter__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__mrp_unbuild__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__pos_session__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__product_pricelist__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__product_product__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__product_template__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__purchase_order__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__purchase_requisition__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__repair_order__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__res_partner_bank__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__sale_order__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__slide_channel__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__stock_landed_cost__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__stock_lot__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking_batch__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__survey_survey__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__survey_user_input__activity_state__planned
 msgid "Planned"
 msgstr "Planirano"
 
@@ -7198,7 +7498,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
 msgid "Planned in"
-msgstr ""
+msgstr "Planirano u"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -7221,7 +7521,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Please contact us instead using"
-msgstr ""
+msgstr "Molimo kontaktirajte nas koristeći "
 
 #. module: mail
 #. odoo-javascript
@@ -7265,7 +7565,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
 msgid "Port"
-msgstr ""
+msgstr "Port"
 
 #. module: mail
 #. odoo-python
@@ -7331,7 +7631,7 @@ msgstr "Podržano od "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__previous_type_ids
 msgid "Preceding Activities"
-msgstr ""
+msgstr "Prethodne aktivnosti"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__reply_to
@@ -7361,9 +7661,15 @@ msgid "Preview"
 msgstr "Pregled"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
+msgid "Preview my camera"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Preview of"
-msgstr ""
+msgstr "Pregled"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__previous_activity_type_id
@@ -7373,7 +7679,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Privacy"
-msgstr ""
+msgstr "Privatnost"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__object_id
@@ -7382,25 +7688,28 @@ msgid ""
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
 msgstr ""
+"Procesiraj svaku dolaznu poruku kao dio konvrzacije koja pripada ovom tipa "
+"dokumenta. To će kreirati nove dokumente za nove konverzacije, ili priloži "
+"follow-up poruka na postojeću konverzaciju."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_model.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__process
 msgid "Processing"
-msgstr ""
+msgstr "Obrađujem"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_icon.xml:0
 msgid "Public Channel"
-msgstr ""
+msgstr "Javni kanal"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories_patch.js:0
 msgid "Public Channels"
-msgstr ""
+msgstr "Javni kanali"
 
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract
@@ -7462,7 +7771,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_ir_qweb
 msgid "Qweb"
-msgstr ""
+msgstr "Qweb"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_form
@@ -7534,18 +7843,18 @@ msgstr ""
 #: code:addons/mail/static/src/chatter/web/scheduled_message.xml:0
 #: code:addons/mail/static/src/core/web_portal/message_patch.js:0
 msgid "Read More"
-msgstr ""
+msgstr "Pročitaj više"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_model.js:0
 msgid "Ready"
-msgstr ""
+msgstr "Spremno"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__ready
 msgid "Ready to Send"
-msgstr ""
+msgstr "Spremno za slanje"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__reason
@@ -7574,7 +7883,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_notification__res_partner_id
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Recipient"
-msgstr ""
+msgstr "Primatelj"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__name
@@ -7600,27 +7909,27 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__recommended_activity_type_id
 msgid "Recommended Activity Type"
-msgstr ""
+msgstr "Preporučeni tip aktivnosti"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__resource_ref
 msgid "Record"
-msgstr ""
+msgstr "Zapis"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__record_name
 msgid "Record Name"
-msgstr ""
+msgstr "Naziv zapisa"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "ID niti zapisa"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__references
 msgid "References"
-msgstr ""
+msgstr "Reference"
 
 #. module: mail
 #. odoo-javascript
@@ -7631,7 +7940,7 @@ msgstr "Odbij"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Regards,"
-msgstr ""
+msgstr "Pozdrav,"
 
 #. module: mail
 #. odoo-javascript
@@ -7643,13 +7952,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
 msgid "Reject"
-msgstr ""
+msgstr "Odbijeno"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__parent_id
 #: model:ir.model.fields,field_description:mail.field_res_users__parent_id
 msgid "Related Company"
-msgstr ""
+msgstr "Povezana tvrtka"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_id
@@ -7658,7 +7967,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message__res_id
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__res_id
 msgid "Related Document ID"
-msgstr ""
+msgstr "Povezani ID dokumenta"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__res_ids
@@ -7679,7 +7988,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_template__model
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__res_model
 msgid "Related Document Model"
-msgstr ""
+msgstr "Povezani model dokumenta"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__res_model
@@ -7694,17 +8003,17 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 msgid "Related Message"
-msgstr ""
+msgstr "Povezana poruka"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__partner_id
 msgid "Related Partner"
-msgstr ""
+msgstr "Povezani partner"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__relation_field
 msgid "Relation field"
-msgstr ""
+msgstr "Relacijsko polje"
 
 #. module: mail
 #. odoo-javascript
@@ -7714,6 +8023,12 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/message_reaction_menu.xml:0
 msgid "Remove"
 msgstr "Ukloni"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+msgid "Remove Blur"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -7739,12 +8054,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove the contextual action to use this template on related documents"
 msgstr ""
+"Ukloni dodatnu akciju da se ovaj predložak koristi na povezanim dokumentima"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/follower_list.xml:0
 msgid "Remove this follower"
-msgstr ""
+msgstr "Ukloni sljedbenika"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field_info
@@ -7763,7 +8079,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__render_model
 #: model:ir.model.fields,field_description:mail.field_mail_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Model renderiranja"
 
 #. module: mail
 #. odoo-python
@@ -7784,25 +8100,25 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_player.xml:0
 msgid "Repeat"
-msgstr ""
+msgstr "Ponovi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
 msgid "Replies"
-msgstr ""
+msgstr "Odgovori"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Reply"
-msgstr ""
+msgstr "Odgovori"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_template__reply_to
 msgid "Reply To"
-msgstr ""
+msgstr "Odgovori na"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to
@@ -7818,7 +8134,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message__reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__reply_to
 msgid "Reply-To"
-msgstr ""
+msgstr "Odgovori na"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -7835,7 +8151,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 msgid "Report"
-msgstr ""
+msgstr "Izvještaj"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__request_partner_id
@@ -7860,7 +8176,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Reset Confirmation"
-msgstr ""
+msgstr "Resetiraj potvrdu"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_template_reset_action
@@ -7883,7 +8199,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_id
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__res_domain_user_id
 msgid "Responsible"
-msgstr ""
+msgstr "Odgovoran"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_user_id
@@ -7916,7 +8232,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Retry"
-msgstr ""
+msgstr "Pokušaj ponovo"
 
 #. module: mail
 #. odoo-javascript
@@ -7932,12 +8248,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__body_content
 msgid "Rich-text Contents"
-msgstr ""
+msgstr "Formatirani tekst"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__body_html
 msgid "Rich-text/HTML message"
-msgstr ""
+msgstr "RT/HTML poruka"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__rtc_inviting_session_id
@@ -7967,17 +8283,17 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "SMTP Server"
-msgstr ""
+msgstr "SMTP poslužitelj"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
 msgid "SSL"
-msgstr ""
+msgstr "SSL"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
 msgid "SSL/TLS"
-msgstr ""
+msgstr "SSL/TLS"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__user_id
@@ -8030,7 +8346,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Schedule Activity"
-msgstr ""
+msgstr "Zakaži aktivnost"
 
 #. module: mail
 #. odoo-javascript
@@ -8062,19 +8378,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/activity/activity_renderer.xml:0
 msgid "Schedule activity"
-msgstr ""
+msgstr "Raspored aktivnosti"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
 msgid "Schedule an Activity"
-msgstr ""
+msgstr "Zakaži aktivnost"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 msgid "Schedule an activity"
-msgstr ""
+msgstr "Zakažite aktivnost"
 
 #. module: mail
 #. odoo-javascript
@@ -8085,7 +8401,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_ir_cron
 msgid "Scheduled Actions"
-msgstr ""
+msgstr "Zakazane akcije"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__scheduled_date
@@ -8110,40 +8426,40 @@ msgstr ""
 #: model:ir.ui.menu,name:mail.mail_message_schedule_menu
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_search
 msgid "Scheduled Messages"
-msgstr ""
+msgstr "Zakazane poruke"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__scheduled_date
 #: model:ir.model.fields,field_description:mail.field_mail_message_schedule__scheduled_datetime
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
-msgstr ""
+msgstr "Planirani datum slanja"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__script
 msgid "Script"
-msgstr ""
+msgstr "Skripta"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
 msgid "Search"
-msgstr ""
+msgstr "Traži"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_search
 msgid "Search Alias"
-msgstr ""
+msgstr "Traži alias"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
 msgid "Search Groups"
-msgstr ""
+msgstr "Traži grupe"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
 msgid "Search Incoming Mail Servers"
-msgstr ""
+msgstr "Pretraži poslužitelje dolaznih mail poruka"
 
 #. module: mail
 #. odoo-javascript
@@ -8163,7 +8479,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.xml:0
 msgid "Search More..."
-msgstr ""
+msgstr "Traži dalje..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_search
@@ -8329,7 +8645,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/composer.js:0
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Send"
-msgstr ""
+msgstr "Pošalji"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -8339,7 +8655,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__mail_post
 msgid "Send Email"
-msgstr ""
+msgstr "Pošalji e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__mail_post_method
@@ -8357,7 +8673,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 msgid "Send Mail (%s)"
-msgstr ""
+msgstr "Pošalji e-mail (%s)"
 
 #. module: mail
 #. odoo-javascript
@@ -8367,7 +8683,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Send Now"
-msgstr ""
+msgstr "Pošalji odmah"
 
 #. module: mail
 #. odoo-javascript
@@ -8400,7 +8716,7 @@ msgstr ""
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 #: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
 msgid "Send message"
-msgstr ""
+msgstr "Pošalji poruku"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_from
@@ -8413,6 +8729,8 @@ msgid ""
 "Sender address (placeholders may be used here). If not set, the default "
 "value will be the author's email alias if configured, or email address."
 msgstr ""
+"Adresa pošiljatelja. Ako nije podešena, koristiti će se e-mail alias autora "
+"ukoliko je podešen, ili e-mail adresa."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_message_action
@@ -8427,7 +8745,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__pending
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Sent"
-msgstr ""
+msgstr "Poslano"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__sequence
@@ -8440,32 +8758,32 @@ msgstr "Sekvenca"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Server & Login"
-msgstr ""
+msgstr "Poslužitelj i prijava"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server
 msgid "Server Action"
-msgstr ""
+msgstr "Serverske radnje"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Server Information"
-msgstr ""
+msgstr "Informacije o poslužitelju"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__server
 msgid "Server Name"
-msgstr ""
+msgstr "Ime Servera"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__priority
 msgid "Server Priority"
-msgstr ""
+msgstr "Prioritet poslužitelja"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__server_type
 msgid "Server Type"
-msgstr ""
+msgstr "Tip poslužitelja"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__server_type_info
@@ -8476,7 +8794,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_upload_service.js:0
 msgid "Server error"
-msgstr ""
+msgstr "Greška poslužitelja"
 
 #. module: mail
 #. odoo-python
@@ -8489,12 +8807,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
 msgid "Server type IMAP."
-msgstr ""
+msgstr "Tip servera IMAP"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
 msgid "Server type POP."
-msgstr ""
+msgstr "POP tip poslužitelja"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__active
@@ -8536,7 +8854,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__source
 msgid "Shortcut"
-msgstr ""
+msgstr "Prečac"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
@@ -8607,7 +8925,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__ref_ir_act_window
 msgid "Sidebar action"
-msgstr ""
+msgstr "Bočna akcija"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__ref_ir_act_window
@@ -8615,6 +8933,8 @@ msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
 msgstr ""
+"Bočna akcija kako bi ovaj predložak bio dostupan na zapisima povezanog "
+"modela dokumenta"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__og_site_name
@@ -8674,7 +8994,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Start a Call"
-msgstr ""
+msgstr "Započmite poziv"
 
 #. module: mail
 #. odoo-javascript
@@ -8684,17 +9004,23 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
+msgid "Start a Video Call"
+msgstr "Započmite video poziv"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_app_model.js:0
 #: code:addons/mail/static/src/discuss/core/web/messaging_menu_patch.xml:0
 msgid "Start a conversation"
-msgstr ""
+msgstr "Započmite razgovor"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/discuss_sidebar_patch.js:0
 #: code:addons/mail/static/src/discuss/core/web/messaging_menu_patch.xml:0
 msgid "Start a meeting"
-msgstr ""
+msgstr "Započnite sastanak"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
@@ -8736,6 +9062,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/statusbar_duration/statusbar_duration_field.js:0
 msgid "Status with time"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Stay tuned! Enable push notifications to never miss a message."
 msgstr ""
 
 #. module: mail
@@ -8808,14 +9140,14 @@ msgstr "Predmet"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__subject
 msgid "Subject (placeholders may be used here)"
-msgstr ""
+msgstr "Naslov"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/scheduled_message.xml:0
 #: code:addons/mail/static/src/core/common/message.xml:0
 msgid "Subject:"
-msgstr ""
+msgstr "Predmet:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__mail_post_autofollow
@@ -8826,7 +9158,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__substitution
 msgid "Substitution"
-msgstr ""
+msgstr "Zamjena"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__subtype_id
@@ -8835,13 +9167,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message__subtype_id
 #: model_terms:ir.ui.view,arch_db:mail.view_message_subtype_tree
 msgid "Subtype"
-msgstr ""
+msgstr "Podvrsta"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_message_subtype
 #: model:ir.ui.menu,name:mail.menu_message_subtype
 msgid "Subtypes"
-msgstr ""
+msgstr "Podtipovi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__suggested_next_type_ids
@@ -8863,12 +9195,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__summary
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__summary
 msgid "Summary"
-msgstr ""
+msgstr "Sažetak"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "Summary:"
-msgstr ""
+msgstr "Sažetak:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__module_google_gmail
@@ -8891,7 +9223,7 @@ msgstr "Sistemski parametar"
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__notification
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__notification
 msgid "System notification"
-msgstr ""
+msgstr "Sistemska obavijest"
 
 #. module: mail
 #. odoo-javascript
@@ -8931,7 +9263,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_reset__template_ids
 msgid "Template"
-msgstr ""
+msgstr "Predložak"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__template_category
@@ -8952,12 +9284,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__template_name
 msgid "Template Name"
-msgstr ""
+msgstr "Naziv predloška"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_template_preview_action
 msgid "Template Preview"
-msgstr ""
+msgstr "Pregled predloška"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__lang
@@ -8997,7 +9329,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_compose_message_view_form_template_save
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Templates"
-msgstr ""
+msgstr "Predlošci"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
@@ -9032,7 +9364,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Test & Confirm"
-msgstr ""
+msgstr "Testiraj i potvrdi"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -9047,7 +9379,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The"
-msgstr ""
+msgstr "!"
 
 #. module: mail
 #. odoo-python
@@ -9151,7 +9483,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
-msgstr ""
+msgstr "Email poslan na"
 
 #. module: mail
 #. odoo-python
@@ -9217,6 +9549,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Model (Odoo vrsta dokumenta) na koje se ovaj alias odgovara. Svaki dolazni "
+"e-mail koji ne odgovara na postojeći zapis uzrokovati će stvaranje novog "
+"zapisa ovog modela (npr. projektni zadatak)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_name
@@ -9226,6 +9561,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Ime e-mail aliasa, npr. 'poslovi' ako žele uhvatiti e-poštu "
+"za<jobs@example.odoo.com>"
 
 #. module: mail
 #. odoo-python
@@ -9293,7 +9630,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "This"
-msgstr ""
+msgstr "Ovaj"
 
 #. module: mail
 #. odoo-python
@@ -9311,7 +9648,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/activity/activity_renderer.xml:0
 msgid "This action will send an email."
-msgstr ""
+msgstr "Ova akcija će poslati email."
 
 #. module: mail
 #. odoo-javascript
@@ -9351,7 +9688,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
 msgid "This field is case insensitive."
-msgstr ""
+msgstr "Ovo polje ne razlikuje mala i velika slova."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__description
@@ -9427,7 +9764,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Thread"
-msgstr ""
+msgstr "Nit"
 
 #. module: mail
 #. odoo-javascript
@@ -9486,13 +9823,13 @@ msgstr "Do"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_to
 msgid "To (Emails)"
-msgstr ""
+msgstr "Za (E-mail)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__recipient_ids
 #: model:ir.model.fields,field_description:mail.field_mail_template__partner_to
 msgid "To (Partners)"
-msgstr ""
+msgstr "Za (Partneri)"
 
 #. module: mail
 #. odoo-javascript
@@ -9515,7 +9852,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 msgid "To:"
-msgstr ""
+msgstr "Za:"
 
 #. module: mail
 #. odoo-javascript
@@ -9523,9 +9860,58 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.js:0
 #: code:addons/mail/static/src/core/web/activity_menu.xml:0
+#: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__account_move__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__account_payment__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__card_campaign__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__crm_lead__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__event_booth__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__event_event__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__event_registration__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__event_sponsor__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__event_track__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_contract__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_services__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_model__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__hr_applicant__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__hr_candidate__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__hr_contract__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__hr_department__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__hr_employee__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__hr_expense_sheet__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__hr_leave_allocation__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__lunch_supplier__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__today
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__mailing_mailing__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_equipment__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__maintenance_request__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__mrp_production__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__mrp_routing_workcenter__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__mrp_unbuild__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__pos_session__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__product_pricelist__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__product_product__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__product_template__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__purchase_order__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__purchase_requisition__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__repair_order__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__res_partner_bank__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__sale_order__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__slide_channel__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__stock_landed_cost__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__stock_lot__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__stock_picking_batch__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__survey_survey__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__survey_user_input__activity_state__today
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Today"
 msgstr "Danas"
@@ -9537,9 +9923,15 @@ msgstr "Današnje aktivnosti"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "Today at %(time)s"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "Today:"
-msgstr ""
+msgstr "Danas:"
 
 #. module: mail
 #. odoo-javascript
@@ -9563,12 +9955,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "Tomorrow:"
-msgstr ""
+msgstr "Sutra:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Topics discussed in this group..."
-msgstr ""
+msgstr "Teme raspravljane u grupi..."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__track_recipients
@@ -9582,6 +9974,8 @@ msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
+"Praćene vrijednosti pohranjene su u posebnom modelu. Ovo polje omogućava "
+"rekonstrukciju praćenja i generiranje statistika na modelu."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
@@ -9592,25 +9986,25 @@ msgstr "Sljedivost:"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_tree
 msgid "Tracking Value"
-msgstr ""
+msgstr "Vrijednost praćenja"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_tracking_value
 #: model:ir.ui.menu,name:mail.menu_mail_tracking_value
 msgid "Tracking Values"
-msgstr ""
+msgstr "Vrijednost praćenja"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__tracking_value_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__tracking_value_ids
 msgid "Tracking values"
-msgstr ""
+msgstr "Vrijednost praćenja"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Translate"
-msgstr ""
+msgstr "Prevoditi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__body
@@ -9646,6 +10040,12 @@ msgid "Turn camera on"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Turn on notifications"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_token
 msgid "Twilio Account Auth Token"
 msgstr ""
@@ -9670,7 +10070,7 @@ msgstr "Vrsta"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_from
 msgid "Type of delay"
-msgstr ""
+msgstr "Vrsta kašnjenja"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__state
@@ -9703,30 +10103,31 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_ice_server__uri
 msgid "URI"
-msgstr ""
+msgstr "URL"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__source_url
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__uuid
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_mail.py:0
 msgid "Unable to connect to SMTP Server"
-msgstr ""
+msgstr "Nije moguće povezati se na HTTP server"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
 msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
+"E-mail se ne može poslati, molimo postavite e-mail adresu pošiljatelja"
 
 #. module: mail
 #. odoo-python
@@ -9771,7 +10172,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 msgid "Unfollow"
-msgstr ""
+msgstr "Ne slijedi više"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -9782,7 +10183,7 @@ msgstr "Jedinica"
 #: model:ir.model.fields,help:mail.field_mail_activity_plan_template__delay_unit
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_unit
 msgid "Unit of delay"
-msgstr ""
+msgstr "Jedinica kašnjenja"
 
 #. module: mail
 #. odoo-python
@@ -9796,7 +10197,7 @@ msgstr "Nepoznato"
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__unknown
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__unknown
 msgid "Unknown error"
-msgstr ""
+msgstr "Nepoznata greška"
 
 #. module: mail
 #. odoo-python
@@ -9849,12 +10250,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Brojač nepročitanih poruka"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Unread messages"
-msgstr ""
+msgstr "Nepročitane poruke"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__unrestricted_attachment_ids
@@ -9871,7 +10272,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_actions.js:0
 msgid "Unstar all"
-msgstr ""
+msgstr "Ukloni zvjezdicu sa svih"
 
 #. module: mail
 #. odoo-python
@@ -9918,7 +10319,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__category__upload_file
 #: model:mail.activity.type,name:mail.mail_activity_data_upload_document
 msgid "Upload Document"
-msgstr ""
+msgstr "Prenesi dokument"
 
 #. module: mail
 #. odoo-javascript
@@ -9942,19 +10343,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 msgid "Uploaded"
-msgstr ""
+msgstr "Učitano"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 msgid "Uploading"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/mail_composer_attachment_selector.js:0
-msgid "Uploading error"
-msgstr ""
+msgstr "Učitavanje"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_type
@@ -10023,7 +10418,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__template_id
 msgid "Use template"
-msgstr ""
+msgstr "Koristi predložak"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__use_push_to_talk
@@ -10033,7 +10428,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "Used In"
-msgstr ""
+msgstr "Koristi se u:"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__res_domain_user_id
@@ -10061,7 +10456,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__sequence
 msgid "Used to order subtypes."
-msgstr ""
+msgstr "Koristi se za poredak podtipova."
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_users
@@ -10080,7 +10475,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_bus_presence
 msgid "User Presence"
-msgstr ""
+msgstr "Prisutnost korisnika"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__user_setting_id
@@ -10094,7 +10489,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_form
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_tree
 msgid "User Settings"
-msgstr ""
+msgstr "Korisničke postavke"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_users_settings_volumes
@@ -10138,7 +10533,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/im_status.xml:0
 #: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
 msgid "User is online"
-msgstr ""
+msgstr "Korisnik je dostupan"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_gif_favorite_user_gif_favorite
@@ -10149,7 +10544,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__user
 #: model:ir.model.fields,field_description:mail.field_mail_ice_server__username
 msgid "Username"
-msgstr ""
+msgstr "Korisničko ime"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__restrict_template_rendering
@@ -10169,7 +10564,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__valid
 msgid "Valid"
-msgstr ""
+msgstr "Odobreno"
 
 #. module: mail
 #. odoo-python
@@ -10196,13 +10591,13 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 #: model:ir.model,name:mail.model_ir_ui_view
 msgid "View"
-msgstr ""
+msgstr "Pogledaj"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "View %s"
-msgstr ""
+msgstr "Pogledaj %s"
 
 #. module: mail
 #. odoo-javascript
@@ -10226,7 +10621,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_act_window_view__view_mode
 #: model:ir.model.fields,field_description:mail.field_ir_ui_view__type
 msgid "View Type"
-msgstr ""
+msgstr "Tip pogleda"
 
 #. module: mail
 #. odoo-javascript
@@ -10343,7 +10738,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__weeks
 msgid "Weeks"
-msgstr ""
+msgstr "Tjedni"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -10362,7 +10757,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 msgid "What's your name?"
-msgstr ""
+msgstr "Koje je vaše ime?"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__user_tz
@@ -10371,6 +10766,9 @@ msgid ""
 "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
 "Anywhere else, time values are computed according to the time offset of your web client."
 msgstr ""
+"Prilikom ispisa dokumenata i izvoza/uvoza podataka, vremenske vrijednosti izračunavaju se prema ovoj vremenskoj zoni.\n"
+"Ako vremenska zona nije postavljena, koristi se UTC (koordinirano univerzalno vrijeme).\n"
+"Bilo gdje drugdje, vremenske vrijednosti izračunavaju se prema vremenskom pomaku vašeg web klijenta."
 
 #. module: mail
 #. odoo-python
@@ -10386,6 +10784,8 @@ msgid ""
 "attached to each processed message. This will usually double the size of "
 "your message database."
 msgstr ""
+"Treba li kompletan original poruke čuvati kao referencu pridruženu svakoj "
+"obrađenoj poruci. Ovo obično uzrokuje značajnu povećanje baze poruka."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__attach
@@ -10393,10 +10793,17 @@ msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
 msgstr ""
+"Privitci poruka trebali bi biti skinuti. Ako nije omogućeno, dolaznim "
+"porukema biti će maknuti privitci prije procesiranja"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__track_recipients
 msgid "Whether to display all the recipients or only the important ones."
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
+msgid "Write /field to insert dynamic content"
 msgstr ""
 
 #. module: mail
@@ -10448,9 +10855,15 @@ msgstr "Jučer"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "Yesterday at %(time)s"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "Yesterday:"
-msgstr ""
+msgstr "Jučer:"
 
 #. module: mail
 #. odoo-javascript
@@ -10542,6 +10955,8 @@ msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
 msgstr ""
+"Ne možete izbrisati te grupe, jer je cijela grupa tvrtke potrebna drugim "
+"modulima."
 
 #. module: mail
 #. odoo-python
@@ -10581,7 +10996,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "You have been assigned to the"
-msgstr ""
+msgstr "Dodijeljen Vam je"
 
 #. module: mail
 #. odoo-javascript
@@ -10595,6 +11010,8 @@ msgid ""
 "You may attach files to this template, to be added to all emails created "
 "from this template"
 msgstr ""
+"Možete priložiti datoteke ovom predlošku, one će biti dodate svim "
+"e-mailovima kreiranim iz ovog predloška"
 
 #. module: mail
 #. odoo-python
@@ -10648,7 +11065,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 msgid "Your"
-msgstr ""
+msgstr " "
 
 #. module: mail
 #. odoo-python
@@ -10697,7 +11114,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 msgid "Your name"
-msgstr ""
+msgstr "Vaše ime "
 
 #. module: mail
 #. odoo-javascript
@@ -10753,7 +11170,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 msgid "back"
-msgstr ""
+msgstr "natrag"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
@@ -10769,7 +11186,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "by"
-msgstr ""
+msgstr "od"
 
 #. module: mail
 #. odoo-javascript
@@ -10853,14 +11270,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "document"
-msgstr ""
+msgstr "dokument"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/activity/activity_renderer.js:0
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "done"
-msgstr ""
+msgstr "gotovo"
 
 #. module: mail
 #. odoo-javascript
@@ -10947,7 +11364,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "e.g. Discuss proposal"
-msgstr ""
+msgstr "npr. Raspraviti o prijedlogu"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_form
@@ -10957,7 +11374,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "e.g. Onboarding"
-msgstr ""
+msgstr "npr. Onboarding"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -10999,7 +11416,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "for"
-msgstr ""
+msgstr "za"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -11096,7 +11513,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "model %s does not accept document creation"
-msgstr ""
+msgstr "model %s ne prihvaća kreiranje dokumenta"
 
 #. module: mail
 #. odoo-javascript
@@ -11108,7 +11525,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_unit__months
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__months
 msgid "months"
-msgstr ""
+msgstr "mjeseci"
 
 #. module: mail
 #. odoo-javascript
@@ -11144,14 +11561,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/relative_time.js:0
 msgid "now"
-msgstr ""
+msgstr "sada"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "on"
-msgstr ""
+msgstr "na"
 
 #. module: mail
 #. odoo-javascript
@@ -11272,7 +11689,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "unknown target model %s"
-msgstr ""
+msgstr "nepoznati odredišni model %s"
 
 #. module: mail
 #. odoo-javascript

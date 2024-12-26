@@ -133,7 +133,7 @@ class PosSession(models.Model):
             'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.product', 'product.attribute', 'product.attribute.custom.value',
             'product.template.attribute.line', 'product.template.attribute.value', 'product.combo', 'product.combo.item', 'product.packaging', 'res.users', 'res.partner',
             'decimal.precision', 'uom.uom', 'uom.category', 'res.country', 'res.country.state', 'res.lang', 'product.pricelist', 'product.pricelist.item', 'product.category',
-            'account.cash.rounding', 'account.fiscal.position', 'account.fiscal.position.tax', 'stock.picking.type', 'res.currency', 'pos.note', 'ir.ui.view', 'ir.module.module']
+            'account.cash.rounding', 'account.fiscal.position', 'account.fiscal.position.tax', 'stock.picking.type', 'res.currency', 'pos.note', 'ir.ui.view', 'product.tag', 'ir.module.module']
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -352,11 +352,16 @@ class PosSession(models.Model):
 
     def login(self):
         self.ensure_one()
-        login_number = self.login_number + 1
-        self.write({
-            'login_number': login_number,
-        })
-        return login_number
+        # FIX for stable version, we cannot modify the actual login_number field
+        code = f"pos.session.login_number{self.id}"
+        session_seq = self.env['ir.sequence'].search_count([('code', '=', code)])
+        if not session_seq:
+            self.env['ir.sequence'].create({
+                'name': f"POS Session {self.id}",
+                'code': code,
+                'company_id': self.company_id.id,
+            })
+        return self.env['ir.sequence'].next_by_code(code)
 
     def action_pos_session_open(self):
         # we only open sessions that haven't already been opened
@@ -891,6 +896,7 @@ class PosSession(models.Model):
                 AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
                 AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, order.company_id)
                 tax_results = AccountTax._prepare_tax_lines(base_lines, order.company_id)
+                total_amount_currency = 0.0
                 for base_line, to_update in tax_results['base_lines_to_update']:
                     # Combine sales/refund lines
                     sale_key = (
@@ -903,6 +909,7 @@ class PosSession(models.Model):
                         tuple(base_line['tax_tag_ids'].ids),
                         base_line['product_id'].id if self.config_id.is_closing_entry_by_product else False,
                     )
+                    total_amount_currency += to_update['amount_currency']
                     sales[sale_key] = self._update_amounts(
                         sales[sale_key],
                         {
@@ -921,6 +928,7 @@ class PosSession(models.Model):
                         tax_line['tax_repartition_line_id'],
                         tuple(tax_line['tax_tag_ids'][0][2]),
                     )
+                    total_amount_currency += tax_line['amount_currency']
                     taxes[tax_key] = self._update_amounts(
                         taxes[tax_key],
                         {
@@ -932,7 +940,7 @@ class PosSession(models.Model):
                     )
 
                 if self.config_id.cash_rounding:
-                    diff = order.amount_paid - order.amount_total
+                    diff = order.amount_paid + total_amount_currency
                     rounding_difference = self._update_amounts(rounding_difference, {'amount': diff}, order.date_order)
 
                 # Increasing current partner's customer_rank
@@ -940,7 +948,7 @@ class PosSession(models.Model):
                 partners._increase_rank('customer_rank')
 
         if self.company_id.anglo_saxon_accounting:
-            all_picking_ids = self.order_ids.filtered(lambda p: not p.is_invoiced).picking_ids.ids + self.picking_ids.filtered(lambda p: not p.pos_order_id).ids
+            all_picking_ids = self.order_ids.filtered(lambda p: not p.is_invoiced and not p.shipping_date).picking_ids.ids + self.picking_ids.filtered(lambda p: not p.pos_order_id).ids
             if all_picking_ids:
                 # Combine stock lines
                 stock_move_sudo = self.env['stock.move'].sudo()
@@ -1800,13 +1808,14 @@ class PosSession(models.Model):
     def find_product_by_barcode(self, barcode, config_id):
         product_fields = self.env['product.product']._load_pos_data_fields(config_id)
         product_packaging_fields = self.env['product.packaging']._load_pos_data_fields(config_id)
+        product_context = {**self.env.context, 'display_default_code': False}
         product = self.env['product.product'].search([
             ('barcode', '=', barcode),
             ('sale_ok', '=', True),
             ('available_in_pos', '=', True),
         ])
         if product:
-            return {'product.product': product.with_context({'display_default_code': False}).read(product_fields, load=False)}
+            return {'product.product': product.with_context(product_context).read(product_fields, load=False)}
 
         domain = [('barcode', 'not in', ['', False])]
         loaded_data = self._context.get('loaded_data')
@@ -1824,7 +1833,7 @@ class PosSession(models.Model):
         packaging = self.env['product.packaging'].search(packaging_params['search_params']['domain'])
 
         if packaging and packaging.product_id:
-            return {'product.product': packaging.product_id.with_context({'display_default_code': False}).read(product_fields, load=False), 'product.packaging': packaging.read(product_packaging_fields, load=False)}
+            return {'product.product': packaging.product_id.with_context(product_context).read(product_fields, load=False), 'product.packaging': packaging.read(product_packaging_fields, load=False)}
         else:
             return {
                 'product.product': [],
@@ -1870,6 +1879,14 @@ class PosSession(models.Model):
 
     def _get_closed_orders(self):
         return self.order_ids.filtered(lambda o: o.state not in ['draft', 'cancel'])
+
+    def _update_session_info(self, session_info):
+        session_info['user_context']['allowed_company_ids'] = self.company_id.ids
+        session_info['user_companies'] = {'current_company': self.company_id.id, 'allowed_companies': {self.company_id.id: session_info['user_companies']['allowed_companies'][self.company_id.id]}}
+        session_info['nomenclature_id'] = self.company_id.nomenclature_id.id
+        session_info['fallback_nomenclature_id'] = self._get_pos_fallback_nomenclature_id()
+        return session_info
+
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'

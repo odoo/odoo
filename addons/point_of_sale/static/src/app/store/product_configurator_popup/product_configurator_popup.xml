@@ -8,7 +8,9 @@
                     <div class="attribute-name-cell form-check" t-att-class="{'ptav-not-available': value.excluded}">
                         <input class="form-check-input radio-check" type="radio" t-model="state.attribute_value_ids" t-att-name="value.attribute_id.id"
                                 t-attf-id="{{ value.attribute_id.id }}_{{ value.id }}" t-att-value="value.id"/>
-                        <span t-esc="value.name"/>
+                        <label t-attf-for="{{ value.attribute_id.id }}_{{ value.id }}" class="form-check-label">
+                            <span t-esc="value.name"/>
+                        </label>
                         <div t-if="value.price_extra" class="price-extra-cell d-inline-block ms-2">
                             <span class="price_extra px-2 py-1 rounded-pill text-bg-info">
                                 <t t-esc="getFormatPriceExtra(value.price_extra)"/>
@@ -141,7 +143,7 @@
                         class="btn btn-primary btn-lg lh-lg o-default-button"
                         t-att-class="{'disabled': isArchivedCombination()}"
                         t-on-click="confirm">
-                        Ok
+                        Add
                     </button>
                 <button class="btn btn-secondary btn-lg lh-lg o-default-button" t-on-click="close">Discard</button>
             </t>

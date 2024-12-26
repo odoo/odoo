@@ -12,11 +12,13 @@ import {
     convertNumericToUnit,
     getCSSVariableValue,
     getHtmlStyle,
+    getFontSizeDisplayValue,
 } from "@html_editor/utils/formatting";
 import { DIRECTIONS } from "@html_editor/utils/position";
 import { _t } from "@web/core/l10n/translation";
 import { FontSelector } from "./font_selector";
 import { withSequence } from "@html_editor/utils/resource";
+import { reactive } from "@odoo/owl";
 
 export const fontItems = [
     {
@@ -97,7 +99,7 @@ const handledElemSelector = [...headingTags, "PRE", "BLOCKQUOTE"].join(", ");
 
 export class FontPlugin extends Plugin {
     static id = "font";
-    static dependencies = ["split", "selection", "dom", "format"];
+    static dependencies = ["input", "split", "selection", "dom", "format"];
     resources = {
         user_commands: [
             {
@@ -159,11 +161,13 @@ export class FontPlugin extends Plugin {
                 Component: FontSelector,
                 props: {
                     getItems: () => fontItems,
+                    getDisplay: () => this.font,
                     onSelected: (item) => {
                         this.dependencies.dom.setTag({
                             tagName: item.tagName,
                             extraClass: item.extraClass,
                         });
+                        this.updateFontParams();
                     },
                 },
             },
@@ -174,12 +178,14 @@ export class FontPlugin extends Plugin {
                 Component: FontSelector,
                 props: {
                     getItems: () => this.fontSizeItems,
-                    onSelected: (item) =>
+                    getDisplay: () => this.fontSize,
+                    onSelected: (item) => {
                         this.dependencies.format.formatSelection("setFontSizeClassName", {
                             formatProps: { className: item.className },
-                        }),
-                    isFontSize: true,
-                    document: this.document,
+                            applyStyle: true,
+                        });
+                        this.updateFontParams();
+                    },
                 },
             },
         ],
@@ -223,15 +229,57 @@ export class FontPlugin extends Plugin {
 
         /** Handlers */
         input_handlers: this.onInput.bind(this),
+        selectionchange_handlers: this.updateFontParams.bind(this),
+        post_undo_handlers: this.updateFontParams.bind(this),
+        post_redo_handlers: this.updateFontParams.bind(this),
 
         /** Overrides */
         split_element_block_overrides: [
-            this.handleSplitBlockPRE.bind(this),
             this.handleSplitBlockHeading.bind(this),
+            this.handleSplitBlockPRE.bind(this),
+            this.handleSplitBlockquote.bind(this),
         ],
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
     };
+
+    setup() {
+        this.fontSize = reactive({ displayName: "" });
+        this.font = reactive({ displayName: "" });
+    }
+
+    get fontName() {
+        const sel = this.dependencies.selection.getSelectionData().deepEditableSelection;
+        // if (!sel) {
+        //     return "Normal";
+        // }
+        const anchorNode = sel.anchorNode;
+        const block = closestBlock(anchorNode);
+        const tagName = block.tagName.toLowerCase();
+
+        const matchingItems = fontItems.filter((item) => {
+            return item.tagName === tagName;
+        });
+
+        const matchingItemsWitoutExtraClass = matchingItems.filter((item) => !item.extraClass);
+
+        if (!matchingItems.length) {
+            return "Normal";
+        }
+
+        return (
+            matchingItems.find((item) => block.classList.contains(item.extraClass)) ||
+            (matchingItemsWitoutExtraClass.length && matchingItemsWitoutExtraClass[0])
+        ).name;
+    }
+
+    get fontSizeName() {
+        const sel = this.dependencies.selection.getSelectionData().deepEditableSelection;
+        if (!sel) {
+            return fontSizeItems[0].name;
+        }
+        return Math.round(getFontSizeDisplayValue(sel, this.document));
+    }
 
     get fontSizeItems() {
         const style = getHtmlStyle(this.document);
@@ -260,7 +308,12 @@ export class FontPlugin extends Plugin {
      */
     handleSplitBlockPRE({ targetNode, targetOffset }) {
         const closestPre = closestElement(targetNode, "pre");
-        if (!closestPre) {
+        const closestBlockNode = closestBlock(targetNode);
+        if (
+            !closestPre ||
+            (closestBlockNode.nodeName !== "PRE" &&
+                (closestBlockNode.textContent || closestBlockNode.nextSibling))
+        ) {
             return;
         }
 
@@ -270,6 +323,10 @@ export class FontPlugin extends Plugin {
             !nodesAfterTarget.length ||
             (nodesAfterTarget.length === 1 && nodesAfterTarget[0].nodeName === "BR")
         ) {
+            // Remove the last empty block node within pre tag
+            if (closestBlockNode.nodeName !== "PRE") {
+                closestBlockNode.remove();
+            }
             const p = this.document.createElement("p");
             closestPre.after(p);
             fillEmpty(p);
@@ -280,6 +337,39 @@ export class FontPlugin extends Plugin {
             this.dependencies.selection.setCursorEnd(lineBreak);
         }
         return true;
+    }
+
+    /**
+     * Specific behavior for blockquote: insert p at end and remove the last
+     * empty node.
+     */
+    handleSplitBlockquote({ targetNode, targetOffset }) {
+        const closestQuote = closestElement(targetNode, "blockquote");
+        const closestBlockNode = closestBlock(targetNode);
+        if (
+            !closestQuote ||
+            (closestBlockNode.nodeName !== "BLOCKQUOTE" &&
+                (closestBlockNode.textContent || closestBlockNode.nextSibling))
+        ) {
+            return;
+        }
+
+        // Nodes to the right of the split position.
+        const nodesAfterTarget = [...rightLeafOnlyNotBlockPath(targetNode, targetOffset)];
+        if (
+            !nodesAfterTarget.length ||
+            (nodesAfterTarget.length === 1 && nodesAfterTarget[0].nodeName === "BR")
+        ) {
+            // Remove the last empty block node within blockquote tag
+            if (closestBlockNode.nodeName !== "BLOCKQUOTE") {
+                closestBlockNode.remove();
+            }
+            const p = this.document.createElement("p");
+            closestQuote.after(p);
+            fillEmpty(p);
+            this.dependencies.selection.setCursorStart(p);
+            return true;
+        }
     }
 
     // @todo @phoenix: Move this to a specific Heading plugin?
@@ -298,6 +388,7 @@ export class FontPlugin extends Plugin {
             // @todo @phoenix: if this condition can be anticipated before the split,
             // handle the splitBlock only in such case.
             if (
+                newElement &&
                 headingTags.includes(newElement.tagName) &&
                 !descendants(newElement).some(isVisibleTextNode)
             ) {
@@ -369,5 +460,9 @@ export class FontPlugin extends Plugin {
             fillEmpty(blockEl);
             this.dependencies.dom.setTag({ tagName: headingToBe });
         }
+    }
+    updateFontParams() {
+        this.font.displayName = this.fontName;
+        this.fontSize.displayName = this.fontSizeName;
     }
 }

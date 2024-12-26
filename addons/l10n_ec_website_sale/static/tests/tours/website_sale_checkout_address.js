@@ -46,19 +46,17 @@ registry.category("web_tour.tours").add("tour_new_billing_ec", {
         },
         {
             content: "Billing address is not same as delivery address",
-            trigger: '#use_delivery_as_billing',
+            trigger: "#use_delivery_as_billing",
             run: "click",
         },
         {
             content: "Add new billing address",
-            trigger: '.all_billing a[href^="/shop/address?address_type=billing"]:contains("Add address")',
+            trigger: `.all_billing a[href^="/shop/address?address_type=billing"]:contains(Add address)`,
             run: "click",
         },
         ...tourUtils.fillAdressForm(),
         {
-            content: "Save address",
-            trigger: "button#save_address",
-            run: "click",
+            trigger: `[name="address_card"] address:contains(1 rue de la paix)`,
         },
     ],
 });

@@ -32,19 +32,21 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     trigger: 'ul.ui-autocomplete a:contains("Matrix")',
     run: "click",
 }, {
-    trigger: '.o_matrix_input_table',
+    trigger: '.modal .o_matrix_input_table',
     run: function () {
         // fill the whole matrix with 1's
         [...document.querySelectorAll(".o_matrix_input")].forEach((el) => el.value = 1);
     }
-}, {
-    trigger: '.o_matrix_input_table',
-    run: function () {
-        // left first cell at 0 to ensure the variant is not created
-        $('.o_matrix_input')[0].value = 0;
-        $('.o_matrix_input')[8].value = 0;
-    }
-}, {
+},
+{
+    trigger: ".modal .o_matrix_input_table .o_matrix_input:eq(0)",
+    run: "edit 0",
+},
+{
+    trigger: ".modal .o_matrix_input_table .o_matrix_input:eq(8)",
+    run: "edit 0",
+},
+{
     trigger: ".modal button:contains(Confirm)",
     run: 'click'
 }, {

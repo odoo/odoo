@@ -13,16 +13,16 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Kim Asplund <kim.asplund@gmail.com>, 2024
 # Marko Happonen <marko.happonen@sprintit.fi>, 2024
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:50+0000\n"
+"POT-Creation-Date: 2024-12-16 13:41+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,14 +33,14 @@ msgstr ""
 #. module: website_sale_collect
 #: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
 msgid ""
-"<i>Your order has been saved.</i> Please come to the store to pay for your "
-"products."
+"<i>Your order has been confirmed.</i><br>Please come to the store to pay for"
+" your products."
 msgstr ""
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.payment_confirmation_status
 msgid "<span class=\"text-muted\"> (In-store pickup)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> (Nouto myymälästä)</span>"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -63,7 +63,7 @@ msgstr "Asetukset"
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.res_config_settings_form
 msgid "Configure Pickup Locations"
-msgstr ""
+msgstr "Määritä noutopaikat"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__custom_mode
@@ -79,7 +79,7 @@ msgstr "Toimitustavat"
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_website__in_store_dm_id
 msgid "In-store Delivery Method"
-msgstr ""
+msgstr "Toimitustapa myymälässä"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -98,7 +98,7 @@ msgstr "Vain"
 #. odoo-python
 #: code:addons/website_sale_collect/models/sale_order.py:0
 msgid "Only %(new_qty)s available"
-msgstr ""
+msgstr "Vain %(new_qty)s käytettävissä"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__opening_hours
@@ -114,18 +114,23 @@ msgstr "Loppu varastosta"
 #. module: website_sale_collect
 #: model:payment.provider,name:website_sale_collect.payment_provider_on_site
 msgid "Pay on Site"
-msgstr ""
+msgstr "Maksa paikan päällä"
 
 #. module: website_sale_collect
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__payment_provider__custom_mode__on_site
 #: model:payment.method,name:website_sale_collect.payment_method_pay_on_site
 msgid "Pay on site"
-msgstr ""
+msgstr "Maksa paikan päällä"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_payment_provider
 msgid "Payment Provider"
 msgstr "Maksupalveluntarjoaja"
+
+#. module: website_sale_collect
+#: model:ir.model,name:website_sale_collect.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Maksutapahtuma"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -134,13 +139,13 @@ msgstr "Maksupalveluntarjoaja"
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__delivery_carrier__delivery_type__in_store
 #: model:product.template,name:website_sale_collect.product_pick_up_in_store_product_template
 msgid "Pick up in store"
-msgstr ""
+msgstr "Nouto myymälästä"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/controllers/main.py:0
 msgid "Please choose a store to collect your order."
-msgstr ""
+msgstr "Valitse myymälä, josta noudat tilauksesi."
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_product_template
@@ -170,20 +175,20 @@ msgstr "Toimitustavat"
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
 msgid "Some of the products are not available at"
-msgstr ""
+msgstr "Joitakin tuotteita ei ole saatavilla"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/controllers/main.py:0
 #: code:addons/website_sale_collect/models/sale_order.py:0
 msgid "Some products are not available in the selected store."
-msgstr ""
+msgstr "Joitakin tuotteita ei ole saatavilla valitussa myymälässä."
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/controllers/main.py:0
 msgid "Sorry, we are unable to ship your order."
-msgstr ""
+msgstr "Valitettavasti emme voi lähettää tilaustasi."
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__warehouse_ids
@@ -195,13 +200,15 @@ msgstr "Kauppat"
 #. odoo-python
 #: code:addons/website_sale_collect/models/delivery_carrier.py:0
 msgid "The delivery method and a warehouse must share the same company"
-msgstr ""
+msgstr "Toimitustavan ja varaston on oltava samassa yrityksessä"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/delivery_carrier.py:0
 msgid "The delivery method must have at least one warehouse to be published."
 msgstr ""
+"Toimitusmenetelmällä on oltava vähintään yksi varasto, jotta se voidaan "
+"julkaista."
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_stock_warehouse
@@ -220,6 +227,7 @@ msgid ""
 "You can only pay on site when selecting the pick up in store delivery "
 "method."
 msgstr ""
+"Voit maksaa vain paikan päällä, kun valitset toimitustavan nouto myymälästä."
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,auth_msg:website_sale_collect.payment_provider_on_site
@@ -247,4 +255,4 @@ msgstr "saatavilla"
 #. odoo-python
 #: code:addons/website_sale_collect/models/payment_provider.py:0
 msgid "no in-store delivery methods available"
-msgstr ""
+msgstr "ei saatavilla myymälätoimituksia"

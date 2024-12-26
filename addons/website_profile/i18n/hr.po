@@ -3,16 +3,27 @@
 # 	* website_profile
 # 
 # Translators:
-# Bole <bole@dajmi5.com>, 2024
 # Luka Carević <luka@uvid.hr>, 2024
+# hrvoje sić <hrvoje.sic@gmail.com>, 2024
+# Jasmina Otročak <jasmina@uvid.hr>, 2024
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2024
+# Antonijo Kovacevic, 2024
+# Ivana Šimek <ivanasimek@gmail.com>, 2024
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
+# Tina Milas, 2024
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2024
+# Carlo Štefanac, 2024
+# Martin Trigaux, 2024
+# Matej Mijoč, 2024
+# Bole <bole@dajmi5.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:41+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Luka Carević <luka@uvid.hr>, 2024\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2024\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +53,7 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid ". Try another search."
-msgstr ""
+msgstr ". Pokušajte drugu pretragu"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
@@ -87,12 +98,12 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
 msgid "<i class=\"text-muted\"> awarded users</i>"
-msgstr ""
+msgstr "<i class=\"text-muted\"> nagrađeni korisnici</i>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<option value=\"\">Country...</option>"
-msgstr ""
+msgstr "<option value=\"\">Država...</option>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -157,7 +168,7 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "<span class=\"text-muted\">Badges</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Oznaka</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
@@ -170,6 +181,8 @@ msgid ""
 "<span id=\"email_validated_message\">Congratulations! Your email has just "
 "been validated.</span>"
 msgstr ""
+"<span id=\"email_validated_message\">Čestitamo! Vaša e-pošta je "
+"provjerena.</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
@@ -193,12 +206,12 @@ msgid ""
 "                        </span>\n"
 "                    </td>\n"
 "                    <td t-if=\"not user.company_id.uses_default_logo\" valign=\"middle\" align=\"right\">\n"
-"                        <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\">\n"
+"                        <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
 "                    </td>\n"
 "                </tr>\n"
 "                <tr>\n"
 "                    <td colspan=\"2\" style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
 "                    </td>\n"
 "                </tr>\n"
 "            </table>\n"
@@ -211,21 +224,21 @@ msgid ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                            Hello <t t-out=\"object.name or ''\">Marc Demo</t>,<br><br>\n"
+"                            Hello <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
 "                            You have been invited to validate your email in order to get access to \"<t t-out=\"object.company_id.name or ''\">YourCompany</t>\" website.\n"
 "                            To validate your email, please click on the following link:\n"
-"                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                            </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                                <a t-att-href=\"ctx.get('token_url')\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                                    Validate my account\n"
 "                                </a>\n"
 "                            </div>\n"
 "                            Thanks for your participation!\n"
-"                        </p>\n"
+"                        \n"
 "                    </td>\n"
 "                </tr>\n"
 "                <tr>\n"
 "                    <td style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                    </td>\n"
 "                </tr>\n"
 "            </table>\n"
@@ -285,25 +298,25 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "About"
-msgstr ""
+msgstr "O programu"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
 msgid "All Users"
-msgstr ""
+msgstr "Svi korisnici"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
 msgid "All time"
-msgstr ""
+msgstr "Cijelo vrijeme"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Badges"
-msgstr ""
+msgstr "Značke"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
@@ -321,7 +334,7 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Biography"
-msgstr ""
+msgstr "Biografija"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__can_publish
@@ -346,7 +359,7 @@ msgstr "Uredi"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Edit Profile"
-msgstr ""
+msgstr "Uredi profil"
 
 #. module: website_profile
 #: model:mail.template,name:website_profile.validation_email
@@ -356,7 +369,7 @@ msgstr ""
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_gamification_badge
 msgid "Gamification Badge"
-msgstr ""
+msgstr "Značka igre"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
@@ -366,7 +379,7 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Home"
-msgstr ""
+msgstr "Naslovna"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -381,7 +394,7 @@ msgstr ""
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__is_published
 msgid "Is Published"
-msgstr ""
+msgstr "je objavljeno"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -401,7 +414,7 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "More info"
-msgstr ""
+msgstr "Više informacija"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -440,26 +453,28 @@ msgid ""
 "Please enter a valid email address in order to receive notifications from "
 "answers or comments."
 msgstr ""
+"Unesite valjanu e-mail adresu kako biste primali obavijesti o odgovorima i "
+"komentarima."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "Ranks"
-msgstr ""
+msgstr "Rangovi"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_access_denied
 msgid "Return to the website."
-msgstr ""
+msgstr "Povratak na web stranicu."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Search"
-msgstr ""
+msgstr "Traži"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Search users"
-msgstr ""
+msgstr "Traži korisnike"
 
 #. module: website_profile
 #: model:mail.template,description:website_profile.validation_email
@@ -469,35 +484,35 @@ msgstr ""
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "Puni URL za pristup dokumentu putem web stranice."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
 msgid "This month"
-msgstr ""
+msgstr "Ovaj mjesec"
 
 #. module: website_profile
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
 msgid "This profile is private!"
-msgstr ""
+msgstr "Ovaj profil je privatan!"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
 msgid "This week"
-msgstr ""
+msgstr "Ovaj tjedan"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "Unpublished"
-msgstr ""
+msgstr "Neobjavljeno"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_biography_editor
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Update"
-msgstr ""
+msgstr "Ažuriraj"
 
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_res_users
@@ -512,7 +527,7 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Users"
-msgstr ""
+msgstr "Korisnici"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -522,17 +537,17 @@ msgstr ""
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "Vidljivo na trenutnoj web stranicama"
 
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_website
 msgid "Website"
-msgstr ""
+msgstr "Web stranica"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_url
 msgid "Website URL"
-msgstr ""
+msgstr "URL web stranice"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -590,12 +605,12 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 msgid "this month"
-msgstr ""
+msgstr "ovaj mjesec"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 msgid "this week"
-msgstr ""
+msgstr "ovaj tjedan"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner

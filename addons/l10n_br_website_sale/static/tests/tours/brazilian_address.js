@@ -20,6 +20,7 @@ function assertCityAndState(expectedCity, expectedState) {
 
 registry.category("web_tour.tours").add("test_brazilian_address", {
     url: '/shop?search=Brazilian test product',
+    checkDelay: 500,
     steps: () => [
         ...tourUtils.addToCart({productName: "Brazilian test product", search: false}),
         tourUtils.goToCart({quantity: 1}),

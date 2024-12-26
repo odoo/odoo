@@ -47,7 +47,7 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS === #
 
-    def _worldline_make_request(self, endpoint, payload=None, method='POST'):
+    def _worldline_make_request(self, endpoint, payload=None, method='POST', idempotency_key=None):
         """ Make a request to Worldline API at the specified endpoint.
 
         Note: self.ensure_one()
@@ -55,6 +55,7 @@ class PaymentProvider(models.Model):
         :param str endpoint: The endpoint to be reached by the request.
         :param dict payload: The payload of the request.
         :param str method: The HTTP method of the request.
+        :param str idempotency_key: The idempotency key to pass in the request.
         :return: The JSON-formatted content of the response.
         :rtype: dict
         :raise ValidationError: If an HTTP error occurs.
@@ -66,13 +67,17 @@ class PaymentProvider(models.Model):
         content_type = 'application/json; charset=utf-8' if method == 'POST' else ''
         tz = datetime.timezone(datetime.timedelta(hours=0), 'GMT')
         dt = datetime.datetime.now(tz).strftime('%a, %d %b %Y %H:%M:%S %Z')  # Datetime in RFC1123.
-        signature = self._worldline_calculate_signature(method, endpoint, content_type, dt)
+        signature = self._worldline_calculate_signature(
+            method, endpoint, content_type, dt, idempotency_key=idempotency_key
+        )
         authorization_header = f'GCS v1HMAC:{self.worldline_api_key}:{signature}'
         headers = {
             'Authorization': authorization_header,
             'Date': dt,
             'Content-Type': content_type,
         }
+        if method == 'POST' and idempotency_key:
+            headers['X-GCS-Idempotence-Key'] = idempotency_key
         try:
             response = requests.request(method, url, json=payload, headers=headers, timeout=10)
             try:
@@ -105,7 +110,9 @@ class PaymentProvider(models.Model):
         else:  # 'test'
             return 'https://payment.preprod.direct.worldline-solutions.com'
 
-    def _worldline_calculate_signature(self, method, endpoint, content_type, dt_rfc):
+    def _worldline_calculate_signature(
+        self, method, endpoint, content_type, dt_rfc, idempotency_key=None
+    ):
         """ Compute the signature for the provided data.
 
         See https://docs.direct.worldline-solutions.com/en/integration/api-developer-guide/authentication.
@@ -114,10 +121,16 @@ class PaymentProvider(models.Model):
         :param str endpoint: The endpoint to be reached by the request.
         :param str content_type: The 'Content-Type' header of the request.
         :param datetime.datetime dt_rfc: The timestamp of the request, in RFC1123 format.
+        :param str idempotency_key: The idempotency key to pass in the request.
         :return: The calculated signature.
         :rtype: str
         """
-        values_to_sign = [method, content_type, dt_rfc, f'/v2/{self.worldline_pspid}/{endpoint}']
+        # specific order required: method, content_type, date, custom headers, endpoint
+        values_to_sign = [method, content_type, dt_rfc]
+        if idempotency_key:
+            values_to_sign.append(f'x-gcs-idempotence-key:{idempotency_key}')
+        values_to_sign.append(f'/v2/{self.worldline_pspid}/{endpoint}')
+
         signing_str = '\n'.join(values_to_sign) + '\n'
         signature = hmac.new(
             self.worldline_api_secret.encode(), signing_str.encode(), hashlib.sha256

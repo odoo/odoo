@@ -3,7 +3,7 @@
         <field name="name">stock.picking.batch.pivot</field>
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
-            <pivot string="Batch Transfer" sample="1">
+            <pivot string="Batch Transfer" class="oe_stock_picking_batch" sample="1">
                 <field name="scheduled_date" type="row"/>
                 <field name="vehicle_id" type="col"/>
             </pivot>
@@ -14,7 +14,7 @@
         <field name="name">stock.picking.batch.graph</field>
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
-            <graph string="Graph View" sample="1">
+            <graph string="Graph View" class="oe_stock_picking_batch" sample="1">
                 <field name="scheduled_date" type="row" interval="day"/>
                 <field name="vehicle_category_id" type="row"/>
             </graph>

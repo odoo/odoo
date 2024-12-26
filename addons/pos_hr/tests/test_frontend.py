@@ -45,8 +45,14 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         emp2.write({"name": "Pos Employee2", "pin": "1234"})
         (admin + emp1 + emp2).company_id = cls.env.company
 
+        emp3 = cls.env['hr.employee'].create({
+            'name': 'Test Employee 3',
+            "user_id": cls.pos_user.id,
+            "company_id": cls.env.company.id,
+        })
+
         cls.main_pos_config.write({
-            'basic_employee_ids': [Command.link(emp1.id), Command.link(emp2.id)]
+            'basic_employee_ids': [Command.link(emp1.id), Command.link(emp2.id), Command.link(emp3.id)]
         })
 
 
@@ -80,4 +86,14 @@ class TestUi(TestPosHrHttpCommon):
             "/pos/ui?config_id=%d" % self.main_pos_config.id,
             "CashierCanSeeProductInfo",
             login="pos_admin",
+        )
+
+    def test_basic_user_cannot_close_session(self):
+        # open a session, the /pos/ui controller will redirect to it
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "CashierCannotClose",
+            login="pos_user",
         )

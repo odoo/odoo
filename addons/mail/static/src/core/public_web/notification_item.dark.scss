@@ -3,7 +3,8 @@
     --mail-MessagingMenu-bg: #{mix($gray-100, $gray-200)};
 
     &.o-important {
-        background-color: mix($o-gray-200, $o-info, 87.5%) !important;
+        background-color: mix($o-gray-200, $o-info, 90%) !important;
+        border-color: lighten(mix($o-gray-200, $o-info, 90%), 5%) !important;
     }
     &:hover, &.o-active {
         background-color: mix($o-gray-200, $o-gray-300) !important;

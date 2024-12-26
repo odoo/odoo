@@ -3,13 +3,18 @@
 # 	* pos_hr
 # 
 # Translators:
+# Tina Milas, 2024
+# hrvoje sić <hrvoje.sic@gmail.com>, 2024
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
+# Martin Trigaux, 2024
+# Jurica Pomper, 2024
 # Bole <bole@dajmi5.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>, 2024\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
@@ -82,7 +87,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_hr.field_pos_session__employee_id
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_list_select_inherit
 msgid "Cashier"
-msgstr ""
+msgstr "Blagajnik"
 
 #. module: pos_hr
 #. odoo-python
@@ -99,7 +104,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 msgid "Change Cashier"
-msgstr ""
+msgstr "Promijeni blagajnika"
 
 #. module: pos_hr
 #. odoo-python
@@ -116,7 +121,7 @@ msgstr "Konfiguracijske postavke"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
 msgid "Counted"
-msgstr ""
+msgstr "Stvarno"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -218,7 +223,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
 msgid "Opening"
-msgstr ""
+msgstr "Otvaranje"
+
+#. module: pos_hr
+#. odoo-python
+#: code:addons/pos_hr/models/pos_session.py:0
+msgid "Others"
+msgstr "Ostali"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -236,7 +247,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
 msgid "Payments"
-msgstr ""
+msgstr "Plaćanja"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -247,7 +258,7 @@ msgstr ""
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "Postavke prodajnog mjesta"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_daily_sales_reports_wizard
@@ -257,22 +268,22 @@ msgstr ""
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_order
 msgid "Point of Sale Orders"
-msgstr ""
+msgstr "Nalozi POS-a"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_report_pos_order
 msgid "Point of Sale Orders Report"
-msgstr ""
+msgstr "Izvješće o narudžbama na prodajnim mjestima"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr ""
+msgstr "Plaćanja na prodajnom mjestu"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_session
 msgid "Point of Sale Session"
-msgstr ""
+msgstr "Smjena POS-a"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -328,7 +339,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 msgid "Wrong PIN"
-msgstr ""
+msgstr "Pogrešan PIN"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -343,3 +354,5 @@ msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
 msgstr ""
+"Nije moguće brisati djelatnika koji koristi otvorenu PoS sessiju, prvo "
+"zatvorite sesiju(e):\n"

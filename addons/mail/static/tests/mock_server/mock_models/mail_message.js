@@ -119,7 +119,7 @@ export class MailMessage extends models.ServerModel {
             MailNotification._filter([["mail_message_id", "in", ids]]).map((n) => n.id)
         );
         for (const message of MailMessage.browse(ids)) {
-            const [data] = this._read_format(message.id, fields, makeKwArgs({ load: false }));
+            const [data] = this._read_format(message.id, fields, false);
             const thread = message.model && this.env[message.model].browse(message.res_id)[0];
             if (thread) {
                 const thread_data = { module_icon: "/base/static/description/icon.png" };
@@ -513,7 +513,13 @@ export class MailMessage extends models.ServerModel {
                 ),
                 thread: mailDataHelpers.Store.one(
                     message.model ? this.env[message.model].browse(message.res_id) : false,
-                    makeKwArgs({ as_thread: true, fields: ["modelName"] })
+                    makeKwArgs({
+                        as_thread: true,
+                        fields: [
+                            "modelName",
+                            message.model === "discuss.channel" ? "name" : "display_name",
+                        ],
+                    })
                 ),
             });
         }

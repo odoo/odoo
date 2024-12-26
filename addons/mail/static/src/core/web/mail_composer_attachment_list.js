@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 import {
     many2ManyBinaryField,
     Many2ManyBinaryField
@@ -6,6 +7,21 @@ import {
 
 export class MailComposerAttachmentList extends Many2ManyBinaryField {
     static template = "mail.MailComposerAttachmentList";
+    /** @override */
+    setup() {
+        super.setup();
+        this.mailStore = useService("mail.store");
+        this.attachmentUploadService = useService("mail.attachment_upload");
+    }
+    /**
+     * @override
+     * @param {integer} fileId
+     */
+    async onFileRemove(fileId) {
+        super.onFileRemove(fileId);
+        const attachment = this.mailStore.Attachment.get(fileId);
+        await this.attachmentUploadService.unlink(attachment);
+    }
 }
 
 export const mailComposerAttachmentList = {

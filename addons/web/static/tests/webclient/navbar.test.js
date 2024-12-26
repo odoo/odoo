@@ -41,14 +41,16 @@ beforeEach(async () => {
     };
 });
 
-test.tags("desktop")("can be rendered", async () => {
+test.tags("desktop");
+test("can be rendered", async () => {
     await mountWithCleanup(NavBar);
     expect(".o_navbar_apps_menu button.dropdown-toggle").toHaveCount(1, {
         message: "1 apps menu toggler present",
     });
 });
 
-test.tags("desktop")("dropdown menu can be toggled", async () => {
+test.tags("desktop");
+test("dropdown menu can be toggled", async () => {
     await mountWithCleanup(NavBar);
     await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
     expect(".dropdown-menu").toHaveCount(1);
@@ -56,7 +58,8 @@ test.tags("desktop")("dropdown menu can be toggled", async () => {
     expect(".dropdown-menu").toHaveCount(0);
 });
 
-test.tags("desktop")("href attribute on apps menu items", async () => {
+test.tags("desktop");
+test("href attribute on apps menu items", async () => {
     defineMenus([
         {
             id: "root",
@@ -70,7 +73,8 @@ test.tags("desktop")("href attribute on apps menu items", async () => {
     expect(".o-dropdown--menu .dropdown-item").toHaveAttribute("href", "/odoo/action-339");
 });
 
-test.tags("desktop")("href attribute with path on apps menu items", async () => {
+test.tags("desktop");
+test("href attribute with path on apps menu items", async () => {
     defineMenus([
         {
             id: "root",
@@ -93,7 +97,8 @@ test.tags("desktop")("href attribute with path on apps menu items", async () => 
     expect(".o-dropdown--menu .dropdown-item").toHaveAttribute("href", "/odoo/my-path");
 });
 
-test.tags("desktop")("many sublevels in app menu items", async () => {
+test.tags("desktop");
+test("many sublevels in app menu items", async () => {
     defineMenus([
         {
             id: "root",
@@ -186,7 +191,8 @@ test.tags("desktop")("many sublevels in app menu items", async () => {
     ]);
 });
 
-test.tags("desktop")("data-menu-xmlid attribute on AppsMenu items", async () => {
+test.tags("desktop");
+test("data-menu-xmlid attribute on AppsMenu items", async () => {
     // Replace all default menus and setting new one
     defineParams({
         menus: [
@@ -245,7 +251,8 @@ test.tags("desktop")("data-menu-xmlid attribute on AppsMenu items", async () => 
     expect(".o-dropdown--menu .dropdown-item[data-menu-xmlid=menu_5]").toHaveCount(1);
 });
 
-test.tags("desktop")("navbar can display current active app", async () => {
+test.tags("desktop");
+test("navbar can display current active app", async () => {
     await mountWithCleanup(NavBar);
     // Open apps menu
     await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
@@ -339,7 +346,8 @@ test("navbar updates after adding a systray item", async () => {
     });
 });
 
-test.tags("desktop")("can adapt with 'more' menu sections behavior", async () => {
+test.tags("desktop");
+test("can adapt with 'more' menu sections behavior", async () => {
     class MyNavbar extends NavBar {
         async adapt() {
             await super.adapt();
@@ -538,7 +546,8 @@ test("'more' menu sections adaptations do not trigger render in some cases", asy
     });
 });
 
-test.tags("desktop")("'more' menu sections properly updated on app change", async () => {
+test.tags("desktop");
+test("'more' menu sections properly updated on app change", async () => {
     defineMenus([
         {
             id: "root",

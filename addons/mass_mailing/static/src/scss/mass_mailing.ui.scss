@@ -10,6 +10,19 @@ html:not(.o_mass_mailing_iframe), body:not(.o_mass_mailing_iframe), html.o_fulls
     overflow: visible !important;
 }
 
+html:has(body.o_mass_mailing_iframe_body_fullscreen) {
+    overflow-y: auto !important;
+}
+
+body {
+    &.o_mass_mailing_iframe_body_with_snippets_sidebar:not(.o_mass_mailing_iframe_body_fullscreen) {
+        padding-right: $o-we-sidebar-width !important;
+    }
+    &.o_mass_mailing_iframe_body_fullscreen {
+        overflow-y: auto !important;
+    }
+}
+
 #iframe_target:not(.o_fullscreen) {
     display: flex;
     flex-direction: column;
@@ -206,11 +219,6 @@ html:not(.o_mass_mailing_iframe), body:not(.o_mass_mailing_iframe), html.o_fulls
     .o_mail_template_preview {
         width: 50%!important;
     }
-}
-
-// Prevent the website snippets sidebar from overlapping the template
-body.has_snippets_sidebar .o_layout {
-    padding-right: $o-we-sidebar-width !important;
 }
 
 body.o_force_mail_theme_choice {

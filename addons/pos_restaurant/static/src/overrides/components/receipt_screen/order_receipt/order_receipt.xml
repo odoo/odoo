@@ -8,7 +8,7 @@
             </t>
         </xpath>
         <xpath expr="//div[hasclass('receipt-change')]" position="attributes">
-            <attribute name="t-if">!props.data.isBill</attribute>
+            <attribute name="t-if">'order_change' in taxTotals and !props.data.isBill</attribute>
         </xpath>
         <xpath expr="//div[hasclass('before-footer')]" position="after">
             <t t-if="props.data.isBill and props.data.set_tip_after_payment">

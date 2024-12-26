@@ -1,30 +1,44 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* bus
-#
+# 
 # Translators:
-# Anzelika Adejanova, 2022
-# JanisJanis <jbojars@gmail.com>, 2022
-# ievaputnina <ievai.putninai@gmail.com>, 2022
-# Arnis Putniņš <arnis@allegro.lv>, 2022
-#
+# Arnis Putniņš <arnis@allegro.lv>, 2024
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
+# ievaputnina <ievai.putninai@gmail.com>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Arnis Putniņš <arnis@allegro.lv>, 2022\n"
+"POT-Creation-Date: 2024-12-19 09:52+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: ievaputnina <ievai.putninai@gmail.com>, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
-"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: lv\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+
+#. module: bus
+#: model:ir.model,name:bus.model_res_groups
+msgid "Access Groups"
+msgstr "Piekļuves grupas"
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_attachment
+msgid "Attachment"
+msgstr "Pielikums"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
 msgid "Away"
+msgstr "Projām"
+
+#. module: bus
+#: model:ir.model,name:bus.model_bus_listener_mixin
+msgid "Can send messages via bus.bus"
 msgstr ""
 
 #. module: bus
@@ -56,7 +70,12 @@ msgstr "Izveidots"
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
 #: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
 msgid "Display Name"
-msgstr "Parādīt vārdu"
+msgstr "Nosaukums"
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP maršrutēšana"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
@@ -84,12 +103,12 @@ msgstr ""
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
 msgid "Last Updated by"
-msgstr "Pēdējoreiz atjaunoja"
+msgstr "Pēdējo reizi atjaunoja"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_date
 msgid "Last Updated on"
-msgstr "Pēdējoreiz atjaunots"
+msgstr "Pēdējās izmaiņas"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__message
@@ -99,28 +118,52 @@ msgstr "Ziņojums"
 #. module: bus
 #: model:ir.model,name:bus.model_ir_model
 msgid "Models"
-msgstr "Models"
+msgstr "Markas"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__offline
 msgid "Offline"
-msgstr "Bezsaiste"
+msgstr "Bezsaistē"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__online
 msgid "Online"
-msgstr "Tiešsaiste"
+msgstr "Tiešsaistē"
 
 #. module: bus
 #. odoo-javascript
+#: code:addons/bus/static/src/components/bus_connection_alert.xml:0
+msgid "Real-time connection lost..."
+msgstr ""
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
 msgid "Refresh"
+msgstr "Atsvaidzināt"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid ""
+"Save your work and refresh to get the latest updates and avoid potential "
+"issues."
 msgstr ""
 
 #. module: bus
 #. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 msgid "The page appears to be out of date."
+msgstr "Šī lappuse izskatās, ka ir novecojusi"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid "The page is out of date"
 msgstr ""
 
 #. module: bus
@@ -134,6 +177,11 @@ msgid "User Presence"
 msgstr ""
 
 #. module: bus
+#: model:ir.model,name:bus.model_res_users_settings
+msgid "User Settings"
+msgstr "Lietotāja uzstādījumi"
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
 msgid "Users"
 msgstr "Lietotāji"
@@ -141,8 +189,14 @@ msgstr "Lietotāji"
 #. module: bus
 #. odoo-python
 #: code:addons/bus/controllers/home.py:0
-msgid "Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"
+msgid ""
+"Your password is the default (admin)! If this system is exposed to untrusted"
+" users it is important to change it immediately for security reasons. I will"
+" keep nagging you about it!"
 msgstr ""
+"Jūsu parole ir noklusējuma (administrators)! Ja šī sistēma ir pakļauta "
+"neuzticamiem lietotājiem, drošības apsvērumu dēļ ir svarīgi to nekavējoties "
+"nomainīt. Mēs Jums par to turpināsim atgādināt!"
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_websocket

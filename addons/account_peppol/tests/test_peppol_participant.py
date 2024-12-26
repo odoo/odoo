@@ -45,6 +45,8 @@ class TestPeppolParticipant(TransactionCase):
                     'migration_key': 'test_key',
                 }
             },
+            '/api/peppol/1/register_sender': {'result': {}},
+            '/api/peppol/1/register_sender_as_receiver': {'result': {}},
         }
 
     @classmethod
@@ -114,7 +116,6 @@ class TestPeppolParticipant(TransactionCase):
         vals = self._get_participant_vals()
         vals['peppol_eas'] = '0208'
         wizard = self.env['peppol.registration'].create(vals)
-        wizard.smp_registration = True
         with self.assertRaises(UserError), self.cr.savepoint():
             wizard.button_peppol_sender_registration()
             wizard.verification_code = '123456'
@@ -126,12 +127,8 @@ class TestPeppolParticipant(TransactionCase):
         # then the account_peppol_proxy_state should not change
         # after running the cron checking participant status
         company = self.env.company
-        wizard = self.env['peppol.registration'].create(self._get_participant_vals())
+        wizard = self.env['peppol.registration'].create({'smp_registration': False, **self._get_participant_vals()})
         wizard.button_peppol_sender_registration()
-        # should send verification code immediately
-        self.assertEqual(company.account_peppol_proxy_state, 'in_verification')
-        wizard.verification_code = '123456'
-        wizard.button_check_peppol_verification_code()
         # since we did not select receiver registration, we're now just a sender
         self.assertEqual(company.account_peppol_proxy_state, 'sender')
         # running the cron should not do anything for the company
@@ -148,10 +145,6 @@ class TestPeppolParticipant(TransactionCase):
         wizard = self.env['peppol.registration'].create(self._get_participant_vals())
         wizard.smp_registration = True  # choose to register as a receiver right away
         wizard.button_peppol_sender_registration()
-        # should send verification code immediately
-        self.assertEqual(company.account_peppol_proxy_state, 'in_verification')
-        wizard.verification_code = '123456'
-        wizard.button_check_peppol_verification_code()
         self.assertEqual(company.account_peppol_proxy_state, 'smp_registration')
         with self._set_context({'participant_state': 'receiver'}):
             self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
@@ -162,7 +155,7 @@ class TestPeppolParticipant(TransactionCase):
         # and then come back to settings and register as a receiver
         # first step: use the peppol wizard to register only as a sender
         company = self.env.company
-        wizard = self.env['peppol.registration'].create(self._get_participant_vals())
+        wizard = self.env['peppol.registration'].create({'smp_registration': False, **self._get_participant_vals()})
         wizard.button_peppol_sender_registration()
         wizard.verification_code = '123456'
         wizard.button_check_peppol_verification_code()

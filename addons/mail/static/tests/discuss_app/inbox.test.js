@@ -45,7 +45,8 @@ test("reply: discard on reply button toggle", async () => {
     await contains(".o-mail-Composer", { count: 0 });
 });
 
-test.tags("focus required")("reply: discard on pressing escape", async () => {
+test.tags("focus required");
+test("reply: discard on pressing escape", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartnert@odoo.com",

@@ -70,8 +70,8 @@ class IrModule(models.Model):
             and (guessed := next((
                 tname
                 for tname, tvals in self.account_templates.items()
-                if tvals['country_id'] == self.env.company.country_id.id
-                or not tvals['country_id']
+                if (self.env.company.country_id.id and tvals['country_id'] == self.env.company.country_id.id)
+                or tname == 'generic_coa'
             ), None))
         ):
             def try_loading(env):

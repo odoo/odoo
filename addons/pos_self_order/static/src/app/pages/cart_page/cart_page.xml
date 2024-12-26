@@ -15,7 +15,7 @@
                                     <span t-if="Object.keys(selfOrder.currentOrder.changes).length === 0"><t t-esc="line.qty" />x </span>
                                     <strong t-esc="line.product_id.display_name"/>
                                 </div>
-                                <div t-if="line.product_id?.attribute_line_ids.length > 0 || line.combo_line_ids.length > 0" class="d-flex align-items-start gap-2 gap-md-3 my-2">
+                                <div t-if="line.attribute_value_ids.length > 0 || line.combo_line_ids.length > 0" class="d-flex align-items-start gap-2 gap-md-3 my-2">
                                     <button
                                         t-if="Object.keys(selfOrder.currentOrder.changes).length === 0"
                                         type="button"

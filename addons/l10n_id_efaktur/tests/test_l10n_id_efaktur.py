@@ -29,6 +29,28 @@ class TestIndonesianEfaktur(AccountTestInvoicingCommon):
         # multi-company setup
         cls.company_data_2 = cls.setup_other_company()
 
+    def test_posting_without_code(self):
+        """ Make sure that if an invoice has no code computed but the partner has one, we still allow posting but also set the code. """
+        # Create an invoice without code on purpose.
+        self.partner_id.l10n_id_kode_transaksi = False
+        out_invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_id.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                Command.create({'name': 'line1', 'price_unit': 110.0, 'tax_ids': self.tax_id.ids}),
+            ],
+        })
+        self.assertFalse(out_invoice.l10n_id_kode_transaksi)
+        # Set the code and post the invoice
+        self.partner_id.l10n_id_kode_transaksi = '01'
+        out_invoice.action_post()
+        # Ensure that the code was set during posting...
+        self.assertEqual(out_invoice.l10n_id_kode_transaksi, '01')
+        # ...and that the number was computed
+        self.assertEqual(out_invoice.l10n_id_tax_number, '0100000000000001')
+
     def test_efaktur_csv_output_1(self):
         """
         Test to ensure that the output csv data contains tax-excluded prices regardless of whether the tax configuration is tax-included or tax-excluded.
@@ -56,6 +78,44 @@ class TestIndonesianEfaktur(AccountTestInvoicingCommon):
         )
         # remaining lines
         line_4 = '"FK","01","0","0000000000001","5","2019","1/5/2019","000000000000000","12345#NIK#NAMA#l10ntest","","100","10","0","","0","0","0","0","INV/2019/00001","0"\n'
+        line_5 = '"OF","","","100.00","1.0","100.00","0","100.00","10.00","0","0"\n'
+
+        efaktur_csv_expected = output_head + line_4 + line_5
+
+        self.assertEqual(efaktur_csv_expected, efaktur_csv_output)
+
+    def test_efaktur_csv_output_address(self):
+        """ Ensure that the address in the output is correct and does not contain the customer name. """
+        self.partner_id.write({
+            'state_id': self.env.ref('base.state_id_ba').id,
+            'country_id': self.env.ref('base.id').id,
+            'street': 'Jalan Legian',
+            'zip': '80361',
+            'city': 'Bali',
+            'is_company': True,  # If true of it a commercial partner is set, the name would be in the address unless said not to add it.
+        })
+
+        out_invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_id.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                Command.create({'name': 'line1', 'price_unit': 110.0, 'tax_ids': self.tax_id.ids}),
+            ],
+            'l10n_id_kode_transaksi': "01",
+        })
+        out_invoice.action_post()
+        out_invoice.download_efaktur()
+
+        efaktur_csv_output = out_invoice.l10n_id_efaktur_document._generate_efaktur_invoice(',')
+        output_head = '%s%s%s' % (
+            _csv_row(FK_HEAD_LIST, ','),
+            _csv_row(LT_HEAD_LIST, ','),
+            _csv_row(OF_HEAD_LIST, ','),
+        )
+        # remaining lines
+        line_4 = '"FK","01","0","0000000000001","5","2019","1/5/2019","000000000000000","12345#NIK#NAMA#l10ntest","Jalan Legian Bali BA 80361 Indonesia","100","10","0","","0","0","0","0","INV/2019/00001","0"\n'
         line_5 = '"OF","","","100.00","1.0","100.00","0","100.00","10.00","0","0"\n'
 
         efaktur_csv_expected = output_head + line_4 + line_5

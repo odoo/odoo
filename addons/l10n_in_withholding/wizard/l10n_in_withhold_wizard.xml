@@ -21,6 +21,8 @@
                 <sheet>
                     <group>
                         <group id="header_left_group">
+                            <field name="related_move_id" invisible="1"/> <!-- used to compute the company_id -->
+                            <field name="related_payment_id" invisible="1"/> <!-- used to compute the company_id -->
                             <field name="date"/>
                             <field name="journal_id" domain="[('type', '=', 'general')]"/>
                         </group>

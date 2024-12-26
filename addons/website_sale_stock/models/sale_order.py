@@ -8,6 +8,16 @@ from odoo.exceptions import ValidationError
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    # NB: dropped in 18.1
+    def _get_warehouse_available(self):
+        self.ensure_one()
+        warehouse = self.website_id._get_warehouse_available()
+        if not warehouse and self.user_id and self.company_id:
+            warehouse = self.user_id.with_company(self.company_id.id)._get_default_warehouse_id()
+        if not warehouse:
+            warehouse = self.env.user._get_default_warehouse_id()
+        return warehouse
+
     def _compute_warehouse_id(self):
         website_orders = self.filtered('website_id')
         super(SaleOrder, self - website_orders)._compute_warehouse_id()

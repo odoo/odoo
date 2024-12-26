@@ -58,7 +58,7 @@ export class IrAttachment extends webModels.IrAttachment {
             const [data] = this._read_format(
                 attachment.id,
                 fields.filter((field) => !["filename", "size", "thread"].includes(field)),
-                makeKwArgs({ load: false })
+                false
             );
             if (fields.includes("filename")) {
                 data.filename = attachment.name;

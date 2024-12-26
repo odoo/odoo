@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +37,13 @@ msgstr "Deckblatt hinzufügen"
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "Address"
 msgstr "Adresse"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/failure_model_patch.js:0
+msgid ""
+"An error occurred when sending a letter with Snailmail on “%(record_name)s”"
+msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
@@ -423,7 +431,7 @@ msgstr "Jetzt senden"
 #. module: snailmail
 #: model:iap.service,description:snailmail.iap_service_snailmail
 msgid "Send your customer invoices and follow-up reports by post, worldwide."
-msgstr ""
+msgstr "Senden Sie Ihre Kundenrechnungen und Mahnungen per Post, weltweit."
 
 #. module: snailmail
 #. odoo-javascript
@@ -457,12 +465,18 @@ msgstr "Farbe für Postversand"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_cover_readonly
 msgid "Snailmail Cover Readonly"
-msgstr ""
+msgstr "Schreibgeschütztes Deckblatt für Postversand"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
 msgid "Snailmail Credit Error"
 msgstr "Postversand Guthabenfehler"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/messaging_menu/messaging_menu_patch.js:0
+msgid "Snailmail Failure: %(modelName)s"
+msgstr ""
 
 #. module: snailmail
 #. odoo-javascript

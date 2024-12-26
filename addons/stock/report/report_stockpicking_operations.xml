@@ -11,8 +11,8 @@
                             <div class="row mb-4">
                                 <div class="col-6" name="div_outgoing_address">
                                     <div t-if="o.should_print_delivery_address()">
-                                        <strong>Delivery Address</strong>
-                                        <div t-field="o.move_ids[0].partner_id"
+                                        <span><strong>Delivery Address:</strong></span>
+                                        <div t-out="o.move_ids[0].partner_id or o.partner_id"
                                             t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'>
                                                 <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 opacity-75 text-muted text-center">
                                                     <strong>Delivery address</strong>
@@ -195,7 +195,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            
+
                             <t t-set="no_reserved_product" t-value="o.move_ids.filtered(lambda x: x.product_uom_qty != x.quantity and x.move_line_ids and x.state!='done')"/>
                             <p t-if="o.state in ['draft', 'waiting', 'confirmed'] or no_reserved_product"><i class="fa fa-exclamation-triangle" />
                                 All products could not be reserved. Click on the "Check Availability" button to try to reserve products.

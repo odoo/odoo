@@ -1127,7 +1127,7 @@ class Message(models.Model):
                     Store.one(
                         self.env[message.model].browse(message.res_id) if message.model else False,
                         as_thread=True,
-                        fields=["modelName"],
+                        fields=["modelName", "name" if message.model == "discuss.channel" else "display_name"],
                     )
                 ),
             }
@@ -1227,7 +1227,7 @@ class Message(models.Model):
             records = self.env[model].browse([res_id])
         else:
             records = self.env[model] if model else self.env['mail.thread']
-        return records._notify_get_reply_to(default=email_from)[res_id]
+        return records.sudo()._notify_get_reply_to(default=email_from)[res_id]
 
     @api.model
     def _get_message_id(self, values):

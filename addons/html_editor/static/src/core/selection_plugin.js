@@ -7,7 +7,13 @@ import {
     isUnprotecting,
     previousLeaf,
 } from "@html_editor/utils/dom_info";
-import { childNodes, closestElement, descendants } from "@html_editor/utils/dom_traversal";
+import {
+    childNodes,
+    closestElement,
+    descendants,
+    firstLeaf,
+    lastLeaf,
+} from "@html_editor/utils/dom_traversal";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Plugin } from "../plugin";
 import { DIRECTIONS, boundariesIn, endPos, leftPos, nodeSize, rightPos } from "../utils/position";
@@ -142,6 +148,7 @@ export class SelectionPlugin extends Plugin {
         "resetActiveSelection",
         "focusEditable",
         // "collapseIfZWS",
+        "isSelectionInEditable",
     ];
     resources = {
         user_commands: { id: "selectAll", run: this.selectAll.bind(this) },
@@ -157,7 +164,14 @@ export class SelectionPlugin extends Plugin {
             }
         });
         this.addDomListener(this.editable, "keydown", (ev) => {
-            const handled = ["arrowright", "shift+arrowright", "arrowleft", "shift+arrowleft"];
+            const handled = [
+                "arrowright",
+                "shift+arrowright",
+                "arrowleft",
+                "shift+arrowleft",
+                "shift+arrowup",
+                "shift+arrowdown",
+            ];
             if (handled.includes(getActiveHotkey(ev))) {
                 this.onKeyDownArrows(ev);
             }
@@ -438,15 +452,8 @@ export class SelectionPlugin extends Plugin {
         const selection = this.document.getSelection();
         const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
         if (selection) {
-            if (documentSelectionIsInEditable) {
-                if (
-                    selection.anchorNode !== anchorNode ||
-                    selection.focusNode !== focusNode ||
-                    selection.anchorOffset !== anchorOffset ||
-                    selection.focusOffset !== focusOffset
-                ) {
-                    selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
-                }
+            if (documentSelectionIsInEditable || selection.anchorNode === null) {
+                selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
                 this.activeSelection = this.makeActiveSelection(selection, true);
             } else {
                 let range = new Range();
@@ -499,6 +506,7 @@ export class SelectionPlugin extends Plugin {
      * @returns {Cursors}
      */
     preserveSelection() {
+        const hadSelection = this.document.getSelection().anchorNode !== null;
         const selectionData = this.getSelectionData();
         const selection = selectionData.editableSelection;
         const anchor = { node: selection.anchorNode, offset: selection.anchorOffset };
@@ -506,6 +514,9 @@ export class SelectionPlugin extends Plugin {
 
         return {
             restore: () => {
+                if (!hadSelection) {
+                    return;
+                }
                 this.setSelection(
                     {
                         anchorNode: anchor.node,
@@ -744,31 +755,56 @@ export class SelectionPlugin extends Plugin {
         // Whether moving a collapsed cursor or extending a selection.
         const mode = ev.shiftKey ? "extend" : "move";
 
-        // Direction of the movement (take rtl writing into account)
-        const screenDirection = ev.key === "ArrowLeft" ? "left" : "right";
-        const isRtl = closestElement(selection.focusNode, "[dir]")?.dir === "rtl";
-        const domDirection = (screenDirection === "left") ^ isRtl ? "previous" : "next";
+        if (["ArrowLeft", "ArrowRight"].includes(ev.key)) {
+            // Direction of the movement (take rtl writing into account)
+            const screenDirection = ev.key === "ArrowLeft" ? "left" : "right";
+            const isRtl = closestElement(selection.focusNode, "[dir]")?.dir === "rtl";
+            const domDirection = (screenDirection === "left") ^ isRtl ? "previous" : "next";
 
-        // Whether the character next to the cursor should be skipped.
-        const shouldSkipCallbacks = this.getResource(
-            "intangible_char_for_keyboard_navigation_predicates"
-        );
-        let adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
-        let shouldSkip = shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter));
+            // Whether the character next to the cursor should be skipped.
+            const shouldSkipCallbacks = this.getResource(
+                "intangible_char_for_keyboard_navigation_predicates"
+            );
+            let adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
+            let shouldSkip = shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter));
 
-        while (shouldSkip) {
-            const { focusNode: nodeBefore, focusOffset: offsetBefore } = selection;
+            while (shouldSkip) {
+                const { focusNode: nodeBefore, focusOffset: offsetBefore } = selection;
 
-            selection.modify(mode, screenDirection, "character");
+                selection.modify(mode, screenDirection, "character");
 
-            const hasSelectionChanged =
-                nodeBefore !== selection.focusNode || offsetBefore !== selection.focusOffset;
-            const lastSkippedChar = adjacentCharacter;
-            adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
+                const hasSelectionChanged =
+                    nodeBefore !== selection.focusNode || offsetBefore !== selection.focusOffset;
+                const lastSkippedChar = adjacentCharacter;
+                adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
 
-            shouldSkip =
-                hasSelectionChanged &&
-                shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter, lastSkippedChar));
+                shouldSkip =
+                    hasSelectionChanged &&
+                    shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter, lastSkippedChar));
+            }
+        }
+
+        const { focusNode, focusOffset } = selection;
+        if (mode === "extend") {
+            // Since selection can't traverse contenteditable="false" elements,
+            // we adjust the selection to the sibling of non editable element.
+            const selectingBackward = ["ArrowLeft", "ArrowUp"].includes(ev.key);
+            const currentBlock = closestBlock(focusNode);
+            const isAtBoundary = selectingBackward
+                ? firstLeaf(currentBlock) === focusNode && focusOffset === 0
+                : lastLeaf(currentBlock) === focusNode && focusOffset === nodeSize(focusNode);
+            const adjacentBlock = selectingBackward
+                ? currentBlock.previousElementSibling
+                : currentBlock.nextElementSibling;
+            const targetBlock = selectingBackward
+                ? adjacentBlock?.previousElementSibling
+                : adjacentBlock?.nextElementSibling;
+            if (!adjacentBlock?.isContentEditable && targetBlock && isAtBoundary) {
+                const leafNode = selectingBackward ? lastLeaf(targetBlock) : firstLeaf(targetBlock);
+                const offset = selectingBackward ? nodeSize(leafNode) : 0;
+                selection.extend(leafNode, offset);
+                ev.preventDefault();
+            }
         }
     }
 

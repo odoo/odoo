@@ -66,13 +66,13 @@ registry.category("web_tour.tours").add('totp_admin_invite', {
     url: '/odoo',
     steps: () => [stepUtils.showAppsMenuItem(), ...openAccountSettingsTab(), {
     content: "open the user's form",
-    trigger: "td.o_data_cell:contains(demo)",
+    trigger: "td.o_data_cell:contains(test_user)",
     run: "click",
 }, {
     content: "go to Account security Tab",
     trigger: "a.nav-link:contains(Account Security)",
     run: "click",
 }, {
-    content: "check that demo user can be invited to use 2FA.",
+    content: "check that test_user user can be invited to use 2FA.",
     trigger: "button:contains(Invite to use 2FA)",
 }]});

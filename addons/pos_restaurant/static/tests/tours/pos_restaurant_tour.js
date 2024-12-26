@@ -125,7 +125,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                 content: "validate the variant dialog (with default values)",
             },
             ProductScreen.selectedOrderlineHas("Desk Organizer"),
-            checkOrderChanges([{ name: "Desk Organizer (S, Leather)", quantity: 1 }]),
+            checkOrderChanges([{ name: "Desk Organizer (Leather, S)", quantity: 1 }]),
             ProductScreen.clickOrderButton(),
             {
                 ...Dialog.confirm(),
@@ -315,5 +315,77 @@ registry.category("web_tour.tours").add("OrderChange", {
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
             TicketScreen.receiptChangeIs("7.80"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("CrmTeamTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("5"),
+            Chrome.clickPlanButton(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PoSPaymentSyncTour1", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.totalAmountIs("2.20"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.emptyPaymentlines("2.20"),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickBackToProductScreen(),
+            ProductScreen.isShown(),
+            ProductScreen.clickOrderButton(),
+            ProductScreen.orderlinesHaveNoChange(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PoSPaymentSyncTour2", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            FloorScreen.clickTable("5"),
+            PaymentScreen.isShown(),
+            PaymentScreen.clickBackToProductScreen(),
+            ProductScreen.isShown(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.totalAmountIs("4.40"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentlineDelButton("Bank", "2.20"),
+            PaymentScreen.emptyPaymentlines("4.40"),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickBackToProductScreen(),
+            ProductScreen.isShown(),
+            ProductScreen.clickOrderButton(),
+            ProductScreen.orderlinesHaveNoChange(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PoSPaymentSyncTour3", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            FloorScreen.clickTable("5"),
+            PaymentScreen.isShown(),
+            PaymentScreen.clickBackToProductScreen(),
+            ProductScreen.isShown(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.totalAmountIs("6.60"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.remainingIs("2.2"),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickBackToProductScreen(),
+            ProductScreen.isShown(),
+            ProductScreen.clickOrderButton(),
+            ProductScreen.orderlinesHaveNoChange(),
         ].flat(),
 });

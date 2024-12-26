@@ -23,8 +23,8 @@
                     <td/>
                     <td/>
                 </tr>
-                <tr t-foreach="props.docs.lines" t-as="line" t-key="line_index" t-attf-class="#{line.is_matched and 'o_grid_match'}">
-                    <td t-attf-class="#{line.is_late and 'o_grid_warning'}">
+                <tr t-foreach="props.docs.lines" t-as="line" t-key="line_index" t-attf-class="#{line.is_matched and 'o_grid_match table-info'}">
+                    <td t-attf-class="#{line.is_late and 'o_grid_warning table-danger'}">
                         <a t-if="line.document_in"
                             href="#"
                             t-on-click.prevent="() => this.props.openView(line.document_in._name, 'form', line.document_in.id)"
@@ -64,10 +64,10 @@
                         <span t-else="" class="text-muted">Not Available</span>
                     </td>
                     <td t-out="line.receipt_date or ''"
-                        t-attf-class="#{line.is_late and 'o_grid_warning'}"/>
+                        t-attf-class="#{line.is_late and 'o_grid_warning table-danger'}"/>
                     <td t-if="props.docs.multiple_product" t-out="line.product.display_name"/>
                     <td class="text-end"><t t-if="! line.replenishment_filled">- </t><t t-out="_formatFloat(line.quantity)"/></td>
-                    <td t-attf-class="#{! line.replenishment_filled and 'o_grid_warning'}" name="usedby_cell">
+                    <td t-attf-class="#{! line.replenishment_filled and 'o_grid_warning table-danger'}" name="usedby_cell">
                         <button t-if="line.move_out and line.move_out.picking_id"
                             t-attf-class="o_priority o_priority_star me-1 fa fa-star#{line.move_out.picking_id.priority=='1' ? '' : '-o'}"
                             t-on-click="() => this._onClickChangePriority('stock.picking', line.move_out.picking_id)"
@@ -79,7 +79,7 @@
                             class="fw-bold"/>
                     </td>
                     <td t-out="line.delivery_date or ''"
-                        t-attf-class="#{! line.replenishment_filled and 'o_grid_warning'}"/>
+                        t-attf-class="#{! line.replenishment_filled and 'o_grid_warning table-danger'}"/>
                 </tr>
                 <tr t-if="this.props.docs.qty_to_order">
                     <td>To Order</td>

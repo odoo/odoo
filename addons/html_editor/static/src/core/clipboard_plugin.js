@@ -171,17 +171,16 @@ export class ClipboardPlugin extends Plugin {
             // just its rows.
             clonedContents = tableClone;
         }
-        const table = closestElement(selection.startContainer, "table");
-        if (clonedContents.firstChild.nodeName === "TABLE" && table) {
+        const startTable = closestElement(selection.startContainer, "table");
+        if (clonedContents.firstChild.nodeName === "TABLE" && startTable) {
             // Make sure the full leading table is copied.
-            clonedContents.firstChild.after(table.cloneNode(true));
+            clonedContents.firstChild.after(startTable.cloneNode(true));
             clonedContents.firstChild.remove();
         }
-        if (clonedContents.lastChild.nodeName === "TABLE") {
+        const endTable = closestElement(selection.endContainer, "table");
+        if (clonedContents.lastChild.nodeName === "TABLE" && endTable) {
             // Make sure the full trailing table is copied.
-            clonedContents.lastChild.before(
-                closestElement(selection.endContainer, "table").cloneNode(true)
-            );
+            clonedContents.lastChild.before(endTable.cloneNode(true));
             clonedContents.lastChild.remove();
         }
         const commonAncestorElement = closestElement(selection.commonAncestorContainer);
@@ -334,7 +333,10 @@ export class ClipboardPlugin extends Plugin {
                 // Break line by inserting new paragraph and
                 // remove current paragraph's bottom margin.
                 const p = closestElement(selection.anchorNode, "p");
-                if (this.dependencies.split.isUnsplittable(closestBlock(selection.anchorNode))) {
+                if (
+                    this.dependencies.split.isUnsplittable(closestBlock(selection.anchorNode)) ||
+                    closestElement(selection.anchorNode).tagName === "PRE"
+                ) {
                     this.dependencies.lineBreak.insertLineBreak();
                 } else {
                     const [pBefore] = this.dependencies.split.splitBlock();
@@ -452,9 +454,24 @@ export class ClipboardPlugin extends Plugin {
             if (!node.matches || node.matches(CLIPBOARD_BLACKLISTS.remove.join(","))) {
                 node.remove();
             } else {
-                // Unwrap the illegal node's contents.
-                for (const unwrappedNode of unwrapContents(node)) {
-                    this.cleanForPaste(unwrappedNode);
+                let childNodes;
+                if (node.nodeName === "DIV" && [...node.childNodes].every((n) => !isBlock(n))) {
+                    // Convert <div> to <p> to preserve the inline structure
+                    // while maintaining block-level behaviour.
+                    const dir = node.getAttribute("dir");
+                    const p = this.document.createElement("p");
+                    if (dir) {
+                        p.setAttribute("dir", dir);
+                    }
+                    p.append(...node.childNodes);
+                    node.replaceWith(p);
+                    childNodes = p.childNodes;
+                } else {
+                    // Unwrap the illegal node's contents.
+                    childNodes = unwrapContents(node);
+                }
+                for (const child of childNodes) {
+                    this.cleanForPaste(child);
                 }
             }
         } else if (node.nodeType !== Node.TEXT_NODE) {

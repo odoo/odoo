@@ -196,7 +196,6 @@ export function receiptChangeIs(amount) {
     return [
         {
             trigger: `.receipt-screen .receipt-change:contains("${amount}")`,
-            run: () => {},
         },
     ];
 }
@@ -212,7 +211,6 @@ export function nthColumnContains(nRow, nCol, string) {
     return [
         {
             trigger: `.ticket-screen .order-row:nth-last-child(${nRow}) > .col:nth-child(${nCol}):contains("${string}")`,
-            run: () => {},
         },
     ];
 }

@@ -435,6 +435,28 @@ test("fetch metadata only once per model", async function () {
     expect.verifySteps(["partner/fields_get"]);
 });
 
+test("An error is displayed if the pivot has invalid model", async function () {
+    const { model, env, pivotId } = await createSpreadsheetWithPivot({
+        mockRPC: async function (route, { model, method, kwargs }) {
+            if (model === "unknown" && method === "fields_get") {
+                throw makeServerError({ code: 404 });
+            }
+        },
+    });
+    const pivot = model.getters.getPivotCoreDefinition(pivotId);
+    env.model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...pivot,
+            model: "unknown",
+        },
+    });
+    setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability:avg")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("#ERROR");
+    expect(getEvaluatedCell(model, "A1").message).toBe(`The model "unknown" does not exist.`);
+});
+
 test("don't fetch pivot data if no formula use it", async function () {
     const spreadsheetData = {
         pivots: {
@@ -469,6 +491,22 @@ test("don't fetch pivot data if no formula use it", async function () {
         "partner/read_group",
     ]);
     expect(getCellValue(model, "A1")).toBe(131);
+});
+
+test("An error is displayed if the pivot has invalid field", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const pivot = model.getters.getPivotCoreDefinition(pivotId);
+    model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...pivot,
+            columns: [{ fieldName: "unknown" }],
+        },
+    });
+    setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability:avg")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("#ERROR");
+    expect(getEvaluatedCell(model, "A1").message).toBe(`Field unknown does not exist`);
 });
 
 test("evaluates only once when two pivots are loading", async function () {

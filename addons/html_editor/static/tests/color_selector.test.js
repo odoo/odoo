@@ -385,7 +385,8 @@ test("should be able to select farthest-corner option in radial gradient", async
     expect("button[title='Extend to the farthest corner']").toHaveClass("active");
 });
 
-describe.tags("desktop")("color preview", () => {
+describe.tags("desktop");
+describe("color preview", () => {
     test("preview color should work and be reverted", async () => {
         await setupEditor("<p>[test]</p>");
 
@@ -465,5 +466,129 @@ describe.tags("desktop")("color preview", () => {
         expect("font").toHaveCount(0);
         execCommand(editor, "historyUndo");
         expect("font").toHaveCount(0);
+    });
+
+    test("should preview color in table on hover in solid tab", async () => {
+        const { el } = await setupEditor(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        await waitFor(".o-we-toolbar");
+        await animationFrame();
+        await click(".o-select-color-background");
+        await animationFrame();
+        // Hover a color
+        await hover(queryOne("button[data-color='#CE0000']"));
+        expect(getContent(el)).toBe(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="" style="background-color: rgb(206, 0, 0);">
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="" style="background-color: rgb(206, 0, 0);">
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        // Hover out
+        await hover(queryOne(".o-we-toolbar .o-select-color-foreground"));
+        await animationFrame();
+        expect(getContent(el)).toBe(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td">
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td">
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
+    });
+
+    test("should preview color in table on hover in custom tab", async () => {
+        const { el } = await setupEditor(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p><br>]</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        await waitFor(".o-we-toolbar");
+        await animationFrame();
+        await click(".o-select-color-background");
+        await animationFrame();
+        await click(".btn:contains('Custom')");
+        await animationFrame();
+        // Hover a color
+        await hover(queryOne("button[data-color='black']"));
+        expect(getContent(el)).toBe(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="bg-black">
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bg-black">
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        // Hover out
+        await hover(queryOne(".o-we-toolbar .o-select-color-foreground"));
+        await animationFrame();
+        expect(getContent(el)).toBe(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td">
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td">
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
     });
 });

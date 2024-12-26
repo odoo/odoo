@@ -64,6 +64,7 @@
 
 .o-mail-Composer-bg {
     background-color: var(--mail-Composer-bg, $o-view-background-color);
+    --border-opacity: .5;
 }
 
 .o-mail-Composer-inputStyle {
@@ -91,11 +92,6 @@
     resize: none;
 
     .o-mail-Composer.o-chatWindow & {
-        @media (min-height: 325px) {
-            max-height: Min(350px, 70vh);
-        }
-    }
-    .o-mail-Composer.o-chatWindowBig & {
         @media (min-height: 325px) {
             max-height: Min(550px, 70vh);
         }
@@ -127,7 +123,6 @@
 }
 
 .o-mail-Composer-compactContainer {
-    --border-opacity: 0.75;
 
     &.o-iosPwa:not(:focus-within) {
         margin-bottom: map-get($spacers, 5) !important;

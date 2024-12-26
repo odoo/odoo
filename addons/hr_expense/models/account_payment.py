@@ -10,6 +10,13 @@ class AccountPayment(models.Model):
 
     expense_sheet_id = fields.Many2one(related='move_id.expense_sheet_id')
 
+    def _compute_outstanding_account_id(self):
+        # EXTENDS account
+        expense_company_payments = self.filtered(lambda payment: payment.expense_sheet_id.payment_mode == 'company_account')
+        for payment in expense_company_payments:
+            payment.outstanding_account_id = payment.expense_sheet_id._get_expense_account_destination()
+        super(AccountPayment, self - expense_company_payments)._compute_outstanding_account_id()
+
     def write(self, vals):
         trigger_fields = {
             'date', 'amount', 'payment_type', 'partner_type', 'payment_reference',

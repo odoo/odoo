@@ -41,6 +41,18 @@ export class DiscussCorePublicWeb {
                 );
             }
         });
+        browser.navigator.serviceWorker?.addEventListener(
+            "message",
+            async ({ data: { action, data } }) => {
+                if (action === "OPEN_CHANNEL") {
+                    const channel = await this.store.Thread.getOrFetch({
+                        model: "discuss.channel",
+                        id: data.id,
+                    });
+                    channel?.open();
+                }
+            }
+        );
     }
 
     /**

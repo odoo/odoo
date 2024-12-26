@@ -3,17 +3,18 @@
 # 	* hr
 # 
 # Translators:
-# Wil Odoo, 2024
 # pezzin <christian.pezzin@gmail.com>, 2024
+# Sergio Zanchetta <primes2h@gmail.com>, 2024
 # Marianna Ciofani, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Marianna Ciofani, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,11 +71,6 @@ msgstr "1 Telefonata"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
 msgstr "12 giorni / anno, incluso <br>6 a scelta."
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "12345678901"
-msgstr "12345678901"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -639,6 +635,11 @@ msgid "Bank Account"
 msgstr "Conto bancario"
 
 #. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Conti bancari"
+
+#. module: hr
 #: model:ir.model,name:hr.model_base
 msgid "Base"
 msgstr "Base"
@@ -1195,6 +1196,12 @@ msgstr ""
 "Visualizza le impostazioni per il lavoro da remoto per ogni dipendente e per"
 " i resoconti dedicati. Le icone di presenza verranno aggiornate con il luogo"
 " di lavoro da remoto."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Divorced"
+msgstr "Divorziato/a"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__doctor
@@ -1990,6 +1997,12 @@ msgid "Lead the entire sales cycle"
 msgstr "Condurre l'intero ciclo di vendita"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Legal Cohabitant"
+msgstr "Convivente legale"
+
+#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
 msgstr "Creiamo una posizione lavorativa."
@@ -2067,11 +2080,6 @@ msgid "Manager of employee %s is not set."
 msgstr "Supervisore non impostato per il dipendente %s."
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Marc Demo"
-msgstr "Marc Demo"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
 #: model:ir.model.fields,field_description:hr.field_res_users__marital
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2082,6 +2090,12 @@ msgstr "Stato civile"
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
 msgstr "Responsabile marketing e community"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Married"
+msgstr "Sposato/a"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__master
@@ -3002,6 +3016,12 @@ msgid "Show employees"
 msgstr "Mostra dipendenti"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Single"
+msgstr "Celibe/nubile"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
 msgid "Skills Management"
 msgstr "Gestione competenze"
@@ -3016,11 +3036,6 @@ msgstr "Numero tessera sanitaria"
 #: model:ir.model.fields,help:hr.field_res_users__ssnid
 msgid "Social Security Number"
 msgstr "Numero posizione previdenziale"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Software Developer"
-msgstr "Sviluppatore di software"
 
 #. module: hr
 #. odoo-python
@@ -3179,8 +3194,12 @@ msgstr "Temporaneo"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
-msgid "The Badge ID must be a sequence of digits."
-msgstr "L'ID del badge deve essere una sequenza di cifre."
+msgid ""
+"The Badge ID must be alphanumeric without any accents and no longer than 18 "
+"characters."
+msgstr ""
+"L'ID del badge deve essere alfanumerico senza accenti e non più lungo di 18 "
+"caratteri."
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
@@ -3535,6 +3554,12 @@ msgid ""
 msgstr ""
 "Se il dipendente è membro del dipartimento dell'utente attivo o del suo "
 "dipartimento figlio."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Widower"
+msgstr "Vedovo/a"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id

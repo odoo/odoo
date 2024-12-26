@@ -216,8 +216,13 @@ class Task(models.Model):
     company_id = fields.Many2one('res.company', string='Company', compute='_compute_company_id', store=True, readonly=False, recursive=True, copy=True, default=_default_company_id)
     color = fields.Integer(string='Color Index', export_string_translation=False)
     rating_active = fields.Boolean(string='Project Rating Status', related="project_id.rating_active")
-    attachment_ids = fields.One2many('ir.attachment', compute='_compute_attachment_ids', string="Attachments that don't come from a message",
-        export_string_translation=False)
+    attachment_ids = fields.One2many(
+        'ir.attachment',
+        compute='_compute_attachment_ids',
+        string="Attachments",
+        export_string_translation=False,
+        help="Attachments that don't come from a message",
+    )
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
     displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Cover Image')
 
@@ -1644,6 +1649,7 @@ class Task(models.Model):
         # found.
         create_context = dict(self.env.context or {})
         create_context['default_user_ids'] = False
+        create_context['mail_notify_author'] = True  # Allows sending stage updates to the author
         if custom_values is None:
             custom_values = {}
         # Auto create partner if not existant when the task is created from email

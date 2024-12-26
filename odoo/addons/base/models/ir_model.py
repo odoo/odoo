@@ -284,6 +284,14 @@ class IrModel(models.Model):
             stored_fields = set(
                 model.field_id.filtered('store').mapped('name') + models.MAGIC_COLUMNS
             )
+            if model.model in self.env:
+                # add fields inherited from models specified via code if they are already loaded
+                stored_fields.update(
+                    fname
+                    for fname, fval in self.env[model.model]._fields.items()
+                    if fval.inherited and fval.base_field.store
+                )
+
             order_fields = RE_ORDER_FIELDS.findall(model.order)
             for field in order_fields:
                 if field not in stored_fields:
@@ -455,6 +463,8 @@ class IrModel(models.Model):
     @api.model
     def _instanciate(self, model_data):
         """ Return a class for the custom model given by parameters ``model_data``. """
+        models.check_pg_name(model_data["model"].replace(".", "_"))
+
         class CustomModel(models.Model):
             _name = model_data['model']
             _description = model_data['name']
@@ -1313,7 +1323,7 @@ class IrModelFields(models.Model):
         elif field_data['ttype'] == 'monetary':
             # be sure that custom monetary field are always instanciated
             if not self.pool.loaded and \
-                not (field_data['currency_field'] and self._is_manual_name(field_data['currency_field'])):
+                field_data['currency_field'] and not self._is_manual_name(field_data['currency_field']):
                 return
             attrs['currency_field'] = field_data['currency_field']
         # add compute function if given

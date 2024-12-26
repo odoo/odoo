@@ -175,7 +175,8 @@ test("char field with size attribute", async () => {
     });
 });
 
-test.tags("desktop")("char field in editable list view", async () => {
+test.tags("desktop");
+test("char field in editable list view", async () => {
     await mountView({
         type: "list",
         resModel: "res.partner",
@@ -494,7 +495,8 @@ test("char field trim (or not) characters", async () => {
     expect(".o_field_widget[name='foo2'] input:only").toHaveValue("  def  ");
 });
 
-test.tags("desktop")("input field: change value before pending onchange returns", async () => {
+test.tags("desktop");
+test("input field: change value before pending onchange returns", async () => {
     await mountView({
         type: "form",
         resModel: "res.partner",
@@ -640,7 +642,8 @@ test("onchange return value before editing input", async () => {
     await expect("[name='name'] input").toHaveValue("yop");
 });
 
-test.tags("desktop")("input field: change value before pending onchange renaming", async () => {
+test.tags("desktop");
+test("input field: change value before pending onchange renaming", async () => {
     Partner._onChanges.product_id = (obj) => {
         obj.name = "on change value";
     };
@@ -787,7 +790,8 @@ test("input field: empty password", async () => {
     });
 });
 
-test.tags("desktop")("input field: set and remove value, then wait for onchange", async () => {
+test.tags("desktop");
+test("input field: set and remove value, then wait for onchange", async () => {
     Partner._onChanges.product_id = (obj) => {
         obj.name = obj.product_id ? "onchange value" : false;
     };

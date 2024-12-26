@@ -30,6 +30,10 @@ class TestWebsiteEventSaleCommon(TransactionCase):
         cls.zero_tax = cls.env['account.tax'].sudo().create({
             'name': 'Tax 0',
             'amount': 0,
+            'tax_group_id': cls.env['account.tax.group'].create({
+                'name': 'Text Tax Group',
+                'company_id': cls.env.company.id,
+            }).id
         })
         cls.product_event = cls.env['product.product'].create({
             'type': 'service',

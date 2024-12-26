@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Manon Rondou, 2024
 # Wil Odoo, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-19 11:53+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -470,7 +470,7 @@ msgstr "9:30"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "<i class=\"fa fa-repeat\"/> Reset"
-msgstr "<html><i class=\"fa fa-repeat\"/>Opnieuw instellen</i>"
+msgstr "<i class=\"fa fa-repeat\"/>Opnieuw instellen"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -508,7 +508,7 @@ msgstr "<span class=\"text-nowrap\">2,350.00</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">Tax 15%</span>"
-msgstr "<span class=\"text-nowrap\">BTW 15%</span>"
+msgstr "<span class=\"text-nowrap\">Btw 15%</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -571,7 +571,7 @@ msgstr "<span>Aantal</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>Taxes</span>"
-msgstr "<span>BTW </span>"
+msgstr "<span>Btw </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -1283,6 +1283,18 @@ msgid "Back"
 msgstr "Terug"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/breadcrumbs/breadcrumbs.js:0
+msgid "Back to “%s”"
+msgstr "Terug naar “%s”"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/breadcrumbs/breadcrumbs.js:0
+msgid "Back to “%s” form"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Background"
 msgstr "Achtergrond"
@@ -1296,7 +1308,7 @@ msgstr "Achtergrondafbeelding"
 #. odoo-javascript
 #: code:addons/web/static/src/views/widgets/ribbon/ribbon.js:0
 msgid "Background color"
-msgstr "Achtergrond kleur"
+msgstr "Achtergrondkleur"
 
 #. module: web
 #. odoo-javascript
@@ -2001,6 +2013,12 @@ msgstr "Kon de geselecteerde afbeelding niet weergeven"
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.js:0
 msgid "Could not display the selected pdf"
 msgstr "Kon de geselecteerde pdf niet weergeven"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+msgid "Could not display the selected spreadsheet"
+msgstr "Kon het geselecteerde spreadsheet niet weergeven"
 
 #. module: web
 #. odoo-javascript
@@ -3144,6 +3162,13 @@ msgstr "Ga naar de URL"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.xml:0
+msgid "Google Slide Viewer"
+msgstr "Google Slide Viewer"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/colorlist/colorlist.js:0
 msgid "Green"
 msgstr "Groen"
@@ -4086,6 +4111,12 @@ msgstr "Match"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
+msgid "Max value"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
 #: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
 msgid "Max value field"
 msgstr "Veld maximale waarde"
@@ -4584,8 +4615,8 @@ msgstr "Er kan geen apparaat worden gevonden."
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "No emoji match your search"
-msgstr "Geen emoji komt overeen met je zoekopdracht"
+msgid "No emoji matches your search"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5062,7 +5093,7 @@ msgstr "Papierformaat"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__partner_id
 msgid "Partner"
-msgstr "Relatie"
+msgstr "Contact"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -5839,6 +5870,12 @@ msgstr "Zoek meer..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
+msgid "Search emoji"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 msgid "Search for a command..."
 msgstr "Zoek een opdracht..."
@@ -5848,12 +5885,6 @@ msgstr "Zoek een opdracht..."
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 msgid "Search for a menu..."
 msgstr "Zoek een menu ..."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "Search for an emoji"
-msgstr "Zoek een emoji"
 
 #. module: web
 #. odoo-javascript
@@ -6181,7 +6212,7 @@ msgstr "Tijd weergeven"
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_components/view_scale_selector.xml:0
 msgid "Show weekends"
-msgstr "Toon weekends"
+msgstr "Toon weekeinden"
 
 #. module: web
 #. odoo-javascript
@@ -6504,8 +6535,8 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
-"Het BTW-nummer. Waarden hier worden gevalideerd op basis van het "
-"landformaat. Je kunt '/' gebruiken om aan te geven dat de relatie niet "
+"Het btw-nummer. Waarden hier worden gevalideerd op basis van het "
+"landformaat. Je kunt '/' gebruiken om aan te geven dat het contact niet "
 "belastingplichtig is."
 
 #. module: web
@@ -6751,25 +6782,25 @@ msgstr "Vandaag"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/boolean_toggle/boolean_toggle_field.js:0
 msgid "Toggle"
-msgstr "Schakelen"
+msgstr "In-/uitschakelen"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.xml:0
 msgid "Toggle Dropdown"
-msgstr "Toggle dropdown"
+msgstr "Dropdown in-/uitschakelen"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
 msgid "Toggle Search Panel"
-msgstr "Toggle zoekpaneel"
+msgstr "Zoekpaneel in-/uitschakelen"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/burger_menu/burger_menu.xml:0
 msgid "Toggle menu"
-msgstr "Menu wisselen"
+msgstr "Menu in-/uitschakelen"
 
 #. module: web
 #. odoo-javascript
@@ -26419,13 +26450,13 @@ msgstr "— druk"
 #. odoo-javascript
 #: code:addons/web/static/src/core/commands/command_items.xml:0
 msgid "— search for"
-msgstr "- zoeken"
+msgstr "—  zoeken naar"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "“acceptable”"
-msgstr "\"aanvaardbaar\""
+msgstr "“aanvaardbaar”"
 
 #. module: web
 #. odoo-javascript
@@ -26437,7 +26468,7 @@ msgstr "“applicatie”"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "“bargain”"
-msgstr "\"koopje\""
+msgstr "“koopje”"
 
 #. module: web
 #. odoo-javascript
@@ -26455,7 +26486,7 @@ msgstr "“korting”"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "“free of charge”"
-msgstr "\"gratis\""
+msgstr "“gratis”"
 
 #. module: web
 #. odoo-javascript
@@ -26473,7 +26504,7 @@ msgstr "“maandelijks bedrag”"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "“no vacancy”"
-msgstr "\"geen vacature\""
+msgstr "“geen vacature”"
 
 #. module: web
 #. odoo-javascript
@@ -26485,19 +26516,19 @@ msgstr "“niet gratis”"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "“open for business”"
-msgstr "\"open for business\""
+msgstr "“open for business”"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "“passing grade”"
-msgstr "\"geslaagd\""
+msgstr "“geslaagd”"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "“prohibited”"
-msgstr "\"verboden\""
+msgstr "“verboden”"
 
 #. module: web
 #. odoo-javascript
@@ -26521,7 +26552,7 @@ msgstr "“servicekosten”"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "“vacancy”"
-msgstr "\"vacature\""
+msgstr "“vacature”"
 
 #. module: web
 #. odoo-javascript

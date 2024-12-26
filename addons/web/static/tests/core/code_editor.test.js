@@ -6,12 +6,14 @@ import {
     editAce,
     mountWithCleanup,
     patchWithCleanup,
+    preloadBundle,
     preventResizeObserverError,
 } from "@web/../tests/web_test_helpers";
 
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { debounce } from "@web/core/utils/timing";
 
+preloadBundle("web.ace_lib");
 preventResizeObserverError();
 
 function getDomValue() {

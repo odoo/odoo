@@ -34,7 +34,7 @@ test("PWA service fetches the manifest found in the page", async () => {
 test("PWA installation process", async () => {
     const beforeInstallPromptEvent = new CustomEvent("beforeinstallprompt");
     beforeInstallPromptEvent.preventDefault = () => {};
-    beforeInstallPromptEvent.prompt = async () => Promise.resolve({ outcome: "accepted" });
+    beforeInstallPromptEvent.prompt = async () => ({ outcome: "accepted" });
     browser.BeforeInstallPromptEvent = beforeInstallPromptEvent;
     await makeMockEnv();
     mountManifestLink("/web/manifest.scoped_app_manifest");

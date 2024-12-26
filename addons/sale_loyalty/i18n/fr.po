@@ -3,8 +3,8 @@
 # 	* sale_loyalty
 # 
 # Translators:
-# Manon Rondou, 2024
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +24,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid " - On products with the following taxes: %(taxes)s"
-msgstr ""
+msgstr " - Sur les produits avec les taxes suivantes : %(taxes)s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
@@ -34,7 +34,7 @@ msgstr "<span class=\"fa fa-clipboard\"/> Copier"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "<strong>Loyalty Card</strong>"
-msgstr ""
+msgstr "<strong>Carte de fidélité</strong>"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -131,7 +131,7 @@ msgstr "Ignorer"
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "Discount %(desc)s%(tax_str)s"
-msgstr ""
+msgstr "Remise %(desc)s%(tax_str)s"
 
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_discount_loyalty_type_config
@@ -179,7 +179,7 @@ msgstr "Cartes-cadeaux & e-wallet"
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_history
 msgid "History for Loyalty cards and Ewallets"
-msgstr ""
+msgstr "Historique des cartes de fidélité et des portefeuilles électroniques"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_sale_order_line__points_cost
@@ -203,7 +203,7 @@ msgstr "Produit invalide à réclamer."
 #. odoo-python
 #: code:addons/sale_loyalty/wizard/sale_loyalty_coupon_wizard.py:0
 msgid "Invalid sales order."
-msgstr "Bon de commande invalide."
+msgstr "Commande client invalide."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__is_reward_line
@@ -213,13 +213,13 @@ msgstr "Est une ligne de récompense de programme"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "Issued"
-msgstr ""
+msgstr "Émis"
 
 #. module: sale_loyalty
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Issued :"
-msgstr ""
+msgstr "Émis(e) :"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
@@ -239,7 +239,7 @@ msgstr "Mis à jour le"
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Loyalty Card :"
-msgstr ""
+msgstr "Carte de fidélité :"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
@@ -249,7 +249,7 @@ msgstr "Bon de fidélité"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__loyalty_data
 msgid "Loyalty Data"
-msgstr ""
+msgstr "Données de fidélité"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_program
@@ -316,7 +316,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__order_id
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__order_id
 msgid "Order"
-msgstr "Ordre"
+msgstr "Commander"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -394,7 +394,7 @@ msgstr "Ventes"
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_order
 msgid "Sales Order"
-msgstr "Bon de commande"
+msgstr "Commande client"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_order_line
@@ -455,7 +455,8 @@ msgstr "Le programme n'est pas disponible pour cette commande."
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_loyalty_card__order_id
 msgid "The sales order from which coupon is generated"
-msgstr "Le bon de commande à partir duquel le bon de réduction est généré"
+msgstr ""
+"La commande client à partir de laquelle le bon de réduction est généré"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -548,14 +549,14 @@ msgstr "Consommé"
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Used :"
-msgstr ""
+msgstr "Utilisé(e) :"
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "You don't have the required product quantities on your sales order."
 msgstr ""
-"Vous n'avez pas les quantités de produit requises sur votre bon de commande."
+"Vous n'avez pas les quantités de produit requises sur votre commande client."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card

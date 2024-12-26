@@ -34,11 +34,13 @@ export class DepartmentChart extends Component {
     }
 
     async openDepartmentEmployees(departmentId) {
-        this.action.doAction("hr.action_employee_from_department" , {
-            additionalContext: {
-                active_id: departmentId,
-            },
-        });
+        const dialogAction = await this.orm.call(
+            this.props.record.resModel,
+            "action_employee_from_department",
+            [departmentId],
+            {}
+        );
+        this.action.doAction(dialogAction);
     }
 }
 

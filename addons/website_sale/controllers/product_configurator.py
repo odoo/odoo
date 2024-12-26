@@ -207,6 +207,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
                 currency,
                 date,
                 basic_product_information['price'],
+                basic_product_information['pricelist_rule_id'],
             ) if 'price_info' not in basic_product_information else None
             if strikethrough_price:
                 basic_product_information['strikethrough_price'] = strikethrough_price
@@ -229,7 +230,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             return self._apply_taxes_to_price(price_extra, product_or_template, currency)
         return price_extra
 
-    def _get_strikethrough_price(self, product_or_template, currency, date, price):
+    def _get_strikethrough_price(self, product_or_template, currency, date, price, pricelist_rule_id=None):
         """ Return the strikethrough price of the product, if there is one.
 
         :param product.product|product.template product_or_template: The product for which to
@@ -240,18 +241,25 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         :rtype: float|None
         :return: The strikethrough price of the product, if there is one.
         """
+        pricelist_rule = request.env['product.pricelist.item'].browse(pricelist_rule_id)
+
         # First, try to use the base price as the strikethrough price.
         # Apply taxes before comparing it to the actual price.
-        base_price = self._apply_taxes_to_price(
-            request.env['product.pricelist.item']._compute_base_price(
-                product_or_template, 1.0, product_or_template.uom_id, date, currency
-            ),
-            product_or_template,
-            currency,
-        )
-        # Only show the base price if it's greater than the actual price.
-        if currency.compare_amounts(base_price, price) == 1:
-            return base_price
+        if pricelist_rule._show_discount_on_shop():
+            pricelist_base_price = self._apply_taxes_to_price(
+                pricelist_rule._compute_price_before_discount(
+                    product=product_or_template,
+                    quantity=1.0,
+                    uom=product_or_template.uom_id,
+                    date=date,
+                    currency=currency,
+                ),
+                product_or_template,
+                currency,
+            )
+            # Only show the base price if it's greater than the actual price.
+            if currency.compare_amounts(pricelist_base_price, price) == 1:
+                return pricelist_base_price
 
         # Second, try to use `compare_list_price` as the strikethrough price.
         # Don't apply taxes since this price should always be displayed as is.

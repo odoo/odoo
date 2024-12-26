@@ -7,7 +7,7 @@
         </div>
         <section t-else="" t-attf-class="paymentlines-container p-3 rounded-3 border {{ props.order.get_due() > 0 ? 'bg-danger-subtle border-danger text-danger' : 'bg-success-subtle border-success text-success'}}">
             <div class="payment-status-container d-flex flex-column-reverse flex-lg-row justify-content-between fs-2 pe-4 me-2">
-                <div t-if="this.props.order.get_due() gte 0 and props.order.get_change() === 0" class="payment-status-remaining d-flex justify-content-between flex-grow-1">
+                <div t-if="this.props.order.hasRemainingAmount()" class="payment-status-remaining d-flex justify-content-between flex-grow-1">
                     <span class="label pe-2">Remaining</span>
                     <span class="amount align-self-end pe-5" t-att-class="{ 'highlight text-danger fw-bolder': props.order.get_due() > 0 }">
                         <t t-esc="remainingText" />

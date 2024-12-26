@@ -33,6 +33,8 @@ msgid ""
 "%s\n"
 "Free Shipping"
 msgstr ""
+"%s\n"
+"จัดส่งฟรี"
 
 #. module: delivery
 #. odoo-python
@@ -88,7 +90,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Shipping Description</strong>"
-msgstr ""
+msgstr "<strong>คำอธิบายการจัดส่ง</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -185,6 +187,7 @@ msgid ""
 "Carrier %s cannot have the same tag in both Must Have Tags and Excluded "
 "Tags."
 msgstr ""
+"ผู้ให้บริการ %s ไม่สามารถมีแท็กเดียวกันทั้งในแท็กที่ต้องมีและแท็กที่ไม่รวม"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
@@ -195,14 +198,14 @@ msgstr "คำอธิบายผู้ให้บริการ"
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Choose a pick-up point"
-msgstr ""
+msgstr "เลือกจุดรับ"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
 #: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
 msgid "Choose this location"
-msgstr ""
+msgstr "เลือกตำแหน่งนี้"
 
 #. module: delivery
 #. odoo-javascript
@@ -415,7 +418,7 @@ msgstr "ข้อผิดพลาด: วิธีการจัดส่ง�
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "Error: this delivery method is not available."
-msgstr ""
+msgstr "ข้อผิดพลาด: วิธีการจัดส่งนี้ไม่พร้อมใช้งาน"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
@@ -448,6 +451,7 @@ msgid ""
 "Filling this form allows you to make the shipping method available according"
 " to the content of the order or its destination."
 msgstr ""
+"การกรอกแบบฟอร์มนี้ทำให้คุณสามารถระบุวิธีการจัดส่งได้ตามเนื้อหาของคำสั่งซื้อหรือปลายทาง"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -508,6 +512,8 @@ msgid ""
 "If the total volume of the order is over this volume, the method won't be "
 "available."
 msgstr ""
+"หากปริมาณการสั่งซื้อรวมเกินกว่าปริมาณดังกล่าว "
+"วิธีดังกล่าวจะไม่สามารถใช้งานได้"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__max_weight
@@ -515,6 +521,8 @@ msgid ""
 "If the total weight of the order is over this weight, the method won't be "
 "available."
 msgstr ""
+"หากน้ำหนักรวมของคำสั่งซื้อเกินกว่าน้ำหนักดังกล่าว "
+"วิธีดังกล่าวจะไม่สามารถใช้ได้"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -593,7 +601,7 @@ msgstr "จัดการคำนำหน้ารหัสไปรษณี
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
 msgid "Map view"
-msgstr ""
+msgstr "มุมมองแผนที่"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -628,7 +636,7 @@ msgstr "ค่าสูงสุด"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__must_have_tag_ids
 msgid "Must Have Tags"
-msgstr ""
+msgstr "ต้องมีแท็ก"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
@@ -645,7 +653,7 @@ msgstr "ผู้ให้บริการรายใหม่"
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid "No pick-up points are available for this delivery address."
-msgstr ""
+msgstr "ไม่มีจุดรับสินค้าสำหรับที่อยู่จัดส่งนี้"
 
 #. module: delivery
 #. odoo-javascript
@@ -664,7 +672,7 @@ msgstr "ไม่สามารถใช้ได้กับคำสั่ง
 #: code:addons/delivery/static/src/js/location_selector/location/location.xml:0
 #: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
 msgid "Opening hours"
-msgstr ""
+msgstr "เวลาเปิดทำการ"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -679,7 +687,7 @@ msgstr "คำสั่ง"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__pickup_location_data
 msgid "Pickup Location Data"
-msgstr ""
+msgstr "ข้อมูลสถานที่รับสินค้า"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -863,6 +871,7 @@ msgid ""
 "The method is NOT available if at least one product of the order has one of "
 "these tags."
 msgstr ""
+"วิธีการนี้จะใช้ไม่ได้หากผลิตภัณฑ์อย่างน้อยหนึ่งรายการในคำสั่งซื้อมีแท็กเหล่านี้"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
@@ -870,6 +879,7 @@ msgid ""
 "The method is available only if at least one product of the order has one of"
 " these tags."
 msgstr ""
+"วิธีการนี้จะใช้ได้เฉพาะในกรณีที่ผลิตภัณฑ์อย่างน้อยหนึ่งรายการในคำสั่งซื้อมีแท็กเหล่านี้อย่างใดอย่างหนึ่ง"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -897,7 +907,7 @@ msgstr "การจัดส่งฟรีเนื่องจากยอด
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
 msgid "There was an error loading the map"
-msgstr ""
+msgstr "มีข้อผิดพลาดในการโหลดแผนที่"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -937,7 +947,7 @@ msgstr "น้ำหนักการสั่งซื้อทั้งหม
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__tracking_url
 msgid "Tracking Link"
-msgstr ""
+msgstr "ลิงค์ติดตาม"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -1021,7 +1031,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
 msgid "Your postal code"
-msgstr ""
+msgstr "รหัสไปรษณีย์ของคุณ"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
@@ -1042,3 +1052,4 @@ msgstr "เช่น UPS เอ็กซ์เพรส"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "i.e. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
 msgstr ""
+"เช่น https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"

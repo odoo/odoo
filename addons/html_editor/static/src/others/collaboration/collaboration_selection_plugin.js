@@ -12,7 +12,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class CollaborationSelectionPlugin extends Plugin {
     static id = "collaborationSelection";
-    static dependencies = ["history", "collaborationOdoo", "localOverlay"];
+    static dependencies = ["history", "collaborationOdoo", "position", "localOverlay"];
     resources = {
         /** Handlers */
         collaboration_notification_handlers: this.handleCollaborationNotification.bind(this),
@@ -47,8 +47,11 @@ export class CollaborationSelectionPlugin extends Plugin {
      * @param {import("./collaboration_odoo_plugin").CollaborationSelection} selection
      */
     drawPeerSelection({ selection, peerId }) {
-        const { selectionColor, peerName = _t("Anonymous") } =
-            this.dependencies.collaborationOdoo.getPeerMetadata(peerId);
+        const peerMetadata = this.dependencies.collaborationOdoo.getPeerMetadata(peerId);
+        if (!peerMetadata) {
+            return;
+        }
+        const { selectionColor, peerName = _t("Anonymous") } = peerMetadata;
         this.multiselectionRemove(peerId);
         let clientRects;
 

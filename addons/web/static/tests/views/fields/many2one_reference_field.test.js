@@ -105,7 +105,8 @@ test("Many2OneReferenceField with no_open option", async () => {
     expect(".o_field_widget[name=res_id] .o_external_button").toHaveCount(0);
 });
 
-test.tags("desktop")("Many2OneReferenceField edition: unset", async () => {
+test.tags("desktop");
+test("Many2OneReferenceField edition: unset", async () => {
     expect.assertions(4);
 
     onRpc("web_save", ({ args }) => {
@@ -135,7 +136,8 @@ test.tags("desktop")("Many2OneReferenceField edition: unset", async () => {
     await clickSave();
 });
 
-test.tags("desktop")("Many2OneReferenceField set value with search more", async () => {
+test.tags("desktop");
+test("Many2OneReferenceField set value with search more", async () => {
     PartnerType._views = {
         list: `<list><field name="name"/></list>`,
         search: `<search/>`,
@@ -183,7 +185,8 @@ test.tags("desktop")("Many2OneReferenceField set value with search more", async 
     ]);
 });
 
-test.tags("desktop")("Many2OneReferenceField: quick create a value", async () => {
+test.tags("desktop");
+test("Many2OneReferenceField: quick create a value", async () => {
     onRpc(({ method }) => {
         expect.step(method);
     });

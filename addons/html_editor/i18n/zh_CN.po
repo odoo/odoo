@@ -6,9 +6,9 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
 # Tiffany Chang, 2024
 # Martin Trigaux, 2024
-# Chloe Wang, 2024
 # Wil Odoo, 2024
 # Odoo哥 <vnsoft.he@gmail.com>, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:49+0000\n"
 "PO-Revision-Date: 2024-09-29 00:00+0000\n"
-"Last-Translator: Odoo哥 <vnsoft.he@gmail.com>, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -260,6 +260,7 @@ msgstr "回到 1 栏"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/color_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
 msgid "Background Color"
 msgstr "背景颜色"
 
@@ -396,6 +397,12 @@ msgstr "协作链接需要加入，而嵌入链接则直接显示绘图。"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/column_plugin.js:0
+msgid "Columnize"
+msgstr "分栏"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.js:0
 msgid "Comparison"
 msgstr "比较"
@@ -429,6 +436,12 @@ msgstr "转换成 3 栏"
 #: code:addons/html_editor/static/src/main/column_plugin.js:0
 msgid "Convert into 4 columns"
 msgstr "转换成 4 栏"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/column_plugin.js:0
+msgid "Convert into columns"
+msgstr "转换为列"
 
 #. module: html_editor
 #. odoo-javascript
@@ -560,7 +573,7 @@ msgstr "绘图板"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder/dynamic_placeholder.js:0
+#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
 msgid "Dynamic Placeholder"
 msgstr "动态定位符"
 
@@ -717,6 +730,7 @@ msgstr "垂直翻转"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/color_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
 msgid "Font Color"
 msgstr "字体颜色"
 
@@ -896,6 +910,12 @@ msgstr "HTML"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
+msgid "Icon"
+msgstr "图标"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
 msgid "Icon size 1x"
 msgstr "图标大小1倍"
@@ -997,13 +1017,19 @@ msgstr "插入视频"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Insert a danger banner"
+msgstr "插入危险模幅"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
 msgid "Insert a drawing board"
 msgstr "插入绘图板"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder/dynamic_placeholder.js:0
+#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
 msgid "Insert a field"
 msgstr "插入字段"
 
@@ -1012,6 +1038,12 @@ msgstr "插入字段"
 #: code:addons/html_editor/static/src/core/dom_plugin.js:0
 msgid "Insert a horizontal rule separator"
 msgstr "插入水平分隔线"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/star_plugin.js:0
+msgid "Insert a rating"
+msgstr "插入评价"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1027,15 +1059,21 @@ msgstr "插入 5 星以上评级"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Insert a success banner"
+msgstr "插入成功横幅"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_ui_plugin.js:0
 msgid "Insert a table"
 msgstr "插入表格"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
-msgid "Insert a video"
-msgstr "插入视频"
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Insert a warning banner"
+msgstr "插入警告模幅"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1052,38 +1090,20 @@ msgstr "插入 Excalidraw 板"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/banner_plugin.js:0
-msgid "Insert an danger banner"
-msgstr "插入一个横幅（危险）"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
-msgid "Insert an image"
-msgstr "插入图像"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/banner_plugin.js:0
 msgid "Insert an info banner"
 msgstr "插入一个横幅（信息）"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/banner_plugin.js:0
-msgid "Insert an success banner"
-msgstr "插入一个横幅（成功）"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/banner_plugin.js:0
-msgid "Insert an warning banner"
-msgstr "插入一个横幅（警告）"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_menu.js:0
 msgid "Insert below"
 msgstr "插入下方"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
+msgid "Insert image or icon"
+msgstr "插入图片或图标"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1177,7 +1197,7 @@ msgstr "循环"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder/dynamic_placeholder.js:0
+#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
 msgid "Marketing Tools"
 msgstr "营销工具"
 
@@ -1207,7 +1227,7 @@ msgstr "缺少文件"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/power_buttons_plugin.js:0
+#: code:addons/html_editor/static/src/main/powerbox/powerbox_plugin.js:0
 msgid "More options"
 msgstr "更多选项"
 
@@ -1643,6 +1663,12 @@ msgstr "对不起，您的提示太长了。请尝试用更少的字数表达。
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/star_plugin.js:0
+msgid "Stars"
+msgstr "星"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/powerbox/powerbox_plugin.js:0
 msgid "Structure"
 msgstr "结构"
@@ -1892,12 +1918,6 @@ msgstr "上传的图像格式不被支持。请尝试使用:%s"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
-msgid "Video"
-msgstr "视频"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_plugin.js:0
 msgid "Video Link"
 msgstr "视频链接"
@@ -1970,7 +1990,7 @@ msgstr "您已达到此服务的最大请求数。稍后再试。"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder/dynamic_placeholder.js:0
+#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
 msgid ""
 "You need to select a model before opening the dynamic placeholder selector."
 msgstr "在打开动态占位符选择器之前，您需要选择一个模型。"

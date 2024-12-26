@@ -1,11 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests import HttpCase, tagged, users
+from odoo.tests import tagged, users
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
 @tagged('post_install', '-at_install')
-class TestTodoUi(HttpCase):
+class TestTodoUi(HttpCaseWithUserDemo):
 
     @users('admin')
     def test_tour_project_task_activities_split(self):

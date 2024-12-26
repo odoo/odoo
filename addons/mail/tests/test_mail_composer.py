@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
 from odoo.tests import Form, HttpCase, tagged, users
@@ -281,6 +283,35 @@ class TestMailComposerUI(MailCommon, HttpCase):
                 "mail/static/tests/tours/mail_composer_test_tour.js",
                 login=self.user_employee.login
             )
-        message = self._new_msgs.filtered(lambda message: message.author_id == self.user_employee.partner_id)
-        self.assertEqual(len(message), 1)
-        self.assertIn(user.partner_id, message.partner_ids)
+
+        message_1, message_2, message_3 = self._new_msgs.filtered(lambda message: message.author_id == self.user_employee.partner_id)
+        self.assertIn(user.partner_id, message_1.partner_ids)
+        self.assertEqual(
+            sorted(message_1.attachment_ids.mapped('raw')),
+            sorted([b'hello, world', b'hi there']))
+
+        signature_pattern = r'<span data-o-mail-quote="1">--\nErnest</span>'
+
+        # For the first message, the user opened the full composer. Therefore,
+        # the signature should have been appended to the message body. As the user
+        # did not deleted it from the editor, the signature should still be
+        # present in the message body. The signature shouldn't be automatically
+        # added by the server as it has already been added by the full composer.
+
+        self.assertEqual(len(re.findall(signature_pattern, message_1.body)), 1)
+        self.assertFalse(message_1.email_add_signature)
+
+        # For the second message, the user opened the full composer. However, the
+        # user manually deleted the signature. As a result, the signature shouldn't
+        # be present in the message body. The signature shouldn't be automatically
+        # added by the server as it has already been added by the full composer.
+
+        self.assertEqual(len(re.findall(signature_pattern, message_2.body)), 0)
+        self.assertFalse(message_2.email_add_signature)
+
+        # For the third message, the user didn't open the full composer. Therefore,
+        # the signature shouldn't be added to the message body. However, the server
+        # should automatically add it to the message when sending it.
+
+        self.assertEqual(len(re.findall(signature_pattern, message_3.body)), 0)
+        self.assertTrue(message_3.email_add_signature)

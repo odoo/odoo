@@ -41,7 +41,8 @@ test("StatInfoField formats decimal precision", async () => {
     });
 });
 
-test.tags("desktop")("StatInfoField in form view on desktop", async () => {
+test.tags("desktop");
+test("StatInfoField in form view on desktop", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -68,7 +69,8 @@ test.tags("desktop")("StatInfoField in form view on desktop", async () => {
     });
 });
 
-test.tags("mobile")("StatInfoField in form view on mobile", async () => {
+test.tags("mobile");
+test("StatInfoField in form view on mobile", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -129,7 +131,8 @@ test("StatInfoField in form view with specific label_field on desktop", async ()
     });
 });
 
-test.tags("mobile")("StatInfoField in form view with specific label_field on mobile", async () => {
+test.tags("mobile");
+test("StatInfoField in form view with specific label_field on mobile", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -162,7 +165,8 @@ test.tags("mobile")("StatInfoField in form view with specific label_field on mob
     });
 });
 
-test.tags("desktop")("StatInfoField in form view with no label on desktop", async () => {
+test.tags("desktop");
+test("StatInfoField in form view with no label on desktop", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -190,7 +194,8 @@ test.tags("desktop")("StatInfoField in form view with no label on desktop", asyn
     });
 });
 
-test.tags("mobile")("StatInfoField in form view with no label on mobile", async () => {
+test.tags("mobile");
+test("StatInfoField in form view with no label on mobile", async () => {
     await mountView({
         type: "form",
         resModel: "partner",

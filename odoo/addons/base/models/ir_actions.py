@@ -973,7 +973,7 @@ class IrActionsServer(models.Model):
             eval_context = self._get_eval_context(action)
             records = eval_context.get('record') or eval_context['model']
             records |= eval_context.get('records') or eval_context['model']
-            if records.ids:
+            if not action_groups and records.ids:
                 # check access rules on real records only; base automations of
                 # type 'onchange' can run server actions on new records
                 try:

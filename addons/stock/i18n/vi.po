@@ -3,16 +3,16 @@
 # 	* stock
 # 
 # Translators:
-# Wil Odoo, 2024
 # Thi Huong Nguyen, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -140,7 +140,7 @@ msgstr "%(name)s Trình tự đóng gói"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence picking"
-msgstr ""
+msgstr "%(name)s Trình tự lấy hàng"
 
 #. module: stock
 #. odoo-python
@@ -509,10 +509,10 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 msgid ""
 "<br>If the products are not available in <b>%s</b>, a rule will be triggered"
-" to bring products in this location."
+" to bring the missing quantity in this location."
 msgstr ""
 "<br>Nếu sản phẩm không có sẵn trong <b>%s</b>, một quy tắc sẽ được kích hoạt"
-" để đưa sản phẩm vào địa điểm này."
+" để đưa số lượng còn thiếu đến vị trí này."
 
 #. module: stock
 #. odoo-python
@@ -529,71 +529,38 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br><br>\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
 "        We are glad to inform you that your order has been shipped.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
-"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
-"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
 "                </t>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
 "            </t>\n"
 "            </strong>\n"
 "        </t>\n"
-"        <br><br>\n"
-"        Please find your delivery order attached for more details.<br><br>\n"
+"        <br/><br/>\n"
+"        Please find your delivery order attached for more details.<br/><br/>\n"
 "        Thank you,\n"
-"        <t t-if=\"user.signature\">\n"
-"            <br>\n"
-"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"            <br/>\n"
+"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 "        "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Xin chào <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br><br>\n"
-"        Chúng tôi vui mừng thông báo rằng đơn hàng của bạn đang được vận chuyển.\n"
-"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
-"            Mã số theo dõi đơn hàng của bạn là\n"
-"            <strong>\n"
-"            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
-"                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
-"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
-"                    </t>\n"
-"                </t>\n"
-"                <t t-else=\"\">\n"
-"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
-"                </t>\n"
-"            </t>\n"
-"            <t t-else=\"\">\n"
-"                <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
-"            </t>\n"
-"            </strong>\n"
-"        </t>\n"
-"        <br><br>\n"
-"        Vui lòng xem phiếu giao hàng được đính kèm trong email này để biết thêm chi tiết.<br><br>\n"
-"        Cảm ơn bạn!\n"
-"        <t t-if=\"user.signature\">\n"
-"            <br>\n"
-"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -730,6 +697,12 @@ msgid "<span class=\"o_stat_text\">Traceability</span>"
 msgstr "<span class=\"o_stat_text\">Khả năng truy xuất nguồn gốc</span>"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "<span><strong>Delivery Address:</strong></span>"
+msgstr "<span><strong>Địa chỉ giao hàng:</strong></span>"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "<span>OBTRETU</span>"
 msgstr "<span>OBTRETU</span>"
@@ -780,12 +753,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Customer Address</strong>"
 msgstr "<strong>Địa chỉ khách hàng</strong>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "<strong>Delivery Address</strong>"
-msgstr "<strong>Địa chỉ giao hàng</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1086,6 +1053,7 @@ msgstr "Thông tin bổ sung"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot_report__address
+#: model:ir.model.fields,field_description:stock.field_stock_picking__warehouse_address_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__partner_id
 #: model_terms:ir.ui.view,arch_db:stock.search_customer_lot_filter
 msgid "Address"
@@ -1348,7 +1316,7 @@ msgstr "Chỉ định tất cả"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
 msgid "Assign Owner"
-msgstr "Chỉ định người phụ trách"
+msgstr "Chỉ định bên sở hữu"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -1495,28 +1463,28 @@ msgstr "Đơn hàng trậm trễ"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation
 msgid "Backorder Confirmation"
-msgstr "Xác nhận đơn hàng chậm trễ"
+msgstr "Xác nhận đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation_line
 msgid "Backorder Confirmation Line"
-msgstr "Dòng xác nhận đơn hàng chậm trễ"
+msgstr "Dòng xác nhận đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__backorder_confirmation_line_ids
 msgid "Backorder Confirmation Lines"
-msgstr "Chi tiết xác nhận đơn hàng chậm trễ"
+msgstr "Chi tiết xác nhận đơn hàng tách kiện"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Backorder creation"
-msgstr "Tạo đơn hàng chậm trễ"
+msgstr "Tạo đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Backorders"
-msgstr "Đơn hàng chậm trễ"
+msgstr "Đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__barcode
@@ -2125,7 +2093,7 @@ msgstr "Lấy hàng theo số lượng"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr "Lấy hàng theo số lượng Đơn hàng chậm trễ"
+msgstr "Lấy hàng theo số lượng Đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_draft
@@ -2168,13 +2136,13 @@ msgstr "Địa điểm đối ứng"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__create_backorder
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Create Backorder"
-msgstr "Tạo đơn hàng chậm trễ"
+msgstr "Tạo đơn hàng tách kiện"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Create Backorder?"
-msgstr "Tạo đơn hàng chậm trễ?"
+msgstr "Tạo đơn hàng tách kiện?"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -2200,8 +2168,8 @@ msgid ""
 "                            products later. Do not create a backorder if you will not\n"
 "                            process the remaining products."
 msgstr ""
-"Tạo đơn hàng chậm trễ nếu bạn dự kiến sẽ xử lý các sản phẩm\n"
-"                          còn lại sau. Không tạo đơn hàng chậm trễ nếu bạn không\n"
+"Tạo đơn hàng tách kiện nếu bạn dự kiến sẽ xử lý các sản phẩm\n"
+"                          còn lại sau. Không tạo đơn hàng tách kiện nếu bạn không\n"
 "                          xử lý các sản phẩm còn lại. "
 
 #. module: stock
@@ -2463,7 +2431,7 @@ msgstr "Bàn điều chỉnh được"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Cyclic Counting"
-msgstr "Đếm theo chu kỳ"
+msgstr "Kiểm kho theo chu kỳ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -2918,7 +2886,7 @@ msgstr "Mô tả phiếu xuất kho"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Internal Transfers"
-msgstr "Mô tả phiếu lệnh chuyển hàng nội bộ"
+msgstr "Mô tả lệnh chuyển hàng nội bộ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -4054,8 +4022,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN labels "
 "of a picking when it is validated."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động in nhãn số lô/sê-ri của phiếu lấy hàng "
-"khi nó được xác thực."
+"Nếu đánh dấu hộp kiểm này, Odoo sẽ tự động in nhãn số lô/sê-ri của phiếu lấy"
+" hàng khi nó được xác thực."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_package_label
@@ -4063,8 +4031,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the package label "
 "when \"Put in Pack\" button is used."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động in nhãn kiện hàng khi nút \"Đóng hàng "
-"thành kiện\" được sử dụng."
+"Nếu đánh dấu hộp kiểm này, Odoo sẽ tự động in nhãn kiện hàng khi nút \"Đóng "
+"hàng thành kiện\" được sử dụng."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_packages
@@ -4072,8 +4040,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the packages and "
 "their contents of a picking when it is validated."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động in các kiện hàng và thành phần của chúng"
-" trong phiếu lấy hàng khi nó được xác thực."
+"Nếu đánh dấu hộp kiểm này, Odoo sẽ tự động in các kiện hàng và thành phần "
+"của chúng trong phiếu lấy hàng khi nó được xác thực."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
@@ -4081,8 +4049,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the product labels"
 " of a picking when it is validated."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động in nhãn sản phẩm của phiếu lấy hàng khi "
-"nó được xác thực."
+"Nếu đánh dấu hộp kiểm này, Odoo sẽ tự động in nhãn sản phẩm của phiếu lấy "
+"hàng khi nó được xác thực."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report_labels
@@ -4090,8 +4058,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the reception "
 "report labels of a picking when it is validated."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động in nhãn báo cáo nhập kho của phiếu lấy "
-"hàng khi nó được xác thực."
+"Nếu đánh dấu hộp kiểm này, Odoo sẽ tự động in nhãn báo cáo nhập kho của "
+"phiếu lấy hàng khi nó được xác thực."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report
@@ -4099,8 +4067,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the reception "
 "report of a picking when it is validated and has assigned moves."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động in báo cáo nhập kho của phiếu lấy hàng "
-"khi nó được xác thực và có điều chuyển đã chỉ định."
+"Nếu đánh dấu hộp kiểm này, Odoo sẽ tự động in báo cáo nhập kho của phiếu lấy"
+" hàng khi nó được xác thực và có điều chuyển đã chỉ định."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_return_slip
@@ -4108,8 +4076,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the return slip of"
 " a picking when it is validated."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động in phiếu trả hàng của phiếu lấy hàng khi"
-" nó được xác thực."
+"Nếu đánh dấu hộp kiểm này, Odoo sẽ tự động in phiếu trả hàng của phiếu lấy "
+"hàng khi nó được xác thực."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_show_reception_report
@@ -4117,8 +4085,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically show the reception "
 "report (if there are moves to allocate to) when validating."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động hiển thị báo cáo nhập kho (nếu có các "
-"điều chuyển cần phân bổ) khi xác nhận."
+"Nếu đánh dấu hộp kiểm này, Odoo sẽ tự động hiển thị báo cáo nhập kho (nếu có"
+" các điều chuyển cần phân bổ) khi xác nhận."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__show_operations
@@ -4129,9 +4097,9 @@ msgid ""
 " operations. If not, the picking lines will represent an aggregate of "
 "detailed stock operations."
 msgstr ""
-"Nếu chọn ô này, chi tiết phiếu lấy hàng sẽ đại diện cho hoạt động tồn kho "
-"chi tiết. Nếu không, chi tiết phiếu lấy hàng sẽ đại diện cho toàn bộ hoạt "
-"động tồn kho."
+"Nếu chọn hộp kiểm này, chi tiết phiếu lấy hàng sẽ đại diện cho hoạt động tồn"
+" kho chi tiết. Nếu không, chi tiết phiếu lấy hàng sẽ đại diện cho toàn bộ "
+"hoạt động tồn kho."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_create_lots
@@ -4280,7 +4248,7 @@ msgstr "Ngày hàng về"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Incoming Draft Transfer"
-msgstr "Lệnh chuyển hàng nhập hàng nháp"
+msgstr "Lệnh chuyển hàng vào nháp"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__incoming_move_line_ids
@@ -4499,7 +4467,7 @@ msgstr "Ngày kiểm kho"
 #: model:ir.model.fields,field_description:stock.field_stock_quant__cyclic_inventory_frequency
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Inventory Frequency"
-msgstr "Tần suất tồn kho"
+msgstr "Tần suất kiểm kho"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
@@ -4766,7 +4734,7 @@ msgstr "Nhập sau xuất trước (LIFO)"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__last_inventory_date
 msgid "Last Inventory"
-msgstr "Tồn kho cuối cùng"
+msgstr "Lần kiểm kho cuối cùng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__write_uid
@@ -5632,7 +5600,7 @@ msgstr "Loại hoạt động tiếp theo"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__next_inventory_date
 msgid "Next Expected"
-msgstr "Dự kiến tiếp theo"
+msgstr "Dự kiến lần tiếp theo"
 
 #. module: stock
 #. odoo-python
@@ -5664,7 +5632,7 @@ msgstr "Không có %s được chọn hoặc một phiếu xuất kho đã đư�
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "No Backorder"
-msgstr "Không có đơn hàng chậm trễ"
+msgstr "Không có đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__no-message
@@ -5778,7 +5746,7 @@ msgstr "Không có tồn kho để hiển thị"
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "No transfer found. Let's create one!"
 msgstr ""
-"Không tìm thấy lệnh chuyển hàng hàng nào. Hãy tạo một lệnh chuyển hàng mới!"
+"Không tìm thấy lệnh chuyển hàng nào. Hãy tạo một lệnh chuyển hàng mới!"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
@@ -6179,7 +6147,7 @@ msgstr "Xuất hàng"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Outgoing Draft Transfer"
-msgstr "Lệnh chuyển hàng xuất hàng nháp"
+msgstr "Lệnh chuyển hàng ra nháp"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__outgoing_move_line_ids
@@ -7633,7 +7601,7 @@ msgstr "Số lượng tái đặt hàng tối thiểu"
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rule"
-msgstr "Qui tắc tái đặt hàng"
+msgstr "Quy tắc tái đặt hàng"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_orderpoint
@@ -8588,7 +8556,7 @@ msgstr "Đã ký"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Size"
-msgstr "Quy mô"
+msgstr "Kích thước"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -9114,7 +9082,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "The backorder %s has been created."
-msgstr "Đơn hàng chậm trễ %s đã được tạo."
+msgstr "Đơn hàng tách kiện %s đã được tạo."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
@@ -9460,8 +9428,8 @@ msgid ""
 "This checkbox is just indicative, it doesn't validate or generate any "
 "product moves."
 msgstr ""
-"Ô này chỉ mang tính biểu thị, nó không xác thực hoặc tạo ra bất kỳ điều "
-"chuyển sản phẩm nào."
+"Hộp kiểm này chỉ mang tính biểu thị, nó không xác thực hoặc tạo ra bất kỳ "
+"điều chuyển sản phẩm nào."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -9476,6 +9444,9 @@ msgid ""
 "created. However, it is possible to change it afterwards or that the routes "
 "use another one by default."
 msgstr ""
+"Đây là địa điểm đích mặc định khi thao tác này được tạo thủ công. Tuy nhiên,"
+" địa điểm này có thể được thay đổi sau đó hoặc các tuyến sử dụng một địa "
+"điểm khác theo mặc định."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -9484,6 +9455,9 @@ msgid ""
 " However, it is possible to change it afterwards or that the routes use "
 "another one by default."
 msgstr ""
+"Đây là địa điểm nguồn mặc định khi thao tác này được tạo thủ công. Tuy "
+"nhiên, địa điểm này có thể được thay đổi sau đó hoặc các tuyến sử dụng một "
+"địa điểm khác theo mặc định."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -9498,9 +9472,9 @@ msgid ""
 "moves affects the product reservation, and should be done with care."
 msgstr ""
 "Đây là số lượng sản phẩm được lên kế hoạch điều chuyển. Việc giảm số lượng "
-"này sẽ không tạo ra một đơn hàng chậm trễ. Tuy nhiên, việc thay đổi số lượng"
-" này trên những điều chuyển đã chỉ định sẽ ảnh hưởng đến dự trữ sản phẩm và "
-"cần được thực hiện cẩn thận."
+"này sẽ không tạo ra một đơn hàng tách kiện. Tuy nhiên, việc thay đổi số "
+"lượng này trên những điều chuyển đã chỉ định sẽ ảnh hưởng đến dự trữ sản "
+"phẩm và cần được thực hiện cẩn thận."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__child_internal_location_ids
@@ -9726,7 +9700,7 @@ msgstr "Cần áp dụng"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__to_backorder
 msgid "To Backorder"
-msgstr "Cần lập đơn hàng chậm trễ"
+msgstr "Cần lập đơn hàng tách kiện"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -9747,7 +9721,7 @@ msgstr "Cần xuất"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "To Do"
-msgstr "Cần làm"
+msgstr "Việc cần làm"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -10078,7 +10052,7 @@ msgstr "Kích hoạt bổ sung cho phế phẩm"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/stock_forecasted.js:0
 msgid "Try to add some incoming or outgoing transfers."
-msgstr "Cố gắng thêm một số lệnh chuyển hàng nhập hàng hoặc xuất hàng."
+msgstr "Cố gắng thêm một số lệnh chuyển hàng vào hoặc ra."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
@@ -10818,8 +10792,8 @@ msgid ""
 " * Never: remaining products are cancelled"
 msgstr ""
 "Khi xác nhận một lệnh chuyển hàng:\n"
-"* Hỏi: người dùng được chọn nếu họ muốn tạo đơn hàng chậm trễ cho các sản phẩm còn lại\n"
-"* Luôn luôn: đơn hàng chậm trễ được tạo tự động cho các sản phẩm còn lại\n"
+"* Hỏi: người dùng được chọn nếu họ muốn tạo đơn hàng tách kiện cho các sản phẩm còn lại\n"
+"* Luôn luôn: đơn hàng tách kiện được tạo tự động cho các sản phẩm còn lại\n"
 "* Không bao giờ: các sản phẩm còn lại sẽ bị hủy"
 
 #. module: stock
@@ -10827,16 +10801,14 @@ msgstr ""
 msgid ""
 "When validating the transfer, the products will be assigned to this owner."
 msgstr ""
-"Khi xác nhận lệnh chuyển hàng hàng, sản phẩm sẽ được giao cho người phụ "
-"trách này."
+"Khi xác nhận lệnh chuyển hàng, sản phẩm sẽ được giao cho bên sở hữu này."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__owner_id
 msgid ""
 "When validating the transfer, the products will be taken from this owner."
 msgstr ""
-"Khi xác nhận lệnh chuyển hàng hàng, sản phẩm sẽ được lấy từ người phụ trách "
-"này."
+"Khi xác nhận lệnh chuyển hàng, sản phẩm sẽ được lấy từ bên sở hữu này."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__additional

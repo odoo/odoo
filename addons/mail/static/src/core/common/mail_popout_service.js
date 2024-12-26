@@ -17,7 +17,7 @@ export const mailPopoutService = {
          * - destroy the current app mounted on the window
          */
         function reset() {
-            if (externalWindow) {
+            if (externalWindow?.document) {
                 externalWindow.document.head.innerHTML = "";
                 externalWindow.document.write(window.document.head.outerHTML);
                 externalWindow.document.body = externalWindow.document.createElement("body");

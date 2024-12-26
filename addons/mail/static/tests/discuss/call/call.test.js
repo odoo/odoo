@@ -42,15 +42,15 @@ test("basic rendering", async () => {
     await contains(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']");
     await contains(".o-discuss-CallActionList");
     await contains(".o-discuss-CallMenu-buttonContent");
-    await contains(".o-discuss-CallActionList button", { count: 5 });
+    await contains(".o-discuss-CallActionList button", { count: 6 });
     await contains("button[aria-label='Unmute'], button[aria-label='Mute']"); // FIXME depends on current browser permission
     await contains(".o-discuss-CallActionList button[aria-label='Deafen']");
     await contains(".o-discuss-CallActionList button[aria-label='Turn camera on']");
+    await contains(".o-discuss-CallActionList button[aria-label='Share Screen']");
     await contains("[title='More']");
     await contains(".o-discuss-CallActionList button[aria-label='Disconnect']");
     await click("[title='More']");
     await contains("[title='Raise Hand']");
-    await contains("[title='Share Screen']");
     await contains("[title='Enter Full Screen']");
     // screen sharing not available in mobile OS
     mockUserAgent("Chrome/0.0.0 Android (OdooMobile; Linux; Android 13; Odoo TestSuite)");
@@ -153,9 +153,9 @@ test("should display invitations", async () => {
         channel_member_id: memberId,
         channel_id: channelId,
     });
-    onRpcBefore("/mail/action", (args) => {
+    onRpcBefore("/mail/data", (args) => {
         if (args.init_messaging) {
-            step(`/mail/action - ${JSON.stringify(args)}`);
+            step(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     mockService("mail.sound_effects", {
@@ -168,7 +168,7 @@ test("should display invitations", async () => {
     });
     await start();
     await assertSteps([
-        `/mail/action - ${JSON.stringify({
+        `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
@@ -234,6 +234,50 @@ test("can share user camera", async () => {
     await contains("video");
     await click("[title='Stop camera']");
     await contains("video", { count: 0 });
+});
+
+test("Card should remain in focus after Share Screen is toggled", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start a Call']");
+    await contains(".o-discuss-Call.o-minimized"); // minimized = no card focused
+    await click(".o-discuss-CallParticipantCard-avatar");
+    await contains(
+        ".o-discuss-Call:not(.o-minimized) .o-discuss-CallParticipantCard:not(.o-inset) img" // inset = aside, not inset = center
+    );
+    await click("[title='Share Screen']");
+    await contains(".o-discuss-CallParticipantCard.o-inset img");
+    await contains(
+        ".o-discuss-Call:not(.o-minimized) .o-discuss-CallParticipantCard:not(.o-inset) video[type='screen']"
+    );
+    await click("[title='Stop Sharing Screen']");
+    await contains(".o-discuss-CallParticipantCard.o-inset", { count: 0 });
+    await contains(
+        ".o-discuss-Call:not(.o-minimized) .o-discuss-CallParticipantCard:not(.o-inset) img"
+    );
+});
+
+test("Camera video stream stays in focus when on/off", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start a Call']");
+    await click(".o-discuss-CallParticipantCard-avatar");
+    await click("[title='Turn camera on']");
+    await click("[title='Stop camera']");
+    await click("[title='Turn camera on']");
+    await contains("video[type='camera']:not(.o-inset)");
+    // test screen sharing then camera on to check camera aside
+    await click("[title='Stop camera']");
+    await click("[title='Share Screen']");
+    await click("[title='Turn camera on']");
+    await contains("video[type='screen']:not(.o-inset)");
+    await contains("video[type='camera'].o-inset");
 });
 
 test("Create a direct message channel when clicking on start a meeting", async () => {
@@ -383,6 +427,52 @@ test("show call participants in discuss sidebar", async () => {
     await contains(".o-mail-DiscussSidebar", {
         contains: [
             ".o-mail-DiscussSidebarChannel:contains('General') ~ .o-mail-DiscussSidebarCallParticipants:contains(Mitchell Admin)",
+        ],
+    });
+});
+
+test("Sort call participants in side bar by name", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["discuss.channel.rtc.session"].create([
+        {
+            channel_member_id: pyEnv["discuss.channel.member"].create({
+                channel_id: channelId,
+                partner_id: pyEnv["res.partner"].create({ name: "CCC" }),
+            }),
+            channel_id: channelId,
+        },
+        {
+            channel_member_id: pyEnv["discuss.channel.member"].create({
+                channel_id: channelId,
+                partner_id: pyEnv["res.partner"].create({ name: "AAA" }),
+            }),
+            channel_id: channelId,
+        },
+        {
+            channel_member_id: pyEnv["discuss.channel.member"].create({
+                channel_id: channelId,
+                partner_id: pyEnv["res.partner"].create({ name: "BBB" }),
+            }),
+            channel_id: channelId,
+        },
+    ]);
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussSidebarCallParticipants", {
+        contains: [
+            ".o-mail-DiscussSidebarCallParticipants-participant:nth-child(1):contains('AAA')",
+        ],
+    });
+    await contains(" .o-mail-DiscussSidebarCallParticipants", {
+        contains: [
+            ".o-mail-DiscussSidebarCallParticipants-participant:nth-child(2):contains('BBB')",
+        ],
+    });
+    await contains(" .o-mail-DiscussSidebarCallParticipants", {
+        contains: [
+            ".o-mail-DiscussSidebarCallParticipants-participant:nth-child(3):contains('CCC')",
         ],
     });
 });

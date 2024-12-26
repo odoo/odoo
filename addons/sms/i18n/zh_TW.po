@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -54,6 +54,12 @@ msgstr "%s無效的收件人"
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "+1 555-555-555"
 msgstr "+1 555-555-555"
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+msgid ", fits in"
+msgstr "，需要"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -194,6 +200,12 @@ msgstr "簡訊記錄的另一種識別方法，用於發送報告"
 #: code:addons/sms/static/src/core/failure_model_patch.js:0
 msgid "An error occurred when sending an SMS"
 msgstr "發送短訊時發生錯誤"
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/core/failure_model_patch.js:0
+msgid "An error occurred when sending an SMS on “%(record_name)s”"
+msgstr ""
 
 #. module: sms
 #. odoo-python
@@ -658,7 +670,7 @@ msgid ""
 "Invalid phone number. Please make sure to follow the international format, "
 "i.e. a plus sign (+), then country code, city code, and local phone number. "
 "For example: +1 555-555-555"
-msgstr ""
+msgstr "電話號碼無效。請確保使用國際電話格式：首先是加號 (+)，然後是國家代碼、城市代碼，最後是當地電話號碼。例：+1 555-555-555"
 
 #. module: sms
 #. odoo-python
@@ -1125,6 +1137,12 @@ msgstr "簡訊發送錯誤"
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/messaging_menu/messaging_menu_patch.js:0
+msgid "SMS Failure: %(modelName)s"
+msgstr ""
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/messaging_menu/messaging_menu_patch.js:0
 msgid "SMS Failures"
 msgstr "簡訊失敗"
 
@@ -1421,7 +1439,7 @@ msgstr "範本"
 msgid ""
 "The SMS Service is currently unavailable for new users and new accounts "
 "registrations are suspended."
-msgstr ""
+msgstr "短訊服務目前不對新的使用者開放，新帳戶註冊亦已暫停。"
 
 #. module: sms
 #. odoo-python
@@ -1457,7 +1475,7 @@ msgstr "該模板可使用的文件類型"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "The verification code is incorrect."
-msgstr ""
+msgstr "驗證碼不正確。"
 
 #. module: sms
 #. odoo-python
@@ -1476,7 +1494,7 @@ msgstr "因該號碼已被使用，此短信已被刪除。"
 #: code:addons/sms/tools/sms_api.py:0
 msgid ""
 "This account already has an existing sender name and it cannot be changed."
-msgstr ""
+msgstr "此帳戶已有目前使用的發訊人名稱，不可更改。"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_iap_account__sender_name
@@ -1493,7 +1511,7 @@ msgstr "此電話號碼已列入簡訊營銷黑名單。點擊取消黑名單。
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "This phone number/account has been banned from our service."
-msgstr ""
+msgstr "此電話號碼/帳戶已被禁止使用我們的服務。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
@@ -1604,7 +1622,7 @@ msgstr "警告"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "We were not able to find your account in our database."
-msgstr ""
+msgstr "未能在資料庫中找到你的帳戶。"
 
 #. module: sms
 #. odoo-python
@@ -1612,7 +1630,7 @@ msgstr ""
 msgid ""
 "We were not able to reach you via your phone number. If you have requested "
 "multiple codes recently, please retry later."
-msgstr ""
+msgstr "我們未能透過你的電話號碼聯絡你。如果你最近要求了多個代碼，請稍後再試。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__website_message_ids
@@ -1664,7 +1682,7 @@ msgstr "您的 IAP 帳戶上沒有足夠的積分。"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "You tried too many times. Please retry later."
-msgstr ""
+msgstr "嘗試次數太多。請稍後再試。"
 
 #. module: sms
 #. odoo-javascript
@@ -1685,7 +1703,7 @@ msgstr "你的短訊帳戶已成功註冊。"
 msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain "
 "alphanumeric characters."
-msgstr ""
+msgstr "你的發訊人名稱，長度必須為 3 至 11 個字元，並只可使用英數字元。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
@@ -1700,13 +1718,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Your sms account has not been activated yet."
-msgstr ""
+msgstr "你的短訊帳戶尚未啟動。"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
-msgid "characters, fits in"
-msgstr "個字元，需使用"
+msgid "characters"
+msgstr "字元"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

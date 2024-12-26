@@ -142,9 +142,9 @@ paymentForm.include({
      * @param {string} flow - The online payment flow of the transaction.
      * @return {void}
      */
-    _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
+    async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (providerCode !== 'adyen' || flow === 'token') {
-            this._super(...arguments); // Tokens are handled by the generic flow
+            await this._super(...arguments); // Tokens are handled by the generic flow
             return;
         }
 

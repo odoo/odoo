@@ -30,23 +30,26 @@ async function testPropertyFieldAvatarOpenChat(propertyType) {
         `,
     });
     onRpc("mail.test.properties", "has_access", () => true);
-    onRpc("res.users", "read", () => {
-        step("read res.users");
-        return [{ id: userId, partner_id: [partnerId, "Partner Test"] }];
-    });
-    onRpc("res.users", "search_read", () => [{ id: userId, name: "User Test" }]);
+    onRpc("res.users", "read", () => step("read res.users"));
     await start();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner Test" });
-    const userId = pyEnv["res.users"].create({ name: "User Test", partner_id: partnerId });
-    const parentId = pyEnv["mail.test.properties"].create({ name: "Parent" });
-    const value = propertyType === "many2one" ? [userId, "User Test"] : [[userId, "User Test"]];
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    const propertyDefinition = {
+        type: propertyType,
+        comodel: "res.users",
+        name: "user",
+        string: "user",
+    };
+    const parentId = pyEnv["mail.test.properties"].create({
+        name: "Parent",
+        definition_properties: [propertyDefinition],
+    });
     const childId = pyEnv["mail.test.properties"].create({
         name: "Test",
         parent_id: parentId,
-        properties: [
-            { type: propertyType, comodel: "res.users", name: "user", string: "user", value },
-        ],
+        properties: [{ ...propertyDefinition, value: [userId] }],
     });
+
     await openFormView("mail.test.properties", childId);
     await assertSteps([]);
     await click(

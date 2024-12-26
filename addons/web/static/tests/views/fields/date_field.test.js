@@ -61,7 +61,8 @@ test("toggle datepicker", async () => {
     expect(".o_datetime_picker").toHaveCount(0);
 });
 
-test.tags("desktop")("open datepicker on Control+Enter", async () => {
+test.tags("desktop");
+test("open datepicker on Control+Enter", async () => {
     defineParams({
         lang_parameters: {
             date_format: "%d/%m/%Y",
@@ -277,7 +278,8 @@ test("date field with warn_future option: do not overwrite datepicker option", a
     expect(".o_field_widget[name='date'] input").toHaveValue("");
 });
 
-test.tags("desktop")("date field in editable list view", async () => {
+test.tags("desktop");
+test("date field in editable list view", async () => {
     onRpc("has_group", () => true);
     await mountView({
         type: "list",
@@ -310,7 +312,8 @@ test.tags("desktop")("date field in editable list view", async () => {
     expect("tr.o_data_row td:not(.o_list_record_selector)").toHaveText("02/22/2017");
 });
 
-test.tags("desktop")("multi edition of date field in list view: clear date in input", async () => {
+test.tags("desktop");
+test("multi edition of date field in list view: clear date in input", async () => {
     onRpc("has_group", () => true);
     Partner._records = [
         { id: 1, date: "2017-02-03" },

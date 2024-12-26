@@ -51,22 +51,21 @@ patch(ControlButtons.prototype, {
         const orderUuid = this.pos.get_order().uuid;
         this.pos.get_order().setBooked(true);
         this.pos.showScreen("FloorScreen");
-        document.addEventListener(
-            "click",
-            async (ev) => {
-                if (this.pos.isOrderTransferMode) {
-                    this.pos.isOrderTransferMode = false;
-                    const tableElement = ev.target.closest(".table");
-                    if (!tableElement) {
-                        return;
-                    }
-                    const table = this.pos.getTableFromElement(tableElement);
-                    await this.pos.transferOrder(orderUuid, table);
-                    this.pos.setTableFromUi(table);
-                }
-            },
-            { once: true }
-        );
+        const onClickWhileTransfer = async (ev) => {
+            if (ev.target.closest(".button-floor")) {
+                return;
+            }
+            this.pos.isOrderTransferMode = false;
+            const tableElement = ev.target.closest(".table");
+            if (!tableElement) {
+                return;
+            }
+            const table = this.pos.getTableFromElement(tableElement);
+            await this.pos.transferOrder(orderUuid, table);
+            this.pos.setTableFromUi(table);
+            document.removeEventListener("click", onClickWhileTransfer);
+        };
+        document.addEventListener("click", onClickWhileTransfer);
     },
     async clickTakeAway() {
         const isTakeAway = !this.currentOrder.takeaway;

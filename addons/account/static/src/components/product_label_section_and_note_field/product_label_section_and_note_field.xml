@@ -30,7 +30,7 @@
                         <a t-if="(columnIsProductAndLabel.value and value) or (!columnIsProductAndLabel.value and (productName or (!productName and !label)))"
                             class="d-flex align-items-center justify-content-between"
                             t-attf-class="o_form_uri #{classFromDecoration}"
-                            t-att-href="value ? `#id=${value[0]}&amp;model=${relation}` : '#'"
+                            t-att-href="value ? `/odoo/${urlRelation}/${value[0]}` : '/'"
                             t-on-click.prevent="onClick"
                         >
                             <span t-ref="productNodeRef" class="w-100">

@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 12:50+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -102,8 +102,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> The default target record getter will work "
 "out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
-"<i j=\"0/\"> De standaard target record getter werkt out-of-the-box voor "
-"elke webhook die afkomstig is van een andere Odoo instantie.</i>"
+"<i class=\"fa fa-info-circle\"/>De standaard target record getter werkt out-"
+"of-the-box voor elke webhook die afkomstig is van een andere Odoo instantie."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -112,9 +112,10 @@ msgid ""
 "be executed <em>every time</em> the watched fields change, <em>whether you "
 "save or not</em>."
 msgstr ""
-"<i j=\"0/\"> Automatiseringsregels die worden geactiveerd door wijzigingen "
-"in de gebruikersinterface, worden uitgevoerd <em>telkens wanneer</em> de "
-"bewaakte velden worden gewijzigd, of <em>je nu opslaat of niet</em>.</i>"
+"<i class=\"fa fa-warning\"/>Automatiseringsregels die worden geactiveerd "
+"door wijzigingen in de gebruikersinterface, worden uitgevoerd <em>telkens "
+"wanneer</em> de bewaakte velden worden gewijzigd, of <em>je nu opslaat of "
+"niet</em>."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -137,9 +138,9 @@ msgid ""
 "                                    <span invisible=\"trigger != 'on_time_updated'\">after last update</span>\n"
 "                                    <span invisible=\"trigger != 'on_time'\">after</span>"
 msgstr ""
-"na <span invisible=\"trigger != 'on_time_created'\">aanmaak</span> na <span invisible=\"trigger != 'on_time_updated'\">laatste update na</span><span invisible=\"trigger != 'on_time'\"></span>\n"
-"                                    \n"
-"                                    "
+"<span invisible=\"trigger != 'on_time_created'\">na aanmaken</span>\n"
+"                                    <span invisible=\"trigger != 'on_time_updated'\">na laatste update</span>\n"
+"                                    <span invisible=\"trigger != 'on_time'\">na</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -164,7 +165,9 @@ msgstr "<span>door het in te stellen op</span>"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<strong><i class=\"fa fa-lock\"/> Keep it secret, keep it safe.</strong>"
-msgstr "<strong><i j=\"0/\"> Houd het geheim, bewaar het veilig.</i></strong>"
+msgstr ""
+"<strong><i class=\"fa fa-lock\"/>Houd het geheim, bewaar het "
+"veilig.</strong>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__name
@@ -207,7 +210,7 @@ msgstr "Volgers toevoegen: %(partner_names)s"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_created
 msgid "After creation"
-msgstr "Na de creatie"
+msgstr "Na het aanmaken"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_updated
@@ -345,7 +348,7 @@ msgstr "Dagen"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Delay"
-msgstr "Werkuren"
+msgstr "Vertraging"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_range
@@ -354,7 +357,7 @@ msgid ""
 "delay before the trigger date, like sending a reminder 15 minutes before a "
 "meeting."
 msgstr ""
-"Vertraging na triggerdatum. Je kan een negatief getal invoeren als je een "
+"Vertraging na triggerdatum. Je kunt een negatief getal invoeren als je een "
 "vertraging nodig hebt voor de triggerdatum, zoals het verzenden van een "
 "herinnering 15 minuten voor een vergadering."
 
@@ -627,7 +630,7 @@ msgstr "Op gearchiveerd"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
 msgid "On creation"
-msgstr "Bij creatie"
+msgstr "Bij aanmaken"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
@@ -744,8 +747,8 @@ msgid ""
 "                tasks when a specific tag is added."
 msgstr ""
 "Een e-mail verzenden wanneer een object van status verandert, records archiveren\n"
-"                na een maand inactiviteit of herinner jezelf eraan om een follow-up te doen\n"
-"                taken wanneer een specifieke tag wordt toegevoegd."
+"                na een maand inactiviteit of herinner jezelf eraan om een follow-up taak te doen\n"
+"                wanneer een specifiek label wordt toegevoegd."
 
 #. module: base_automation
 #: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0

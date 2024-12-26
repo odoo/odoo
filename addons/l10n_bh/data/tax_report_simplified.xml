@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_bh_tax_report_simplified" model="account.report">
+        <field name="name">Simplified VAT Return</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.bh"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="l10n_bh_tax_report_simplified_base" model="account.report.column">
+                <field name="name">Base</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="l10n_bh_tax_report_simplified_tax" model="account.report.column">
+                <field name="name">Tax</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_bh_tax_report_simplified_1a" model="account.report.line">
+                <field name="name">1(a). Standard rated sales at 10%</field>
+                <field name="code">bh_simp_1a</field>
+                <field name="expression_ids">
+                    <record id="l10n_bh_tax_report_simplified_1a_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">1(a) B</field>
+                    </record>
+                    <record id="l10n_bh_tax_report_simplified_1a_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">1(a) T</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_bh_tax_report_simplified_2" model="account.report.line">
+                <field name="name">2. Zero rated (including exports)</field>
+                <field name="code">bh_simp_2</field>
+                 <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_bh_tax_report_simplified_2_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">bh_simp_2_1.base + bh_simp_2_2.base + bh_simp_2_3.base</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_bh_tax_report_simplified_2_1" model="account.report.line">
+                        <field name="name">Zero rated</field>
+                        <field name="code">bh_simp_2_1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_simplified_2_1_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">4 B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_simplified_2_2" model="account.report.line">
+                        <field name="name">Exports</field>
+                        <field name="code">bh_simp_2_2</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_simplified_2_2_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">5 B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_simplified_2_3" model="account.report.line">
+                        <field name="name">GCC</field>
+                        <field name="code">bh_simp_2_3</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_simplified_2_3_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">2 B</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_bh_tax_report_simplified_3" model="account.report.line">
+                <field name="name">3. Other and exempt sales</field>
+                <field name="code">bh_simp_3</field>
+                 <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_bh_tax_report_simplified_3_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">bh_3_1.base + bh_3_2.base</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_bh_tax_report_simplified_3_1" model="account.report.line">
+                        <field name="name">Sales subject to domestic reverse charge mechanism</field>
+                        <field name="code">bh_3_1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_simplified_3_1_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">3 B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_simplified_3_2" model="account.report.line">
+                        <field name="name">Exempt</field>
+                        <field name="code">bh_3_2</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_simplified_3_2_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">6 B</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_bh_tax_report_simplified_7" model="account.report.line">
+                <field name="name">7.Total sales</field>
+                <field name="code">bh_simp_7</field>
+                <field name="expression_ids">
+                    <record id="l10n_bh_tax_report_simplified_7_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">bh_simp_1a.base + bh_simp_2.base + bh_simp_3.base </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_simplified_7_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">bh_simp_1a.tax</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_bh_tax_report_simplified_14" model="account.report.line">
+                <field name="name">14. Total purchases</field>
+                <field name="code">bh_simp_14</field>
+                 <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_bh_tax_report_simplified_14_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">bh_simp_8a.base + bh_simp_9a.base + bh_simp_10.base + bh_simp_11a.base + bh_simp_12.base + bh_simp_13.base</field>
+                    </record>
+                    <record id="l10n_bh_tax_report_simplified_14_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">bh_simp_8a.tax + bh_simp_9a.tax + bh_simp_10.tax + bh_simp_11a.tax + bh_simp_12.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_bh_tax_report_simplified_8" model="account.report.line">
+                        <field name="name">8(a). Standard rated domestic purchases at 10%</field>
+                        <field name="code">bh_simp_8a</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_simplified_8_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">8(a) B</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_simplified_8_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">8(a) T</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_simplified_9" model="account.report.line">
+                        <field name="name">9(a). Imports subject to VAT paid at customs</field>
+                        <field name="code">bh_simp_9a</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_simplified_9_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">9(a) B</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_simplified_9_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">9(a) T</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_simplified_10" model="account.report.line">
+                        <field name="name">10. Imports subject to deferral at customs</field>
+                        <field name="code">bh_simp_10</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_simplified_10_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">10 B</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_simplified_10_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">10 T</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_simplified_11" model="account.report.line">
+                        <field name="name">11(a). Imports subject to VAT accounted for through reverse charge mechanism at 10%</field>
+                        <field name="code">bh_simp_11a</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_simplified_11_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">11(a) B</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_simplified_11_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">11(a) T</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_simplified_12" model="account.report.line">
+                        <field name="name">12. Purchases subject to domestic reverse charge mechanism</field>
+                        <field name="code">bh_simp_12</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_simplified_12_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">12 B</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_simplified_12_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">12 T</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_simplified_13" model="account.report.line">
+                        <field name="name">13. Purchases from non-registered suppliers, zero rated/ exempt purchases</field>
+                        <field name="code">bh_simp_13</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_simplified_13_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">13 B</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_bh_tax_report_simplified_15" model="account.report.line">
+                <field name="name">15. Total VAT due for current period</field>
+                <field name="code">bh_simp_15</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_bh_tax_report_simplified_15_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">bh_simp_7.tax - bh_simp_14.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_bh_tax_report_simplified_16" model="account.report.line">
+                        <field name="name">16. Corrections from previous period (between BHD +-5,000)</field>
+                        <field name="code">bh_simp_16</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_simplified_16_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_simplified_17" model="account.report.line">
+                        <field name="name">17. VAT credit carried forward from previous period(s)</field>
+                        <field name="code">bh_simp_17</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_simplified_17_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_simplified_18" model="account.report.line">
+                        <field name="name">18. Net VAT due (or reclaimed)</field>
+                        <field name="code">bh_simp_18</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_simplified_18_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">bh_simp_15.tax + bh_simp_16.tax - bh_simp_17.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

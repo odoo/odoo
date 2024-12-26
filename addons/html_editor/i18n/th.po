@@ -115,6 +115,7 @@ msgstr "ยอมรับ"
 #: code:addons/html_editor/controllers/main.py:0
 msgid "Action %s is not a window action, link preview is not available"
 msgstr ""
+"การดำเนินการ %s ไม่ใช่การดำเนินการของหน้าต่าง ไม่สามารถดูตัวอย่างลิงก์ได้"
 
 #. module: html_editor
 #. odoo-python
@@ -123,6 +124,8 @@ msgid ""
 "Action %s not found, link preview is not available, please check your url is"
 " correct"
 msgstr ""
+"ไม่พบการดำเนินการ %s ไม่สามารถดูตัวอย่างลิงก์ได้ โปรดตรวจสอบว่า URL "
+"ของคุณถูกต้อง"
 
 #. module: html_editor
 #. odoo-javascript
@@ -260,6 +263,7 @@ msgstr "กลับไปที่คอลัมน์เดียว"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/color_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
 msgid "Background Color"
 msgstr "สีพื้นหลัง"
 
@@ -398,6 +402,12 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/column_plugin.js:0
+msgid "Columnize"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.js:0
 msgid "Comparison"
 msgstr "การเปรียบเทียบ"
@@ -431,6 +441,12 @@ msgstr "แปลงเป็น 3 คอลัมน์"
 #: code:addons/html_editor/static/src/main/column_plugin.js:0
 msgid "Convert into 4 columns"
 msgstr "แปลงเป็น 4 คอลัมน์"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/column_plugin.js:0
+msgid "Convert into columns"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -564,7 +580,7 @@ msgstr "กระดานวาดภาพ"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder/dynamic_placeholder.js:0
+#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
 msgid "Dynamic Placeholder"
 msgstr "ตัวยึดตำแหน่งแบบไดนามิก"
 
@@ -721,6 +737,7 @@ msgstr "พลิกแนวตั้ง"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/color_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
 msgid "Font Color"
 msgstr "สีฟอนต์"
 
@@ -900,6 +917,12 @@ msgstr "Html"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
+msgid "Icon"
+msgstr "ไอคอน"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/icon_plugin.js:0
 msgid "Icon size 1x"
 msgstr "ขนาดไอคอน 1x"
@@ -1001,13 +1024,19 @@ msgstr "แทรกวิดีโอ"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Insert a danger banner"
+msgstr "แทรกป้ายความปลอดภัย"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
 msgid "Insert a drawing board"
 msgstr "ใส่กระดานวาดภาพ"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder/dynamic_placeholder.js:0
+#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
 msgid "Insert a field"
 msgstr "แทรกฟิลด์"
 
@@ -1016,6 +1045,12 @@ msgstr "แทรกฟิลด์"
 #: code:addons/html_editor/static/src/core/dom_plugin.js:0
 msgid "Insert a horizontal rule separator"
 msgstr "แทรกตัวคั่นกฎแนวนอน"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/star_plugin.js:0
+msgid "Insert a rating"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1031,15 +1066,21 @@ msgstr "ใส่คะแนนมากกว่า 5 ดาว"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Insert a success banner"
+msgstr "แทรกป้ายความสำเร็จ"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_ui_plugin.js:0
 msgid "Insert a table"
 msgstr "แทรกตาราง"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
-msgid "Insert a video"
-msgstr "แทรกวิดีโอ"
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Insert a warning banner"
+msgstr "แทรกป้ายคำเตือน"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1056,38 +1097,20 @@ msgstr "ใส่บอร์ด Excalidraw"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/banner_plugin.js:0
-msgid "Insert an danger banner"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
-msgid "Insert an image"
-msgstr "แทรกรูปภาพ"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/banner_plugin.js:0
 msgid "Insert an info banner"
 msgstr "แทรกป้ายข้อมูล"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/banner_plugin.js:0
-msgid "Insert an success banner"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/banner_plugin.js:0
-msgid "Insert an warning banner"
-msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_menu.js:0
 msgid "Insert below"
 msgstr "แทรกด้านล่าง"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
+msgid "Insert image or icon"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1151,6 +1174,8 @@ msgid ""
 "Link preview is not available because %s, please check if your url is "
 "correct"
 msgstr ""
+"ไม่สามารถดูตัวอย่างลิงก์ได้ เนื่องจาก %s โปรดตรวจสอบว่า URL "
+"ของคุณถูกต้องหรือไม่"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1181,7 +1206,7 @@ msgstr "ห่วง"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder/dynamic_placeholder.js:0
+#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
 msgid "Marketing Tools"
 msgstr "เครื่องมือทางการตลาด"
 
@@ -1211,7 +1236,7 @@ msgstr "ไฟล์ที่หายไป"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/power_buttons_plugin.js:0
+#: code:addons/html_editor/static/src/main/powerbox/powerbox_plugin.js:0
 msgid "More options"
 msgstr ""
 
@@ -1648,6 +1673,12 @@ msgstr "ขออภัย ข้อความของคุณยาวเ�
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/star_plugin.js:0
+msgid "Stars"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/powerbox/powerbox_plugin.js:0
 msgid "Structure"
 msgstr "โครงสร้าง"
@@ -1899,12 +1930,6 @@ msgstr "ไม่รองรับรูปแบบของภาพที่
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_plugin.js:0
-msgid "Video"
-msgstr "วิดีโอ"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/video_plugin/video_plugin.js:0
 msgid "Video Link"
 msgstr "การเชื่อมโยงวิดีโอ"
@@ -1977,7 +2002,7 @@ msgstr "คุณมีคำขอถึงจำนวนสูงสุดส
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/dynamic_placeholder/dynamic_placeholder.js:0
+#: code:addons/html_editor/static/src/others/dynamic_placeholder_plugin.js:0
 msgid ""
 "You need to select a model before opening the dynamic placeholder selector."
 msgstr "คุณต้องเลือกรุ่นก่อนที่จะเปิดตัวเลือกตัวยึดตำแหน่งแบบไดนามิก"

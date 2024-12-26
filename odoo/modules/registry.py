@@ -104,10 +104,6 @@ class Registry(Mapping):
                 return cls.registries[db_name]
             except KeyError:
                 return cls.new(db_name)
-            finally:
-                # set db tracker - cleaned up at the WSGI dispatching phase in
-                # odoo.http.root
-                threading.current_thread().dbname = db_name
 
     @classmethod
     @locked
@@ -858,6 +854,8 @@ class Registry(Mapping):
                           self.registry_sequence, ' '.join('[Cache %s: %s]' % cs for cs in self.cache_sequences.items()))
 
     def get_sequences(self, cr):
+        assert cr.readonly is False, "can't use replica, sequence data is not replicated"
+
         cache_sequences_query = ', '.join([f'base_cache_signaling_{cache_name}' for cache_name in _CACHES_BY_KEY])
         cache_sequences_values_query = ',\n'.join([f'base_cache_signaling_{cache_name}.last_value' for cache_name in _CACHES_BY_KEY])
         cr.execute(f"""

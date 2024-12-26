@@ -19,7 +19,7 @@ export class MailLinkPreview extends models.ServerModel {
                     "og_type",
                     "source_url",
                 ],
-                makeKwArgs({ load: false })
+                false
             );
             data.message = mailDataHelpers.Store.one(
                 this.env["mail.message"].browse(linkPreview.message_id),

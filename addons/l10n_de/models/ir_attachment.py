@@ -24,18 +24,30 @@ class IrAttachment(models.Model):
         for attachment in audit_trail_attachments:
             move = id2move.get(attachment.res_id)
             if move and move.posted_before and move.country_code == 'DE':
-                raise UserError(_("You cannot remove parts of the audit trail."))
+                ue = UserError(_("You cannot remove parts of the audit trail."))
+                ue._audit_trail = True
+                raise ue
 
     def write(self, vals):
         if vals.keys() & {'res_id', 'res_model', 'raw', 'datas', 'store_fname', 'db_datas'}:
-            self._except_audit_trail()
+            try:
+                self._except_audit_trail()
+            except UserError as e:
+                if (
+                    not hasattr(e, '_audit_trail')
+                    or vals.get('res_model') != 'documents.document'
+                    or vals.keys() & {'raw', 'datas', 'store_fname', 'db_datas'}
+                ):
+                    raise  # do not raise if trying to version the attachment through a document
+                vals.pop('res_model', None)
+                vals.pop('res_id', None)
         return super().write(vals)
 
     def unlink(self):
         invoice_pdf_attachments = self.filtered(lambda attachment:
             attachment.res_model == 'account.move'
             and attachment.res_id
-            and attachment.res_field in ('invoice_pdf_report_file', 'ubl_cii_xml_id')
+            and attachment.res_field in ('invoice_pdf_report_file', 'ubl_cii_xml_file')
         )
         if invoice_pdf_attachments:
             # only detach the document from the field, but keep it in the database for the audit trail

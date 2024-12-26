@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, queryRect } from "@odoo/hoot-dom";
+import { check, click, queryRect } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -66,9 +66,7 @@ test("radio field on a many2one in a new record", async () => {
     expect("div.o_radio_item").toHaveCount(2);
     expect("input.o_radio_input").toHaveCount(2);
     expect(".o_field_radio:first").toHaveText("xphone\nxpad");
-    expect("input.o_radio_input:checked").toHaveCount(0, {
-        message: "none of the input should be checked",
-    });
+    expect("input.o_radio_input:checked").toHaveCount(0);
 });
 
 test("required radio field on a many2one", async () => {
@@ -78,9 +76,7 @@ test("required radio field on a many2one", async () => {
         arch: /* xml */ `<form><field name="product_id" widget="radio" required="1"/></form>`,
     });
 
-    expect(".o_field_radio input:checked").toHaveCount(0, {
-        message: "none of the input should be checked",
-    });
+    expect(".o_field_radio input:checked").toHaveCount(0);
     await clickSave();
     expect(".o_notification_title:first").toHaveText("Invalid fields:");
     expect(".o_notification_content:first").toHaveProperty(
@@ -139,7 +135,7 @@ test("radio field on a selection in a new record", async () => {
 
     await clickSave();
 
-    expect("input.o_radio_input:checked").toHaveAttribute("data-value", "black", {
+    expect("input.o_radio_input[data-value=black]").toBeChecked({
         message: "should have saved record with correct value",
     });
 });
@@ -165,14 +161,15 @@ test("two radio field with same selection", async () => {
         `,
     });
 
-    expect("[name='color'] input.o_radio_input:checked").toHaveAttribute("data-value", "black");
-    expect("[name='color_2'] input.o_radio_input:checked").toHaveAttribute("data-value", "black");
+    expect("[name='color'] input.o_radio_input[data-value=black]").toBeChecked();
+    expect("[name='color_2'] input.o_radio_input[data-value=black]").toBeChecked();
 
     // click on Red
     await click("[name='color_2'] label");
     await animationFrame();
-    expect("[name='color'] input.o_radio_input:checked").toHaveAttribute("data-value", "black");
-    expect("[name='color_2'] input.o_radio_input:checked").toHaveAttribute("data-value", "red");
+
+    expect("[name='color'] input.o_radio_input[data-value=black]").toBeChecked();
+    expect("[name='color_2'] input.o_radio_input[data-value=red]").toBeChecked();
 });
 
 test("radio field has o_horizontal or o_vertical class", async () => {
@@ -196,32 +193,27 @@ test("radio field has o_horizontal or o_vertical class", async () => {
     });
 
     const verticalRadio = ".o_field_radio > div.o_vertical:first";
-    const rectT = queryRect(`${verticalRadio} .o_radio_item:first`);
-    const rectB = queryRect(`${verticalRadio} .o_radio_item:last`);
-    expect(rectT.right).toBe(rectB.right);
+    expect(`${verticalRadio} .o_radio_item:first`).toHaveRect({
+        right: queryRect(`${verticalRadio} .o_radio_item:last`).right,
+    });
     expect(".o_field_radio > div.o_horizontal").toHaveCount(1, {
         message: "should have o_horizontal class",
     });
     const horizontalRadio = ".o_field_radio > div.o_horizontal:first";
-    const rectL = queryRect(`${horizontalRadio} .o_radio_item:first`);
-    const rectR = queryRect(`${horizontalRadio} .o_radio_item:last`);
-    expect(rectL.top).toBe(rectR.top);
+    expect(`${horizontalRadio} .o_radio_item:first`).toHaveRect({
+        top: queryRect(`${horizontalRadio} .o_radio_item:last`).top,
+    });
 });
 
 test("radio field with numerical keys encoded as strings", async () => {
-    expect.assertions(5);
-
-    Partner._fields.selection = {
-        type: "selection",
+    Partner._fields.selection = fields.Selection({
         selection: [
             ["0", "Red"],
             ["1", "Black"],
         ],
-    };
-
-    onRpc("partner", "web_save", ({ args }) => {
-        expect(args[1].selection).toBe("1", { message: "should write correct value" });
     });
+
+    onRpc("partner", "web_save", ({ args }) => expect.step(args[1].selection));
 
     await mountView({
         type: "form",
@@ -230,16 +222,16 @@ test("radio field with numerical keys encoded as strings", async () => {
         arch: /* xml */ `<form><field name="selection" widget="radio"/></form>`,
     });
     expect(".o_field_widget").toHaveText("Red\nBlack");
-    expect(".o_radio_input:checked").toHaveCount(0, { message: "no value should be checked" });
+    expect(".o_radio_input:checked").toHaveCount(0);
 
-    await click("input.o_radio_input:last");
+    await check("input.o_radio_input:last");
     await animationFrame();
     await clickSave();
 
     expect(".o_field_widget").toHaveText("Red\nBlack");
-    expect(".o_radio_input[data-index='1']:checked").toHaveCount(1, {
-        message: "'Black' should be checked",
-    });
+    expect(".o_radio_input[data-value='1']").toBeChecked();
+
+    expect.verifySteps(["1"]);
 });
 
 test("radio field is empty", async () => {

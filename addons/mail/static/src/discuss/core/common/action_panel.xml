@@ -11,9 +11,9 @@
     </t>
 
     <t t-name="mail.ActionPanel.content">
-        <div class="o-mail-ActionPanel-header position-sticky top-0 pt-2 pb-1 d-flex flex-column bg-inherit small" t-att-class="{ 'px-1': env.inChatWindow, 'px-2': !env.inChatWindow }">
+        <div class="o-mail-ActionPanel-header position-sticky top-0 pt-2 pb-1 d-flex flex-column bg-inherit smaller" t-att-class="{ 'px-1': env.inChatWindow, 'pe-2': !env.inChatWindow }">
             <div class="d-flex align-items-baseline gap-1">
-                <button t-if="env.closeActionPanel" class="btn p-1 opacity-25 opacity-100-hover" title="Close panel" t-on-click.stop="env.closeActionPanel">
+                <button t-if="env.closeActionPanel" class="btn p-1 opacity-75 opacity-100-hover" title="Close panel" t-on-click.stop="env.closeActionPanel">
                     <i class="oi oi-arrow-left fa-fw"/>
                 </button>
                 <i t-if="props.icon" class="text-muted opacity-50" t-att-class="props.icon"/>

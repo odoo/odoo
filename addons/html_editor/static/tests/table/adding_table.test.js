@@ -10,7 +10,8 @@ function expectContentToBe(el, html) {
     expect(getContent(el)).toBe(unformat(html));
 }
 
-test.tags("desktop")("can add a table using the powerbox and keyboard", async () => {
+test.tags("desktop");
+test("can add a table using the powerbox and keyboard", async () => {
     const { el, editor } = await setupEditor("<p>a[]</p>");
     expect(".o-we-powerbox").toHaveCount(0);
     expectContentToBe(el, `<p>a[]</p>`);
@@ -60,7 +61,8 @@ test.tags("desktop")("can add a table using the powerbox and keyboard", async ()
     );
 });
 
-test.tags("desktop")("can close table picker with escape", async () => {
+test.tags("desktop");
+test("can close table picker with escape", async () => {
     const { el, editor } = await setupEditor("<p>a[]</p>");
     await insertText(editor, "/");
     await waitFor(".o-we-powerbox");
@@ -107,7 +109,8 @@ test("in iframe, can add a table using the powerbox and keyboard", async () => {
     expect(":iframe .o_table").toHaveCount(1);
 });
 
-test.tags("desktop")("Expand columns in the correct direction in 'rtl'", async () => {
+test.tags("desktop");
+test("Expand columns in the correct direction in 'rtl'", async () => {
     const { editor } = await setupEditor("<p>a[]</p>", {
         config: {
             direction: "rtl",
@@ -145,7 +148,8 @@ test.tags("desktop")("Expand columns in the correct direction in 'rtl'", async (
     expect(".o-we-cell.active").toHaveCount(6);
 });
 
-test.tags("desktop")("add table inside empty list", async () => {
+test.tags("desktop");
+test("add table inside empty list", async () => {
     const { el, editor } = await setupEditor("<ul><li>[]<br></li></ul>");
 
     // open powerbox
@@ -197,7 +201,8 @@ test.tags("desktop")("add table inside empty list", async () => {
     );
 });
 
-test.tags("desktop")("add table inside non-empty list", async () => {
+test.tags("desktop");
+test("add table inside non-empty list", async () => {
     const { el, editor } = await setupEditor("<ul><li>abc[]</li></ul>");
 
     // open powerbox

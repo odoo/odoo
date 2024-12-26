@@ -291,7 +291,7 @@ class Certificate(models.Model):
             return (self.public_key_id or self.private_key_id)._get_public_key_numbers_bytes(formatting=formatting)
 
         # When no keys are set to the certificate, use the self-contained public key from the content
-        return self.env['certificate.key']._get_public_key_numbers_bytes_with_key(
+        return self.env['certificate.key']._numbers_public_key_bytes_with_key(
             self._get_public_key_bytes(encoding='pem'),
             formatting=formatting,
         )

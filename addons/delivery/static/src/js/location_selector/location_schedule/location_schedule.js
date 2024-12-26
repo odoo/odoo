@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Component } from '@odoo/owl';
+import { _t } from '@web/core/l10n/translation';
 
 export class LocationSchedule extends Component {
     static template = 'delivery.locationSelector.schedule';
@@ -24,5 +25,9 @@ export class LocationSchedule extends Component {
      */
     getWeekDay(weekday) {
         return luxon.Info.weekdays()[weekday]
+    }
+
+    get closedLabel() {
+        return _t("Closed");
     }
 }

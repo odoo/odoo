@@ -18,6 +18,7 @@ import {
 import { Component, xml } from "@odoo/owl";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { WebClient } from "@web/webclient/webclient";
+import { tourRecorderState } from "@web_tour/tour_service/tour_recorder/tour_recorder_state";
 
 describe.current.tags("desktop");
 
@@ -424,4 +425,42 @@ test("Edit input after autofocus", async () => {
     expect(".o_button_record").toHaveText("Record (recording keyboard)");
     checkTourSteps([".o_input"]);
     expect(tourRecorder.state.steps.map((s) => s.run)).toEqual(["edit Bismillah"]);
+});
+
+test("Check Tour Recorder State", async () => {
+    await mountWithCleanup(
+        `
+        <div class="o_parent">
+            <div class="o_child_1 click"></div>
+            <div class="o_child_2"></div>
+            <div class="o_child_3"></div>
+        </div>
+    `,
+        { noMainContainer: true }
+    );
+
+    expect(".o_tour_recorder").toHaveCount(1);
+    expect(tourRecorderState.isRecording()).toBe("0");
+    await click(".o_button_record");
+    await animationFrame();
+    expect(tourRecorderState.isRecording()).toBe("1");
+    expect(tourRecorderState.getCurrentTourRecorder()).toEqual([]);
+    await click(".click");
+    await animationFrame();
+    checkTourSteps([".o_child_1"]);
+
+    await click(".o_child_2");
+    await animationFrame();
+    checkTourSteps([".o_child_1", ".o_child_2"]);
+    expect(tourRecorderState.getCurrentTourRecorder()).toEqual([
+        { trigger: ".o_child_1", run: "click" },
+        { trigger: ".o_child_2", run: "click" },
+    ]);
+
+    await click(".o_button_record");
+    await animationFrame();
+    await click(".o_tour_recorder_close_button");
+    await animationFrame();
+    expect(tourRecorderState.getCurrentTourRecorder()).toEqual([]);
+    expect(tourRecorderState.isRecording()).toBe("0");
 });
