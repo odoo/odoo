@@ -4165,6 +4165,11 @@ class AccountMove(models.Model):
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
 
+    def _prepare_tax_lines_for_taxes_computation(self, tax_amls, round_from_tax_lines):
+        if round_from_tax_lines:
+            return [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
+        return []
+
     def _prepare_invoice_aggregated_taxes(
         self,
         filter_invl_to_apply=None,
@@ -4197,10 +4202,7 @@ class AccountMove(models.Model):
         base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product' and (not filter_invl_to_apply or filter_invl_to_apply(x)))
         base_lines = [self._prepare_product_base_line_for_taxes_computation(x) for x in base_amls]
         tax_amls = self.line_ids.filtered(lambda x: x.display_type == 'tax')
-        if round_from_tax_lines:
-            tax_lines = [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
-        else:
-            tax_lines = []
+        tax_lines = self._prepare_tax_lines_for_taxes_computation(tax_amls, round_from_tax_lines)
         AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
         if postfix_function:
             postfix_function(base_lines)
