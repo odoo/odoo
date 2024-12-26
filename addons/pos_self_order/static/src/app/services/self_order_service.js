@@ -469,7 +469,6 @@ export class SelfOrder extends Reactive {
             preset_id: autoSelectedPresets ? this.config.default_preset_id : false,
         });
         this.selectedOrderUuid = newOrder.uuid;
-
         return this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
     }
 
@@ -572,41 +571,6 @@ export class SelfOrder extends Reactive {
             }
         }
     }
-
-    saveOrdersAccessTokens() {
-        if (this.self_ordering_mode === "kiosk") {
-            return new Set();
-        }
-
-        const localStorageKey = `self_order_${this.access_token}`;
-        const orderAccessToken = localStorage.getItem(localStorageKey);
-        const orderAccessTokenSet = new Set();
-
-        if (typeof orderAccessToken === "string") {
-            const oldAccessToken = JSON.parse(orderAccessToken);
-
-            if (oldAccessToken.length) {
-                for (const at of oldAccessToken) {
-                    if (at) {
-                        orderAccessTokenSet.add(at);
-                    }
-                }
-            }
-        }
-
-        this.models["pos.order"]
-            .filter((o) => o.access_token && o.finalized)
-            .forEach((o) => orderAccessTokenSet.add(o.access_token));
-
-        localStorage.setItem(localStorageKey, JSON.stringify([...orderAccessTokenSet]));
-        return orderAccessTokenSet;
-    }
-
-    resetTableIdentifier() {
-        this.router.deleteTableIdentifier();
-        this.currentTable = null;
-    }
-
     initKioskData() {
         if (this.session && this.access_token) {
             this.ordering = true;
@@ -637,7 +601,7 @@ export class SelfOrder extends Reactive {
                 this.access_token &&
                 this.config.self_ordering_mode !== "consultation"
             ) {
-                await this.getOrdersFromServer();
+                await this.getUserDataFromServer();
                 const tableIdentifier = this.router.getTableIdentifier();
 
                 if (tableIdentifier) {
@@ -716,6 +680,7 @@ export class SelfOrder extends Reactive {
                 }
             );
             this.models.loadData(data);
+            this.data.synchronizeLocalDataInIndexedDB();
             for (const order of data["pos.order"]) {
                 this.subscribeToOrderChannel(order);
             }
@@ -725,7 +690,6 @@ export class SelfOrder extends Reactive {
             }
 
             this.currentOrder.recomputeChanges();
-            this.saveOrdersAccessTokens();
             return this.models["pos.order"].getBy("uuid", uuid);
         } catch (error) {
             const order = this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
@@ -734,20 +698,19 @@ export class SelfOrder extends Reactive {
         }
     }
 
-    async getOrdersFromServer() {
-        const localAccessToken = [...this.saveOrdersAccessTokens()];
+    async getUserDataFromServer() {
         const accessTokens = this.models["pos.order"]
             .map((order) => order.access_token)
             .filter(Boolean);
 
-        if (accessTokens.length === 0 && localAccessToken.length === 0) {
+        if (accessTokens.length === 0) {
             return;
         }
 
         try {
-            const data = await rpc(`/pos-self-order/get-orders/`, {
+            const data = await rpc(`/pos-self-order/get-user-data/`, {
                 access_token: this.access_token,
-                order_access_tokens: [...accessTokens, ...localAccessToken],
+                order_access_tokens: accessTokens,
             });
             this.models.loadData(data);
             this.selectedOrderUuid = null;
