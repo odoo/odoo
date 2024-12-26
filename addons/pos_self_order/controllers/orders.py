@@ -67,6 +67,7 @@ class PosSelfOrderController(http.Controller):
     def _generate_return_values(self, order, config_id):
         return {
             'pos.order': order.read(order._load_pos_data_fields(config_id.id), load=False),
+            'res.partner': order.partner_id.read(order.partner_id._load_pos_data_fields(config_id.id), load=False),
             'pos.order.line': order.lines.read(order._load_pos_data_fields(config_id.id), load=False),
             'pos.payment': order.payment_ids.read(order.payment_ids._load_pos_data_fields(order.config_id.id), load=False),
             'pos.payment.method': order.payment_ids.mapped('payment_method_id').read(order.env['pos.payment.method']._load_pos_data_fields(order.config_id.id), load=False),
@@ -115,7 +116,34 @@ class PosSelfOrderController(http.Controller):
                     })
                 lst_price = 0
 
-    @http.route('/pos-self-order/get-orders', auth='public', type='jsonrpc', website=True)
+    @http.route('/pos-self-order/validate-partner', auth='public', type='jsonrpc', website=True)
+    def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None):
+        pos_config = self._verify_pos_config(access_token)
+        existing_partner = pos_config.env['res.partner'].sudo().browse(int(partner_id)) if partner_id else False
+
+        if existing_partner and existing_partner.exists():
+            return {
+                'res.partner': existing_partner.read(existing_partner._load_pos_data_fields(pos_config.id), load=False),
+            }
+
+        state_id = pos_config.env['res.country.state'].browse(int(state_id)) if state_id else False
+        country_id = pos_config.env['res.country'].browse(int(country_id))
+        partner_sudo = request.env['res.partner'].sudo().create({
+            'name': name,
+            'phone': phone,
+            'street': street,
+            'zip': zip,
+            'city': city,
+            'country_id': country_id.id,
+            'state_id': state_id.id if state_id else False,
+            'company_id': pos_config.company_id.id,
+        })
+
+        return {
+            'res.partner': partner_sudo.read(partner_sudo._load_pos_data_fields(pos_config.id), load=False),
+        }
+
+    @http.route('/pos-self-order/get-user-data', auth='public', type='jsonrpc', website=True)
     def get_orders_by_access_token(self, access_token, order_access_tokens):
         pos_config = self._verify_pos_config(access_token)
         session = pos_config.current_session_id
