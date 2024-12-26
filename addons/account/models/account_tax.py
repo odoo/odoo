@@ -145,7 +145,6 @@ class AccountTax(models.Model):
         "Based on Payment: the tax is due as soon as the payment of the invoice is received.")
     cash_basis_transition_account_id = fields.Many2one(string="Cash Basis Transition Account",
         check_company=True,
-        domain="[('deprecated', '=', False)]",
         comodel_name='account.account',
         help="Account used to transition the tax amount for cash basis taxes. It will contain the tax amount as long as the original invoice has not been reconciled ; at reconciliation, this amount cancelled on this account and put on the regular tax account.")
     invoice_repartition_line_ids = fields.One2many(
@@ -3248,7 +3247,7 @@ class AccountTaxRepartitionLine(models.Model):
     document_type = fields.Selection(string="Related to", selection=[('invoice', 'Invoice'), ('refund', 'Refund')], required=True)
     account_id = fields.Many2one(string="Account",
         comodel_name='account.account',
-        domain="[('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
+        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
         check_company=True,
         help="Account on which to post the tax amount")
     tag_ids = fields.Many2many(string="Tax Grids", comodel_name='account.account.tag', domain=[('applicability', '=', 'taxes')], copy=True, ondelete='restrict')

@@ -311,10 +311,10 @@ class AccountFiscalPositionAccount(models.Model):
     company_id = fields.Many2one('res.company', string='Company', related='position_id.company_id', store=True)
     account_src_id = fields.Many2one('account.account', string='Account on Product',
         check_company=True, required=True,
-        domain="[('deprecated', '=', False)]")
+    )
     account_dest_id = fields.Many2one('account.account', string='Account to Use Instead',
         check_company=True, required=True,
-        domain="[('deprecated', '=', False)]")
+    )
 
     _account_src_dest_uniq = models.Constraint(
         'unique (position_id,account_src_id,account_dest_id)',
@@ -411,7 +411,7 @@ class ResPartner(models.Model):
               JOIN res_company line_company ON line_company.id = aml.company_id
         RIGHT JOIN account_account acc ON aml.account_id = acc.id
              WHERE acc.account_type = %s
-               AND NOT acc.deprecated
+               AND acc.active
                AND SPLIT_PART(line_company.parent_path, '/', 1)::int = %s
                AND move.state = 'posted'
           GROUP BY aml.partner_id
@@ -528,11 +528,11 @@ class ResPartner(models.Model):
         string="Currency") # currency of amount currency
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable",
-        domain="[('account_type', '=', 'liability_payable'), ('deprecated', '=', False)]",
+        domain="[('account_type', '=', 'liability_payable')]",
         ondelete='restrict')
     property_account_receivable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Receivable",
-        domain="[('account_type', '=', 'asset_receivable'), ('deprecated', '=', False)]",
+        domain="[('account_type', '=', 'asset_receivable')]",
         ondelete='restrict')
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
         string="Fiscal Position",

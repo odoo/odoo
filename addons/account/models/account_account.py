@@ -51,7 +51,7 @@ class AccountAccount(models.Model):
     code = fields.Char(string="Code", size=64, tracking=True, compute='_compute_code', search='_search_code', inverse='_inverse_code')
     code_store = fields.Char(company_dependent=True)
     placeholder_code = fields.Char(string="Display code", compute='_compute_placeholder_code', search='_search_placeholder_code')
-    deprecated = fields.Boolean(default=False, tracking=True)
+    active = fields.Boolean(default=True, tracking=True)
     used = fields.Boolean(compute='_compute_used', search='_search_used')
     account_type = fields.Selection(
         selection=[
@@ -771,7 +771,7 @@ class AccountAccount(models.Model):
         domain = [
             *self.env['account.move.line']._check_company_domain(company_id),
             ('partner_id', '=', partner_id),
-            ('account_id.deprecated', '=', False),
+            ('account_id.active', '=', True),
             ('date', '>=', fields.Date.add(fields.Date.today(), days=-365 * 2)),
         ]
         if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):

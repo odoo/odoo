@@ -3892,7 +3892,6 @@ class AccountMove(models.Model):
         domain = [
             *self.env['account.move.line']._check_company_domain(company_id),
             ('partner_id', '=', partner_id),
-            ('account_id.deprecated', '=', False),
             ('date', '>=', date.today() - timedelta(days=365 * 2)),
         ]
         if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
@@ -5133,8 +5132,8 @@ class AccountMove(models.Model):
                     move.currency_id.name
                 ))
 
-            if move.line_ids.account_id.filtered(lambda account: account.deprecated) and not self._context.get('skip_account_deprecation_check'):
-                validation_msgs.add(_("A line of this move is using a deprecated account, you cannot post it."))
+            if move.line_ids.account_id.filtered(lambda account: not account.active) and not self._context.get('skip_account_deprecation_check'):
+                validation_msgs.add(_("A line of this move is using a archived account, you cannot post it."))
 
             # If the field autocheck_on_post is set, we want the checked field on the move to be checked
             if move.journal_id.autocheck_on_post:

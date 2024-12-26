@@ -103,7 +103,7 @@ class ResCompany(models.Model):
     user_hard_lock_date = fields.Date(compute='_compute_user_hard_lock_date')
     transfer_account_id = fields.Many2one('account.account',
         check_company=True,
-        domain="[('reconcile', '=', True), ('account_type', '=', 'asset_current'), ('deprecated', '=', False)]", string="Inter-Banks Transfer Account", help="Intermediary account used when moving money from a liquidity account to another")
+        domain="[('reconcile', '=', True), ('account_type', '=', 'asset_current')]", string="Inter-Banks Transfer Account", help="Intermediary account used when moving money from a liquidity account to another")
     expects_chart_of_accounts = fields.Boolean(string='Expects a Chart of Accounts', default=True)
     chart_template = fields.Selection(selection='_chart_template_selection')
     bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts')
@@ -125,14 +125,12 @@ class ResCompany(models.Model):
         comodel_name='account.account',
         string="Gain Exchange Rate Account",
         check_company=True,
-        domain="[('deprecated', '=', False),\
-                ('internal_group', '=', 'income')]")
+        domain="[('internal_group', '=', 'income')]")
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Loss Exchange Rate Account",
         check_company=True,
-        domain="[('deprecated', '=', False), \
-                ('account_type', '=', 'expense')]")
+        domain="[('account_type', '=', 'expense')]")
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
@@ -219,7 +217,6 @@ class ResCompany(models.Model):
     account_cash_basis_base_account_id = fields.Many2one(
         comodel_name='account.account',
         check_company=True,
-        domain=[('deprecated', '=', False)],
         string="Base Tax Received Account",
         help="Account that will be set on lines created in cash basis journal entry and used to keep track of the "
              "tax base amount.")

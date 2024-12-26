@@ -594,7 +594,7 @@ class TestAccountAccount(TestAccountMergeCommon):
 
             - Creates: partner and a account move of that partner.
             - Checks if the most frequent account for the partner matches created account (with recent move).
-            - Sets the account as deprecated and checks that it no longer appears in the suggestions.
+            - Sets the account as archived and checks that it no longer appears in the suggestions.
 
             * since tested function takes into account last 2 years, we use freeze_time
         """
@@ -614,14 +614,14 @@ class TestAccountAccount(TestAccountMergeCommon):
         )
         self.assertEqual(account.id, results_1[0], "Account with most account_moves should be listed first")
 
-        account.deprecated = True
-        account.flush_recordset(['deprecated'])
+        account.active = False
+        account.flush_recordset(['active'])
         results_2 = self.env['account.account']._get_most_frequent_accounts_for_partner(
             company_id=self.env.company.id,
             partner_id=partner.id,
             move_type="out_invoice"
         )
-        self.assertFalse(account.id in results_2, "Deprecated account should NOT appear in account suggestions")
+        self.assertFalse(account.id in results_2, "Archived account should NOT appear in account suggestions")
 
     def test_placeholder_code(self):
         """ Test that the placeholder code is '{code_in_company} ({company})'

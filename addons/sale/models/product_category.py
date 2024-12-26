@@ -9,7 +9,6 @@ class ProductCategory(models.Model):
         company_dependent=True,
         string="Downpayment Account",
         domain=[
-            ('deprecated', '=', False),
             ('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card', 'off_balance'))
         ],
         help="This account will be used on Downpayment invoices.",
