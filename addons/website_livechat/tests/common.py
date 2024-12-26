@@ -31,6 +31,7 @@ class TestLivechatCommon(TransactionCaseWithUserDemo):
             'name': 'The basic channel',
             'user_ids': [(6, 0, [self.operator.id])]
         })
+        self.env.ref("website.default_website").channel_id = self.livechat_channel.id
 
         self.max_sessions_per_operator = 5
         visitor_vals = {
@@ -60,13 +61,7 @@ class TestLivechatCommon(TransactionCaseWithUserDemo):
 
         self.send_feedback_url = f"{self.livechat_base_url}/im_livechat/feedback"
         self.leave_session_url = f"{self.livechat_base_url}/im_livechat/visitor_leave_session"
-
-        # override the get_available_users to return only Michel as available
-        def _compute_available_operator_ids(channel_self):
-            for record in channel_self:
-                record.available_operator_ids = self.operator
-
-        self.patch(type(self.env['im_livechat.channel']), '_compute_available_operator_ids', _compute_available_operator_ids)
+        self.env["bus.presence"].create({"user_id": self.operator.id, "status": "online"})
 
         # override the _get_visitor_from_request to return self.visitor
         self.target_visitor = self.visitor

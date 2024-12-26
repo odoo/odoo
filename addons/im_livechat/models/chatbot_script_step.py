@@ -355,11 +355,8 @@ class ChatbotScriptStep(models.Model):
 
         if discuss_channel.livechat_channel_id:
             # sudo: res.users - visitor can access operator of their channel
-            # sudo: res.lang - visitor can access their own lang
             human_operator = discuss_channel.livechat_channel_id.sudo()._get_operator(
-                lang=discuss_channel.livechat_visitor_id.sudo().lang_id.code
-                if hasattr(discuss_channel, "livechat_visitor_id")
-                else None,
+                lang=self.env.context.get("lang"),
                 country_id=discuss_channel.country_id.id,
                 expertises=self.operator_expertise_ids,
                 users=users,
