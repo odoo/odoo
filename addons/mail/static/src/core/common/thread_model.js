@@ -432,12 +432,12 @@ export class Thread extends Record {
         try {
             const { data, messages } = await this.fetchMessagesData({ after, around, before });
             this.store.insert(data, { html: true });
-            this.isLoaded = true;
             return this.store["mail.message"].insert(messages.reverse());
         } catch (e) {
             this.hasLoadingFailed = true;
             throw e;
         } finally {
+            this.isLoaded = true;
             this.status = "ready";
         }
     }
