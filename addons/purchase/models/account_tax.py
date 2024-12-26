@@ -13,7 +13,7 @@ class AccountTax(models.Model):
         taxes_to_compute -= used_taxes
 
         if taxes_to_compute:
-            self.env['purchase.order.line'].flush_model(['taxes_id'])
+            self.env['purchase.order.line'].flush_model(['tax_ids'])
             self.env.cr.execute("""
                 SELECT id
                 FROM account_tax
