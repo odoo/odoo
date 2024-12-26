@@ -336,7 +336,7 @@ class TestImportModule(odoo.tests.TransactionCase):
 
     def test_import_and_update_module(self):
         self.test_user = new_test_user(
-            self.env, login='Admin',
+            self.env, login='Admin_',
             groups='base.group_user,base.group_system',
             name='Admin',
         )
