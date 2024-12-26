@@ -814,6 +814,10 @@ class ProjectTask(models.Model):
         if not_project_user:
             vals_list = [{k: v for k, v in vals.items() if k in self.SELF_READABLE_FIELDS} for vals in vals_list]
 
+        active_users = self.env['res.users']
+        has_default_users = 'user_ids' in default
+        if not has_default_users:
+            active_users = self.user_ids.filtered('active')
         milestone_mapping = self.env.context.get('milestone_mapping', {})
         for task, vals in zip(self, vals_list):
 
@@ -831,6 +835,9 @@ class ProjectTask(models.Model):
                     'parent_id': False,
                 }
                 vals['child_ids'] = [Command.create(child_id.copy_data(default)[0]) for child_id in task.child_ids]
+            if not has_default_users and vals['user_ids']:
+                active_users = task.user_ids & active_users
+                vals['user_ids'] = [Command.set(active_users.ids)]
         return vals_list
 
     def _create_task_mapping(self, copied_tasks):

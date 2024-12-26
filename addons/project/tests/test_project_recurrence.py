@@ -325,3 +325,43 @@ class TestProjectRecurrence(TransactionCase):
         self.assertEqual(datetime(2023, 1, 10, 0, 0), tasks_copy[0].child_ids.child_ids.date_deadline)
         self.assertEqual(datetime(2023, 1, 11, 0, 0), tasks_copy[1].date_deadline)
         self.assertEqual(datetime(2023, 1, 12, 0, 0), tasks_copy[1].child_ids.date_deadline)
+
+    def test_recurrent_tasks_without_archive_user(self):
+        task = self.env['project.task'].create({
+            'project_id': self.project_recurring.id,
+            'name': 'Test task',
+            'stage_id': self.stage_b.id,
+            'user_ids': [Command.set([self.user.id, self.user_projectuser.id])],
+            'recurring_task': True,
+            'repeat_type': 'forever',
+        })
+        self.user_projectuser.action_archive()
+        task.write({'state': '1_done'})
+        self.assertEqual((task.recurrence_id.task_ids - task).user_ids, self.user)
+
+    def test_recurrent_sub_tasks_without_archive_user(self):
+        """
+        Test the behavior of recurring tasks when a user assigned to a child task is archived.
+        Steps:
+        1. Create a parent task with a recurring rule.
+        2. Add a child task with assigned users.
+        3. Archive one of the users assigned to the child task.
+        4. Complete the parent task to generate a recurring task.
+        5. Verify the new task excludes archived users.
+        """
+        parent_task = self.env['project.task'].create({
+            'project_id': self.project_recurring.id,
+            'name': 'Task A',
+            'stage_id': self.stage_b.id,
+            'recurring_task': True,
+            'repeat_type': 'forever',
+            'child_ids': [Command.create({
+                'project_id': self.project_recurring.id,
+                'name': 'Sub task A',
+                'stage_id': self.stage_b.id,
+                'user_ids': [Command.set([self.user.id, self.user_projectuser.id])],
+            })],
+        })
+        self.user_projectuser.action_archive()
+        parent_task.write({'state': '1_done'})
+        self.assertEqual((parent_task.recurrence_id.task_ids - parent_task).child_ids.user_ids, self.user)
