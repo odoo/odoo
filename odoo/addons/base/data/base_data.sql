@@ -20,7 +20,7 @@ CREATE TABLE res_users (
     partner_id integer, -- references res_partner,
     active boolean default True,
     create_date timestamp without time zone,
-    login varchar(64) NOT NULL UNIQUE,
+    login varchar(64) NOT NULL,
     password varchar default null,
     primary key(id)
 );

@@ -7,6 +7,7 @@ from unittest.mock import patch
 import odoo
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import tagged
+from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 
@@ -98,3 +99,35 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
             u.create_date = datetime.now() - timedelta(days=5, minutes=10)
         with self.registry.cursor() as cr:
             users.with_env(users.env(cr=cr)).send_unregistered_user_reminder(after_days=5, batch_size=100)
+
+    @mute_logger('odoo.sql_db', 'odoo.addons.auth_signup.controllers.main')
+    def test_signup_with_similar_user(self):
+        self._activate_free_signup()
+
+        def web_signup(url, data, login):
+            self.authenticate(None, None)
+            data.update({'login': login, 'csrf_token': self.csrf_token()})
+            res = self.url_open(url, data=data)
+            self.logout()
+            return res.content
+
+        # Values from login form
+        payload = {
+            'login': 'unique@example.com',
+            'name': 'user',
+            'password': 'mypassword',
+            'confirm_password': 'mypassword',
+        }
+
+        url_free_signup = self._get_free_signup_url()
+
+        # Signup a first time with a unique login
+        res = web_signup(url_free_signup, payload, 'unique@example.com')
+        self.assertIn(b'You are logged in.', res)
+
+        # Try to signup with similar logins (case insensitive)
+        similar_logins = ['Unique@example.com', 'UNIQUE@example.com', '  unique@Example.com  ']
+        for login in similar_logins:
+            with self.subTest(login=login):
+                res = web_signup(url_free_signup, payload, login)
+                self.assertIn(b'Another user is already registered using this email address.', res)

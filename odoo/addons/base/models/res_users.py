@@ -260,8 +260,8 @@ class ResUsers(models.Model):
     view_group_hierarchy = fields.Json(string='Technical field for user group setting', store=False, copy=False, default=_default_view_group_hierarchy)
     role = fields.Selection([('group_user', 'User'), ('group_system', 'Administrator')], compute='_compute_role', readonly=False, string="Role")
 
-    _login_key = models.Constraint("UNIQUE (login)",
-        'You can not have two users with the same login!')
+    _login_key = models.UniqueIndex("(lower(login))",
+        'You can not have two users with the similar login!')
 
     def init(self):
         cr = self.env.cr
@@ -728,7 +728,10 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_login_domain(self, login):
-        return Domain('login', '=', login)
+        return Domain.custom(to_sql=lambda table: SQL(
+            "lower(%s.login) = lower(%s)",
+            table, login,
+        ))
 
     @api.model
     def _get_email_domain(self, email):
@@ -739,10 +742,10 @@ class ResUsers(models.Model):
         return self._order
 
     def _login(self, credential, user_agent_env):
-        login = credential['login']
+        login = credential['login'].strip()
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
         try:
-            with self._assert_can_auth(user=login):
+            with self._assert_can_auth(user=login.lower()):
                 user = self.sudo().search(self._get_login_domain(login), order=self._get_login_order(), limit=1)
                 if not user:
                     # ruff: noqa: TRY301
