@@ -30,19 +30,6 @@ export class ChatBotService {
         this.bus = new EventBus();
         this.livechatService = services["im_livechat.livechat"];
         this.store = services["mail.store"];
-        services["mail.store"].isReady.then(async () => {
-            if (this.chatbot) {
-                await this.livechatService.thread.isLoadedDeferred;
-                // wait for messages to be fully inserted
-                await new Promise(setTimeout);
-                this.start();
-            }
-        });
-        this.livechatService.onStateChange(SESSION_STATE.CREATED, () => {
-            if (this.chatbot) {
-                this.start();
-            }
-        });
         this.livechatService.onStateChange(SESSION_STATE.NONE, () => this.stop());
         this.bus.addEventListener("MESSAGE_POST", async ({ detail: message }) => {
             await this.chatbot?.processAnswer(message);
@@ -57,7 +44,9 @@ export class ChatBotService {
      */
     async start() {
         if (this.chatbot.thread.isLastMessageFromCustomer) {
-            await this.chatbot?.processAnswer(this.livechatService.thread.newestMessage);
+            await this.chatbot?.processAnswer(
+                this.livechatService.thread.newestPersistentOfAllMessage
+            );
         }
         if (!this.chatbot.currentStep?.expectAnswer || this.chatbot.currentStep?.completed) {
             this._triggerNextStep();
