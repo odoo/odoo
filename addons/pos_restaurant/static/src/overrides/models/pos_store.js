@@ -4,6 +4,8 @@ import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment
 import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
+import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
+import { TipScreen } from "@pos_restaurant/app/tip_screen/tip_screen";
 
 const NON_IDLE_EVENTS = [
     "mousemove",
@@ -134,7 +136,10 @@ patch(PosStore.prototype, {
             isDraftOrder = true;
         }
 
-        if (this.get_order()?.finalized) {
+        if (
+            this.get_order()?.finalized &&
+            ![ReceiptScreen, TipScreen].includes([this.mainScreen.component])
+        ) {
             this.add_new_order();
         }
 

@@ -15,4 +15,12 @@ patch(DataServiceOptions.prototype, {
             },
         };
     },
+    get pohibitedAutoLoadedModels() {
+        return [
+            ...super.pohibitedAutoLoadedModels,
+            "loyalty.program",
+            "loyalty.rule",
+            "loyalty.reward",
+        ];
+    },
 });
