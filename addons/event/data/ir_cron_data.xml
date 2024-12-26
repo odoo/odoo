@@ -7,7 +7,7 @@
         <field name="state">code</field>
         <field name="code">model.schedule_communications(autocommit=True)</field>
         <field name="user_id" ref="base.user_root"/>
-        <field name="interval_number">1</field>
+        <field name="interval_number">24</field>
         <field name="interval_type">hours</field>
         <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=15)).strftime('%Y-%m-%d %H:%M:%S')" />
     </record>
