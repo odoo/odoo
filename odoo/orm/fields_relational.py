@@ -108,7 +108,7 @@ class _Relational(Field[M], typing.Generic[M]):
         if self.check_company:
             field_to_check = None
             if self.company_dependent:
-                cids = '[allowed_company_ids[0]]'
+                cids = '[companies.active_id]'
             elif self.model_name == 'res.company':
                 # when using check_company=True on a field on 'res.company', the
                 # company_id comes from the id of the current record
