@@ -26,14 +26,16 @@
                             <field name="company_id" readonly="1" groups="base.group_multi_company" />
                             <field name="config_ids" widget="many2many_tags" placeholder="No Point of Sale" />
                         </group>
-                        <group>
-                            <field name="hide_use_payment_terminal" invisible="1"/>
-                            <field name="hide_qr_code_method" invisible="1"/>
-                            <field name="payment_method_type" />
-                            <field name="use_payment_terminal" string="Integrate with" />
-                            <field name="qr_code_method" invisible="hide_qr_code_method" required="payment_method_type == 'qr_code'"/>
+                        <div>
+                            <group>
+                                <field name="hide_use_payment_terminal" invisible="1"/>
+                                <field name="hide_qr_code_method" invisible="1"/>
+                                <field name="payment_method_type" />
+                                <field name="use_payment_terminal" string="Integrate with" />
+                                <field name="qr_code_method" invisible="hide_qr_code_method" required="payment_method_type == 'qr_code'"/>
+                            </group>
                             <widget name="pos_payment_provider_cards" invisible="use_payment_terminal or payment_method_type != 'terminal'" />
-                        </group>
+                        </div>
                     </group>
                 </sheet>
             </form>

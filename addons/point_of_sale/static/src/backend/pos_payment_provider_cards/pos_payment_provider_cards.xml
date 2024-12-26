@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="point_of_sale.PosPaymentProviderCards">
-        <div class="container gap-0" t-ref="cards_container">
-            <div class="row">
-                <div t-foreach="state.providers" t-as="provider" t-key="provider.selection" t-att-class="this.env.inDialog ? 'col-12' : 'col-xl-6 col-xxl-4'" class="p-1">
-                    <div class="d-flex border rounded justify-content-between w-100 h-100 p-1 gap-1">
-                        <div class="d-inline-block position-relative opacity-trigger-hover">
-                            <img class="img" style="max-width: 65px;" t-att-alt="provider.provider" t-att-src="`/point_of_sale/static/img/providers/${provider.selection}.png`" />
-                        </div>
-                        <div class="text-start flex-grow-1">
-                            <span class="mb-0 fs-6" t-esc="provider.provider" />
-                        </div>
-                        <div class="d-flex justify-content-end align-items-end">
-                            <button t-if="provider.state === 'uninstalled'" t-on-click="() => this.installModule(provider.id)" class="btn btn-sm btn-primary ms-auto">Install</button>
-                            <button t-else="" t-on-click="() => this.setupProvider(provider.id)" class="btn btn-sm btn-secondary ms-auto">Setup</button>
-                        </div>
-                    </div>
+        <div class="d-flex flex-wrap gap-1" t-ref="cards_container">
+            <div t-foreach="state.providers"
+                 t-as="provider"
+                 t-key="provider.selection"
+                 class="d-flex border rounded justify-content-between h-100 p-1 gap-1"
+                 t-att-class="this.env.inDialog ? 'col-12' : 'col-5 col-xl-5 col-xxl-4'">
+                <div class="d-inline-block position-relative opacity-trigger-hover">
+                    <img class="img" style="max-width: 65px;" t-att-alt="provider.provider" t-att-src="`/point_of_sale/static/img/providers/${provider.selection}.png`" />
+                </div>
+                <div class="d-flex flex-column justify-content-between w-100">
+                    <span class="mb-0 fs-6 fw-bold" t-esc="provider.provider" />
+                    <button t-if="provider.state === 'uninstalled'" t-on-click="() => this.installModule(provider.id)" class="btn btn-sm btn-primary ms-auto align-self-end">Install</button>
+                    <button t-else="" t-on-click="() => this.setupProvider(provider.id)" class="btn btn-sm btn-secondary ms-auto align-self-end">Setup</button>
                 </div>
             </div>
         </div>
