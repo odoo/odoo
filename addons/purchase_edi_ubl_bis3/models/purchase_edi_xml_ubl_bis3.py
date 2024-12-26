@@ -77,9 +77,9 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         }
 
     def _get_tax_category_vals(self, order, order_line):
-        if not order_line.taxes_id:
+        if not order_line.tax_ids:
             return None
-        tax = order_line.taxes_id[0]
+        tax = order_line.tax_ids[0]
         customer = order.company_id.partner_id.commercial_partner_id
         supplier = order.partner_id
         tax_unece_codes = self._get_tax_unece_codes(customer, supplier, tax)

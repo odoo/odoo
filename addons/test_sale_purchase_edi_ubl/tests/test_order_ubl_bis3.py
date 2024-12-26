@@ -57,13 +57,13 @@ class TestOrderEdiUbl(TestAccountEdiUblCii):
                 'price_unit': 30.0,
                 'product_uom_id': self.uom_units.id,
                 'product_qty': 10.0,
-                'taxes_id': self.purchase_tax.ids,
+                'tax_ids': self.purchase_tax.ids,
             }, {
                 'product_id': self.displace_prdct.id,
                 'price_unit': 30.0,
                 'product_uom_id': self.uom_units.id,
                 'product_qty': 50.0,
-                'taxes_id': self.purchase_tax.ids,
+                'tax_ids': self.purchase_tax.ids,
             },
         ]
         xml_attachment = self.get_xml_attachment_of_po(line_vals)
@@ -87,7 +87,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii):
             line['tax_ids'] = related_sales_tax.ids
             line['price_unit'] = line_product.list_price
             del line['product_qty']
-            del line['taxes_id']
+            del line['tax_ids']
 
         self.assertRecordValues(so.order_line, line_vals)
 

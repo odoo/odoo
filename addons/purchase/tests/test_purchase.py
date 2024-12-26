@@ -704,10 +704,10 @@ class TestPurchase(AccountTestInvoicingCommon):
             line.product_id = product_no_tax
         po = po_form.save()
         self.assertRecordValues(po.order_line, [
-            {'product_id': product_all_taxes.id, 'taxes_id': tax_xx.ids},
-            {'product_id': product_no_xx_tax.id, 'taxes_id': tax_x.ids},
-            {'product_id': product_no_branch_tax.id, 'taxes_id': (tax_a + tax_b).ids},
-            {'product_id': product_no_tax.id, 'taxes_id': []},
+            {'product_id': product_all_taxes.id, 'tax_ids': tax_xx.ids},
+            {'product_id': product_no_xx_tax.id, 'tax_ids': tax_x.ids},
+            {'product_id': product_no_branch_tax.id, 'tax_ids': (tax_a + tax_b).ids},
+            {'product_id': product_no_tax.id, 'tax_ids': []},
         ])
 
     @freeze_time('2024-07-08')

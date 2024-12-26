@@ -582,7 +582,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
                 'analytic_distribution': {self.analytic_account.id: 100},
                 'product_id': self.product_order.id,
                 'product_qty': 2,  # plural value to check if the price is multiplied more than once
-                'taxes_id': [included_tax.id],  # set the included tax
+                'tax_ids': [included_tax.id],  # set the included tax
                 'price_unit': self.product_order.standard_price,
                 'currency_id': self.env.company.currency_id.id,
             })],

@@ -513,7 +513,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
                     'product_qty': 1.0,
                     'product_uom_id': self.product_a.uom_id.id,
                     'price_unit': 100.0,
-                    'taxes_id': False,
+                    'tax_ids': False,
                 }),
                 (0, 0, {
                     'name': self.landed_cost.name,

@@ -271,7 +271,7 @@ class PurchaseRequisitionLine(models.Model):
             'product_uom_id': self.product_id.uom_id.id,
             'product_qty': product_qty,
             'price_unit': price_unit,
-            'taxes_id': [(6, 0, taxes_ids)],
+            'tax_ids': [(6, 0, taxes_ids)],
             'date_planned': date_planned,
             'analytic_distribution': self.analytic_distribution,
         }
