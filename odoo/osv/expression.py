@@ -686,7 +686,7 @@ class expression(object):
             :attr result: the result of the parsing, as a pair (query, params)
             :attr query: Query object holding the final result
         """
-        # TODO deprecate
+        warnings.warn("Since 19.0, expression() is deprecated, use Domain or _where_calc instead", DeprecationWarning)
         self._unaccent = model.pool.unaccent
         self._has_trigram = model.pool.has_trigram
         self.root_model = model
