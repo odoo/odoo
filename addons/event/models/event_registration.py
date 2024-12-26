@@ -318,9 +318,10 @@ class EventRegistration(models.Model):
             return
 
         # either trigger the cron, either run schedulers immediately (scaling choice)
-        async_scheduler = self.env['ir.config_parameter'].sudo().get_param('event.event_mail_async')
+        async_scheduler = self.env['ir.config_parameter'].sudo().get_param('event.event_mail_async', True)
         if async_scheduler:
             self.env.ref('event.event_mail_scheduler')._trigger()
+            self.env.ref('mail.ir_cron_mail_scheduler_action')._trigger()
         else:
             # we could simply call _create_missing_mail_registrations and let cron do their job
             # but it currently leads to several delays. We therefore call execute until
