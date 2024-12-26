@@ -26,8 +26,6 @@ IGNORED_IN_EXPRESSION = {
     'context',
     'companies',
     'context_today',
-    'allowed_company_ids',
-    'current_company_id',
     'time',
     'datetime',
     'relativedelta',

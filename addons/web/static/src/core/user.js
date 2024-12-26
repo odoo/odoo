@@ -200,7 +200,6 @@ export function _makeUser(session) {
             return {
                 uid: this.userId,
                 companies: companyEvalContext,
-                allowed_company_ids: this.context.allowed_company_ids, // For backwards compatibility cases. Deprecated as of 19.0.
             };
         },
         get lang() {
