@@ -18,7 +18,7 @@ class StockLot(models.Model):
         help='This is the date on which the goods with this Serial Number should be removed from the stock. This date will be used in FEFO removal strategy.')
     alert_date = fields.Datetime(string='Alert Date', compute='_compute_dates', store=True, readonly=False,
         help='Date to determine the expired lots and serial numbers using the filter "Expiration Alerts".')
-    product_expiry_alert = fields.Boolean(compute='_compute_product_expiry_alert', help="The Expiration Date has been reached.")
+    product_expiry_alert = fields.Boolean(compute='_compute_product_expiry_alert', store=True, help="The Expiration Date has been reached.")
     product_expiry_reminded = fields.Boolean(string="Expiry has been reminded")
 
     @api.depends('expiration_date')
