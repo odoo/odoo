@@ -38,6 +38,17 @@
                                 </div>
                             </div>
                         </setting>
+                        <setting string="Import/Export"
+                                 company_dependent="1">
+                            <div id="india_export" class="row">
+                                <label string="IEC Number" for="l10n_in_iec_number" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_in_iec_number" required="l10n_in_lut_number"/>
+                                <label string="LUT Number" for="l10n_in_lut_number" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_in_lut_number" required="l10n_in_lut_expiration_date"/>
+                                <label string="LUT Valid up to" for="l10n_in_lut_expiration_date" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_in_lut_expiration_date" required="l10n_in_lut_number"/>
+                            </div>
+                        </setting>
                         <t invisible="not l10n_in_is_gst_registered">
                             <setting name="india_production_setting"
                                      company_dependent="1"

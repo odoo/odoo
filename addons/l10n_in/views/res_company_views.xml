@@ -16,6 +16,9 @@
             </xpath>
             <xpath expr="//field[@name='vat']" position="after">
                 <field name="l10n_in_pan" invisible="country_code != 'IN'"/>
+                <field name="l10n_in_iec_number" invisible="country_code != 'IN'" required="l10n_in_lut_number"/>
+                <field name="l10n_in_lut_number" invisible="country_code != 'IN'" required="l10n_in_lut_expiration_date"/>
+                <field name="l10n_in_lut_expiration_date" invisible="country_code != 'IN'" required="l10n_in_lut_number"/>
             </xpath>
             <xpath expr="//sheet" position="before">
                 <div class="alert alert-warning mt-1 mb-1" role="alert" invisible="not l10n_in_gst_state_warning or country_code != 'IN'">

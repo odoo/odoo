@@ -59,6 +59,20 @@ class ResConfigSettings(models.TransientModel):
     l10n_in_fetch_vendor_edi_feature = fields.Boolean(string="Fetch Vendor E-Invoiced Document")
     l10n_in_enet_vendor_batch_payment_feature = fields.Boolean(string="ENet Vendor Batch Payment")
 
+    # Import/Export settings
+    l10n_in_iec_number = fields.Char(
+        related='company_id.l10n_in_iec_number',
+        readonly=False
+    )
+    l10n_in_lut_number = fields.Char(
+        related='company_id.l10n_in_lut_number',
+        readonly=False
+    )
+    l10n_in_lut_expiration_date = fields.Date(
+        related='company_id.l10n_in_lut_expiration_date',
+        readonly=False
+    )
+
     module_l10n_in_reports = fields.Boolean("GST E-Filing & Matching")
     module_l10n_in_edi = fields.Boolean("Indian Electronic Invoicing")
     module_l10n_in_ewaybill = fields.Boolean("Indian Electronic Waybill")

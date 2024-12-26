@@ -1,5 +1,6 @@
 import pytz
 from stdnum.in_ import pan, gstin
+from datetime import timedelta, datetime, time
 
 from odoo import _, api, fields, models 
 from odoo.exceptions import ValidationError
@@ -38,6 +39,9 @@ class ResCompany(models.Model):
     )
     l10n_in_pan_type = fields.Char(string="PAN Type", compute="_compute_l10n_in_pan_type")
     l10n_in_gst_state_warning = fields.Char(related="partner_id.l10n_in_gst_state_warning")
+    l10n_in_iec_number = fields.Char(string="IEC No.")
+    l10n_in_lut_number = fields.Char(string="LUT No.")
+    l10n_in_lut_expiration_date = fields.Date(string="LUT valid up to", help="Date until which the LUT is valid.")
 
     # TDS/TCS settings
     l10n_in_tds_feature = fields.Boolean(
@@ -141,11 +145,37 @@ class ResCompany(models.Model):
     def onchange_vat(self):
         self.partner_id.onchange_vat()
 
+    def _update_l10n_in_export_sez_fiscal_position(self):
+        """Update fiscal positions based on LUT and IEC numbers."""
+        for company in self:
+            ChartTemplate = self.env['account.chart.template'].with_company(company)
+            lut_sez_fp = ChartTemplate.ref('fiscal_position_in_lut_sez')
+            export_sez_fp = ChartTemplate.ref('fiscal_position_in_export_sez_in')
+            if company.l10n_in_iec_number and not export_sez_fp.auto_apply and not company.l10n_in_lut_number:
+                export_sez_fp.write({'auto_apply': True})
+            elif export_sez_fp.auto_apply:
+                export_sez_fp.write({'auto_apply': False})
+
+            if company.l10n_in_lut_number and company.l10n_in_lut_expiration_date:
+                if not lut_sez_fp.auto_apply:
+                    lut_sez_fp.write({'auto_apply': True})
+                    export_sez_fp.write({'auto_apply': False})
+                user_tz = pytz.timezone(self.env.user.tz)
+                lut_cron_trigger_datetime = user_tz.localize(datetime.combine(company.l10n_in_lut_expiration_date + timedelta(days=1), time.min))
+                self.env.ref('l10n_in.ir_cron_update_lut_status')._trigger((lut_cron_trigger_datetime.astimezone(pytz.utc)).replace(tzinfo=None))
+            elif lut_sez_fp.auto_apply:
+                lut_sez_fp.write({'auto_apply': False})
+
     @api.constrains('l10n_in_pan')
     def _check_l10n_in_pan(self):
         for record in self:
             if record.l10n_in_pan and not pan.is_valid(record.l10n_in_pan):
                 raise ValidationError(_('The entered PAN seems invalid. Please enter a valid PAN.'))
+
+    @api.constrains('l10n_in_lut_expiration_date')
+    def _check_l10n_in_lut_expiration_date(self):
+        if self.l10n_in_lut_expiration_date and self.l10n_in_lut_expiration_date < fields.Date.today():
+            raise ValidationError(_('Please enter a valid LUT Expiration Date.'))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -162,6 +192,8 @@ class ResCompany(models.Model):
         if (vals.get('state_id') or vals.get('country_id')) and not self.env.context.get('delay_account_group_sync'):
             # Update Fiscal Positions for companies setting up state for the first time
             self._update_l10n_in_fiscal_position()
+        if 'l10n_in_iec_number' in vals or 'l10n_in_lut_number' in vals or vals.get('l10n_in_lut_expiration_date'):
+            self._update_l10n_in_export_sez_fiscal_position()
         return res
 
     def _update_l10n_in_fiscal_position(self):
@@ -179,3 +211,15 @@ class ResCompany(models.Model):
     def action_update_state_as_per_gstin(self):
         self.ensure_one()
         self.partner_id.action_update_state_as_per_gstin()
+
+    def _cron_update_lut_status(self):
+        """Schedule the cron job to deactivate LUT after expiration."""
+        tz = pytz.timezone("Asia/Kolkata")
+        today_date = fields.Datetime.now().astimezone(tz).replace(tzinfo=None).date()
+        companies = self.search([
+            ('l10n_in_lut_number', '!=', False),
+            ('l10n_in_lut_expiration_date', '<', today_date),
+        ])
+        for company in companies:
+            company.write({'l10n_in_lut_number': False, 'l10n_in_lut_expiration_date': False})
+            company._update_l10n_in_export_sez_fiscal_position()

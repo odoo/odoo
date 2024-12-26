@@ -76,7 +76,6 @@ class AccountChartTemplate(models.AbstractModel):
             'fiscal_position_in_export_sez_in': {
                 'name': _('Export/SEZ'),
                 'sequence': 3,
-                'auto_apply': True,
                 'note': _('SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX.'),
                 'tax_ids': (
                     self._get_l10n_in_fiscal_tax_vals(trailing_id='_sez_exp')
@@ -118,3 +117,4 @@ class AccountChartTemplate(models.AbstractModel):
         if template_code == 'in':
             company = company or self.env.company
             company._update_l10n_in_is_gst_registered()
+            company._update_l10n_in_export_sez_fiscal_position()

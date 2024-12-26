@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_update_lut_status" model="ir.cron">
+        <field name="name">Indian Accounting: Update LUT Status</field>
+        <field name="model_id" ref="model_res_company"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_update_lut_status()</field>
+        <field name="interval_number">9999</field>
+        <field name="interval_type">months</field>
+    </record>
+</odoo>
