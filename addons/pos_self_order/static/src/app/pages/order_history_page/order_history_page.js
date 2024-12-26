@@ -1,4 +1,4 @@
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -10,16 +10,6 @@ export class OrdersHistoryPage extends Component {
     async setup() {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
-        this.state = useState({
-            loadingProgress: true,
-        });
-
-        await this.loadOrder();
-    }
-
-    async loadOrder() {
-        await this.selfOrder.getOrdersFromServer();
-        this.state.loadingProgress = false;
     }
 
     get orders() {

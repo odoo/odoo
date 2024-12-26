@@ -16,4 +16,4 @@ class PosLoadMixin(models.AbstractModel):
     def _load_pos_self_data(self, data):
         domain = self._load_pos_self_data_domain(data)
         fields = self._load_pos_self_data_fields(data['pos.config'][0]['id'])
-        return self.search_read(domain, fields, load=False)
+        return self.search_read(domain, fields, load=False) if domain is not False else []

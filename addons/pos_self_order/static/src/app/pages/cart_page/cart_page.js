@@ -4,11 +4,11 @@ import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { PopupTable } from "@pos_self_order/app/components/popup_table/popup_table";
 import { _t } from "@web/core/l10n/translation";
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
-import { SlotsPopup } from "@pos_self_order/app/components/slots_popup/slots_popup";
+import { PresetInfoPopup } from "@pos_self_order/app/components/preset_info_popup/preset_info_popup";
 
 export class CartPage extends Component {
     static template = "pos_self_order.CartPage";
-    static components = { PopupTable, OrderWidget, SlotsPopup };
+    static components = { PopupTable, OrderWidget, PresetInfoPopup };
     static props = {};
 
     setup() {
@@ -16,7 +16,7 @@ export class CartPage extends Component {
         this.router = useService("router");
         this.state = useState({
             selectTable: false,
-            selectSlots: false,
+            fillInformations: false,
             cancelConfirmation: false,
         });
     }
@@ -60,10 +60,10 @@ export class CartPage extends Component {
         }
 
         if (
-            this.selfOrder.currentOrder.preset_id?.use_timing &&
-            !this.selfOrder.currentOrder.preset_time
+            !this.selfOrder.currentOrder.presetRequirementsFilled &&
+            this.selfOrder.config.self_ordering_mode === "mobile"
         ) {
-            this.state.selectSlots = true;
+            this.state.fillInformations = true;
             return;
         }
 
@@ -84,14 +84,11 @@ export class CartPage extends Component {
         this.selfOrder.rpcLoading = false;
     }
 
-    selectSlot(time) {
-        if (!time) {
-            this.state.selectSlots = false;
-            return;
+    proceedInfos(state) {
+        this.state.fillInformations = false;
+        if (state) {
+            this.pay();
         }
-
-        this.selfOrder.currentOrder.preset_time = time;
-        this.pay();
     }
 
     selectTable(table) {
