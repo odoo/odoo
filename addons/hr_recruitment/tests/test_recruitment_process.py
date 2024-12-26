@@ -18,11 +18,11 @@ class TestRecruitmentProcess(TestHrCommon):
             'department_id': dep_rd.id,
             'no_of_recruitment': 5,
         })
-        employee_niv = self.env['hr.employee'].create({
+        employee_sharlene = self.env['hr.employee'].create({
             'name': 'Sharlene Rhodes',
         })
         job_developer = job_developer.with_user(self.res_users_hr_officer.id)
-        employee_niv = employee_niv.with_user(self.res_users_hr_officer.id)
+        employee_sharlene = employee_sharlene.with_user(self.res_users_hr_officer.id)
 
         # Create a new HR Recruitment Officer
         res_users_hr_recruitment_officer = self.env['res.users'].create({

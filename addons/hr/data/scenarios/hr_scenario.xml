@@ -109,7 +109,7 @@
         <record id="work_contact_sj" model="res.partner" forcecreate="1">
             <field name="name">Simon Jones</field>
             <field name="email">jones@mycompany.example.com</field>
-            <field name="image_1920" type="base64" file="hr/static/img/employee_qdp-image.png"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_demo-image.png"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="company_name">My Company</field>
             <field name="street">260 Broadway</field>
@@ -181,7 +181,7 @@
             <field name="job_title">Experienced Developer</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_demo')])]"/>
-            <field name="image_1920" type="base64" file="hr/static/img/employee_qdp-image.png"/>
+            <field name="image_1920" type="base64" file="hr/static/img/employee_demo-image.png"/>
             <field name="work_phone">(555)-768-6230</field>
             <field name="mobile_phone">(555)-768-6235</field>
             <field name="work_contact_id" ref="work_contact_sj"/>

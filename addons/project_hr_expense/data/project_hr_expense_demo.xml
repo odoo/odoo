@@ -4,11 +4,11 @@
         <!-- Expense Sheet -->
         <record id="transportation_expense_sheet" model="hr.expense.sheet">
             <field name="name">Transportation Expense</field>
-            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="employee_id" ref="hr.employee_ronnie"/>
         </record>
         <record id="restaurant_expense_sheet" model="hr.expense.sheet">
             <field name="name">Restaurant Expense</field>
-            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="employee_id" ref="hr.employee_ronnie"/>
         </record>
 
         <record id="hr_expense.travel_admin_by_car_expense" model="hr.expense">
@@ -19,7 +19,7 @@
         </record>
         <record id="transportation_expense" model="hr.expense">
             <field name="name">Transportation</field>
-            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="employee_id" ref="hr.employee_ronnie"/>
             <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
             <field name="product_id" ref="hr_expense.expense_product_travel_accommodation"/>
             <field name="total_amount_currency" eval="240.0"/>
@@ -29,7 +29,7 @@
         </record>
         <record id="restaurant_expense" model="hr.expense">
             <field name="name">Restaurant</field>
-            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="employee_id" ref="hr.employee_ronnie"/>
             <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
             <field name="product_id" ref="hr_expense.expense_product_meal"/>
             <field name="total_amount_currency" eval="320.0"/>
