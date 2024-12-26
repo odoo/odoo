@@ -256,7 +256,8 @@
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <pivot string="New Employees Over Time" sample="1" js_class="hr_pivot_view">
-                    <field name="create_date" interval="month" type="row"/>
+                    <field name="job_id" type="row"/>
+                    <field name="create_date" interval="year" type="col"/>
                     <field name="id"/>
                     <field name="color" type="measure" invisible="1"/>
                     <field name="distance_home_work" type="measure" invisible="1"/>
