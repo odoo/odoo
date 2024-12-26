@@ -364,10 +364,10 @@ patch(PosStore.prototype, {
         return await super.getServerOrders();
     },
     getDefaultSearchDetails() {
-        if (this.selectedTable && this.selectedTable.id) {
+        if (this.config.module_pos_restaurant) {
             return {
                 fieldName: "REFERENCE",
-                searchTerm: this.selectedTable.getName(),
+                searchTerm: "",
             };
         }
         return super.getDefaultSearchDetails();
