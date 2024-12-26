@@ -29,6 +29,11 @@ patch(ChatWindow.prototype, {
         }
     },
 
+    async onClickNewSession() {
+        await this.close();
+        await this.livechatService.open();
+    },
+
     onCloseConfirmationDialog() {
         this.state.actionsDisabled = false;
         this.livechatState.showCloseConfirmation = false;
