@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
         <xpath expr="//*[@name='thread content']" position="replace">
-           <FeedbackPanel t-if="props.chatWindow.hasFeedbackPanel" onClickClose="() => this.close()" thread="thread"/>
+           <FeedbackPanel t-if="props.chatWindow.hasFeedbackPanel" onClickClose="() => this.close()" onClickNewSession="() => this.onClickNewSession()" thread="thread"/>
            <t t-else="">
             <t>$0</t>
             <t t-if="this.livechatState.showCloseConfirmation">
