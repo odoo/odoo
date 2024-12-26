@@ -6308,7 +6308,10 @@ class BaseModel(metaclass=MetaModel):
                         else:
                             stack.append({record.id for record in self if record[key] & value_companies.parent_ids})
                     else:
-                        stack.append(set(self.with_context(active_test=False).search([('id', 'in', self.ids), leaf], order='id')._ids))
+                        hierarchy_domain = [('id', 'in', self.ids), leaf]
+                        if self._active_name:
+                            hierarchy_domain.append((self._active_name, 'in', [True, False]))
+                        stack.append(set(self._search(hierarchy_domain)))
                     continue
 
                 # determine the field with the final type for values

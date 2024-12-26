@@ -3348,7 +3348,6 @@ class TestX2many(TransactionExpressionCase):
         self.assertEqual(parent.with_context(active_test=False).active_children_ids, act_children)
 
     def test_12_active_test_one2many_search(self):
-        # TODO use _search, filtered domains behaves strangely for hierarchies
         Model = self.env['test_new_api.model_active_field']
         parent = Model.create({
             'children_ids': [
@@ -3364,8 +3363,8 @@ class TestX2many(TransactionExpressionCase):
         self.assertIn(parent, self._search(Model, [('children_ids', '=', 'A')]))
         self.assertNotIn(parent, self._search(Model, [('children_ids', '=', 'B')]))
         # Same result with the child_of operator
-        self.assertIn(parent, Model.search([('children_ids', 'child_of', 'A')]))
-        self.assertNotIn(parent, Model.search([('children_ids', 'child_of', 'B')]))
+        self.assertIn(parent, self._search(Model, [('children_ids', 'child_of', 'A')]))
+        self.assertNotIn(parent, self._search(Model, [('children_ids', 'child_of', 'B')]))
 
         # a one2many field with active_test=False matches its inactive children
         self.assertIn(parent, self._search(Model, [('all_children_ids.name', '=', 'A')]))
@@ -3373,14 +3372,13 @@ class TestX2many(TransactionExpressionCase):
         # Same result when it used _search_display_name
         self.assertIn(parent, self._search(Model, [('all_children_ids', '=', 'A')]))
         # Same result with the child_of operator
-        self.assertIn(parent, Model.search([('all_children_ids', 'child_of', 'A')]))
+        self.assertIn(parent, self._search(Model, [('all_children_ids', 'child_of', 'A')]))
         self.assertIn(parent, self._search(Model, [('all_children_ids', '=', 'B')]))
         # Same result with the child_of operator
-        self.assertIn(parent, Model.search([('all_children_ids', 'child_of', 'A')]))
-        self.assertIn(parent, Model.search([('all_children_ids', 'child_of', 'B')]))
+        self.assertIn(parent, self._search(Model, [('all_children_ids', 'child_of', 'A')]))
+        self.assertIn(parent, self._search(Model, [('all_children_ids', 'child_of', 'B')]))
 
     def test_12_active_test_many2many_search(self):
-        # TODO use _search, filtered domains behaves strangely for hierarchies
         Model = self.env['test_new_api.model_active_field']
         parent = Model.create({
             'relatives_ids': [
@@ -3400,10 +3398,10 @@ class TestX2many(TransactionExpressionCase):
         self.assertIn(parent, self._search(Model, [('relatives_ids', '=', 'A')]))
         self.assertNotIn(parent, self._search(Model, [('relatives_ids', '=', 'B')]))
         # Same result with the child_of operator
-        self.assertIn(parent, Model.search([('relatives_ids', 'child_of', child_a.id)]))
-        self.assertIn(parent, Model.search([('relatives_ids', 'child_of', 'A')]))
-        self.assertNotIn(parent, Model.search([('relatives_ids', 'child_of', child_b.id)]))
-        self.assertNotIn(parent, Model.search([('relatives_ids', 'child_of', 'B')]))
+        self.assertIn(parent, self._search(Model, [('relatives_ids', 'child_of', child_a.id)]))
+        self.assertIn(parent, self._search(Model, [('relatives_ids', 'child_of', 'A')]))
+        self.assertNotIn(parent, self._search(Model, [('relatives_ids', 'child_of', child_b.id)]))
+        self.assertNotIn(parent, self._search(Model, [('relatives_ids', 'child_of', 'B')]))
 
         # a many2many field with active_test=False matches its inactive children
         self.assertIn(parent, self._search(Model, [('all_relatives_ids.name', '=', 'A')]))
@@ -3412,10 +3410,10 @@ class TestX2many(TransactionExpressionCase):
         self.assertIn(parent, self._search(Model, [('all_relatives_ids', '=', 'A')]))
         self.assertIn(parent, self._search(Model, [('all_relatives_ids', '=', 'B')]))
         # Same result with the child_of operator
-        self.assertIn(parent, Model.search([('all_relatives_ids', 'child_of', child_a.id)]))
-        self.assertIn(parent, Model.search([('all_relatives_ids', 'child_of', 'A')]))
-        self.assertIn(parent, Model.search([('all_relatives_ids', 'child_of', child_b.id)]))
-        self.assertIn(parent, Model.search([('all_relatives_ids', 'child_of', 'B')]))
+        self.assertIn(parent, self._search(Model, [('all_relatives_ids', 'child_of', child_a.id)]))
+        self.assertIn(parent, self._search(Model, [('all_relatives_ids', 'child_of', 'A')]))
+        self.assertIn(parent, self._search(Model, [('all_relatives_ids', 'child_of', child_b.id)]))
+        self.assertIn(parent, self._search(Model, [('all_relatives_ids', 'child_of', 'B')]))
 
     def test_search_many2many(self):
         """ Tests search on many2many fields. """
