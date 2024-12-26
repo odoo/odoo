@@ -2032,7 +2032,18 @@
 
     <template id="cart_combo_item_line">
         <div class="d-flex align-items-center">
-            <div t-field="combo_item_line.product_id.image_128"
+            <!-- Sends raw image to bypass access check if the root combo product is published and
+            managed to get added to the cart but not the individual combo item -->
+            <img
+                t-if="not combo_item_line.product_id.is_published
+                      and combo_item_line.product_id.image_128"
+                t-att-src="image_data_uri(combo_item_line.product_id.image_128)"
+                class="o_image_64_max img rounded"
+                t-att-alt="combo_item_line.name_short"
+            />
+            <div
+                t-else=""
+                t-field="combo_item_line.product_id.image_128"
                  t-options="{
                     'widget': 'image',
                     'qweb_img_responsive': False,
