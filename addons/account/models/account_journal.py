@@ -69,7 +69,6 @@ class AccountJournal(models.Model):
 
     def _get_default_account_domain(self):
         return """[
-            ('deprecated', '=', False),
             ('account_type', 'in', ('asset_cash', 'liability_credit_card') if type == 'bank'
                                    else ('liability_credit_card',) if type == 'credit'
                                    else ('asset_cash',) if type == 'cash'
@@ -118,7 +117,7 @@ class AccountJournal(models.Model):
         compute='_compute_suspense_account_id',
         help="Bank statements transactions will be posted on the suspense account until the final reconciliation "
              "allowing finding the right account.", string='Suspense Account',
-        domain="[('deprecated', '=', False), ('account_type', '=', 'asset_current')]",
+        domain="[('account_type', '=', 'asset_current')]",
     )
     non_deductible_account_id = fields.Many2one(
         comodel_name='account.account',
@@ -126,7 +125,6 @@ class AccountJournal(models.Model):
         string='Private Part Account',
         readonly=False,
         store=True,
-        domain="[('deprecated', '=', False)]",
         help="Account used to register the private part of mixed expenses.",
     )
     restrict_mode_hash_table = fields.Boolean(string="Secure Posted Entries with Hash",
@@ -210,14 +208,12 @@ class AccountJournal(models.Model):
         comodel_name='account.account', check_company=True,
         help="Used to register a profit when the ending balance of a cash register differs from what the system computes",
         string='Profit Account',
-        domain="[('deprecated', '=', False), \
-                ('account_type', 'in', ('income', 'income_other'))]")
+        domain="[('account_type', 'in', ('income', 'income_other'))]")
     loss_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True,
         help="Used to register a loss when the ending balance of a cash register differs from what the system computes",
         string='Loss Account',
-        domain="[('deprecated', '=', False), \
-                ('account_type', '=', 'expense')]")
+        domain="[('account_type', '=', 'expense')]")
 
     # Bank journals fields
     company_partner_id = fields.Many2one('res.partner', related='company_id.partner_id', string='Account Holder', readonly=True, store=False)

@@ -24,14 +24,14 @@ class ResConfigSettings(models.TransientModel):
         string="Gain Exchange Rate Account",
         readonly=False,
         check_company=True,
-        domain="[('deprecated', '=', False), ('internal_group', '=', 'income')]")
+        domain="[('internal_group', '=', 'income')]")
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name="account.account",
         related="company_id.expense_currency_exchange_account_id",
         string="Loss Exchange Rate Account",
         readonly=False,
         check_company=True,
-        domain="[('deprecated', '=', False), ('account_type', '=', 'expense')]")
+        domain="[('account_type', '=', 'expense')]")
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template = fields.Selection(selection=lambda self: self.env.company._chart_template_selection(), default=lambda self: self.env.company.chart_template)
     sale_tax_id = fields.Many2one(
@@ -64,7 +64,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         related='company_id.account_journal_suspense_account_id',
         check_company=True,
-        domain="[('deprecated', '=', False), ('account_type', 'in', ('asset_current', 'liability_current'))]",
+        domain="[('account_type', 'in', ('asset_current', 'liability_current'))]",
         help='Bank Transactions are posted immediately after import or synchronization. '
              'Their counterparty is the bank suspense account.\n'
              'Reconciliation replaces the latter by the definitive account(s).')
@@ -74,7 +74,6 @@ class ResConfigSettings(models.TransientModel):
         domain=[
             ('reconcile', '=', True),
             ('account_type', '=', 'asset_current'),
-            ('deprecated', '=', False),
         ],
         help="Intermediary account used when moving from a liquidity account to another.")
     module_account_accountant = fields.Boolean(string='Accounting')
@@ -116,7 +115,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         check_company=True,
         related='company_id.account_cash_basis_base_account_id',
-        domain=[('deprecated', '=', False)])
+    )
     account_fiscal_country_id = fields.Many2one(string="Fiscal Country Code", related="company_id.account_fiscal_country_id", readonly=False, store=False)
 
     qr_code = fields.Boolean(string='Display SEPA QR-code', related='company_id.qr_code', readonly=False)
@@ -169,7 +168,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         related='company_id.account_journal_early_pay_discount_loss_account_id',
         check_company=True,
-        domain="[('deprecated', '=', False), ('account_type', 'in', ('expense', 'income', 'income_other'))]",
+        domain="[('account_type', 'in', ('expense', 'income', 'income_other'))]",
     )
     account_journal_early_pay_discount_gain_account_id = fields.Many2one(
         comodel_name='account.account',
@@ -178,7 +177,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         check_company=True,
         related='company_id.account_journal_early_pay_discount_gain_account_id',
-        domain="[('deprecated', '=', False), ('account_type', 'in', ('income', 'income_other', 'expense'))]",
+        domain="[('account_type', 'in', ('income', 'income_other', 'expense'))]",
     )
 
     # Accounts for allocation of discounts
