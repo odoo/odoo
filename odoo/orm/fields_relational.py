@@ -69,9 +69,8 @@ class _Relational(Field[M], typing.Generic[M]):
 
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
-        if self.comodel_name not in model.pool:
-            _logger.warning("Field %s with unknown comodel_name %r", self, self.comodel_name)
-            self.comodel_name = '_unknown'
+        assert self.comodel_name in model.pool, \
+            f"Field {self} with unknown comodel_name {self.comodel_name or '???'!r}"
 
     def get_domain_list(self, model):
         """ Return a list domain from the domain parameter. """
