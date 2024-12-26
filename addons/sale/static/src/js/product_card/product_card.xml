@@ -10,7 +10,7 @@
             <div class="card-header p-0">
                 <img
                     class="w-100"
-                    t-attf-src="/web/image/product.product/{{props.product.id}}/image_128"
+                    t-att-src="props.product.image_src || `/web/image/product.product/${props.product.id}/image_128`"
                     alt="Product Image"
                 />
             </div>
