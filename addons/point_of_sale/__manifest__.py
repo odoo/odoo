@@ -6,7 +6,7 @@
     'version': '1.0.1',
     'category': 'Sales/Point of Sale',
     'sequence': 40,
-    'summary': 'User-friendly PoS interface for shops and restaurants',
+    'summary': 'Handle checkouts and payments for shops and restaurants.',
     'depends': ['resource', 'stock_account', 'barcodes', 'web_editor', 'digest', 'phone_validation'],
     'uninstall_hook': 'uninstall_hook',
     'data': [
