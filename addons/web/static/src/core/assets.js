@@ -38,21 +38,40 @@ whenReady(() => computeBundleCacheMap(document));
  * @param {(error: Error) => any} onError
  */
 const onLoadAndError = (el, onLoad, onError) => {
+    let isUnloading = false;
+
     const onLoadListener = (event) => {
+        if (isUnloading) {
+            return;
+        }
         removeListeners();
         onLoad(event);
     };
 
     const onErrorListener = (error) => {
+        if (isUnloading) {
+            return;
+        }
         removeListeners();
         onError(error);
     };
 
-    const removeListeners = () => {
-        el.removeEventListener("load", onLoadListener);
-        el.removeEventListener("error", onErrorListener);
+    const currentWindow = el.ownerDocument.defaultView;
+    const onBeforeUnloadListener = (ev) => {
+        if (ev.isDefaultPrevented) {
+            return;
+        }
+        isUnloading = true;
+        removeListeners();
     };
 
+    function removeListeners() {
+        currentWindow.removeEventListener("beforeunload", onBeforeUnloadListener);
+        el.removeEventListener("load", onLoadListener);
+        el.removeEventListener("error", onErrorListener);
+    }
+
+    currentWindow.addEventListener("beforeunload", onBeforeUnloadListener);
     el.addEventListener("load", onLoadListener);
     el.addEventListener("error", onErrorListener);
 };
