@@ -84,6 +84,8 @@ import {
     ZERO_WIDTH_CHARS_REGEX,
     getAdjacentCharacter,
     isLinkEligibleForZwnbsp,
+    getNodePath,
+    getNodeFromPath
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -1292,12 +1294,33 @@ export class OdooEditor extends EventTarget {
     historyResetFromSteps(steps, historyIds) {
         this._historyIds = historyIds;
         this.observerUnactive();
+
+        // Recompute `_latestComputedSelection` after node recreation by converting `anchorNode`
+        // and `focusNode` to paths relative to the editable container for later lookup.
+        let latestComputedSelectionPath = null;
+        if (this._latestComputedSelection?.anchorNode) {
+            latestComputedSelectionPath = {
+                ...this._latestComputedSelection,
+                anchorNode: getNodePath(this._latestComputedSelection.anchorNode, this.editable),
+                focusNode: getNodePath(this._latestComputedSelection.focusNode, this.editable),
+            };
+        }
         for (const node of [...this.editable.childNodes]) {
             node.remove();
         }
         this._historyClean();
         for (const step of steps) {
             this.historyApply(step.mutations);
+        }
+        if (latestComputedSelectionPath) {
+            this._latestComputedSelection = {
+                ...latestComputedSelectionPath,
+                anchorNode: getNodeFromPath(latestComputedSelectionPath.anchorNode, this.editable),
+                focusNode: getNodeFromPath(latestComputedSelectionPath.focusNode, this.editable),
+            };
+            if (this.isSelectionInEditable(this._latestComputedSelection)) {
+                this._latestComputedSelectionInEditable = this._latestComputedSelection;
+            }
         }
         this._historySnapshots = [{ step: steps[0] }];
         this._historySteps = steps;

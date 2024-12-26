@@ -3306,3 +3306,38 @@ export function cleanZWS(node) {
         .filter(node => node.nodeType === Node.TEXT_NODE && node.nodeValue.includes('\u200B'))
         .forEach(node => node.nodeValue = node.nodeValue.replace(/\u200B/g, ''));
 }
+
+/**
+ * Generates the path to a node as an array of indices, relative to a given ancestor.
+ *
+ * @param {Node} node - The node to trace the path for.
+ * @param {Node} stopNode - The ancestor node to stop at.
+ * @returns {number[]} The path as an array of child indices.
+ */
+export function getNodePath(node, stopNode) {
+    const path = [];
+    while (node && node !== stopNode) {
+        const childNodes = Array.from(node.parentNode?.childNodes || []);
+        path.unshift(childNodes.indexOf(node));
+        node = node.parentNode;
+    }
+    return path;
+}
+
+/**
+ * Finds a node in the DOM based on a path of child indices.
+ *
+ * @param {number[]} path - The path as an array of child indices.
+ * @param {Node} startNode - The node to start the search from.
+ * @returns {Node|null} The node at the specified path, or null if not found.
+ */
+export function getNodeFromPath(path, startNode) {
+    let node = startNode;
+    for (const index of path) {
+        if (!node.childNodes[index]) {
+            return null;
+        }
+        node = node.childNodes[index];
+    }
+    return node;
+}
