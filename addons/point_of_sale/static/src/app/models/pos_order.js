@@ -102,6 +102,15 @@ export class PosOrder extends Base {
         return dateTime.isValid ? dateTime.toFormat("HH:mm") : false;
     }
 
+    get presetRequirementsFilled() {
+        return (
+            (!this.preset_id?.needsPartner ||
+                (this.partner_id?.name && this.partner_id?.contact_address)) &&
+            (!this.preset_id?.needsName || this.partner_id?.name || this.floating_order_name) &&
+            (!this.preset_id?.needsSlot || this.preset_time)
+        );
+    }
+
     getEmailItems() {
         return [_t("the receipt")].concat(this.isToInvoice() ? [_t("the invoice")] : []);
     }
