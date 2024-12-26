@@ -35,6 +35,8 @@ class AuthSignupHome(Home):
 
     @http.route('/web/signup', type='http', auth='public', website=True, sitemap=False, captcha='signup')
     def web_auth_signup(self, *args, **kw):
+        if 'login' in request.params:
+            request.params['login'] = request.params['login'].strip().lower()
         qcontext = self.get_auth_signup_qcontext()
 
         if not qcontext.get('token') and not qcontext.get('signup_enabled'):
@@ -80,6 +82,8 @@ class AuthSignupHome(Home):
 
     @http.route('/web/reset_password', type='http', auth='public', website=True, sitemap=False, captcha='password_reset')
     def web_auth_reset_password(self, *args, **kw):
+        if 'login' in request.params and not request.env['res.users'].sudo().search([('login', '=', request.params['login'])]):
+            request.params['login'] = request.params['login'].strip().lower()
         qcontext = self.get_auth_signup_qcontext()
 
         if not qcontext.get('token') and not qcontext.get('reset_password_enabled'):
@@ -149,6 +153,8 @@ class AuthSignupHome(Home):
             raise UserError(_("The form was not properly filled in."))
         if values.get('password') != qcontext.get('confirm_password'):
             raise UserError(_("Passwords do not match; please retype them."))
+        if not values.get('login'):
+            raise UserError(_("Please enter a proper login."))
         supported_lang_codes = [code for code, _ in request.env['res.lang'].get_installed()]
         lang = request.context.get('lang', '')
         if lang in supported_lang_codes:
