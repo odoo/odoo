@@ -1,36 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from datetime import timedelta
 from unittest.mock import patch
 
 import odoo
 from odoo import Command, fields
-from odoo.tests import HttpCase
-from odoo.tests.common import new_test_user, users
+from odoo.tests.common import users
 from odoo.addons.mail.tests.common import MailCommon
-
+from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
 
 
 @odoo.tests.tagged("-at_install", "post_install")
-class TestGetOperator(MailCommon, HttpCase):
-    def _create_operator(self, lang_code=None, country_code=None, expertises=None):
-        operator = new_test_user(
-            self.env(su=True), login=f"operator_{lang_code or country_code}_{self.operator_id}"
-        )
-        operator.res_users_settings_id.livechat_expertise_ids = expertises
-        operator.partner_id = self.env["res.partner"].create(
-            {
-                "name": f"Operator {lang_code or country_code}",
-                "lang": lang_code,
-                "country_id": self.env["res.country"].search([("code", "=", country_code)]).id
-                if country_code
-                else None,
-            }
-        )
-        self.env["bus.presence"].create({"user_id": operator.id, "status": "online"})  # Simulate online status
-        self.operator_id += 1
-        return operator
-
+class TestGetOperator(MailCommon, TestGetOperatorCommon):
     def _create_chat(self, livechat, operator, in_call=False):
         channel = self.env["discuss.channel"].create(
             {
@@ -54,10 +34,6 @@ class TestGetOperator(MailCommon, HttpCase):
 
     def setUp(self):
         super().setUp()
-        self.operator_id = 0
-        self.env["res.lang"].with_context(active_test=False).search(
-            [("code", "in", ["fr_FR", "es_ES", "de_DE", "en_US"])]
-        ).write({"active": True})
         random_choice_patch = patch("random.choice", lambda arr: arr[0])
         self.startPatcher(random_choice_patch)
 
