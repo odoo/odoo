@@ -100,11 +100,15 @@ composerActionsRegistry
         sequenceQuick: 20,
     })
     .add("upload-files", {
-        condition: (component) =>
-            !(
+        condition: (component) => {
+            if (!component.thread.allow_public_upload && component.store.self.type === "guest") {
+                return false;
+            }
+            return !(
                 component.thread?.channel_type === "whatsapp" &&
                 component.props.composer.attachments.length > 0
-            ),
+            );
+        },
         icon: "fa fa-paperclip",
         name: _t("Attach Files"),
         onClick: (component, action, ev) => {
