@@ -35,7 +35,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
 
     def _format_extra_replenishment(self, po_line, quantity, production_id=False):
         po = po_line.order_id
-        price = po_line.taxes_id.compute_all(
+        price = po_line.tax_ids.compute_all(
             po_line.price_unit,
             currency=po.currency_id,
             quantity=quantity,
@@ -88,7 +88,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         if move_in and move_in.purchase_line_id:
             po_line = move_in.purchase_line_id
             po = po_line.order_id
-            price = po_line.taxes_id.compute_all(
+            price = po_line.tax_ids.compute_all(
                 po_line.price_unit,
                 currency=po.currency_id,
                 quantity=uom_id._compute_quantity(quantity, move_in.purchase_line_id.product_uom_id),

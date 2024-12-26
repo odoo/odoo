@@ -38,7 +38,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
                     'product_qty': 10.0,
                     'product_uom_id': cls.product_a.uom_id.id,
                     'price_unit': cls.product_a.list_price,
-                    'taxes_id': False,
+                    'tax_ids': False,
                     'analytic_distribution': {
                         cls.analytic_account_a.id : 80.0,
                         cls.analytic_account_b.id : 20.0,
@@ -50,7 +50,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
                     'product_qty': 10.0,
                     'product_uom_id': cls.product_b.uom_id.id,
                     'price_unit': cls.product_b.list_price,
-                    'taxes_id': False,
+                    'tax_ids': False,
                     'analytic_distribution': {
                         cls.analytic_account_b.id : 100.0,
                     },
@@ -130,7 +130,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             'type_tax_use': 'purchase',
             'price_include_override': 'tax_included',
         })
-        self.purchase_order.order_line.taxes_id = tax_10_included
+        self.purchase_order.order_line.tax_ids = tax_10_included
         self.purchase_order.order_line.qty_received = 5
         self.assertRecordValues(self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids, [
             # reverse move lines
