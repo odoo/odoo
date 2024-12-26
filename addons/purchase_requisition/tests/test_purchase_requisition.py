@@ -556,7 +556,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         alt_po_wizard = alt_po_wizard_form.save()
         alt_po_id = alt_po_wizard.action_create_alternative()['res_id']
         alt_po = self.env['purchase.order'].browse(alt_po_id)
-        self.assertEqual(orig_po.order_line.taxes_id, alt_po.order_line.taxes_id)
+        self.assertEqual(orig_po.order_line.tax_ids, alt_po.order_line.tax_ids)
 
     def test_alternative_purchase_order_merge(self):
         group_purchase_alternatives = self.env.ref('purchase_requisition.group_purchase_alternatives')

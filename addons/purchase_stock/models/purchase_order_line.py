@@ -197,9 +197,9 @@ class PurchaseOrderLine(models.Model):
         order = self.order_id
         price_unit = self.price_unit
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
-        if self.taxes_id:
+        if self.tax_ids:
             qty = self.product_qty or 1
-            price_unit = self.taxes_id.compute_all(
+            price_unit = self.tax_ids.compute_all(
                 price_unit,
                 currency=self.order_id.currency_id,
                 quantity=qty,

@@ -277,7 +277,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
             'order_line': [(0, 0, {
                 'product_id': avco_product.id,
                 'product_qty': 999,
-                'taxes_id': [(6, 0, [incl_tax.id])],
+                'tax_ids': [(6, 0, [incl_tax.id])],
             })],
         })
         po.button_confirm()

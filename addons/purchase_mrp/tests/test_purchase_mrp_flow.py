@@ -1077,7 +1077,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             pol_form.product_qty = 30
             pol_form.product_uom_id = self.uom_kg
             pol_form.price_unit = 90000
-            pol_form.taxes_id.clear()
+            pol_form.tax_ids.clear()
         po = po_form.save()
         po.button_confirm()
 
@@ -1201,7 +1201,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             pol_form.product_id = prod
             pol_form.product_qty = 1
             pol_form.price_unit = 100
-            pol_form.taxes_id.clear()
+            pol_form.tax_ids.clear()
         po = po_form.save()
         po.button_confirm()
         receipt = po.picking_ids
