@@ -10,7 +10,7 @@ export class ChatbotScriptStep extends Record {
     message;
     /** @type {"free_input_multi"|"free_input_single"|"question_email"|"question_phone"|"question_selection"|"text"|"forward_operator"} */
     type;
-    isLast = false;
+    is_last = false;
     answers = Record.many("chatbot.script.answer");
 }
 ChatbotScriptStep.register();

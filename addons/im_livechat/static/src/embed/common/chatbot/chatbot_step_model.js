@@ -17,7 +17,6 @@ export class ChatbotStep extends Record {
             return this.scriptStep?.type;
         },
     });
-    isLast = false;
 
     get expectAnswer() {
         return [

@@ -18,9 +18,14 @@ patch(ChatWindow.prototype, {
         this.livechatState = useState({ showCloseConfirmation: false });
     },
 
-    async close() {
+    async close({ withConfirmation = true } = {}) {
         const chatWindow = toRaw(this.props.chatWindow);
-        if (chatWindow.thread.id > 0 && !this.livechatState.showCloseConfirmation) {
+        if (
+            withConfirmation &&
+            !chatWindow.hasFeedbackPanel &&
+            chatWindow.thread.id > 0 &&
+            !this.livechatState.showCloseConfirmation
+        ) {
             this.state.actionsDisabled = true;
             this.livechatState.showCloseConfirmation = true;
         } else {
@@ -32,5 +37,9 @@ patch(ChatWindow.prototype, {
     onCloseConfirmationDialog() {
         this.state.actionsDisabled = false;
         this.livechatState.showCloseConfirmation = false;
+    },
+
+    onClickContinue() {
+        this.close({ withConfirmation: false });
     },
 });

@@ -110,7 +110,7 @@ export class ChatBotService {
         if (!this.chatbot?.currentStep) {
             return;
         }
-        if (this.chatbot.currentStep.expectAnswer || this.chatbot.currentStep.isLast) {
+        if (this.chatbot.currentStep.expectAnswer || this.chatbot.currentStep.scriptStep.is_last) {
             return;
         }
         this.nextStepTimeout = browser.setTimeout(async () => this._triggerNextStep(), STEP_DELAY);

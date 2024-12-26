@@ -18,9 +18,11 @@
         </xpath>
         <xpath expr="//Composer" position="replace">
             <t t-if="chatbotService.inputEnabled">$0</t>
-            <t t-else="">
-                <span class="bg-200 py-1 text-center fst-italic" t-esc="chatbotService.inputDisabledText"/>
-            </t>
+            <div t-else="" class="bg-200 d-flex justify-content-center">
+                <span t-if="chatbotService.chatbot.completed" class="flex-grow-1"/>
+                <span class="text-center py-1 fst-italic flex-grow-1" t-esc="chatbotService.inputDisabledText"/>
+                <button t-if="chatbotService.chatbot.completed" class="btn btn-link btn-sm me-1" t-on-click="onClickContinue">Continue</button>
+            </div>
         </xpath>
     </t>
 </templates>

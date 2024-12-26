@@ -269,3 +269,35 @@ class TestLivechatChatbotUI(TestGetOperatorCommon, TestWebsiteLivechatCommon, Ch
         channel = self.livechat_channel.channel_ids[0]
         self.assertIn(channel.channel_member_ids.partner_id.user_ids, en_op)
         self.assertNotIn(channel.channel_member_ids.partner_id.user_ids, fr_op)
+
+    def test_chatbot_continue_after_completion(self):
+        chatbot_script = self.env["chatbot.script"].create({"title": "Continue Bot"})
+        question_step = self.env["chatbot.script.step"].create(
+            {
+                "chatbot_script_id": chatbot_script.id,
+                "message": "Hello, what can I do for you?",
+                "step_type": "question_selection",
+            },
+        )
+        self.env["chatbot.script.answer"].create(
+            {
+                "name": "No, thank you for your time.",
+                "script_step_id": question_step.id,
+            }
+        )
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {
+                "name": "Continue after completion channel",
+                "rule_ids": [
+                    Command.create(
+                        {
+                            "regex_url": "/",
+                            "chatbot_script_id": chatbot_script.id,
+                            "action": "auto_popup",
+                        }
+                    )
+                ],
+            }
+        )
+        self.env.ref("website.default_website").channel_id = livechat_channel.id
+        self.start_tour("/", "website_livechat.chatbot_continue_tour")
