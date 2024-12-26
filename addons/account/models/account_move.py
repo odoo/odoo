@@ -3663,6 +3663,9 @@ class AccountMove(models.Model):
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
 
+    def _get_tax_lines_to_aggregate(self):
+        return self.line_ids.filtered(lambda x: x.display_type == 'tax')
+
     def _prepare_invoice_aggregated_taxes(self, filter_invl_to_apply=None, filter_tax_values_to_apply=None, grouping_key_generator=None, distribute_total_on_line=True):
         self.ensure_one()
         company = self.company_id
@@ -3689,7 +3692,7 @@ class AccountMove(models.Model):
         # This difference is then distributed evenly across the 'taxes_data' in 'to_process'
         # such that the manual and computed tax amounts match.
         # The updated tax information is later used by '_aggregate_taxes' to compute the right tax amounts (consistently on all levels).
-        tax_lines = self.line_ids.filtered(lambda x: x.display_type == 'tax')
+        tax_lines = self._get_tax_lines_to_aggregate()
         sign = -1 if self.is_inbound(include_receipts=True) else 1
 
         # Collect the tax_amount_currency/balance from tax lines.
