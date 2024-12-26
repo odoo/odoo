@@ -379,13 +379,13 @@ class AccountEdiFormat(models.Model):
 
         if is_oss:
             values['regime_key'] = ['17']
+        elif invoice.l10n_es_is_simplified and invoice.company_id.l10n_es_tbai_tax_agency != 'bizkaia':
+            values['regime_key'] = ['52']  # code for simplified invoices
         elif export_exempts:
             values['regime_key'] = ['02']
         else:
             values['regime_key'] = ['01']
 
-        if invoice.l10n_es_is_simplified and invoice.company_id.l10n_es_tbai_tax_agency != 'bizkaia':
-            values['regime_key'] += ['52']  # code for simplified invoices
         values['nosujeto_causa'] = 'IE' if is_oss else 'RL'
 
         return values
