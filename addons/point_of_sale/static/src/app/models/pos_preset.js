@@ -14,6 +14,18 @@ export class PosPreset extends Base {
         };
     }
 
+    get needsSlot() {
+        return this.use_timing;
+    }
+
+    get needsName() {
+        return this.identification === "name";
+    }
+
+    get needsPartner() {
+        return this.identification === "address";
+    }
+
     get orders() {
         return this.models["pos.order"].filter((o) => o.preset_id?.id === this.id);
     }

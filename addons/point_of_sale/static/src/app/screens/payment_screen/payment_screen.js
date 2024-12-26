@@ -501,10 +501,10 @@ export class PaymentScreen extends Component {
             return false;
         }
 
-        if (this.currentOrder.preset_id?.identification === "address" && !partner?.name) {
+        if (!this.currentOrder.presetRequirementsFilled) {
             this.dialog.add(AlertDialog, {
                 title: _t("Customer required"),
-                body: _t("Please add a customer to the order."),
+                body: _t("Please add a valid customer to the order."),
             });
             return false;
         }

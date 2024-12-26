@@ -30,6 +30,36 @@ export function selectTable(table) {
     ];
 }
 
+export function selectRandomValueInInput(inputSelector) {
+    return {
+        content: `Select Random Value in Input`,
+        trigger: inputSelector,
+        run: (helpers) => {
+            const options = document.querySelectorAll(`${inputSelector} option`);
+            for (const option of options) {
+                // Verify if the option is not disabled
+                if (option.disabled || option.value === "") {
+                    continue;
+                }
+
+                const targetOption = option;
+                const optionValue = targetOption.value;
+                helpers.anchor.value = optionValue;
+                helpers.anchor.dispatchEvent(new Event("change"));
+                break;
+            }
+        },
+    };
+}
+
+export function fillInput(inputPlaceholder, value) {
+    return {
+        content: `Fill input with ${value}`,
+        trigger: `input[placeholder="${inputPlaceholder}"]`,
+        run: `edit ${value}`,
+    };
+}
+
 export function checkProduct(name, price, quantity) {
     return {
         content: `Check product card with ${name} and ${price}`,
