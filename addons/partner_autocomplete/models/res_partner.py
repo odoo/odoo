@@ -198,37 +198,40 @@ class ResPartner(models.Model):
             return any(re.match(rx, vat) for rx in all_gstin_re)
         return False
 
-    def _is_synchable(self):
-        already_synched = self.env['res.partner.autocomplete.sync'].search([('partner_id', '=', self.id), ('synched', '=', True)])
-        return self.is_company and self.partner_gid and not already_synched
+    def _filter_synchable(self):
+        companies = self.filtered('is_company').filtered('partner_gid')
+        already_synched = set(self.env['res.partner.autocomplete.sync'].search([
+            ('partner_id', 'in', companies.ids), ('synched', '=', True)]
+        ).partner_id.ids)
+        return companies.filtered(lambda p: p.id not in already_synched)
 
-    def _update_autocomplete_data(self, vat):
-        self.ensure_one()
-        if vat and self._is_synchable() and self._is_vat_syncable(vat):
-            self.env['res.partner.autocomplete.sync'].sudo().add_to_queue(self.id)
+    def _update_autocomplete_data(self):
+        for partner in self._filter_synchable():
+            vat = partner.vat
+            if vat and partner._is_vat_syncable(vat):
+                self.env['res.partner.autocomplete.sync'].sudo().add_to_queue(partner.id)
 
     @api.model_create_multi
     def create(self, vals_list):
-        partners = super(ResPartner, self).create(vals_list)
-        if len(vals_list) == 1:
-            partners._update_autocomplete_data(vals_list[0].get('vat', False))
-            if partners.additional_info:
-                template_values = json.loads(partners.additional_info)
+        partners = super().create(vals_list)
+        partners._update_autocomplete_data()
+        for partner in partners:
+            if partner.additional_info:
+                template_values = json.loads(partner.additional_info)
                 template_values['flavor_text'] = _("Partner created by Odoo Partner Autocomplete Service")
-                partners.message_post_with_source(
+                partner.message_post_with_source(
                     'iap_mail.enrich_company',
                     render_values=template_values,
                     subtype_xmlid='mail.mt_note',
                 )
-                partners.write({'additional_info': False})
+                partner.write({'additional_info': False})
 
         return partners
 
     def write(self, values):
-        res = super(ResPartner, self).write(values)
-        if len(self) == 1:
-            self._update_autocomplete_data(values.get('vat', False))
-
+        res = super().write(values)
+        if "vat" in values or "is_company" in values:
+            self._update_autocomplete_data()
         return res
 
     @api.model
