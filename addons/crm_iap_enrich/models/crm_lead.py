@@ -27,7 +27,7 @@ class CrmLead(models.Model):
                 lead.show_enrich_button = True
 
     @api.model
-    def _iap_enrich_leads_cron(self, enrich_hours_delay=1, leads_batch_size=1000):
+    def _iap_enrich_leads_cron(self, enrich_hours_delay=24, leads_batch_size=1000):
         timeDelta = self.env.cr.now() - datetime.timedelta(hours=enrich_hours_delay)
         # Get all leads not lost nor won (lost: active = False)
         leads = self.search([
