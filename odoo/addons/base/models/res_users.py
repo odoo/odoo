@@ -291,6 +291,15 @@ class ResUsers(models.Model):
             for uid, pw in cr.fetchall():
                 ResUsers.browse(uid).password = pw
 
+    def _order_field_to_sql(self, alias, field_name, direction, nulls, query):
+        if field_name == 'login_date':
+            sql_field = SQL(
+                "SELECT MAX(create_date) FROM res_users_log WHERE create_uid = %s",
+                SQL.identifier(alias, 'id'),
+            )
+            return SQL("(%s) %s %s", sql_field, direction, nulls)
+        return super()._order_field_to_sql(alias, field_name, direction, nulls, query)
+
     def _set_password(self):
         ctx = self._crypt_context()
         for user in self:
@@ -577,6 +586,11 @@ class ResUsers(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        # Force lowercase login
+        if self.env.context.get('force_lowercase_login', True):
+            for vals in vals_list:
+                if vals.get('login'):
+                    vals['login'] = vals['login'].strip().lower()
         users = super().create(vals_list)
         setting_vals = []
         for user in users:
@@ -594,6 +608,8 @@ class ResUsers(models.Model):
         return users
 
     def write(self, vals):
+        if self.env.context.get('force_lowercase_login', True) and vals.get('login'):
+            vals['login'] = vals['login'].strip().lower()
         if vals.get('active') and SUPERUSER_ID in self._ids:
             raise UserError(_("You cannot activate the superuser."))
         if vals.get('active') == False and self.env.uid in self._ids:  # noqa: E712
@@ -744,7 +760,12 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_login_domain(self, login):
-        return Domain('login', '=', login)
+        # TODO check: performance
+        return Domain.custom(to_sql=lambda model, alias, query: SQL(
+            "lower(trim(%s)) = lower(trim(%s))",
+            model._field_to_sql(alias, 'login', query),
+            login,
+        ))
 
     @api.model
     def _get_email_domain(self, email):
@@ -752,7 +773,8 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_login_order(self):
-        return self._order
+        # keep recently logged in users first
+        return 'login_date desc nulls last, ' + self._order
 
     def _login(self, credential, user_agent_env):
         login = credential['login']

@@ -2541,12 +2541,14 @@ def users(*logins):
             old_uid = self.uid
             try:
                 # retrieve users
-                Users = self.env['res.users'].with_context(active_test=False)
+                Users = self.env['res.users'].with_context(active_test=False)\
+                # Lower case the logins because logins is in lower case only.
+                lower_logins = [login.lower() for login in logins]
                 user_id = {
                     user.login: user.id
-                    for user in Users.search([('login', 'in', list(logins))])
+                    for user in Users.search([('login', 'in', list(lower_logins))])
                 }
-                for login in logins:
+                for login in lower_logins:
                     with self.subTest(login=login):
                         # switch user and execute func
                         self.uid = user_id[login]
