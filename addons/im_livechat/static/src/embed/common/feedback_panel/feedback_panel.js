@@ -16,7 +16,7 @@ import { rpc } from "@web/core/network/rpc";
  */
 export class FeedbackPanel extends Component {
     static template = "im_livechat.FeedbackPanel";
-    static props = ["onClickClose?", "thread"];
+    static props = ["onClickClose?", "onClickNewSession", "thread"];
     static components = { TranscriptSender };
 
     STEP = Object.freeze({

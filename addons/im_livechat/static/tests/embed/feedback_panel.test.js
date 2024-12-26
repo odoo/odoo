@@ -15,7 +15,13 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { asyncStep, mountWithCleanup, waitForSteps } from "@web/../tests/web_test_helpers";
+import {
+    asyncStep,
+    Command,
+    mountWithCleanup,
+    serverState,
+    waitForSteps,
+} from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -47,7 +53,7 @@ test("Close without feedback", async () => {
     await contains(".o-mail-Message-content", { text: "Hello World!" });
     await click("[title*='Close Chat Window']");
     await click(".o-livechat-CloseConfirmation-leave");
-    await click("button", { text: "Close conversation" });
+    await click("button", { text: "Close" });
     await contains(".o-livechat-LivechatButton");
     await waitForSteps(["/im_livechat/visitor_leave_session"]);
 });
@@ -98,4 +104,27 @@ test("Closing folded chat window should open it with feedback", async () => {
     await click(".o-livechat-CloseConfirmation-leave");
     await click(".o-mail-ChatHub-bubbleBtn");
     await contains(".o-mail-ChatWindow p", { text: "Did we correctly answer your question?" });
+});
+
+test("Start new session from feedback panel", async () => {
+    const pyEnv = await startServer();
+    const channelId = await loadDefaultEmbedConfig();
+    await start({ authenticateAs: false });
+    await mountWithCleanup(LivechatButton);
+    await click(".o-livechat-LivechatButton");
+    await contains(".o-mail-ChatWindow", { text: "Mitchell Admin" });
+    await insertText(".o-mail-Composer-input", "Hello World!");
+    triggerHotkey("Enter");
+    await contains(".o-mail-Message-content", { text: "Hello World!" });
+    await click("[title*='Close Chat Window']");
+    await click(".o-livechat-CloseConfirmation-leave");
+    pyEnv["im_livechat.channel"].write([channelId], {
+        user_ids: [
+            Command.clear(serverState.userId),
+            Command.create({ partner_id: pyEnv["res.partner"].create({ name: "Bob Operator" }) }),
+        ],
+    });
+    await click("button", { text: "New Session" });
+    await contains(".o-mail-ChatWindow", { count: 1 });
+    await contains(".o-mail-ChatWindow", { text: "Bob Operator" });
 });

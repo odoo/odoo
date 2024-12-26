@@ -49,7 +49,7 @@ test("do not save fold state of temporary live chats", async () => {
     await click("[title*='Close Chat Window']");
     await waitForSteps(["fold - open"]); // clicking close shows the feedback panel
     await click(".o-livechat-CloseConfirmation-leave");
-    await click("button", { text: "Close conversation" });
+    await click("button", { text: "Close" });
     await waitForSteps(["fold - closed"]);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message", { text: "Hello, how may I help you?" });
