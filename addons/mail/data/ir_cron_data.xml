@@ -29,9 +29,9 @@
         </record>
 
         <record id="ir_cron_delete_notification" model="ir.cron">
-            <field name="name">Notification: Delete Notifications older than 6 Month</field>
+            <field name="name">Notification: Delete Notifications older than 6 Months</field>
             <field name="interval_number">1</field>
-            <field name="interval_type">days</field>
+            <field name="interval_type">months</field>
             <field name="model_id" ref="model_mail_notification"/>
             <field name="code">model._gc_notifications(max_age_days=180)</field>
             <field name="state">code</field>
