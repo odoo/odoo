@@ -113,27 +113,63 @@ export class AddSnippetDialog extends Component {
      * Inserts the snippets from the selected snippetGroup into the <iframe>.
      */
     async insertSnippets() {
-        let snippetsToDisplay = [];
-        const search = this.state.search.toLowerCase();
-        if (search) {
-            const strMatches = str => !search || str.toLowerCase().includes(search);
-            snippetsToDisplay = [...this.props.snippets.values()].filter(snippet => {
-                if (!snippet.excluded && ((snippet.group && !snippet.fromCategory)
-                    || ["structure", "hybrid"].includes(snippet.fromCategory))) {
-                    const matches = strMatches(snippet.category.text)
-                        || strMatches(snippet.displayName)
-                        || strMatches(snippet.data.oeKeywords || '');
-                    if (matches) {
-                        return snippet;
-                    }
-                }
+        // First, filter out snippets which are never supposed to be shown
+        // (excluded ones, inner content ones, ...).
+        let snippetsToDisplay = [...this.props.snippets.values()].filter(snippet => {
+            // Note: custom ones have "custom" group, but inner ones (custom or
+            // not) have no group.
+            return !snippet.excluded && snippet.group;
+        });
+
+        if (this.state.search) {
+            const search = this.state.search;
+            const selectorSearch = /^s_[\w-]*$/.test(search) && `[class^="${search}"], [class*=" ${search}"]`;
+            const lowerCasedSearch = search.toLowerCase();
+            const strMatches = str => str.toLowerCase().includes(lowerCasedSearch);
+            snippetsToDisplay = snippetsToDisplay.filter(snippet => {
+                return selectorSearch && (
+                        snippet.baseBody.matches(selectorSearch)
+                        || snippet.baseBody.querySelector(selectorSearch)
+                    )
+                    || strMatches(snippet.category.text)
+                    || strMatches(snippet.displayName)
+                    || strMatches(snippet.data.oeKeywords || '');
             });
+            // Make sure to show the snippets that "better" match first
+            if (selectorSearch) {
+                snippetsToDisplay.sort((snippetA, snippetB) => {
+                    // If the search is exactly equal to a snippet xmlid, show
+                    // that snippet first.
+                    if (snippetA.data.snippet === search) {
+                        return -1;
+                    }
+                    if (snippetB.data.snippet === search) {
+                        return 1;
+                    }
+
+                    // If the search is a full class name used on the snippet
+                    // root node, show that snippet first.
+                    const aHasExactClassOnRoot = snippetA.baseBody.classList.contains(search);
+                    const bHasExactClassOnRoot = snippetB.baseBody.classList.contains(search);
+                    if (aHasExactClassOnRoot !== bHasExactClassOnRoot) {
+                        return aHasExactClassOnRoot ? -1 : 1;
+                    }
+
+                    // Otherwise show a partial class match of a snippet first
+                    // if it happens on the root node.
+                    const aHasPartialClassOnRoot = snippetA.baseBody.matches(selectorSearch);
+                    const bHasPartialClassOnRoot = snippetB.baseBody.matches(selectorSearch);
+                    if (aHasPartialClassOnRoot !== bHasPartialClassOnRoot) {
+                        return aHasPartialClassOnRoot ? -1 : 1;
+                    }
+
+                    return 0;
+                });
+            }
         } else {
-            snippetsToDisplay = [...this.props.snippets.values()].filter(snippet => {
-                return !snippet.excluded && (snippet.group === this.state.groupSelected
-                    && this.state.groupSelected !== "custom"
-                    || this.state.groupSelected === "custom"
-                    && ["structure", "hybrid"].includes(snippet.fromCategory));
+            // No search: display the currently selected tab (group)
+            snippetsToDisplay = snippetsToDisplay.filter(snippet => {
+                return snippet.group === this.state.groupSelected;
             });
         }
 
