@@ -1475,17 +1475,21 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_product_categories_order(self):
         """ Verify that the order of categories doesnt change in the frontend """
+        self.env['pos.category'].search([]).write({'sequence': 100})
         self.env['pos.category'].create({
             'name': 'AAA',
             'parent_id': False,
+            'sequence': 1,
         })
         self.env['pos.category'].create({
             'name': 'AAC',
             'parent_id': False,
+            'sequence': 3,
         })
         parentA = self.env['pos.category'].create({
             'name': 'AAB',
             'parent_id': False,
+            'sequence': 2,
         })
         parentB = self.env['pos.category'].create({
             'name': 'AAX',
