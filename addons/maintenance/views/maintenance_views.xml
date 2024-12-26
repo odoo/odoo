@@ -617,22 +617,10 @@
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"
                            class="oe_inline" placeholder="Visible to all"/>
                 </group>
-                <group name="group_alias">
-                    <label for="alias_name" string="Email Alias"/>
-                    <div name="alias_def">
-                        <field name="alias_id" class="oe_read_only oe_inline" string="Email Alias" required="0"/>
-                        <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" dir="ltr">
-                            <field name="alias_name" placeholder="alias" class="oe_inline"/>@
-                            <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
-                                   options="{'no_create': True, 'no_open': True}"/>
-                        </div>
-                    </div>
-                </group>
                 <group>
                     <field name="note"/>
                 </group>
                 </sheet>
-                <chatter/>
             </form>
         </field>
     </record>
@@ -765,6 +753,17 @@
                     <group>
                         <field name="active" invisible="1"/>
                         <field name="member_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True}" domain="[('share', '=', False)]"/>
+                    </group>
+                    <group name="group_alias">
+                        <label for="alias_name" string="Email Alias"/>
+                        <div name="alias_def">
+                            <field name="alias_id" class="oe_read_only oe_inline" string="Email Alias" required="0"/>
+                            <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" dir="ltr">
+                                <field name="alias_name" placeholder="alias" class="oe_inline"/>@
+                                <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
+                                    options="{'no_create': True, 'no_open': True}"/>
+                            </div>
+                        </div>
                     </group>
                     <group>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
