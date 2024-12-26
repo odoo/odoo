@@ -85,6 +85,7 @@ import {
     getAdjacentCharacter,
     isLinkEligibleForZwnbsp,
     isZwnbsp,
+    childNodeIndex,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -1305,12 +1306,33 @@ export class OdooEditor extends EventTarget {
     historyResetFromSteps(steps, historyIds) {
         this._historyIds = historyIds;
         this.observerUnactive();
+
+        // Recompute `_latestComputedSelection` after node recreation by converting `anchorNode`
+        // and `focusNode` to paths relative to the editable container for later lookup.
+        let latestComputedSelectionPath;
+        if (this._latestComputedSelection?.anchorNode) {
+            latestComputedSelectionPath = {
+                ...this._latestComputedSelection,
+                anchorNode: this._getNodeIndexPath(this._latestComputedSelection.anchorNode),
+                focusNode: this._getNodeIndexPath(this._latestComputedSelection.focusNode),
+            };
+        }
         for (const node of [...this.editable.childNodes]) {
             node.remove();
         }
         this._historyClean();
         for (const step of steps) {
             this.historyApply(step.mutations);
+        }
+        if (latestComputedSelectionPath) {
+            this._latestComputedSelection = {
+                ...latestComputedSelectionPath,
+                anchorNode: this._getNodeFromIndexPath(latestComputedSelectionPath.anchorNode),
+                focusNode: this._getNodeFromIndexPath(latestComputedSelectionPath.focusNode),
+            };
+            if (this.isSelectionInEditable(this._latestComputedSelection)) {
+                this._latestComputedSelectionInEditable = this._latestComputedSelection;
+            }
         }
         this._historySnapshots = [{ step: steps[0] }];
         this._historySteps = steps;
@@ -1681,6 +1703,28 @@ export class OdooEditor extends EventTarget {
         }
         this._currentStep.mutations.unshift(...this._historyStashedMutations);
         this._historyStashedMutations = [];
+    }
+    /**
+     * Generates the path to a node as an array of indices, relative to a given ancestor.
+     *
+     * @param {Node} node - The node to trace the path for.
+     * @returns {number[]} The path as an array of child indices.
+     */
+    _getNodeIndexPath(node) {
+        return [node, ...ancestors(node, this.editable)].map((ancestor) =>
+            childNodeIndex(ancestor)
+        );
+    }
+    /**
+     * Finds a node in the DOM based on a path of child indices.
+     *
+     * @param {number[]} indexPath - The path as an array of child indices.
+     * @returns {Node|undefined} The node at the specified path, or null if not found.
+     */
+    _getNodeFromIndexPath(indexPath) {
+        return (
+            indexPath.reduceRight((node, index) => node?.childNodes?.[index], this.editable.parentElement)
+        );
     }
     _historyClean() {
         this._historySteps = [];
