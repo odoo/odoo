@@ -65,7 +65,7 @@ export class ConfirmationPage extends Component {
     }
 
     async initOrder() {
-        const data = await rpc(`/pos-self-order/get-orders/`, {
+        const data = await rpc(`/pos-self-order/get-user-data/`, {
             access_token: this.selfOrder.access_token,
             order_access_tokens: [this.props.orderAccessToken],
         });
