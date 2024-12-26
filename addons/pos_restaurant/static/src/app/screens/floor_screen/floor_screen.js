@@ -554,13 +554,20 @@ export class FloorScreen extends Component {
     _getNewTableNumber() {
         let firstNum = 1;
         const floorPrefix = this.activeFloor.floor_prefix;
-        const floorPrefixLength = floorPrefix.toString().length;
-        const tablesNumber = this.activeTables
-            .filter(
+        let floorPrefixLength = floorPrefix.toString().length;
+        let tablesNumber = [];
+        // Handle special case of prefix being 0
+        if (parseFloat(floorPrefix) === 0) {
+            floorPrefixLength = 0;
+            tablesNumber = this.activeTables;
+        } else {
+            tablesNumber = this.activeTables.filter(
                 (table) =>
                     parseInt(table.table_number.toString().slice(0, floorPrefixLength)) ===
                         floorPrefix && table.table_number.toString().length > floorPrefixLength
-            )
+            );
+        }
+        tablesNumber = tablesNumber
             .map((table) => parseInt(table.table_number.toString().slice(floorPrefixLength)))
             .sort(function (a, b) {
                 return a - b;
@@ -723,10 +730,10 @@ export class FloorScreen extends Component {
                 if (data.floor_prefix && data.name) {
                     await this.pos.data.ormWrite("restaurant.floor", [this.activeFloor.id], {
                         name: data.name,
-                        floor_prefix: data.floor_prefix,
+                        floor_prefix: parseInt(data.floor_prefix),
                     });
                     this.activeFloor.name = data.name;
-                    this.activeFloor.floor_prefix = data.floor_prefix;
+                    this.activeFloor.floor_prefix = parseInt(data.floor_prefix);
                     await this.pos.data.read(
                         "restaurant.table",
                         this.activeFloor.table_ids.map((t) => t.id)
