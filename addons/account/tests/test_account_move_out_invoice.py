@@ -3901,7 +3901,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 })
             ],
         })
-        self.product_a.property_account_income_id.deprecated = True
+        self.product_a.property_account_income_id.active = False
         with self.assertRaises(UserError):
             move.action_post()
 

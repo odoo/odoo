@@ -98,7 +98,7 @@ class AccountMoveLine(models.Model):
         index=False,  # covered by account_move_line_account_id_date_idx defined in init()
         auto_join=True,
         ondelete="cascade",
-        domain="[('deprecated', '=', False), ('account_type', '!=', 'off_balance')]",
+        domain="[('account_type', '!=', 'off_balance')]",
         check_company=True,
         tracking=True,
     )
@@ -571,7 +571,7 @@ class AccountMoveLine(models.Model):
                            ON account_companies.account_account_id = account.id
                      WHERE account_companies.res_company_id = ANY(%(company_ids)s)
                        AND account.account_type IN ('asset_receivable', 'liability_payable')
-                       AND account.deprecated = 'f'
+                       AND account.active = 't'
                 )
                 SELECT * FROM previous
                 UNION ALL
@@ -1207,8 +1207,8 @@ class AccountMoveLine(models.Model):
             account = line.account_id
             journal = line.move_id.journal_id
 
-            if account.deprecated and not self.env.context.get('skip_account_deprecation_check'):
-                raise UserError(_('The account %(name)s (%(code)s) is deprecated.', name=account.name, code=account.code))
+            if not account.active and not self.env.context.get('skip_account_deprecation_check'):
+                raise UserError(_('The account %(name)s (%(code)s) is archived.', name=account.name, code=account.code))
 
             account_currency = account.currency_id
             if account_currency and account_currency != line.company_currency_id and account_currency != line.currency_id:
@@ -1529,9 +1529,9 @@ class AccountMoveLine(models.Model):
         protected_fields = self._get_lock_date_protected_fields()
         account_to_write = self.env['account.account'].browse(vals['account_id']) if 'account_id' in vals else None
 
-        # Check writing a deprecated account.
-        if account_to_write and account_to_write.deprecated:
-            raise UserError(_('You cannot use a deprecated account.'))
+        # Check writing a archived account.
+        if account_to_write and not account_to_write.active:
+            raise UserError(_('You cannot use an archived account.'))
 
         inalterable_fields = set(self._get_integrity_hash_fields()).union({'inalterable_hash'})
         hashed_moves = self.move_id.filtered('inalterable_hash')

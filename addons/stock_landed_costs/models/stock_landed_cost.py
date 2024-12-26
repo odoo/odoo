@@ -358,7 +358,7 @@ class StockLandedCostLines(models.Model):
              "By Current cost: Cost will be divided according to product's current cost.\n"
              "By Weight: Cost will be divided depending on its weight.\n"
              "By Volume: Cost will be divided depending on its volume.")
-    account_id = fields.Many2one('account.account', 'Account', domain=[('deprecated', '=', False)])
+    account_id = fields.Many2one('account.account', 'Account')
     currency_id = fields.Many2one('res.currency', related='cost_id.currency_id')
 
     @api.onchange('product_id')
