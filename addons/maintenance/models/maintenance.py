@@ -22,7 +22,6 @@ class MaintenanceStage(models.Model):
 
 class MaintenanceEquipmentCategory(models.Model):
     _name = 'maintenance.equipment.category'
-    _inherit = ['mail.alias.mixin', 'mail.thread']
     _description = 'Maintenance Equipment Category'
 
     @api.depends('equipment_ids')
@@ -36,7 +35,7 @@ class MaintenanceEquipmentCategory(models.Model):
     name = fields.Char('Category Name', required=True, translate=True)
     company_id = fields.Many2one('res.company', string='Company',
         default=lambda self: self.env.company)
-    technician_user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.uid)
+    technician_user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self.env.uid)
     color = fields.Integer('Color Index')
     note = fields.Html('Comments', translate=True)
     equipment_ids = fields.One2many('maintenance.equipment', 'category_id', string='Equipment', copy=False)
@@ -44,8 +43,6 @@ class MaintenanceEquipmentCategory(models.Model):
     maintenance_ids = fields.One2many('maintenance.request', 'category_id', copy=False)
     maintenance_count = fields.Integer(string="Maintenance Count", compute='_compute_maintenance_count')
     maintenance_open_count = fields.Integer(string="Current Maintenance", compute='_compute_maintenance_count')
-    alias_id = fields.Many2one(help="Email alias for this equipment category. New emails will automatically "
-        "create a new equipment under this category.")
     fold = fields.Boolean(string='Folded in Maintenance Pipe', compute='_compute_fold', store=True)
     equipment_properties_definition = fields.PropertiesDefinition('Equipment Properties')
 
@@ -67,14 +64,6 @@ class MaintenanceEquipmentCategory(models.Model):
         for category in self:
             if category.equipment_ids or category.maintenance_ids:
                 raise UserError(_("You cannot delete an equipment category containing equipment or maintenance requests."))
-
-    def _alias_get_creation_values(self):
-        values = super(MaintenanceEquipmentCategory, self)._alias_get_creation_values()
-        values['alias_model_id'] = self.env['ir.model']._get('maintenance.request').id
-        if self.id:
-            values['alias_defaults'] = defaults = ast.literal_eval(self.alias_defaults or "{}")
-            defaults['category_id'] = self.id
-        return values
 
 
 class MaintenanceMixin(models.AbstractModel):
@@ -307,7 +296,7 @@ class MaintenanceRequest(models.Model):
             if request.owner_user_id or request.user_id:
                 request._add_followers()
             if request.equipment_id and not request.maintenance_team_id:
-                request.maintenance_team_id = request.equipment_id.maintenance_team_id
+                request.maintenance_team_id = request.maintenance_team_id
             if request.close_date and not request.stage_id.done:
                 request.close_date = False
             if not request.close_date and request.stage_id.done:
@@ -387,6 +376,7 @@ class MaintenanceRequest(models.Model):
 
 class MaintenanceTeam(models.Model):
     _name = 'maintenance.team'
+    _inherit = ['mail.alias.mixin', 'mail.thread']
     _description = 'Maintenance Teams'
 
     name = fields.Char('Team Name', required=True, translate=True)
@@ -407,6 +397,7 @@ class MaintenanceTeam(models.Model):
     todo_request_count_high_priority = fields.Integer(string="Number of Requests in High Priority", compute='_compute_todo_requests')
     todo_request_count_block = fields.Integer(string="Number of Requests Blocked", compute='_compute_todo_requests')
     todo_request_count_unscheduled = fields.Integer(string="Number of Requests Unscheduled", compute='_compute_todo_requests')
+    alias_id = fields.Many2one(help="Email alias for this maintenance team.")
 
     @api.depends('request_ids.stage_id.done')
     def _compute_todo_requests(self):
@@ -427,3 +418,11 @@ class MaintenanceTeam(models.Model):
     def _compute_equipment(self):
         for team in self:
             team.equipment_count = len(team.equipment_ids)
+
+    def _alias_get_creation_values(self):
+        values = super()._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get('maintenance.request').id
+        if self.id:
+            values['alias_defaults'] = defaults = ast.literal_eval(self.alias_defaults or "{}")
+            defaults['maintenance_team_id'] = self.id
+        return values
