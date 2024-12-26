@@ -8,7 +8,7 @@ import json
 
 from odoo import _, api, fields, models, Command, tools
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.mail import is_html_empty, email_normalize, email_split_and_format
 from odoo.tools.misc import clean_context
 from odoo.addons.mail.tools.parser import parse_res_ids
@@ -1395,17 +1395,15 @@ class MailComposeMessage(models.TransientModel):
         :return: an Odoo domain (list of leaves) """
         self.ensure_one()
         if isinstance(self.res_domain, (str, bool)) and not self.res_domain:
-            return expression.FALSE_DOMAIN
+            return Domain.FALSE
         try:
             domain = self.res_domain
             if isinstance(self.res_domain, str):
                 domain = ast.literal_eval(domain)
 
-            expression.expression(
-                domain,
-                self.env[self.model],
-            )
-        except (ValueError, AssertionError) as e:
+            domain = Domain(domain)
+            domain.validate(self.env[self.model])
+        except ValueError as e:
             raise ValidationError(
                 _("Invalid domain “%(domain)s” (type “%(domain_type)s”)",
                     domain=self.res_domain,
