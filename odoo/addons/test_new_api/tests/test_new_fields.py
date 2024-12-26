@@ -3358,23 +3358,23 @@ class TestX2many(TransactionExpressionCase):
         })
 
         # a one2many field without context does not match its inactive children
-        self.assertIn(parent, Model.search([('children_ids.name', '=', 'A')]))
-        self.assertNotIn(parent, Model.search([('children_ids.name', '=', 'B')]))
-        # Same result when it used name_search
-        self.assertIn(parent, Model.search([('children_ids', '=', 'A')]))
-        self.assertNotIn(parent, Model.search([('children_ids', '=', 'B')]))
+        self.assertIn(parent, self._search(Model, [('children_ids.name', '=', 'A')]))
+        self.assertNotIn(parent, self._search(Model, [('children_ids.name', '=', 'B')]))
+        # Same result when it used _search_display_name
+        self.assertIn(parent, self._search(Model, [('children_ids', '=', 'A')]))
+        self.assertNotIn(parent, self._search(Model, [('children_ids', '=', 'B')]))
         # Same result with the child_of operator
         self.assertIn(parent, Model.search([('children_ids', 'child_of', 'A')]))
         self.assertNotIn(parent, Model.search([('children_ids', 'child_of', 'B')]))
 
         # a one2many field with active_test=False matches its inactive children
-        self.assertIn(parent, Model.search([('all_children_ids.name', '=', 'A')]))
-        self.assertIn(parent, Model.search([('all_children_ids.name', '=', 'B')]))
-        # Same result when it used name_search
-        self.assertIn(parent, Model.search([('all_children_ids', '=', 'A')]))
+        self.assertIn(parent, self._search(Model, [('all_children_ids.name', '=', 'A')]))
+        self.assertIn(parent, self._search(Model, [('all_children_ids.name', '=', 'B')]))
+        # Same result when it used _search_display_name
+        self.assertIn(parent, self._search(Model, [('all_children_ids', '=', 'A')]))
         # Same result with the child_of operator
         self.assertIn(parent, Model.search([('all_children_ids', 'child_of', 'A')]))
-        self.assertIn(parent, Model.search([('all_children_ids', '=', 'B')]))
+        self.assertIn(parent, self._search(Model, [('all_children_ids', '=', 'B')]))
         # Same result with the child_of operator
         self.assertIn(parent, Model.search([('all_children_ids', 'child_of', 'A')]))
         self.assertIn(parent, Model.search([('all_children_ids', 'child_of', 'B')]))
@@ -3389,13 +3389,16 @@ class TestX2many(TransactionExpressionCase):
             ],
         })
         child_a, child_b = parent.with_context(active_test=False).relatives_ids
+        # TODO all_relatives_ids is empty, because it is another fields using
+        # the same backend table as relative_ids
+        Model.invalidate_model(['all_relatives_ids'])
 
         # a many2many field without context does not match its inactive children
-        self.assertIn(parent, Model.search([('relatives_ids.name', '=', 'A')]))
-        self.assertNotIn(parent, Model.search([('relatives_ids.name', '=', 'B')]))
-        # Same result when it used name_search
-        self.assertIn(parent, Model.search([('relatives_ids', '=', 'A')]))
-        self.assertNotIn(parent, Model.search([('relatives_ids', '=', 'B')]))
+        self.assertIn(parent, self._search(Model, [('relatives_ids.name', '=', 'A')]))
+        self.assertNotIn(parent, self._search(Model, [('relatives_ids.name', '=', 'B')]))
+        # Same result when it used _search_display_name
+        self.assertIn(parent, self._search(Model, [('relatives_ids', '=', 'A')]))
+        self.assertNotIn(parent, self._search(Model, [('relatives_ids', '=', 'B')]))
         # Same result with the child_of operator
         self.assertIn(parent, Model.search([('relatives_ids', 'child_of', child_a.id)]))
         self.assertIn(parent, Model.search([('relatives_ids', 'child_of', 'A')]))
@@ -3403,11 +3406,11 @@ class TestX2many(TransactionExpressionCase):
         self.assertNotIn(parent, Model.search([('relatives_ids', 'child_of', 'B')]))
 
         # a many2many field with active_test=False matches its inactive children
-        self.assertIn(parent, Model.search([('all_relatives_ids.name', '=', 'A')]))
-        self.assertIn(parent, Model.search([('all_relatives_ids.name', '=', 'B')]))
-        # Same result when it used name_search
-        self.assertIn(parent, Model.search([('all_relatives_ids', '=', 'A')]))
-        self.assertIn(parent, Model.search([('all_relatives_ids', '=', 'B')]))
+        self.assertIn(parent, self._search(Model, [('all_relatives_ids.name', '=', 'A')]))
+        self.assertIn(parent, self._search(Model, [('all_relatives_ids.name', '=', 'B')]))
+        # Same result when it used _search_display_name
+        self.assertIn(parent, self._search(Model, [('all_relatives_ids', '=', 'A')]))
+        self.assertIn(parent, self._search(Model, [('all_relatives_ids', '=', 'B')]))
         # Same result with the child_of operator
         self.assertIn(parent, Model.search([('all_relatives_ids', 'child_of', child_a.id)]))
         self.assertIn(parent, Model.search([('all_relatives_ids', 'child_of', 'A')]))
@@ -4143,6 +4146,12 @@ class TestMany2oneReference(TransactionExpressionCase):
         # searching on the one2many should flush the field 'res_model'
         records = record.search([('model_ids.create_date', '!=', False)])
         self.assertIn(record, records)
+
+        # filtered should be aligned
+        # TODO right now, need to invalidate because the inverse of
+        # many2one_reference is not updated
+        record.invalidate_model()
+        self._search(record, [('model_ids.create_date', '!=', False)])
 
 
 @tagged('selection_abstract')
