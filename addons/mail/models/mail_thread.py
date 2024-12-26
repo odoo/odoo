@@ -4151,6 +4151,7 @@ class MailThread(models.AbstractModel):
         """
         if not self:
             return True
+        self = self.browse(set(self.ids)) # Filter duplicates to avoid triggering mail_followers_res_partner_res_model_id_uniq constraint
 
         new_partner_subtypes = dict()
 
