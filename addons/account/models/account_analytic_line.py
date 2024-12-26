@@ -17,7 +17,6 @@ class AccountAnalyticLine(models.Model):
         'account.account',
         string='Financial Account',
         ondelete='restrict',
-        domain="[('deprecated', '=', False)]",
         check_company=True,
         compute='_compute_general_account_id', store=True, readonly=False
     )

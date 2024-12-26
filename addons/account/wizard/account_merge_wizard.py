@@ -41,7 +41,7 @@ class AccountMergeWizard(models.TransientModel):
     def _get_grouping_key(self, account):
         """ Return a grouping key for the given account. """
         self.ensure_one()
-        grouping_fields = ['account_type', 'non_trade', 'currency_id', 'reconcile', 'deprecated']
+        grouping_fields = ['account_type', 'non_trade', 'currency_id', 'reconcile', 'active']
         if self.is_group_by_name:
             grouping_fields.append('name')
         return tuple(account[field] for field in grouping_fields)
@@ -295,7 +295,7 @@ class AccountMergeWizardLine(models.TransientModel):
         if self.account_id.reconcile:
             other_name_elements.append(_("Reconcilable"))
 
-        if self.account_id.deprecated:
+        if not self.account_id.active:
             other_name_elements.append(_("Deprecated"))
 
         if not self.wizard_id.is_group_by_name:

@@ -45,7 +45,7 @@ class AccountInvoiceReport(models.Model):
     product_uom_id = fields.Many2one('uom.uom', string='Unit', readonly=True)
     product_categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
     invoice_date_due = fields.Date(string='Due Date', readonly=True)
-    account_id = fields.Many2one('account.account', string='Revenue/Expense Account', readonly=True, domain=[('deprecated', '=', False)])
+    account_id = fields.Many2one('account.account', string='Revenue/Expense Account', readonly=True)
     price_subtotal_currency = fields.Float(string='Untaxed Amount in Currency', readonly=True)
     price_subtotal = fields.Float(string='Untaxed Amount', readonly=True)
     price_total = fields.Float(string='Total', readonly=True)

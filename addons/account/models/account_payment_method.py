@@ -113,8 +113,7 @@ class AccountPaymentMethodLine(models.Model):
         check_company=True,
         copy=False,
         ondelete='restrict',
-        domain="[('deprecated', '=', False), "
-                "'|', ('account_type', 'in', ('asset_current', 'liability_current')), ('id', '=', default_account_id)]"
+        domain="['|', ('account_type', 'in', ('asset_current', 'liability_current')), ('id', '=', default_account_id)]"
     )
     journal_id = fields.Many2one(
         comodel_name='account.journal',

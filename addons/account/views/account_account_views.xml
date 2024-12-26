@@ -68,7 +68,6 @@
                                     <group>
                                         <field name="internal_group" invisible="1" readonly="1"/>
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
-                                        <field name="deprecated"/>
                                         <field name="group_id"/>
                                         <field name="company_ids" widget="many2many_tags" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     </group>
@@ -152,7 +151,7 @@
                     <filter string="Expenses" name="expensesacc" domain="[('internal_group','=', 'expense')]"/>
                     <separator/>
                     <filter string="Account with Entries" name="used" domain="[('used', '=', True)]"/>
-                    <filter string="Active Account" name="activeacc" domain="[('deprecated', '=', False)]"/>
+                    <filter string="Inactive Accounts" name="inactiveacc" domain="[('active', '=', False)]"/>
                     <separator/>
                     <field name="account_type"/>
                     <group expand="0" string="Group By">
@@ -183,7 +182,6 @@
                 to disclose a certain amount of information.
               </p>
             </field>
-            <field name="context">{'search_default_activeacc': True}</field>
         </record>
 
         <record model="ir.actions.server" id="action_unmerge_accounts">

@@ -16,14 +16,12 @@
                 <field name="profit_account_id"
                        invisible="type not in ('cash', 'bank') or country_code != 'DK'"
                        groups="account.group_account_readonly"
-                       domain="[('deprecated', '=', False)]"
                 />
             </field>
             <field name="loss_account_id" position="after">
                 <field name="loss_account_id"
                        invisible="type not in ('cash', 'bank') or country_code != 'DK'"
                        groups="account.group_account_readonly"
-                       domain="[('deprecated', '=', False)]"
                 />
             </field>
         </field>

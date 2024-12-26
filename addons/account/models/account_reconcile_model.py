@@ -47,7 +47,7 @@ class AccountReconcileModelLine(models.Model):
     company_id = fields.Many2one(related='model_id.company_id', store=True)
     sequence = fields.Integer(required=True, default=10)
     account_id = fields.Many2one('account.account', string='Account', ondelete='cascade',
-        domain="[('deprecated', '=', False), ('account_type', '!=', 'off_balance')]", check_company=True)
+        domain="[('account_type', '!=', 'off_balance')]", check_company=True)
 
     # This field is ignored in a bank statement reconciliation.
     journal_id = fields.Many2one(

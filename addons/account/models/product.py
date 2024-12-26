@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools import format_amount
 
-ACCOUNT_DOMAIN = "['&', ('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance'))]"
+ACCOUNT_DOMAIN = "[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance'))]"
 
 
 class ProductCategory(models.Model):
