@@ -271,6 +271,9 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
      * @param {string} pivotId pivot id
      */
     _addDomain(pivotId) {
+        if (this.getters.getPivotCoreDefinition(pivotId).type !== "ODOO") {
+            return;
+        }
         const domainList = [];
         for (const [filterId, fieldMatch] of Object.entries(
             this.getters.getPivotFieldMatch(pivotId)
