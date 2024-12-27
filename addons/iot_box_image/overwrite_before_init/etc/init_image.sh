@@ -126,6 +126,7 @@ chown odoo:odoo "/home/pi/odoo.conf"
 
 groupadd usbusers
 usermod -a -G usbusers odoo
+usermod -a -G video odoo
 usermod -a -G lp odoo
 usermod -a -G input lightdm
 usermod -a -G pi odoo
