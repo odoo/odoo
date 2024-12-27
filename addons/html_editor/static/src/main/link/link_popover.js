@@ -32,13 +32,10 @@ export class LinkPopover extends Component {
         { size: "lg", label: _t("Large") },
     ];
     buttonStylesData = [
-        { style: "", label: _t("Default") },
-        { style: "rounded-circle", label: _t("Default + Rounded") },
-        { style: "outline", label: _t("Outline") },
-        { style: "outline,rounded-circle", label: _t("Outline + Rounded") },
         { style: "fill", label: _t("Fill") },
         { style: "fill,rounded-circle", label: _t("Fill + Rounded") },
-        { style: "flat", label: _t("Flat") },
+        { style: "outline", label: _t("Outline") },
+        { style: "outline,rounded-circle", label: _t("Outline + Rounded") },
     ];
     setup() {
         this.ui = useService("ui");
@@ -220,7 +217,6 @@ export class LinkPopover extends Component {
                 this.state.urlTitle = this.state.label;
             }
         } else {
-            const html_parser = new window.DOMParser();
             // Set state based on cached link meta data
             // for record missing errors, we push a warning that the url is likely invalid
             // for other errors, we log them to not block the ui
@@ -243,10 +239,7 @@ export class LinkPopover extends Component {
                     internalMetadata.link_preview_name ||
                     internalMetadata.display_name ||
                     internalMetadata.name;
-                this.state.urlDescription = internalMetadata.description
-                    ? html_parser.parseFromString(internalMetadata.description, "text/html").body
-                          .textContent
-                    : "";
+                this.state.urlDescription = internalMetadata?.description || "";
                 this.state.urlTitle = this.state.linkPreviewName
                     ? this.state.linkPreviewName
                     : this.state.url;
@@ -268,7 +261,7 @@ export class LinkPopover extends Component {
      */
     onChangeClasses() {
         const shapes = this.state.buttonStyle ? this.state.buttonStyle.split(",") : [];
-        const style = ["outline", "fill"].includes(shapes[0]) ? `${shapes[0]}-` : "";
+        const style = ["outline", "fill"].includes(shapes[0]) ? `${shapes[0]}-` : "fill-";
         const shapeClasses = shapes.slice(style ? 1 : 0).join(" ");
         this.state.classes =
             (this.state.type ? `btn btn-${style}${this.state.type}` : "") +

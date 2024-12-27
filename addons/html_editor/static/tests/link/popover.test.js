@@ -517,16 +517,16 @@ describe("Link formatting in the popover", () => {
         ]);
         expect(queryOne('select[name="link_type"]').selectedIndex).toBe(2);
         expect(queryOne('select[name="link_style_size"]').selectedIndex).toBe(0);
-        expect(queryOne('select[name="link_style_shape"]').selectedIndex).toBe(5);
+        expect(queryOne('select[name="link_style_shape"]').selectedIndex).toBe(1);
 
         await click('select[name="link_type"');
         await select("primary");
         await click('select[name="link_style_size"');
         await select("lg");
         await click('select[name="link_style_shape"');
-        await select("rounded-circle");
+        await select("fill,rounded-circle");
         await animationFrame();
-        expect(linkPreviewEl).toHaveClass(["btn", "btn-primary", "rounded-circle", "btn-lg"]);
+        expect(linkPreviewEl).toHaveClass(["btn", "btn-fill-primary", "rounded-circle", "btn-lg"]);
     });
     test("after applying the link format, the link's format should be updated", async () => {
         const { el } = await setupEditor('<p><a href="http://test.com/">link2[]</a></p>');
@@ -539,15 +539,15 @@ describe("Link formatting in the popover", () => {
         await select("secondary");
         await animationFrame();
         await click('select[name="link_style_shape"');
-        await select("flat");
+        await select("outline,rounded-circle");
         await animationFrame();
 
         const linkPreviewEl = queryOne("#link-preview");
-        expect(linkPreviewEl).toHaveClass(["btn", "btn-secondary", "flat"]);
+        expect(linkPreviewEl).toHaveClass(["btn", "btn-outline-secondary", "rounded-circle"]);
 
         await click(".o_we_apply_link");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="http://test.com/" class="btn btn-secondary flat">link2[]</a></p>'
+            '<p><a href="http://test.com/" class="btn btn-outline-secondary rounded-circle">link2[]</a></p>'
         );
     });
     test("no preview of the link when the url is empty", async () => {
@@ -632,7 +632,7 @@ describe("link preview", () => {
     test("test internal link preview", async () => {
         onRpc("/html_editor/link_preview_internal", () => {
             return {
-                description: markup("<p>Test description</p>"),
+                description: markup("Test description"),
                 link_preview_name: "Task name | Project name",
             };
         });
