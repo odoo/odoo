@@ -35,6 +35,9 @@ migrationStepRegistry.add("odoo_migration_sorted_column", {
         if (version < 13) {
             data = migrate12to13(data);
         }
+        if (version < 14) {
+            data = migrate13to14(data);
+        }
         return data;
     },
 });
@@ -406,6 +409,16 @@ function migrate12to13(data) {
                 order: pivot.sortedColumn.order,
                 domain: [],
             };
+        }
+    }
+    return data;
+}
+
+function migrate13to14(data) {
+    for (const globalFilter of data.globalFilters || []) {
+        if (globalFilter.type === "relation") {
+            globalFilter.operator = globalFilter.includeChildren ? "child_of" : "in";
+            delete globalFilter.includeChildren;
         }
     }
     return data;
