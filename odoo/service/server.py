@@ -1216,25 +1216,29 @@ class WorkerCron(Worker):
     def process_work(self):
         _logger.debug("WorkerCron (%s) polling for jobs", self.pid)
         db_names = self._db_list()
-        if len(db_names):
-            self.db_index = (self.db_index + 1) % len(db_names)
-            db_name = db_names[self.db_index]
-            self.setproctitle(db_name)
 
-            from odoo.addons.base.models import ir_cron  # noqa: PLC0415
-            ir_cron.IrCron._process_jobs(db_name)
-
-            # dont keep cursors in multi database mode
-            if len(db_names) > 1:
-                sql_db.close_db(db_name)
-
-            self.request_count += 1
-            if self.request_count >= self.request_max and self.request_max < len(db_names):
-                _logger.error("There are more dabatases to process than allowed "
-                              "by the `limit_request` configuration variable: %s more.",
-                              len(db_names) - self.request_max)
-        else:
+        if not len(db_names):
             self.db_index = 0
+            return
+
+        self.db_index = (self.db_index + 1) % len(db_names)
+        db_name = db_names[self.db_index]
+        self.setproctitle(db_name)
+
+        from odoo.addons.base.models.ir_cron import IrCron  # noqa: PLC0415
+        IrCron._process_jobs(db_name)
+
+        # dont keep cursors in multi database mode
+        if len(db_names) > 1:
+            sql_db.close_db(db_name)
+
+        self.request_count += 1
+        if self.request_count >= self.request_max and self.request_max < len(db_names):
+            _logger.error(
+                "There are more dabatases to process than allowed "
+                "by the `limit_request` configuration variable: %s more.",
+                len(db_names) - self.request_max,
+            )
 
     def start(self):
         os.nice(10)     # mommy always told me to be nice with others...
