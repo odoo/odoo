@@ -119,3 +119,58 @@ test("Refresh the overlay buttons when toggling the mobile preview", async () =>
     expect(".overlay .o_bring_front").toHaveCount(1);
     expect(".overlay .fa-angle-left, .overlay .fa-angle-right").toHaveCount(0);
 });
+
+test("Use the 'remove' overlay buttons: removing a grid item", async () => {
+    await setupWebsiteBuilder(`
+        <section>
+            <div class="container">
+                <div class="row o_grid_mode" data-row-count="14">
+                    <div class="o_grid_item g-height-4 g-col-lg-7 col-lg-7" style="grid-area: 1 / 1 / 5 / 8; z-index: 1;">
+                        <p>TEST</p>
+                    </div>
+                    <div class="o_grid_item g-height-14 g-col-lg-5 col-lg-5" style="grid-area: 1 / 8 / 15 / 13; z-index: 2;">
+                        <p>TEST</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `);
+
+    await contains(":iframe .g-height-14").click();
+    expect(".overlay .o_overlay_options").toHaveCount(1);
+    expect(".overlay .oe_snippet_remove").toHaveCount(1);
+
+    // Check that the element was removed, the grid was resized and the overlay
+    // is now on the other grid item (= sibling).
+    await contains(".overlay .oe_snippet_remove").click();
+    expect(":iframe .g-height-14").toHaveCount(0);
+    expect(":iframe .row.o_grid_mode").toHaveAttribute("data-row-count", "4");
+    expect(".overlay .oe_snippet_remove").toHaveCount(1);
+    expect(".oe_overlay.oe_active").toHaveRect(":iframe .o_grid_item");
+});
+
+test("Use the 'remove' overlay buttons: removing the last element will remove the parent", async () => {
+    await setupWebsiteBuilder(`
+        <section class="first-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <p>TEST</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="second-section">
+            <p>TEST</p>
+        </section>
+    `);
+
+    await contains(":iframe .col-lg-6").click();
+    expect(".overlay .oe_snippet_remove").toHaveCount(1);
+
+    await contains(".overlay .oe_snippet_remove").click();
+    expect(":iframe .col-lg-6, :iframe .first-section").toHaveCount(0);
+    expect(".overlay .oe_snippet_remove").toHaveCount(1);
+    // Check that the parent sibling is selected.
+    expect(".oe_overlay.oe_active").toHaveRect(":iframe .second-section");
+});
