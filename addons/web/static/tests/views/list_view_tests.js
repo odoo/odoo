@@ -10664,6 +10664,88 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test(
+        "multi edit field with daterange widget across multiple month",
+        async function (assert) {
+            assert.expect(5);
+
+            serverData.models.daterange = {
+                fields: {
+                    date_start: { string: "Date Start", type: "date" },
+                    date_end: { string: "Date End", type: "date" },
+                },
+                records: [
+                    {
+                        id: 1,
+                        date_start: "2017-01-25",
+                        date_end: "2017-01-26",
+                    },
+                    {
+                        id: 2,
+                        date_start: "2017-01-02",
+                        date_end: "2017-01-03",
+                    },
+                ],
+            };
+            patchTimeZone(360);
+
+            await makeView({
+                type: "list",
+                resModel: "daterange",
+                serverData,
+                arch: `
+                <tree multi_edit="1">
+                    <field name="date_start" widget="daterange" options="{'related_end_date': 'date_end'}" />
+                    <field name="date_end" widget="daterange" options="{'related_start_date': 'date_start'}"/>
+                </tree>`,
+                mockRPC(route, args) {
+                    if (args.method === "write") {
+                        assert.deepEqual(args.args, [
+                            [1, 2],
+                            { date_start: "2017-01-16", date_end: "2017-03-12" },
+                        ]);
+                    }
+                },
+            });
+            await click(target.querySelector(".o_list_record_selector input"));
+            await click(target.querySelector(".o_data_row .o_data_cell")); // edit first row
+            await click(target.querySelector(".o_data_row .o_data_cell .o_field_daterange input"));
+            // change dates via the daterangepicker
+            const datepicker = document.querySelector(`.daterangepicker[data-name="date_start"]`);
+            await triggerEvent(
+                datepicker,
+                ".drp-calendar.left .available[data-title='r3c1']",
+                "mousedown"
+            );
+            await click(datepicker, ".next");
+            await triggerEvent(
+                datepicker,
+                ".drp-calendar.right .available[data-title='r2c0']",
+                "mousedown"
+            );
+            const applyBtn = datepicker.querySelector(".applyBtn");
+            assert.notOk(applyBtn.disabled);
+
+            // Apply the changes
+            await click(applyBtn);
+            assert.containsOnce(
+                target,
+                ".modal",
+                "The confirm dialog should appear to confirm the multi edition."
+            );
+
+            const changesTable = document.querySelector(".modal-body .o_modal_changes");
+            assert.strictEqual(
+                changesTable.innerText.replaceAll("\n", "").replaceAll("\t", ""),
+                "Field:Date StartUpdate to:01/16/2017Field:Date EndUpdate to:03/12/2017"
+            );
+
+            // Valid the confirm dialog
+            await click(target, ".modal .btn-primary");
+            assert.containsNone(target, ".modal");
+        }
+    );
+
+    QUnit.test(
         "multi edit field with daterange widget (edition without using the picker)",
         async function (assert) {
             assert.expect(4);

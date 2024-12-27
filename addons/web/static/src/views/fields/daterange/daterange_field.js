@@ -41,6 +41,14 @@ export class DateRangeField extends Component {
                     window.$(el).on("show.daterangepicker", this.onPickerShow.bind(this));
                     window.$(el).on("hide.daterangepicker", this.onPickerHide.bind(this));
 
+                    this.pickerContainer.addEventListener(
+                        "click",
+                        (ev) => {
+                            ev.isFromDateRangePicker = true;
+                        },
+                        { capture: true }
+                    );
+
                     this.pickerContainer.dataset.name = this.props.name;
                 }
 
