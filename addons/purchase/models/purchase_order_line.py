@@ -141,7 +141,7 @@ class PurchaseOrderLine(models.Model):
             line.qty_invoiced = qty
 
             # compute qty_to_invoice
-            if line.order_id.state in ['purchase', 'done']:
+            if line.order_id.state == 'purchase':
                 if line.product_id.purchase_method == 'purchase':
                     line.qty_to_invoice = line.product_qty - line.qty_invoiced
                 else:
@@ -224,9 +224,9 @@ class PurchaseOrderLine(models.Model):
         return super(PurchaseOrderLine, self).write(values)
 
     @api.ondelete(at_uninstall=False)
-    def _unlink_except_purchase_or_done(self):
+    def _unlink_except_purchase(self):
         for line in self:
-            if line.order_id.state in ['purchase', 'done']:
+            if line.order_id.state == 'purchase':
                 state_description = {state_desc[0]: state_desc[1] for state_desc in self._fields['state']._description_selection(self.env)}
                 raise UserError(_('Cannot delete a purchase order line which is in state “%s”.', state_description.get(line.state)))
 
@@ -451,7 +451,7 @@ class PurchaseOrderLine(models.Model):
     def action_purchase_history(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("purchase.action_purchase_history")
-        action['domain'] = [('state', 'in', ['purchase', 'done']), ('product_id', '=', self.product_id.id)]
+        action['domain'] = [('state', '=', 'purchase'), ('product_id', '=', self.product_id.id)]
         action['display_name'] = _("Purchase History for %s", self.product_id.display_name)
         action['context'] = {
             'search_default_partner_id': self.partner_id.id
