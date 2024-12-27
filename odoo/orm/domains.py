@@ -1587,10 +1587,12 @@ def _optimize_boolean_in_all(condition, model):
     return condition
 
 
-def _value_to_date(value, env, iso_only=False):
+def _value_to_date(value, env, iso_only=False, inside_day=lambda dt: dt.date()):
     # check datetime first, because it's a subclass of date
     if isinstance(value, datetime):
-        return value.date()
+        if value.time() == time.min:
+            return value.date()
+        return inside_day(value)
     if isinstance(value, date) or value is False:
         return value
     if isinstance(value, str):
@@ -1603,9 +1605,9 @@ def _value_to_date(value, env, iso_only=False):
                 return value
         else:
             value = parse_date(value, env)
-        return _value_to_date(value, env)
+        return _value_to_date(value, env, inside_day=inside_day)
     if isinstance(value, COLLECTION_TYPES):
-        return OrderedSet(_value_to_date(v, env=env, iso_only=iso_only) for v in value)
+        return OrderedSet(_value_to_date(v, env=env, iso_only=iso_only, inside_day=inside_day) for v in value)
     raise ValueError(f'Failed to cast {value!r} into a date')
 
 
@@ -1618,7 +1620,26 @@ def _optimize_type_date(condition, model):
         or "." in condition.field_expr
     ):
         return condition
-    value = _value_to_date(condition.value, model.env, iso_only=True)
+
+    def inside_day(dt: datetime):
+        # when comparing to a date inside a day, update the operator
+        nonlocal operator
+        match operator:
+            case '<':
+                operator = '<='
+            case '>=':
+                operator = '>'
+            case '<=' | '>':
+                pass
+            case _:
+                return None  # filter out the value
+        return dt.date()
+
+    value = _value_to_date(condition.value, model.env, iso_only=True, inside_day=inside_day)
+    if isinstance(value, OrderedSet):
+        value.discard(None)
+    elif value is None:
+        return Domain(operator in NEGATIVE_CONDITION_OPERATORS)
     if value is False and operator[0] in ('<', '>'):
         # comparison to False results in an empty domain
         return _FALSE_DOMAIN
