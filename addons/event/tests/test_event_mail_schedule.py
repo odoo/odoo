@@ -660,11 +660,13 @@ class TestMailSchedule(EventMailCommon):
         """ Async mode for schedulers activated, should not send communication
         in the same transaction. """
         test_event = self.test_event.with_env(self.env)
-        cron = self.env.ref('event.event_mail_scheduler')
+        cron_event = self.env.ref('event.event_mail_scheduler')
+        cron_mail = self.env.ref('mail.ir_cron_mail_scheduler_action')
         reference_now = self.reference_now
 
         self.env['ir.config_parameter'].sudo().set_param('event.event_mail_async', True)
-        with self.capture_triggers(cron.id) as capt, \
+        with self.capture_triggers(cron_event.id) as capt_event, \
+             self.capture_triggers(cron_mail.id) as capt_mail, \
              self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \
              self.mock_mail_gateway():
             existing = self.env['event.registration'].create([
@@ -676,13 +678,14 @@ class TestMailSchedule(EventMailCommon):
             ])
         self.assertEqual(len(self._new_mails), 0)
         self.assertEqual(self.mail_mail_create_mocked.call_count, 0)
-        capt.records.ensure_one()
-        self.assertEqual(capt.records.call_at, reference_now.replace(microsecond=0) + relativedelta(minutes=10))
+        capt_event.records.ensure_one()
+        self.assertEqual(capt_event.records.call_at, reference_now.replace(microsecond=0) + relativedelta(minutes=10))
+        capt_mail.records.ensure_one()
 
         # run cron: emails should be send for registrations
         with self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \
              self.mock_mail_gateway():
-            cron.sudo().method_direct_trigger()
+            cron_event.sudo().method_direct_trigger()
         self.assertMailMailWEmails(
             [formataddr((reg.name, reg.email)) for reg in existing],
             "outgoing",
