@@ -68,6 +68,7 @@ export class ProductScreen extends Component {
             // the callbacks in `onMounted` hook.
             this.numberBuffer.reset();
         });
+
         this.barcodeReader = useService("barcode_reader");
 
         useBarcodeReader({

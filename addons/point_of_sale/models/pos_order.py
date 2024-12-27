@@ -906,12 +906,10 @@ class PosOrder(models.Model):
 
     def action_pos_order_cancel(self):
         cancellable_orders = self.filtered(lambda order: order.state == 'draft')
-        res = cancellable_orders.write({'state': 'cancel'})
-        if res:
-            cancellable_orders[0].config_id._notify(('CANCEL_ORDERS',
-                {"order_ids": cancellable_orders.ids, 'login_number': self.env.context.get('login_number', False)},
-            ))
-        return res
+        cancellable_orders.write({'state': 'cancel'})
+        return {
+            'pos.order': cancellable_orders.read(self._load_pos_data_fields(self.config_id.ids[0]), load=False)
+        }
 
     def _apply_invoice_payments(self, is_reverse=False):
         receivable_account = self.env["res.partner"]._find_accounting_partner(self.partner_id).with_company(self.company_id).property_account_receivable_id
@@ -963,8 +961,10 @@ class PosOrder(models.Model):
                 order_ids.append(self._process_order(order, False))
                 _logger.info("PoS synchronisation #%d order %s created pos.order #%d", sync_token, order_log_name, order_ids[-1])
             else:
-                # Give as much information as this situation shouldn't be normal and we might lose information
-                _logger.warning("PoS synchronisation #%d unprocessed order %s order full data: %s", sync_token, order_log_name, pformat(order))
+                # This situation can happen if a unsyncronized PoS try to sync an order that was already synced by another PoS
+                # we need to send back the order to the PoS to let it know its new status
+                _logger.info("PoS synchronisation #%d order %s is already done, sending back to unsynced PoS", sync_token, order_log_name)
+                order_ids.append(existing_order.id)
 
         # Sometime pos_orders_ids can be empty.
         pos_order_ids = self.env['pos.order'].browse(order_ids)

@@ -157,21 +157,84 @@ export class PosStore extends Reactive {
         await this.processServerData();
         this.onNotified = getOnNotified(this.bus, this.config.access_token);
         this.onNotified("CLOSING_SESSION", this.closingSessionNotification.bind(this));
-        this.onNotified("CANCEL_ORDERS", this.cancelOrderNotification.bind(this));
+        this.onNotified("SYNCHRONISATION", this.recordSynchronisation.bind(this));
 
         return await this.afterProcessServerData();
     }
 
-    async cancelOrderNotification(data) {
-        if (data.login_number === this.session.login_number) {
+    async recordSynchronisation(data) {
+        if (odoo.debug === "assets") {
+            console.info("Incoming synchronisation", data);
+            console.info("Login number", odoo.login_number, data.login_number);
+            console.info("Session Ids", odoo.pos_session_id, data.session_id);
+        }
+
+        if (data.login_number === odoo.login_number || data.session_id !== odoo.pos_session_id) {
             return;
         }
 
-        const orders = this.models["pos.order"].readMany(data.order_ids);
-        for (const order of orders) {
-            if (!order.finalized) {
-                order.state = "cancel";
+        const records = await this.data.call("pos.config", "get_records", [
+            odoo.pos_config_id,
+            data["records"],
+        ]);
+
+        const missing = await this.data.missingRecursive(records);
+        const toRemove = {};
+        const toCreate = {};
+        const toUpdate = {};
+
+        for (const [model, records] of Object.entries(missing)) {
+            toCreate[model] = [];
+            toUpdate[model] = [];
+
+            for (const record of records) {
+                const existingRec = this.models[model].get(record.id);
+                if (existingRec) {
+                    if (model === "pos.order" && existingRec.state === "draft") {
+                        // Verify if some subrecords are deleted
+                        const children = ["lines", "payment_ids"];
+                        for (const child of children) {
+                            const existingChild = existingRec[child];
+                            const recordChild = record[child];
+
+                            if (existingChild.length !== recordChild.length) {
+                                // We only delete server records, the local one will be synced later
+                                const toDelete = existingChild.filter(
+                                    (c) => !recordChild.includes(c.id) && typeof c.id === "number"
+                                );
+
+                                if (toDelete.length) {
+                                    const childModel = toDelete[0].model.modelName;
+                                    toRemove[childModel] = toRemove[childModel] || [];
+                                    toRemove[childModel].push(...toDelete);
+                                }
+                            }
+                        }
+                    } else if (model === "pos.order") {
+                        continue;
+                    }
+
+                    toUpdate[model].push(record);
+                } else {
+                    toCreate[model].push(record);
+                }
             }
+        }
+
+        this.models.loadData(toCreate, [], false);
+        this.models.loadData(toUpdate, [], false, true);
+
+        for (const [model, records] of Object.entries(toRemove)) {
+            this.models[model].deleteMany(records, { silent: true });
+        }
+
+        if (
+            this.get_order()?.finalized &&
+            !["TipScreen", "ReceiptScreen", "PaymentScreen"].includes(
+                this.mainScreen.component.name
+            )
+        ) {
+            this.add_new_order();
         }
     }
 
@@ -338,9 +401,7 @@ export class PosStore extends Reactive {
 
         if (ids.size > 0) {
             this.pendingOrder.delete.clear();
-            await this.data.call("pos.order", "action_pos_order_cancel", [Array.from(ids)], {
-                context: { login_number: this.session.login_number },
-            });
+            await this.data.callRelated("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
             return true;
         }
 
@@ -1052,7 +1113,7 @@ export class PosStore extends Reactive {
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         const { orderToCreate, orderToUpdate, paidOrdersNotSent } = this.getPendingOrder();
-        let orders = [...orderToCreate, ...orderToUpdate, ...paidOrdersNotSent];
+        let orders = options.orders || [...orderToCreate, ...orderToUpdate, ...paidOrdersNotSent];
 
         // Filter out orders that are already being synced
         orders = orders.filter((order) => !this.syncingOrders.has(order.id));
@@ -1072,7 +1133,7 @@ export class PosStore extends Reactive {
             // Allow us to force the sync of the orders In the case of
             // pos_restaurant is usefull to get unsynced orders
             // for a specific table
-            if (orders.length === 0 && !context.force) {
+            if (orders.length === 0) {
                 return;
             }
 
@@ -1092,7 +1153,8 @@ export class PosStore extends Reactive {
             });
 
             const missingRecords = await this.data.missingRecursive(data);
-            const newData = this.models.loadData(missingRecords);
+            this.data.dispatchData(missingRecords);
+            const newData = this.models.loadData(missingRecords, [], false, true);
             for (const order of newData["pos.order"]) {
                 if (!["invoiced", "paid", "done", "cancel"].includes(order.state)) {
                     this.addPendingOrder([order.id]);
@@ -1247,27 +1309,6 @@ export class PosStore extends Reactive {
             this.get_order().updateSavedQuantity();
         }
         this.selectedOrderUuid = order?.uuid;
-    }
-
-    async verifiyOpenOrder() {
-        const openOrderIds = this.get_open_orders()
-            .map((order) => order.id)
-            .filter((id) => typeof id === "number");
-
-        if (!openOrderIds.length) {
-            return;
-        }
-
-        try {
-            await this.data.read("pos.order", openOrderIds);
-        } catch (error) {
-            if (error instanceof ConnectionLostError) {
-                console.log("Unable to fetch open orders");
-                return;
-            }
-
-            console.error(error);
-        }
     }
 
     // return the list of unpaid orders
@@ -1458,7 +1499,7 @@ export class PosStore extends Reactive {
     async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
         const uuid = o.uuid;
         this.addPendingOrder([o.id]);
-        await this.syncAllOrders({ cancel_table_notification: true });
+        await this.syncAllOrders({ orders: [o] });
         const getOrder = (uuid) => this.models["pos.order"].getBy("uuid", uuid);
         const order = getOrder(uuid);
         await this.sendOrderInPreparation(order, cancelled);
@@ -1771,31 +1812,6 @@ export class PosStore extends Reactive {
             {},
             QRPopup
         );
-    }
-
-    async onTicketButtonClick() {
-        if (this.isTicketScreenShown) {
-            this.closeScreen();
-        } else {
-            if (this._shouldLoadOrders()) {
-                try {
-                    this.setLoadingOrderState(true);
-                    const orders = await this.getServerOrders();
-                    if (orders && orders.length > 0) {
-                        const message = _t(
-                            "%s orders have been loaded from the server. ",
-                            orders.length
-                        );
-                        this.notification.add(message);
-                    }
-                } finally {
-                    this.setLoadingOrderState(false);
-                    this.showScreen("TicketScreen");
-                }
-            } else {
-                this.showScreen("TicketScreen");
-            }
-        }
     }
 
     get isTicketScreenShown() {
