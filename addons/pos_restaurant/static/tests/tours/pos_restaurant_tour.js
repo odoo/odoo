@@ -161,15 +161,10 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             Chrome.clickMenuOption("Orders"),
             // The order ref ends with -0002 because it is actually the 2nd order made in the session.
             // The first order made in the session is a floating order.
-            TicketScreen.deleteOrder("-0002"),
+            TicketScreen.deleteOrder("Main Floor/2"),
             Dialog.confirm(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
             isSyncStatusConnected(),
-            TicketScreen.selectOrder("-0005"),
+            TicketScreen.selectOrder("Main Floor/5"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
             ProductScreen.back(),
@@ -189,7 +184,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
     steps: () =>
         [
             // There is one draft synced order from the previous tour
-            FloorScreen.clickTable("2"),
+            FloorScreen.clickTable("5"),
             ProductScreen.totalAmountIs("4.40"),
 
             // Test transfering an order
@@ -198,18 +193,13 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             FloorScreen.clickTable("4"),
 
             // Test if products still get merged after transfering the order
-            ProductScreen.clickDisplayedProduct("Coca-Cola", true, "2.0"),
+            ProductScreen.clickDisplayedProduct("Water", true, "2.0"),
             ProductScreen.totalAmountIs("6.60"),
             ProductScreen.clickNumpad("1"),
             ProductScreen.totalAmountIs("4.40"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
             ReceiptScreen.clickNextOrder(),
             // At this point, there are no draft orders.
 

@@ -279,9 +279,9 @@ export class PaymentScreen extends Component {
 
             // 2. Invoice.
             if (this.shouldDownloadInvoice() && this.currentOrder.is_to_invoice()) {
-                if (this.currentOrder.raw.account_move) {
+                if (this.currentOrder.account_move) {
                     await this.report.doAction("account.account_invoices", [
-                        this.currentOrder.raw.account_move,
+                        this.currentOrder.account_move,
                     ]);
                 } else {
                     throw {

@@ -5,8 +5,6 @@ import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
-import { uuidv4 } from "@point_of_sale/utils";
-import { TipScreen } from "@pos_restaurant/app/tip_screen/tip_screen";
 
 const NON_IDLE_EVENTS = [
     "mousemove",
@@ -19,8 +17,6 @@ const NON_IDLE_EVENTS = [
     "keypress",
 ];
 let IDLE_TIMER_SETTER;
-
-const { DateTime } = luxon;
 
 patch(PosStore.prototype, {
     /**
@@ -35,133 +31,61 @@ patch(PosStore.prototype, {
         if (this.config.module_pos_restaurant) {
             this.setActivityListeners();
             this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
-            // Sync the number of orders on each table with other PoS
-            this.getTableOrderCount();
         }
     },
+    async recordSynchronisation(data) {
+        await super.recordSynchronisation(...arguments);
+        if (data.records["pos.order"]?.length > 0) {
+            // Verify if there is only 1 order by table.
+            const orderByTableId = this.models["pos.order"].reduce((acc, order) => {
+                // Floating order doesn't need to be verified.
+                if (!order.finalized && order.table_id?.id) {
+                    acc[order.table_id.id] = acc[order.table_id.id] || [];
+                    acc[order.table_id.id].push(order);
+                }
+                return acc;
+            }, {});
 
+            for (const orders of Object.values(orderByTableId)) {
+                if (orders.length > 1) {
+                    // The only way to get here is if there is several waiters on the same table.
+                    // In this case we take orderline of the local order and we add it to the synced order.
+                    const syncedOrder = orders.find((order) => typeof order.id === "number");
+                    const localOrders = orders.find((order) => typeof order.id !== "number");
+
+                    let watcher = 0;
+                    while (localOrders.lines.length > 0) {
+                        if (watcher > 1000) {
+                            break;
+                        }
+
+                        const line = localOrders.lines.pop();
+                        line.update({ order_id: syncedOrder });
+                        line.setDirty();
+                        watcher++;
+                    }
+
+                    // Remove local orders from the local database.
+                    if (this.get_order()?.id === localOrders.id) {
+                        this.set_order(syncedOrder);
+                        this.addPendingOrder([syncedOrder.id]);
+                    }
+
+                    localOrders.delete();
+                }
+            }
+            this.computeTableCount();
+        }
+    },
     get firstScreen() {
         return this.config.module_pos_restaurant ? "FloorScreen" : super.firstScreen;
     },
-
-    async getTableOrderCount() {
-        this.lastWsTs = DateTime.now().ts;
-        this.bus.subscribe("TABLE_ORDER_COUNT", this.ws_syncTableCount.bind(this));
-    },
-    // using the same floorplan.
-    async ws_syncTableCount(data) {
-        if (data.login_number === this.session.login_number) {
-            this.computeTableCount(data);
-            return;
-        }
-
-        const missingTable = data["table_ids"].find(
-            (tableId) => !(tableId in this.models["restaurant.table"].getAllBy("id"))
-        );
-        if (missingTable) {
-            const response = await this.data.searchRead("restaurant.floor", [
-                ["pos_config_ids", "in", this.config.id],
-            ]);
-
-            const table_ids = response.map((floor) => floor.raw.table_ids).flat();
-            await this.data.read("restaurant.table", table_ids);
-        }
-        const tableLocalOrders = this.models["pos.order"].filter(
-            (o) => data["table_ids"].includes(o.table_id?.id) && !o.finalized
-        );
-        const localOrderlines = tableLocalOrders
-            .filter((o) => typeof o.id === "number")
-            .flatMap((o) => o.lines)
-            .filter((l) => typeof l.id !== "number");
-        const lineIdByOrderId = localOrderlines.reduce((acc, curr) => {
-            if (!acc[curr.order_id.id]) {
-                acc[curr.order_id.id] = [];
-            }
-            acc[curr.order_id.id].push(curr.id);
-            return acc;
-        }, {});
-
-        const orders = await this.data.searchRead("pos.order", [
-            ["session_id", "=", this.session.id],
-            ["table_id", "in", data["table_ids"]],
-        ]);
-        await this.data.read(
-            "pos.order.line",
-            orders.flatMap((o) => o.lines).map((l) => l.id),
-            ["qty"]
-        );
-        for (const [orderId, lineIds] of Object.entries(lineIdByOrderId)) {
-            const lines = this.models["pos.order.line"].readMany(lineIds);
-            for (const line of lines) {
-                line.update({ order_id: orderId });
-            }
-        }
-
-        let isDraftOrder = false;
-        for (const order of orders) {
-            if (order.state !== "draft") {
-                this.removePendingOrder(order);
-                continue;
-            } else {
-                this.addPendingOrder([order.id]);
-            }
-
-            const tableId = order.table_id?.id;
-            if (!tableId) {
-                continue;
-            }
-
-            const draftOrder = this.models["pos.order"].find(
-                (o) => o.table_id?.id === tableId && o.id !== order.id && o.state === "draft"
-            );
-
-            if (!draftOrder) {
-                continue;
-            }
-
-            for (const orphanLine of draftOrder.lines) {
-                const adoptingLine = order.lines.find((l) => l.can_be_merged_with(orphanLine));
-                if (adoptingLine && adoptingLine.id !== orphanLine.id) {
-                    adoptingLine.merge(orphanLine);
-                } else if (!adoptingLine) {
-                    orphanLine.update({ order_id: order });
-                }
-            }
-
-            if (this.selectedOrderUuid === draftOrder.uuid) {
-                this.selectedOrderUuid = order.uuid;
-            }
-
-            await this.removeOrder(draftOrder, true);
-            isDraftOrder = true;
-        }
-
-        if (
-            this.get_order()?.finalized &&
-            ![ReceiptScreen, TipScreen].includes(this.mainScreen.component)
-        ) {
-            this.add_new_order();
-        }
-
-        if (isDraftOrder) {
-            await this.syncAllOrders();
-        }
-
-        this.computeTableCount(data);
-    },
-    cancelOrderNotification(data) {
-        super.cancelOrderNotification(...arguments);
-        this.computeTableCount(data);
-    },
     async closingSessionNotification(data) {
         await super.closingSessionNotification(...arguments);
-        this.computeTableCount(data);
+        this.computeTableCount();
     },
-    computeTableCount(data) {
-        const tableIds = data?.table_ids;
-        const tables = tableIds
-            ? this.models["restaurant.table"].readMany(tableIds)
-            : this.models["restaurant.table"].getAll();
+    computeTableCount() {
+        const tables = this.models["restaurant.table"].getAll();
         const orders = this.get_open_orders();
         for (const table of tables) {
             const tableOrders = orders.filter(
@@ -320,15 +244,6 @@ patch(PosStore.prototype, {
         this.addPendingOrder([order.id]);
         return order;
     },
-    getSyncAllOrdersContext(orders, options = {}) {
-        const context = super.getSyncAllOrdersContext(...arguments);
-        context["cancel_table_notification"] = options["cancel_table_notification"] || false;
-        if (this.config.module_pos_restaurant && this.selectedTable) {
-            context["table_ids"] = [this.selectedTable.id];
-            context["force"] = true;
-        }
-        return context;
-    },
     getPendingOrder() {
         const context = this.getSyncAllOrdersContext();
         const { orderToCreate, orderToUpdate, paidOrdersNotSent } = super.getPendingOrder();
@@ -382,7 +297,6 @@ patch(PosStore.prototype, {
         this.selectedTable = table;
         try {
             this.loadingOrderState = true;
-            await this.syncAllOrders();
         } finally {
             this.loadingOrderState = false;
 
@@ -442,19 +356,18 @@ patch(PosStore.prototype, {
         return this.get_open_orders().filter((order) => order.table_id?.id === tableId);
     },
     async unsetTable() {
-        try {
-            await this.syncAllOrders();
-        } catch (e) {
-            if (!(e instanceof ConnectionLostError)) {
-                throw e;
-            }
-            Promise.reject(e);
-        }
         this.selectedTable = null;
         const order = this.get_order();
         if (order && !order.isBooked) {
             this.removeOrder(order);
+        } else if (order) {
+            if (!this.orderToTransferUuid) {
+                this.syncAllOrders({ orders: [order] });
+            } else {
+                await this.syncAllOrders({ orders: [order] });
+            }
         }
+
         this.set_order(null);
     },
     getActiveOrdersOnTable(table) {
@@ -487,8 +400,11 @@ patch(PosStore.prototype, {
                     adoptingLine.merge(orphanLine);
                     orphanLine.delete();
                 } else {
-                    orphanLine.uuid = uuidv4();
-                    orphanLine.update({ order_id: destinationOrder });
+                    // We cannot just change the order_id of the line because it will be deleted by the
+                    // server when cancelling the order. We need to create a new line with the same values.
+                    const serialized = orphanLine.serialize();
+                    serialized.order_id = destinationOrder.id;
+                    this.models["pos.order.line"].create(serialized, false, true);
                 }
             }
 
@@ -496,17 +412,6 @@ patch(PosStore.prototype, {
         }
 
         await this.setTable(destinationTable);
-    },
-    updateTables(...tables) {
-        this.data.call("restaurant.table", "update_tables", [
-            tables.map((t) => t.id),
-            Object.fromEntries(
-                tables.map((t) => [
-                    t.id,
-                    { ...t.serialize({ orm: true }), parent_id: t.parent_id?.id || false },
-                ])
-            ),
-        ]);
     },
     getCustomerCount(tableId) {
         const tableOrders = this.getTableOrders(tableId).filter((order) => !order.finalized);

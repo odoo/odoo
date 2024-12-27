@@ -177,8 +177,8 @@ export class Base {
         return { ...this.uiState };
     }
 
-    update(vals) {
-        this.model.update(this, vals);
+    update(vals, opts = {}) {
+        this.model.update(this, vals, opts);
     }
     delete(opts = {}) {
         return this.model.delete(this, opts);
@@ -334,6 +334,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     }
 
     function removeItem(record, fieldName, item) {
+        if (typeof record !== "object") {
+            return;
+        }
+
         const cacheSet = record._getCacheSet(fieldName);
         if (cacheSet.has(toRaw(item))) {
             cacheSet.delete(toRaw(item));
@@ -410,7 +414,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     }
 
     function exists(model, id) {
-        return id in records[model];
+        return model in records && id in records[model];
     }
 
     function create(
@@ -507,7 +511,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                             if (exists(comodelName, val.id)) {
                                 connect(field, record, val);
                             }
-                        } else if (models[field.relation]) {
+                        } else if (models[field.relation] && typeof val === "object") {
                             const newRecord = create(comodelName, val);
                             connect(field, record, newRecord);
                         } else {
@@ -533,14 +537,34 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         return create(model, vals, false, true);
     }
 
-    function update(model, record, vals) {
+    function update(model, record, vals, opts = {}) {
         const fields = getFields(model);
         Object.assign(baseData[model][record.id], vals);
 
         for (const name in vals) {
-            if (!(name in fields)) {
+            if (!(name in fields) && name !== "id") {
+                continue;
+            } else if (name === "id" && vals[name] !== record.id) {
+                delete records[model][record.id];
+                delete baseData[model][record.id];
+
+                for (const key of indexes[model] || []) {
+                    const keyVal = record.raw[key];
+                    if (Array.isArray(keyVal)) {
+                        for (const val of keyVal) {
+                            indexedRecords[model][key][val].delete(record.id);
+                        }
+                    }
+                }
+
+                record.id = vals[name];
+                records[model][record.id] = record;
+                baseData[model][record.id] = vals;
+                continue;
+            } else if (name === "id") {
                 continue;
             }
+
             const field = fields[name];
             const comodelName = field.relation;
             if (X2MANY_TYPES.has(field.type)) {
@@ -567,6 +591,18 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         for (const record2 of existingRecords) {
                             connect(field, record, record2);
                         }
+                    } else if (type === "set") {
+                        const linkedRecs = record[name];
+                        const existingRecords = items.filter((record) =>
+                            exists(comodelName, record.id)
+                        );
+
+                        for (const record2 of [...linkedRecs]) {
+                            disconnect(field, record, record2);
+                        }
+                        for (const record2 of existingRecords) {
+                            connect(field, record, record2);
+                        }
                     }
                 }
             } else if (field.type === "many2one") {
@@ -576,7 +612,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
                     if (exist) {
                         connect(field, record, vals[name]);
-                    } else if (models[field.relation]) {
+                    } else if (models[field.relation] && typeof vals[name] === "object") {
                         const newRecord = create(comodelName, vals[name]);
                         connect(field, record, newRecord);
                     } else {
@@ -591,7 +627,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             }
         }
 
-        if (typeof record.id === "number") {
+        if (typeof record.id === "number" && !opts.silent) {
             commands[model].update.add(record.id);
         }
     }
@@ -676,16 +712,16 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 }
                 return result;
             },
-            update(record, vals) {
-                return update(model, record, vals);
+            update(record, vals, opts = {}) {
+                return update(model, record, vals, opts);
             },
             delete(record, opts = {}) {
                 return delete_(model, record, opts);
             },
-            deleteMany(records) {
+            deleteMany(records, opts = {}) {
                 const result = [];
                 for (const record of records) {
-                    result.push(delete_(model, record));
+                    result.push(delete_(model, record, opts));
                 }
                 return result;
             },
@@ -842,11 +878,13 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
      * Load the data without the relations then link the related records.
      * @param {*} rawData
      */
-    function loadData(rawData, load = [], fromSerialized = false) {
+    function loadData(rawData, load = [], fromSerialized = false, keepLocalRelation = false) {
         const results = {};
         const oldStates = {};
+        const ignoreConnection = {};
 
         for (const model in rawData) {
+            ignoreConnection[model] = [];
             const modelKey = keyByModel[model] || "id";
 
             if (!oldStates[model]) {
@@ -889,6 +927,30 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     }
                 }
 
+                if (oldRecord && keepLocalRelation) {
+                    for (const [field, value] of Object.entries(record)) {
+                        if (field === "id") {
+                            continue;
+                        }
+
+                        const params = getFields(model)[field];
+                        if (params && X2MANY_TYPES.has(params.type)) {
+                            value.push(
+                                ...oldRecord[field]
+                                    .filter((r) => typeof r.id === "string")
+                                    .map((r) => r.id)
+                            );
+                            record[field] = ["set", value];
+                        }
+                    }
+
+                    oldRecord.update(record, { silent: true });
+                    oldRecord.setup(record);
+                    ignoreConnection[model].push(record.id);
+                    results[model].push(oldRecord);
+                    continue;
+                }
+
                 const result = create(model, record, true, false, true);
                 if (oldRecord && oldRecord.id !== result.id) {
                     oldRecord.delete();
@@ -915,6 +977,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             const fields = getFields(model);
 
             for (const rawRec of rawRecords) {
+                if (ignoreConnection[model].includes(rawRec.id)) {
+                    continue;
+                }
+
                 const recorded = records[model][rawRec.id];
 
                 // Check if there are any missing fields for this record

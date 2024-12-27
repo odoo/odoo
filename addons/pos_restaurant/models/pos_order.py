@@ -51,23 +51,6 @@ class PosOrder(models.Model):
 
         return result
 
-    def _process_saved_order(self, draft):
-        order_id = super()._process_saved_order(draft)
-        if not self.env.context.get('cancel_table_notification'):
-            self.send_table_count_notification(self.table_id)
-        return order_id
-
     def send_table_count_notification(self, table_ids):
-        messages = []
-        a_config = None
-        for config in self.env['pos.config'].search([('floor_ids', 'in', table_ids.floor_id.ids)]):
-            if config.current_session_id:
-                a_config = config
-                messages.append(
-                    (
-                        "TABLE_ORDER_COUNT",
-                        {"table_ids": table_ids.ids, 'login_number': self.env.context.get('login_number', False)},
-                    )
-                )
-        if messages:
-            a_config._notify(*messages, private=False)
+        # Cannot remove the method in stable
+        pass

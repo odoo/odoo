@@ -198,6 +198,19 @@ class PosConfig(models.Model):
         string='Closing Entry by product',
         help="Display the breakdown of sales lines by product in the automatically generated closing entry.")
 
+    def dispatch_record_ids(self, session_id, records, login_number):
+        self._notify('SYNCHRONISATION', {
+            'records': records,
+            'session_id': session_id,
+            'login_number': login_number
+        })
+
+    def get_records(self, data):
+        records = {}
+        for model, ids in data.items():
+            records[model] = self.env[model].browse(ids).read(self.env[model]._load_pos_data_fields(self.id), load=False)
+        return records
+
     @api.model
     def _load_pos_data_domain(self, data):
         return [('id', '=', data['pos.session']['data'][0]['config_id'])]
