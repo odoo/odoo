@@ -136,7 +136,7 @@ class MrpUnbuild(models.Model):
         return {
             'move_id': finished_move.id,
             'lot_id': self.lot_id.id,
-            'qty_done': self.product_qty,
+            'qty_done': finished_move.product_uom_qty,
             'product_id': finished_move.product_id.id,
             'product_uom_id': finished_move.product_uom.id,
             'location_id': finished_move.location_id.id,
