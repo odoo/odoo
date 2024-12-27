@@ -2,11 +2,11 @@
 
 {
     'name': "Sales - Async Emails",
+    'version': '1.0',
     'category': 'Sales/Sales',
     'summary': "Send order status emails asynchronously",
     'depends': ['sale'],
     'data': [
-        'data/ir_config_parameter.xml',
         'data/ir_cron.xml',
     ],
     'auto_install': True,

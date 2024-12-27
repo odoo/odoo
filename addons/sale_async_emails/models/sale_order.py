@@ -17,7 +17,7 @@ class SaleOrder(models.Model):
 
     def _send_order_notification_mail(self, mail_template):
         """ Override of `sale` to reschedule order status emails to be sent asynchronously. """
-        async_send = str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.async_emails'))
+        async_send = str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.async_emails', False))
         cron = async_send and self.env.ref('sale_async_emails.cron', raise_if_not_found=False)
         if async_send and cron and not self.env.context.get('is_async_email', False):
             # Schedule the email to be sent asynchronously.
