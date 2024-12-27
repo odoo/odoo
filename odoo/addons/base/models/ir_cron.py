@@ -750,8 +750,8 @@ class IrCronTrigger(models.Model):
     _rec_name = 'cron_id'
     _allow_sudo_commands = False
 
-    cron_id = fields.Many2one("ir.cron", index=True)
-    call_at = fields.Datetime(index=True)
+    cron_id = fields.Many2one("ir.cron", index=True, required=True, ondelete="cascade")
+    call_at = fields.Datetime(index=True, required=True)
 
     @api.autovacuum
     def _gc_cron_triggers(self):
