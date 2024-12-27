@@ -54,6 +54,8 @@ class ResConfigSettings(models.TransientModel):
         help="Character(s) used to separate data contained within an aggregate barcode (i.e. a barcode containing multiple barcode encodings)")
     module_stock_fleet = fields.Boolean("Dispatch Management System")
     replenish_on_order = fields.Boolean("Replenish on Order (MTO)", compute='_compute_replenish_on_order', inverse='_inverse_replenish_on_order')
+    stock_text_confirmation = fields.Boolean(related='company_id.stock_text_confirmation', string='Stock Text Validation with stock move', readonly=False)
+    stock_confirmation_type = fields.Selection(related='company_id.stock_confirmation_type', string='Stock Text Validation type', readonly=False)
 
     def _compute_replenish_on_order(self):
         route = self.env.ref('stock.route_warehouse0_mto', raise_if_not_found=False)
@@ -75,6 +77,11 @@ class ResConfigSettings(models.TransientModel):
         if not self.group_stock_production_lot:
             self.group_lot_on_delivery_slip = False
             self.module_product_expiry = False
+
+    @api.onchange('stock_confirmation_type', 'stock_text_confirmation')
+    def _onchange_stock_confirmation_fields(self):
+        if self.stock_text_confirmation and self.stock_confirmation_type == 'sms':
+            self.module_stock_sms = True
 
     @api.onchange('group_stock_adv_location')
     def onchange_adv_location(self):
