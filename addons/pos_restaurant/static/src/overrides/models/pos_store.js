@@ -138,7 +138,7 @@ patch(PosStore.prototype, {
 
         if (
             this.get_order()?.finalized &&
-            ![ReceiptScreen, TipScreen].includes([this.mainScreen.component])
+            ![ReceiptScreen, TipScreen].includes(this.mainScreen.component)
         ) {
             this.add_new_order();
         }
