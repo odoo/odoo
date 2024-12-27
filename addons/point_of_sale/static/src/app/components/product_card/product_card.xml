@@ -19,9 +19,7 @@
                     t-att-class="{'no-image d-flex justify-content-center align-items-center text-center fs-4': !props.imageUrl}"
                     t-attf-id="article_product_{{props.productId}}"
                     t-esc="props.name" />
-                <h1 t-if="props.productCartQty"
-                    t-out="props.productCartQty"
-                    class="product-cart-qty text-muted display-6 fw-bolder m-0 mt-auto" />
+                <t t-tag="props.imageUrl ? 'h1' : 'h2'" t-if="props.productCartQty" t-out="props.productCartQty" class="product-cart-qty text-muted fw-bolder m-0 mt-auto" />
             </div>
         </article>
     </t>
