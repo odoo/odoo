@@ -152,13 +152,16 @@ class TestEventMailSchedule(TestEventMailCommon):
         current_now = self.event_date_begin - timedelta(days=1)
         EventMail = type(self.env['event.mail'])
         exec_origin = EventMail._execute_event_based_for_registrations
-        with patch.object(
-                EventMail, '_execute_event_based_for_registrations', autospec=True, wraps=EventMail, side_effect=exec_origin,
-             ) as mock_exec, \
-             self.mock_datetime_and_now(current_now), \
-             self.mockSMSGateway(), \
-             self.mock_mail_gateway(), \
-             self.capture_triggers('event.event_mail_scheduler') as capture:
+        with (
+            patch.object(
+               EventMail, '_execute_event_based_for_registrations', autospec=True, wraps=EventMail, side_effect=exec_origin,
+            ) as mock_exec,
+            self.mock_datetime_and_now(current_now),
+            self.mockSMSGateway(),
+            self.mock_mail_gateway(),
+            self.capture_triggers('event.event_mail_scheduler') as capture,
+            self.enter_registry_test_mode(),
+        ):
             self.event_cron_id.method_direct_trigger()
 
         self.assertFalse(after_mail.last_registration_id)
@@ -179,10 +182,13 @@ class TestEventMailSchedule(TestEventMailCommon):
         self.assertSchedulerCronTriggers(capture, [current_now] * 2)
 
         # relaunch to close scheduler
-        with self.mock_datetime_and_now(current_now), \
-             self.mockSMSGateway(), \
-             self.mock_mail_gateway(), \
-             self.capture_triggers('event.event_mail_scheduler') as capture:
+        with (
+            self.mock_datetime_and_now(current_now),
+            self.mockSMSGateway(),
+            self.mock_mail_gateway(),
+            self.capture_triggers('event.event_mail_scheduler') as capture,
+            self.enter_registry_test_mode(),
+        ):
             self.event_cron_id.method_direct_trigger()
         self.assertEqual(before_mail.last_registration_id, registrations[-1])
         self.assertEqual(before_mail.mail_count_done, 30)
@@ -194,10 +200,13 @@ class TestEventMailSchedule(TestEventMailCommon):
 
         # launch after event schedulers -> all communications are sent
         current_now = self.event_date_end + timedelta(hours=1)
-        with self.mock_datetime_and_now(current_now), \
-             self.mockSMSGateway(), \
-             self.mock_mail_gateway(), \
-             self.capture_triggers('event.event_mail_scheduler') as capture:
+        with (
+            self.mock_datetime_and_now(current_now),
+            self.mockSMSGateway(),
+            self.mock_mail_gateway(),
+            self.capture_triggers('event.event_mail_scheduler') as capture,
+            self.enter_registry_test_mode(),
+        ):
             self.event_cron_id.method_direct_trigger()
 
         # iterative work on registrations: only 20 (cron limit) are taken into account
@@ -212,10 +221,13 @@ class TestEventMailSchedule(TestEventMailCommon):
         self.assertSchedulerCronTriggers(capture, [current_now] * 2)
 
         # relaunch to close scheduler
-        with self.mock_datetime_and_now(current_now), \
-             self.mockSMSGateway(), \
-             self.mock_mail_gateway(), \
-             self.capture_triggers('event.event_mail_scheduler') as capture:
+        with (
+            self.mock_datetime_and_now(current_now),
+            self.mockSMSGateway(),
+            self.mock_mail_gateway(),
+            self.capture_triggers('event.event_mail_scheduler') as capture,
+            self.enter_registry_test_mode(),
+        ):
             self.event_cron_id.method_direct_trigger()
         self.assertEqual(after_mail.last_registration_id, registrations[-1])
         self.assertEqual(after_mail.mail_count_done, 30)
@@ -262,13 +274,16 @@ class TestEventMailSchedule(TestEventMailCommon):
         self.assertSchedulerCronTriggers(capture, [self.reference_now + timedelta(hours=1)] * 2)
 
         # iterative work on registrations, force cron to close those
-        with patch.object(
-                EventMailRegistration, '_execute_on_registrations', autospec=True, wraps=EventMailRegistration, side_effect=exec_origin,
-             ) as mock_exec, \
-             self.mock_datetime_and_now(self.reference_now + timedelta(hours=1)), \
-             self.mockSMSGateway(), \
-             self.mock_mail_gateway(), \
-             self.capture_triggers('event.event_mail_scheduler') as capture:
+        with (
+            patch.object(
+               EventMailRegistration, '_execute_on_registrations', autospec=True, wraps=EventMailRegistration, side_effect=exec_origin,
+            ) as mock_exec,
+            self.mock_datetime_and_now(self.reference_now + timedelta(hours=1)),
+            self.mockSMSGateway(),
+            self.mock_mail_gateway(),
+            self.capture_triggers('event.event_mail_scheduler') as capture,
+            self.enter_registry_test_mode(),
+        ):
             self.event_cron_id.method_direct_trigger()
 
         # finished sending communications

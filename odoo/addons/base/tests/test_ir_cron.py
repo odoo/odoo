@@ -97,7 +97,10 @@ class TestIrCron(TransactionCase, CronMixinCase):
             )
         """)
 
-        self.cron.method_direct_trigger()
+        registry = self.cron.pool
+        with self.enter_registry_test_mode(), patch.object(registry, 'cursor', side_effect=registry.cursor, autospec=True) as cursor_method:
+            self.cron.method_direct_trigger()
+            self.assertEqual(cursor_method.call_count, 1, "Should create a new transaction for direct trigger")
 
         self.assertEqual(self.cron.lastcall, fields.Datetime.now())
         self.assertEqual(self.partner.name, 'You have been CRONWNED')

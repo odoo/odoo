@@ -146,10 +146,13 @@ class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
 
         invoice1 = self.init_invoice('out_invoice', products=self.product_a)
         invoice2 = self.init_invoice('out_invoice', products=self.product_a)
-        with self.with_custom_method('_get_move_applicability', lambda edi_format, inv: {'post': edi_format._test_edi_post_invoice}), \
-             self.with_custom_method('_needs_web_services', lambda edi_format: True), \
-             self.with_custom_method('_test_edi_post_invoice', lambda edi_format, inv: {inv: {'success': True}}), \
-             self.capture_triggers('account_edi.ir_cron_edi_network') as capt:
+        with (
+            self.with_custom_method('_get_move_applicability', lambda edi_format, inv: {'post': edi_format._test_edi_post_invoice}),
+            self.with_custom_method('_needs_web_services', lambda edi_format: True),
+            self.with_custom_method('_test_edi_post_invoice', lambda edi_format, inv: {inv: {'success': True}}),
+            self.enter_registry_test_mode(),
+            self.capture_triggers('account_edi.ir_cron_edi_network') as capt,
+        ):
             (invoice1 + invoice2).action_post()
 
             self.env.ref('account_edi.ir_cron_edi_network').method_direct_trigger()

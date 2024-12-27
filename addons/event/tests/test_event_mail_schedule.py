@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import contextlib
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
@@ -77,6 +78,18 @@ class EventMailCommon(EventCase, MailCase, CronMixinCase):
                     }),
                 ]
             })
+
+    def execute_event_cron(self, *, freeze_date=None):
+        cron = self.event_cron_id.sudo()
+        with contextlib.ExitStack() as stack:
+            if freeze_date:
+                stack.enter_context(self.mock_datetime_and_now(freeze_date))
+            stack.enter_context(self.mock_mail_gateway())
+            stack.enter_context(self.mock_mail_app())
+            stack.enter_context(self.enter_registry_test_mode())
+            capture = stack.enter_context(self.capture_triggers('event.event_mail_scheduler'))
+            cron.method_direct_trigger()
+            return capture
 
 
 @tagged('event_mail', 'post_install', '-at_install')
@@ -219,11 +232,9 @@ class TestMailSchedule(EventMailCommon):
         # --------------------------------------------------
 
         with patch.object(
-                EventMailRegistration, '_execute_on_registrations', autospec=True, wraps=EventMailRegistration, side_effect=exec_origin,
-             ) as mock_exec, \
-             self.mock_datetime_and_now(now), self.mock_mail_gateway(), \
-             self.capture_triggers('event.event_mail_scheduler') as capture:
-            self.event_cron_id.method_direct_trigger()
+               EventMailRegistration, '_execute_on_registrations', autospec=True, wraps=EventMailRegistration, side_effect=exec_origin,
+            ) as mock_exec:
+            capture = self.execute_event_cron(freeze_date=now)
 
         # iterative check
         self.assertEqual(
@@ -271,10 +282,8 @@ class TestMailSchedule(EventMailCommon):
         now_registration = now + relativedelta(hours=1)
         with patch.object(
                 EventMailRegistration, '_execute_on_registrations', autospec=True, wraps=EventMailRegistration, side_effect=exec_origin,
-             ) as mock_exec, \
-             self.mock_datetime_and_now(now_registration), self.mock_mail_gateway(), \
-             self.capture_triggers('event.event_mail_scheduler') as capture:
-            self.event_cron_id.method_direct_trigger()
+             ) as mock_exec:
+            capture = self.execute_event_cron(freeze_date=now_registration)
 
         # iterative check
         self.assertEqual(
@@ -308,8 +317,7 @@ class TestMailSchedule(EventMailCommon):
 
         # simulate cron running before scheduled date -> should not do anything
         now_start = self.event_date_begin + relativedelta(hours=-25, microsecond=654321)
-        with self.mock_datetime_and_now(now_start), self.mock_mail_gateway():
-            self.event_cron_id.method_direct_trigger()
+        self.execute_event_cron(freeze_date=now_start)
 
         self.assertFalse(event_prev_scheduler.mail_done)
         self.assertEqual(event_prev_scheduler.mail_state, 'scheduled')
@@ -318,8 +326,7 @@ class TestMailSchedule(EventMailCommon):
 
         # execute cron to run schedulers after scheduled date
         now_start = self.event_date_begin + relativedelta(hours=-23, microsecond=654321)
-        with self.mock_datetime_and_now(now_start), self.mock_mail_gateway():
-            self.event_cron_id.method_direct_trigger()
+        self.execute_event_cron(freeze_date=now_start)
 
         # check that scheduler is finished
         self.assertTrue(event_prev_scheduler.mail_done, 'event: reminder scheduler should have run')
@@ -391,9 +398,8 @@ class TestMailSchedule(EventMailCommon):
 
         # execute event reminder scheduler explicitly after its schedule date
         new_end = self.event_date_end + relativedelta(hours=2)
-        with self.mock_datetime_and_now(new_end), self.mock_mail_gateway():
-            (attendees + new_attendee).invalidate_recordset(['event_date_range'])
-            self.event_cron_id.method_direct_trigger()
+        (attendees + new_attendee).invalidate_recordset(['event_date_range'])
+        self.execute_event_cron(freeze_date=new_end)
 
         # check that scheduler is finished
         self.assertTrue(event_next_scheduler.mail_done, 'event: reminder scheduler should should have run')
@@ -416,7 +422,6 @@ class TestMailSchedule(EventMailCommon):
     def test_event_mail_schedule_fail_global_composer(self):
         """ Simulate a fail during composer usage e.g. invalid field path, template
         / model change, ... to check defensive behavior """
-        cron = self.env.ref("event.event_mail_scheduler").sudo()
 
         # set template write_uid
         user_admin = self.env.ref('base.user_admin')
@@ -433,10 +438,8 @@ class TestMailSchedule(EventMailCommon):
 
         # sending fails
         current_dt = self.reference_now + relativedelta(days=3)
-        with patch.object(type(self.env["mail.compose.message"]), "_action_send_mail_mass_mail", _patched_send_mail), \
-            self.mock_datetime_and_now(current_dt), \
-            self.mock_mail_gateway(), self.mock_mail_app():
-            cron.method_direct_trigger()
+        with patch.object(self.env.registry["mail.compose.message"], "_action_send_mail_mass_mail", _patched_send_mail):
+            self.execute_event_cron(freeze_date=current_dt)
         self.assertFalse(before_scheduler.mail_done)
         self.assertMailNotifications(
             self._new_msgs[0],
@@ -460,28 +463,22 @@ class TestMailSchedule(EventMailCommon):
 
         # resend within the same hour -> no more log
         new_dt = self.reference_now + relativedelta(days=3, minutes=59)
-        with patch.object(type(self.env["mail.compose.message"]), "_action_send_mail_mass_mail", _patched_send_mail), \
-            self.mock_datetime_and_now(new_dt), \
-            self.mock_mail_gateway(), self.mock_mail_app():
-            cron.method_direct_trigger()
+        with patch.object(self.env.registry["mail.compose.message"], "_action_send_mail_mass_mail", _patched_send_mail):
+            self.execute_event_cron(freeze_date=new_dt)
         self.assertFalse(before_scheduler.mail_done)
         self.assertFalse(self._new_msgs)
         self.assertEqual(before_scheduler.error_datetime, current_dt.replace(microsecond=0))
 
         # resend in more than one hour -> log again
         new_dt = self.reference_now + relativedelta(days=3, minutes=61)
-        with patch.object(type(self.env["mail.compose.message"]), "_action_send_mail_mass_mail", _patched_send_mail), \
-            self.mock_datetime_and_now(new_dt), \
-            self.mock_mail_gateway(), self.mock_mail_app():
-            cron.method_direct_trigger()
+        with patch.object(self.env.registry["mail.compose.message"], "_action_send_mail_mass_mail", _patched_send_mail):
+            self.execute_event_cron(freeze_date=new_dt)
         self.assertFalse(before_scheduler.mail_done)
         self.assertTrue(self._new_msgs)
         self.assertEqual(before_scheduler.error_datetime, new_dt.replace(microsecond=0))
 
         # send succeeds -> reset error
-        with self.mock_datetime_and_now(new_dt), \
-            self.mock_mail_gateway(), self.mock_mail_app():
-            cron.method_direct_trigger()
+        self.execute_event_cron(freeze_date=new_dt)
         self.assertTrue(before_scheduler.mail_done)
         self.assertFalse(before_scheduler.error_datetime)
 
@@ -501,9 +498,7 @@ class TestMailSchedule(EventMailCommon):
 
         # sending fails
         current_dt = self.reference_now + relativedelta(days=3)
-        with self.mock_datetime_and_now(current_dt), \
-            self.mock_mail_gateway(), self.mock_mail_app():
-            cron.method_direct_trigger()
+        self.execute_event_cron(freeze_date=current_dt)
         self.assertFalse(before_scheduler.mail_done)
         self.assertMailNotifications(
             self._new_msgs[0],
@@ -534,9 +529,7 @@ class TestMailSchedule(EventMailCommon):
         before_scheduler = self.test_event.event_mail_ids.filtered(lambda s: s.interval_type == "before_event")
 
         self.test_event.registration_ids.unlink()
-        with self.mock_datetime_and_now(self.reference_now + relativedelta(days=3)), \
-             self.mock_mail_gateway():
-            cron.method_direct_trigger()
+        self.execute_event_cron(freeze_date=self.reference_now + relativedelta(days=3))
         self.assertTrue(before_scheduler.mail_done)
 
     @mute_logger(
@@ -683,9 +676,7 @@ class TestMailSchedule(EventMailCommon):
         capt_mail.records.ensure_one()
 
         # run cron: emails should be send for registrations
-        with self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \
-             self.mock_mail_gateway():
-            cron_event.sudo().method_direct_trigger()
+        self.execute_event_cron(freeze_date=reference_now + relativedelta(minutes=10))
         self.assertMailMailWEmails(
             [formataddr((reg.name, reg.email)) for reg in existing],
             "outgoing",
@@ -909,8 +900,7 @@ class TestMailScheduleInternals(EventMailCommon):
 
         # execute cron to run schedulers
         now_start = event_date_begin + relativedelta(hours=-3)
-        with self.mock_datetime_and_now(now_start), self.mock_mail_gateway():
-            event_cron_id.method_direct_trigger()
+        self.execute_event_cron(freeze_date=now_start)
 
         # check that scheduler is not executed
         self.assertFalse(event_prev_scheduler.mail_done, 'event: reminder scheduler should should have run')

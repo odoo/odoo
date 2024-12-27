@@ -522,8 +522,8 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
             .with_context(active_model='account.move', active_ids=invoices.ids)\
             .create(kwargs)
 
-    def _get_mail_message(self, move):
-        return self.env['mail.message'].search([('model', '=', move._name), ('res_id', '=', move.id)], limit=1)
+    def _get_mail_message(self, move, limit=1):
+        return self.env['mail.message'].search([('model', '=', move._name), ('res_id', '=', move.id)], limit=limit)
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install', 'mail_template')
@@ -631,7 +631,8 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertTrue(invoice2.is_being_sent)
 
         # Run the CRON.
-        self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+        with self.enter_registry_test_mode():
+            self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
         self.assertTrue(invoice1.invoice_pdf_report_id)
         invoice_attachments = self.env['ir.attachment'].search([
             ('res_model', '=', invoice1._name),
@@ -660,7 +661,8 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             'email': {'count': 1, 'label': 'by Email'},
         })
         wizard.action_send_and_print()
-        self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+        with self.enter_registry_test_mode():
+            self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
         invoice_attachments = self.env['ir.attachment'].search([
             ('res_model', '=', invoice1._name),
             ('res_id', '=', invoice1.id),
@@ -691,12 +693,13 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertTrue('account_missing_email' in wizard.alerts)
         self.assertEqual(wizard.alerts['account_missing_email']['level'], 'warning')
         wizard.action_send_and_print()
-        self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+        with self.enter_registry_test_mode():
+            self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
         # invoices are generated, but only partner_b got an email, without raising any errors
         self.assertTrue(invoice1.invoice_pdf_report_id)
-        self.assertFalse(self._get_mail_message(invoice1))
+        self.assertFalse(self._get_mail_message(invoice1, limit=None).partner_ids)
         self.assertTrue(invoice2.invoice_pdf_report_id)
-        self.assertTrue(self._get_mail_message(invoice2))
+        self.assertTrue(self._get_mail_message(invoice2, limit=None).partner_ids)
 
     def test_invoice_multi_with_edi(self):
         invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
@@ -935,7 +938,8 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard = self.create_send_and_print(invoice_1 + invoice_2)
 
         wizard.action_send_and_print()
-        self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+        with self.enter_registry_test_mode():
+            self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
         # generation defaulted on the generic mail_template and processed successfully
         self.assertTrue(invoice_1.invoice_pdf_report_id)
         self.assertTrue(invoice_2.invoice_pdf_report_id)
@@ -1006,9 +1010,11 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard_2.action_send_and_print()
 
         invoices = invoice_1_1 + invoice_1_2 + invoice_2_1 + invoice_2_2
+        invoices = invoices.sudo()  # keep access after flush of the cron
         self.assertFalse(invoices.invoice_pdf_report_id)
-        self.assertEqual(invoices.mapped(lambda inv: bool(inv.sending_data)), [True] * len(invoices))
-        self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+        self.assertTrue(all(invoice.sending_data for invoice in invoices))
+        with self.enter_registry_test_mode():
+            self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
         self.assertTrue(all(invoice.invoice_pdf_report_id for invoice in invoices))
         self.assertTrue(all(not invoice.sending_data for invoice in invoices))
 
@@ -1042,7 +1048,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         with patch(
             'odoo.addons.account.models.account_move_send.AccountMoveSend._hook_invoice_document_before_pdf_report_render',
             _hook_invoice_document_before_pdf_report_render,
-        ):
+        ), self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
             self.env.cr.precommit.run()  # trigger the creation of bus.bus records
 

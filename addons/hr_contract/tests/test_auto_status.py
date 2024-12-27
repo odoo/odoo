@@ -18,7 +18,8 @@ class TestHrContracts(TestContractCommon):
         self.assertEqual(self.employee.contract_warning, True)
 
     def apply_cron(self):
-        self.env.ref('hr_contract.ir_cron_data_contract_update_state').method_direct_trigger()
+        with self.enter_registry_test_mode():
+            self.env.ref('hr_contract.ir_cron_data_contract_update_state').method_direct_trigger()
 
     def test_contract_enddate(self):
         self.test_contract.update(dict(date_end=datetime.now() + relativedelta(days=100)))
