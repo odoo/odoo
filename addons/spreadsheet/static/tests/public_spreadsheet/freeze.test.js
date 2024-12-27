@@ -201,9 +201,8 @@ test("from/to global filters are exported", async function () {
     const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
         id: "42",
-        type: "date",
         label: "Date Filter",
-        rangeType: "from_to",
+        operator: "from_to",
     });
     await setGlobalFilterValue(model, {
         id: "42",
@@ -228,9 +227,8 @@ test("from/to global filter without value is exported", async function () {
     const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
         id: "42",
-        type: "date",
         label: "Date Filter",
-        rangeType: "from_to",
+        operator: "from_to",
     });
     const data = await freezeOdooData(model);
     const filterSheet = data.sheets[1];

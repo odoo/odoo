@@ -15,11 +15,11 @@ const { DateTime } = luxon;
 /**
  * Convert pivot period to the related filter value
  *
- * @param {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").RangeType} timeRange
+ * @param {string} granularity
  * @param {string} value
  * @returns {object}
  */
-function pivotPeriodToFilterValue(timeRange, value) {
+function pivotPeriodToFilterValue(granularity, value) {
     // reuse the same logic as in `parseAccountingDate`?
     if (typeof value === "number") {
         value = value.toString(10);
@@ -37,7 +37,7 @@ function pivotPeriodToFilterValue(timeRange, value) {
         return undefined;
     }
     const yearOffset = yearValue - DateTime.now().year;
-    switch (timeRange) {
+    switch (granularity) {
         case "year":
             return {
                 yearOffset,
@@ -168,9 +168,26 @@ export class PivotCoreViewGlobalFilterPlugin extends OdooCoreViewPlugin {
                 }
                 let transformedValue;
                 const currentValue = this.getters.getGlobalFilterValue(filter.id);
-                switch (filter.type) {
-                    case "date":
-                        if (filter.rangeType === "fixedPeriod" && time) {
+                switch (filter.operator) {
+                    case "ilike":
+                        if (currentValue !== value) {
+                            transformedValue = value;
+                        }
+                        break;
+                    case "in":
+                    case "child_of":
+                        if (typeof value == "string") {
+                            value = Number(value);
+                            if (Number.isNaN(value)) {
+                                break;
+                            }
+                        }
+                        if (JSON.stringify(currentValue) !== `[${value}]`) {
+                            transformedValue = [value];
+                        }
+                        break;
+                    case "fixedPeriod":
+                        if (time) {
                             if (value === "false") {
                                 transformedValue = undefined;
                             } else {
@@ -186,22 +203,9 @@ export class PivotCoreViewGlobalFilterPlugin extends OdooCoreViewPlugin {
                             continue;
                         }
                         break;
-                    case "relation":
-                        if (typeof value == "string") {
-                            value = Number(value);
-                            if (Number.isNaN(value)) {
-                                break;
-                            }
-                        }
-                        if (JSON.stringify(currentValue) !== `[${value}]`) {
-                            transformedValue = [value];
-                        }
-                        break;
-                    case "text":
-                        if (currentValue !== value) {
-                            transformedValue = value;
-                        }
-                        break;
+                    case "from_to":
+                    case "relative":
+                        continue;
                 }
                 matchingFilters.push({ filterId: filter.id, value: transformedValue });
             }

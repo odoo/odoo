@@ -17,7 +17,6 @@ export class DateFilterValue extends Component {
     static template = "spreadsheet_edition.DateFilterValue";
     static components = { DateTimeInput };
     static props = {
-        // See @spreadsheet_edition/bundle/global_filters/filters_plugin.RangeType
         onTimeRangeChanged: Function,
         yearOffset: { type: Number, optional: true },
         period: { type: String, optional: true },

@@ -1,8 +1,8 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, queryAllTexts, queryAllValues } from "@odoo/hoot-dom";
+import { click, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
-import { contains, makeMockEnv, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
 
 import { Model } from "@odoo/o-spreadsheet";
 import {
@@ -15,8 +15,9 @@ import { FilterValue } from "@spreadsheet/global_filters/components/filter_value
 import { user } from "@web/core/user";
 
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
+import { mountComponentWithModelUpdate } from "../helpers/ui";
 
-describe.current.tags("headless");
+describe.current.tags("desktop");
 defineSpreadsheetModels();
 
 /**
@@ -24,7 +25,7 @@ defineSpreadsheetModels();
  * @param {{ model: Model, filter: object}} props
  */
 async function mountFilterValueComponent(props) {
-    await mountWithCleanup(FilterValue, { props });
+    await mountComponentWithModelUpdate(FilterValue, props);
 }
 
 test("basic text filter", async function () {
@@ -32,8 +33,9 @@ test("basic text filter", async function () {
     const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
-        type: "text",
+        operator: "ilike",
         label: "Text Filter",
+        target: { model: "lead", field: "char_field" },
     });
     await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
     await contains("input").edit("foo");
@@ -46,22 +48,23 @@ test("text filter with range", async function () {
     const sheetId = model.getters.getActiveSheetId();
     await addGlobalFilter(model, {
         id: "42",
-        type: "text",
+        operator: "ilike",
         label: "Text Filter",
         rangeOfAllowedValues: toRangeData(sheetId, "A1:A3"),
+        target: { model: "lead", field: "char_field" },
     });
     setCellContent(model, "A1", "foo");
     setCellContent(model, "A2", "0");
     setCellFormat(model, "A2", "0.00");
     await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
-    expect("select").toHaveValue("", { message: "no value is selected" });
-    expect(queryAllTexts("option")).toEqual(["Choose a value...", "foo", "0.00"], {
+    expect(".o-autocomplete input").toHaveValue("", { message: "no value is selected" });
+    await contains("input").click();
+    expect(queryAllTexts("li")).toEqual(["foo", "0.00"], {
         message: "values are formatted",
     });
-    expect(queryAllValues("option")).toEqual(["", "foo", "0"]);
-    await contains("select").select("0");
-    expect("select").toHaveValue("0", { message: "value is selected" });
-    expect(model.getters.getGlobalFilterValue("42")).toBe("0", { message: "value is set" });
+    await contains("li a").click();
+    expect(".o-autocomplete input").toHaveValue("foo", { message: "value is selected" });
+    expect(model.getters.getGlobalFilterValue("42")).toBe("foo", { message: "value is set" });
 });
 
 test("relational filter with domain", async function () {
@@ -73,11 +76,11 @@ test("relational filter with domain", async function () {
     const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
-        type: "relation",
         operator: "in",
         label: "My Filter",
-        modelName: "partner",
+        relation: "partner",
         domainOfAllowedValues: [["display_name", "=", "Bob"]],
+        target: { model: "lead", field: "partner" },
     });
     await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
     await click(".o_multi_record_selector input");
@@ -99,11 +102,11 @@ test("relational filter with a contextual domain", async function () {
     const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     await addGlobalFilter(model, {
         id: "42",
-        type: "relation",
         operator: "in",
         label: "My Filter",
-        modelName: "partner",
+        relation: "partner",
         domainOfAllowedValues: '[["user_ids", "in", [uid]]]',
+        target: { model: "lead", field: "partner" },
     });
     await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
     await click(".o_multi_record_selector input");
