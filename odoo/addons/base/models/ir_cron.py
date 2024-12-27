@@ -123,13 +123,14 @@ class IrCron(models.Model):
         _logger.info('Job %r (%s) done', self.name, self.id)
         return True
 
-    @classmethod
-    def _process_jobs(cls, db_name):
+    @staticmethod
+    def _process_jobs(db_name):
         """ Execute every job ready to be run on this database. """
         try:
             db = odoo.sql_db.db_connect(db_name)
             threading.current_thread().dbname = db_name
             with db.cursor() as cron_cr:
+                cls = IrCron
                 cls._check_version(cron_cr)
                 jobs = cls._get_all_ready_jobs(cron_cr)
                 if not jobs:
@@ -167,8 +168,8 @@ class IrCron(models.Model):
             if hasattr(threading.current_thread(), 'dbname'):
                 del threading.current_thread().dbname
 
-    @classmethod
-    def _check_version(cls, cron_cr):
+    @staticmethod
+    def _check_version(cron_cr):
         """ Ensure the code version matches the database version """
         cron_cr.execute("""
             SELECT latest_version
@@ -181,8 +182,8 @@ class IrCron(models.Model):
         if version != BASE_VERSION:
             raise BadVersion()
 
-    @classmethod
-    def _check_modules_state(cls, cr, jobs):
+    @staticmethod
+    def _check_modules_state(cr, jobs):
         """ Ensure no module is installing or upgrading """
         cr.execute("""
             SELECT COUNT(*)
@@ -207,8 +208,8 @@ class IrCron(models.Model):
         from odoo.modules.loading import reset_modules_state  # noqa: PLC0415
         reset_modules_state(cr.dbname)
 
-    @classmethod
-    def _get_all_ready_jobs(cls, cr):
+    @staticmethod
+    def _get_all_ready_jobs(cr):
         """ Return a list of all jobs that are ready to be executed """
         cr.execute("""
             SELECT *
@@ -225,8 +226,8 @@ class IrCron(models.Model):
         """)
         return cr.dictfetchall()
 
-    @classmethod
-    def _acquire_one_job(cls, cr, job_id):
+    @staticmethod
+    def _acquire_one_job(cr, job_id):
         """
         Acquire for update the job with id ``job_id``.
 
