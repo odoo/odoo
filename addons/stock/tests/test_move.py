@@ -6897,3 +6897,25 @@ class StockMove(TransactionCase):
             {'location_id': subloc.id, 'lot_id': lots[1].id, 'package_id': pack.id},
             {'location_id': self.stock_location.id, 'lot_id': lots[2].id, 'package_id': False},
         ])
+
+    def test_change_dest_loc_after_sm_creation(self):
+        form = Form(self.env['stock.picking'].with_context(restricted_picking_type_code="incoming"))
+        with form.move_ids_without_package.new() as move:
+            move.product_id = self.product
+            move.product_uom_qty = 1
+        form.location_dest_id = self.customer_location
+        self.assertEqual(form.move_ids_without_package.edit(0).location_dest_id, self.customer_location)
+
+        picking = form.save()
+        self.assertEqual(picking.move_ids_without_package.location_dest_id, self.customer_location)
+
+        form = Form(picking)
+        with form.move_ids_without_package.new() as move:
+            move.product_id = self.product_consu
+            move.product_uom_qty = 1
+        form.location_dest_id = self.stock_location
+        self.assertEqual(form.move_ids_without_package.edit(0).location_dest_id, self.stock_location)
+        self.assertEqual(form.move_ids_without_package.edit(1).location_dest_id, self.stock_location)
+
+        picking = form.save()
+        self.assertEqual(picking.move_ids_without_package.location_dest_id, self.stock_location)
