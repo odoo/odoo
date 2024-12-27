@@ -166,6 +166,14 @@ export function defineSpreadsheetActions() {
 }
 
 export class IrModel extends webModels.IrModel {
+    has_searchable_parent_relation() {
+        return false;
+    }
+
+    get_available_models() {
+        return this.env["ir.model"].search_read([], ["display_name", "model"]);
+    }
+
     display_name_for(models) {
         const records = this.env["ir.model"].search_read([["model", "in", models]]);
         return records.map((record) => ({

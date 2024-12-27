@@ -204,8 +204,12 @@ test("Can clear filter date filter value that defaults to current period", async
                 id: "1",
                 type: "date",
                 label: "Date Filter",
-                rangeType: "fixedPeriod",
+                operator: "fixedPeriod",
                 defaultValue: "this_year",
+                target: {
+                    model: "partner",
+                    field: "date",
+                },
             },
         ],
     };
@@ -233,11 +237,14 @@ test("Can delete record tag in the filter by hitting Backspace", async function 
         globalFilters: [
             {
                 id: "1",
-                type: "relation",
                 operator: "in",
                 label: "Relation Filter",
-                modelName: "product",
+                relation: "product",
                 defaultValue: [37],
+                target: {
+                    model: "partner",
+                    field: "product_id",
+                },
             },
         ],
     };
@@ -288,10 +295,13 @@ test("Changing filter values will create a new share", async function () {
         globalFilters: [
             {
                 id: "1",
-                type: "date",
                 label: "Date Filter",
-                rangeType: "fixedPeriod",
+                operator: "fixedPeriod",
                 defaultValue: "this_year",
+                target: {
+                    model: "partner",
+                    field: "date",
+                },
             },
         ],
     };

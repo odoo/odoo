@@ -9,9 +9,7 @@
 
 import { OdooUIPlugin } from "@spreadsheet/plugins";
 
-
 export class GlobalFiltersUIPlugin extends OdooUIPlugin {
-
     /**
      * Handle a spreadsheet command
      *

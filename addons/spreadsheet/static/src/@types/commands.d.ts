@@ -125,7 +125,6 @@ declare module "@spreadsheet" {
         type: "SET_GLOBAL_FILTER_VALUE";
         id: string;
         value: any;
-        displayNames?: string[];
     }
 
     export interface SetManyGlobalFilterValueCommand {

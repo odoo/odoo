@@ -22,41 +22,22 @@ const quarterOptionsIds = Object.values(QUARTER_OPTIONS).map((option) => option.
  * @returns {boolean}
  */
 export function checkFilterValueIsValid(filter, value) {
-    const { type } = filter;
-    if (value !== undefined) {
-        switch (type) {
-            case "text":
-                if (typeof value !== "string") {
-                    return false;
-                }
-                break;
-            case "date": {
-                return checkDateFilterValueIsValid(filter, value);
-            }
-            case "relation":
-                if (value === "current_user") {
-                    return true;
-                }
-                if (!Array.isArray(value)) {
-                    return false;
-                }
-                break;
-        }
-    }
-    return true;
-}
-
-/**
- * Check if the value is valid for given filter.
- * @param {DateGlobalFilter} filter
- * @param {any} value
- * @returns {boolean}
- */
-function checkDateFilterValueIsValid(filter, value) {
-    if (!value) {
+    if (value === undefined) {
         return true;
     }
-    switch (filter.rangeType) {
+    switch (filter.operator) {
+        case undefined: // Attribute
+        case "ilike":
+            if (typeof value !== "string") {
+                return false;
+            }
+            return true;
+        case "in":
+        case "child_of":
+            if (!Array.isArray(value)) {
+                return false;
+            }
+            return true;
         case "fixedPeriod": {
             const period = value.period;
             if (!filter.disabledPeriods || !filter.disabledPeriods.length) {
@@ -72,13 +53,12 @@ function checkDateFilterValueIsValid(filter, value) {
         }
         case "relative": {
             const expectedValues = RELATIVE_DATE_RANGE_TYPES.map((val) => val.type);
-            expectedValues.push("this_month", "this_quarter", "this_year");
+            expectedValues.push("", "this_month", "this_quarter", "this_year");
             return expectedValues.includes(value);
         }
         case "from_to":
             return typeof value === "object";
     }
-    return true;
 }
 
 /**
@@ -169,4 +149,8 @@ export function getRelativeDateDomain(now, offset, rangeType, fieldName, fieldTy
     }
 
     return new Domain(["&", [fieldName, ">=", leftBound], [fieldName, "<=", rightBound]]);
+}
+
+export function isDateOperator(operator) {
+    return ["from_to", "relative", "fixedPeriod"].includes(operator);
 }

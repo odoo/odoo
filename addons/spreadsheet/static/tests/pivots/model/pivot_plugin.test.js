@@ -223,11 +223,11 @@ test("Renaming a pivot with a matching global filter does not retrigger RPCs", a
         model,
         {
             id: "42",
-            type: "relation",
+            operator: "in",
+            relation: "product",
             label: "test",
             defaultValue: [41],
-            modelName: undefined,
-            rangeType: undefined,
+            target: { model: "partner", field: "product" },
         },
         {
             pivot: { [pivotId]: { chain: "product_id", type: "many2one" } },
@@ -1358,12 +1358,10 @@ test("field matching is removed when filter is deleted", async function () {
         model,
         {
             id: "42",
-            type: "relation",
             operator: "in",
             label: "test",
             defaultValue: [41],
-            modelName: undefined,
-            rangeType: undefined,
+            relation: "product",
         },
         {
             pivot: { [pivotId]: { chain: "product_id", type: "many2one" } },

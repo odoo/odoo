@@ -359,40 +359,46 @@ test("group year/quarter/month filters to a single filter type", () => {
     expect(filters).toEqual([
         {
             id: "1",
-            type: "relation",
             operator: "in",
             label: "a relational filter",
             defaultValue: [2],
-            defaultValueDisplayNames: ["Mitchell Admin"],
-            modelName: "res.users",
+            relation: "res.users",
+            target: {
+                model: "res.users",
+                field: "id",
+            },
         },
         {
             id: "2",
-            type: "date",
             label: "a year relational filter",
-            rangeType: "fixedPeriod",
+            operator: "fixedPeriod",
             defaultValue: "this_year",
+            parameterType: "date",
+            target: undefined,
         },
         {
             id: "3",
-            type: "date",
             label: "a quarter relational filter",
-            rangeType: "fixedPeriod",
+            operator: "fixedPeriod",
             defaultValue: "this_quarter",
+            parameterType: "date",
+            target: undefined,
         },
         {
             id: "4",
-            type: "date",
             label: "a month relational filter",
-            rangeType: "fixedPeriod",
+            operator: "fixedPeriod",
             defaultValue: "this_month",
+            parameterType: "date",
+            target: undefined,
         },
         {
             id: "5",
-            type: "date",
             label: "a relative date filter",
-            rangeType: "relative",
+            operator: "relative",
             defaultValue: "last_week",
+            parameterType: "date",
+            target: undefined,
         },
     ]);
 });
@@ -535,6 +541,200 @@ test("Pivot sorted columns are migrated (12 to 13)", () => {
         order: "desc",
     });
     expect(migratedData.pivots["2"].sortedColumn).toBe(undefined);
+});
+
+test("Global filters migration 13 to 14", () => {
+    const data = {
+        version: 23,
+        odooVersion: 13,
+        sheets: [],
+        pivots: {
+            1: {
+                type: "ODOO",
+                fieldMatching: {
+                    4: { chain: "customer", type: "many2one" },
+                    7: { chain: "customer.foo", type: "text" },
+                },
+                name: "Name",
+                model: "product.pivot",
+                measures: [],
+                columns: [],
+                rows: [],
+                formulaId: "1",
+            },
+        },
+        lists: {
+            1: {
+                name: "Name",
+                model: "product.list",
+                fieldMatching: { 6: { chain: "foo", type: "char" } },
+            },
+        },
+        figures: [
+            {
+                tag: "chart",
+                data: {
+                    metaData: {
+                        resModel: "product.chart",
+                    },
+                    fieldMatching: { 9: { chain: "create_date", type: "date" } },
+                },
+            },
+        ],
+        globalFilters: [
+            {
+                // Relation filter
+                id: "1",
+                type: "relation",
+                label: "a relational filter",
+                defaultValue: [2],
+                modelName: "res.partner",
+            },
+            {
+                // Relation filter with includeChildren
+                id: "2",
+                type: "relation",
+                label: "a relational filter",
+                defaultValue: [2],
+                modelName: "res.partner",
+                includeChildren: true,
+            },
+            {
+                // Relation filter with res.users and current_user
+                id: "3",
+                type: "relation",
+                label: "a relational filter",
+                defaultValue: "current_user",
+                modelName: "res.users",
+            },
+            {
+                // Relation filter with field matching
+                id: "4",
+                type: "relation",
+                label: "a relational filter",
+                defaultValue: [2],
+                modelName: "res.partner",
+            },
+            {
+                // Text filter
+                id: "5",
+                type: "text",
+                label: "a text filter",
+            },
+            {
+                // Text filter with field matching
+                id: "6",
+                type: "text",
+                label: "a text filter",
+            },
+            {
+                // Text filter with field matching on a multiple chain
+                id: "7",
+                type: "text",
+                label: "a text filter",
+            },
+            {
+                // Date filter
+                id: "8",
+                type: "date",
+                label: "a date filter",
+                rangeType: "fixedPeriod",
+            },
+            {
+                // Date filter with field matching
+                id: "9",
+                type: "date",
+                label: "a date filter",
+                rangeType: "from_to",
+            },
+        ],
+    };
+    const migratedData = load(data);
+    expect(migratedData.globalFilters).toEqual([
+        {
+            id: "1",
+            operator: "in",
+            relation: "res.partner",
+            label: "a relational filter",
+            defaultValue: [2],
+            target: {
+                model: "res.partner",
+                field: "id",
+            },
+        },
+        {
+            id: "2",
+            operator: "child_of",
+            relation: "res.partner",
+            label: "a relational filter",
+            defaultValue: [2],
+            target: {
+                model: "res.partner",
+                field: "id",
+            },
+        },
+        {
+            id: "3",
+            operator: "in",
+            relation: "res.users",
+            label: "a relational filter",
+            defaultValue: ["uid"],
+            target: {
+                model: "res.users",
+                field: "id",
+            },
+        },
+        {
+            id: "4",
+            operator: "in",
+            relation: "res.partner",
+            label: "a relational filter",
+            defaultValue: [2],
+            target: {
+                model: "product.pivot",
+                field: "customer",
+            },
+        },
+        {
+            id: "5",
+            operator: "ilike",
+            parameterType: "text",
+            label: "a text filter",
+            target: undefined,
+        },
+        {
+            id: "6",
+            operator: "ilike",
+            label: "a text filter",
+            target: {
+                model: "product.list",
+                field: "foo",
+            },
+        },
+        {
+            id: "7",
+            operator: "ilike",
+            parameterType: "text",
+            label: "a text filter",
+            target: undefined,
+        },
+        {
+            id: "8",
+            operator: "fixedPeriod",
+            parameterType: "date",
+            label: "a date filter",
+            target: undefined,
+        },
+        {
+            id: "9",
+            operator: "from_to",
+            label: "a date filter",
+            target: {
+                model: "product.chart",
+                field: "create_date",
+            },
+        },
+    ]);
 });
 
 test("Odoo version is exported", () => {
