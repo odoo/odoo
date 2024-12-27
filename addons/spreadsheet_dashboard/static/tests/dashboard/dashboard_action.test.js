@@ -234,6 +234,7 @@ test("Can delete record tag in the filter by hitting Backspace", async function 
             {
                 id: "1",
                 type: "relation",
+                operator: "in",
                 label: "Relation Filter",
                 modelName: "product",
                 defaultValue: [37],

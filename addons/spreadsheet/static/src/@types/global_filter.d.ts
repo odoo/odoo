@@ -64,7 +64,7 @@ declare module "@spreadsheet" {
         id: string;
         label: string;
         modelName: string;
-        includeChildren: boolean;
+        operator: "in" | "child_of";
         defaultValue?: "current_user" | number[];
         domainOfAllowedValues?: DomainListRepr | string;
     }

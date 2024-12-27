@@ -74,6 +74,7 @@ test("relational filter with domain", async function () {
     await addGlobalFilter(model, {
         id: "42",
         type: "relation",
+        operator: "in",
         label: "My Filter",
         modelName: "partner",
         domainOfAllowedValues: [["display_name", "=", "Bob"]],
@@ -99,6 +100,7 @@ test("relational filter with a contextual domain", async function () {
     await addGlobalFilter(model, {
         id: "42",
         type: "relation",
+        operator: "in",
         label: "My Filter",
         modelName: "partner",
         domainOfAllowedValues: '[["user_ids", "in", [uid]]]',
