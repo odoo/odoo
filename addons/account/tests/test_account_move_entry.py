@@ -75,10 +75,10 @@ class TestAccountMove(AccountTestInvoicingCommon):
         nb_invoices = self.env['account.move'].search_count(domain=[])
         self.test_move.auto_post = 'at_date'
         self.test_move.date = fields.Date.today()
-        with freeze_time(self.test_move.date - relativedelta(days=1)):
+        with freeze_time(self.test_move.date - relativedelta(days=1)), self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
             self.assertEqual(self.test_move.state, 'draft')  # can't be posted before its date
-        with freeze_time(self.test_move.date + relativedelta(days=1)):
+        with freeze_time(self.test_move.date + relativedelta(days=1)), self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
             self.assertEqual(self.test_move.state, 'posted')  # can be posted after its date
         self.assertEqual(nb_invoices, self.env['account.move'].search_count(domain=[]))
@@ -102,7 +102,8 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.test_move.date = date  # invoice_date's onchange does not trigger from code
         self.test_move.invoice_date_due = date + relativedelta(days=1)
 
-        self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()  # first recurrence
+        with self.enter_registry_test_mode():
+            self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()  # first recurrence
         new_invoices_1 = self.env['account.move'].search(domain=[]) - prev_invoices
         new_date_1 = fields.Date.from_string('2022-01-30')
         self.assertEqual(self.test_move.state, 'posted')
@@ -111,7 +112,8 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertEqual(new_date_1, new_invoices_1.date)
         self.assertEqual(new_date_1 + relativedelta(days=1), new_invoices_1.invoice_date_due)  # due date maintains delta with date
 
-        self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()  # second recurrence
+        with self.enter_registry_test_mode():
+            self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()  # second recurrence
         new_invoices_2 = self.env['account.move'].search(domain=[]) - prev_invoices - new_invoices_1
         new_date_2 = fields.Date.from_string('2022-02-28')
         self.assertEqual(new_invoices_1.state, 'posted')
@@ -121,7 +123,8 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertEqual(new_date_2 + relativedelta(days=1), new_invoices_2.invoice_date_due)
         self.assertEqual(new_invoices_2.invoice_user_id, self.test_move.invoice_user_id)
 
-        self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()  # no more recurrences
+        with self.enter_registry_test_mode():
+            self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()  # no more recurrences
         new_invoices_3 = self.env['account.move'].search(domain=[]) - prev_invoices - new_invoices_1 - new_invoices_2
         self.assertEqual(0, len(new_invoices_3))
 
