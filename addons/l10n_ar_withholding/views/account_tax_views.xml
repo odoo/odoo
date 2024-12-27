@@ -28,7 +28,7 @@
                 <field name="l10n_ar_withholding_payment_type" invisible="1"/><!-- Because of onchange-->
                 <field name="l10n_ar_state_id" invisible="l10n_ar_tax_type not in ['iibb_untaxed', 'iibb_total']" required="l10n_ar_tax_type in ['iibb_untaxed', 'iibb_total']" options="{'no_create': True}"/>
                 <field name="l10n_ar_non_taxable_amount" invisible="country_code != 'AR' or l10n_ar_type_tax_use != 'supplier'"/>
-                <field name="l10n_ar_minimum_threshold" invisible="country_code != 'AR' or l10n_ar_type_tax_use != 'supplier'"/>
+                <field name="l10n_ar_minimum_threshold" invisible="country_code != 'AR' or l10n_ar_type_tax_use not in ['supplier', 'sale']"/>
                 <field name="l10n_ar_withholding_sequence_id" context="{'default_name': name}" invisible="l10n_ar_withholding_payment_type != 'supplier'"/>
                 <field name="l10n_ar_code" invisible="l10n_ar_tax_type not in ['earnings', 'earnings_scale'] or l10n_ar_type_tax_use != 'supplier'" required="l10n_ar_tax_type in ['earnings', 'earnings_scale'] and l10n_ar_type_tax_use == 'supplier'"/>
             </xpath>
