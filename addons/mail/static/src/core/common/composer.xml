@@ -49,7 +49,7 @@
                     t-ref="input-container"
                 >
                     <div t-if="!extended" t-attf-class="{{ actionsContainerClass }}">
-                        <Dropdown position="'top-start'" menuClass="'d-flex flex-column py-0'">
+                        <Dropdown t-if="partitionedActions.other.length > 0" position="'top-start'" menuClass="'d-flex flex-column py-0'">
                             <t t-call="mail.Composer.moreActions"/>
                             <t t-set-slot="content">
                                 <t t-call="mail.Composer.dropdownActions"/>
@@ -57,7 +57,7 @@
                         </Dropdown>
                     </div>
                     <div class="position-relative flex-grow-1">
-                        <t t-set="inputClasses" t-value="'o-mail-Composer-inputStyle form-control border-0 rounded-3'"/>
+                        <t t-set="inputClasses" t-value="{'o-mail-Composer-inputStyle form-control border-0 rounded-3': true, 'ps-2': partitionedActions.other.length === 0}"/>
                         <textarea class="o-mail-Composer-input o-mail-Composer-bg shadow-none overflow-auto"
                             t-att-class="inputClasses"
                             t-ref="textarea"
