@@ -42,6 +42,10 @@ class ResCompany(models.Model):
         help="""Day of the month when the annual inventory should occur. If zero or negative, then the first day of the month will be selected instead.
         If greater than the last day of a month, then the last day of the month will be selected instead.""")
 
+    # used for sending stock text confirmation
+    stock_text_confirmation = fields.Boolean("Stock Text Confirmation")
+    stock_confirmation_type = fields.Selection([('sms', 'SMS')], default='sms')
+
     def _create_transit_location(self):
         '''Create a transit location with company_id being the given company_id. This is needed
            in case of resuply routes between warehouses belonging to the same company, because
@@ -210,3 +214,7 @@ class ResCompany(models.Model):
                 'property_stock_customer': inter_company_location.id,
                 'property_stock_supplier': inter_company_location.id,
             })
+
+    def _get_text_validation(self, confirmation_type):
+        self.ensure_one()
+        return bool(self.stock_text_confirmation and self.stock_confirmation_type == confirmation_type)
