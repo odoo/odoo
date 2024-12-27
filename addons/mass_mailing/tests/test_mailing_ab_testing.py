@@ -86,7 +86,7 @@ class TestMailingABTesting(MassMailCommon):
         self.assertEqual(self.ab_testing_mailing_1.opened_ratio, 66.67)
         self.assertEqual(self.ab_testing_mailing_2.opened_ratio, 50)
 
-        with self.mock_mail_gateway():
+        with self.mock_mail_gateway(), self.enter_registry_test_mode():
             self.env.ref('mass_mailing.ir_cron_mass_mailing_ab_testing').sudo().method_direct_trigger()
         self.ab_testing_mailing_ids.invalidate_recordset()
         winner_mailing = self.ab_testing_campaign.mailing_mail_ids.filtered(lambda mailing: mailing.ab_testing_pc == 100)

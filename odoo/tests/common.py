@@ -950,13 +950,17 @@ class TransactionCase(BaseCase):
         Make so that all new cursors opened on this database registry reuse the
         one currenly used by the tests. See ``Registry.enter_test_mode``.
         """
+        # entering the test mode should flush/invalidate all changes in the
+        # current environment because changes happen inside other cursors
         env = self.env
+        env.flush_all()
         registry = env.registry
         registry.enter_test_mode(env.cr)
         try:
             yield
         finally:
             registry.leave_test_mode()
+            env.invalidate_all()
 
 
 class SingleTransactionCase(BaseCase):
