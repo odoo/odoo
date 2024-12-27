@@ -21,7 +21,7 @@ class TestSaleTimesheetDashboard(Common):
             'service_type': 'timesheet',
             'service_tracking': 'no',
             'project_id': False,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
     def test_get_sale_item_data_various_sol_with_timesheet_installed(self):

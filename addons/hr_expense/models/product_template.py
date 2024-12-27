@@ -12,7 +12,7 @@ class ProductTemplate(models.Model):
     def default_get(self, fields):
         result = super(ProductTemplate, self).default_get(fields)
         if self.env.context.get('default_can_be_expensed'):
-            result['supplier_taxes_id'] = False
+            result['supplier_tax_ids'] = False
         return result
 
     can_be_expensed = fields.Boolean(string="Expenses", compute='_compute_can_be_expensed',

@@ -40,7 +40,7 @@ patch(PosStore.prototype, {
             const categIds = eventTicketWithProduct.flatMap(
                 (ticket) => ticket.product_id.pos_categ_ids
             );
-            const taxeIds = eventTicketWithProduct.flatMap((ticket) => ticket.product_id.taxes_id);
+            const taxeIds = eventTicketWithProduct.flatMap((ticket) => ticket.product_id.tax_ids);
             this.models["product.template"].create({
                 id: `dummy_${event.id}`,
                 available_in_pos: true,
@@ -48,7 +48,7 @@ patch(PosStore.prototype, {
                 display_name: event.name,
                 name: event.name,
                 pos_categ_ids: categIds.map((categ) => ["link", categ]),
-                taxes_id: taxeIds.map((tax) => ["link", tax]),
+                tax_ids: taxeIds.map((tax) => ["link", tax]),
                 _event_id: event.id,
             });
 

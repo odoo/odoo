@@ -96,7 +96,7 @@ class TestPosMrp(TestPointOfSaleCommon):
             'name': 'Final Kit',
             'available_in_pos': True,
             'categ_id': category.id,
-            'taxes_id': False,
+            'tax_ids': False,
             'is_storable': True,
         })
 
@@ -104,7 +104,7 @@ class TestPosMrp(TestPointOfSaleCommon):
             'name': 'Final Kit 2',
             'available_in_pos': True,
             'categ_id': category.id,
-            'taxes_id': False,
+            'tax_ids': False,
             'is_storable': True,
         })
 
@@ -112,14 +112,14 @@ class TestPosMrp(TestPointOfSaleCommon):
             'name': 'Subkit 1',
             'available_in_pos': True,
             'categ_id': category.id,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         self.subkit2 = self.env['product.product'].create({
             'name': 'Subkit 2',
             'available_in_pos': True,
             'categ_id': category.id,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         self.component_a = self.env['product.product'].create({
@@ -127,7 +127,7 @@ class TestPosMrp(TestPointOfSaleCommon):
             'available_in_pos': True,
             'standard_price': 5.0,
             'categ_id': category.id,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         self.component_b = self.env['product.product'].create({
@@ -135,7 +135,7 @@ class TestPosMrp(TestPointOfSaleCommon):
             'available_in_pos': True,
             'standard_price': 5.0,
             'categ_id': category.id,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         self.component_c = self.env['product.product'].create({
@@ -143,7 +143,7 @@ class TestPosMrp(TestPointOfSaleCommon):
             'available_in_pos': True,
             'standard_price': 5.0,
             'categ_id': category.id,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         bom_product_form = Form(self.env['mrp.bom'])
@@ -213,7 +213,7 @@ class TestPosMrp(TestPointOfSaleCommon):
                 'price_subtotal': 2,
                 'price_subtotal_incl': 2,
                 'qty': 1,
-                'tax_ids': [(6, 0, self.kit.taxes_id.ids)]}], [0, 0, {
+                'tax_ids': [(6, 0, self.kit.tax_ids.ids)]}], [0, 0, {
                     'discount': 0,
                     'pack_lot_ids': [],
                     'price_unit': 2,
@@ -221,7 +221,7 @@ class TestPosMrp(TestPointOfSaleCommon):
                     'price_subtotal': 2,
                     'price_subtotal_incl': 2,
                     'qty': 1,
-                    'tax_ids': [(6, 0, self.kit_2.taxes_id.ids)]}
+                    'tax_ids': [(6, 0, self.kit_2.tax_ids.ids)]}
             ]],
             'partner_id': self.partner1.id,
             'session_id': self.pos_config.current_session_id.id,
@@ -264,7 +264,7 @@ class TestPosMrp(TestPointOfSaleCommon):
             'name': 'Final Kit',
             'available_in_pos': True,
             'categ_id': category.id,
-            'taxes_id': False,
+            'tax_ids': False,
             'is_storable': True,
         })
 
@@ -273,7 +273,7 @@ class TestPosMrp(TestPointOfSaleCommon):
             'available_in_pos': True,
             'standard_price': 12000.0,
             'categ_id': category.id,
-            'taxes_id': False,
+            'tax_ids': False,
             'uom_id': self.env.ref('uom.product_uom_dozen').id,
         })
 

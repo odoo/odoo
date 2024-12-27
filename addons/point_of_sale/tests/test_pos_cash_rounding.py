@@ -31,7 +31,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             'name': "random_product",
             'available_in_pos': True,
             'list_price': 13.67,
-            'taxes_id': [Command.set(cls.company_data['default_tax_sale'].ids)],
+            'tax_ids': [Command.set(cls.company_data['default_tax_sale'].ids)],
             'pos_categ_ids': [Command.set(cls.pos_desk_misc_test.ids)],
         })
 

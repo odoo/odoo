@@ -188,7 +188,7 @@ patch(PosStore.prototype, {
         let proposed_down_payment = userValue;
         if (isPercentage) {
             const down_payment_tax = this.models["account.tax"].get(
-                this.config.down_payment_product_id.taxes_id
+                this.config.down_payment_product_id.tax_ids
             );
             const percentageBase =
                 !down_payment_tax || down_payment_tax.price_include

@@ -60,11 +60,11 @@ class EventBoothCategory(models.Model):
             if category.product_id and category.product_id.list_price:
                 category.price = category.product_id.list_price + category.product_id.price_extra
 
-    @api.depends('product_id', 'product_id.taxes_id', 'price')
+    @api.depends('product_id', 'product_id.tax_ids', 'price')
     def _compute_price_incl(self):
         for category in self:
             if category.product_id and category.price:
-                tax_ids = category.product_id.taxes_id
+                tax_ids = category.product_id.tax_ids
                 taxes = tax_ids.compute_all(category.price, category.currency_id, 1.0, product=category.product_id)
                 category.price_incl = taxes['total_included']
             else:
@@ -81,7 +81,7 @@ class EventBoothCategory(models.Model):
     @api.depends('product_id', 'price_reduce')
     def _compute_price_reduce_taxinc(self):
         for category in self:
-            tax_ids = category.product_id.taxes_id
+            tax_ids = category.product_id.tax_ids
             taxes = tax_ids.compute_all(category.price_reduce, category.currency_id, 1.0, product=category.product_id)
             category.price_reduce_taxinc = taxes['total_included'] or 0
 

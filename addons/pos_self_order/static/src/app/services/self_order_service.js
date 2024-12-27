@@ -247,7 +247,7 @@ export class SelfOrder extends Reactive {
         const values = {
             order_id: this.currentOrder,
             product_id: product,
-            tax_ids: productTemplate.taxes_id.map((tax) => ["link", tax]),
+            tax_ids: productTemplate.tax_ids.map((tax) => ["link", tax]),
             qty: qty,
             note: customer_note || "",
             price_unit: productPrice.total_excluded,
@@ -266,7 +266,7 @@ export class SelfOrder extends Reactive {
                 Object.assign(values, {
                     product_id: productVariant,
                     price_unit: productVariant.lst_price,
-                    tax_ids: productVariant.taxes_id.map((tax) => ["link", tax]),
+                    tax_ids: productVariant.tax_ids.map((tax) => ["link", tax]),
                 });
             }
 
@@ -312,10 +312,7 @@ export class SelfOrder extends Reactive {
                 "create",
                 {
                     product_id: comboItem.combo_item_id.product_id,
-                    tax_ids: comboItem.combo_item_id.product_id.taxes_id.map((tax) => [
-                        "link",
-                        tax,
-                    ]),
+                    tax_ids: comboItem.combo_item_id.product_id.tax_ids.map((tax) => ["link", tax]),
                     combo_item_id: comboItem.combo_item_id,
                     price_unit: comboItem.price_unit,
                     order_id: this.currentOrder,
@@ -841,7 +838,7 @@ export class SelfOrder extends Reactive {
             : this.config.default_pricelist_id;
         const price = productTemplate.getPrice(pricelist, 1, 0, false, product);
 
-        let taxes = productTemplate.taxes_id;
+        let taxes = productTemplate.tax_ids;
 
         if (!product) {
             product = productTemplate;

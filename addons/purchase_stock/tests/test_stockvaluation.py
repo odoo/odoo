@@ -31,7 +31,7 @@ class TestStockValuation(TransactionCase):
             'standard_price': 1299.0,
             'list_price': 1799.0,
             # Ignore tax calculations for these tests.
-            'supplier_taxes_id': False,
+            'supplier_tax_ids': False,
             'is_storable': True,
             'categ_id': cls.env.ref('product.product_category_goods').id,
         })

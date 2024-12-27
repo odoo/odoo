@@ -26,7 +26,7 @@ class TestWebsiteEventBoothSale(HttpCaseWithUserPortal, TestWebsiteEventSaleComm
             'description_sale': 'Mighty Booth Description',
             'list_price': 20,
             'standard_price': 60.0,
-            'taxes_id': [(6, 0, [cls.tax.id])],
+            'tax_ids': [(6, 0, [cls.tax.id])],
             'type': 'service',
             'service_tracking': 'event_booth',
         })

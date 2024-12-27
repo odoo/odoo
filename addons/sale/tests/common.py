@@ -22,7 +22,7 @@ class SaleCommon(
         cls.group_discount_per_so_line = cls.quick_ref('sale.group_discount_per_so_line')
 
         (cls.product + cls.service_product).write({
-            'taxes_id': [Command.clear()],
+            'tax_ids': [Command.clear()],
         })
 
         cls.empty_order, cls.sale_order = cls.env['sale.order'].create([
@@ -77,8 +77,8 @@ class TestSaleCommon(AccountTestInvoicingCommon):
                 'uom_id': cls.uom_unit.id,
                 'default_code': 'SERV_DEL',
                 'invoice_policy': 'delivery',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'tax_ids': [(6, 0, [])],
+                'supplier_tax_ids': [(6, 0, [])],
                 'company_id': company.id,
             }),
             'product_service_order': cls.env['product.product'].with_company(company).create({
@@ -91,8 +91,8 @@ class TestSaleCommon(AccountTestInvoicingCommon):
                 'description': 'Example of product to invoice on order',
                 'default_code': 'PRE-PAID',
                 'invoice_policy': 'order',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'tax_ids': [(6, 0, [])],
+                'supplier_tax_ids': [(6, 0, [])],
                 'company_id': company.id,
             }),
             'product_order_cost': cls.env['product.product'].with_company(company).create({
@@ -106,8 +106,8 @@ class TestSaleCommon(AccountTestInvoicingCommon):
                 'default_code': 'FURN_9999',
                 'invoice_policy': 'order',
                 'expense_policy': 'cost',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'tax_ids': [(6, 0, [])],
+                'supplier_tax_ids': [(6, 0, [])],
                 'company_id': company.id,
             }),
             'product_delivery_cost': cls.env['product.product'].with_company(company).create({
@@ -121,8 +121,8 @@ class TestSaleCommon(AccountTestInvoicingCommon):
                 'default_code': 'FURN_7777',
                 'invoice_policy': 'delivery',
                 'expense_policy': 'cost',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'tax_ids': [(6, 0, [])],
+                'supplier_tax_ids': [(6, 0, [])],
                 'company_id': company.id,
             }),
             'product_order_sales_price': cls.env['product.product'].with_company(company).create({
@@ -136,8 +136,8 @@ class TestSaleCommon(AccountTestInvoicingCommon):
                 'default_code': 'FURN_9999',
                 'invoice_policy': 'order',
                 'expense_policy': 'sales_price',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'tax_ids': [(6, 0, [])],
+                'supplier_tax_ids': [(6, 0, [])],
                 'company_id': company.id,
             }),
             'product_delivery_sales_price': cls.env['product.product'].with_company(company).create({
@@ -151,8 +151,8 @@ class TestSaleCommon(AccountTestInvoicingCommon):
                 'default_code': 'FURN_7777',
                 'invoice_policy': 'delivery',
                 'expense_policy': 'sales_price',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'tax_ids': [(6, 0, [])],
+                'supplier_tax_ids': [(6, 0, [])],
                 'company_id': company.id,
             }),
             'product_order_no': cls.env['product.product'].with_company(company).create({
@@ -166,8 +166,8 @@ class TestSaleCommon(AccountTestInvoicingCommon):
                 'default_code': 'FURN_9999',
                 'invoice_policy': 'order',
                 'expense_policy': 'no',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'tax_ids': [(6, 0, [])],
+                'supplier_tax_ids': [(6, 0, [])],
                 'company_id': company.id,
             }),
             'product_delivery_no': cls.env['product.product'].with_company(company).create({
@@ -181,8 +181,8 @@ class TestSaleCommon(AccountTestInvoicingCommon):
                 'default_code': 'FURN_7777',
                 'invoice_policy': 'delivery',
                 'expense_policy': 'no',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'tax_ids': [(6, 0, [])],
+                'supplier_tax_ids': [(6, 0, [])],
                 'company_id': company.id,
             }),
         })

@@ -58,7 +58,7 @@ class TestPointOfSale(TransactionCase):
         product = self.env['product.product'].create({
             'name': 'Test Product 1',
             'list_price': 100,
-            'taxes_id': False,
+            'tax_ids': False,
             'available_in_pos': True,
         })
 

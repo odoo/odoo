@@ -125,7 +125,7 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
             'service_type': 'timesheet',
             'service_tracking': 'no',
             'project_id': False,
-            'taxes_id': False,
+            'tax_ids': False,
             'property_account_income_id': cls.account_sale.id,
         })
         cls.product_order_timesheet2 = cls.env['product.product'].create({
@@ -139,7 +139,7 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
             'service_type': 'timesheet',
             'service_tracking': 'task_global_project',
             'project_id': cls.project_global.id,
-            'taxes_id': False,
+            'tax_ids': False,
             'property_account_income_id': cls.account_sale.id,
         })
         cls.product_order_timesheet3 = cls.env['product.product'].create({
@@ -153,7 +153,7 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
             'service_type': 'timesheet',
             'service_tracking': 'task_in_project',
             'project_id': False,  # will create a project
-            'taxes_id': False,
+            'tax_ids': False,
             'property_account_income_id': cls.account_sale.id,
         })
         cls.product_order_timesheet4 = cls.env['product.product'].create({
@@ -167,7 +167,7 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
             'service_type': 'timesheet',
             'service_tracking': 'project_only',
             'project_id': False,
-            'taxes_id': False,
+            'tax_ids': False,
             'property_account_income_id': cls.account_sale.id,
         })
         cls.product_order_timesheet5 = cls.env['product.product'].create({
@@ -182,7 +182,7 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
             'service_tracking': 'project_only',
             'project_id': False,
             'project_template_id': cls.project_template.id,
-            'taxes_id': False,
+            'tax_ids': False,
             'property_account_income_id': cls.account_sale.id,
         })
 
@@ -198,7 +198,7 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
             'service_type': 'timesheet',
             'service_tracking': 'no',
             'project_id': False,
-            'taxes_id': False,
+            'tax_ids': False,
             'property_account_income_id': cls.account_sale.id,
         })
         cls.product_delivery_timesheet2 = cls.env['product.product'].create({
@@ -212,7 +212,7 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
             'service_type': 'timesheet',
             'service_tracking': 'task_global_project',
             'project_id': cls.project_global.id,
-            'taxes_id': False,
+            'tax_ids': False,
             'property_account_income_id': cls.account_sale.id,
         })
         cls.product_delivery_timesheet3 = cls.env['product.product'].create({
@@ -226,7 +226,7 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
             'service_type': 'timesheet',
             'service_tracking': 'task_in_project',
             'project_id': False,  # will create a project
-            'taxes_id': False,
+            'tax_ids': False,
             'property_account_income_id': cls.account_sale.id,
         })
         cls.product_delivery_timesheet4 = cls.env['product.product'].create({
@@ -240,7 +240,7 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
             'service_type': 'timesheet',
             'service_tracking': 'project_only',
             'project_id': False,
-            'taxes_id': False,
+            'tax_ids': False,
             'property_account_income_id': cls.account_sale.id,
         })
         cls.product_delivery_timesheet5 = cls.env['product.product'].create({
@@ -255,7 +255,7 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
             'service_tracking': 'project_only',
             'project_template_id': cls.project_template.id,
             'project_id': False,
-            'taxes_id': False,
+            'tax_ids': False,
             'property_account_income_id': cls.account_sale.id,
         })
         cls.product_service_delivered_timesheet = cls.env['product.product'].create({

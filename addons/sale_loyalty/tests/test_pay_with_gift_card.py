@@ -167,7 +167,7 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
                 'discount_applicability': 'order',
             })]
         })
-        self.assertFalse(gift_card_program.reward_ids.discount_line_product_id.taxes_id)
+        self.assertFalse(gift_card_program.reward_ids.discount_line_product_id.tax_ids)
 
     def test_paying_with_gift_card_uses_gift_card_product_taxes(self):
         order = self.empty_order
@@ -192,7 +192,7 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
         # TODO check amount total of gift_card_line
 
         # TAX EXCL
-        self.program_gift_card.reward_ids.discount_line_product_id.taxes_id = [
+        self.program_gift_card.reward_ids.discount_line_product_id.tax_ids = [
             Command.link(self.tax_15pc_excl.id)
         ]
         self._apply_promo_code(order, gift_card.code)
@@ -204,7 +204,7 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
 
         # TAX INCL
         gift_card_line.unlink()  # Remove gift card
-        self.program_gift_card.reward_ids.discount_line_product_id.taxes_id = [
+        self.program_gift_card.reward_ids.discount_line_product_id.tax_ids = [
             Command.set(self.tax_10pc_incl.ids)
         ]
         self._apply_promo_code(order, gift_card.code)
@@ -216,7 +216,7 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
 
         # TAX INCL + TAX EXCL
         gift_card_line.unlink()  # Remove gift card
-        self.program_gift_card.reward_ids.discount_line_product_id.taxes_id = [
+        self.program_gift_card.reward_ids.discount_line_product_id.tax_ids = [
             Command.link(self.tax_15pc_excl.id)
         ]
         self._apply_promo_code(order, gift_card.code)
@@ -240,7 +240,7 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
             'amount': 10,
         })
         self.product_A.write({'list_price': 90})
-        self.product_A.taxes_id = tax_10_fixed
+        self.product_A.tax_ids = tax_10_fixed
 
         order = self.empty_order
         order.write({'order_line': [

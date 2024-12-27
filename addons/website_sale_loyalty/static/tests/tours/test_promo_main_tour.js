@@ -65,7 +65,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
                         method: 'create',
                         args: [{
                           'name': 'Taxed Product',
-                          'taxes_id': [([6, false, [tax_id]])],
+                          'tax_ids': [([6, false, [tax_id]])],
                           'list_price': 100,
                           'website_published': true,
                         }],

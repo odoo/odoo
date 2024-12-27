@@ -112,7 +112,7 @@ class ResPartner(models.Model):
                             'product_id': product.id,
                             'quantity': 1,
                             'price_unit': amount,
-                            'tax_ids': [(6, 0, product.taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(self.env.company)).ids)]
+                            'tax_ids': [(6, 0, product.tax_ids.filtered_domain(self.env['account.tax']._check_company_domain(self.env.company)).ids)]
                         }
                      )
                 ]

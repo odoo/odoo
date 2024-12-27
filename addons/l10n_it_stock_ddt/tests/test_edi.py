@@ -45,8 +45,8 @@ class TestItEdiDDT(TestItEdi):
                 'uom_id': uom_unit.id,
                 'default_code': 'SERV_DEL',
                 'invoice_policy': 'delivery',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'tax_ids': [(6, 0, [])],
+                'supplier_tax_ids': [(6, 0, [])],
             }, {
                 'name': 'product_service_order',
                 'categ_id': product_category.id,
@@ -57,8 +57,8 @@ class TestItEdiDDT(TestItEdi):
                 'description': 'Example of product to invoice on order',
                 'default_code': 'PRE-PAID',
                 'invoice_policy': 'order',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'tax_ids': [(6, 0, [])],
+                'supplier_tax_ids': [(6, 0, [])],
             }, {
                 'name': 'product_order_no',
                 'categ_id': product_category.id,
@@ -70,8 +70,8 @@ class TestItEdiDDT(TestItEdi):
                 'default_code': 'FURN_9999',
                 'invoice_policy': 'order',
                 'expense_policy': 'no',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'tax_ids': [(6, 0, [])],
+                'supplier_tax_ids': [(6, 0, [])],
             }, {
                 'name': 'product_delivery_no',
                 'categ_id': product_category.id,
@@ -83,8 +83,8 @@ class TestItEdiDDT(TestItEdi):
                 'default_code': 'FURN_7777',
                 'invoice_policy': 'delivery',
                 'expense_policy': 'no',
-                'taxes_id': [(6, 0, [])],
-                'supplier_taxes_id': [(6, 0, [])],
+                'tax_ids': [(6, 0, [])],
+                'supplier_tax_ids': [(6, 0, [])],
             }
         ])
 

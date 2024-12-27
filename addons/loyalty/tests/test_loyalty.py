@@ -168,7 +168,7 @@ class TestLoyalty(TransactionCase):
     def test_prevent_archiving_product_linked_to_active_loyalty_reward(self):
         self.program.program_type = 'promotion'
         self.program.flush_recordset()
-        product = self.env['product.product'].with_context(default_taxes_id=False).create({
+        product = self.env['product.product'].with_context(default_tax_ids=False).create({
             'name': 'Test Product',
             'type': 'consu',
             'list_price': 20.0,
@@ -191,7 +191,7 @@ class TestLoyalty(TransactionCase):
         We just have to archive the free product that has been created while creating
         the program itself not the product we already had before.
         """
-        product = self.env['product.product'].with_context(default_taxes_id=False).create({
+        product = self.env['product.product'].with_context(default_tax_ids=False).create({
             'name': 'Test Product',
             'type': 'consu',
             'list_price': 20.0,

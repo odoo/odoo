@@ -808,7 +808,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
                     'product_uom_id': self.product_a.uom_id.id,
                     'quantity': 1.0,
                     'price_unit': 1000,
-                    'tax_ids': self.product_a.taxes_id.ids,
+                    'tax_ids': self.product_a.tax_ids.ids,
                 }),
                 Command.create({
                     'name': self.product_b.name,
@@ -816,7 +816,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
                     'product_uom_id': self.product_b.uom_id.id,
                     'quantity': 1.0,
                     'price_unit': 200,
-                    'tax_ids': self.product_b.taxes_id.ids,
+                    'tax_ids': self.product_b.tax_ids.ids,
                 }),
             ]
         })
