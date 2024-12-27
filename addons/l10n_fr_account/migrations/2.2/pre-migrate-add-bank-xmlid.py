@@ -21,7 +21,7 @@ def migrate(cr, version):
                     )
              SELECT 'res.bank',
                     'l10n_fr_account',
-                    CONCAT('bank_fr_', banks.bic),
+                    CONCAT('bank_fr_', REPLACE(banks.bic, ' ', '')),
                     banks.id,
                     True
                FROM banks
