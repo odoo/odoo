@@ -95,6 +95,11 @@ def empty_pipe(fd):
         if e.errno not in [errno.EAGAIN]:
             raise
 
+
+def cron_database_list():
+    return config['db_name'] or list_dbs(True)
+
+
 #----------------------------------------------------------
 # Werkzeug WSGI servers patched
 #----------------------------------------------------------
@@ -453,7 +458,8 @@ class ThreadedServer(CommonServer):
         # just a bit prevents they all poll the database at the exact
         # same time. This is known as the thundering herd effect.
 
-        from odoo.addons.base.models.ir_cron import IrCron
+        from odoo.addons.base.models.ir_cron import IrCron  # noqa: PLC0415
+
         def _run_cron(cr):
             pg_conn = cr._cnx
             # LISTEN / NOTIFY doesn't work in recovery mode
@@ -476,17 +482,17 @@ class ThreadedServer(CommonServer):
                         return
                     raise
 
-                registries = Registry.registries
                 _logger.debug('cron%d polling for jobs', number)
-                for db_name, registry in registries.d.items():
-                    if registry.ready:
-                        thread = threading.current_thread()
-                        thread.start_time = time.time()
-                        try:
-                            IrCron._process_jobs(db_name)
-                        except Exception:
-                            _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
-                        thread.start_time = None
+                db_names = cron_database_list()
+                for db_name in db_names:
+                    thread = threading.current_thread()
+                    thread.start_time = time.time()
+                    try:
+                        IrCron._process_jobs(db_name)
+                    except Exception:
+                        _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
+                    thread.start_time = None
+
         while True:
             conn = sql_db.db_connect('postgres')
             with contextlib.closing(conn.cursor()) as cr:
@@ -1206,16 +1212,9 @@ class WorkerCron(Worker):
             _logger.info('WorkerCron (%s) max age (%ss) reached.', self.pid, config['limit_time_worker_cron'])
             self.alive = False
 
-    def _db_list(self):
-        if config['db_name']:
-            db_names = list(config['db_name'])
-        else:
-            db_names = list_dbs(True)
-        return db_names
-
     def process_work(self):
         _logger.debug("WorkerCron (%s) polling for jobs", self.pid)
-        db_names = self._db_list()
+        db_names = cron_database_list()
 
         if not len(db_names):
             self.db_index = 0
