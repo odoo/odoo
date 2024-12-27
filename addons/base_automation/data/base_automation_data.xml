@@ -5,7 +5,7 @@
             <field name="name">Automation Rules: check and execute</field>
             <field name="model_id" ref="model_base_automation"/>
             <field name="state">code</field>
-            <field name="code">model._check(True)</field>
+            <field name="code">model._cron_process_time_based_actions()</field>
             <field name="interval_number">4</field>
             <field name="interval_type">hours</field>
             <field name="active" eval="False" />
