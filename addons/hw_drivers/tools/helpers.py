@@ -161,14 +161,18 @@ def check_git_branch():
         )
 
         if db_branch != local_branch:
-            with writable():
-                subprocess.run(git + ['branch', '-m', db_branch], check=True)
-                subprocess.run(git + ['remote', 'set-branches', 'origin', db_branch], check=True)
-                _logger.info("Updating odoo folder to the branch %s", db_branch)
-                subprocess.run(
-                    ['/home/pi/odoo/addons/iot_box_image/configuration/checkout.sh'], check=True
-                )
-            odoo_restart()
+            try:
+                with writable():
+                    subprocess.run(git + ['branch', '-m', db_branch], check=True)
+                    subprocess.run(git + ['remote', 'set-branches', 'origin', db_branch], check=True)
+                    _logger.info("Updating odoo folder to the branch %s", db_branch)
+                    subprocess.run(
+                        ['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh'], check=True
+                    )
+            except subprocess.CalledProcessError:
+                _logger.exception("Failed to update the code with git.")
+            finally:
+                odoo_restart()
     except Exception:
         _logger.exception('An error occurred while trying to update the code with git')
 
@@ -374,11 +378,11 @@ def delete_iot_handlers():
     with the newly downloaded drivers
     """
     try:
-        for directory in ['drivers', 'interfaces']:
-            path = file_path(f'hw_drivers/iot_handlers/{directory}')
-            iot_handlers = list_file_by_os(path)
-            for file in iot_handlers:
-                unlink_file(f"odoo/addons/hw_drivers/iot_handlers/{directory}/{file}")
+        for directory in ['drivers', 'interfaces', 'lib']:
+            iot_handlers = file_path(f'hw_drivers/iot_handlers/{directory}')
+            for file in Path(iot_handlers).iterdir():
+                if file.is_file():
+                    unlink_file(f"odoo/addons/hw_drivers/iot_handlers/{directory}/{file.name}")
         _logger.info("Deleted old IoT handlers")
     except OSError:
         _logger.exception('Failed to delete old IoT handlers')
