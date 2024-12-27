@@ -98,7 +98,7 @@ class AccountChartTemplate(models.AbstractModel):
         field = self.env['ir.module.module']._fields['account_templates']
         modules = (
             self.env.cache.get_records(self.env['ir.module.module'], field)
-            or self.env['ir.module.module'].search([])
+            or self.env['ir.module.module'].sudo().search([])
         )
 
         return {
@@ -140,7 +140,7 @@ class AccountChartTemplate(models.AbstractModel):
             chart template.
         :type install_demo: bool
         """
-        if not self.env.registry.ready and not install_demo:
+        if not self.env.registry.loaded and not install_demo:
             _logger.warning('Incorrect usage of try_loading without a fully loaded registry. This could lead to issues.')
         if not company:
             return
@@ -149,8 +149,8 @@ class AccountChartTemplate(models.AbstractModel):
 
         template_code = template_code or company and self._guess_chart_template(company.country_id)
 
-        if template_code == 'syscohada' and template_code != company.chart_template:
-            raise UserError(_("The Syscohada chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country."))
+        if template_code in {'syscohada', 'syscebnl'} and template_code != company.chart_template:
+            raise UserError(_("The %s chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country.", template_code))
 
         return self._load(template_code, company, install_demo)
 
@@ -335,10 +335,12 @@ class AccountChartTemplate(models.AbstractModel):
                                       and t.type_tax_use == values.get('type_tax_use')\
                                       and t.tax_scope == values.get('tax_scope', False)
                             )
-                        uniq_key = unique_tax_name_key(oldtax)
-                        rename_idx = len(list(filter(lambda t: re.match(fr"^(?:\[old\d*\] |){uniq_key[0]}$", t[0]) and t[1:] == uniq_key[1:], unique_tax_name_keys)))
-                        if rename_idx:
-                            oldtax.name = f"[old{rename_idx - 1 if rename_idx > 1 else ''}] {oldtax.name}"
+                        uniq_key = unique_tax_name_key(oldtax[0] if len(oldtax) > 1 else oldtax)
+                        matching_names = len(list(filter(lambda t: re.match(fr"^(?:\[old\d*\] |){uniq_key[0]}$", t[0]) and t[1:] == uniq_key[1:], unique_tax_name_keys)))
+                        for index, tax_to_rename in enumerate(oldtax):
+                            rename_idx = index + matching_names
+                            if rename_idx:
+                                tax_to_rename.name = f"[old{rename_idx - 1 if rename_idx > 1 else ''}] {tax_to_rename.name}"
                     else:
                         repartition_lines = values.get('repartition_line_ids')
                         values.clear()

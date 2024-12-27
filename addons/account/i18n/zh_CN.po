@@ -7,9 +7,10 @@
 # Yazi Tian, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
 # Dorian Ibañez, 2024
-# Wil Odoo, 2024
-# Chloe Wang, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
+# Chloe Wang, 2024
+# Wil Odoo, 2024
+# Raymond Yu <cl_yu@hotmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-06 12:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,14 +58,15 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"- 税项组：税项为一组子税项。\n"
-"- 固定：无论价格如何，税额保持不变。\n"
-"- 价格百分比：税额是价格的一定百分比：\n"
-"    例如：100 * (1 + 10%) = 110（不含价格）\n"
-"    例如：110 / (1 + 10%) = 100（包含价格）\n"
-"- 含税价格的百分比：税额是价格的一部分：\n"
-"    例如：180 / (1 - 10%) = 200（不含价格）\n"
-"    例如：200 * (1 - 10%) = 180（含价格）"
+"    - 税项组：税项为一组子税项。\n"
+"    - 固定：无论价格如何，税额保持不变。\n"
+"    - 价格百分比：税额是价格的一定百分比：\n"
+"        例如：100 * (1 + 10%) = 110（不含价格）\n"
+"        例如：110 / (1 + 10%) = 100（包含价格）\n"
+"    - 含税价格的百分比：税额是价格的一部分：\n"
+"        例如：180 / (1 - 10%) = 200（不含价格）\n"
+"        例如：200 * (1 - 10%) = 180（含价格）\n"
+"        "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -644,6 +646,55 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        亲爱的\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br><br>\n"
+"        这是您的\n"
+"        <t t-if=\"object.name\">\n"
+"            发票 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            发票\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (参考编号：: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        金额为 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        收款方 <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            该发票已付款。\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            请尽早付款。\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br><br>\n"
+"                请使用以下通讯方式付款: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    账户 <strong t-out=\"object.partner_bank_id.acc_number\"></strong>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"            <br><br>\n"
+"            PS: 您可以查看您的工时表 <a t-att-href=\"'my/timesheets?search_in=invoice&amp;search=%s' % object.name\">通过门户网站</a>\n"
+"        </t>\n"
+"        <br><br>\n"
+"        如有任何疑问，请随时联系我们。\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -1532,14 +1583,14 @@ msgstr "账户%s不允许对账。首先应更改账户配置，设为允许对�
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Account %s is of payable type, but is used in a sale operation."
-msgstr ""
+msgstr "账户 “%s” 属于应付类型，但被用于销售操作。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Account %s is of receivable type, but is used in a purchase operation."
-msgstr ""
+msgstr "账户 “%s” 属于应收类型，但被用于采购操作。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
@@ -5067,11 +5118,6 @@ msgid "DELIVERED DUTY PAID"
 msgstr "完税后交货"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
-msgid "DOWN"
-msgstr "向下"
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
 msgstr "仪表板"
@@ -5793,6 +5839,11 @@ msgstr "域公式快捷方式"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Domestic country of your accounting"
 msgstr "您的会计所在国"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
+msgid "Down"
+msgstr "下"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__checkbox_download
@@ -7049,11 +7100,6 @@ msgstr "整合引擎不支持分组功能。请删除“%s”中的分组值"
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
 msgid "Growth Comparison"
 msgstr "增长对比"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
-msgid "HALF-UP"
-msgstr "一半"
 
 #. module: account
 #: model:ir.model,name:account.model_ir_http
@@ -9486,6 +9532,11 @@ msgstr "可搜索的名称"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Navigate easily through reports and see what is behind the numbers"
 msgstr "轻松浏览报告，查看数字背后的信息"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
+msgid "Nearest"
+msgstr "最近的"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
@@ -12176,6 +12227,7 @@ msgstr "保存该页面，返回该页面，以设置功能。"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "从您的银行应用程序扫描."
@@ -13701,9 +13753,9 @@ msgstr "付款期限必须至少有一个百分比行，且百分比之和须为
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
-"The Syscohada chart template shouldn't be selected directly. Instead, you "
-"should directly select the chart template related to your country."
-msgstr "不应直接选择 Syscohada 图表模板。相反，您应该直接选择与您的国家/地区相关的图表模板。"
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
+msgstr "不应直接选择 %s 图表模板。而是应该直接选择与您的国家相关的图表模板。"
 
 #. module: account
 #. odoo-python
@@ -15321,11 +15373,6 @@ msgid "Type of the exception activity on record."
 msgstr "记录中异常活动的类型。"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
-msgid "UP"
-msgstr "向上"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
@@ -15500,6 +15547,11 @@ msgstr "不信任付款计数"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "UoM"
 msgstr "计量单位"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
+msgid "Up"
+msgstr "向上"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15996,7 +16048,7 @@ msgstr "勾选后，显示该表达式值时不显示0值。"
 msgid ""
 "When targeting an expression for carryover, the label of that expression "
 "must start with _applied_carryover_"
-msgstr "当针对一个表达式进行结转时，该表达式的标签必须以 _applied_carryover_ 开头。"
+msgstr "当针对一个表达式进行结转时，该表达式的标签必须以 _applied_carryover_ 开头"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -16253,6 +16305,13 @@ msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
 msgstr "如果没有在%s日记账中设置的暂记科目，则不能创建新的对账单行。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+#, python-format
+msgid "You can't create payments for entries belonging to different branches."
+msgstr "您不可为不同分支的记项创建付款。"
 
 #. module: account
 #. odoo-python
@@ -16726,7 +16785,7 @@ msgstr "不能对具有资产负债表外科目的行使用税项"
 msgid ""
 "You cannot use the field carryover_target in an expression that does not "
 "have the label starting with _carryover_"
-msgstr "如果表达式中的标签不是以 _carryover_ 开头，则不能使用字段 carryover_target。"
+msgstr "如果表达式中的标签不是以 _carryover_ 开头，则不能使用字段 carryover_target_"
 
 #. module: account
 #. odoo-python

@@ -330,6 +330,7 @@ class CurrencyRate(models.Model):
     _description = "Currency Rate"
     _rec_names_search = ['name', 'rate']
     _order = "name desc"
+    _check_company_domain = models.check_company_domain_parent_of
 
     name = fields.Date(string='Date', required=True, index=True,
                            default=fields.Date.context_today)

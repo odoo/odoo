@@ -410,7 +410,8 @@ class StockQuant(models.Model):
     def action_view_inventory(self):
         """ Similar to _get_quants_action except specific for inventory adjustments (i.e. inventory counts). """
         self = self._set_view_context()
-        self._quant_tasks()
+        if not self.env['ir.config_parameter'].sudo().get_param('stock.skip_quant_tasks'):
+            self._quant_tasks()
 
         ctx = dict(self.env.context or {})
         ctx['no_at_date'] = True
@@ -637,7 +638,7 @@ class StockQuant(models.Model):
     def check_lot_id(self):
         for quant in self:
             if quant.lot_id.product_id and quant.lot_id.product_id != quant.product_id:
-                raise ValidationError(_('The Lot/Serial number (%s) is linked to another product.', quant.location_id.name))
+                raise ValidationError(_('The Lot/Serial number (%s) is linked to another product.', quant.lot_id.name))
 
     @api.model
     def _get_removal_strategy(self, product_id, location_id):

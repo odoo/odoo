@@ -3,14 +3,14 @@
 # 	* website_event
 # 
 # Translators:
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
 # JanisJanis <jbojars@gmail.com>, 2023
 # Anzelika Adejanova, 2023
 # Martin Trigaux, 2023
 # Arnis Putniņš <arnis@allegro.lv>, 2023
-# ievaputnina <ievai.putninai@gmail.com>, 2023
 # Will Sensors, 2024
 # Konstantins Zabogonskis <inculin4ik@gmail.com>, 2024
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
+# ievaputnina <ievai.putninai@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Konstantins Zabogonskis <inculin4ik@gmail.com>, 2024\n"
+"Last-Translator: ievaputnina <ievai.putninai@gmail.com>, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_count
 msgid "# Registrations"
-msgstr ""
+msgstr "# Reģistrācijas"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -246,7 +246,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "About Us"
-msgstr ""
+msgstr "Par mums"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_about_us
@@ -294,7 +294,7 @@ msgstr "Atbilde"
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_answer_view_pivot
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_answer_view_tree
 msgid "Answer Breakdown"
-msgstr ""
+msgstr "Atbildes sadalījums"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__answer_ids
@@ -347,7 +347,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__partner_id
 msgid "Booked by"
-msgstr ""
+msgstr "Rezervēja"
 
 #. module: website_event
 #. odoo-python
@@ -538,6 +538,13 @@ msgid "End -"
 msgstr ""
 
 #. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/website_event.js:0
+#, python-format
+msgid "Error"
+msgstr "Kļūda"
+
+#. module: website_event
 #: model:ir.model,name:website_event.model_event_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__event_id
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__event_id
@@ -603,7 +610,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_ids
 msgid "Event Registrations"
-msgstr ""
+msgstr "Pasākumu registrācijas"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
@@ -678,7 +685,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "Expired"
-msgstr ""
+msgstr "Iztecējis"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__menu_register_cta
@@ -728,7 +735,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #. module: website_event
 #. odoo-python
@@ -1324,6 +1331,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__value_answer_id
 msgid "Suggested answer"
 msgstr "Ieteiktā atbilde"
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options

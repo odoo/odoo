@@ -3,7 +3,7 @@ from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_repr, find_xml_value
 from odoo.tools.float_utils import float_round
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import clean_context, formatLang
 from odoo.tools.zeep import Client
 
 from markupsafe import Markup
@@ -60,7 +60,7 @@ EAS_MAPPING = {
     'GB': {'9932': 'vat'},
     'GR': {'9933': 'vat'},
     'HR': {'9934': 'vat'},
-    'HU': {'9910': 'vat'},
+    'HU': {'9910': 'l10n_hu_eu_vat'},
     'IE': {'9935': 'vat'},
     'IS': {'0196': 'vat'},
     'IT': {'0211': 'vat', '0210': 'l10n_it_codice_fiscale'},
@@ -375,7 +375,9 @@ class AccountEdiCommon(models.AbstractModel):
         """ Retrieve the bank account, if no matching bank account is found, create it
         """
 
-        bank_details = map(sanitize_account_number, bank_details)
+        # clear the context, because creation of partner when importing should not depend on the context default values
+        ResPartnerBank = self.env['res.partner.bank'].with_env(self.env(context=clean_context(self.env.context)))
+        bank_details = list(map(sanitize_account_number, bank_details))
 
         if invoice.move_type in ('out_refund', 'in_invoice'):
             partner = invoice.partner_id
@@ -387,13 +389,13 @@ class AccountEdiCommon(models.AbstractModel):
         banks_to_create = []
         acc_number_partner_bank_dict = {
             bank.sanitized_acc_number: bank
-            for bank in self.env['res.partner.bank'].search(
+            for bank in ResPartnerBank.search(
                 [('company_id', 'in', [False, invoice.company_id.id]), ('acc_number', 'in', bank_details)]
             )
         }
 
         for account_number in bank_details:
-            partner_bank = acc_number_partner_bank_dict.get(account_number, self.env['res.partner.bank'])
+            partner_bank = acc_number_partner_bank_dict.get(account_number, ResPartnerBank)
 
             if partner_bank.partner_id == partner:
                 invoice.partner_bank_id = partner_bank
@@ -405,7 +407,7 @@ class AccountEdiCommon(models.AbstractModel):
                 })
 
         if banks_to_create:
-            invoice.partner_bank_id = self.env['res.partner.bank'].create(banks_to_create)[0]
+            invoice.partner_bank_id = ResPartnerBank.create(banks_to_create)[0]
 
     def _import_fill_invoice_allowance_charge(self, tree, invoice, qty_factor):
         logs = []

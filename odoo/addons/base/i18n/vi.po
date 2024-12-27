@@ -6061,7 +6061,7 @@ msgstr ""
 "=======================================\n"
 "Phân hệ này cho phép sử dụng địa chỉ ở cấp độ dòng khi lấy thuế từ Avatax.\n"
 "\n"
-"Hạn chế hiện tại là một dòng đơn hàng duy nhất có nhiều hơn một lần dịch chuyển tồn kho (VD: 10 sản phẩm A, 2 được gửi từ kho số 1 và 8 từ kho số 2). Trong trường hợp này, đơn bán hàng nên được chia thành\n"
+"Hạn chế hiện tại là một dòng đơn hàng duy nhất có nhiều hơn một lần điều chuyển tồn kho (VD: 10 sản phẩm A, 2 được gửi từ kho số 1 và 8 từ kho số 2). Trong trường hợp này, đơn bán hàng nên được chia thành\n"
 "nhiều lần giao hàng.\n"
 
 #. module: base
@@ -6186,7 +6186,7 @@ msgstr ""
 "\n"
 "Quản lý Chi phí nhập kho\n"
 "=====================\n"
-"Phân hệ này cho phép bạn dễ dàng bổ sung chi phí trên các hoạt động lấy hàng và quyết định phân chia các chi phí này cho các lần dịch chuyển tồn kho tương ứng để hạch toán chúng khi định giá hàng tồn kho.\n"
+"Phân hệ này cho phép bạn dễ dàng bổ sung chi phí trên các hoạt động lấy hàng và quyết định phân chia các chi phí này cho các lần điều chuyển tồn kho tương ứng để hạch toán chúng khi định giá hàng tồn kho.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_board
@@ -6728,7 +6728,7 @@ msgstr ""
 "\n"
 "Ứng dụng này kiểm soát thời gian nghỉ phép của nhân viên công ty bạn. Nó cho phép nhân viên xin nghỉ phép. Sau đó, quản lý có thể xem xét đơn và phê duyệt hoặc từ chối chúng. Nhờ đó, bạn có thể kiểm soát tổng thể kế hoạch nghỉ phép cho công ty hoặc bộ phận của mình.\n"
 "\n"
-"Bạn có thể định cấu hình một số loại nghỉ phép (ốm, nghỉ có lương, ...) và phân bổ thời gian nghỉ phép cho nhân viên hoặc bộ phận một cách nhanh chóng bằng cách sử dụng phân bổ nghỉ phép. Nhân viên cũng có thể yêu cầu thêm ngày nghỉ bằng cách gửi đơn xin phân bổ thời gian nghỉ phép mới. Việc này sẽ làm tăng tổng số ngày nghỉ còn lại cho loại nghỉ phép đó (nếu yêu cầu được chấp nhận).\n"
+"Bạn có thể định cấu hình một số loại nghỉ phép (ốm, nghỉ có lương, ...) và phân bổ thời gian nghỉ phép cho nhân viên hoặc bộ phận một cách nhanh chóng bằng cách sử dụng phân bổ thời gian nghỉ phép. Nhân viên cũng có thể yêu cầu thêm ngày nghỉ bằng cách gửi đơn xin phân bổ thời gian nghỉ phép mới. Việc này sẽ làm tăng tổng số ngày nghỉ còn lại cho loại nghỉ phép đó (nếu yêu cầu được chấp nhận).\n"
 "\n"
 "Bạn có thể theo dõi nghỉ phép theo nhiều cách khác nhau bằng các báo cáo sau:\n"
 "\n"
@@ -9131,6 +9131,22 @@ msgstr ""
 "Nguồn: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_bh
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Bahrain in Odoo.\n"
+"===========================================================================\n"
+"Bahrain accounting basic charts and localization.\n"
+"\n"
+"Activates:\n"
+" - Chart of Accounts\n"
+" - Taxes\n"
+" - Tax reports\n"
+" - Fiscal Positions\n"
+" - States\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_be
 msgid ""
 "\n"
@@ -9263,6 +9279,28 @@ msgstr ""
 "Agrega una nomenclatura contable para Honduras. También incluye impuestos y la\n"
 "moneda Lempira. -- Bổ sung hệ thống tài khoản dành cho Honduras. Bao gồm cả thuế\n"
 "và đồng nội tệ Lempira."
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_lb_account
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Lebanon in Odoo.\n"
+"==============================================================================\n"
+"Lebanon accounting basic charts,taxes and localization.\n"
+"Activates:\n"
+"* Chart of Accounts\n"
+"* Taxes\n"
+"* Fiscal Positions\n"
+msgstr ""
+"\n"
+"Đây là phân hệ cơ sở để quản lý hệ thống tài khoản cho Liban trong Odoo.\n"
+"===================================================================================\n"
+"\n"
+"Hệ thống tài khoản cơ bản, thuế, và bản địa cho Liban.\n"
+"Kích hoạt:\n"
+"* Hệ thống tài khoản\n"
+"* Thuế\n"
+"* Vị trí tài chính\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
@@ -10520,6 +10558,52 @@ msgid ""
 "with pain.008.001.02 specification) to send to your bank in order to\n"
 "collect a set of payments.\n"
 "\n"
+"To be eligible for this payment method, a customer must have first\n"
+"returned a mandate to the company, giving their consent to use direct debit.\n"
+"This consent must have been encoded as a 'customer mandate' in Odoo.\n"
+"\n"
+"You also need to meet the following requirements in order to properly\n"
+"generate an SDD file:\n"
+"- Your company account must be set to a valid IBAN number\n"
+"- Your company must have been given a creditor identifier (this can be done in Settings - General Settings - Accounting section)\n"
+"- Your company must have defined a journal to receive SDD payments (again, in 'settings' of accounting module)\n"
+"- Every customer for whom you generate a payment must have a valid IBAN account number.\n"
+"\n"
+"Odoo will let you know if any of these requirements are not satisfied.\n"
+"\n"
+"To register a payment for open invoices, you can use the dedicated\n"
+"'SEPA Direct Debit' option by selecting a bank account in the 'Register\n"
+"Payment' wizard. An error message will appear if no valid mandate is\n"
+"available for generating a payment on the selected invoice.\n"
+msgstr ""
+"\n"
+"Phân hệ này cho phép tạo các tệp XML tuân thủ Ghi nợ trực tiếp SEPA (SDD) (phù hợp với quy định kỹ thuật pain.008.001.02) để gửi đến ngân hàng của bạn nhằm thu một tập hợp các khoản thanh toán.\n"
+"\n"
+"Để đủ điều kiện sử dụng phương thức thanh toán này, trước tiên, khách hàng phải\n"
+"gửi lại giấy ủy quyền cho công ty, đồng ý sử dụng ghi nợ trực tiếp.\n"
+"Sự đồng ý này phải được mã hóa dưới dạng 'ủy quyền của khách hàng' trong Odoo.\n"
+"\n"
+"Bạn cũng cần đáp ứng các yêu cầu sau để\n"
+"tạo tệp SDD đúng cách:\n"
+"- Tài khoản công ty của bạn phải được đặt thành số IBAN hợp lệ\n"
+"- Công ty của bạn phải được cấp mã định danh chủ nợ (có thể thực hiện việc này trong phần Cài đặt - Cài đặt chung - Kế toán)\n"
+"- Công ty của bạn phải xác định nhật ký để nhận thanh toán SDD (vẫn trong phần 'cài đặt' của phân hệ kế toán)\n"
+"- Mỗi khách hàng mà bạn tạo thanh toán phải có số tài khoản IBAN hợp lệ.\n"
+"\n"
+"Odoo sẽ thông báo cho bạn nếu bất kỳ yêu cầu nào trong số các yêu cầu trên không được đáp ứng.\n"
+"\n"
+"Để ghi nhận thanh toán cho các hóa đơn chưa thanh toán, bạn có thể sử dụng tùy chọn\n"
+"'Ghi nợ trực tiếp SEPA' riêng bằng cách chọn tài khoản ngân hàng trong công cụ 'Ghi nhận\n"
+"thanh toán'. Một thông báo lỗi sẽ xuất hiện nếu không có uỷ quyền hợp lệ\n"
+"nào khả dụng để tạo thanh toán cho hóa đơn đã chọn.\n"
+
+#. module: base
+msgid ""
+"\n"
+"This module enables the generation of SEPA Direct Debit (SDD)-compliant XML files (consistent\n"
+"with pain.008.001.02 specification) to send to your bank in order to\n"
+"collect a set of payments.\n"
+"\n"
 "To be elligible for this payment method, a customer must have first\n"
 "returned a mandate to the company, giving his consent to use direct debit.\n"
 "This consent must have been encoded as a 'customer mandate' into Odoo.\n"
@@ -11763,7 +11847,7 @@ msgid ""
 "======================================\n"
 msgstr ""
 "\n"
-"Xác thực dịch chuyển tồn kho cho Dịch vụ Hiện trường\n"
+"Xác thực điều chuyển tồn kho cho Dịch vụ Hiện trường\n"
 "======================================\n"
 
 #. module: base
@@ -11820,7 +11904,7 @@ msgstr ""
 "\n"
 "Phân hệ kế toán kho\n"
 "===================\n"
-"Phân hệ này tạo một liên kết giữa phân hệ 'Kho' và 'Kế toán' và cho phép bạn tạo bút toán để xác định giá trị các lần dịch chuyển tồn kho\n"
+"Phân hệ này tạo một liên kết giữa phân hệ 'Kho' và 'Kế toán' và cho phép bạn tạo bút toán để xác định giá trị các lần điều chuyển tồn kho\n"
 "\n"
 "Tính năng Chính\n"
 "---------------------------\n"
@@ -11869,7 +11953,7 @@ msgstr ""
 "\n"
 "Tính năng:\n"
 "\n"
-"     - Có một kênh livechat liên quan đến nhóm để trả lời các câu hỏi của khách hàng của bạn.\n"
+"     - Có một kênh trò chuyện trực tiếp liên quan đến nhóm để trả lời các câu hỏi của khách hàng của bạn.\n"
 "     - Dễ dàng tạo phiếu hỗ trợ mới bằng các lệnh trong kênh.\n"
 "\n"
 
@@ -15214,7 +15298,7 @@ msgstr "Thuật ngữ Ứng dụng"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_view_base
 msgid "Apply"
-msgstr "Ứng tuyển"
+msgstr "Áp dụng"
 
 #. module: base
 #. odoo-python
@@ -15908,6 +15992,11 @@ msgstr "ID huy hiệu"
 #: model:res.country,name:base.bs
 msgid "Bahamas"
 msgstr "Bahamas"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_bh
+msgid "Bahrain - Accounting"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bh
@@ -21265,8 +21354,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_fedex
-msgid "Fedex Shipping"
-msgstr "Giao hàng Fedex"
+msgid "Fedex Shipping (Legacy)"
+msgstr "Vận chuyển Fedex (Cũ)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_fr_fec
@@ -24728,7 +24817,7 @@ msgstr "Ngày khóa không thể đảo ngược"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_is_company
 msgid "Is Company"
-msgstr "Là công ty"
+msgstr "Công ty"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__is_company_details_empty
@@ -25446,6 +25535,11 @@ msgstr "Tìm hiểu thêm"
 #: model:res.country,name:base.lb
 msgid "Lebanon"
 msgstr "Lebanon"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_lb_account
+msgid "Lebanon - Accounting"
+msgstr "Leban - Kế toán"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__ledger
@@ -29935,7 +30029,7 @@ msgstr "OdooBot - HR"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_im_livechat_mail_bot
 msgid "OdooBot for livechat"
-msgstr "Thêm OdooBot hỗ trợ livechat"
+msgstr "Thêm OdooBot hỗ trợ trò chuyện trực tiếp"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_12
@@ -31475,7 +31569,7 @@ msgstr "Lên kế hoạch tài nguyên của bạn với các công việc trong
 #: model:ir.module.category,name:base.module_category_human_resources_planning
 #: model:ir.module.module,shortdesc:base.module_planning
 msgid "Planning"
-msgstr "Lập kế hoạch"
+msgstr "Kế hoạch"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_planning_hr_skills
@@ -33057,7 +33151,7 @@ msgstr "Tập tin báo cáo"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__report_footer
 msgid "Report Footer"
-msgstr "Lề dưới báo cáo"
+msgstr "Footer báo cáo"
 
 #. module: base
 #: model:ir.model,name:base.model_report_layout
@@ -34275,7 +34369,7 @@ msgstr "Gửi tin nhắn văn bản làm thông báo nhắc nhở sự kiện"
 #: model:ir.module.module,description:base.module_stock_sms
 #: model:ir.module.module,summary:base.module_stock_sms
 msgid "Send text messages when final stock move"
-msgstr "Gửi tin nhắn văn bản trong bước dịch chuyển tồn kho cuối cùng"
+msgstr "Gửi tin nhắn văn bản trong bước điều chuyển tồn kho cuối cùng"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm_sms
@@ -34313,8 +34407,14 @@ msgstr "Gửi hàng của bạn qua DHL và theo dõi chúng online"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex
-msgid "Send your shippings through Fedex and track them online"
-msgstr "Gửi hàng của bạn qua Fedex và theo dõi chúng trực tuyến"
+msgid ""
+"This is the legacy integration with FedEx that is no longer supported.Please"
+" install the new \"Fedex Shipping\" module and uninstall this one as soon as"
+" possible. This integration will stop working in 2024"
+msgstr ""
+"Đây là tích hợp cũ với FedEx không còn được hỗ trợ. Vui lòng cài đặt phân hệ"
+" \"Vận chuyển FedEx\" mới và gỡ bỏ phân hệ này càng sớm càng tốt. Tích hợp "
+"này sẽ ngừng hoạt động vào năm 2024."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_ups_rest
@@ -34736,7 +34836,7 @@ msgstr "Sint Maarten (Dutch part)"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__size
 msgid "Size"
-msgstr "Quy mô"
+msgstr "Kích thước"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_model_fields_size_gt_zero
@@ -36281,6 +36381,17 @@ msgstr "Không thể chọn tác vụ \"Trình Chuyển đổi Ứng dụng\" l�
 #, python-format
 msgid "The %s of a subsidiary must be the same as it's root company."
 msgstr "%s của công ty con phải giống công ty mẹ của nó."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"The action \"%s\" cannot be set as the home action because it requires a "
+"record to be selected beforehand."
+msgstr ""
+"Không thể thiết lập tác vụ \"%s\" làm tác vụ trang chủ vì nó yêu cầu phải "
+"chọn trước một bản ghi."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__code
@@ -37864,7 +37975,7 @@ msgstr "Đến"
 #: model:ir.model.fields.selection,name:base.selection__res_users_deletion__state__todo
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_search
 msgid "To Do"
-msgstr "Cần làm"
+msgstr "Việc cần làm"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__state__to_install
@@ -37901,7 +38012,7 @@ msgstr "Việc cần làm"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Todo"
-msgstr "Cần làm"
+msgstr "Việc cần làm"
 
 #. module: base
 #: model:res.country,name:base.tg
@@ -40855,7 +40966,7 @@ msgstr "Kết nối eBay"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale
 msgid "eCommerce"
-msgstr "thương mại điện tử"
+msgstr "Thương mại điện tử"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_mondialrelay

@@ -194,6 +194,17 @@ export class MediaDialog extends Component {
                     if (this.props.media.dataset.hoverEffectIntensity) {
                         element.dataset.hoverEffectIntensity = this.props.media.dataset.hoverEffectIntensity;
                     }
+                } else if ([TABS.VIDEOS.id, TABS.DOCUMENTS.id].includes(this.state.activeTab)) {
+                    const parentEl = this.props.media.parentElement;
+                    if (
+                        parentEl &&
+                        parentEl.tagName === "A" &&
+                        parentEl.children.length === 1 &&
+                        this.props.media.tagName === "IMG"
+                    ) {
+                        // If an image is wrapped in an <a> tag, we remove the link when replacing it with a video or document
+                        parentEl.replaceWith(parentEl.firstElementChild);
+                    }
                 }
             }
             for (const otherTab of Object.keys(TABS).filter(key => key !== this.state.activeTab)) {

@@ -161,6 +161,7 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
                 const pivotDefinition = this.getters.getPivotModelDefinition(cmd.pivotId);
                 const dataSourceId = this.getPivotDataSourceId(cmd.pivotId);
                 this.dataSources.add(dataSourceId, PivotDataSource, pivotDefinition);
+                this._addDomain(cmd.pivotId);
                 break;
             }
             case "UNDO":
@@ -188,6 +189,7 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
                     const pivotDefinition = this.getters.getPivotModelDefinition(cmd.pivotId);
                     const dataSourceId = this.getPivotDataSourceId(cmd.pivotId);
                     this.dataSources.add(dataSourceId, PivotDataSource, pivotDefinition);
+                    this._addDomains();
                 }
 
                 if (!this.getters.getPivotIds().length) {

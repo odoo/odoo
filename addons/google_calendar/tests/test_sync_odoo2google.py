@@ -8,7 +8,7 @@ from unittest.mock import patch
 from odoo.addons.google_calendar.utils.google_calendar import GoogleEvent, GoogleCalendarService
 from odoo.addons.google_account.models.google_service import GoogleService
 from odoo.addons.google_calendar.models.res_users import User
-from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
+from .test_sync_common import TestSyncGoogle, patch_api
 from odoo.tests.common import users, warmup
 from odoo.tests import tagged
 from odoo import tools
@@ -107,7 +107,6 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'duration': 18,
         })
         partner_model = self.env.ref('base.model_res_partner')
-        partner = self.env['res.partner'].search([], limit=1)
         with self.assertQueryCount(__system__=86):
             event = self.env['calendar.event'].create({
                 'name': "Event",

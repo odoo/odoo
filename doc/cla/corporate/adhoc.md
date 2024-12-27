@@ -30,3 +30,5 @@ Camila Vives cav@adhoc.com.ar https://github.com/cav-adhoc
 Celina Devigili ced@adhoc.com.ar https://github.com/ced-adhoc
 Matías Velazquez mav@adhoc.com.ar https://github.com/mav-adhoc
 Felipe García Suez feg@adhoc.com.ar https://github.com/feg-adhoc
+Franco Leyes lef@adhoc.com.ar https://github.com/lef-adhoc
+Julia Elizondo jue@adhoc.com.ar https://github.com/jue-adhoc

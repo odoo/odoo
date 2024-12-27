@@ -116,30 +116,34 @@ export class DynamicList extends DataPoint {
     }
 
     async leaveEditMode({ discard } = {}) {
-        if (this.editedRecord) {
+        let editedRecord = this.editedRecord;
+        if (editedRecord) {
             let canProceed = true;
             if (discard) {
-                await this.editedRecord.discard();
-                if (this.editedRecord && this.editedRecord.isNew) {
-                    this._removeRecords([this.editedRecord.id]);
+                await editedRecord.discard();
+                editedRecord = this.editedRecord;
+                if (editedRecord && editedRecord.isNew) {
+                    this._removeRecords([editedRecord.id]);
                 }
             } else {
                 if (!this.model._urgentSave) {
-                    await this.editedRecord.checkValidity();
-                    if (!this.editedRecord) {
+                    await editedRecord.checkValidity();
+                    editedRecord = this.editedRecord;
+                    if (!editedRecord) {
                         return true;
                     }
                 }
-                if (this.editedRecord.isNew && !this.editedRecord.dirty) {
-                    this._removeRecords([this.editedRecord.id]);
+                if (editedRecord.isNew && !editedRecord.dirty) {
+                    this._removeRecords([editedRecord.id]);
                 } else {
-                    canProceed = await this.editedRecord.save();
+                    canProceed = await editedRecord.save();
                 }
             }
 
-            if (canProceed && this.editedRecord) {
+            editedRecord = this.editedRecord;
+            if (canProceed && editedRecord) {
                 this.model._updateConfig(
-                    this.editedRecord.config,
+                    editedRecord.config,
                     { mode: "readonly" },
                     { reload: false }
                 );

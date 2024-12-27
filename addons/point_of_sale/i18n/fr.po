@@ -3,11 +3,11 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Richard Mouthier <rmo@odoo.com>, 2024
+# Richard Mouthier (RMO) <rmo@odoo.com>, 2024
 # Larissa Manderfeld, 2024
 # Jolien De Paepe, 2024
-# Wil Odoo, 2024
 # Manon Rondou, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3983,11 +3983,6 @@ msgid "Newspaper Rack"
 msgstr "Porte-journaux"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Activité suivante de l'événement du calendrier"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Date limite de l'activité à venir"
@@ -4217,13 +4212,6 @@ msgstr "Nombre de transactions :"
 #, python-format
 msgid "OK"
 msgstr "OK"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-#, python-format
-msgid "Odoo Point of Sale"
-msgstr "Odoo Point de Vente"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.office_combo_product_template
@@ -5108,13 +5096,6 @@ msgid "PoS Interface"
 msgstr "Interface du PdV"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid "PoS Order"
-msgstr "Commande PdV"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__pos_order_line_id
 msgid "PoS Order Line"
 msgstr "Ligne de commande PdV"
@@ -5429,6 +5410,13 @@ msgstr "Publié"
 #, python-format
 msgid "Powered by"
 msgstr "Généré par"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#, python-format
+msgid "Powered by Odoo"
+msgstr "Généré par Odoo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
@@ -5849,11 +5837,6 @@ msgstr "RAISON"
 #, python-format
 msgid "REFUNDED:"
 msgstr "REMBOURSÉ :"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
-msgid "Ratings"
-msgstr "Évaluations"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7737,6 +7720,15 @@ msgstr ""
 #: code:addons/point_of_sale/models/account_journal.py:0
 #, python-format
 msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr ""
+"Ce journal est associé à un mode de paiement. Vous ne pouvez pas l'archiver."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
 msgstr ""
 "Ce journal est associé à un mode de paiement. Vous ne pouvez pas modifier "
@@ -7915,11 +7907,11 @@ msgstr "À peser avec une balance"
 msgid ""
 "To delete a product, make sure all point of sale sessions are closed.\n"
 "\n"
-"Deleting a product available in a session would be like attempting to snatch ahamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
+"Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
 msgstr ""
 "Pour supprimer un produit, assurez-vous que toutes les sessions du point de vente sont fermées.\n"
 "\n"
-"Supprimer un produit disponible dans une session reviendrait à tenter d'arracher un hamburger de la main d'un client en pleine bouchée ; le chaos s'ensuivrait car il y aurait du ketchup et de la mayo partout !"
+"Supprimer un produit disponible dans une session reviendrait à tenter d'arracher un hamburger de la main d'un client en pleine dégustation ; résultat : un véritable carnage avec du ketchup et de la mayonnaise qui volent dans tous les sens !"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice

@@ -29,7 +29,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             vals['vals']['order_reference'] = invoice.purchase_order_reference
 
         customer = vals['customer'].commercial_partner_id
-        if customer.peppol_eas + ":" + customer.peppol_endpoint == CHORUS_PRO_PEPPOL_ID:
+        if customer.peppol_eas and customer.peppol_endpoint and customer.peppol_eas + ":" + customer.peppol_endpoint == CHORUS_PRO_PEPPOL_ID:
             for role in ('supplier', 'customer'):
                 partner = vals[role].commercial_partner_id
                 if 'siret' in partner._fields and partner.siret and partner.country_code == 'FR':
@@ -47,9 +47,11 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     def _export_invoice_constraints(self, invoice, vals):
         constraints = super()._export_invoice_constraints(invoice, vals)
         customer, supplier = vals['customer'].commercial_partner_id, vals['supplier']
-        if customer.peppol_eas + ":" + customer.peppol_endpoint == CHORUS_PRO_PEPPOL_ID:
+        if customer.peppol_eas and customer.peppol_endpoint and customer.peppol_eas + ":" + customer.peppol_endpoint == CHORUS_PRO_PEPPOL_ID:
             if 'siret' not in customer._fields or not customer.siret:
                 constraints['chorus_customer'] = _("The siret is mandatory for the customer when invoicing to Chorus Pro.")
             if supplier.country_code == 'FR' and ('siret' not in supplier._fields or not supplier.siret):
                 constraints['chorus_supplier'] = _("The siret is mandatory for french suppliers when invoicing to Chorus Pro.")
+            if not invoice.partner_bank_id.bank_id.bic:
+                constraints['chorus_financial_institution_branch'] = _("The BIC of the payee's bank is mandatory when invoicing to Chorus Pro.")
         return constraints

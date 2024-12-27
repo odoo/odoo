@@ -374,7 +374,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      */
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
         // Create a transaction and retrieve its processing values.
-        this.rpc(
+        await this.rpc(
             this.paymentContext['transactionRoute'],
             this._prepareTransactionRouteParams(),
         ).then(processingValues => {

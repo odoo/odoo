@@ -509,17 +509,17 @@ class AccountMoveLine(models.Model):
             elif line.journal_id.type == 'purchase':
                 if product.description_purchase:
                     values.append(product.description_purchase)
-            return '\n'.join(values)
+            return '\n'.join(values) if values else False
 
         term_by_move = (self.move_id.line_ids | self).filtered(lambda l: l.display_type == 'payment_term').sorted(lambda l: l.date_maturity or date.max).grouped('move_id')
         for line in self.filtered(lambda l: l.move_id.inalterable_hash is False):
             if line.display_type == 'payment_term':
                 term_lines = term_by_move.get(line.move_id, self.env['account.move.line'])
                 n_terms = len(line.move_id.invoice_payment_term_id.line_ids)
-                name = line.move_id.payment_reference or ''
+                name = line.move_id.payment_reference or False
                 if n_terms > 1:
                     index = term_lines._ids.index(line.id) if line in term_lines else len(term_lines)
-                    name = _('%s installment #%s', name, index + 1).lstrip()
+                    name = _('%s installment #%s', name if name else '', index + 1).lstrip()
                 if n_terms > 1 or not line.name or line._origin.name == line._origin.move_id.payment_reference:
                     line.name = name
             if not line.product_id or line.display_type in ('line_section', 'line_note'):

@@ -87,10 +87,6 @@ class Registry(Mapping):
                 return cls.registries[db_name]
             except KeyError:
                 return cls.new(db_name)
-            finally:
-                # set db tracker - cleaned up at the WSGI dispatching phase in
-                # odoo.http.root
-                threading.current_thread().dbname = db_name
 
     @classmethod
     @locked

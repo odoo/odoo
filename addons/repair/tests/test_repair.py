@@ -617,6 +617,9 @@ class TestRepair(common.TransactionCase):
         """
         Check that the lot_id field is cleared after updating the product in the repair order.
         """
+        self.env.ref('base.group_user').implied_ids += (
+            self.env.ref('stock.group_production_lot')
+        )
         sn_1 = self.env['stock.lot'].create({'name': 'sn_1', 'product_id': self.product_storable_serial.id})
         ro_form = Form(self.env['repair.order'])
         ro_form.product_id = self.product_storable_serial
@@ -713,3 +716,64 @@ class TestRepair(common.TransactionCase):
         self.assertEqual(len(res), 1, "The invoice should have one line")
         self.assertEqual(res[0]['product_name'], self.product_storable_serial.display_name, "The product name should be the same")
         self.assertEqual(res[0]['lot_name'], quant.lot_id.name, "The lot name should be the same")
+
+    def test_trigger_orderpoint_from_repair(self):
+        """
+        Test that the order point triggered by the repair order creates a move linked to a picking.
+        """
+        self.assertFalse(self.env['stock.move'].search([('product_id', '=', self.product_storable_no.id)]))
+        route = self.env['stock.route'].create({
+            'name': 'new route',
+            'rule_ids': [(0, False, {
+                'name': 'rule_test',
+                'location_src_id': self.stock_warehouse.lot_stock_id.id,
+                'location_dest_id': self.stock_location_14.id,
+                'company_id': self.env.company.id,
+                'action': 'pull',
+                'picking_type_id': self.env.ref('stock.picking_type_in').id,
+                'procure_method': 'make_to_stock'
+            })],
+        })
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Cake RR',
+            'product_id': self.product_storable_no,
+            'route_id': route.id,
+            'location_id': self.stock_location_14.id,
+            'product_id': self.product_storable_no.id,
+            'product_min_qty': 0,
+            'product_max_qty': 1,
+            'trigger': 'auto'
+        })
+        # The product to be repaired should be storable and out of stock
+        # to trigger the wizard indicating that the product has an insufficient quantity.
+        self.product_product_3.type = 'product'
+        repair_order = self.env['repair.order'].create({
+            'product_id': self.product_product_3.id,
+            'product_uom': self.product_product_3.uom_id.id,
+            'partner_id': self.res_partner_12.id,
+            'location_id': self.stock_location_14.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.product_storable_no.id,
+                    'product_uom_qty': 1.0,
+                    'state': 'draft',
+                    'repair_line_type': 'add',
+                })
+            ],
+        })
+        validate_action = repair_order.action_validate()
+        self.assertEqual(validate_action.get("res_model"), "stock.warn.insufficient.qty.repair")
+        warn_qty_wizard = Form(
+            self.env['stock.warn.insufficient.qty.repair']
+            .with_context(**validate_action['context'])
+            ).save()
+        warn_qty_wizard.action_done()
+        self.assertEqual(repair_order.state, "confirmed", 'Repair order should be in "Confirmed" state.')
+        move = self.env['stock.move'].search([
+            ('product_id', '=', self.product_storable_no.id),
+            ('location_dest_id', '=', self.stock_location_14.id,)
+        ])
+        self.assertTrue(move.picking_id)
+        self.assertFalse(move.repair_id)
+        self.assertEqual(move.location_id, self.stock_warehouse.lot_stock_id)
+        self.assertEqual(move.location_dest_id, self.stock_location_14)

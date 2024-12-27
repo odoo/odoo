@@ -280,9 +280,15 @@
                                         <span t-field="line.quantity"/>
                                         <span t-field="line.product_uom_id" groups="uom.group_uom"/>
                                     </td>
-                                    <td name="account_invoice_line_name">
-                                        <t t-set="line_name" t-value="line.name or line.with_context(lang=o.partner_id.lang).product_id.display_name"/>
-                                        <span t-out="line_name" t-options="{'widget': 'text'}" t-att-dir="o.env['res.lang']._lang_get_direction(o.partner_id.lang)"/>
+                                    <td name="account_invoice_line_name" class="text-end">
+                                        <t t-if="line.product_id">
+                                            <t t-set="english_name" t-value="line.with_context(lang='en_US').product_id.display_name"/>
+                                            <t t-set="arabic_name" t-value="line.with_context(lang='ar_001').product_id.display_name"/>
+
+                                            <span t-out="arabic_name + '\n'" t-if="arabic_name not in line.name" t-options="{'widget': 'text'}" dir="rtl"/>
+                                            <span t-out="english_name + '\n'" t-if="(english_name != arabic_name) and (english_name not in line.name)" t-options="{'widget': 'text'}"/>
+                                        </t>
+                                        <span t-out="line.name" t-options="{'widget': 'text'}" t-att-dir="o.env['res.lang']._lang_get_direction(o.partner_id.lang)"/>
                                     </td>
 
                                 </t>

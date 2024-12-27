@@ -5,7 +5,7 @@
 # Translators:
 # Zsolt Godó <zsolttokio@gmail.com>, 2023
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2023
+# f1b3a33e3b33fcf18004a5292e501f50_3500ca8 <373b677b151624c4521d9efc77b996fd_750224>, 2023
 # Kovács Tibor <kovika@gmail.com>, 2023
 # Csaba Tóth <i3rendszerhaz@gmail.com>, 2023
 # Szabolcs Máj, 2023
@@ -15,6 +15,7 @@
 # Martin Trigaux, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2024
 # krnkris, 2024
+# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2024
 # gezza <geza.nagy@oregional.hu>, 2024
 # 
 msgid ""
@@ -318,7 +319,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "2023-01-01"
-msgstr ""
+msgstr "2023-01-01"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -330,7 +331,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "3.00"
-msgstr ""
+msgstr "3.00"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__print_format__4x12
@@ -1558,6 +1559,15 @@ msgstr "Termékmennyiség megváltoztatása"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_lot.py:0
@@ -2549,7 +2559,7 @@ msgstr "Kiszállítási útvonal"
 #: model:ir.actions.report,name:stock.action_report_delivery
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Delivery Slip"
-msgstr "Árujegy"
+msgstr "Szállítólevél"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__move_type
@@ -2641,7 +2651,7 @@ msgstr "Belső átmozgatások leírása"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Receipts"
-msgstr "Leírás beérkezésekhez"
+msgstr "Leírás beszállításokhoz"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking
@@ -3264,7 +3274,7 @@ msgstr "Előrejelzett mennyiség"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__in
 msgid "Forecasted Receipts"
-msgstr "Előrejelzett nyugták"
+msgstr "Előrejelzett beszállítások"
 
 #. module: stock
 #. odoo-javascript
@@ -3382,7 +3392,7 @@ msgstr "Jövőbeni gyártások"
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Future Receipts"
-msgstr "Jövőbeni beérkezések"
+msgstr "Jövőbeni beszállítások"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -6109,7 +6119,7 @@ msgstr "Kigyűjtés"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quant_id
 msgid "Pick From"
-msgstr ""
+msgstr "Kiszedés forrás"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pick_type_id
@@ -7011,12 +7021,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__incoming
 #, python-format
 msgid "Receipt"
-msgstr "Számla"
+msgstr "Beszállítás"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__reception_route_id
 msgid "Receipt Route"
-msgstr "Bevételi útvonal"
+msgstr "Beszállítás útvonal"
 
 #. module: stock
 #. odoo-python
@@ -7028,7 +7038,7 @@ msgstr "Bevételi útvonal"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, python-format
 msgid "Receipts"
-msgstr "Nyugták"
+msgstr "Beszállítások"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
@@ -8620,6 +8630,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
@@ -9242,7 +9259,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Total Incoming"
-msgstr ""
+msgstr "Összes beérkező"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -10429,6 +10446,13 @@ msgid ""
 "You cannot directly pack quantities from different transfers into the same "
 "package through this view. Try adding them to a batch picking and pack it "
 "there."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
 msgstr ""
 
 #. module: stock

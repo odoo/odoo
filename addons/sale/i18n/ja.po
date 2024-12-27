@@ -1154,15 +1154,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"販売中の顧客とドキュメントを共有できます。\n"
-"顧客とドキュメントを共有したくない場合は空欄にして下さい。\n"
-"見積書: ドキュメントは顧客に送信され、顧客はいつでもアクセスできます。\n"
-"例: このオプションはプロダクト説明ファイルを共有するのに便利です。\n"
-"確定オーダ: ドキュメントが顧客に送信され、顧客がアクセスできるようになります。\n"
-"例: このオプションは、ユーザマニュアルやeコマースで購入したデジタルコンテンツを共有するのに便利です。\n"
-"引用の内側: ドキュメントは見出しページと見積書テーブルの間の見積書PDFに含まれます。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1649,7 +1643,7 @@ msgstr "国コード"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_loyalty
 msgid "Coupons & Loyalty"
-msgstr "クーポン＆ロイヤルティ"
+msgstr "クーポン＆ロイヤリティ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -2060,7 +2054,7 @@ msgstr "値引: %(percent)s%%- 以下の税のプロダクトにおいて%(taxes
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Discounts, Loyalty & Gift Card"
-msgstr "値引・ロイヤルティ・ギフトカード"
+msgstr "値引・ロイヤリティ・ギフトカード"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_draft_invoice_warning
@@ -3412,7 +3406,7 @@ msgstr "PayPal"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr "お支払い方法"
+msgstr "支払方法"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__payment_method
@@ -4144,7 +4138,6 @@ msgstr "販売オーダ"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4909,6 +4902,16 @@ msgid "There are existing"
 msgstr "これらは存在する"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr "この会社向けに設定された割引プロダクトはまだないようです。明細ごとの割引を利用するか、または管理者に割引を付与するよう依頼して下さい。"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "This default value is applied to any new product created. This can be "
@@ -5433,6 +5436,7 @@ msgid ""
 msgstr "販売または購買するもの(在庫品、消耗品、サービス品等)は、プロダクトとして登録する必要があります。"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "自分のオーダ"

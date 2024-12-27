@@ -802,7 +802,7 @@ class PosSession(models.Model):
                 partners._increase_rank('customer_rank')
 
         if self.company_id.anglo_saxon_accounting:
-            all_picking_ids = self.order_ids.filtered(lambda p: not p.is_invoiced).picking_ids.ids + self.picking_ids.filtered(lambda p: not p.pos_order_id).ids
+            all_picking_ids = self.order_ids.filtered(lambda p: not p.is_invoiced and not p.shipping_date).picking_ids.ids + self.picking_ids.filtered(lambda p: not p.pos_order_id).ids
             if all_picking_ids:
                 # Combine stock lines
                 stock_move_sudo = self.env['stock.move'].sudo()
@@ -1733,6 +1733,7 @@ class PosSession(models.Model):
             'pos.combo',
             'pos.combo.line',
             'product.packaging',
+            'product.tag',
             'account.cash.rounding',
             'pos.payment.method',
             'account.fiscal.position',
@@ -1829,6 +1830,12 @@ class PosSession(models.Model):
 
     def _get_pos_ui_res_lang(self, params):
         return self.env['res.lang'].search_read(**params['search_params'])
+
+    def _get_pos_ui_product_tag(self, params):
+        return self.env['product.tag'].search_read(**params['search_params'])
+
+    def _loader_params_product_tag(self):
+        return {'search_params': {'domain': [], 'fields': ['name']}}
 
     def _loader_params_account_tax(self):
         return {
@@ -2059,7 +2066,7 @@ class PosSession(models.Model):
                 'fields': [
                     'display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode',
                     'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'product_tmpl_id', 'tracking',
-                    'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids',
+                    'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_tag_ids',
                 ],
                 'order': 'sequence,default_code,name',
             },

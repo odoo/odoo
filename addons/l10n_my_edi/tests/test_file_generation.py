@@ -5,6 +5,7 @@ from freezegun import freeze_time
 from lxml import etree
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tools import cleanup_xml_node
 from odoo.tests import tagged
 
 NS_MAP = {
@@ -21,7 +22,7 @@ NS_MAP = {
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class L10nMyEDITestSubmission(AccountTestInvoicingCommon):
+class L10nMyEDITestFileSubmission(AccountTestInvoicingCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref='my'):
@@ -37,6 +38,7 @@ class L10nMyEDITestSubmission(AccountTestInvoicingCommon):
             'l10n_my_identification_number': '202001234567',
             'state_id': cls.env.ref('base.state_my_jhr').id,
             'street': 'that one street, 5',
+            'city': 'Main city',
             'phone': '+60123456789',
         })
         cls.partner_a.write({
@@ -46,6 +48,7 @@ class L10nMyEDITestSubmission(AccountTestInvoicingCommon):
             'country_id': cls.env.ref('base.my').id,
             'state_id': cls.env.ref('base.state_my_jhr').id,
             'street': 'that other street, 3',
+            'city': 'Main city',
             'phone': '+60123456786',
         })
 
@@ -260,6 +263,26 @@ class L10nMyEDITestSubmission(AccountTestInvoicingCommon):
             'cac:BillingReference/cac:InvoiceDocumentReference/cbc:UUID',
             basic_invoice.l10n_my_edi_external_uuid,
         )
+
+    def test_05_invoice_with_so(self):
+        """
+        Ensure that an invoice linked to an SO will not contain this information in the xml.
+        """
+        basic_invoice = self.init_invoice(
+            'out_invoice', amounts=[100], currency=self.currency_data['currency']
+        )
+        basic_invoice.l10n_my_edi_external_uuid = '12345678912345678912345678'
+        basic_invoice.action_post()
+
+        vals = self.env['account.edi.xml.ubl_myinvois_my']._export_invoice_vals(basic_invoice.with_context(lang=basic_invoice.partner_id.lang))
+        # As we don't rely on the sale module, we'll provide the sale_order_id manually in the vals.
+        vals['vals']['sales_order_id'] = 'TEST/123'
+        xml_content = self.env['ir.qweb']._render(vals['main_template'], vals)
+        file = etree.tostring(cleanup_xml_node(xml_content), xml_declaration=True, encoding='UTF-8')
+        root = etree.fromstring(file)
+        # Check the invoice type to endure that it is marked as credit note.
+        node = root.xpath('cac:OrderReference', namespaces=NS_MAP)
+        self.assertEqual(node, [])
 
     def _assert_node_values(self, root, node_path, text, attributes=None):
         node = root.xpath(node_path, namespaces=NS_MAP)

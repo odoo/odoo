@@ -5,9 +5,10 @@
 # Translators:
 # Jakub Lohnisky <jakub@lepremier.cz>, 2023
 # Ivana Bartonkova, 2023
-# Jiří Podhorecký, 2023
+# Jiří Podhorecký <jirka.p@volny.cz>, 2023
 # Wil Odoo, 2024
 # Jakub Smolka, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jakub Smolka, 2024\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,37 +31,40 @@ msgid ""
 "        Technical field used to link multiple reward lines from the same reward together.\n"
 "    "
 msgstr ""
+"\n"
+"        Technické pole používané k propojení více položek odměn ze stejné odměny dohromady.\n"
+"    "
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/partner_line/partner_line.js:0
 #, python-format
 msgid "%s Points"
-msgstr ""
+msgstr "%s bodů"
 
 #. module: pos_loyalty
 #: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
 msgid "15% on next order"
-msgstr ""
+msgstr "15% na další objednávku"
 
 #. module: pos_loyalty
 #: model:loyalty.reward,description:pos_loyalty.15_pc_on_next_order_reward
 msgid "15% on your order"
-msgstr ""
+msgstr "15% na vaši objednávku"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "A better global discount is already applied."
-msgstr ""
+msgstr "Lepší globální sleva je již uplatněna."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
 #, python-format
 msgid "A reward could not be loaded"
-msgstr ""
+msgstr "Odměnu se nepodařilo načíst"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__promo_barcode
@@ -68,16 +72,18 @@ msgid ""
 "A technical field used as an alternative to the promo code. This is "
 "automatically generated when the promo code is changed."
 msgstr ""
+"Technické pole používané jako alternativa k promo kódu. Ten se generuje "
+"automaticky při změně promo kódu."
 
 #. module: pos_loyalty
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
 msgid "All PoS"
-msgstr ""
+msgstr "Všechna prod. místa"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_rule__any_product
 msgid "Any Product"
-msgstr ""
+msgstr "Jakýkoli produkt"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -87,6 +93,8 @@ msgid ""
 "Are you sure you want to remove %s from this order?\n"
 " You will still be able to claim it through the reward button."
 msgstr ""
+"Opravdu chcete odebrat %s z této objednávky?\n"
+" Stále si ji budete moci nárokovat prostřednictvím tlačítka odměny."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -129,14 +137,14 @@ msgstr "Kódy kupónů"
 #. module: pos_loyalty
 #: model:loyalty.program,portal_point_name:pos_loyalty.15_pc_on_next_order
 msgid "Coupon point(s)"
-msgstr ""
+msgstr "Kupónové bod(y)"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.xml:0
 #, python-format
 msgid "Current Balance:"
-msgstr ""
+msgstr "Aktuální zůstatek:"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -150,20 +158,20 @@ msgstr "Zákazník"
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "Customer needed"
-msgstr ""
+msgstr "Potřebný zákazník"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/product_screen/product_screen.js:0
 #, python-format
 msgid "Deactivating reward"
-msgstr ""
+msgstr "Deaktivování odměny"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_config__gift_card_settings
 #: model:ir.model.fields,help:pos_loyalty.field_res_config_settings__pos_gift_card_settings
 msgid "Defines the way you want to set your gift cards."
-msgstr ""
+msgstr "Definuje způsob, jakým chcete nastavit dárkové poukazy."
 
 #. module: pos_loyalty
 #: model:ir.ui.menu,name:pos_loyalty.menu_discount_loyalty_type_config
@@ -184,7 +192,7 @@ msgstr "Zadejte kód"
 #: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
 #, python-format
 msgid "Enter the gift card code"
-msgstr ""
+msgstr "Zadejte kód dárkového poukazu"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -198,24 +206,24 @@ msgstr "Chyba"
 #: code:addons/pos_loyalty/static/src/overrides/components/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Error validating rewards"
-msgstr ""
+msgstr "Chyba při ověřování odměn"
 
 #. module: pos_loyalty
 #: model:loyalty.reward,description:pos_loyalty.loyalty_program_reward
 msgid "Free Product - Simple Pen"
-msgstr ""
+msgstr "Produkt zdarma - jednoduché pero"
 
 #. module: pos_loyalty
 #: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__create_set
 msgid "Generate PDF cards"
-msgstr ""
+msgstr "Generovat karty PDF"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
 #, python-format
 msgid "Generate a Gift Card"
-msgstr ""
+msgstr "Generovat dárkový poukaz"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -230,7 +238,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_config__gift_card_settings
 #: model:ir.model.fields,field_description:pos_loyalty.field_res_config_settings__pos_gift_card_settings
 msgid "Gift Cards settings"
-msgstr ""
+msgstr "Nastavení dárkových poukazů"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -248,7 +256,7 @@ msgstr "Poukazy a digitální peněženky"
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__points_cost
 msgid "How many point this reward cost on the coupon."
-msgstr ""
+msgstr "Kolik bodů stojí tato odměna na kupónu."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -256,6 +264,7 @@ msgstr ""
 #, python-format
 msgid "Invalid gift card program reward. Use 1 currency per point discount."
 msgstr ""
+"Neplatná odměna programu dárkových poukazů. Použijte slevu 1 měny za bod."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -263,25 +272,27 @@ msgstr ""
 #, python-format
 msgid "Invalid gift card program rule. Use 1 point per currency spent."
 msgstr ""
+"Neplatné pravidlo programu dárkových poukazů. Použijte 1 bod za každou "
+"utracenou měnu."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Invalid gift card program. More than one reward."
-msgstr ""
+msgstr "Neplatný program dárkových poukazů. Více než jedna odměna."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Invalid gift card program. More than one rule."
-msgstr ""
+msgstr "Neplatný program dárkových poukazů. Více než jedno pravidlo."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__is_reward_line
 msgid "Is Reward Line"
-msgstr ""
+msgstr "Je položka odměny"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_mail
@@ -333,21 +344,21 @@ msgstr "Ne"
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "No reward can be claimed with this coupon."
-msgstr ""
+msgstr "S tímto kupónem nelze uplatnit žádnou odměnu."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
 #, python-format
 msgid "No valid eWallet found"
-msgstr ""
+msgstr "Nenalezena žádná platná digitální peněženka."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/control_buttons/reward_button/reward_button.js:0
 #, python-format
 msgid "Please select a product for this reward"
-msgstr ""
+msgstr "Vyberte prosím produkt pro tuto odměnu"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -359,17 +370,17 @@ msgstr "Vyberte odměnu"
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_order_count
 msgid "PoS Order Count"
-msgstr ""
+msgstr "Počet objednávek místa prodeje"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__source_pos_order_id
 msgid "PoS Order Reference"
-msgstr ""
+msgstr "Odkaz objednávky místa prodeje"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_card__source_pos_order_id
 msgid "PoS order where this coupon was generated."
-msgstr ""
+msgstr "Objednávka prod. místa, kde byl tento kupón vygenerován."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_ok
@@ -412,7 +423,7 @@ msgstr "Body"
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__points_cost
 msgid "Points Cost"
-msgstr ""
+msgstr "Cena bodů"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -432,28 +443,28 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__pos_report_print_id
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_report_print_id
 msgid "Print Report"
-msgstr ""
+msgstr "Vytisknout výkaz"
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Program: %(name)s, Reward Product: `%(reward_product)s`"
-msgstr ""
+msgstr "Program: %(name)s, Produkt za odměnu: `%(reward_product)s`"
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Program: %(name)s, Rule Product: `%(rule_product)s`"
-msgstr ""
+msgstr "Program: %(name)s, Produkt pravidla: `%(rule_product)s`"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
 #, python-format
 msgid "Refund with eWallet"
-msgstr ""
+msgstr "Refundace pomocí digitální peněženky"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -463,18 +474,20 @@ msgid ""
 "Refunding a top up or reward product for an eWallet or gift card program is "
 "not allowed."
 msgstr ""
+"Refundace za dobití nebo odměnu za program digitální peněženky nebo "
+"dárkového poukazu není povoleno."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/control_buttons/reset_programs_button/reset_programs_button.xml:0
 #, python-format
 msgid "Reset Programs"
-msgstr ""
+msgstr "Resetovat programy"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_config_ids
 msgid "Restrict publishing to those shops."
-msgstr ""
+msgstr "Omezit publikování na tyto obchody."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -487,24 +500,24 @@ msgstr "Odměna"
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__reward_identifier_code
 msgid "Reward Identifier Code"
-msgstr ""
+msgstr "Identifikační kód odměny"
 
 #. module: pos_loyalty
 #: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__scan_use
 msgid "Scan existing cards"
-msgstr ""
+msgstr "Skenovat existující karty"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
 #, python-format
 msgid "Select program"
-msgstr ""
+msgstr "Vybrat program"
 
 #. module: pos_loyalty
 #: model:product.template,name:pos_loyalty.simple_pen_product_template
 msgid "Simple Pen"
-msgstr ""
+msgstr "Jednoduché pero"
 
 #. module: pos_loyalty
 #. odoo-python
@@ -514,32 +527,34 @@ msgid ""
 "Some coupons are invalid. The applied coupons have been updated. Please "
 "check the order."
 msgstr ""
+"Některé kupony jsou neplatné. Použité kupony byly aktualizovány. "
+"Zkontrolujte prosím objednávku."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
 #, python-format
 msgid "Spent:"
-msgstr ""
+msgstr "Utraceno:"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__any_product
 msgid "Technical field, whether all product match"
-msgstr ""
+msgstr "Technické pole, zda se všechny produkty shodují"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "That coupon code has already been scanned and activated."
-msgstr ""
+msgstr "Kód kupónu již byl naskenován a aktivován."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "That promo code program has already been activated."
-msgstr ""
+msgstr "Tento program propagačních kódů již byl aktivován."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -565,7 +580,7 @@ msgstr ""
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__coupon_id
 msgid "The coupon used to claim that reward."
-msgstr ""
+msgstr "Kupón používaný k uplatnění této odměny."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -574,7 +589,7 @@ msgstr ""
 msgid ""
 "The following codes already exist in the database, perhaps they were already sold?\n"
 "%s"
-msgstr ""
+msgstr "Následující kódy již v databázi existují, možná byly již prodány?%s"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_mail__pos_report_print_id
@@ -582,6 +597,8 @@ msgid ""
 "The report action to be executed when creating a coupon/gift card/loyalty "
 "card in the PoS."
 msgstr ""
+"Akce výkazu, která se má provést při vytváření kupónu/dárkového "
+"poukazu/věrnostní karty v prod. místě."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -591,39 +608,41 @@ msgid ""
 "The reward \"%s\" contain an error in its domain, your domain must be "
 "compatible with the PoS client"
 msgstr ""
+"Odměna \"%s\" obsahuje chybu ve své doméně, vaše doména musí být "
+"kompatibilní s klientem prod. místa"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id
 msgid "The reward associated with this line."
-msgstr ""
+msgstr "Odměna spojená s touto položkou."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "The reward could not be applied."
-msgstr ""
+msgstr "Odměnu nebylo možné uplatnit."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
 #, python-format
 msgid "There are not enough points for the coupon: %s."
-msgstr ""
+msgstr "Pro kupón není dostatek bodů: %s"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "There are not enough points on the coupon to claim this reward."
-msgstr ""
+msgstr "Na kuponu není dostatek bodů k uplatnění této odměny."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "There are not enough products in the basket to claim this reward."
-msgstr ""
+msgstr "V košíku není dostatek produktů k uplatnění této odměny."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -633,6 +652,8 @@ msgid ""
 "There is no email template on the gift card program and your pos is set to "
 "print them."
 msgstr ""
+"V programu dárkových poukazů není žádná šablona e-mailu a vaše pozice je "
+"nastavena na jejich tisk."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -642,25 +663,27 @@ msgid ""
 "There is no print report on the gift card program and your pos is set to "
 "print them."
 msgstr ""
+"V programu dárkových poukazů není žádný výkaz tisku a vaše pozice je "
+"nastavena na jejich tisk."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__valid_product_ids
 msgid "These are the products that are valid for this rule."
-msgstr ""
+msgstr "Toto jsou produkty, které jsou platné pro toto pravidlo."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "This coupon is expired (%s)."
-msgstr ""
+msgstr " Platnost tohoto kupónu vypršela (%s)."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "This coupon is invalid (%s)."
-msgstr ""
+msgstr "Tento kupón je neplatný (%s)."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -681,7 +704,7 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
 #, python-format
 msgid "This gift card has already been sold"
-msgstr ""
+msgstr "Tento dárkový poukaz již byl prodán"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -691,11 +714,14 @@ msgid ""
 "This gift card is not linked to any order. Do you really want to apply its "
 "reward?"
 msgstr ""
+"Tento dárkový poukaz není spojen s žádnou objednávkou. Opravdu chcete "
+"uplatnit jeho odměnu?"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_report_print_id
 msgid "This is used to print the generated gift cards from PoS."
 msgstr ""
+"Toto se používá k tisku vygenerovaných dárkových poukazů z prod. místa."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -704,6 +730,8 @@ msgstr ""
 msgid ""
 "To continue, make the following reward products available in Point of Sale."
 msgstr ""
+"Chcete-li pokračovat, zpřístupněte v Prodejním místě následující produkty "
+"odměn."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__type
@@ -715,28 +743,28 @@ msgstr "Typ"
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "Unknown discount type"
-msgstr ""
+msgstr "Neznámý typ slevy"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "Unpaid gift card"
-msgstr ""
+msgstr "Nezaplacený dárkový poukaz"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "Unpaid gift card rejected."
-msgstr ""
+msgstr "Nezaplacený dárkový poukaz zamítnut."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
 #, python-format
 msgid "Use eWallet to pay"
-msgstr ""
+msgstr "K platbě použijte digitální peněženku"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_rule__valid_product_ids
@@ -753,14 +781,14 @@ msgstr "Platnost do:"
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__is_reward_line
 msgid "Whether this line is part of a reward or not."
-msgstr ""
+msgstr "Zda je tato položka součástí odměny nebo ne."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
 #, python-format
 msgid "Won:"
-msgstr ""
+msgstr "Vyhráno:"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -774,7 +802,7 @@ msgstr "Ano"
 #: code:addons/pos_loyalty/static/src/overrides/models/pos_store.js:0
 #, python-format
 msgid "You cannot sell a gift card that has already been sold."
-msgstr ""
+msgstr "Dárkový poukaz, který již byla prodán, nelze prodat."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -782,6 +810,8 @@ msgstr ""
 #, python-format
 msgid "You cannot set negative quantity or price to gift card or ewallet."
 msgstr ""
+"U dárkového poukazu nebo digitální peněženky nemůžete nastavit záporné "
+"množství nebo cenu."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -790,48 +820,50 @@ msgstr ""
 msgid ""
 "You either have not created an eWallet or all your eWallets have expired."
 msgstr ""
+"Buď jste nevytvořili digitální peněženku, nebo platnost všech vašich "
+"digitálních peněženek vypršela."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "You must set '%s' before setting '%s'."
-msgstr ""
+msgstr "Musíte nastavit '%s' před nastavením '%s'."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
 #, python-format
 msgid "eWallet"
-msgstr ""
+msgstr "Digitální peněženka"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
 #, python-format
 msgid "eWallet Pay"
-msgstr ""
+msgstr "Platba digitální peněženkou"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/control_buttons/e_wallet_button/e_wallet_button.js:0
 #, python-format
 msgid "eWallet Refund"
-msgstr ""
+msgstr "Refundace digitální peněženkou"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/models/loyalty.js:0
 #, python-format
 msgid "eWallet requires a customer to be selected"
-msgstr ""
+msgstr "Digitální peněženka vyžaduje, aby byl vybrán zákazník"
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/overrides/components/order_receipt/order_receipt.xml:0
 #, python-format
 msgid "no expiration"
-msgstr ""
+msgstr "žádná expirace"
 
 #. module: pos_loyalty
 #. odoo-javascript

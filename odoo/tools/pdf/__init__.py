@@ -38,7 +38,7 @@ else:
     raise ImportError("pypdf implementation not found") from error
 del error
 
-PdfReader, PdfWriter, filters, generic, errors, create_string_object =\
+PdfReaderBase, PdfWriter, filters, generic, errors, create_string_object =\
     pypdf.PdfReader, pypdf.PdfWriter, pypdf.filters, pypdf.generic, pypdf.errors, pypdf.create_string_object
 # because they got re-exported
 ArrayObject, BooleanObject, ByteStringObject, DecodedStreamObject, DictionaryObject, IndirectObject, NameObject, NumberObject =\
@@ -59,18 +59,17 @@ pypdf.filters.decompress = lambda data: decompressobj().decompress(data)
 
 
 # monkey patch to discard unused arguments as the old arguments were not discarded in the transitional class
+# This keep the old default value of the `strict` argument
+# https://github.com/py-pdf/pypdf/blob/1.26.0/PyPDF2/pdf.py#L1061
 # https://pypdf2.readthedocs.io/en/2.0.0/_modules/PyPDF2/_reader.html#PdfReader
-class PdfFileReader(PdfReader):
-    def __init__(self, *args, **kwargs):
-        if "strict" not in kwargs and len(args) < 2:
-            kwargs["strict"] = True  # maintain the default
-        kwargs = {k: v for k, v in kwargs.items() if k in ('strict', 'stream')}
-        super().__init__(*args, **kwargs)
+class PdfReader(PdfReaderBase):
+    def __init__(self, stream, strict=True, *args, **kwargs):
+        super().__init__(stream, strict)
 
 
-if 'PyPDF2' in sys.modules:
-    pypdf.PdfFileReader = PdfFileReader
-    pypdf.PdfFileWriter = PdfWriter
+# Ensure that PdfFileReader and PdfFileWriter are available in case it's still used somewhere
+PdfFileReader = pypdf.PdfFileReader = PdfReader
+pypdf.PdfFileWriter = PdfWriter
 
 _logger = getLogger(__name__)
 DEFAULT_PDF_DATETIME_FORMAT = "D:%Y%m%d%H%M%S+00'00'"
@@ -232,6 +231,7 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
         width = float(abs(page.mediaBox.getWidth()))
         height = float(abs(page.mediaBox.getHeight()))
 
+        can.setPageSize((width, height))
         can.translate(width, height)
         can.rotate(-45)
 

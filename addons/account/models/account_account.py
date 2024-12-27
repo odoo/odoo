@@ -798,7 +798,7 @@ class AccountGroup(models.Model):
     name = fields.Char(required=True, translate=True)
     code_prefix_start = fields.Char(compute='_compute_code_prefix_start', readonly=False, store=True, precompute=True)
     code_prefix_end = fields.Char(compute='_compute_code_prefix_end', readonly=False, store=True, precompute=True)
-    company_id = fields.Many2one('res.company', required=True, readonly=True, default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', required=True, readonly=True, default=lambda self: self.env.company.root_id)
 
     _sql_constraints = [
         (
@@ -908,40 +908,41 @@ class AccountGroup(models.Model):
         self.env['account.account'].flush_model(['code'])
 
         if company:
-            company_ids = company.root_id.ids
+            root_companies = company.root_id
         elif account_ids:
-            company_ids = account_ids.company_id.root_id.ids
-            account_ids = account_ids.ids
+            root_companies = account_ids.company_id.root_id
         else:
-            company_ids = []
-            for company in self.company_id:
-                company_ids.extend(company._accessible_branches().ids)
-            account_ids = []
-        if not company_ids and not account_ids:
-            return
-        account_where_clause = SQL('account.company_id IN %s', tuple(company_ids))
-        if account_ids:
-            account_where_clause = SQL('%s AND account.id IN %s', account_where_clause, tuple(account_ids))
+            root_companies = self.company_id
 
-        self._cr.execute(SQL("""
+        account_domain = [('company_id', 'child_of', root_companies.ids)]
+        if account_ids:
+            account_domain.append(('id', 'in', account_ids.ids))
+
+        account_query = self.env['account.account']._where_calc(account_domain)
+
+        self._cr.execute(SQL(
+            """
             WITH relation AS (
-                 SELECT DISTINCT ON (account.id)
-                        account.id AS account_id,
+                 SELECT DISTINCT ON (account_account.id)
+                        account_account.id AS account_id,
                         agroup.id AS group_id
-                   FROM account_account account
-                   JOIN res_company account_company ON account_company.id = account.company_id
+                   FROM %(from_clause)s
+                   JOIN res_company account_company ON account_company.id = account_account.company_id
               LEFT JOIN account_group agroup
-                     ON agroup.code_prefix_start <= LEFT(account.code, char_length(agroup.code_prefix_start))
-                    AND agroup.code_prefix_end >= LEFT(account.code, char_length(agroup.code_prefix_end))
+                     ON agroup.code_prefix_start <= LEFT(account_account.code, char_length(agroup.code_prefix_start))
+                    AND agroup.code_prefix_end >= LEFT(account_account.code, char_length(agroup.code_prefix_end))
                     AND agroup.company_id = split_part(account_company.parent_path, '/', 1)::int
-                  WHERE %s
-               ORDER BY account.id, char_length(agroup.code_prefix_start) DESC, agroup.id
+                  WHERE %(where_clause)s
+               ORDER BY account_account.id, char_length(agroup.code_prefix_start) DESC, agroup.id
             )
             UPDATE account_account
                SET group_id = rel.group_id
               FROM relation rel
              WHERE account_account.id = rel.account_id
-        """, account_where_clause))
+            """,
+            from_clause=account_query.from_clause,
+            where_clause=account_query.where_clause,
+        ))
         self.env['account.account'].invalidate_model(['group_id'], flush=False)
 
     def _adapt_parent_account_group(self, company=None):
@@ -965,7 +966,7 @@ class AccountGroup(models.Model):
                        child.id AS child_id,
                        parent.id AS parent_id
                   FROM account_group parent
-                  JOIN account_group child
+            RIGHT JOIN account_group child
                     ON char_length(parent.code_prefix_start) < char_length(child.code_prefix_start)
                    AND parent.code_prefix_start <= LEFT(child.code_prefix_start, char_length(parent.code_prefix_start))
                    AND parent.code_prefix_end >= LEFT(child.code_prefix_end, char_length(parent.code_prefix_end))

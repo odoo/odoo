@@ -50,11 +50,12 @@ class SaleOrderLine(models.Model):
 
     pos_order_line_ids = fields.One2many('pos.order.line', 'sale_order_line_id', string="Order lines Transfered to Point of Sale", readonly=True, groups="point_of_sale.group_pos_user")
 
-    @api.depends('pos_order_line_ids.qty')
+    @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.picking_ids', 'pos_order_line_ids.order_id.picking_ids.state')
     def _compute_qty_delivered(self):
         super()._compute_qty_delivered()
         for sale_line in self:
-            sale_line.qty_delivered += sum([self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in sale_line.pos_order_line_ids if sale_line.product_id.type != 'service'], 0)
+            if all(picking.state == 'done' for picking in sale_line.pos_order_line_ids.order_id.picking_ids):
+                sale_line.qty_delivered += sum((self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in sale_line.pos_order_line_ids if sale_line.product_id.type != 'service'), 0)
 
     @api.depends('pos_order_line_ids.qty')
     def _compute_qty_invoiced(self):
@@ -119,3 +120,8 @@ class SaleOrderLine(models.Model):
         super()._compute_untaxed_amount_invoiced()
         for line in self:
             line.untaxed_amount_invoiced += sum(line.pos_order_line_ids.mapped('price_subtotal'))
+
+    def _get_downpayment_line_price_unit(self, invoices):
+        return super()._get_downpayment_line_price_unit(invoices) + sum(
+            pol.price_unit for pol in self.sudo().pos_order_line_ids
+        )

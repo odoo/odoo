@@ -4,7 +4,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { getOrigin } from "@web/core/utils/urls";
+import { getOrigin, url } from "@web/core/utils/urls";
 import { click, contains } from "@web/../tests/utils";
 
 QUnit.module("attachment list");
@@ -169,6 +169,36 @@ QUnit.test("view attachment", async () => {
     await contains(".o-mail-AttachmentImage img");
     await click(".o-mail-AttachmentImage");
     await contains(".o-FileViewer");
+});
+
+QUnit.test("can view pdf url", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const attachmentId = pyEnv["ir.attachment"].create({
+        name: "url.pdf.example",
+        mimetype: "application/pdf",
+        type: "url",
+        url: "https://pdfobject.com/pdf/sample.pdf",
+    });
+    pyEnv["mail.message"].create({
+        attachment_ids: [attachmentId],
+        body: "<p>Test</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-AttachmentCard", { text: "url.pdf.example" });
+    await contains(".o-FileViewer");
+    await contains(
+        `iframe.o-FileViewer-view[data-src="/web/static/lib/pdfjs/web/viewer.html?file=${encodeURIComponent(
+            url(`/web/content/${attachmentId}`, { filename: "url.pdf.example" })
+        )}#pagemode=none"]`
+    );
 });
 
 QUnit.test("close attachment viewer", async () => {
@@ -395,5 +425,32 @@ QUnit.test("img file has proper src in discuss.channel", async () => {
     openDiscuss(channelId);
     await contains(
         `.o-mail-AttachmentImage[title='test.png'] img[data-src='${getOrigin()}/discuss/channel/${channelId}/image/${attachmentId}?filename=test.png&width=1920&height=300']`
+    );
+});
+
+QUnit.test("download url of non-viewable binary file", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const attachmentId = pyEnv["ir.attachment"].create({
+        name: "test.o",
+        mimetype: "application/octet-stream",
+        type: "binary",
+    });
+    pyEnv["mail.message"].create({
+        attachment_ids: [attachmentId],
+        body: "<p>Test</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await contains(
+        `button[data-download-url="${url(
+            `/web/content/${attachmentId}?filename=test.o&download=true`
+        )}"]`
     );
 });

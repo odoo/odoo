@@ -43,6 +43,9 @@ class PurchaseOrderLine(models.Model):
             moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self._context['accrual_entry_date'])
         return moves
 
+    def _get_po_line_invoice_lines_su(self):
+        return self.sudo().invoice_lines
+
     @api.depends('move_ids.state', 'move_ids.product_uom', 'move_ids.quantity')
     def _compute_qty_received(self):
         from_stock_lines = self.filtered(lambda order_line: order_line.qty_received_method == 'stock_moves')
@@ -55,7 +58,7 @@ class PurchaseOrderLine(models.Model):
                 for move in line._get_po_line_moves():
                     if move.state == 'done':
                         if move._is_purchase_return():
-                            if move.to_refund:
+                            if not move.origin_returned_move_id or move.to_refund:
                                 total -= move.product_uom._compute_quantity(move.quantity, line.product_uom, rounding_method='HALF-UP')
                         elif move.origin_returned_move_id and move.origin_returned_move_id._is_dropshipped() and not move._is_dropshipped_returned():
                             # Edge case: the dropship is returned to the stock, no to the supplier.
@@ -364,7 +367,7 @@ class PurchaseOrderLine(models.Model):
         incoming_moves = self.env['stock.move']
 
         for move in self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped and self.product_id == r.product_id):
-            if move._is_purchase_return() and move.to_refund:
+            if move._is_purchase_return() and (move.to_refund or not move.origin_returned_move_id):
                 outgoing_moves |= move
             elif move.location_dest_id.usage != "supplier":
                 if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):

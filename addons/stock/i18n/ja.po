@@ -3,11 +3,11 @@
 # 	* stock
 # 
 # Translators:
-# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Martin Trigaux, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
-# Wil Odoo, 2024
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
 # Junko Augias, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1594,6 +1594,15 @@ msgstr "連鎖移動が存在"
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
 msgstr "プロダクト数量変更"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr "移動明細のロット/シリアル番号を異なるプロダクトで変更することはできません。"
 
 #. module: stock
 #. odoo-python
@@ -5121,7 +5130,7 @@ msgstr "複数ステップルート"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
 msgid "Multiple Quantity"
-msgstr "複数の数量"
+msgstr "調達ロットサイズ"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_package_type
@@ -8002,7 +8011,7 @@ msgstr "在庫に所有者を設定"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to manage variants"
-msgstr "製品に特性 (色、サイズ等) を設定し、バリアントを管理する"
+msgstr "プロダクトに特性 (色、サイズ等) を設定し、バリアントを管理する"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_to_zero_quants_tree
@@ -8660,6 +8669,13 @@ msgid ""
 " With 'Automatic No Step Added', the location is replaced in the original "
 "move."
 msgstr "手動操作'値は、現在のものの後に在庫移動を作成します。 '自動ステップ追加なし'を使用すると、元の移動で場所が置き換えられます。"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr "ロット/シリアル番号 (%s) は他のプロダクトにリンクされています。"
 
 #. module: stock
 #. odoo-python
@@ -10216,7 +10232,7 @@ msgstr "このロケーションで参照されていないプロダクトを集
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
 msgid "You are good, no replenishment to perform!"
-msgstr "あなたは良いです、実行するための補充はありません'"
+msgstr "大丈夫です、実行する補充はありません！"
 
 #. module: stock
 #. odoo-python
@@ -10465,6 +10481,13 @@ msgid ""
 "package through this view. Try adding them to a batch picking and pack it "
 "there."
 msgstr "このビューでは、異なる運送からの数量を同じ梱包に直接梱包することはできません。バッチピッキングに追加して、そこで梱包して下さい。"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr "在庫クオンツは複製できません。"
 
 #. module: stock
 #. odoo-python
@@ -10856,7 +10879,7 @@ msgstr "場所から"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid "in"
-msgstr "に"
+msgstr ":"
 
 #. module: stock
 #. odoo-javascript

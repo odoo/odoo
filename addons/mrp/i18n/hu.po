@@ -3,7 +3,7 @@
 # 	* mrp
 # 
 # Translators:
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2023
+# f1b3a33e3b33fcf18004a5292e501f50_3500ca8 <373b677b151624c4521d9efc77b996fd_750224>, 2023
 # Szabolcs Máj, 2023
 # Zsolt Godó <zsolttokio@gmail.com>, 2023
 # Kovács Tibor <kovika@gmail.com>, 2023
@@ -1546,7 +1546,7 @@ msgstr "Felhasználás"
 #: model:ir.actions.act_window,name:mrp.action_mrp_consumption_warning
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Consumption Warning"
-msgstr ""
+msgstr "Felhasználás figyelmeztetés"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_uom_category_id
@@ -1647,7 +1647,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "Create Backorder"
-msgstr "Visszamaradt rendelés létrehozás"
+msgstr "Visszamaradt rendelés létrehozása"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__use_create_components_lots
@@ -1658,7 +1658,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create a Backorder"
-msgstr ""
+msgstr "Visszamaradt rendelés létrehozása"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1666,6 +1666,9 @@ msgid ""
 "Create a backorder if you expect to process the remaining products later. Do"
 " not create a backorder if you will not process the remaining products."
 msgstr ""
+"Hozzon létre visszamaradt rendelést, ha le kell gyártani a maradék "
+"termékeket. Ne hozzon létre visszamaradt rendelést, ha nem szükséges a "
+"maradék termékek legyártása."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -1694,7 +1697,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create backorder"
-msgstr ""
+msgstr "Visszamaradt rendelés létrehozása"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -6783,6 +6786,15 @@ msgid ""
 "                            <span invisible=\"mrp_production_count == 1\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
+"A várhatótól eltérő mennyiséget használt fel az alábbi termékeknél.\n"
+"                        <b invisible=\"consumption == 'strict'\">\n"
+"                            Kérjük erősítse meg, hogy ez így megfelelő és indokolt.\n"
+"                        </b>\n"
+"                        <b invisible=\"consumption != 'strict'\">\n"
+"                            Kérjük tekinintse át az összetevő felhasználást vagy kérjen  menedzseri jóváhagyást\n"
+"                            <span invisible=\"mrp_production_count != 1\">ez a gyártási rendelés</span>\n"
+"                            <span invisible=\"mrp_production_count == 1\">ezek a gyártási rendelések</span>.\n"
+"                        </b>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
@@ -6791,6 +6803,9 @@ msgid ""
 "                        Create a backorder if you expect to process the remaining quantities later.<br/>\n"
 "                        Do not create a backorder if you will not process the remaining products."
 msgstr ""
+"A gyártandó mennyiségnél kevesebb szériaszámot adott meg.<br/>\n"
+"                        Hozzon létre visszamaradt rendelést, ha a későbbiekben várhatóan feldolgozásra kerül a maradék mennyiség.<br/>\n"
+"                        Ne hozzpn létre visszamaradt rendelést, ha nem szükséges a maradék mennyiség feldolgozása."
 
 #. module: mrp
 #. odoo-python
@@ -6846,7 +6861,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
 msgid "You produced less than initial demand"
-msgstr ""
+msgstr "Az eredeti igénynél kevesebb került legyártásra"
 
 #. module: mrp
 #. odoo-python

@@ -25,7 +25,7 @@ class StockMove(models.Model):
 
     @api.model
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
-        excluded_fields = super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_id']
+        excluded_fields = super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_ids']
         if self.env['ir.config_parameter'].sudo().get_param('purchase_stock.merge_different_procurement'):
             excluded_fields += ['procure_method']
         return excluded_fields
@@ -63,7 +63,7 @@ class StockMove(models.Model):
                     l.value, order.currency_id, order.company_id, l.create_date, round=False)))
             total_invoiced_value = 0
             invoiced_qty = 0
-            for invoice_line in line.sudo().invoice_lines:
+            for invoice_line in line._get_po_line_invoice_lines_su():
                 if invoice_line.move_id.state != 'posted':
                     continue
                 # Adjust unit price to account for discounts before adding taxes.
@@ -94,8 +94,12 @@ class StockMove(models.Model):
             # in assigned state. However, the move date is the scheduled date until move is
             # done, then date of actual move processing. See:
             # https://github.com/odoo/odoo/blob/2f789b6863407e63f90b3a2d4cc3be09815f7002/addons/stock/models/stock_move.py#L36
+            convert_date = fields.Date.context_today(self)
+            # use currency rate at bill date when invoice before receipt
+            if float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom.rounding) > 0:
+                convert_date = max(line.sudo().invoice_lines.move_id.filtered(lambda m: m.state == 'posted').mapped('invoice_date'), default=convert_date)
             price_unit = order.currency_id._convert(
-                price_unit, order.company_id.currency_id, order.company_id, fields.Date.context_today(self), round=False)
+                price_unit, order.company_id.currency_id, order.company_id, convert_date, round=False)
         return price_unit
 
     def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description):
@@ -164,13 +168,13 @@ class StockMove(models.Model):
         """
         am_vals_list = super()._account_entry_move(qty, description, svl_id, cost)
         returned_move = self.origin_returned_move_id
-        pdiff_exists = bool((self | returned_move).stock_valuation_layer_ids.stock_valuation_layer_ids.account_move_line_id)
+        move = (self | returned_move).with_prefetch(self._prefetch_ids)
+        pdiff_exists = bool(move.stock_valuation_layer_ids.stock_valuation_layer_ids.account_move_line_id)
 
         if not am_vals_list or not self.purchase_line_id or pdiff_exists or float_is_zero(qty, precision_rounding=self.product_id.uom_id.rounding):
             return am_vals_list
 
         layer = self.env['stock.valuation.layer'].browse(svl_id)
-        returned_move = self.origin_returned_move_id
 
         if returned_move and self._is_out() and self._is_returned(valued_type='out'):
             returned_layer = returned_move.stock_valuation_layer_ids.filtered(lambda svl: not svl.stock_valuation_layer_id)[:1]
@@ -224,7 +228,8 @@ class StockMove(models.Model):
         """ Overridden to return the vendor bills related to this stock move.
         """
         rslt = super(StockMove, self)._get_related_invoices()
-        rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.state == 'posted')
+        purchase_ids = self.env['purchase.order'].search([('picking_ids', 'in', self.picking_id.ids)])
+        rslt += purchase_ids.invoice_ids.filtered(lambda x: x.state == 'posted')
         return rslt
 
     def _get_source_document(self):

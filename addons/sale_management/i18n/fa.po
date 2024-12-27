@@ -32,7 +32,7 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "1.5"
-msgstr ""
+msgstr "1.5"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -40,16 +40,25 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
 "company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"```html\n"
+"<span class=\"fa fa-lg fa-building-o p-2\" title=\"مقدارهای تنظیم‌شده در اینجا مخصوص شرکت هستند.\" groups=\"base.group_multi_company\"/>\n"
+"```"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "<span invisible=\"not require_payment\">of</span>"
 msgstr ""
+"```html\n"
+"<span invisible=\"not require_payment\">از</span>\n"
+"```"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "<span>Options</span>"
 msgstr ""
+"```html\n"
+"<span>گزینه‌ها</span>\n"
+"```"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -181,7 +190,7 @@ msgid ""
 "Default values will be overwritten by values provided by the quotation "
 "template."
 msgstr ""
-"مقادیر پیش‌فرض توسط مقادیری که از الگوی پیش‌فاکتور ارائه می‌شوند، بازنویسی "
+"مقادیر پیش‌فرض با مقادیری که توسط قالب پیش‌فاکتور ارائه شده‌اند جایگزین "
 "خواهند شد."
 
 #. module: sale_management
@@ -233,14 +242,14 @@ msgstr "دسترسی ندارید، از این داده ها برای ایمی�
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "Extra Chips"
-msgstr "چیپ‌های اضافی"
+msgstr "چیپس اضافی"
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
 msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
 msgstr ""
-"محصول، تعداد و واحد اندازه‌گیری (UoM) در خط پیش‌فاکتور فروش غیرقابل حسابداری"
-" ممنوع است."
+"خط محصول ممنوعه، مقدار و واحد اندازه‌گیری در خطوط پیشنهادی فروش غیرقابل "
+"حسابرسی"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
@@ -271,8 +280,8 @@ msgid ""
 "If set, SO with this template will invoice in this journal; otherwise the "
 "sales journal with the lowest sequence is used."
 msgstr ""
-"در صورت تنظیم، سفارش فروش (SO) با این الگو در این دفترکل فاکتور خواهد شد؛ در"
-" غیر این صورت، دفترکل فروش با کمترین شماره ترتیب استفاده می‌شود."
+"اگر تنظیم شود، SO با این قالب در این دفتر کل صورت‌حساب خواهد شد؛ در غیر این "
+"صورت، دفتر کل فروش با کمترین توالی استفاده می‌شود."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
@@ -458,7 +467,7 @@ msgstr "قالب‌های پیش‌فاکتور"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation Validity"
-msgstr "اعتبار پیش‌فاکتور"
+msgstr "اعتبار پیشنهاد"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management

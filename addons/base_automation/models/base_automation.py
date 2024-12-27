@@ -421,26 +421,43 @@ class BaseAutomation(models.Model):
                 ),
             }}
 
+    def _has_trigger_onchange(self):
+        return any(
+            automation.active and automation.trigger == 'on_change' and automation.on_change_field_ids
+            for automation in self
+        )
+
     @api.model_create_multi
     def create(self, vals_list):
         base_automations = super(BaseAutomation, self).create(vals_list)
         self._update_cron()
         self._update_registry()
+        if base_automations._has_trigger_onchange():
+            # Invalidate templates cache to update on_change attributes if needed
+            self.env.registry.clear_cache('templates')
         return base_automations
 
-    def write(self, vals):
+    def write(self, vals: dict):
+        clear_templates = self._has_trigger_onchange()
         res = super(BaseAutomation, self).write(vals)
         if set(vals).intersection(self.CRITICAL_FIELDS):
             self._update_cron()
             self._update_registry()
+            if clear_templates or self._has_trigger_onchange():
+                # Invalidate templates cache to update on_change attributes if needed
+                self.env.registry.clear_cache('templates')
         elif set(vals).intersection(self.RANGE_FIELDS):
             self._update_cron()
         return res
 
     def unlink(self):
+        clear_templates = self._has_trigger_onchange()
         res = super(BaseAutomation, self).unlink()
         self._update_cron()
         self._update_registry()
+        if clear_templates:
+            # Invalidate templates cache to update on_change attributes if needed
+            self.env.registry.clear_cache('templates')
         return res
 
     def copy(self, default=None):
@@ -653,14 +670,13 @@ class BaseAutomation(models.Model):
             self = self.with_context(__action_done=automation_done)
             records = records.with_context(__action_done=automation_done)
 
-        # modify records
-        if 'date_automation_last' in records._fields:
-            records.date_automation_last = fields.Datetime.now()
-
         # we process the automation on the records for which any watched field
         # has been modified, and only mark the automation as done for those
         records = records.filtered(self._check_trigger_fields)
         automation_done[self] = records_done + records
+
+        if records and 'date_automation_last' in records._fields:
+            records.date_automation_last = fields.Datetime.now()
 
         # prepare the contexts for server actions
         contexts = [
@@ -895,8 +911,6 @@ class BaseAutomation(models.Model):
                 method = make_onchange(automation_rule.id)
                 for field in automation_rule.on_change_field_ids:
                     Model._onchange_methods[field.name].append(method)
-                if automation_rule.on_change_field_ids:
-                    self.env.registry.clear_cache('templates')
 
             if automation_rule.model_id.is_mail_thread and automation_rule.trigger in MAIL_TRIGGERS:
                 patch(Model, "message_post", make_message_post())

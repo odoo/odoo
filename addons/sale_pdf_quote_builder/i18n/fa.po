@@ -9,6 +9,7 @@
 # Martin Trigaux, 2023
 # Hanna Kheradroosta, 2024
 # odooers ir, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: odooers ir, 2024\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "<i class=\"fa fa-arrow-right\"/> Download examples"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> دانلود نمونه‌ها"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on
@@ -67,19 +68,19 @@ msgstr "تنظیمات پیکربندی"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer
 msgid "Footer pages"
-msgstr ""
+msgstr "صفحات پاورقی"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header
 msgid "Header pages"
-msgstr ""
+msgstr "صفحات سربرگ"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
 msgid "Inside quote"
-msgstr ""
+msgstr "داخل نقل قول"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -89,11 +90,13 @@ msgid ""
 "It seems that we're not able to process this pdf inside a quotation. It is "
 "either encrypted, or encoded in a format we do not support."
 msgstr ""
+"به نظر می‌رسد که قادر به پردازش این فایل پی‌دی‌اف درون یک نقل‌قول نیستیم. یا"
+" رمزگذاری شده است، یا به فرمتی کدگذاری شده است که از آن پشتیبانی نمی‌کنیم."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Learn more from the documentation."
-msgstr ""
+msgstr "از مستندات بیشتر بیاموزید."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
@@ -107,12 +110,12 @@ msgstr "با افزودن سربرگ، توضیحات محصول و پانوشت
 #: code:addons/sale_pdf_quote_builder/models/product_document.py:0
 #, python-format
 msgid "Only PDF documents can be attached inside a quote."
-msgstr ""
+msgstr "فقط می‌توان اسناد PDF را درون یک پیشنهاد پیوست کرد."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "PDF Quote Builder"
-msgstr ""
+msgstr "سازنده نقل قول PDF"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
@@ -133,6 +136,11 @@ msgid ""
 "                            in the quote, if the product has an \"inside quotes\" document, this document\n"
 "                            will be added after header pages and before the quotation details."
 msgstr ""
+"محصولات توضیحات به صورت اسناد پی‌دی‌اف هستند که می‌توانید آن‌ها را مستقیماً به محصولات اضافه کنید.  \n"
+"                            برای انجام این کار، به یک محصول بروید، دکمه \"اسناد محصول\" را پیدا کنید، سپس سند پی‌دی‌اف جدیدی  \n"
+"                            را با قابلیت مشاهده به عنوان \"درون نقل‌قول‌ها\" اضافه کنید. برای هر محصول در نقل‌قول، اگر محصول  \n"
+"                            یک سند \"درون نقل‌قول‌ها\" داشته باشد، این سند بعد از صفحات سرصفحه و قبل از جزئیات نقل‌قول  \n"
+"                            اضافه خواهد شد."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -143,6 +151,11 @@ msgid ""
 "                            product descriptions, details of the quote and then the footer pages.\n"
 "                            If empty, it will use those define in the company settings.<br/>"
 msgstr ""
+"ارائه صفحات سرصفحه و صفحات پاصفحه برای ایجاد یک نقل‌قول جذاب\n"
+"                            با اطلاعات بیشتر درباره شرکت شما، محصولات شما و خدمات شما.\n"
+"                            پی‌دی‌اف نقل‌قول شما با ترکیب صفحات سرصفحه،\n"
+"                            توضیحات محصولات، جزئیات نقل‌قول و سپس صفحات پاصفحه ساخته خواهد شد.\n"
+"                            اگر خالی باشد، از تنظیمات تعریف‌شده در شرکت استفاده خواهد کرد. <br/>"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
@@ -164,14 +177,14 @@ msgstr "اکشن گزارش"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer_name
 msgid "Sale Footer Name"
-msgstr ""
+msgstr "نام پاورقی فروش"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header_name
 msgid "Sale Header Name"
-msgstr ""
+msgstr "نام سربرگ فروش"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
@@ -185,6 +198,9 @@ msgid ""
 "                            can be injected in these documents using pdf forms.\n"
 "                            Refer to the documentation to know more about this feature."
 msgstr ""
+"برخی اطلاعات خاص مربوط به پیشنهاد (نام مشتری، مرجع پیشنهاد، ... )\n"
+"                            می‌تواند با استفاده از فرم‌های PDF در این اسناد وارد شود. \n"
+"                            برای اطلاعات بیشتر در مورد این ویژگی به مستندات مراجعه کنید."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
@@ -197,3 +213,5 @@ msgstr "قابل مشاهده در"
 #, python-format
 msgid "When attached inside a quote, the document must be a file, not a URL."
 msgstr ""
+"هنگامی که در داخل یک نقل‌قول پیوست می‌شود، سند باید یک فایل باشد، نه یک آدرس"
+" اینترنتی."

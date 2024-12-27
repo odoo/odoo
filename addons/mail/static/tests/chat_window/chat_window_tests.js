@@ -404,6 +404,25 @@ QUnit.test("Close active thread action in chatwindow on ESCAPE", async () => {
     await contains(".o-mail-ChatWindow");
 });
 
+QUnit.test("ESC cancels thread rename", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId, is_minimized: true }),
+        ],
+        create_uid: pyEnv.currentUserId,
+    });
+    await start();
+    await click(".o-mail-ChatWindow-command", { text: "General" });
+    await click(".dropdown-item", { text: "Rename" });
+    await contains(".o-mail-AutoresizeInput.o-focused[title='General']");
+    await insertText(".o-mail-AutoresizeInput", "New", { replace: true });
+    triggerHotkey("Escape");
+    await contains(".o-mail-AutoresizeInput.o-focused", { count: 0 });
+    await contains(".o-mail-ChatWindow-command", { text: "General" });
+});
+
 QUnit.test("open 2 different chat windows: enough screen width [REQUIRE FOCUS]", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "Channel_1" }, { name: "Channel_2" }]);

@@ -1151,12 +1151,12 @@ msgstr "Riga ordine consentita"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr "Consente di inviare una fattura pro-forma ai clienti."
+msgstr "Consente di inviare una fattura proforma ai clienti."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr "Consente di inviare una fattura pro forma."
+msgstr "Consente di inviare una fattura proforma."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_document__attached_on
@@ -1167,15 +1167,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"Consente di condividere il documento con i tuoi clienti al momento di una vendita.\n"
-"Lascia il campo vuoto se non vuoi condividere il documento con i clienti.\n"
-"Preventivo: il documento verrà inviato e sarà accessibile ai clienti in qualsiasi momento.\n"
-"ad es. quest'opzione può essere utile per condividere file relativi alla descrizione del prodotto.\n"
-"Ordine confermato: il documento verrà inviato e sarà accessibile ai clienti.\n"
-"ad es. quest'opzione può essere utile per condividere manuali utente o contenuti digitali acquistati sull'e-commerce. \n"
-"All'interno del preventivo: il documento verrà incluso nel pdf del preventivo tra l'intestazione e la tabella."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -3453,7 +3447,7 @@ msgstr "Token di identità PDT"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "Fattura PRO FORMA"
+msgstr "Fattura PROFORMA"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_id
@@ -3617,7 +3611,7 @@ msgstr "Tariffazione"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr "Fattura pro forma"
+msgstr "Fattura proforma"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -3627,7 +3621,7 @@ msgstr "Fattura proforma"
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro-forma Invoices"
-msgstr "Fatture pro forma"
+msgstr "Fatture proforma"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
@@ -4237,7 +4231,6 @@ msgstr "Ordine/i di vendita"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4414,7 +4407,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr "Invia fattura PRO FORMA"
+msgstr "Invia fattura PROFORMA"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5040,6 +5033,19 @@ msgid "There are existing"
 msgstr "Sono presenti "
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
+"Non sembra esserci ancora un prodotto di sconto configurato per questa "
+"azienda. È possibile utilizzare uno sconto per riga o chiedere a un "
+"amministratore di concedere lo sconto la prima volta."
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "This default value is applied to any new product created. This can be "
@@ -5611,6 +5617,7 @@ msgstr ""
 "                che sia un prodotto stoccabile, un consumabile o un servizio."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "I tuoi ordini"

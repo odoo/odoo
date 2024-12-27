@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # Wil Odoo, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,13 +29,15 @@ msgid ""
 "\n"
 "This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
 msgstr ""
+"\n"
+"Ця проблема виникає через те, що кількість стає нульовою після округлення під час перетворення. Щоб виправити це, налаштуйте коефіцієнти перерахунку або метод округлення, щоб переконатися, що навіть найменша кількість у вихідній одиниці не округляється до нуля в цільовій одиниці."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 #, python-format
 msgid " - From \"%s\" to \"%s\""
-msgstr ""
+msgstr " - Від \"%s\" до \"%s\""
 
 #. module: point_of_sale
 #. odoo-python
@@ -125,7 +127,7 @@ msgstr "%s знайдені товари для \"%s\"."
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "%s untaxed"
-msgstr ""
+msgstr "%s неоподатковується"
 
 #. module: point_of_sale
 #. odoo-python
@@ -902,7 +904,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/main.js:0
 #, python-format
 msgid "An error occurred while loading the Point of Sale: \n"
-msgstr ""
+msgstr "Під час завантаження точки продажу сталася помилка: \n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -1689,7 +1691,7 @@ msgstr "Батьківський Combo"
 #: code:addons/point_of_sale/models/product.py:0
 #, python-format
 msgid "Combo products cannot contains variants or attributes"
-msgstr ""
+msgstr "Комбіновані товари не можуть містити варіанти чи атрибути"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_combo_form
@@ -1862,6 +1864,8 @@ msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero"
 " quantity due to rounding:"
 msgstr ""
+"Помилка конвертації: наступні конвертації одиниць вимірювання призводять до "
+"нульової кількості через округлення:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -2097,7 +2101,7 @@ msgstr "Екран клієнта"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
 msgid "Customer Screen : {{message}}"
-msgstr ""
+msgstr "Екран клієнта : {{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2113,7 +2117,7 @@ msgstr "Екран клієнта підключений"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
 msgid "Customer Screen Not Found : {{message}}"
-msgstr ""
+msgstr "Екран клієнта не знайдено : {{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2128,7 +2132,7 @@ msgstr "Екран клієнта не підтримується. Оновіт�
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
 msgid "Customer Screen Warning : {{message}}"
-msgstr ""
+msgstr "Сповіщення екрана клієнта : {{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2651,7 +2655,7 @@ msgstr "Email надіслано."
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 #, python-format
 msgid "Email: {{currentOrder.getEmailItems().join(', ')}}"
-msgstr ""
+msgstr "Email: {{currentOrder.getEmailItems().join(', ')}}"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3965,11 +3969,6 @@ msgid "Newspaper Rack"
 msgstr "Газетна стійка"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Наступна подія календаря дій"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Дедлайн наступної дії"
@@ -4199,13 +4198,6 @@ msgstr "Кількість транзакцій:"
 #, python-format
 msgid "OK"
 msgstr "Ок"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-#, python-format
-msgid "Odoo Point of Sale"
-msgstr "Точка продажу Odoo"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.office_combo_product_template
@@ -5085,13 +5077,6 @@ msgid "PoS Interface"
 msgstr "Інтерфейс точки продажу"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid "PoS Order"
-msgstr "Замовлення PoS"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__pos_order_line_id
 msgid "PoS Order Line"
 msgstr "Рядок замовлення PoS"
@@ -5122,7 +5107,7 @@ msgstr "Категорія товару точки продажу"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "PoS order %s can not be processed"
-msgstr ""
+msgstr "Замовлення точки продажу %s неможливо обробити"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -5406,6 +5391,13 @@ msgstr "Опубліковано"
 #, python-format
 msgid "Powered by"
 msgstr "Зроблено"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#, python-format
+msgid "Powered by Odoo"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
@@ -5825,11 +5817,6 @@ msgstr "ПРИЧИНА"
 #, python-format
 msgid "REFUNDED:"
 msgstr "ПОВЕРНЕНО:"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
-msgid "Ratings"
-msgstr "Оцінювання"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6589,7 +6576,7 @@ msgstr "Встановлення кількох цін на товар, авто
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #, python-format
 msgid "Set the new discount"
-msgstr ""
+msgstr "Встановити нову знижку"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7143,6 +7130,9 @@ msgid ""
 "The datas received from the point of sale has been saved in the attachments.\n"
 "Please contact your support service to assist you on restoring it"
 msgstr ""
+"Замовлення точки продажу з таким референсом %s було отримано на сервер Odoo, але процес оброблення замовлення не вдався.\n"
+"Дані, отримані з точки продажу, збережені у вкладеннях.\n"
+"Будь ласка, зверніться до служби підтримки, щоб допомогти вам відновити його"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7170,6 +7160,8 @@ msgid ""
 "The amount of your payment lines must be rounded to validate the transaction.\n"
 "The rounding precision is %s so you should set %s or %s as payment amount instead of %s."
 msgstr ""
+"Для підтвердження транзакції суму ваших платіжних рядків потрібно округлити.\n"
+"Точність округлення %s тож ви повинні встановити %s або %s як суму платежу замість %s."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7682,6 +7674,15 @@ msgstr ""
 #: code:addons/point_of_sale/models/account_journal.py:0
 #, python-format
 msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr ""
+"Цей журнал пов'язаний зі способом оплати. Ви не можете додати його в Архів"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
 msgstr ""
 "Цей журнал пов’язаний із способом оплати. Ви не можете змінити його тип"
@@ -7857,11 +7858,8 @@ msgstr "Для зважування на вагах"
 msgid ""
 "To delete a product, make sure all point of sale sessions are closed.\n"
 "\n"
-"Deleting a product available in a session would be like attempting to snatch ahamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
+"Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
 msgstr ""
-"Щоб видалити товар, переконайтеся, що всі точки продажу закрито.\n"
-"\n"
-"Видалення товару, доступного під час сесії, було б схожим на спробу вирвати гамбургер з руки клієнта на півкусі; виникне хаос, оскільки кетчуп і майонез будуть літати всюди!"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -8479,6 +8477,8 @@ msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
 msgstr ""
+"Ви не маєте дозволу на відкриття POS-сесії. Спробуйте відкрити сесію з іншим"
+" користувачем"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8828,7 +8828,7 @@ msgstr "були дублікати існуючих замовлень"
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 #, python-format
 msgid "{{ !barcodeReader ? 'No nomenclature' : '' }}"
-msgstr ""
+msgstr "{{ !barcodeReader ? 'No nomenclature' : '' }}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8838,10 +8838,12 @@ msgid ""
 "{{ line.has_valid_product_lot() ? 'Valid product lot' : 'Invalid product "
 "lot'}}"
 msgstr ""
+"{{ line.has_valid_product_lot() ? 'Valid product lot' : 'Invalid product "
+"lot'}}"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.xml:0
 #, python-format
 msgid "{{partnerDetailsFields[item]}}"
-msgstr ""
+msgstr "{{partnerDetailsFields[item]}}"

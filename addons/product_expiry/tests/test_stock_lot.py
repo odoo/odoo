@@ -525,6 +525,7 @@ class TestStockLot(TestStockCommon):
         the latter should be applied on the SML
         """
         exp_date = fields.Datetime.today() + relativedelta(days=15)
+        sml_exp_date = fields.Datetime.today() + relativedelta(days=10)
 
         lot = self.env['stock.lot'].create({
             'name': 'Lot 1',
@@ -533,16 +534,26 @@ class TestStockLot(TestStockCommon):
             'company_id': self.env.company.id,
         })
 
+        move = self.env['stock.move'].create({
+            'name': 'move_test',
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'product_id': self.apple_product.id,
+            'product_uom': self.apple_product.uom_id.id,
+        })
         sml = self.env['stock.move.line'].create({
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location,
             'product_id': self.apple_product.id,
             'quantity': 3,
             'product_uom_id': self.apple_product.uom_id.id,
-            'lot_id': lot.id,
+            'expiration_date': fields.Datetime.to_string(sml_exp_date),
             'company_id': self.env.company.id,
+            'move_id': move.id,
         })
+        self.assertEqual(sml.expiration_date, sml_exp_date)
 
+        sml.lot_id = lot
         self.assertEqual(sml.expiration_date, exp_date)
 
     def test_apply_same_date_on_expiry_fields(self):

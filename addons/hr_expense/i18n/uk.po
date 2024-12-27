@@ -673,6 +673,9 @@ msgid ""
 "from the partner to fix the configuration. Cancel this invoice and start "
 "again."
 msgstr ""
+"Ви справді хочете виставляти рахунки власній компанії? Видаліть «Назва "
+"компанії» з партнера, щоб виправити налаштування. Скасуйте цей рахунок-"
+"фактуру та почніть знову."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__business_domain
@@ -1526,7 +1529,7 @@ msgstr "Кількість повідомлень з помилковою дст
 #: code:addons/hr_expense/static/src/components/expense_dashboard.xml:0
 #, python-format
 msgid "Numbers computed from your personal expenses."
-msgstr ""
+msgstr "Цифри, обчислені з ваших особистих витрат."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
@@ -1645,6 +1648,14 @@ msgstr "Платежі"
 #: model_terms:product.template,description:hr_expense.expense_product_communication_product_template
 msgid "Phone bills, postage, etc."
 msgstr "Рахунки за телефон, поштові витрати тощо."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid ""
+"Please specify an expense journal in order to generate accounting entries."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1913,7 +1924,7 @@ msgstr "Табель"
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__show_commercial_partner_warning
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__show_commercial_partner_warning
 msgid "Show Commercial Partner Warning"
-msgstr ""
+msgstr "Показувати сповіщення комерційному партнеру"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -2152,6 +2163,27 @@ msgid ""
 msgstr ""
 "Робоча електронна пошта деяких співробітників відсутня. Будь ласка, додайте "
 "її до форми працівника"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "Employee(s) should have a bank account set."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "Go to Employee(s)"
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "Employee(s)"
+msgstr "Співробітник(и)"
 
 #. module: hr_expense
 #. odoo-python

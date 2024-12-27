@@ -4,10 +4,10 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Sergio Zanchetta <primes2h@gmail.com>, 2024
-# Wil Odoo, 2024
 # Lorenzo Battistini <lb@takobi.online>, 2024
+# Wil Odoo, 2024
 # Marianna Ciofani, 2024
+# Sergio Zanchetta <primes2h@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-06 12:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Marianna Ciofani, 2024\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2448,7 +2448,7 @@ msgstr "Tutti"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__fiscalyear_lock_date
 msgid "All Users Lock Date"
-msgstr "Data di blocco tutti utenti"
+msgstr "Data di chiusura tutti utenti"
 
 #. module: account
 #. odoo-python
@@ -5270,11 +5270,6 @@ msgid "DELIVERED DUTY PAID"
 msgstr "RESO SDOGANATO"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
-msgid "DOWN"
-msgstr "DIFETTO"
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
 msgstr "Bacheca"
@@ -6014,6 +6009,11 @@ msgstr "Scorciatoia formula dominio"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Domestic country of your accounting"
 msgstr "Paese di origine della tua contabilità"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
+msgid "Down"
+msgstr "Difetto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__checkbox_download
@@ -7318,11 +7318,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
 msgid "Growth Comparison"
 msgstr "Confronto crescita"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
-msgid "HALF-UP"
-msgstr "METÀ (PER ECCESSO)"
 
 #. module: account
 #: model:ir.model,name:account.model_ir_http
@@ -8936,7 +8931,7 @@ msgstr "Disponibilità giornali"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__period_lock_date
 msgid "Journals Entries Lock Date"
-msgstr "Data di blocco registrazioni contabili"
+msgstr "Data di chiusura registrazioni contabili"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__json_activity_data
@@ -9335,7 +9330,7 @@ msgstr "Carica più limite"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
 msgid "Lock Date Message"
-msgstr "Messaggio data di blocco"
+msgstr "Messaggio data di chiusura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -9618,7 +9613,7 @@ msgstr "Data massima delle righe abbinate"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__max_tax_lock_date
 msgid "Max Tax Lock Date"
-msgstr "Data massima di blocco dell'IVA"
+msgstr "Data massima di chiusura dell'IVA"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__5
@@ -9863,6 +9858,11 @@ msgstr "Nome consultabile"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Navigate easily through reports and see what is behind the numbers"
 msgstr "Naviga facilmente fra i rendiconti e scopri cosa c'è dietro i numeri"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
+msgid "Nearest"
+msgstr "Più vicino"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
@@ -12173,7 +12173,7 @@ msgstr "Nome riga rendiconto"
 #: model:ir.ui.menu,name:account.account_report_folder
 #: model:ir.ui.menu,name:account.menu_finance_reports
 msgid "Reporting"
-msgstr "Rendiconto"
+msgstr "Rendicontazione"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding
@@ -12612,6 +12612,7 @@ msgstr "Salvare la pagina e tornare qui per impostare la funzionalità."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "Lettura tramite app bancaria."
@@ -13839,7 +13840,7 @@ msgstr "Riga ripartizione imposta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_lock_date
 msgid "Tax Return Lock Date"
-msgstr "Data di blocco dichiarazione fiscale"
+msgstr "Data di chiusura dichiarazione fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_scope
@@ -14216,12 +14217,12 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
-"The Syscohada chart template shouldn't be selected directly. Instead, you "
-"should directly select the chart template related to your country."
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
 msgstr ""
-"Il modello di grafico Syscohada non dovrebbe essere selezionato "
-"direttamente. Tuttavia, è possibile selezionare direttamente il modello di "
-"grafico collegato al tuo Paese."
+"Il modello di grafico %s non dovrebbe essere selezionato direttamente. "
+"Tuttavia, è possibile selezionare direttamente il modello di grafico "
+"collegato al tuo Paese."
 
 #. module: account
 #. odoo-python
@@ -14473,16 +14474,16 @@ msgid ""
 "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
 "The Journal Entry will be accounted on %(invoice_date)s upon posting."
 msgstr ""
-"La data è impostata prima della %(lock_type)s data di blocco %(lock_date)s. "
-"La registrazione contabile verrà contabilizzata il %(invoice_date)s al "
-"momento della registrazione."
+"La data è stata impostata prima della data di chiusura %(lock_type)s "
+"%(lock_date)s. La registrazione verrà contabilizzata il %(invoice_date)s al "
+"momento della conferma."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "The date selected is protected by a lock date"
-msgstr "La data selezionata è protetta da una data di blocco"
+msgstr "La data selezionata è protetta da una data di chiusura"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_shipping_id
@@ -16026,11 +16027,6 @@ msgid "Type of the exception activity on record."
 msgstr "Tipo di attività eccezione sul record."
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
-msgid "UP"
-msgstr "ECCESSO"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
@@ -16207,6 +16203,11 @@ msgstr "Numero di pagamenti non sicuri"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "UoM"
 msgstr "UdM"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
+msgid "Up"
+msgstr "Eccesso"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17025,6 +17026,15 @@ msgid ""
 msgstr ""
 "Impossibile creare una nuova riga di estratto conto. Nel registro %s non è "
 "stato impostato un conto provvisorio."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+#, python-format
+msgid "You can't create payments for entries belonging to different branches."
+msgstr ""
+"Impossibile creare pagamenti per registrazioni che appartengono a filiali "
+"diverse."
 
 #. module: account
 #. odoo-python

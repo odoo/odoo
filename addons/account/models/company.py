@@ -6,6 +6,7 @@ import calendar
 
 from odoo import fields, models, api, _, Command
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
+from odoo.tools import date_utils
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
 from odoo.tools.float_utils import float_round, float_is_zero
@@ -27,11 +28,19 @@ MONTH_SELECTION = [
     ('12', 'December'),
 ]
 
-PEPPOL_LIST = [
-    'AD', 'AL', 'AT', 'BA', 'BE', 'BG', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI',
-    'FR', 'GB', 'GR', 'HR', 'HU', 'IE', 'IS', 'IT', 'LI', 'LT', 'LU', 'LV', 'MC', 'ME',
-    'MK', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'RS', 'SE', 'SI', 'SK', 'SM', 'TR', 'VA',
+# List of countries where Peppol should be used by default.
+PEPPOL_DEFAULT_COUNTRIES = [
+    'AT', 'BE', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI',
+    'FR', 'GR', 'IE', 'IS', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL',
+    'NO', 'PL', 'PT', 'RO', 'SE', 'SI',
 ]
+
+# List of countries where Peppol is accessible.
+PEPPOL_LIST = PEPPOL_DEFAULT_COUNTRIES + [
+    'AD', 'AL',  'BA', 'BG', 'GB', 'HR', 'HU', 'LI', 'MC', 'ME',
+    'MK', 'RS', 'SK', 'SM', 'TR', 'VA',
+]
+
 
 class ResCompany(models.Model):
     _name = "res.company"
@@ -751,13 +760,11 @@ class ResCompany(models.Model):
 
     def compute_fiscalyear_dates(self, current_date):
         """
-        The role of this method is to provide a fallback when account_accounting is not installed.
-        As the fiscal year is irrelevant when account_accounting is not installed, this method returns the calendar year.
-        :param current_date: A datetime.date/datetime.datetime object.
+        Returns the dates of the fiscal year containing the provided date for this company.
         :return: A dictionary containing:
             * date_from
             * date_to
         """
-
-        return {'date_from': datetime(year=current_date.year, month=1, day=1).date(),
-                'date_to': datetime(year=current_date.year, month=12, day=31).date()}
+        self.ensure_one()
+        date_from, date_to = date_utils.get_fiscal_year(current_date, day=self.fiscalyear_last_day, month=int(self.fiscalyear_last_month))
+        return {'date_from': date_from, 'date_to': date_to}

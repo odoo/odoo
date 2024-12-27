@@ -1171,15 +1171,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"Hiermaa kan je het document delen met je klanten binnen een verkoop. \n"
-"Laat het leeg als je dit document niet wilt delen met klanten. \n"
-"Offerte: het document wordt verzonden naar de klanten en is op elk moment toegankelijk voor hen.\n"
-"bijv. deze optie kan handig zijn om bestanden met productbeschrijvingen te delen. \n"
-"Bevestigde order: het document wordt verzonden naar de klanten en is toegankelijk voor hen.\n"
-"bijv. deze optie kan handig zijn voor het delen van gebuikershandleidingen of digitale inhoud die via e-commerce is gekocht. \n"
-"Binnen offerte: Het document wordt opgenomen in de PDF van de offerte tussen de voorbladen en de offertetabel."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -4235,7 +4229,6 @@ msgstr "Verkooporder(s)"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -5043,6 +5036,19 @@ msgid "There are existing"
 msgstr "Er zijn bestaande"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
+"Er lijkt nog geen kortingsproduct geconfigureerd te zijn voor dit bedrijf. "
+"Je kunt een korting per regel gebruiken of een beheerder vragen om de "
+"korting de eerste keer toe te kennen."
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "This default value is applied to any new product created. This can be "
@@ -5611,6 +5617,7 @@ msgstr ""
 "of het nu een fysiek product, verbruiksartikel of een dienst is."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Je orders"

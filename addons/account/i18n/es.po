@@ -9,8 +9,9 @@
 # Camille Dantinne <cmd@odoo.com>, 2023
 # Xabi Spacebiker <xabispacebiker@gmail.com>, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Wil Odoo, 2024
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
+# Pilar Vargas, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
@@ -580,7 +581,7 @@ msgstr ""
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Aquí está su\n"
+"        Ésta es su\n"
 "        <t t-if=\"object.name\">\n"
 "            factura rectificativa <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
 "        </t>\n"
@@ -665,7 +666,7 @@ msgstr ""
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Aquí está su\n"
+"        Ésta es su\n"
 "        <t t-if=\"object.name\">\n"
 "            factura <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
 "        </t>\n"
@@ -1619,6 +1620,8 @@ msgstr ""
 #, python-format
 msgid "Account %s is of payable type, but is used in a sale operation."
 msgstr ""
+"La cuenta %s es de tipo por pagar, pero se está utilizando en una operación "
+"de venta."
 
 #. module: account
 #. odoo-python
@@ -1626,6 +1629,8 @@ msgstr ""
 #, python-format
 msgid "Account %s is of receivable type, but is used in a purchase operation."
 msgstr ""
+"La cuenta %s es de tipo por cobrar, pero se está utilizando en una operación"
+" de compra."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
@@ -2254,18 +2259,18 @@ msgstr ""
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #, python-format
 msgid "Add"
-msgstr "Agregar"
+msgstr "Añadir"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_new_bank_setting
 #: model:ir.ui.menu,name:account.menu_action_account_bank_journal_form
 msgid "Add a Bank Account"
-msgstr "Agregar una cuenta bancaria"
+msgstr "Añadir una cuenta bancaria"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__plain
 msgid "Add a Note"
-msgstr "Agregar una nota"
+msgstr "Añadir una nota"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2273,82 +2278,82 @@ msgid ""
 "Add a QR-code to your invoices so that your customers can pay instantly with"
 " their mobile banking application."
 msgstr ""
-"Agregue un código QR a sus facturas para que sus clientes puedan pagar "
+"Añada un código QR a sus facturas para que sus clientes puedan pagar "
 "instantáneamente con su aplicación móvil bancaria."
 
 #. module: account
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_bank_account
 msgid "Add a bank account"
-msgstr "Agregar una cuenta bancaria"
+msgstr "Añadir una cuenta bancaria"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
 msgid "Add a journal"
-msgstr "Agregar un diario"
+msgstr "Añadir un diario"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
 msgid "Add a journal group"
-msgstr "Agregar un grupo de diarios"
+msgstr "Añadir un grupo de diarios"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add a line"
-msgstr "Agregar una línea"
+msgstr "Añadir una línea"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Add a line to your invoice"
-msgstr "Agregue una línea a su factura"
+msgstr "Añada una línea a su factura"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__html
 msgid "Add a link to a Web Page"
-msgstr "Agregue un enlace a una página web"
+msgstr "Añada un enlace a una página web"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
 msgid "Add a new account"
-msgstr "Agregar una nueva cuenta "
+msgstr "Añadir una nueva cuenta "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add a note"
-msgstr "Agregar una nota"
+msgstr "Añadir una nota"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Add a payment QR-code to your invoices"
-msgstr "Agregue un código QR de pago a sus facturas"
+msgstr "Añada un código QR de pago a sus facturas"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__strategy__add_invoice_line
 msgid "Add a rounding line"
-msgstr "Agregar una línea de redondeo"
+msgstr "Añadir una línea de redondeo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add a section"
-msgstr "Agregar una sección"
+msgstr "Añadir una sección"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add an internal note..."
-msgstr "Agregue una nota interna..."
+msgstr "Añada una nota interna..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "Add contacts to notify..."
-msgstr "Agregar contactos a notificar..."
+msgstr "Añadir contactos a notificar..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Add your terms & conditions at the bottom of invoices/orders/quotations"
 msgstr ""
-"Agregue sus términos y condiciones al final de sus facturas, pedidos o "
+"Añada sus términos y condiciones al final de sus facturas, pedidos o "
 "presupuestos"
 
 #. module: account
@@ -4559,7 +4564,7 @@ msgstr "Grupo de países"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__country
 msgid "Country Matches"
-msgstr "El país coincide"
+msgstr "Coincide con el país"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_country_name
@@ -5270,11 +5275,6 @@ msgid "DELIVERED DUTY PAID"
 msgstr "ENTREGADO CON DERECHOS PAGADOS"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
-msgid "DOWN"
-msgstr "ABAJO"
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
 msgstr "Tablero"
@@ -5961,17 +5961,18 @@ msgstr "Distribución de facturas"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__refund_repartition_line_ids
 msgid "Distribution for Refund Invoices"
-msgstr "Distribución para facturas de reembolsos"
+msgstr "Distribución para facturas rectificativas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Distribution for Refunds"
-msgstr "Distribución para reembolsos"
+msgstr "Distribución para facturas rectificativas"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
 msgid "Distribution when the tax is used on a refund"
-msgstr "Distribución cuando el impuesto se utiliza en un reembolso"
+msgstr ""
+"Distribución cuando el impuesto se utiliza en una factura rectificativa"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__invoice_repartition_line_ids
@@ -6016,6 +6017,11 @@ msgstr "Acceso rápido de fórmula de dominio"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Domestic country of your accounting"
 msgstr "País de origen de su contabilidad"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
+msgid "Down"
+msgstr "Abajo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__checkbox_download
@@ -7318,11 +7324,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
 msgid "Growth Comparison"
 msgstr "Comparación de crecimiento"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
-msgid "HALF-UP"
-msgstr "A LA MITAD MÁS CERCANA"
 
 #. module: account
 #: model:ir.model,name:account.model_ir_http
@@ -9861,6 +9862,11 @@ msgstr ""
 "números"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
+msgid "Nearest"
+msgstr "Más cercano"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
 #: model:ir.model.fields,field_description:account.field_account_move__need_cancel_request
 #: model:ir.model.fields,field_description:account.field_account_payment__need_cancel_request
@@ -10426,7 +10432,7 @@ msgid ""
 "settings.This adds a button to import from the Accounting dashboard."
 msgstr ""
 "Una vez instalado, configure 'Fuentes bancarias' para 'Importar archivo' en "
-"la configuración de la cuenta bancaria. Esto agrega un botón para importar "
+"la configuración de la cuenta bancaria. Esto añade un botón para importar "
 "desde el tablero de Contabilidad."
 
 #. module: account
@@ -10946,7 +10952,7 @@ msgstr "Pagado parcialmente"
 #: model_terms:ir.ui.view,arch_db:account.view_account_various_payment_tree
 #, python-format
 msgid "Partner"
-msgstr "Contacto"
+msgstr "Empresa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
@@ -12038,13 +12044,13 @@ msgstr "Reembolso creado"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_in_invoice_refund_tree
 msgid "Refund Currency"
-msgstr "Moneda del rembolso"
+msgstr "Moneda del reembolso"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_in_refund_type
 #: model:ir.ui.menu,name:account.menu_action_move_in_refund_type
 msgid "Refunds"
-msgstr "Reembolsos"
+msgstr "Facturas rectificativas"
 
 #. module: account
 #. odoo-python
@@ -12605,6 +12611,7 @@ msgstr "Guarde esta página y luego regrese para configurar la función."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "Escanéeme con su aplicación bancaria."
@@ -14133,6 +14140,8 @@ msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
 msgstr ""
+"La disponibilidad está configurada con “Coincide con el país\", pero el "
+"campo País no está configurado."
 
 #. module: account
 #. odoo-python
@@ -14140,7 +14149,8 @@ msgstr ""
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
 msgstr ""
-"Se requiere la fecha de facturación/reembolso para validar este documento."
+"Se requiere la fecha de facturación/rectificativa para validar este "
+"documento."
 
 #. module: account
 #. odoo-python
@@ -14213,12 +14223,12 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
-"The Syscohada chart template shouldn't be selected directly. Instead, you "
-"should directly select the chart template related to your country."
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
 msgstr ""
-"La plantilla del plan contable de Syscohada no debe seleccionarse "
-"directamente. En su lugar, debe seleccionar directamente la plantilla del "
-"plan contable de su país."
+"La plantilla del plan contable %s no debe seleccionarse directamente. En su "
+"lugar, debe seleccionar directamente la plantilla del plan contable de su "
+"país."
 
 #. module: account
 #. odoo-python
@@ -15111,8 +15121,8 @@ msgid ""
 "The sequences of this journal are different for Invoices and Refunds but you"
 " selected some of both types."
 msgstr ""
-"Las secuencias de este diario son diferentes para facturas y reembolsos, "
-"pero seleccionó algunas de ambos tipos."
+"Las secuencias de este diario son diferentes para facturas y rectificativas,"
+" pero seleccionó algunas de ambos tipos."
 
 #. module: account
 #. odoo-python
@@ -15282,7 +15292,7 @@ msgid ""
 "There was an error when trying to add the banner to the original PDF.\n"
 "Please make sure the source file is valid."
 msgstr ""
-"Ocurrió un error al tratar de agregar el banner al PDF original.\n"
+"Ocurrió un error al tratar de añadir el banner al PDF original.\n"
 "Asegúrese de que el archivo original sea válido."
 
 #. module: account
@@ -16026,11 +16036,6 @@ msgid "Type of the exception activity on record."
 msgstr "Tipo de actividad de excepción en el registro."
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
-msgid "UP"
-msgstr "ARRIBA"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
@@ -16207,6 +16212,11 @@ msgstr "Número de pagos no confiables"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "UoM"
 msgstr "UdM"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
+msgid "Up"
+msgstr "Arriba"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17026,6 +17036,14 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
+#, python-format
+msgid "You can't create payments for entries belonging to different branches."
+msgstr ""
+"No puede crear pagos para asientos que pertenezcan a diferentes sucursales."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
@@ -17149,7 +17167,7 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s."
 msgstr ""
-"No puede agregar o modificar asientos anteriores a o incluyendo la fecha de "
+"No puede añadir o modificar asientos anteriores a o incluyendo la fecha de "
 "bloqueo %s."
 
 #. module: account
@@ -17160,8 +17178,8 @@ msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
 "Check the company settings or ask someone with the 'Adviser' role"
 msgstr ""
-"No puede agregar / modificar asientos anteriores y hasta la fecha de bloqueo"
-" %s. Comprueba la configuración de la compañía o pregunta a alguien con el "
+"No puede añadir / modificar asientos anteriores y hasta la fecha de bloqueo "
+"%s. Comprueba la configuración de la compañía o pregunta a alguien con el "
 "rol 'Asesor'"
 
 #. module: account
@@ -17690,7 +17708,7 @@ msgstr "Debe especificar la cuenta de ganancias (dependiente de la compañía)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."
-msgstr "Debe agregar una línea antes de validar."
+msgstr "Debe añadir una línea antes de validar."
 
 #. module: account
 #. odoo-python

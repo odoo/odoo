@@ -6,11 +6,11 @@
 # sharkutz <sharkutz4life@yahoo.com>, 2024
 # Dragos Vasile, 2024
 # Vacaru Adrian <adrian.vacaru@gmail.com>, 2024
+# Claudia Baisan, 2024
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2024
 # Fenyedi Levente, 2024
 # Emanuel Bruda, 2024
 # Hongu Cosmin <cosmin513@gmail.com>, 2024
-# Claudia Baisan, 2024
 # Cozmin Candea <office@terrabit.ro>, 2024
 # Martin Trigaux, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
@@ -22,6 +22,7 @@
 # Wil Odoo, 2024
 # Alin Miclea, 2024
 # Lyall Kindmurr, 2024
+# Larisa Pop, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2024
 # 
 msgid ""
@@ -9150,6 +9151,22 @@ msgstr ""
 "Source: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_bh
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Bahrain in Odoo.\n"
+"===========================================================================\n"
+"Bahrain accounting basic charts and localization.\n"
+"\n"
+"Activates:\n"
+" - Chart of Accounts\n"
+" - Taxes\n"
+" - Tax reports\n"
+" - Fiscal Positions\n"
+" - States\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_be
 msgid ""
 "\n"
@@ -9281,6 +9298,19 @@ msgstr ""
 "Agrega una nomenclatura contable para Honduras. También incluye impuestos y la\n"
 "moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes\n"
 "and the Lempira currency."
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_lb_account
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Lebanon in Odoo.\n"
+"==============================================================================\n"
+"Lebanon accounting basic charts,taxes and localization.\n"
+"Activates:\n"
+"* Chart of Accounts\n"
+"* Taxes\n"
+"* Fiscal Positions\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
@@ -10538,6 +10568,32 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa_direct_debit
+msgid ""
+"\n"
+"This module enables the generation of SEPA Direct Debit (SDD)-compliant XML files (consistent\n"
+"with pain.008.001.02 specification) to send to your bank in order to\n"
+"collect a set of payments.\n"
+"\n"
+"To be eligible for this payment method, a customer must have first\n"
+"returned a mandate to the company, giving their consent to use direct debit.\n"
+"This consent must have been encoded as a 'customer mandate' in Odoo.\n"
+"\n"
+"You also need to meet the following requirements in order to properly\n"
+"generate an SDD file:\n"
+"- Your company account must be set to a valid IBAN number\n"
+"- Your company must have been given a creditor identifier (this can be done in Settings - General Settings - Accounting section)\n"
+"- Your company must have defined a journal to receive SDD payments (again, in 'settings' of accounting module)\n"
+"- Every customer for whom you generate a payment must have a valid IBAN account number.\n"
+"\n"
+"Odoo will let you know if any of these requirements are not satisfied.\n"
+"\n"
+"To register a payment for open invoices, you can use the dedicated\n"
+"'SEPA Direct Debit' option by selecting a bank account in the 'Register\n"
+"Payment' wizard. An error message will appear if no valid mandate is\n"
+"available for generating a payment on the selected invoice.\n"
+msgstr ""
+
+#. module: base
 msgid ""
 "\n"
 "This module enables the generation of SEPA Direct Debit (SDD)-compliant XML files (consistent\n"
@@ -13007,7 +13063,7 @@ msgstr "<span>Obiect:</span>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "<span>Other address for the company (e.g. subsidiary, ...)</span>"
-msgstr "<span>Other address for the company (e.g. subsidiary, ...)</span>"
+msgstr "<span>O altă adresă pentru companie (de exemplu, filială, ...)</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -13015,8 +13071,8 @@ msgid ""
 "<span>Preferred address for all deliveries. Selected by default when you "
 "deliver an order that belongs to this company.</span>"
 msgstr ""
-"<span>Preferred address for all deliveries. Selected by default when you "
-"deliver an order that belongs to this company.</span>"
+"<span>Adresa preferată pentru toate livrările. Selectă implicit atunci când "
+"livrați o comandă care aparține acestei companii.</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -13024,8 +13080,8 @@ msgid ""
 "<span>Preferred address for all invoices. Selected by default when you "
 "invoice an order that belongs to this company.</span>"
 msgstr ""
-"<span>Preferred address for all invoices. Selected by default when you "
-"invoice an order that belongs to this company.</span>"
+"<span>Adresă preferată pentru toate facturile. Selectă implicit atunci când "
+"facturați o comandă care aparține acestei companii.</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -15892,6 +15948,11 @@ msgid "Bahamas"
 msgstr "Bahamas"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_bh
+msgid "Bahrain - Accounting"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.bh
 msgid "Bahrain"
 msgstr "Bahrain"
@@ -16378,7 +16439,7 @@ msgid ""
 "Blame the following rules:\n"
 "%s"
 msgstr ""
-"Blame the following rules:\n"
+"Cauza? Următoarele reguli:\n"
 "%s"
 
 #. module: base
@@ -16708,7 +16769,9 @@ msgstr "Bridge module for project_enterprise and hr_contract"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ro_efactura
 msgid "Bridge module for sending Romanian E-Factura to the SPV"
-msgstr "Bridge module for sending Romanian E-Factura to the SPV"
+msgstr ""
+"Modul de legătură pentru trimiterea E-Facturii românești către SPV (Spațiul "
+"Privat Virtual)."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_product_configurator
@@ -21221,7 +21284,7 @@ msgstr "Features for Italian eCommerce eInvoicing"
 #: model:ir.model.fields,field_description:base.field_res_bank__state
 #: model:ir.model.fields,field_description:base.field_res_company__state_id
 msgid "Fed. State"
-msgstr "Stat federal"
+msgstr "Județe"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country_state
@@ -21237,8 +21300,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_fedex
-msgid "Fedex Shipping"
-msgstr "Fedex Shipping"
+msgid "Fedex Shipping (Legacy)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_fr_fec
@@ -23623,8 +23686,8 @@ msgid ""
 "If you really, really need access, perhaps you can win over your friendly "
 "administrator with a batch of freshly baked cookies."
 msgstr ""
-"If you really, really need access, perhaps you can win over your friendly "
-"administrator with a batch of freshly baked cookies."
+"Dacă ai nevoie urgentă de acces, poate reușești să convingi administratorul "
+"prietenos cu o tavă de prăjituri proaspăt coapte. 🍪"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_access__active
@@ -25422,6 +25485,11 @@ msgstr "Aflați mai multe"
 #: model:res.country,name:base.lb
 msgid "Lebanon"
 msgstr "Liban"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_lb_account
+msgid "Lebanon - Accounting"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__ledger
@@ -27905,8 +27973,8 @@ msgid ""
 "Note: this might be a multi-company issue. Switching company may help - in "
 "Odoo, not in real life!"
 msgstr ""
-"Note: this might be a multi-company issue. Switching company may help - in "
-"Odoo, not in real life!"
+"Notă: aceasta ar putea fi o problemă de multi-companie. Schimbarea companiei"
+" ar putea ajuta - în Odoo, nu în viața reală!"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
@@ -34289,8 +34357,11 @@ msgstr "Trimiteți expedierile prin DHL și urmăriți-le online"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex
-msgid "Send your shippings through Fedex and track them online"
-msgstr "Trimiteți expedierile prin Fedex și urmăriți-le online"
+msgid ""
+"This is the legacy integration with FedEx that is no longer supported.Please"
+" install the new \"Fedex Shipping\" module and uninstall this one as soon as"
+" possible. This integration will stop working in 2024"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_ups_rest
@@ -35354,7 +35425,7 @@ msgstr "Începe configurare"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "Stare"
+msgstr "Județ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
@@ -35379,7 +35450,7 @@ msgstr "Palestina"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_ids
 msgid "States"
-msgstr "Stări"
+msgstr "Județe"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_update__state
@@ -36251,6 +36322,15 @@ msgstr "The \"App Switcher\" action cannot be selected as home action."
 #, python-format
 msgid "The %s of a subsidiary must be the same as it's root company."
 msgstr "The %s of a subsidiary must be the same as it's root company."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"The action \"%s\" cannot be set as the home action because it requires a "
+"record to be selected beforehand."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__code
@@ -38364,9 +38444,9 @@ msgid ""
 "\n"
 "Sorry, %s doesn't have '%s' access to:"
 msgstr ""
-"Uh-oh! Looks like you have stumbled upon some top-secret records.\n"
+"Ups! Se pare că ai dat peste niște înregistrări strict confidențiale.\n"
 "\n"
-"Sorry, %s doesn't have '%s' access to:"
+"Ne pare rău, %s nu are acces de '%s' la:"
 
 #. module: base
 #: model:res.country,name:base.ua

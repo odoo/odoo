@@ -22,9 +22,9 @@
 # Tanguy Queguineur, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Larissa Manderfeld, 2024
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # Lasse L, 2024
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1654,6 +1654,17 @@ msgstr "Det finns länkade flyttningar"
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
 msgstr "Ändra produktantal"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"Det är inte tillåtet att ändra parti- eller serienummer för flyttrader med "
+"olika produkter."
 
 #. module: stock
 #. odoo-python
@@ -5520,7 +5531,7 @@ msgstr "Inga operationer hittades. Låt oss skapa en överföring!"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "No product found to generate Serials/Lots for."
-msgstr ""
+msgstr "Ingen produkt hittades för att generera Serials/Lots för."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -6105,7 +6116,7 @@ msgstr "Paket A"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package B"
-msgstr ""
+msgstr "Paket B"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
@@ -8898,6 +8909,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr "Lot/Serienummer (%s) är kopplat till en annan produkt."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
@@ -10656,7 +10674,7 @@ msgstr "Du kan inte ändra typen av en produkt som redan har använts."
 #, python-format
 msgid ""
 "You can not create a snoozed orderpoint that is not manually triggered."
-msgstr ""
+msgstr "Du kan inte skapa en snoozed orderpunkt som inte utlöses manuellt."
 
 #. module: stock
 #. odoo-python
@@ -10727,6 +10745,8 @@ msgid ""
 "You can only snooze manual orderpoints. You should rather archive 'auto-"
 "trigger' orderpoints if you do not want them to be triggered."
 msgstr ""
+"Du kan bara snooza manuella orderpunkter. Du bör hellre arkivera \"auto-"
+"trigger\" orderpunkter om du inte vill att de ska triggas."
 
 #. module: stock
 #. odoo-python
@@ -10845,6 +10865,16 @@ msgid ""
 "package through this view. Try adding them to a batch picking and pack it "
 "there."
 msgstr ""
+"Du kan inte direkt packa kvantiteter från olika överföringar till samma "
+"paket via den här vyn. Försök att lägga till dem i en batchplockning och "
+"packa dem där."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr "Du kan inte duplicera aktiequanter."
 
 #. module: stock
 #. odoo-python

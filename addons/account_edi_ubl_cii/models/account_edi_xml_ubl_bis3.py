@@ -60,15 +60,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             vals.pop('registration_name', None)
             vals.pop('registration_address_vals', None)
 
-            # Some extra european countries use Bis 3 but do not prepend their VAT with the country code (i.e.
-            # Australia). Allow them to use Bis 3 without raising BR-CO-09.
-            if (
-                partner.country_id
-                and partner.country_id not in self.env.ref('base.europe').country_ids
-                and not partner.vat[:2].isalpha()
-            ):
-                vals['company_id'] = partner.country_id.code + partner.vat
-
         # sources:
         #  https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_applying_foretaksregisteret
         #  https://docs.peppol.eu/poacc/billing/3.0/bis/#national_rules (NO-R-002 (warning))
@@ -201,7 +192,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         vals_list = super()._get_tax_category_list(invoice, taxes)
 
         for vals in vals_list:
-            vals.pop('name')
+            vals.pop('name', None)
 
         return vals_list
 
@@ -222,6 +213,8 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         line_item_vals = super()._get_invoice_line_item_vals(line, taxes_vals)
 
         for val in line_item_vals['classified_tax_category_vals']:
+            # [UBL-CR-600] A UBL invoice should not include the InvoiceLine Item ClassifiedTaxCategory TaxExemptionReasonCode
+            val.pop('tax_exemption_reason_code', None)
             # [UBL-CR-601] TaxExemptionReason must not appear in InvoiceLine Item ClassifiedTaxCategory
             # [BR-E-10] TaxExemptionReason must only appear in TaxTotal TaxSubtotal TaxCategory
             val.pop('tax_exemption_reason', None)

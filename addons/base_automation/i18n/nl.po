@@ -5,6 +5,7 @@
 # Translators:
 # Jolien De Paepe, 2023
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
@@ -142,9 +143,9 @@ msgid ""
 "                                    <span invisible=\"trigger != 'on_time_updated'\">after last update</span>\n"
 "                                    <span invisible=\"trigger != 'on_time'\">after</span>"
 msgstr ""
-"na <span invisible=\"trigger != 'on_time_created'\">aanmaak</span> na <span invisible=\"trigger != 'on_time_updated'\">laatste update na</span><span invisible=\"trigger != 'on_time'\"></span>\n"
-"                                    \n"
-"                                    "
+"<span invisible=\"trigger != 'on_time_created'\">na aanmaken</span>\n"
+"                                    <span invisible=\"trigger != 'on_time_updated'\">na laatste update</span>\n"
+"                                    <span invisible=\"trigger != 'on_time'\">na</span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -363,7 +364,7 @@ msgstr "Dagen"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Delay"
-msgstr "Werkuren"
+msgstr "Vertraging"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_range
@@ -533,6 +534,8 @@ msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record. Not checked on record creation."
 msgstr ""
+"Indien aanwezig, moet deze conditie voldaan zijn voor het bijwerken van het "
+"record. Niet aangevinkt bij het aanmaken van records."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form

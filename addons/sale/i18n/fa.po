@@ -125,7 +125,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "2023-12-31"
-msgstr ""
+msgstr "۲۰۲۳-۱۲-۳۱"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -937,15 +937,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"به شما امکان می دهد سند را با مشتریان خود در یک فروش به اشتراک بگذارید.\n"
-"اگر نمی‌خواهید این سند را با مشتری فروش به اشتراک بگذارید، آن را خالی بگذارید.\n"
-"پیش فاکتور: سند در هر زمان برای مشتریان ارسال می شود و در دسترس مشتریان قرار می گیرد.\n"
-"به عنوان مثال، این گزینه می تواند برای به اشتراک گذاری فایل های توضیحات محصول مفید باشد.\n"
-"سفارش تایید شده: سند برای مشتریان ارسال می شود و در دسترس مشتریان قرار می گیرد.\n"
-"به عنوان مثال، این گزینه می تواند برای به اشتراک گذاشتن کتابچه راهنمای کاربر یا محتوای دیجیتالی خریداری شده در تجارت الکترونیک مفید باشد.\n"
-"پیش فاکتور داخلی: سند در pdf پیش فاکتور بین صفحات سرصفحه و جدول پیش فاکتور قرار می گیرد. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -2770,7 +2764,7 @@ msgstr "فیلدهای الزامی در سطر سفارش فروش وجود ن�
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Mitchell Admin"
-msgstr ""
+msgstr "میچل ادمین"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
@@ -3980,7 +3974,6 @@ msgstr "سفارش (های) فروش"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4768,6 +4761,16 @@ msgid "There are existing"
 msgstr "موجود هستند"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "This default value is applied to any new product created. This can be "
@@ -5329,6 +5332,7 @@ msgstr ""
 "                 خواه یک محصول قابل ذخیره سازی، یک کالای مصرفی یا یک سرویس باشد."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "سفارشات شما"

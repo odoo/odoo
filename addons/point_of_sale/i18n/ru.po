@@ -18,11 +18,12 @@
 # Dinar <gabbasov@it-projects.info>, 2023
 # Oleg Kuryan <oleg@ventor.tech>, 2024
 # Сергей Шебанин <sergey@shebanin.ru>, 2024
+# Wil Odoo, 2024
 # Collex100, 2024
 # Nadia Martynova, 2024
 # Martin Trigaux, 2024
 # ILMIR <karamov@it-projects.info>, 2024
-# Wil Odoo, 2024
+# Ilya Rozhkov, 2024
 # 
 msgid ""
 msgstr ""
@@ -30,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Ilya Rozhkov, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3979,11 +3980,6 @@ msgid "Newspaper Rack"
 msgstr "Стойка для газет"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Следующее событие календаря активности"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Следующий срок мероприятия"
@@ -4213,13 +4209,6 @@ msgstr "Количество транзакций:"
 #, python-format
 msgid "OK"
 msgstr "OK"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-#, python-format
-msgid "Odoo Point of Sale"
-msgstr "Odoo Точка продаж"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.office_combo_product_template
@@ -5102,13 +5091,6 @@ msgid "PoS Interface"
 msgstr "Интерфейс PoS"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid "PoS Order"
-msgstr "Заказ PoS"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__pos_order_line_id
 msgid "PoS Order Line"
 msgstr "Линия заказов PoS"
@@ -5423,6 +5405,13 @@ msgstr "Опубликовано"
 #, python-format
 msgid "Powered by"
 msgstr "Работает на"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#, python-format
+msgid "Powered by Odoo"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
@@ -5842,11 +5831,6 @@ msgstr "ПРИЧИНА"
 #, python-format
 msgid "REFUNDED:"
 msgstr "ВОЗВРАЩЕНО:"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
-msgid "Ratings"
-msgstr "Рейтинги"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7697,6 +7681,14 @@ msgstr ""
 #: code:addons/point_of_sale/models/account_journal.py:0
 #, python-format
 msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr "Этот журнал связан с методом оплаты. Вы не можете его архивировать"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
 msgstr "Этот журнал связан с методом оплаты. Вы не можете изменить его тип"
 
@@ -7871,11 +7863,8 @@ msgstr "Взвесить на весах"
 msgid ""
 "To delete a product, make sure all point of sale sessions are closed.\n"
 "\n"
-"Deleting a product available in a session would be like attempting to snatch ahamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
+"Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
 msgstr ""
-"Чтобы удалить продукт, убедитесь, что все сеансы продаж закрыты.\n"
-"\n"
-"Удаление продукта, доступного в сеансе, подобно попытке выхватить гамбургер из рук покупателя во время откусывания; начнется хаос, когда кетчуп и майонез разлетятся повсюду!"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice

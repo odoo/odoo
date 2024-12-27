@@ -119,7 +119,7 @@ msgstr "'Forpakning - %s' % (object.name)"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "(e.g: product description, ebook, legal notice, ...)."
-msgstr ""
+msgstr "(f.eks.: produktbeskrivelse, e-bok, juridisk informasjon, …)."
 
 #. module: product
 #. odoo-python
@@ -213,6 +213,12 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                      Ekstra priser\n"
+"                                     </span>\n"
+"                                      <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                          Ekstra pris  \n"
+"                                       </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -227,7 +233,7 @@ msgstr "<span class=\"o_stat_text\">Relaterte Produkter</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">Arkivert</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -804,7 +810,7 @@ msgstr "Konfigurer"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Configure tags"
-msgstr ""
+msgstr "Konfigurer tagger"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
@@ -1195,7 +1201,7 @@ msgstr "Last ned"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Download examples"
-msgstr ""
+msgstr "Last ned eksempler"
 
 #. module: product
 #: model:product.template,name:product.product_product_27_product_template
@@ -1280,7 +1286,7 @@ msgstr "Eksplisitt regelnavn for denne prislistelinjen."
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__extra_html
 msgid "Extra Content"
-msgstr ""
+msgstr "Tilleggsinnhold"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2362,7 +2368,7 @@ msgstr "Produktkategori"
 #. module: product
 #: model:ir.model,name:product.model_product_document
 msgid "Product Document"
-msgstr ""
+msgstr "Produkt dokument"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_dymo
@@ -2493,7 +2499,7 @@ msgstr "Attributtverdi for Produktmal"
 #: model:ir.model.fields,field_description:product.field_product_product__product_tag_ids
 #: model:ir.model.fields,field_description:product.field_product_template__product_tag_ids
 msgid "Product Template Tags"
-msgstr ""
+msgstr "Produktmal tag"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_template_ids
@@ -2641,7 +2647,7 @@ msgstr "Beskrivelse på innkjøp"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
 #: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
 msgid "Purchase UoM"
-msgstr ""
+msgstr "Innkjøps enhet"
 
 #. module: product
 #. odoo-javascript
@@ -2951,7 +2957,7 @@ msgstr "Leverandørprisliste"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Tag finnes fra før"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3279,12 +3285,12 @@ msgstr "Last opp"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Upload files to your product"
-msgstr ""
+msgstr "Last opp filer til produktet"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Upsell & Cross-Sell"
-msgstr ""
+msgstr "Mersalg og kryssalg"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__url
@@ -3299,6 +3305,7 @@ msgid ""
 "Use this feature to store any files you would like to share with your "
 "customers"
 msgstr ""
+"Bruk denne funksjonen til å lagre filer du ønsker å dele med kundene dine."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -3770,6 +3777,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
+"Du må definere et produkt for alt du selger eller kjøper, \n"
+"                  enten det er et lagringsprodukt, et forbruksprodukt eller en tjeneste."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action

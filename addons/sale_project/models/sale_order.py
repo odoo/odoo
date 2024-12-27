@@ -73,7 +73,7 @@ class SaleOrder(models.Model):
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
         tasks_per_so = self.env['project.task']._read_group(
-            domain=['&', ('project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids)],
+            domain=self._tasks_ids_domain(),
             groupby=['sale_order_id'],
             aggregates=['id:recordset', '__count']
         )
@@ -171,8 +171,11 @@ class SaleOrder(models.Model):
             'default_project_id': default_project_id,
             'default_user_ids': [self.env.uid],
         }
-        action['domain'] = AND([ast.literal_eval(action['domain']), [('id', 'in', self.tasks_ids.ids)]])
+        action['domain'] = AND([ast.literal_eval(action['domain']), self._tasks_ids_domain()])
         return action
+
+    def _tasks_ids_domain(self):
+        return ['&', ('project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids)]
 
     def action_create_project(self):
         self.ensure_one()

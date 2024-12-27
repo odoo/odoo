@@ -21,14 +21,14 @@
 # Robin Calvin, 2023
 # Simon S, 2023
 # Wil Odoo, 2024
+# Claes-Johan Dahlin, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Martin Trigaux, 2024
 # Kim Asplund <kim.asplund@gmail.com>, 2024
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
 # Lasse L, 2024
 # Larissa Manderfeld, 2024
-# Claes-Johan Dahlin, 2024
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
@@ -189,7 +189,7 @@ msgstr ""
 "krypterad SSL/TLS-anslutning.\n"
 "Detta kan användas för att enkelt skapa e-postbaserade arbetsflöden för många e-postaktiverade Odoo-dokument, t.ex:\n"
 "----------------------------------------------------------------------------------------------------------\n"
-"    * CRM Leads/Opportunities\n"
+"    * CRM kundämne\n"
 "    * CRM-anspråk\n"
 "    * Projektfrågor\n"
 "    * Projektuppgifter\n"
@@ -711,6 +711,9 @@ msgid ""
 "* Submit e-invoices to the NAV (Hungarian Tax Agency) as part of the invoicing process.\n"
 "* Perform the Tax Audit Export (Adóhatósági Ellenőrzési Adatszolgáltatás) in NAV 3.0 format.\n"
 msgstr ""
+"\n"
+"* Skicka e-fakturor till NAV (ungerska skatteverket) som en del av faktureringsprocessen.\n"
+"* Utföra skatterevisionsexport (Adóhatósági Ellenőrzési Adatszolgáltatás) i NAV 3.0-format.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid
@@ -1908,6 +1911,10 @@ msgid ""
 "================================================\n"
 "Auto installed for users in Australia, India and New Zealand as it is customary there.\n"
 msgstr ""
+"\n"
+"Lägg till kundfakturor i bokföringsmodulen\n"
+"================================================\n"
+"Installeras automatiskt för användare i Australien, Indien och Nya Zeeland eftersom det är brukligt där.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account_enterprise
@@ -2081,8 +2088,8 @@ msgid ""
 "This module includes contact phone and mobile numbers validation."
 msgstr ""
 "\n"
-"Lägg till funktioner i dina webbplatsformulär för att generera leads eller möjligheter i CRM-appen.\n"
-"Formulären måste anpassas i *Website Builder* för att generera leads.\n"
+"Lägg till funktioner i dina webbplatsformulär för att generera kundämnen eller affärsmöjligheter i CRM-appen.\n"
+"Formulären måste anpassas i *Website Builder* för att generera kundämnen.\n"
 "\n"
 "Den här modulen omfattar validering av kontakttelefoner och mobilnummer."
 
@@ -2110,6 +2117,9 @@ msgid ""
 "Add new address fields necessary to respect the new 2024-07-01 French law\n"
 "(https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000046383394) to invoices.\n"
 msgstr ""
+"\n"
+"Lägg till nya adressfält som är nödvändiga för att respektera den nya franska lagen 2024-07-01\n"
+"(https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000046383394) på fakturor.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase_stock
@@ -2408,7 +2418,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Tillåt att generera leads från schemalagda möten via din webbplats\n"
+"Tillåt att generera kundämnen från schemalagda möten via din webbplats\n"
 "-----------------------------------------------------------------------\n"
 "\n"
 
@@ -2648,7 +2658,7 @@ msgstr ""
 "\n"
 "* Rapport om kostnadsstrukturen\n"
 "\n"
-"Gör det också möjligt att beräkna kostnaden för produkten utifrån dess BoM, med hjälp av kostnaderna för dess komponenter och produktionsgrupp.\n"
+"Gör det också möjligt att beräkna kostnaden för produkten utifrån dess  Materialförteckning, med hjälp av kostnaderna för dess komponenter och produktionsgrupp.\n"
 "En knapp läggs till på själva produkten, men också en åtgärd i listvyn över produkterna.\n"
 "Om den automatiska lagervärderingen är aktiv skapas de nödvändiga bokföringsposterna.\n"
 "\n"
@@ -3337,6 +3347,10 @@ msgid ""
 "========================\n"
 "Provides electronic invoicing for services for Brazil through Avatax.\n"
 msgstr ""
+"\n"
+"Brasiliansk redovisning EDI\n"
+"========================\n"
+"Erbjuder elektronisk fakturering av tjänster för Brasilien genom Avatax.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br_edi_sale
@@ -3532,6 +3546,10 @@ msgid ""
 "- Exported goods (COMEX).\n"
 "- Extended address fields.\n"
 msgstr ""
+"\n"
+"Bridge-modul för att utöka version 3.1 av leveransguiden (Complemento XML Carta de Porte).\n"
+"- Exporterade varor (COMEX).\n"
+"- Utökade adressfält.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_stock_extended
@@ -4474,6 +4492,8 @@ msgid ""
 "\n"
 "E-invoice implementation for the Kingdom of Saudi Arabia (PoS)\n"
 msgstr ""
+"\n"
+"Implementering av e-faktura i Saudiarabien (PoS)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_slides
@@ -4859,8 +4879,8 @@ msgid ""
 "country and detailed information like pages browsed by the lead (through a link to website visitor).\n"
 msgstr ""
 "\n"
-"Berika leads som skapas automatiskt genom ett möte med insamlad information om webbplatsbesökare, t.ex. språk,\n"
-"land och detaljerad information som sidor som leadet har bläddrat igenom (via en länk till webbplatsbesökaren).\n"
+"Berika kundämne som skapas automatiskt genom ett möte med insamlad information om webbplatsbesökare, t.ex. språk,\n"
+"land och detaljerad information som sidor som kundämnet har bläddrat igenom (via en länk till webbplatsbesökaren).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_digest_enterprise
@@ -5727,7 +5747,7 @@ msgstr ""
 "\n"
 "Funktioner:\n"
 "\n"
-"    - Bearbeta ärenden genom olika steg för att lösa dem.\n"
+"    - Bearbeta ärenden genom olika etapper för att lösa dem.\n"
 "    - Lägg till prioriteringar, typer, beskrivningar och taggar för att definiera dina ärenden.\n"
 "    - Använd chatter för att kommunicera ytterligare information och ping medarbetare på ärenden.\n"
 "    - Njut av en anpassad instrumentpanel och en lättanvänd kanbanvy för att hantera dina ärenden.\n"
@@ -5774,6 +5794,8 @@ msgid ""
 "\n"
 "Implements Pix QR codes for Brazil.\n"
 msgstr ""
+"\n"
+"Implementerar Pix QR-koder för Brasilien.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -6353,7 +6375,7 @@ msgstr ""
 "Underhåll i MRP\n"
 "==================\n"
 "* Förebyggande vs avhjälpande underhåll\n"
-"* Definiera olika steg för dina underhållsbehov\n"
+"* Definiera olika etapper för dina underhållsbehov\n"
 "* Planera underhållsbehov (även återkommande förebyggande)\n"
 "* Utrustning relaterad till arbetscentraler\n"
 "* MTBF, MTTR, ...\n"
@@ -9028,6 +9050,8 @@ msgid ""
 "\n"
 "This is a bridge module to install the customer statements module by default with the UK localization\n"
 msgstr ""
+"\n"
+"Detta är en bryggmodul för att installera modulen för kundutdrag som standard med den brittiska lokaliseringen\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar
@@ -9156,6 +9180,22 @@ msgstr ""
 "Detta är basmodulen för den serbiska lokaliseringen. Den hanterar kontoplan och skatter.\n"
 "Denna modul är baserad på det officiella dokumentet \"Pravilnik o kontnom rámci i sadržini računa u kontnom rámci za privredna društvo, zadruge i preduzetnike (\"Slov. glasnik RS\", br. 89/2020)\".\n"
 "Källa: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_bh
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Bahrain in Odoo.\n"
+"===========================================================================\n"
+"Bahrain accounting basic charts and localization.\n"
+"\n"
+"Activates:\n"
+" - Chart of Accounts\n"
+" - Taxes\n"
+" - Tax reports\n"
+" - Fiscal Positions\n"
+" - States\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be
@@ -9290,6 +9330,27 @@ msgstr ""
 "Agrega una nomenclatura contable para Honduras. También incluye impuestos y la\n"
 "moneda Lempira. -- Lägger till en bokföringsskala för Honduras. Det omfattar även skatter\n"
 "och valutan Lempira."
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_lb_account
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Lebanon in Odoo.\n"
+"==============================================================================\n"
+"Lebanon accounting basic charts,taxes and localization.\n"
+"Activates:\n"
+"* Chart of Accounts\n"
+"* Taxes\n"
+"* Fiscal Positions\n"
+msgstr ""
+"\n"
+"Detta är basmodulen för att hantera redovisningsdiagrammet för Libanon i Odoo.\n"
+"================================================== =============================\n"
+"Libanon redovisning grundläggande diagram, skatter och lokalisering.\n"
+"Aktiverar:\n"
+"* Kontoplan\n"
+"* Skatter\n"
+"* Finanspolitiska positioner\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
@@ -10166,18 +10227,18 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Med denna modul kan du publicera dina återförsäljare/partners på din webbplats och vidarebefordra inkommande leads/opportunities till dem.\n"
+"Med denna modul kan du publicera dina återförsäljare/partners på din webbplats och vidarebefordra inkommande kundämnet / affärsmöjligheten till dem.\n"
 "\n"
 "\n"
 "**Publicera en partner**\n"
 "\n"
 "För att publicera en partner anger du en *Nivå* i deras kontaktformulär (i avsnittet Partnertilldelning) och klickar på knappen *Publicera*.\n"
 "\n"
-"**Framåtriktade leads**\n"
+"**Framåtriktade kundämnen**\n"
 "\n"
-"Vidarebefordra leads kan göras för en eller flera leads åt gången. Åtgärden är tillgänglig i avsnittet *Tilldelad partner* i formulärvyn för lead/opportunity och i menyn *Åtgärd* i listvyn.\n"
+"Vidarebefordra kundämne kan göras för en eller flera kundämnen åt gången. Åtgärden är tillgänglig i avsnittet *Tilldelad partner* i formulärvyn för kundämne/affärsmöjlighet och i menyn *Åtgärd* i listvyn.\n"
 "\n"
-"Den automatiska tilldelningen beräknas utifrån vikten av partnernivåer och geolokalisering. Partners får leads som finns runt omkring dem.\n"
+"Den automatiska tilldelningen beräknas utifrån vikten av partnernivåer och geolokalisering. Partners får kundämnen som finns runt omkring dem.\n"
 "\n"
 
 #. module: base
@@ -10286,8 +10347,8 @@ msgstr ""
 "Med den här modulen kan du hantera dina inköpsavtal.\n"
 "===========================================================\n"
 "\n"
-"Hantera anbudsinfordringar och generella beställningar. Anbudsinfordringar används för att få\n"
-"konkurrerande anbud från olika leverantörer och välja ut de bästa. Blankettbeställningar\n"
+"Hantera anbudsinfordringar och avropsorder. Anbudsinfordringar används för att få\n"
+"konkurrerande anbud från olika leverantörer och välja ut de bästa. Avropsorder\n"
 "är avtal som du har med leverantörer för att få tillgång till en förutbestämd prissättning.\n"
 
 #. module: base
@@ -10447,6 +10508,9 @@ msgid ""
 "This module brings the technical requirements for the Ecuadorian regulations.\n"
 "Install this if you are using the Point of Sale app in Ecuador.\n"
 msgstr ""
+"\n"
+"Denna modul innehåller de tekniska kraven för de ecuadorianska bestämmelserna.\n"
+"Installera den här om du använder Point of Sale-appen i Ecuador.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_pos_res_cert
@@ -10544,6 +10608,54 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa_direct_debit
+msgid ""
+"\n"
+"This module enables the generation of SEPA Direct Debit (SDD)-compliant XML files (consistent\n"
+"with pain.008.001.02 specification) to send to your bank in order to\n"
+"collect a set of payments.\n"
+"\n"
+"To be eligible for this payment method, a customer must have first\n"
+"returned a mandate to the company, giving their consent to use direct debit.\n"
+"This consent must have been encoded as a 'customer mandate' in Odoo.\n"
+"\n"
+"You also need to meet the following requirements in order to properly\n"
+"generate an SDD file:\n"
+"- Your company account must be set to a valid IBAN number\n"
+"- Your company must have been given a creditor identifier (this can be done in Settings - General Settings - Accounting section)\n"
+"- Your company must have defined a journal to receive SDD payments (again, in 'settings' of accounting module)\n"
+"- Every customer for whom you generate a payment must have a valid IBAN account number.\n"
+"\n"
+"Odoo will let you know if any of these requirements are not satisfied.\n"
+"\n"
+"To register a payment for open invoices, you can use the dedicated\n"
+"'SEPA Direct Debit' option by selecting a bank account in the 'Register\n"
+"Payment' wizard. An error message will appear if no valid mandate is\n"
+"available for generating a payment on the selected invoice.\n"
+msgstr ""
+"\n"
+"Denna modul möjliggör generering av SEPA Direct Debit (SDD)-kompatibla XML-filer (konsekventa\n"
+"med specifikation 008.001.02) att skicka till din bank för att\n"
+"samla in en uppsättning betalningar.\n"
+"\n"
+"För att vara berättigad till denna betalningsmetod måste en kund ha först\n"
+"returnerade ett fullmakt till företaget och gav sitt samtycke till att använda autogiro.\n"
+"Detta samtycke måste ha kodats som ett \"kundmandat\" i Odoo.\n"
+"\n"
+"Du måste också uppfylla följande krav för att fungera korrekt\n"
+"generera en SDD-fil:\n"
+"- Ditt företagskonto måste vara inställt på ett giltigt IBAN-nummer\n"
+"- Ditt företag måste ha fått en borgenärsidentifiering (detta kan göras i Inställningar - Allmänna inställningar - Bokföring)\n"
+"- Ditt företag måste ha definierat en journal för att ta emot SDD-betalningar (återigen, i \"inställningar\" i redovisningsmodulen)\n"
+"- Varje kund som du genererar en betalning för måste ha ett giltigt IBAN-kontonummer.\n"
+"\n"
+"Odoo kommer att meddela dig om något av dessa krav inte är uppfyllt.\n"
+"\n"
+"För att registrera en betalning för öppna fakturor kan du använda den dedikerade\n"
+"Alternativet 'SEPA Direct Debit' genom att välja ett bankkonto i 'Registrera\n"
+"Betalningsguiden. Ett felmeddelande visas om inget giltigt medgivande är\n"
+"tillgänglig för att generera en betalning på den valda fakturan.\n"
+
+#. module: base
 msgid ""
 "\n"
 "This module enables the generation of SEPA Direct Debit (SDD)-compliant XML files (consistent\n"
@@ -11114,6 +11226,8 @@ msgid ""
 "\n"
 "This module is a bridge to auto-install Audit Trail with Germany\n"
 msgstr ""
+"\n"
+"Denna modul är en brygga för att automatiskt installera Audit Trail med Tyskland\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk_audit_trail
@@ -12553,6 +12667,10 @@ msgid ""
 "                the company.\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                Beskriv något som gjorde dig stolt, ett arbete som var positivt för\n"
+"                företaget.\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12562,6 +12680,10 @@ msgid ""
 "                obstacles?\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                Mötte du nya svårigheter? Konfronterade du dig själv med nya\n"
+"                hinder?\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12571,6 +12693,10 @@ msgid ""
 "                you enjoy the most/the least?\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                Varje jobb har sina starka sidor, vilka är enligt dig de arbetsuppgifter som\n"
+"                du trivs bäst/mindre bra med?\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
@@ -12580,6 +12706,10 @@ msgid ""
 "                overcome their weaknesses?\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                Ur ett chefsperspektiv, hur skulle du som chef kunna hjälpa medarbetaren\n"
+"                att övervinna sina svagheter?\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12589,6 +12719,10 @@ msgid ""
 "                for you to reach your goals and look for the best collaboration.\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                Hur kan företaget hjälpa dig med dina behov och mål för att du ska kunna\n"
+"                kunna nå dina mål och hitta det bästa samarbetet.\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
@@ -12598,6 +12732,10 @@ msgid ""
 "                employee's desire?\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                Hur ser du på medarbetaren i framtiden, följer din vision medarbetarens\n"
+"                medarbetarens önskan?\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
@@ -12607,11 +12745,15 @@ msgid ""
 "                issues.\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                Prestationer som övertygar dig om att medarbetaren har styrkor att\n"
+"                möta jobbets utmaningar.\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "<em>Autonomy</em>"
-msgstr ""
+msgstr "<em>Självständighet</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12621,21 +12763,25 @@ msgid ""
 "                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
 "                </span>"
 msgstr ""
+"<em>Kultur/Beteende:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-1\">\n"
+"                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
+"                </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "<em>Do you need rapid answer to the current situation?</em>"
-msgstr ""
+msgstr "<em>Behöver du ett snabbt svar på den aktuella situationen?</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "<em>Give an example of long-term objective (&gt; 6 months)</em>"
-msgstr ""
+msgstr "<em>Ge ett exempel på ett långsiktigt mål (&gt; 6 månader)</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "<em>Give an example of short-term objective (&lt; 6 months)</em>"
-msgstr ""
+msgstr "<em>Ge ett exempel på ett kortsiktigt mål (&lt; 6 månader)</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12645,6 +12791,10 @@ msgid ""
 "                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
 "                </span>"
 msgstr ""
+"<em>Intern kommunikation:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-2\">\n"
+"                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
+"                </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12654,11 +12804,15 @@ msgid ""
 "                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
 "                </span>"
 msgstr ""
+"<em>Jobbets innehåll:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-3\">\n"
+"                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
+"                </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "<em>Pro-activity</em>"
-msgstr ""
+msgstr "<em>Proaktivitet</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12668,21 +12822,25 @@ msgid ""
 "                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
 "                </span>"
 msgstr ""
+"<em>Ersättning:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-5\">\n"
+"                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
+"                </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "<em>Stress Resistance</em>"
-msgstr ""
+msgstr "<em>Stresstålighet</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "<em>Teamwork</em>"
-msgstr ""
+msgstr "<em>Samarbete</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "<em>Time Management</em>"
-msgstr ""
+msgstr "<em>Tidshantering</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12692,6 +12850,10 @@ msgid ""
 "                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
 "                </span>"
 msgstr ""
+"<em>Arbetsorganisation:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-4\">\n"
+"                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
+"                </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -12890,6 +13052,9 @@ msgid ""
 "                Evaluation\n"
 "            </span>"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Utvärdering\n"
+"            </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
@@ -12898,6 +13063,9 @@ msgid ""
 "                Feedback\n"
 "            </span>"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Feedback\n"
+"            </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
@@ -12906,6 +13074,9 @@ msgid ""
 "                Improvements\n"
 "            </span>"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Förbättringar\n"
+"            </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12914,6 +13085,9 @@ msgid ""
 "                My feelings\n"
 "            </span>"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Mina känslor\n"
+"            </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12922,6 +13096,9 @@ msgid ""
 "                My future\n"
 "            </span>"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Min framtid\n"
+"            </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12930,6 +13107,9 @@ msgid ""
 "                My work\n"
 "            </span>"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Mitt arbete\n"
+"            </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -14458,7 +14638,8 @@ msgstr "Lägger till en simulering av brutto- till nettolöner"
 #. module: base
 #: model:ir.module.module,description:base.module_voip_crm
 msgid "Adds a button to schedule calls from leads in Kanban."
-msgstr "Lägger till en knapp för att schemalägga samtal från leads i Kanban."
+msgstr ""
+"Lägger till en knapp för att schemalägga samtal från kundämnen i Kanban."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_project_stock
@@ -15751,12 +15932,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_edi_sale_services
 msgid "Avatax Brazil Sale for Services"
-msgstr ""
+msgstr "Avatax Brasilien Försäljning för tjänster"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_avatax_services
 msgid "Avatax Brazil for Services"
-msgstr ""
+msgstr "Avatax Brasilien för tjänster"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_avatax_stock
@@ -15873,6 +16054,11 @@ msgstr "ID-bricka"
 #: model:res.country,name:base.bs
 msgid "Bahamas"
 msgstr "Bahamas"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_bh
+msgid "Bahrain - Accounting"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bh
@@ -16487,7 +16673,7 @@ msgstr "Brasilien - Försäljning av webbplats"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_pix
 msgid "Brazil Pix QR codes"
-msgstr ""
+msgstr "Brasilien Pix QR-koder"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br
@@ -16507,7 +16693,7 @@ msgstr "Brasiliansk EDI för redovisning till salu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_edi_services
 msgid "Brazilian Accounting EDI for services"
-msgstr ""
+msgstr "Brasiliansk redovisning EDI för tjänster"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_renting_sign
@@ -16693,7 +16879,7 @@ msgstr "Bryggmodul för project_enterprise och hr_contract"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ro_efactura
 msgid "Bridge module for sending Romanian E-Factura to the SPV"
-msgstr ""
+msgstr "Bridge-modul för att skicka rumänsk E-Factura till SPV"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_product_configurator
@@ -17841,7 +18027,7 @@ msgstr "Beräkningsmetoden kan inte bero på fältet \"id"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch_hr_payroll_elm
 msgid "Compute payslips according to ELM 5 standard"
-msgstr ""
+msgstr "Beräkna lönebesked enligt ELM 5-standarden"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
@@ -18175,7 +18361,7 @@ msgstr "Kontrollera kvaliteten på dina produkter med IoT-enheter"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_helpdesk
 msgid "Convert Tickets from/to Leads"
-msgstr "Konvertera ärende från/till leads"
+msgstr "Konvertera ärende från/till kundämnen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_mail_plugin
@@ -18916,7 +19102,7 @@ msgstr "Kundvård (CRM)"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_uk_customer_statements
 msgid "Customer Statements"
-msgstr ""
+msgstr "Kundutlåtanden"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
@@ -20507,7 +20693,7 @@ msgstr "Energiförsörjning"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_iap_enrich
 msgid "Enrich Leads/Opportunities using email address domain"
-msgstr "Berika leads/möjligheter med hjälp av en e-postadressdomän"
+msgstr "Berika kundämnen/affärsmöjligheter med hjälp av en e-postadressdomän"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_appointment_crm
@@ -20550,7 +20736,7 @@ msgstr "Enterprise motsvarighet för återförsäljare"
 #: model:ir.module.module,description:base.module_website_crm_iap_reveal_enterprise
 #: model:ir.module.module,summary:base.module_website_crm_iap_reveal_enterprise
 msgid "Enterprise counterpart of Visits -> Leads"
-msgstr "Enterprise-motsvarigheten till Besök -> Leads"
+msgstr "Enterprise-motsvarigheten till Besök -> Kundämnen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder
@@ -21222,8 +21408,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_fedex
-msgid "Fedex Shipping"
-msgstr "Fedex-frakt"
+msgid "Fedex Shipping (Legacy)"
+msgstr "Fedex Shipping (legacy)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_fr_fec
@@ -21965,6 +22151,8 @@ msgstr "Frankrike - Redovisningsrapporter"
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_invoice_addr
 msgid "France - Adding Mandatory Invoice Mentions (Decree no. 2022-1299)"
 msgstr ""
+"Frankrike - Lägga till obligatoriska faktureringsmeningar (dekret nr "
+"2022-1299)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
@@ -22027,7 +22215,7 @@ msgstr "Franska sydterritorierna"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__5
 msgid "Friday"
-msgstr "fredag"
+msgstr "Fredag"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__date_from
@@ -22218,12 +22406,13 @@ msgstr "Generera elektroniska fakturor med anpassade nummer"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_iap_mine
 msgid "Generate Leads/Opportunities based on country, industries, size, etc."
-msgstr "Generera leads/möjligheter baserat på land, branscher, storlek etc."
+msgstr ""
+"Skapa kundämnen/affärsmöjligheter baserat på land, branscher, storlek etc."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_iap_reveal
 msgid "Generate Leads/Opportunities from your website's traffic"
-msgstr "Generera leads/möjligheter från trafiken på din webbplats"
+msgstr "Skapa kundämnen/affärsmöjligheter från trafiken på din webbplats"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
@@ -22233,12 +22422,12 @@ msgstr "Generera nyckel"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm
 msgid "Generate leads from a contact form"
-msgstr "Generera leads från ett kontaktformulär"
+msgstr "Skapa kundämnen från ett kontaktformulär"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_appointment_crm
 msgid "Generate leads when prospects schedule appointments"
-msgstr "Generera leads när potentiella kunder bokar möten"
+msgstr "Skapa kundämnen när potentiella kunder bokar möten"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription
@@ -22320,7 +22509,7 @@ msgstr "Tyskland - Certifiering för försäljningsställen av typen restaurang"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_audit_trail
 msgid "Germany - audit trail"
-msgstr ""
+msgstr "Tyskland - verifieringskedja"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_de_pos_cert
@@ -22387,6 +22576,8 @@ msgid ""
 "Give one positive achievement that convinced you of the employee's\n"
 "            value."
 msgstr ""
+"Nämn en positiv prestation som övertygade dig om medarbetarens\n"
+"            värde."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__global
@@ -22731,7 +22922,8 @@ msgstr "Haiti"
 #. module: base
 #: model:ir.module.module,description:base.module_sale_mrp_margin
 msgid "Handle BoM prices to compute sale margin."
-msgstr "Hantera BoM-priser för att beräkna försäljningsmarginal."
+msgstr ""
+"Hantera priser för Materialförteckning för att beräkna försäljningsmarginal."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_lunch
@@ -23133,17 +23325,17 @@ msgstr "Hushåll"
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "How could the employee improve?"
-msgstr ""
+msgstr "Hur kan medarbetaren förbättra sig?"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "How do I feel about my own..."
-msgstr ""
+msgstr "Hur känner jag inför min egen..."
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "How do I feel about the company..."
-msgstr ""
+msgstr "Hur känner jag för företaget..."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__numbercall
@@ -23462,7 +23654,7 @@ msgstr ""
 "i ett grupperat resultat (t.ex. filter \"Gruppera efter\", Kanban-kolumner osv.).\n"
 "Observera att det kan minska prestandan avsevärt om målmodellen\n"
 "fältet innehåller många poster; används vanligtvis för modeller med\n"
-"få poster (t.ex. stadier, jobbpositioner, händelsetyper etc.)."
+"få poster (t.ex. etapper, jobbpositioner, händelsetyper etc.)."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_debug
@@ -23999,7 +24191,7 @@ msgstr "Indian - Stock Report(GST)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_withholding
 msgid "Indian - TDS"
-msgstr ""
+msgstr "Indisk - TDS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
@@ -25419,6 +25611,11 @@ msgid "Lebanon"
 msgstr "Libanon"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_lb_account
+msgid "Lebanon - Accounting"
+msgstr "Libanon - Bokföring"
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__ledger
 msgid "Ledger  28  431.8 x 279.4 mm"
 msgstr "Ledger  28  431.8 x 279.4 mm"
@@ -25748,6 +25945,8 @@ msgid ""
 "Long term (&gt; 6 months) career discussion, where does the employee\n"
 "            wants to go, how to help them reach this path?"
 msgstr ""
+"Långsiktig (&gt; 6 månader) karriärdiskussion. Vart vill medarbetaren?\n"
+"            Hur kan vi hjälpas åt för att nå dit?"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_lunch
@@ -26393,7 +26592,7 @@ msgstr "Tillverkning utgår"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp
 msgid "Manufacturing Orders & BOMs"
-msgstr "Tillverkningsorder och BOMs"
+msgstr "Tillverkningsorder och Materialförteckning"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__many2one
@@ -26693,7 +26892,7 @@ msgstr "Mexiko - Elektronisk leveransguide Comex - Version 3.0"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_stock_extended_31
 msgid "Mexico - Electronic Delivery Guide Comex - Version 3.1"
-msgstr ""
+msgstr "Mexiko - Elektronisk leveransguide Comex - Version 3.1"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_reports_closing
@@ -27256,7 +27455,7 @@ msgstr "Monaco"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__1
 msgid "Monday"
-msgstr "måndag"
+msgstr "Måndag"
 
 #. module: base
 #: model:res.country,name:base.mn
@@ -28293,8 +28492,8 @@ msgstr ""
 "Öka försäljningsproduktiviteten, förbättra vinstandelen och öka intäkterna med Odoo\n"
 "<a href=\"https://www.odoo.com/app/crm\">Open Source CRM</a>.\n"
 "\n"
-"Hantera din säljtratt utan ansträngning. Locka leads, följ upp telefonsamtal och\n"
-"samtal och möten. Analysera kvaliteten på dina leads för att fatta välgrundade\n"
+"Hantera din säljtratt utan ansträngning. Locka kundämnen, följ upp telefonsamtal och\n"
+"samtal och möten. Analysera kvaliteten på dina kundämnen för att fatta välgrundade\n"
 "fatta välgrundade beslut och spara tid genom att integrera e-post direkt i applikationen.\n"
 "\n"
 "Din försäljningstratt, så som du vill ha den\n"
@@ -28304,14 +28503,14 @@ msgstr ""
 "i din säljtratt och få omedelbar visuell information om nästa åtgärd,\n"
 "nya meddelanden, toppmöjligheter och förväntade intäkter.\n"
 "\n"
-"Enkel hantering av leads\n"
+"Enkel hantering av kundämnen\n"
 "-------------------------\n"
 "\n"
-"Skapa leads automatiskt från inkommande e-post. Analysera leads effektivitet och\n"
+"Skapa kundämnen automatiskt från inkommande e-post. Analysera kundämnen effektivitet och\n"
 "jämför prestanda för kampanjer, kanaler eller säljteam.\n"
 "\n"
-"Hitta dubbletter, slå samman leads och tilldela dem till rätt säljare i en\n"
-"operation. Lägg mindre tid på administration och mer tid på att kvalificera leads.\n"
+"Hitta dubbletter, slå samman kundämnen och tilldela dem till rätt säljare i en\n"
+"operation. Lägg mindre tid på administration och mer tid på att kvalificera kundämnen.\n"
 "\n"
 "Organisera dina möjligheter\n"
 "---------------------------\n"
@@ -28331,7 +28530,7 @@ msgstr ""
 "arbeta, så att alla förblir produktiva.\n"
 "\n"
 "Dirigera, sortera och filtrera inkommande e-post automatiskt. Odoo CRM hanterar inkommande\n"
-"e-post och vidarebefordrar dem till rätt möjligheter eller säljteam. Nya leads skapas direkt\n"
+"e-post och vidarebefordrar dem till rätt möjligheter eller säljteam. Nya kundämnen skapas direkt\n"
 "skapas direkt och intresserade säljare meddelas automatiskt.\n"
 "\n"
 "Agenda för samarbete\n"
@@ -28341,17 +28540,17 @@ msgstr ""
 "se din och dina kollegors agenda i en och samma vy. Som chef är det enkelt att\n"
 "se vad ditt team är upptaget med.\n"
 "\n"
-"Lead Automation och marknadsföringskampanjer\n"
+"Kundämnesautomatik och marknadsföringskampanjer\n"
 "---------------------------------------\n"
 "\n"
 "Öka prestandan genom att automatisera uppgifter med Odoo <a href=\"https://www.odoo.com/app/crm\">CRM</a>.\n"
 "\n"
-"Använd våra marknadsföringskampanjer för att automatisera leads, uppföljningar och\n"
+"Använd våra marknadsföringskampanjer för att automatisera kundämnen, uppföljningar och\n"
 "kampanjer. Definiera automatiseringsregler (t.ex. be en säljare att ringa, skicka ett\n"
 "e-post, ...) baserat på triggers (ingen aktivitet sedan 20 dagar, svarat på ett\n"
 "kampanjmejl, etc.)\n"
 "\n"
-"Optimera kampanjer från lead till avslut, i alla kanaler. Fatta smartare beslut\n"
+"Optimera kampanjer från kundämnen till avslut, i alla kanaler. Fatta smartare beslut\n"
 "beslut om var du ska investera och visa hur dina marknadsföringsaktiviteter påverkar\n"
 "företagets resultat.\n"
 "\n"
@@ -28672,7 +28871,7 @@ msgstr ""
 "---------------------------\n"
 "\n"
 "Få flexibilitet att skapa materialförteckningar i flera nivåer, valfri routing,\n"
-"versionsändringar och fantommaterialförteckningar. Du kan använda BoM för kit eller för\n"
+"versionsändringar och fantommaterialförteckningar. Du kan använda Materialförteckning för kit eller för\n"
 "tillverkningsbeställningar.\n"
 "\n"
 "Få flexibilitet i all verksamhet\n"
@@ -28817,7 +29016,7 @@ msgstr ""
 "Odoo Massutskick\n"
 "-----------------\n"
 "\n"
-"Skicka enkelt massutskick till dina leads, möjligheter eller kunder\n"
+"Skicka enkelt massutskick till dina kundämnen, möjligheter eller kunder\n"
 "med Odoo <a href=\"https://www.odoo.com/app/email-marketing\">E-postmarknadsföring</a>. Spåra\n"
 "marknadsföringskampanjer för att förbättra konverteringsgraden. Designa\n"
 "professionella e-postmeddelanden och återanvänd mallar med några få klick.\n"
@@ -28825,7 +29024,7 @@ msgstr ""
 "Skicka professionella e-postmeddelanden\n"
 "------------------------\n"
 "\n"
-"Importera en databas med prospekt eller filtrera på befintliga leads, möjligheter och\n"
+"Importera en databas med prospekt eller filtrera på befintliga kundämnen, möjligheter och\n"
 "kunder med bara några få klick.\n"
 "\n"
 "Definiera e-postmallar för att återanvända innehåll eller specifik design för ditt nyhetsbrev.\n"
@@ -28839,7 +29038,7 @@ msgstr ""
 "Få statistik i realtid om kampanjernas prestanda för att förbättra din\n"
 "konverteringsgrad. Spåra skickade, mottagna, öppnade och besvarade e-postmeddelanden.\n"
 "\n"
-"Hantera enkelt dina marknadsföringskampanjer, diskussionsgrupper, leads och\n"
+"Hantera enkelt dina marknadsföringskampanjer, diskussionsgrupper, kundämnen och\n"
 "möjligheter i en enkel och kraftfull plattform.\n"
 "\n"
 "Integrerad med Odoo Apps\n"
@@ -28848,7 +29047,7 @@ msgstr ""
 "Få tillgång till massutskicksfunktioner från alla Odoo-appar för att förbättra hur dina\n"
 "användare kommunicerar.\n"
 "\n"
-"Skicka mallar med e-postmeddelanden från Odoo <a href=\"https://www.odoo.com/app/email-marketing\">CRM-möjligheter</a>, välj leads baserat\n"
+"Skicka mallar med e-postmeddelanden från Odoo <a href=\"https://www.odoo.com/app/email-marketing\">CRM-möjligheter</a>, välj kundämnen baserat\n"
 "baserat på marknadsföringssegment, skicka <a href=\"https://www.odoo.com/app/recruitment\">jobberbjudanden</a> och automatisera\n"
 "svar till sökande, återanvänd e-postmall i lead automation-marknadsföringskampanjer\n"
 "kampanjer.\n"
@@ -28856,12 +29055,12 @@ msgstr ""
 "Svar på dina e-postmeddelanden visas automatiskt i historiken för varje dokument\n"
 "med modulen för sociala nätverk.\n"
 "\n"
-"Städa din databas med leads\n"
+"Städa din databas med kundämnen\n"
 "------------------------\n"
 "\n"
-"Få en ren lead-databas som förbättras över tid med hjälp av prestandan i\n"
-"dina e-postmeddelanden. Odoo hanterar studsande e-postmeddelanden effektivt, flaggar felaktiga leads\n"
-"och ger dig statistik över kvaliteten på dina leads.\n"
+"Få en ren kundämnes-databas som förbättras över tid med hjälp av prestandan i\n"
+"dina e-postmeddelanden. Odoo hanterar studsande e-postmeddelanden effektivt, flaggar felaktiga kundämnen\n"
+"och ger dig statistik över kvaliteten på dina kundämnen.\n"
 "\n"
 "Skicka e-post med ett klick\n"
 "---------------------\n"
@@ -28870,7 +29069,7 @@ msgstr ""
 "massutskick med ett klick till alla andra användare på deras egna prospekt eller\n"
 "dokument.\n"
 "\n"
-"Välj några dokument (t.ex. leads, supportärenden, leverantörer, sökande,\n"
+"Välj några dokument (t.ex. kundämnen, supportärenden, leverantörer, sökande,\n"
 "...) och skicka e-post till deras kontakter med ett klick genom att återanvända befintliga\n"
 "mallar.\n"
 "\n"
@@ -28878,7 +29077,7 @@ msgstr ""
 "--------------------\n"
 "\n"
 "Med chatter-funktionen kan du kommunicera snabbare och mer effektivt med\n"
-"din kund. Få dokument som skapas automatiskt (leads, möjligheter,\n"
+"din kund. Få dokument som skapas automatiskt (kundämnen, möjligheter,\n"
 "uppgifter, ...) baserat på svar på dina massutskickskampanjer Följ\n"
 "diskussionen direkt i affärsdokumenten i Odoo eller via e-post.\n"
 "\n"
@@ -28899,16 +29098,16 @@ msgstr ""
 "baserat på triggers (ingen aktivitet sedan 20 dagar, svarat på ett kampanjmejl,\n"
 "etc.)\n"
 "\n"
-"Optimera kampanjer från lead till avslut, i alla kanaler. Fatta smartare beslut\n"
+"Optimera kampanjer från kundämnen till avslut, i alla kanaler. Fatta smartare beslut\n"
 "beslut om var du ska investera och visa hur dina marknadsföringsaktiviteter påverkar\n"
 "företagets resultat.\n"
 "\n"
-"Integrera enkelt ett kontaktformulär på din webbplats. Inlämningar från formulär skapar leads\n"
-"automatiskt i Odoo CRM. Leads kan användas i marknadsföringskampanjer.\n"
+"Integrera enkelt ett kontaktformulär på din webbplats. Inlämningar från formulär skapar kundämnen\n"
+"automatiskt i Odoo CRM. Kundämnen kan användas i marknadsföringskampanjer.\n"
 "\n"
 "Hantera din <a href=\"https://www.odoo.com/app/crm\">försäljningstratt</a> utan\n"
-"ansträngning. Locka leads, följ upp telefonsamtal och möten. Analysera kvaliteten\n"
-"kvaliteten på dina leads för att fatta välgrundade beslut och spara tid genom att integrera\n"
+"ansträngning. Locka kundämnen, följ upp telefonsamtal och möten. Analysera kvaliteten\n"
+"kvaliteten på dina kundämnen för att fatta välgrundade beslut och spara tid genom att integrera\n"
 "e-post direkt i applikationen.\n"
 "\n"
 
@@ -29447,7 +29646,7 @@ msgstr ""
 "\n"
 "Traditionell e-handel och CMS har dåligt utformade backends eftersom det inte är deras\n"
 "kärnfokus. Med Odoo-integrationen drar du nytta av den bästa hanterings\n"
-"programvara för att följa upp dina beställningar, dina jobbsökande, dina leads etc.\n"
+"programvara för att följa upp dina beställningar, dina jobbsökande, dina kundämnen etc.\n"
 "\n"
 "En fantastisk mobil upplevelse\n"
 "-------------------------\n"
@@ -29736,7 +29935,7 @@ msgstr ""
 "\n"
 "Våra funktioner för översättning \"på begäran\" gör att du kan dra nytta av professionella\n"
 "översättare som översätter alla dina ändringar automatiskt. Ändra bara någon del\n"
-"på din webbplats (ett nytt blogginlägg, en sidändring, produktbeskrivningar,\n"
+"på din webbplats (ett nytt blogginlägg, en sidförändring, produktbeskrivningar,\n"
 "...) så uppdateras de översatta versionerna automatiskt inom cirka 32 timmar.\n"
 "\n"
 "Finjustera din katalog\n"
@@ -29773,7 +29972,7 @@ msgstr ""
 "din distribution. Ge dem tillgång till din återförsäljarportal för ett effektivt\n"
 "samarbete.\n"
 "\n"
-"Marknadsför dina återförsäljare online, vidarebefordra leads till återförsäljare (med inbyggd\n"
+"Marknadsför dina återförsäljare online, vidarebefordra kundämnen till återförsäljare (med inbyggd\n"
 "geolokalisering), definiera specifika prislistor, lansera ett lojalitetsprogram\n"
 "(erbjud specifika rabatter till dina bästa kunder eller återförsäljare) etc.\n"
 "\n"
@@ -29819,7 +30018,7 @@ msgstr ""
 "- Avancerade funktioner för lagerhantering\n"
 "- Integrering av fakturering och bokföring\n"
 "- Massutskick och kundsegmentering\n"
-"- Automatisering av leads och marknadsföringskampanjer\n"
+"- Automatisering av kundämnen och marknadsföringskampanjer\n"
 "- Permanent kundvagn\n"
 "\n"
 "Fullt integrerad med andra appar\n"
@@ -29881,6 +30080,8 @@ msgid ""
 "Odoo is unable to merge the generated PDFs because of {num_errors} corrupted"
 " file(s)"
 msgstr ""
+"Odoo kan inte slå samman de genererade PDF-filerna på grund av {num_errors} "
+"skadad(e) fil(er)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__padding
@@ -32344,7 +32545,7 @@ msgstr "Publicera dina produkter på eBay"
 #: model:ir.module.module,summary:base.module_website_crm_partner_assign
 msgid "Publish your resellers/partners and forward leads to them"
 msgstr ""
-"Publicera dina återförsäljare/partners och vidarebefordra leads till dem"
+"Publicera dina återförsäljare/partners och vidarebefordra kundämnen till dem"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__published_version
@@ -33240,7 +33441,7 @@ msgstr "Rumänien - SAF-T Import"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_efactura
 msgid "Romania - Send E-Factura"
-msgstr ""
+msgstr "Rumänien - Skicka E-Factura"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_saft
@@ -33833,7 +34034,7 @@ msgstr "Sanerat kontonummer"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__6
 msgid "Saturday"
-msgstr "lördag"
+msgstr "Lördag"
 
 #. module: base
 #: model:res.country,name:base.sa
@@ -34198,7 +34399,7 @@ msgstr "Skicka SMS till besökaren"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_sms
 msgid "Send SMS to Visitor with leads"
-msgstr "Skicka SMS till besökare med leads"
+msgstr "Skicka SMS till besökare med kundämnen"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__webhook
@@ -34278,8 +34479,14 @@ msgstr "Skicka dina försändelser via DHL och spåra dem online"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex
-msgid "Send your shippings through Fedex and track them online"
-msgstr "Skicka dina försändelser via Fedex och spåra dem online"
+msgid ""
+"This is the legacy integration with FedEx that is no longer supported.Please"
+" install the new \"Fedex Shipping\" module and uninstall this one as soon as"
+" possible. This integration will stop working in 2024"
+msgstr ""
+"Detta är den äldre integrationen med FedEx som inte längre stöds. Installera"
+" den nya \"Fedex Shipping\"-modulen och avinstallera denna så snart som "
+"möjligt. Denna integration kommer att sluta fungera 2024"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_ups_rest
@@ -34578,7 +34785,7 @@ msgstr "Kort"
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "Short term (6-months) actions / decisions / objectives"
-msgstr ""
+msgstr "Mål/åtgärder/beslut på kort sikt (6 månader)"
 
 #. module: base
 #: model:ir.model,name:base.model_res_users_apikeys_show
@@ -34990,7 +35197,7 @@ msgstr "Spanien - Modelo 130 Skatterapport"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_pos_tbai
 msgid "Spain - POS + TicketBAI"
-msgstr ""
+msgstr "Spanien - POS + TicketBAI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_pos
@@ -35368,7 +35575,7 @@ msgstr "Påbörja konfigurationen"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "Läge"
+msgstr "Region"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
@@ -35712,7 +35919,7 @@ msgstr "Schweiz - Löner"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_hr_payroll_elm
 msgid "Switzerland - Payroll (ELM Standard)"
-msgstr ""
+msgstr "Schweiz - Löneadministration (ELM Standard)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_hr_payroll_account
@@ -36266,6 +36473,17 @@ msgstr "Åtgärden \"App Switcher\" kan inte väljas som hemåtgärd."
 msgid "The %s of a subsidiary must be the same as it's root company."
 msgstr ""
 "%s-värdet för ett dotterbolag måste vara detsamma som för dess moderbolag."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"The action \"%s\" cannot be set as the home action because it requires a "
+"record to be selected beforehand."
+msgstr ""
+"Åtgärden \"%s\" kan inte ställas in som startåtgärd eftersom den kräver att "
+"en post väljs i förväg."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__code
@@ -37247,7 +37465,7 @@ msgid ""
 " Bangladesh "
 msgstr ""
 "Detta är basmodulen för att hantera kontoplaner och lokalisering för "
-"Bangladesh"
+"Bangladesh "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pk
@@ -37992,7 +38210,7 @@ msgstr "Spåra utrustning och hantera underhållsförfrågningar"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm
 msgid "Track leads and close opportunities"
-msgstr "Spåra leads och stänga möjligheter"
+msgstr "Spåra kundämnen och stänga möjligheter"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment
@@ -38146,8 +38364,8 @@ msgid ""
 "Turn emails received in your mailbox into leads and log their content as "
 "internal notes."
 msgstr ""
-"Förvandla e-postmeddelanden som du får i din brevlåda till leads och logga "
-"deras innehåll som interna anteckningar."
+"Förvandla e-postmeddelanden som du får i din brevlåda till kundämnen och "
+"logga deras innehåll som interna anteckningar."
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_mail_plugin
@@ -38259,7 +38477,7 @@ msgstr "England - bokföringsrapporter"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk_customer_statements
 msgid "UK - Customer Statements"
-msgstr ""
+msgstr "Storbritannien - Kundutlåtanden"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bacs
@@ -39336,7 +39554,7 @@ msgstr "Visa arvsläget"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_livechat
 msgid "View livechat sessions for leads"
-msgstr "Visa livechat-sessioner för leads"
+msgstr "Visa livechat-sessioner för kundämnen"
 
 #. module: base
 #. odoo-python
@@ -39739,7 +39957,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_iap_reveal_enterprise
 msgid "Website Visits Lead Generation Enterprise"
-msgstr "Webbplatsbesökare till leads för Enterprise"
+msgstr "Webbplatsbesökare till kundämnen för Enterprise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_profile
@@ -39764,7 +39982,7 @@ msgstr "Västsahara"
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "What are my best achievement(s) since my last appraisal?"
-msgstr ""
+msgstr "Vilka är mina bästa prestationer sedan mitt senaste medarbetarsamtal?"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -39772,6 +39990,8 @@ msgid ""
 "What are my short and long-term goals with the company, and for my\n"
 "            career?"
 msgstr ""
+"Vilka är mina korta- och långsiktiga mål med företaget och för min\n"
+"            karriär?"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -39779,11 +39999,13 @@ msgid ""
 "What has been the most challenging aspect of my work this past year and\n"
 "            why?"
 msgstr ""
+"Vad har varit den mest utmanande aspekten av mitt arbete under det senaste året och\n"
+"            varför?"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "What would I need to improve my work?"
-msgstr ""
+msgstr "Vad skulle jag behöva för att förbättra mitt arbete?"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
@@ -39914,7 +40136,7 @@ msgstr ""
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "Which parts of my job do I most / least enjoy?"
-msgstr ""
+msgstr "Vilka delar av mitt jobb trivs jag bäst respektive sämst med?"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__implementation
@@ -40440,6 +40662,8 @@ msgid ""
 "You cannot use %(property_name)r because the linked %(model_name)r model "
 "doesn't exist or is invalid"
 msgstr ""
+"Du kan inte använda %(property_name)r eftersom den länkade "
+"%(model_name)r-modellen inte finns, eller är ogiltig"
 
 #. module: base
 #. odoo-python

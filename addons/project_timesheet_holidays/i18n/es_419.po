@@ -41,9 +41,9 @@ msgid ""
 "the time off %s. If you don't want a timesheet, you should leave the "
 "internal project and task empty."
 msgstr ""
-"Para crear una hoja de horas para el tiempo personal %s debe establecer el "
-"proyecto interno y la tarea. Si no desea generarla, debe dejar los campos "
-"anteriores vacíos."
+"Para crear una hoja de horas para el tiempo personal %s debe configurar el "
+"proyecto interno y la tarea. Deje los campos anteriores vacíos si no desea "
+"crearla."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
@@ -137,9 +137,9 @@ msgid ""
 "off requests. You can specify another project on each time off type "
 "individually."
 msgstr ""
-"El proyecto predeterminado que se usa cuando se generan hojas de horas en "
-"automático desde las solicitudes de tiempo personal. Puede especificar otro "
-"proyecto en cada tipo de permiso de forma individual."
+"El proyecto predeterminado utilizado al generar hojas de horas en automático"
+" desde las solicitudes de tiempo personal. Puede especificar otro proyecto "
+"en cada tipo de tiempo personal."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
@@ -147,9 +147,9 @@ msgid ""
 "The default task used when automatically generating timesheets via time off "
 "requests. You can specify another task on each time off type individually."
 msgstr ""
-"La tarea predeterminada que se usa cuando se genera una hoja de horas "
-"automáticamente a través de las solicitudes de tiempo libre. Puede "
-"especificar otra tarea en cada tipo de permiso de forma individual."
+"La tarea predeterminada utilizada al generar una hoja de horas en automático"
+" desde las solicitudes de tiempo personal. Puede especificar otra tarea en "
+"cada tipo de tiempo personal."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -178,7 +178,7 @@ msgstr "Solicitud de tiempo personal"
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Time Off Task"
-msgstr "Tarea de tiempo libre"
+msgstr "Tarea de tiempo personal"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
@@ -210,9 +210,8 @@ msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
 msgstr ""
-"No puede crear hojas de horas para una tarea vinculada a un tipo de permiso."
-" Le recomendamos que use la aplicación Tiempo personal para solicitar uno "
-"nuevo."
+"No puede crear hojas de horas para una tarea vinculada a un tipo de tiempo "
+"personal. Use la aplicación Tiempo personal para solicitar uno nuevo."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -234,8 +233,7 @@ msgid ""
 "cancel your time off request from the Time Off application instead."
 msgstr ""
 "No puede eliminar hojas de horas vinculadas a solicitudes de tiempo "
-"personal. Le recomendamos que cancele la solicitud desde la aplicación "
-"Tiempo personal."
+"personal. Cancele la solicitud desde la aplicación Tiempo personal."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -246,5 +244,4 @@ msgid ""
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
 "No puede modificar las hojas de horas vinculadas a solicitudes de tiempo "
-"personal. Le recomendamos que use la aplicación Tiempo personal para "
-"modificar sus solicitudes."
+"personal. Use la aplicación Tiempo personal para modificar sus solicitudes."

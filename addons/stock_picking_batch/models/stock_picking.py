@@ -117,6 +117,10 @@ class StockPicking(models.Model):
     def button_validate(self):
         res = super().button_validate()
         to_assign_ids = set()
+        # Having non-done pickings after the `super()` call means it stopped early,
+        # so we shouldn’t remove the pickings from batches yet.
+        if not any(picking.state == 'done' for picking in self):
+            return res
         if self and self.env.context.get('pickings_to_detach'):
             pickings_to_detach = self.env['stock.picking'].browse(self.env.context['pickings_to_detach'])
             pickings_to_detach.batch_id = False

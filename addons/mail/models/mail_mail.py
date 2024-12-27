@@ -396,6 +396,7 @@ class MailMail(models.Model):
                     'Unknown error when evaluating mail headers (received %r): %s',
                     self.headers, e,
                 )
+        headers['X-Odoo-Message-Id'] = self.message_id
         headers.setdefault('Return-Path', self.record_alias_domain_id.bounce_email or self.env.company.bounce_email)
 
         # prepare recipients: use email_to if defined then check recipient_ids
@@ -404,10 +405,13 @@ class MailMail(models.Model):
         # used in post-processing to know failures, like missing recipients
         email_list = []
         if self.email_to:
-            email_to = tools.email_split_and_format(self.email_to)
+            email_to_normalized = tools.email_normalize_all(self.email_to)
+            email_to = tools.email_split_and_format_normalize(self.email_to)
             email_list.append({
                 'email_cc': [],
                 'email_to': email_to,
+                # list of normalized emails to help extract_rfc2822
+                'email_to_normalized': email_to_normalized,
                 # keep raw initial value for incoming pre processing of outgoing emails
                 'email_to_raw': self.email_to or '',
                 'partner_id': False,
@@ -416,28 +420,29 @@ class MailMail(models.Model):
         # with partner-specific sending)
         if self.email_cc:
             if email_list:
-                email_list[0]['email_cc'] = tools.email_split(self.email_cc)
+                email_list[0]['email_cc'] = tools.email_split_and_format_normalize(self.email_cc)
+                email_list[0]['email_to_normalized'] += tools.email_normalize_all(self.email_cc)
             else:
                 email_list.append({
-                    'email_cc':  tools.email_split(self.email_cc),
+                    'email_cc':  tools.email_split_and_format_normalize(self.email_cc),
                     'email_to': [],
+                    'email_to_normalized': tools.email_normalize_all(self.email_cc),
                     'email_to_raw': False,
                     'partner_id': False,
                 })
         # specific behavior to customize the send email for notified partners
         for partner in self.recipient_ids:
             # check partner email content
-            emails_normalized = tools.email_normalize_all(partner.email)
-            if emails_normalized:
-                email_to = [
-                    tools.formataddr((partner.name or "", email or "False"))
-                    for email in emails_normalized
-                ]
-            else:
-                email_to = [tools.formataddr((partner.name or "", partner.email or "False"))]
+            email_to_normalized = tools.email_normalize_all(partner.email)
+            email_to = [
+                tools.formataddr((partner.name or "", email or "False"))
+                for email in email_to_normalized or [partner.email]
+            ]
             email_list.append({
                 'email_cc': [],
                 'email_to': email_to,
+                # list of normalized emails to help extract_rfc2822
+                'email_to_normalized': email_to_normalized,
                 # keep raw initial value for incoming pre processing of outgoing emails
                 'email_to_raw': partner.email or '',
                 'partner_id': partner,
@@ -473,6 +478,7 @@ class MailMail(models.Model):
                 'email_cc': email_values['email_cc'],
                 'email_from': self.email_from,
                 'email_to': email_values['email_to'],
+                'email_to_normalized': email_values['email_to_normalized'],
                 'email_to_raw': email_values['email_to_raw'],
                 'headers': headers,
                 'message_id': self.message_id,
@@ -505,9 +511,12 @@ class MailMail(models.Model):
         # First group the <mail.mail> per mail_server_id, per alias_domain (if no server) and per email_from
         group_per_email_from = defaultdict(list)
         for values in mail_values:
+            # protect against ill-formatted email_from when formataddr was used on an already formatted email
+            emails_from = tools.email_split_and_format_normalize(values['email_from'])
+            email_from = emails_from[0] if emails_from else values['email_from']
             mail_server_id = values['mail_server_id'][0] if values['mail_server_id'] else False
             alias_domain_id = values['record_alias_domain_id'][0] if values['record_alias_domain_id'] else False
-            key = (mail_server_id, alias_domain_id, values['email_from'])
+            key = (mail_server_id, alias_domain_id, email_from)
             group_per_email_from[key].append(values['id'])
 
         # Then find the mail server for each email_from and group the <mail.mail>
@@ -624,7 +633,7 @@ class MailMail(models.Model):
                     notifs.flush_recordset(['notification_status', 'failure_type', 'failure_reason'])
 
                 # protect against ill-formatted email_from when formataddr was used on an already formatted email
-                emails_from = tools.email_split_and_format(mail.email_from)
+                emails_from = tools.email_split_and_format_normalize(mail.email_from)
                 email_from = emails_from[0] if emails_from else mail.email_from
 
                 # build an RFC2822 email.message.Message object and send it without queuing
@@ -635,15 +644,19 @@ class MailMail(models.Model):
 
                 # send each sub-email
                 for email in email_list:
+                    # give indication to 'send_mail' about emails already considered
+                    # as being valid
+                    email_to_normalized = email.pop('email_to_normalized', [])
                     # if given, contextualize sending using alias domains
                     if alias_domain_id:
                         alias_domain = self.env['mail.alias.domain'].sudo().browse(alias_domain_id)
                         SendIrMailServer = IrMailServer.with_context(
                             domain_notifications_email=alias_domain.default_from_email,
                             domain_bounce_address=email['headers'].get('Return-Path') or alias_domain.bounce_email,
+                            send_validated_to=email_to_normalized,
                         )
                     else:
-                        SendIrMailServer = IrMailServer
+                        SendIrMailServer = IrMailServer.with_context(send_validated_to=email_to_normalized)
                     msg = SendIrMailServer.build_email(
                         email_from=email_from,
                         email_to=email['email_to'],

@@ -76,7 +76,7 @@ msgstr ""
 "        <li>Ubicación: <t t-out=\"ctx.get('location') or not_available\"></t></li>\n"
 "        <li>Dispositivo: <t t-out=\"ctx.get('device') or not_available\"></t></li>\n"
 "        <li>Navegador: <t t-out=\"ctx.get('browser') or not_available\"></t></li>\n"
-"        <li>Dirección IP : <t t-out=\"ctx.get('ip') or not_available\"></t></li>\n"
+"        <li>Dirección IP: <t t-out=\"ctx.get('ip') or not_available\"></t></li>\n"
 "    </ul>\n"
 "    <p>Si es usted, ingrese el siguiente código para poder iniciar sesión:</p>\n"
 "    <t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"></t>\n"
@@ -88,12 +88,12 @@ msgstr ""
 "    <small>Tenga en cuenta que este código vence en <t t-out=\"expiration\"></t>.</small>\n"
 "\n"
 "    <p style=\"margin: 16px 0px 16px 0px;\">\n"
-"        Si NO es usted quien está tratando de iniciar sesión,\n"
-"        cambie su contraseña inmediatamente para garantizar la seguridad de su cuenta.\n"
+"        Si NO es usted\n"
+"        cambie su contraseña ahora mismo para garantizar la seguridad de su cuenta.\n"
 "    </p>\n"
 "\n"
 "    <p style=\"margin: 16px 0px 16px 0px;\">\n"
-"        También le recomendamos que active la autenticación de dos factores mediante una aplicación de autenticación para ayudarle a asegurar su cuenta.\n"
+"        También le recomendamos que active la autenticación de dos factores. Use una aplicación de autenticación, le ayudará a proteger su cuenta.\n"
 "    </p>\n"
 "\n"
 "    <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
@@ -221,7 +221,7 @@ msgstr "Enviar correo electrónico"
 #. module: auth_totp_mail_enforce
 #: model:mail.template,name:auth_totp_mail_enforce.mail_template_totp_mail_code
 msgid "Settings: 2Fa New Login"
-msgstr "Configuración: nuevo inicio de sesión A2F"
+msgstr "Ajustes: nuevo inicio de sesión A2F"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_auth_totp_rate_limit_log
@@ -260,15 +260,14 @@ msgstr ""
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of authentication mails sent for your account"
-msgstr ""
-"Se alcanzó el límite de correos de autenticación enviados a su cuenta."
+msgstr "Alcanzó el límite de correos de autenticación enviados a su cuenta."
 
 #. module: auth_totp_mail_enforce
 #. odoo-python
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of code verifications for your account"
-msgstr "Se alcanzó el límite de códigos de autenticación para su cuenta."
+msgstr "Alcanzó el límite de códigos de autenticación para su cuenta."
 
 #. module: auth_totp_mail_enforce
 #: model:mail.template,subject:auth_totp_mail_enforce.mail_template_totp_mail_code

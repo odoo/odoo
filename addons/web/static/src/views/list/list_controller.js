@@ -32,6 +32,7 @@ import {
     Component,
     onMounted,
     onWillPatch,
+    onWillRender,
     onWillStart,
     useEffect,
     useRef,
@@ -70,6 +71,11 @@ export class ListController extends Component {
 
         this.optionalActiveFields = [];
 
+        this.editedRecord = null;
+        onWillRender(() => {
+            this.editedRecord = this.model.root.editedRecord;
+        });
+
         onWillStart(async () => {
             this.isExportEnable = await this.userService.hasGroup("base.group_allow_export");
         });
@@ -100,9 +106,8 @@ export class ListController extends Component {
                 return this.model.root.leaveEditMode();
             },
             beforeUnload: async (ev) => {
-                const editedRecord = this.model.root.editedRecord;
-                if (editedRecord) {
-                    const isValid = await editedRecord.urgentSave();
+                if (this.editedRecord) {
+                    const isValid = await this.editedRecord.urgentSave();
                     if (!isValid) {
                         ev.preventDefault();
                         ev.returnValue = "Unsaved changes";
@@ -131,8 +136,8 @@ export class ListController extends Component {
                 limit: limit,
                 total: count,
                 onUpdate: async ({ offset, limit }, hasNavigated) => {
-                    if (this.model.root.editedRecord) {
-                        if (!(await this.model.root.editedRecord.save())) {
+                    if (this.editedRecord) {
+                        if (!(await this.editedRecord.save())) {
                             return;
                         }
                     }
@@ -237,7 +242,10 @@ export class ListController extends Component {
     }
 
     async openRecord(record) {
-        await record.save();
+        const dirty = await record.isDirty();
+        if (dirty) {
+            await record.save();
+        }
         if (this.archInfo.openAction) {
             this.actionService.doActionButton({
                 name: this.archInfo.openAction.action,
@@ -268,7 +276,7 @@ export class ListController extends Component {
 
     async onClickSave() {
         return executeButtonCallback(this.rootRef.el, async () => {
-            const saved = await this.model.root.editedRecord.save();
+            const saved = await this.editedRecord.save();
             if (saved) {
                 await this.model.root.leaveEditMode();
             }
@@ -569,8 +577,8 @@ export class ListController extends Component {
     }
 
     async beforeExecuteActionButton(clickParams) {
-        if (clickParams.special !== "cancel" && this.model.root.editedRecord) {
-            return this.model.root.editedRecord.save();
+        if (clickParams.special !== "cancel" && this.editedRecord) {
+            return this.editedRecord.save();
         }
     }
 
@@ -587,7 +595,7 @@ export class ListController extends Component {
                 const dialogProps = {
                     confirm: () => resolve(true),
                     cancel: () => {
-                        if (this.model.root.editedRecord) {
+                        if (this.editedRecord) {
                             this.model.root.leaveEditMode({ discard: true });
                         } else {
                             editedRecord.discard();

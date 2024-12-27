@@ -174,8 +174,7 @@ def check_git_branch():
                     )
                 odoo_restart()
     except Exception:
-        _logger.exception('An error occurred while connecting to server')
-
+        _logger.exception('An error occurred while trying to update the code with git')
 
 def check_image():
     """
@@ -230,7 +229,7 @@ def generate_password():
             subprocess.run(('sudo', 'cp', '/etc/shadow', '/root_bypass_ramdisks/etc/shadow'), check=True)
         return password
     except subprocess.CalledProcessError as e:
-        _logger.error("Failed to generate password: %s", e.output)
+        _logger.exception("Failed to generate password: %s", e.output)
         return 'Error: Check IoT log'
 
 
@@ -423,13 +422,11 @@ def download_iot_handlers(auto=True):
             if resp.data:
                 delete_iot_handlers()
                 with writable():
-                    drivers_path = ['odoo', 'addons', 'hw_drivers', 'iot_handlers']
-                    path = path_file(str(Path().joinpath(*drivers_path)))
+                    path = path_file('odoo', 'addons', 'hw_drivers', 'iot_handlers')
                     zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
                     zip_file.extractall(path)
-        except Exception as e:
-            _logger.error('Could not reach configured server')
-            _logger.error('A error encountered : %s ' % e)
+        except Exception:
+            _logger.exception('Could not reach configured server to download IoT handlers')
 
 def compute_iot_handlers_addon_name(handler_kind, handler_file_name):
     return "odoo.addons.hw_drivers.iot_handlers.{handler_kind}.{handler_name}".\
@@ -450,9 +447,8 @@ def load_iot_handlers():
                 module = util.module_from_spec(spec)
                 try:
                     spec.loader.exec_module(module)
-                except Exception as e:
-                    _logger.error('Unable to load file: %s ', file)
-                    _logger.error('An error encountered : %s ', e)
+                except Exception:
+                    _logger.exception('Unable to load handler file: %s', file)
     lazy_property.reset_all(http.root)
 
 def list_file_by_os(file_list):
@@ -472,12 +468,16 @@ def odoo_restart(delay=0):
     IR.start()
 
 
-def path_file(filename):
+def path_file(*args):
+    """Return the path to the file from IoT Box root or Windows Odoo
+    server folder
+    :return: The path to the file
+    """
     platform_os = platform.system()
     if platform_os == 'Linux':
-        return Path.home() / filename
+        return Path("~pi", *args).expanduser() # Path.home() returns odoo user's home instead of pi's
     elif platform_os == 'Windows':
-        return Path().absolute().parent.joinpath('server/' + filename)
+        return Path().absolute().parent.joinpath('server', *args)
 
 
 def read_file_first_line(filename):
@@ -524,8 +524,8 @@ def download_from_url(download_url, path_to_filename):
         request_response.raise_for_status()
         write_file(path_to_filename, request_response.content, 'wb')
         _logger.info('Downloaded %s from %s', path_to_filename, download_url)
-    except Exception as e:
-        _logger.error('Failed to download from %s: %s', download_url, e)
+    except Exception:
+        _logger.exception('Failed to download from %s', download_url)
 
 def unzip_file(path_to_filename, path_to_extract):
     """
@@ -542,8 +542,8 @@ def unzip_file(path_to_filename, path_to_extract):
                 zip_file.extractall(path_file(path_to_extract))
             Path(path).unlink()
         _logger.info('Unzipped %s to %s', path_to_filename, path_to_extract)
-    except Exception as e:
-        _logger.error('Failed to unzip %s: %s', path_to_filename, e)
+    except Exception:
+        _logger.exception('Failed to unzip %s', path_to_filename)
 
 
 @cache

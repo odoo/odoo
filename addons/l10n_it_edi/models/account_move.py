@@ -262,9 +262,18 @@ class AccountMove(models.Model):
         template = self.env['ir.qweb']._load('l10n_it_edi.account_invoice_line_it_FatturaPA')[0]
         flat_discount_element = template.find('.//ScontoMaggiorazione/Percentuale')
         if flat_discount_element is not None:
+            downpayment_lines = []
+            if not is_downpayment:
+                # Negative lines linked to down payment should stay negative
+                for line_dict in base_lines:
+                    line = line_dict['record']
+                    if line.price_subtotal < 0 and line._get_downpayment_lines():
+                        downpayment_lines.append(line_dict)
+                        base_lines.remove(line_dict)
             dispatch_result = self.env['account.tax']._dispatch_negative_lines(base_lines)
             base_lines = sorted(
-                dispatch_result['result_lines'] + dispatch_result['orphan_negative_lines'] + dispatch_result['nulled_candidate_lines'],
+                dispatch_result['result_lines'] + dispatch_result['orphan_negative_lines'] + dispatch_result['nulled_candidate_lines']
+                + downpayment_lines,
                 key=itemgetter('sequence')
             )
         else:
@@ -291,10 +300,10 @@ class AccountMove(models.Model):
                 'line': line,
                 'line_number': num + 1,
                 'description': description or 'NO NAME',
-                'subtotal_price_eur': (line_dict['gross_price_subtotal'] - line_dict['discount_amount']) * inverse_factor,
-                'subtotal_price': (line_dict['gross_price_subtotal'] - line_dict['discount_amount']) * inverse_factor * line_dict['rate'],
+                'subtotal_price_eur': (line_dict['gross_price_subtotal'] - line_dict.get('discount_amount', 0.0)) * inverse_factor,
+                'subtotal_price': (line_dict['gross_price_subtotal'] - line_dict.get('discount_amount', 0.0)) * inverse_factor * line_dict['rate'],
                 'unit_price': line_dict['price_unit'],
-                'discount_amount': ((line_dict['discount_amount'] - line_dict['discount_amount_before_dispatching']) / line.quantity) if line.quantity else 0,
+                'discount_amount': ((line_dict.get('discount_amount', 0.0) - line_dict['discount_amount_before_dispatching']) / line.quantity) if line.quantity else 0,
                 'vat_tax': line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t._l10n_it_filter_kind('vat') and t.amount >= 0),
                 'downpayment_moves': downpayment_moves,
                 'discount_type': (

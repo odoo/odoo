@@ -87,7 +87,8 @@
         // Adapt the horizontal margins of a direct row child of a grid item, to
         // make them compensate the grid item horizontal padding (to avoid an
         // overflow).
-        .o_grid_item > .row {
+        .o_grid_item > .row,
+        .o_grid_item > .o_text_columns > .row {
             --grid-inner-row-gutter-x: clamp(0px, 2 * var(--grid-item-padding-x), #{$grid-gutter-width});
             margin-left: calc(-0.5 * var(--grid-inner-row-gutter-x));
             margin-right: calc(-0.5 * var(--grid-inner-row-gutter-x));

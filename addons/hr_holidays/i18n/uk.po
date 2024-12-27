@@ -2423,7 +2423,7 @@ msgstr "Менеджер"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__unpaid
 msgid "Is Unpaid"
-msgstr "Неоплачено"
+msgstr "Неоплачувана відпустка"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__is_user_only_responsible
@@ -3556,6 +3556,8 @@ msgid ""
 "Some of the accrual plans you're trying to delete are linked to an existing "
 "allocation. Delete or cancel them first."
 msgstr ""
+"Деякі з планів нарахування, які ви намагаєтеся видалити, пов’язані з наявним"
+" розподілом. Спочатку видаліть або скасуйте їх."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
@@ -3703,6 +3705,15 @@ msgstr ""
 "Нарахування починається після визначеного періоду з дати початку розподілу. "
 "Це поле визначає кількість днів, місяців або років, після яких "
 "використовується нарахування."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_type.py:0
+#, python-format
+msgid ""
+"The allocation requirement of a time off type cannot be changed once leaves "
+"of that type have been taken. You should create a new time off type instead."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__color

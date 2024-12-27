@@ -1305,7 +1305,12 @@ class TestReports(TestReportsCommon):
             whose source is a sublocation of the stock warehouse location
         """
         stock_location = self.env.ref('stock.warehouse0').lot_stock_id
-        sublocation = stock_location.child_ids[0]
+        sublocation = self.env['stock.location'].create({
+            'name': 'Warehouse0 / Sublocation',
+            'posx': 0,
+            'barcode': 'TEST_BARCODE_LOCATION',
+            'location_id': stock_location.id
+        })
         self.env['stock.quant']._update_available_quantity(self.product, sublocation, 10.0)
         delivery_form = Form(self.env['stock.picking'])
         delivery_form.picking_type_id = self.picking_type_out

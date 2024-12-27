@@ -513,7 +513,7 @@ class AccountEdiFormat(models.Model):
                 "TaxSch": "GST",
                 "SupTyp": self._l10n_in_get_supply_type(invoice, tax_details_by_code),
                 "RegRev": tax_details_by_code.get("is_reverse_charge") and "Y" or "N",
-                "IgstOnIntra": is_intra_state and tax_details_by_code.get("igst") and "Y" or "N"},
+                "IgstOnIntra": is_intra_state and tax_details_by_code.get("igst_amount") and "Y" or "N"},
             "DocDtls": {
                 "Typ": invoice.move_type == "out_refund" and "CRN" or "INV",
                 "No": invoice.name,
@@ -562,7 +562,7 @@ class AccountEdiFormat(models.Model):
         if is_overseas:
             json_payload.update({
                 "ExpDtls": {
-                    "RefClm": tax_details_by_code.get("igst") and "Y" or "N",
+                    "RefClm": tax_details_by_code.get("igst_amount") and "Y" or "N",
                     "ForCur": invoice.currency_id.name,
                     "CntCode": saler_buyer.get("buyer_details").country_id.code or "",
                 }

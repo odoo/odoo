@@ -49,7 +49,7 @@ class ProductTemplate(models.Model):
                     ._svl_empty_stock(description, product_template=product_template)
                 out_stock_valuation_layers = SVL.create(out_svl_vals_list)
                 if product_template.valuation == 'real_time':
-                    move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
+                    move_vals_list += Product.with_context(products_orig_quantity_svl=products_orig_quantity_svl)._svl_empty_stock_am(out_stock_valuation_layers)
                 impacted_templates[product_template] = (products, description, products_orig_quantity_svl)
 
         res = super(ProductTemplate, self).write(vals)
@@ -301,6 +301,7 @@ class ProductProduct(models.Model):
                     'debit': abs(value),
                     'credit': 0,
                     'product_id': product.id,
+                    'quantity': 0,
                 }), (0, 0, {
                     'name': _(
                         '%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s',
@@ -313,6 +314,7 @@ class ProductProduct(models.Model):
                     'debit': 0,
                     'credit': abs(value),
                     'product_id': product.id,
+                    'quantity': 0,
                 })],
             }
             am_vals_list.append(move_vals)
@@ -687,12 +689,12 @@ class ProductProduct(models.Model):
 
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             orig_qtys = self.env.context.get('products_orig_quantity_svl')
-            if orig_qtys and float_compare(orig_qtys[product.id], 0, precision_digits=precision) == 1:
-                debit_account_id = stock_input_account.id
-                credit_account_id = product_accounts[product.id]['stock_valuation'].id
-            else:
+            if orig_qtys and float_compare(orig_qtys[product.id], 0, precision_digits=precision) < 1:
                 debit_account_id = product_accounts[product.id]['stock_valuation'].id
                 credit_account_id = product_accounts[product.id]['stock_output'].id
+            else:
+                debit_account_id = stock_input_account.id
+                credit_account_id = product_accounts[product.id]['stock_valuation'].id
             value = out_stock_valuation_layer.value
             move_vals = {
                 'journal_id': product_accounts[product.id]['stock_journal'].id,
@@ -974,7 +976,8 @@ class ProductCategory(models.Model):
                     ._svl_empty_stock(description, product_category=product_category)
                 out_stock_valuation_layers = SVL.sudo().create(out_svl_vals_list)
                 if product_category.property_valuation == 'real_time':
-                    move_vals_list += Product.with_context(product_orig_quantity_svl=products_orig_quantity_svl)._svl_empty_stock_am(out_stock_valuation_layers)
+
+                    move_vals_list += Product.with_context(products_orig_quantity_svl=products_orig_quantity_svl)._svl_empty_stock_am(out_stock_valuation_layers)
                 impacted_categories[product_category] = (products, description, products_orig_quantity_svl)
 
         res = super(ProductCategory, self).write(vals)

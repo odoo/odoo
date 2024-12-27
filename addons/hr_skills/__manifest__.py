@@ -46,6 +46,9 @@ This module introduces skills and resume management for employees.
             'hr_skills/static/src/views/*.js',
             'hr_skills/static/src/xml/**/*',
         ],
+        'web.qunit_suite_tests': [
+            'hr_skills/static/tests/**/*',
+        ],
         'web.assets_tests': [
             'hr_skills/static/tests/tours/*',
         ],

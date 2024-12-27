@@ -306,6 +306,8 @@ export class Link extends Component {
         var doStripDomain = this._doStripDomain();
         if (this.state.url.indexOf(location.origin) === 0 && doStripDomain) {
             this.state.url = this.state.url.slice(location.origin.length);
+        } else if (url.indexOf(location.origin) === 0 && !doStripDomain) {
+            this.state.url = url;
         }
         var allWhitespace = /\s+/gi;
         var allStartAndEndSpace = /^\s+|\s+$/gi;

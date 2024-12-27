@@ -997,7 +997,7 @@ msgstr "Malların teslim edileceği adres. İsteğe bağlı."
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_adjustments
 msgid "Adjustments"
-msgstr "Adjustments"
+msgstr "Düzeltmeler"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -1273,7 +1273,7 @@ msgstr "Otomatik"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_delivery_slip
 msgid "Auto Print Delivery Slip"
-msgstr ""
+msgstr "Otomatik Yazdırma Teslimat Fişi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_lot_labels
@@ -1616,6 +1616,15 @@ msgstr "Zincirleme Hareketler Bulunmakta"
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
 msgstr "Ürün Miktarını Değiştir"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -2823,7 +2832,7 @@ msgstr "Hedef Konum :"
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_dest_ids
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Destination Moves"
-msgstr "Hedef Hareket"
+msgstr "Hedef Hareketler"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__result_package_id
@@ -4953,7 +4962,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_product_replenish
 msgid "Low on stock? Let's replenish."
-msgstr ""
+msgstr "Stoklarınız mı azaldı?  İkmal edin"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__mto_pull_id
@@ -5685,7 +5694,7 @@ msgstr "Envanter ayarlamasını yalnızca bir stok yöneticisi doğrulayabilir."
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__move
 msgid "Operation Quantities"
-msgstr ""
+msgstr "Operasyon Miktarları"
 
 #. module: stock
 #. odoo-python
@@ -6227,7 +6236,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__partially_available
 msgid "Partially Available"
-msgstr "Parçalı Uygunluk"
+msgstr "Kısmen Uygun"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__partner_id
@@ -6243,7 +6252,7 @@ msgstr "İş Ortağı Adresi"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_action_inventory_tree
 msgid "Physical Inventory"
-msgstr ""
+msgstr "Fiziki Envanter"
 
 #. module: stock
 #. odoo-python
@@ -6480,7 +6489,7 @@ msgstr "Tedarik grubu"
 #. module: stock
 #: model:ir.actions.server,name:stock.ir_cron_scheduler_action_ir_actions_server
 msgid "Procurement: run scheduler"
-msgstr "Tedarik: Planlayıcı çalıştır"
+msgstr "Tedarik: Planlayıcı Çalıştır"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__produce_line_ids
@@ -7385,7 +7394,7 @@ msgstr "İkmal Konumu"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__should_replenish
 msgid "Replenish Quantities"
-msgstr ""
+msgstr "İkmal Miktarları"
 
 #. module: stock
 #. odoo-python
@@ -7874,12 +7883,12 @@ msgstr "Hurdaya Ayırma"
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
 #, python-format
 msgid "Scrap Products"
-msgstr ""
+msgstr "Hurda Ürünler"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrap_id
 msgid "Scrap operation"
-msgstr ""
+msgstr "Hurda Operasyonu"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_scrap
@@ -8813,6 +8822,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
@@ -8888,7 +8904,7 @@ msgstr "İlk sırada olan varsayılan bir tanedir."
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "The following replenishment order have been generated"
-msgstr ""
+msgstr "Aşağıdaki ikmal siparişi oluşturuldu"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
@@ -10714,6 +10730,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid "You cannot duplicate stock quants."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid "You cannot modify inventory loss quantity"
 msgstr "Envanter kaybı miktarını değiştiremezsiniz"
 
@@ -10915,7 +10938,7 @@ msgstr ""
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "You need to select a route to replenish your products"
-msgstr ""
+msgstr "Ürünlerinizi ikmal için bir rota seçmeniz gerekiyor"
 
 #. module: stock
 #. odoo-python

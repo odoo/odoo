@@ -125,6 +125,11 @@ class WebsiteSale(main.WebsiteSale):
         if 'error' in reward_status:
             request.session['error_promo_code'] = reward_status['error']
             return False
+        order._update_programs_and_rewards()
+        if order.carrier_id.free_over and not reward.program_id.is_payment_program:
+            # update shiping cost if it's `free_over` and reward isn't eWallet or gift card
+            # will call `_update_programs_and_rewards` again, updating applied eWallet/gift cards
+            order._check_carrier_quotation(keep_carrier=True)
         return True
 
     @http.route()

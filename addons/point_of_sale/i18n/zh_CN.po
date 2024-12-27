@@ -6,10 +6,11 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
 # Yazi Tian, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
-# Wil Odoo, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
+# Raymond Yu <cl_yu@hotmail.com>, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
 # Chloe Wang, 2024
-# 何彬 <vnsoft.he@gmail.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +42,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/stock_picking.py:0
 #, python-format
 msgid " - From \"%s\" to \"%s\""
-msgstr ""
+msgstr " - 从 \"%s\" 到 \"%s\""
 
 #. module: point_of_sale
 #. odoo-python
@@ -130,7 +131,7 @@ msgstr "%s 找到 “%s” 的产品."
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "%s untaxed"
-msgstr ""
+msgstr "%s未缴税"
 
 #. module: point_of_sale
 #. odoo-python
@@ -865,7 +866,7 @@ msgstr "上传产品价格错误。确认POS机上的所有价格清单准确。
 #: code:addons/point_of_sale/static/src/app/main.js:0
 #, python-format
 msgid "An error occurred while loading the Point of Sale: \n"
-msgstr ""
+msgstr "加载销售点时发生错误：\n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -2063,7 +2064,7 @@ msgstr "已连接的客户屏幕"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
 msgid "Customer Screen Not Found : {{message}}"
-msgstr ""
+msgstr "未找到客户屏幕： {{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2078,7 +2079,7 @@ msgstr "客户屏幕不支持。请升级IoT Box"
 #: code:addons/point_of_sale/static/src/app/navbar/customer_facing_display_button/customer_facing_display_button.xml:0
 #, python-format
 msgid "Customer Screen Warning : {{message}}"
-msgstr ""
+msgstr "客户屏幕警告：{{message}}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2591,7 +2592,7 @@ msgstr "发送电子邮件."
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 #, python-format
 msgid "Email: {{currentOrder.getEmailItems().join(', ')}}"
-msgstr ""
+msgstr "电子邮件：{{currentOrder.getEmailItems().join(', ')}}"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3873,11 +3874,6 @@ msgid "Newspaper Rack"
 msgstr "报纸架"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "下一活动日历事件"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "下一活动截止日期"
@@ -4101,13 +4097,6 @@ msgstr "交易数量："
 #, python-format
 msgid "OK"
 msgstr "OK"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-#, python-format
-msgid "Odoo Point of Sale"
-msgstr "ERP 销售点"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.office_combo_product_template
@@ -4851,7 +4840,7 @@ msgid ""
 "Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue. "
 msgstr ""
 "请检查打印机是否仍然连接。\n"
-"某些浏览器不允许从网站到网络设备的 HTTP 调用（出于安全原因）。如果是这种情况，您需要关注 ERP 文档中的 \"ePOS 打印机自签名证书 \"和 \"安全连接 (HTTPS) \"来解决问题."
+"某些浏览器不允许从网站到网络设备的 HTTP 调用（出于安全原因）。如果是这种情况，您需要关注 ERP 文档中的 \"ePOS 打印机自签名证书 \"和 \"安全连接 (HTTPS) \"来解决问题。 "
 
 #. module: point_of_sale
 #. odoo-python
@@ -4966,13 +4955,6 @@ msgid "PoS Interface"
 msgstr "PoS接口"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid "PoS Order"
-msgstr "POS订单"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__pos_order_line_id
 msgid "PoS Order Line"
 msgstr "PoS 订单线"
@@ -5003,7 +4985,7 @@ msgstr "PoS产品类别"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "PoS order %s can not be processed"
-msgstr ""
+msgstr "POS订单%s无法处理"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -5287,6 +5269,13 @@ msgstr "已过账"
 #, python-format
 msgid "Powered by"
 msgstr "技术提供"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#, python-format
+msgid "Powered by Odoo"
+msgstr "由 Odoo 提供支持"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
@@ -5702,11 +5691,6 @@ msgstr "原因"
 #, python-format
 msgid "REFUNDED:"
 msgstr "退款："
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
-msgid "Ratings"
-msgstr "点评"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6460,7 +6444,7 @@ msgstr "每一套产品，多种价格自动折扣等."
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #, python-format
 msgid "Set the new discount"
-msgstr ""
+msgstr "设置新折扣"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7003,6 +6987,9 @@ msgid ""
 "The datas received from the point of sale has been saved in the attachments.\n"
 "Please contact your support service to assist you on restoring it"
 msgstr ""
+"Odoo 服务器已收到带有 %s 的销售点订单，但订单处理阶段失败。\n"
+"从销售点收到的数据已保存在附件中。\n"
+"请联系您的支持服务部门，以协助您恢复它"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7472,6 +7459,14 @@ msgstr "这对于提供具有特定税金的上门服务和外卖服务的餐厅
 #: code:addons/point_of_sale/models/account_journal.py:0
 #, python-format
 msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr "此日记账与付款方式相关联。无法存档"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
 msgstr "该日记账与支付方式相关联。不能修改其类型"
 
@@ -7632,11 +7627,11 @@ msgstr "称重"
 msgid ""
 "To delete a product, make sure all point of sale sessions are closed.\n"
 "\n"
-"Deleting a product available in a session would be like attempting to snatch ahamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
+"Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
 msgstr ""
 "要删除产品，请确保所有销售点会话都已关闭。\n"
 "\n"
-"删除会话中的产品就像试图从顾客手中抢走正在咬中的汉堡包一样，番茄酱和蛋黄酱会四处飞溅，混乱不堪！"
+"删除会话中的可用产品就好比试图从顾客手中抢走吃到一半的汉堡包，番茄酱和蛋黄酱会四处飞溅，混乱不堪！"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -8227,7 +8222,7 @@ msgstr "无法在多种现金支付方式中使用同一日记账。"
 msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
-msgstr "您没有权限打开POS营业点。请尝试使用不同的登录用户打开。"
+msgstr "您没有权限打开POS营业点。请尝试使用不同的登录用户打开"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8578,4 +8573,4 @@ msgstr "{{ line.has_valid_product_lot() ? '产品批次有效' : '产品批次�
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.xml:0
 #, python-format
 msgid "{{partnerDetailsFields[item]}}"
-msgstr ""
+msgstr "{{partnerDetailsFields[item]}}"

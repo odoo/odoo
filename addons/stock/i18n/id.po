@@ -1637,6 +1637,17 @@ msgstr "Ubah Kuantitas Produk"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"Mengubah nomor Seri/Lot untuk baris pergerakkan dengan produk yang berbeda "
+"tidak diizinkan."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_lot.py:0
@@ -8875,6 +8886,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr "Nomor Seri/Lot ini (%s) terhubung ke produk lain."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
 msgid ""
 "The Serial Number (%s) is already used in these location(s): %s.\n"
 "\n"
@@ -10833,6 +10851,13 @@ msgstr ""
 "Anda tidak dapat secara langsung mengelompokkan kuantitas dari transfer-"
 "transfer yang berbeda menjadi paket yang sama melalui tampilan ini. Coba "
 "tambahkan mereka ke batch picking dan kelompokkan dari sana."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr "Anda tidak dapat menduplikasikan stock quant."
 
 #. module: stock
 #. odoo-python

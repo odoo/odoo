@@ -46,3 +46,4 @@ from . import test_setup_wizard
 from . import test_structured_reference
 from . import test_product
 from . import test_mail_tracking_value
+from . import test_account_move_attachment

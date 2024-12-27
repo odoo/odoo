@@ -15,7 +15,6 @@
 # Josep Sànchez <papapep@gmx.com>, 2023
 # Sandra Franch <sandra.franch@upc.edu>, 2023
 # jabiri7, 2023
-# Eugeni Chafer <eugeni@chafer.cat>, 2023
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2023
 # 7b9408628f00af852f513eb4f12c005b_f9c6891, 2023
 # eriiikgt, 2023
@@ -23,22 +22,23 @@
 # Jonatan Gk, 2024
 # Carles Antoli <carlesantoli@hotmail.com>, 2024
 # Braulio D. López Vázquez <bdl@odoo.com>, 2024
-# marcescu, 2024
 # Iván Infantes Castarnado, 2024
 # Pere Martínez, 2024
-# Josep Anton Belchi, 2024
 # Martin Trigaux, 2024
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2024
 # RGB Consulting <odoo@rgbconsulting.com>, 2024
 # Jonathan Pasquier <jpasquier@fundesplai.org>, 2024
-# Óscar Fonseca <tecnico@pyming.com>, 2024
 # Santiago Payà <santiagopim@gmail.com>, 2024
 # EstudiTIC, 2024
 # Ivan Espinola, 2024
 # Arnau Ros, 2024
-# Quim - eccit <quim@eccit.com>, 2024
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
 # Harcogourmet, 2024
 # xean, 2024
+# Óscar Fonseca <tecnico@pyming.com>, 2024
+# marcescu, 2024
+# Josep Anton Belchi, 2024
+# Eugeni Chafer <eugeni@chafer.cat>, 2024
 # 
 msgid ""
 msgstr ""
@@ -46,7 +46,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-06 12:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: xean, 2024\n"
+"Last-Translator: Eugeni Chafer <eugeni@chafer.cat>, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1597,6 +1597,8 @@ msgstr ""
 #, python-format
 msgid "Account %s is of payable type, but is used in a sale operation."
 msgstr ""
+"El compte%s és de tipus \"a pagar\", però es fa servir en una operació de "
+"venda. "
 
 #. module: account
 #. odoo-python
@@ -1604,6 +1606,8 @@ msgstr ""
 #, python-format
 msgid "Account %s is of receivable type, but is used in a purchase operation."
 msgstr ""
+"El compte %s és de tipus \"a cobrar\", però es fa servir en una operació de "
+"compra."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
@@ -1956,7 +1960,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 msgid "Accountant"
-msgstr ""
+msgstr "Comptable"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -3497,7 +3501,7 @@ msgstr "Missatge de bloqueig"
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Bookkeeper"
-msgstr ""
+msgstr "Comptable"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -5237,11 +5241,6 @@ msgid "DELIVERED DUTY PAID"
 msgstr "Lliurat amb drets pagats"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
-msgid "DOWN"
-msgstr "ABAIX"
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
 msgstr "Tauler"
@@ -5985,6 +5984,11 @@ msgid "Domestic country of your accounting"
 msgstr "País domèstic de la vostra comptabilitat"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
+msgid "Down"
+msgstr "Avall"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__checkbox_download
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_is_download
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -6212,7 +6216,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Early Payment Discount of"
-msgstr ""
+msgstr "Descompte per pagament anticipat de"
 
 #. module: account
 #. odoo-python
@@ -7030,6 +7034,9 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
+"Fòrmula al formulari line_code.expression_label. Això permet establir "
+"l'objetiu del traspàs per a aquesta expresió (en una expresió etiquetada com"
+" a _carryover_* ), en cas de que sigui diferent de la línia pare."
 
 #. module: account
 msgid ""
@@ -7279,11 +7286,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
 msgid "Growth Comparison"
 msgstr "Comparació del creixement"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
-msgid "HALF-UP"
-msgstr "MITJÀ PUJADA"
 
 #. module: account
 #: model:ir.model,name:account.model_ir_http
@@ -8755,14 +8757,14 @@ msgstr "Apunt comptable"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Journal Item %s created"
-msgstr ""
+msgstr "L'assentament %s ha estat creat"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Journal Item %s deleted"
-msgstr ""
+msgstr "S'ha eliminat l'assentament %s "
 
 #. module: account
 #. odoo-python
@@ -9818,6 +9820,11 @@ msgstr "Nom cercable"
 msgid "Navigate easily through reports and see what is behind the numbers"
 msgstr ""
 "Navegueu fàcilment pels informes i vegeu què hi ha darrere dels números"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
+msgid "Nearest"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
@@ -12567,6 +12574,7 @@ msgstr "Guardeu aquesta pàgina i torneu per a configurar la característica."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "Escanegeu-me amb la vostra aplicació bancària."
@@ -14166,12 +14174,9 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
-"The Syscohada chart template shouldn't be selected directly. Instead, you "
-"should directly select the chart template related to your country."
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
 msgstr ""
-"El tipus de diagrama Syscohada no hauria de ser seleccionat directament. Al "
-"seu lloc, mireu de seleccionar el tipus de diagrama adequat a la vostra "
-"ubicació."
 
 #. module: account
 #. odoo-python
@@ -14363,6 +14368,8 @@ msgid ""
 "The country code of the foreign VAT number does not match any country in the"
 " group."
 msgstr ""
+"El codi de país del número fiscal estranger, no coincideix amb cap país del "
+"grup. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -15446,6 +15453,7 @@ msgstr ""
 msgid ""
 "This journal is associated with a payment method. You cannot archive it"
 msgstr ""
+"Aquest diari està associat amb un mètode de pagament. No pots arxivar-lo."
 
 #. module: account
 #. odoo-python
@@ -15964,11 +15972,6 @@ msgid "Type of the exception activity on record."
 msgstr "Tipus d'activitat d'excepció registrada."
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
-msgid "UP"
-msgstr "Amunt"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
@@ -16148,9 +16151,14 @@ msgid "UoM"
 msgstr "UdM"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
+msgid "Up"
+msgstr "Puja"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Update Taxes and Accounts"
-msgstr ""
+msgstr "Actualitza impostos i comptes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16963,6 +16971,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
+#, python-format
+msgid "You can't create payments for entries belonging to different branches."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
@@ -17127,6 +17142,8 @@ msgid ""
 "You cannot create a fiscal position with a country outside of the selected "
 "country group."
 msgstr ""
+"No pots crear una posició fiscal a un país de fora del grup de països "
+"seleccionat"
 
 #. module: account
 #. odoo-python
@@ -17870,7 +17887,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "has been applied."
-msgstr ""
+msgstr "ha estat aplicat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

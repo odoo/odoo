@@ -305,55 +305,8 @@ class HrAttendance(models.Model):
                         overtime_duration_real = overtime_duration
                     # The employee usually work on that day
                     else:
-                        # Compute start and end time for that day
-                        planned_start_dt, planned_end_dt = False, False
-                        planned_work_duration = 0
-                        for calendar_attendance in working_times[attendance_date]:
-                            planned_start_dt = min(planned_start_dt, calendar_attendance[0]) if planned_start_dt else calendar_attendance[0]
-                            planned_end_dt = max(planned_end_dt, calendar_attendance[1]) if planned_end_dt else calendar_attendance[1]
-                            planned_work_duration += (calendar_attendance[1] - calendar_attendance[0]).total_seconds() / 3600.0
                         # Count time before, during and after 'working hours'
-                        pre_work_time, work_duration, post_work_time = 0, 0, 0
-
-                        for attendance in attendances:
-                            # consider check_in as planned_start_dt if within threshold
-                            # if delta_in < 0: Checked in after supposed start of the day
-                            # if delta_in > 0: Checked in before supposed start of the day
-                            local_check_in = pytz.utc.localize(attendance.check_in)
-                            delta_in = (planned_start_dt - local_check_in).total_seconds() / 3600.0
-
-                            # Started before or after planned date within the threshold interval
-                            if (delta_in > 0 and delta_in <= company_threshold) or\
-                                (delta_in < 0 and abs(delta_in) <= employee_threshold):
-                                local_check_in = planned_start_dt
-                            local_check_out = pytz.utc.localize(attendance.check_out)
-
-                            # same for check_out as planned_end_dt
-                            delta_out = (local_check_out - planned_end_dt).total_seconds() / 3600.0
-                            # if delta_out < 0: Checked out before supposed start of the day
-                            # if delta_out > 0: Checked out after supposed start of the day
-
-                            # Finised before or after planned date within the threshold interval
-                            if (delta_out > 0 and delta_out <= company_threshold) or\
-                                (delta_out < 0 and abs(delta_out) <= employee_threshold):
-                                local_check_out = planned_end_dt
-
-                            # There is an overtime at the start of the day
-                            if local_check_in < planned_start_dt:
-                                pre_work_time += (min(planned_start_dt, local_check_out) - local_check_in).total_seconds() / 3600.0
-                            # Interval inside the working hours -> Considered as working time
-                            if local_check_in <= planned_end_dt and local_check_out >= planned_start_dt:
-                                start_dt = max(planned_start_dt, local_check_in)
-                                stop_dt = min(planned_end_dt, local_check_out)
-                                work_duration += (stop_dt - start_dt).total_seconds() / 3600.0
-                                # remove lunch time from work duration
-                                lunch_intervals = emp._employee_attendance_intervals(start_dt, stop_dt, lunch=True)
-                                work_duration -= sum((i[1] - i[0]).total_seconds() / 3600.0 for i in lunch_intervals)
-
-                            # There is an overtime at the end of the day
-                            if local_check_out > planned_end_dt:
-                                post_work_time += (local_check_out - max(planned_end_dt, local_check_in)).total_seconds() / 3600.0
-
+                        pre_work_time, work_duration, post_work_time, planned_work_duration = attendances._get_pre_post_work_time(emp, working_times, attendance_date)
                         # Overtime within the planned work hours + overtime before/after work hours is > company threshold
                         overtime_duration = work_duration - planned_work_duration
                         if pre_work_time > company_threshold:
@@ -390,6 +343,57 @@ class HrAttendance(models.Model):
         overtime_to_unlink.sudo().unlink()
         self.env.add_to_compute(self._fields['overtime_hours'],
                                 self.search([('employee_id', 'in', employees_worked_hours_to_compute)]))
+
+    def _get_pre_post_work_time(self, employee, working_times, attendance_date):
+        pre_work_time, work_duration, post_work_time = 0, 0, 0
+        company_threshold = employee.company_id.overtime_company_threshold / 60.0
+        employee_threshold = employee.company_id.overtime_employee_threshold / 60.0
+        # Compute start and end time for that day
+        planned_start_dt, planned_end_dt = False, False
+        planned_work_duration = 0
+        for calendar_attendance in working_times[attendance_date]:
+            planned_start_dt = min(planned_start_dt, calendar_attendance[0]) if planned_start_dt else calendar_attendance[0]
+            planned_end_dt = max(planned_end_dt, calendar_attendance[1]) if planned_end_dt else calendar_attendance[1]
+            planned_work_duration += (calendar_attendance[1] - calendar_attendance[0]).total_seconds() / 3600.0
+        for attendance in self:
+            # consider check_in as planned_start_dt if within threshold
+            # if delta_in < 0: Checked in after supposed start of the day
+            # if delta_in > 0: Checked in before supposed start of the day
+            local_check_in = pytz.utc.localize(attendance.check_in)
+            delta_in = (planned_start_dt - local_check_in).total_seconds() / 3600.0
+
+            # Started before or after planned date within the threshold interval
+            if (delta_in > 0 and delta_in <= company_threshold) or\
+                (delta_in < 0 and abs(delta_in) <= employee_threshold):
+                local_check_in = planned_start_dt
+            local_check_out = pytz.utc.localize(attendance.check_out)
+
+            # same for check_out as planned_end_dt
+            delta_out = (local_check_out - planned_end_dt).total_seconds() / 3600.0
+            # if delta_out < 0: Checked out before supposed start of the day
+            # if delta_out > 0: Checked out after supposed start of the day
+
+            # Finised before or after planned date within the threshold interval
+            if (delta_out > 0 and delta_out <= company_threshold) or\
+                (delta_out < 0 and abs(delta_out) <= employee_threshold):
+                local_check_out = planned_end_dt
+
+            # There is an overtime at the start of the day
+            if local_check_in < planned_start_dt:
+                pre_work_time += (min(planned_start_dt, local_check_out) - local_check_in).total_seconds() / 3600.0
+            # Interval inside the working hours -> Considered as working time
+            if local_check_in <= planned_end_dt and local_check_out >= planned_start_dt:
+                start_dt = max(planned_start_dt, local_check_in)
+                stop_dt = min(planned_end_dt, local_check_out)
+                work_duration += (stop_dt - start_dt).total_seconds() / 3600.0
+                # remove lunch time from work duration
+                lunch_intervals = employee._employee_attendance_intervals(start_dt, stop_dt, lunch=True)
+                work_duration -= sum((i[1] - i[0]).total_seconds() / 3600.0 for i in lunch_intervals)
+
+            # There is an overtime at the end of the day
+            if local_check_out > planned_end_dt:
+                post_work_time += (local_check_out - max(planned_end_dt, local_check_in)).total_seconds() / 3600.0
+        return pre_work_time, work_duration, post_work_time, planned_work_duration
 
     @api.model_create_multi
     def create(self, vals_list):

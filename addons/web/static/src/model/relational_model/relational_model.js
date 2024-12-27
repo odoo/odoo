@@ -290,8 +290,8 @@ export class RelationalModel extends Model {
                 delete config.groups;
             }
         }
-        if (!config.isMonoRecord && this.root) {
-            // always reset the offset to 0 when reloading from above
+        if (!config.isMonoRecord && this.root && params.domain) {
+            // always reset the offset to 0 when reloading from above with a domain
             const resetOffset = (config) => {
                 config.offset = 0;
                 for (const group of Object.values(config.groups || {})) {
@@ -344,13 +344,18 @@ export class RelationalModel extends Model {
         if (config.countLimit !== Number.MAX_SAFE_INTEGER) {
             config.countLimit = Math.max(config.countLimit, config.offset + config.limit);
         }
-        return this._loadUngroupedList({
+        const { records, length } = await this._loadUngroupedList({
             ...config,
             context: {
                 ...config.context,
                 current_company_id: config.currentCompanyId,
             },
         });
+        if (config.offset && !records.length) {
+            config.offset = 0;
+            return this._loadData(config);
+        }
+        return { records, length };
     }
 
     /**
@@ -667,7 +672,9 @@ export class RelationalModel extends Model {
      * @returns {Promise<number>}
      */
     async _updateCount(config) {
-        const count = await this.keepLast.add(this.orm.searchCount(config.resModel, config.domain));
+        const count = await this.keepLast.add(
+            this.orm.searchCount(config.resModel, config.domain, { context: config.context })
+        );
         config.countLimit = Number.MAX_SAFE_INTEGER;
         return count;
     }

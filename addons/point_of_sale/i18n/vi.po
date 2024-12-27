@@ -29,6 +29,8 @@ msgid ""
 "\n"
 "This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
 msgstr ""
+"\n"
+"Sự cố này xảy ra vì số lượng trở thành 0 sau khi làm tròn trong quá trình chuyển đổi. Để khắc phục sự cố này, hãy điều chỉnh hệ số chuyển đổi hoặc phương pháp làm tròn để đảm bảo rằng ngay cả số lượng nhỏ nhất trong đơn vị gốc cũng không làm tròn xuống 0 trong đơn vị mục tiêu."
 
 #. module: point_of_sale
 #. odoo-python
@@ -1850,6 +1852,8 @@ msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero"
 " quantity due to rounding:"
 msgstr ""
+"Lỗi chuyển đổi: Các phép chuyển đổi đơn vị tính sau đây cho kết quả là số "
+"lượng bằng 0 vì làm tròn:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -3942,11 +3946,6 @@ msgid "Newspaper Rack"
 msgstr "Giá đựng báo"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Sự kiện trên lịch cho hoạt động tiếp theo"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Hạn chót cho hoạt động tiếp theo"
@@ -4178,13 +4177,6 @@ msgid "OK"
 msgstr "OK"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-#, python-format
-msgid "Odoo Point of Sale"
-msgstr "Odoo Điểm bán hàng"
-
-#. module: point_of_sale
 #: model:product.template,name:point_of_sale.office_combo_product_template
 msgid "Office combo"
 msgstr "Combo văn phòng"
@@ -4232,8 +4224,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "Only administrators can edit receipt headers and footers"
-msgstr ""
-"Chỉ quản trị viên mới có thể chỉnh sửa đầu trang và chân trang của biên lai"
+msgstr "Chỉ quản trị viên mới có thể chỉnh sửa header và footer của biên lai"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -5062,13 +5053,6 @@ msgid "PoS Interface"
 msgstr "Giao diện PoS"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid "PoS Order"
-msgstr "Đơn hàng POS"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__pos_order_line_id
 msgid "PoS Order Line"
 msgstr "Dòng đơn hàng POS"
@@ -5383,6 +5367,13 @@ msgstr "Đã vào sổ"
 #, python-format
 msgid "Powered by"
 msgstr "Cung cấp bởi"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#, python-format
+msgid "Powered by Odoo"
+msgstr "Cung cấp bởi Odoo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
@@ -5804,11 +5795,6 @@ msgstr "LÝ DO"
 #, python-format
 msgid "REFUNDED:"
 msgstr "ĐÃ HOÀN TIỀN:"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
-msgid "Ratings"
-msgstr "Đánh giá"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6566,7 +6552,7 @@ msgstr "Thiết lập nhiều giá bán cho một sản phẩm, chiết khấu t
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #, python-format
 msgid "Set the new discount"
-msgstr ""
+msgstr "Thiết lập chiết khấu mới"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6690,7 +6676,7 @@ msgstr "Thiết bị đầu cuối thanh toán SIX"
 #. module: point_of_sale
 #: model:product.attribute,name:point_of_sale.size_attribute
 msgid "Size"
-msgstr "Quy mô"
+msgstr "Kích thước"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_skip_screen
@@ -7145,6 +7131,8 @@ msgid ""
 "The amount of your payment lines must be rounded to validate the transaction.\n"
 "The rounding precision is %s so you should set %s or %s as payment amount instead of %s."
 msgstr ""
+"Số tiền của các dòng thanh toán phải được làm tròn để xác thực giao dịch.\n"
+"Độ chính xác làm tròn là %s, nên bạn nên đặt %s hoặc %s làm số tiền thanh toán thay vì %s."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7654,6 +7642,16 @@ msgstr ""
 #: code:addons/point_of_sale/models/account_journal.py:0
 #, python-format
 msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr ""
+"Sổ nhật ký được liên kết với một phương thức thanh toán. Bạn không thể lưu "
+"trữ sổ nhật ký này"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
 msgstr ""
 "Sổ nhật ký được liên kết với một phương thức thanh toán. Bạn không thể sửa "
@@ -7831,11 +7829,11 @@ msgstr "Dùng cân"
 msgid ""
 "To delete a product, make sure all point of sale sessions are closed.\n"
 "\n"
-"Deleting a product available in a session would be like attempting to snatch ahamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
+"Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
 msgstr ""
 "Để xóa một sản phẩm, hãy đảm bảo tất cả các phiên điểm bán hàng đều đã đóng.\n"
 "\n"
-"Việc xóa một sản phẩm hiện có trong phiên cứ như là bạn cố gắng giật chiếc bánh hamburger mà khách hàng đang cắn dở; rồi hỗn loạn sẽ xảy ra khi sốt cà chua và mayo bay tứ tung!"
+"Việc xóa một sản phẩm hiện có trong phiên không khác nào bạn cố gắng giật chiếc bánh hamburger mà khách hàng đang cắn dở; rồi hỗn loạn sẽ xảy ra khi sốt cà chua và mayo bay tứ tung!"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -8449,6 +8447,8 @@ msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
 msgstr ""
+"Bạn không có quyền mở phiên POS. Vui lòng thử mở phiên bằng tài khoản người "
+"dùng khác"
 
 #. module: point_of_sale
 #. odoo-python

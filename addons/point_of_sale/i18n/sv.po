@@ -18,13 +18,13 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
 # Wil Odoo, 2024
-# Claes-Johan Dahlin, 2024
 # Martin Trigaux, 2024
 # Daniel Osser <danielosser@gmail.com>, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Lasse L, 2024
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Claes-Johan Dahlin, 2024
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Wilderoth <martin.wilderoth@linserv.se>, 2024\n"
+"Last-Translator: Claes-Johan Dahlin, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,6 +48,8 @@ msgid ""
 "\n"
 "This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
 msgstr ""
+"\n"
+"Detta problem uppstår eftersom kvantiteten blir noll efter avrundning under konverteringen. För att åtgärda detta, justera omvandlingsfaktorerna eller avrundningsmetoden för att säkerställa att inte ens den minsta kvantiteten i den ursprungliga enheten avrundas nedåt till noll i målenheten."
 
 #. module: point_of_sale
 #. odoo-python
@@ -1878,6 +1880,8 @@ msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero"
 " quantity due to rounding:"
 msgstr ""
+"Fel vid konvertering: Följande omvandlingar av måttenheter resulterar i en "
+"nollkvantitet på grund av avrundning:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -3973,11 +3977,6 @@ msgid "Newspaper Rack"
 msgstr "Tidningsställ"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Nästa Kalenderhändelse för aktivitet"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Nästa slutdatum för aktivitet"
@@ -4205,13 +4204,6 @@ msgstr "Antal transaktioner:"
 #, python-format
 msgid "OK"
 msgstr "OK"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-#, python-format
-msgid "Odoo Point of Sale"
-msgstr "Odoo Point of Sale"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.office_combo_product_template
@@ -5086,13 +5078,6 @@ msgid "PoS Interface"
 msgstr "PoS-gränssnitt"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid "PoS Order"
-msgstr "PoS Beställning"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__pos_order_line_id
 msgid "PoS Order Line"
 msgstr "PoS Orderlinje"
@@ -5407,6 +5392,13 @@ msgstr "Bokförd"
 #, python-format
 msgid "Powered by"
 msgstr "Drivs med"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#, python-format
+msgid "Powered by Odoo"
+msgstr "Drivs av Odoo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
@@ -5827,11 +5819,6 @@ msgstr "SKÄL"
 #, python-format
 msgid "REFUNDED:"
 msgstr "ÅTERBETALAS:"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
-msgid "Ratings"
-msgstr "Betyg"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6590,7 +6577,7 @@ msgstr "Ställ in flera priser per produkt, automatiserade rabatter mm."
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #, python-format
 msgid "Set the new discount"
-msgstr ""
+msgstr "Ställ in den nya rabatten"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7172,6 +7159,8 @@ msgid ""
 "The amount of your payment lines must be rounded to validate the transaction.\n"
 "The rounding precision is %s so you should set %s or %s as payment amount instead of %s."
 msgstr ""
+"Beloppet på dina betalningsrader måste avrundas för att validera transaktionen.\n"
+"Avrundningsprecisionen är %s så du bör ange %s eller %s som betalningsbelopp i stället för %s."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7688,6 +7677,15 @@ msgstr ""
 #: code:addons/point_of_sale/models/account_journal.py:0
 #, python-format
 msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr ""
+"Denna journal är kopplad till en betalningsmetod. Du kan inte arkivera den"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
 msgstr ""
 "Denna journal är kopplad till en betalningsmetod. Du kan inte ändra dess typ"
@@ -7863,11 +7861,11 @@ msgstr "Att väga med våg"
 msgid ""
 "To delete a product, make sure all point of sale sessions are closed.\n"
 "\n"
-"Deleting a product available in a session would be like attempting to snatch ahamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
+"Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
 msgstr ""
-"Om du vill ta bort en produkt måste du se till att alla kassasessioner är stängda.\n"
+"För att ta bort en produkt, se till att alla försäljningstillfällen är stängda.\n"
 "\n"
-"Att ta bort en produkt som finns tillgänglig i en session är som att försöka rycka en ahamburgare ur handen på en kund mitt i tuggan; kaos uppstår när ketchup och majonnäs flyger överallt!"
+"Att ta bort en produkt som är tillgänglig under en session skulle vara som att försöka ta en hamburgare ur en kunds hand mitt i tuggan; kaos kommer att uppstå när ketchup och majonnäs flyger överallt!"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -8478,6 +8476,8 @@ msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
 msgstr ""
+"Du har inte behörighet att öppna en POS-session. Försök att öppna en session"
+" med en annan användare"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8823,7 +8823,7 @@ msgstr "var dubbletter av befintliga order"
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 #, python-format
 msgid "{{ !barcodeReader ? 'No nomenclature' : '' }}"
-msgstr ""
+msgstr "{{ !barcodeReader ? \"No nomenclature\" : '' }}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8833,6 +8833,8 @@ msgid ""
 "{{ line.has_valid_product_lot() ? 'Valid product lot' : 'Invalid product "
 "lot'}}"
 msgstr ""
+"{{ line.has_valid_product_lot() ? 'Valid product lot' : 'Invalid product "
+"lot'}}"
 
 #. module: point_of_sale
 #. odoo-javascript

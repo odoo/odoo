@@ -107,7 +107,7 @@
             </CabeceraFactura>
             <DatosFactura t-if="is_emission">
                 <FechaOperacion t-if="invoice.delivery_date and format_date(invoice.invoice_date) != format_date(invoice.delivery_date)" t-out="format_date(invoice.delivery_date)"/>
-                <DescripcionFactura t-out="invoice.invoice_origin or 'manual'"/>
+                <DescripcionFactura t-out="invoice.invoice_origin and invoice.invoice_origin[:250] or 'manual'"/>
                 <DetallesFactura>
                     <IDDetalleFactura t-foreach="invoice_lines" t-as="line_values">
                         <t t-set="line" t-value="line_values['line']"/>

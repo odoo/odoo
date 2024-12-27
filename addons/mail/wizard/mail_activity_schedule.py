@@ -134,7 +134,7 @@ class MailActivitySchedule(models.TransientModel):
     @api.depends('company_id', 'res_model_id')
     def _compute_plan_available_ids(self):
         for scheduler in self:
-            scheduler.plan_available_ids = self.env['mail.activity.plan'].search(self._get_plan_available_base_domain())
+            scheduler.plan_available_ids = self.env['mail.activity.plan'].search(scheduler._get_plan_available_base_domain())
 
     @api.depends_context('plan_mode')
     @api.depends('plan_available_ids')

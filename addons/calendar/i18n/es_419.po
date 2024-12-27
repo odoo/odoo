@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Iran Villalobos López, 2024
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Wil Odoo, 2024
 # Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -191,17 +191,17 @@ msgstr ""
 "        Hola, <t t-out=\"object.common_name or ''\">Ready Mat</t><br><br>\n"
 "        <t t-if=\"is_online and target_responsible\">\n"
 "            <t t-if=\"customer\">\n"
-"                Se actualizó la fecha de su cita con <t t-out=\"customer.name or ''\">Jesse Brown</t>.\n"
+"                La fecha de su cita con <t t-out=\"customer.name or ''\">Jesse Brown</t> se actualizó.\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Se actualizó su cita.\n"
 "            </t>\n"
-"            La cita <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Programar una demostración</strong> ahora será el\n"
+"            La cita <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Programar una demostración</strong> ahora está programada para el\n"
 "            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>\n"
 "        </t>\n"
 "        <t t-elif=\"is_online and target_customer\">\n"
-"            Se actualizó la fecha de su cita con <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t>.\n"
-"            La cita <strong t-out=\"object.event_id.appointment_type_id.name or ''\"></strong> ahora será el\n"
+"            La fecha de su cita con <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t> se actualizó.\n"
+"            La cita <strong t-out=\"object.event_id.appointment_type_id.name or ''\"></strong> ahora está programada para el\n"
 "            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
@@ -962,8 +962,8 @@ msgid ""
 "automatically mark as done when a document is uploaded"
 msgstr ""
 "Las acciones pueden activar comportamientos específicos, como abrir la vista"
-" de calendario o marcar como la actividad como hecha de forma automática al "
-"subir un documento"
+" de calendario o marcar la actividad como hecha de forma automática al subir"
+" un documento"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
@@ -2582,8 +2582,8 @@ msgstr "Detener"
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
 msgid "Stop date of an event, without time for full days events"
 msgstr ""
-"Fecha de fin del evento. Los eventos que duran todo el día no incluyen la "
-"hora."
+"Fecha de finalización del evento, no muestra la hora para eventos que duran "
+"todo el día."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree

@@ -45,6 +45,17 @@ export class UncaughtCorsError extends UncaughtError {
 export const errorService = {
     start(env) {
         function handleError(uncaughtError, retry = true) {
+            function shouldLogError() {
+                // Only log errors that are relevant business-wise, following the heuristics:
+                // Error.event and Error.traceback have been assigned
+                // in one of the two error event listeners below.
+                // If preventDefault was already executed on the event, don't log it.
+                return (
+                    uncaughtError.event &&
+                    !uncaughtError.event.defaultPrevented &&
+                    uncaughtError.traceback
+                );
+            }
             let originalError = uncaughtError;
             while (originalError instanceof Error && "cause" in originalError) {
                 originalError = originalError.cause;
@@ -55,18 +66,18 @@ export const errorService = {
                         break;
                     }
                 } catch (e) {
-                    console.error(
-                        `A crash occured in error handler ${name} while handling ${uncaughtError}:`,
-                        e
-                    );
+                    if (shouldLogError()) {
+                        uncaughtError.event.preventDefault();
+                        console.error(
+                            `@web/core/error_service: handler "${name}" failed with "${
+                                e.cause || e
+                            }" while trying to handle:\n` + uncaughtError.traceback
+                        );
+                    }
                     return;
                 }
             }
-            if (
-                uncaughtError.event &&
-                !uncaughtError.event.defaultPrevented &&
-                uncaughtError.traceback
-            ) {
+            if (shouldLogError()) {
                 // Log the full traceback instead of letting the browser log the incomplete one
                 uncaughtError.event.preventDefault();
                 console.error(uncaughtError.traceback);

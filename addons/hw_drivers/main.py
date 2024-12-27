@@ -85,7 +85,7 @@ class Manager(Thread):
             except json.decoder.JSONDecodeError:
                 _logger.exception('Could not load JSON data: Received data is not in valid JSON format\ncontent:\n%s', resp.data)
             except Exception:
-                _logger.exception('Could not reach configured server')
+                _logger.exception('Could not reach configured server to send all IoT devices')
         else:
             _logger.info('Ignoring sending the devices to the database: no associated database')
 
@@ -119,8 +119,8 @@ class Manager(Thread):
                 i = interface()
                 i.daemon = True
                 i.start()
-            except Exception as e:
-                _logger.error("Error in %s: %s", str(interface), e)
+            except Exception:
+                _logger.exception("Interface %s could not be started", str(interface))
 
         # Set scheduled actions
         schedule and schedule.every().day.at("00:00").do(helpers.get_certificate_status)
@@ -140,7 +140,7 @@ class Manager(Thread):
                 schedule and schedule.run_pending()
             except Exception:
                 # No matter what goes wrong, the Manager loop needs to keep running
-                _logger.error(format_exc())
+                _logger.exception("Manager loop unexpected error")
 
 # Must be started from main thread
 if DBusGMainLoop:

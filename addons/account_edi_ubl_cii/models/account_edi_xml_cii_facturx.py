@@ -34,14 +34,6 @@ class AccountEdiXmlCII(models.AbstractModel):
             'seller_postal_address': self._check_required_fields(
                 vals['record']['company_id']['partner_id']['commercial_partner_id'], 'country_id'
             ),
-            # [BR-DE-9] The element "Buyer post code" (BT-53) must be transmitted. (only mandatory in Germany ?)
-            'buyer_postal_address': self._check_required_fields(
-                vals['record']['commercial_partner_id'], 'zip'
-            ),
-            # [BR-DE-4] The element "Seller post code" (BT-38) must be transmitted. (only mandatory in Germany ?)
-            'seller_post_code': self._check_required_fields(
-                vals['record']['company_id']['partner_id']['commercial_partner_id'], 'zip'
-            ),
             # [BR-CO-26]-In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29),
             # the Seller legal registration identifier (BT-30) and/or the Seller VAT identifier (BT-31) shall be present.
             'seller_identifier': self._check_required_fields(
@@ -74,9 +66,9 @@ class AccountEdiXmlCII(models.AbstractModel):
             # [BR-IG-05]-In an Invoice line (BG-25) where the Invoiced item VAT category code (BT-151) is "IGIC" the
             # invoiced item VAT rate (BT-152) shall be greater than 0 (zero).
             'igic_tax_rate': self._check_non_0_rate_tax(vals)
-                if vals['record']['commercial_partner_id']['country_id']['code'] == 'ES'
-                    and vals['record']['commercial_partner_id']['zip']
-                    and vals['record']['commercial_partner_id']['zip'][:2] in ['35', '38'] else None,
+                if vals['record']['partner_id']['country_id']['code'] == 'ES'
+                    and vals['record']['partner_id']['zip']
+                    and vals['record']['partner_id']['zip'][:2] in ['35', '38'] else None,
         })
         return constraints
 

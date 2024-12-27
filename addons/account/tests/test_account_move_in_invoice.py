@@ -2437,7 +2437,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             ('out_receipt', 1000.0, [('out_refund', 1000.0)], 'reversed'),
             ('out_receipt', 1000.0, [('out_refund', 500.0), ('out_refund', 500.0)], 'reversed'),
             ('out_receipt', 1000.0, [('reverse', 1000.0)], 'reversed'),
-            ('out_refund', 1000.0, [('reverse', -1000.0)], 'reversed'),
+            ('out_refund', 1000.0, [('reverse', -1000.0)], 'paid'),
+            ('out_refund', 1000.0, [('entry', 1000.0)], 'reversed'),
             ('in_invoice', 1000.0, [('in_refund', 1000.0)], 'reversed'),
             ('in_invoice', 1000.0, [('in_refund', 500.0), ('in_refund', 500.0)], 'reversed'),
             ('in_invoice', 1000.0, [('in_refund', 500.0), ('entry', 500.0)], 'reversed'),
@@ -2445,7 +2446,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             ('in_receipt', 1000.0, [('in_refund', 1000.0)], 'reversed'),
             ('in_receipt', 1000.0, [('in_refund', 500.0), ('in_refund', 500.0)], 'reversed'),
             ('in_receipt', 1000.0, [('reverse', 1000.0)], 'reversed'),
-            ('in_refund', 1000.0, [('reverse', 1000.0)], 'reversed'),
+            ('in_refund', 1000.0, [('reverse', 1000.0)], 'paid'),
+            ('in_refund', 1000.0, [('entry', -1000.0)], 'reversed'),
             ('entry', 1000.0, [('entry', -1000.0)], 'not_paid'),
             ('entry', 1000.0, [('reverse', 1000.0)], 'not_paid'),
 
@@ -2546,7 +2548,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(payment_term_line.name, 'test')
         with Form(self.invoice) as move_form:
             move_form.payment_reference = False
-        self.assertEqual(payment_term_line.name, '', 'Payment term line was not changed')
+        self.assertEqual(payment_term_line.name, False, 'Payment term line was not changed')
 
     def test_taxes_onchange_product_uom_and_price_unit(self):
         """

@@ -10,11 +10,11 @@
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Cozmin Candea <office@terrabit.ro>, 2024
 # Martin Trigaux, 2024
-# Dorin Hongu <dhongu@gmail.com>, 2024
 # Larisa_nexterp, 2024
 # Betty Keresztesi, 2024
 # Corina Calin, 2024
 # Lyall Kindmurr, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Lyall Kindmurr, 2024\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1177,15 +1177,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"Vă permite să partajați documentul cu clienții dvs. în cadrul unei vânzări.\n"
-"Lăsați necompletat dacă nu doriți să partajați acest document cu clientul.\n"
-"Cotație: documentul va fi trimis clienților și accesibil acestora în orice moment.\n"
-"de exemplu: această opțiune poate fi utilă pentru a partaja fișierele cu descrierea produsului.\n"
-"Comandă confirmată: documentul va fi trimis si accesibil clientilor.\n"
-"de exemplu: această opțiune poate fi utilă pentru a partaja manualul de utilizare sau conținutul digital cumpărat de pe e-commerce.\n"
-"Citat intern: Documentul va fi inclus in pdf-ul cotației intre antetul paginilor și tabelul de cotație. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -4235,7 +4229,7 @@ msgstr "Linii de comandă de vânzare legate de o comandă de vânzare a mea"
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
 msgid "Sales Order(s)"
-msgstr "Comandă (enzi) de vânzare "
+msgstr "Comenzi de vânzare "
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -4245,7 +4239,6 @@ msgstr "Comandă (enzi) de vânzare "
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -5045,6 +5038,16 @@ msgid "There are existing"
 msgstr "Există"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "This default value is applied to any new product created. This can be "
@@ -5614,6 +5617,7 @@ msgstr ""
 "indiferent dacă este un produs stocabil, un consumabil sau un serviciu."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Comenzile dvs."

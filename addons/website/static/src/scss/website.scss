@@ -340,11 +340,15 @@ $-seen-urls: ();
     @include o-add-gradient('menu-gradient');
 }
 
+.navbar-light .o_navbar_mobile {
+    @include o-add-gradient('menu-gradient');
+}
+
 // TODO this should be reviewed. While it allowed to choose a color for the
 // navbar text, there is no :hover effect, the active item is not visible and
 // the selector is probably too specific and should rather be about extending
 // bootstrap if possible.
-#wrapwrap:not(.o_header_overlay) header, header.o_header_is_scrolled {
+#wrapwrap:not(.o_header_overlay) header, header.o_header_is_scrolled, header .o_navbar_mobile {
     .nav-item > .nav-link > *, .nav-item > .nav-link::after, .js_language_selector span, .badge {
         $header-text-color: o-website-value('header-text-color');
         // Check if the value is wrapped in quotes (initially it wasn't, and it
@@ -2562,4 +2566,19 @@ input[value*="data-oe-translation-initial-sha"] {
 // Disables the offset on dropdown to match relative position in mobile/offcanvas.
 .o_dropdown_without_offset {
     transform: none !important;
+}
+
+// o_facebook_page (Facebook page plugin)
+
+// Since October 2024, the Facebook mobile site (m.facebook.com) uses an
+// 'X-Frame-Options' header set to 'deny', preventing iframe embedding across
+// different domains. This header enforces a security policy restricting
+// cross-origin access to the content.
+// Meta has not provided any communication regarding this change. Until it is
+// resolved, we have no choice but to hide the iframe on mobile to prevent users
+// from seeing a "unavailable content" icon.
+@include media-breakpoint-down(md) {
+    .o_facebook_page {
+        display: none;
+    }
 }

@@ -1655,13 +1655,13 @@ msgstr "Ảnh bìa"
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
 msgid "Create a new time off allocation"
-msgstr "Tạo một phân bổ nghỉ phép mới"
+msgstr "Tạo một phân bổ thời gian nghỉ phép mới"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
 msgid "Create a new time off allocation request"
-msgstr "Tạo một đơn phân bổ nghỉ phép mới"
+msgstr "Tạo một đơn phân bổ thời gian nghỉ phép mới"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__create_uid
@@ -3701,6 +3701,17 @@ msgstr ""
 "tích lũy được sử dụng."
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_type.py:0
+#, python-format
+msgid ""
+"The allocation requirement of a time off type cannot be changed once leaves "
+"of that type have been taken. You should create a new time off type instead."
+msgstr ""
+"Không thể thay đổi đơn phân bổ của loại nghỉ phép sau khi đã sử dụng ngày "
+"nghỉ phép thuộc loại đó. Thay vào đó, bạn nên tạo loại nghỉ phép mới."
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__color
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color
 msgid ""
@@ -3956,7 +3967,7 @@ msgstr "Nghỉ phép"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation
 msgid "Time Off Allocation"
-msgstr "Phân bổ nghỉ phép"
+msgstr "Phân bổ thời gian nghỉ phép"
 
 #. module: hr_holidays
 #. odoo-python
