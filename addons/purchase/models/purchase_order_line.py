@@ -116,7 +116,7 @@ class PurchaseOrderLine(models.Model):
             line = line.with_company(line.company_id)
             fpos = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id._get_fiscal_position(line.order_id.partner_id)
             # filter taxes by company
-            taxes = line.product_id.supplier_taxes_id._filter_taxes_by_company(line.company_id)
+            taxes = line.product_id.supplier_tax_ids._filter_taxes_by_company(line.company_id)
             line.tax_ids = fpos.map_tax(taxes)
 
     @api.depends('discount', 'price_unit')
@@ -319,7 +319,7 @@ class PurchaseOrderLine(models.Model):
                 po_line_uom = line.product_uom_id or line.product_id.uom_id
                 price_unit = line.env['account.tax']._fix_tax_included_price_company(
                     line.product_id.uom_id._compute_price(line.product_id.standard_price, po_line_uom),
-                    line.product_id.supplier_taxes_id,
+                    line.product_id.supplier_tax_ids,
                     line.tax_ids,
                     line.company_id,
                 )
@@ -333,7 +333,7 @@ class PurchaseOrderLine(models.Model):
                 line.price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
 
             elif seller:
-                price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.tax_ids, line.company_id) if seller else 0.0
+                price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_tax_ids, line.tax_ids, line.company_id) if seller else 0.0
                 price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
                 price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
                 line.price_unit = seller.product_uom_id._compute_price(price_unit, line.product_uom_id)
@@ -505,7 +505,7 @@ class PurchaseOrderLine(models.Model):
         if seller and seller.product_uom_id != product_uom:
             uom_po_qty = product_id.uom_id._compute_quantity(uom_po_qty, seller.product_uom_id, rounding_method='HALF-UP')
 
-        product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id in company_id.parent_ids)
+        product_taxes = product_id.supplier_tax_ids.filtered(lambda x: x.company_id in company_id.parent_ids)
         taxes = po.fiscal_position_id.map_tax(product_taxes)
 
         if seller:

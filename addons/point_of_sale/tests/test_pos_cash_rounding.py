@@ -31,7 +31,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             'name': "random_product",
             'available_in_pos': True,
             'list_price': 13.67,
-            'taxes_id': [Command.set(cls.company_data['default_tax_sale'].ids)],
+            'tax_ids': [Command.set(cls.company_data['default_tax_sale'].ids)],
             'pos_categ_ids': [Command.set(cls.pos_desk_misc_test.ids)],
         })
 
@@ -438,14 +438,14 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             'name': "product_a",
             'available_in_pos': True,
             'list_price': 95.00,
-            'taxes_id': tax_include,
+            'tax_ids': tax_include,
             'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
         })
         self.env['product.product'].create({
             'name': "product_b",
             'available_in_pos': True,
             'list_price': 42.00,
-            'taxes_id': tax_include,
+            'tax_ids': tax_include,
             'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
         })
         self.start_pos_tour('test_cash_rounding_up_with_change')

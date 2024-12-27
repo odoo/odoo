@@ -262,7 +262,7 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
         test_product = self.env['product.product'].create({
             'name': 'Test Product',
             'list_price': 110,
-            'taxes_id': [Command.set([tax10.id])],
+            'tax_ids': [Command.set([tax10.id])],
         })
 
         # Add discount of 50% for pricelist
@@ -336,7 +336,7 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
         product_template = self.env['product.template'].create({
             'name': 'prod_no_variant',
             'list_price': 110,
-            'taxes_id': [Command.set([tax10.id])],
+            'tax_ids': [Command.set([tax10.id])],
             'is_published': True,
             'attribute_line_ids': [
                 Command.create({

@@ -250,7 +250,7 @@ class Delivery(WebsiteSale):
             express_checkout_partial_delivery_address=is_express_checkout_flow
         ))
         if rate.get('success'):
-            tax_ids = delivery_method.product_id.taxes_id.filtered(
+            tax_ids = delivery_method.product_id.tax_ids.filtered(
                 lambda t: t.company_id == order.company_id
             )
             if tax_ids:

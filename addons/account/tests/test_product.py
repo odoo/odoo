@@ -29,7 +29,7 @@ class TestProduct(AccountTestInvoicingCommon):
             "name": "Tax tag",
             "applicability": "taxes",
         })
-        self.product_a.taxes_id.repartition_line_ids.tag_ids = tax_line_tag
+        self.product_a.tax_ids.repartition_line_ids.tag_ids = tax_line_tag
         # Check that internal user can read product_a
         self.env.invalidate_all()
         with Form(self.product_a.with_user(self.internal_user)) as form_a:
@@ -49,11 +49,11 @@ class TestProduct(AccountTestInvoicingCommon):
         companies = self.env['res.company'].sudo().search([])
         # Product should have all the default taxes of the other companies.
         self.assertRecordValues(product_without_company.sudo(), [{
-            'taxes_id': companies.account_sale_tax_id.ids,
-            'supplier_taxes_id': companies.account_purchase_tax_id.ids,
+            'tax_ids': companies.account_sale_tax_id.ids,
+            'supplier_tax_ids': companies.account_purchase_tax_id.ids,
         }])  # Take care that inactive default taxes won't be shown on the product
         # Product should have only the default tax of the company it belongs to.
         self.assertRecordValues(product_with_company.sudo(), [{
-            'taxes_id': self.company_data['company'].account_sale_tax_id.ids,
-            'supplier_taxes_id': self.company_data['company'].account_purchase_tax_id.ids,
+            'tax_ids': self.company_data['company'].account_sale_tax_id.ids,
+            'supplier_tax_ids': self.company_data['company'].account_purchase_tax_id.ids,
         }])

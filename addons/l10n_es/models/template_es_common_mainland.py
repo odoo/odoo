@@ -25,7 +25,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('es_common_mainland', model='product.product')
     def _get_product(self):
         return {
-            'l10n_es.product_dua_valuation_4': {'supplier_taxes_id': [Command.set(['account_tax_template_p_iva4_ibc_group'])]},
-            'l10n_es.product_dua_valuation_10': {'supplier_taxes_id': [Command.set(['account_tax_template_p_iva10_ibc_group'])]},
-            'l10n_es.product_dua_valuation_21': {'supplier_taxes_id': [Command.set(['account_tax_template_p_iva21_ibc_group'])]},
+            'l10n_es.product_dua_valuation_4': {'supplier_tax_ids': [Command.set(['account_tax_template_p_iva4_ibc_group'])]},
+            'l10n_es.product_dua_valuation_10': {'supplier_tax_ids': [Command.set(['account_tax_template_p_iva10_ibc_group'])]},
+            'l10n_es.product_dua_valuation_21': {'supplier_tax_ids': [Command.set(['account_tax_template_p_iva21_ibc_group'])]},
         }

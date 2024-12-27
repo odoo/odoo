@@ -239,7 +239,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
 
     @staticmethod
     def _apply_taxes_to_price(price, product_or_template, currency):
-        product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(
+        product_taxes = product_or_template.sudo().tax_ids._filter_taxes_by_company(
             request.env.company
         )
         if product_taxes:

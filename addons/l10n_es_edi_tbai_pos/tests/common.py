@@ -19,5 +19,5 @@ class CommonPosEsEdiTest(CommonPosTest):
 
     def es_edi_edit_product_templates(self):
         self.ten_dollars_with_10_incl.write({
-            'taxes_id': self._get_tax_by_xml_id('s_iva21b').ids
+            'tax_ids': self._get_tax_by_xml_id('s_iva21b').ids
         })

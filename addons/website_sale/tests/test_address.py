@@ -315,7 +315,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             'list_price': 100,
             'website_published': True,
             'sale_ok': True,
-            'taxes_id': [tax_10_incl.id]
+            'tax_ids': [tax_10_incl.id]
         })
         so = self.env['sale.order'].create({
             'partner_id': self.partner.id,

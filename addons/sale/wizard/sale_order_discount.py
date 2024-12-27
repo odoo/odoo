@@ -46,7 +46,7 @@ class SaleOrderDiscount(models.TransientModel):
             'invoice_policy': 'order',
             'list_price': 0.0,
             'company_id': self.company_id.id,
-            'taxes_id': None,
+            'tax_ids': None,
         }
         services_category = self.env.ref('product.product_category_services', raise_if_not_found=False)
         if services_category:

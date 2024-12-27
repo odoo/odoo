@@ -31,9 +31,9 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
     def test_01_product_configurator(self):
         self.env.ref('base.user_admin').write({'group_ids': [(4, self.env.ref('product.group_product_variant').id)]})
         tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 15})
-        self.product_product_custo_desk.taxes_id = tax
-        self.product_product_conf_chair_floor_protect.taxes_id = tax
-        self.product_product_conf_chair.taxes_id = tax
+        self.product_product_custo_desk.tax_ids = tax
+        self.product_product_conf_chair_floor_protect.tax_ids = tax
+        self.product_product_conf_chair.tax_ids = tax
         self.start_tour("/odoo", 'sale_product_configurator_tour', login='salesman')
 
     def test_02_product_configurator_advanced(self):
@@ -165,11 +165,11 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
         })
         # Add a 15% tax on desk
         tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 15})
-        self.product_product_custo_desk.taxes_id = tax
+        self.product_product_custo_desk.tax_ids = tax
 
         # Remove tax from Conference Chair and Chair floor protection
-        self.product_product_conf_chair.taxes_id = None
-        self.product_product_conf_chair_floor_protect.taxes_id = None
+        self.product_product_conf_chair.tax_ids = None
+        self.product_product_conf_chair_floor_protect.tax_ids = None
         self.start_tour("/odoo", 'sale_product_configurator_pricelist_tour', login='salesman')
 
     def test_06_product_configurator_optional_products(self):

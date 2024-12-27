@@ -359,8 +359,8 @@
             <field name="categ_id" ref="product_category_clothes"/>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_others')])]" />
             <field name="combo_ids" eval="[(6, 0, [ref('jeans_combo'), ref('tshirt_combo')])]"/>
-            <field name="taxes_id" eval="[(5,)]"/>
-            <field name="supplier_taxes_id" eval="[(5,)]"/>
+            <field name="tax_ids" eval="[(5,)]"/>
+            <field name="supplier_tax_ids" eval="[(5,)]"/>
         </record>
 
         <record model="product.product" id="casual_denim_short">

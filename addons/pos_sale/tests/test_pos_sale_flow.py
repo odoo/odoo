@@ -91,14 +91,14 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
             'is_storable': True,
             'lst_price': 10,
-            'taxes_id': [Command.clear()],
+            'tax_ids': [Command.clear()],
         })
         product2 = self.env['product.product'].create({
             'name': 'product2',
             'available_in_pos': True,
             'is_storable': True,
             'lst_price': 11,
-            'taxes_id': [Command.clear()],
+            'tax_ids': [Command.clear()],
         })
         partner_1 = self.env['res.partner'].create({'name': 'Test Partner 1'})
         partner_2 = self.env['res.partner'].create({'name': 'Test Partner 2'})
@@ -209,7 +209,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
             'is_storable': True,
             'lst_price': 10.0,
-            'taxes_id': False,
+            'tax_ids': False,
             'categ_id': self.product_category.id,
         })
 
@@ -402,14 +402,14 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'name': 'Product A',
             'available_in_pos': True,
             'lst_price': 10.0,
-            'taxes_id': [],
+            'tax_ids': [],
         })
 
         product_b = self.env['product.product'].create({
             'name': 'Product B',
             'available_in_pos': True,
             'lst_price': 5.0,
-            'taxes_id': [],
+            'tax_ids': [],
         })
 
         partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
@@ -498,7 +498,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'type': 'service',
             'invoice_policy': 'order',
             'lst_price': 50.0,
-            'taxes_id': [],
+            'tax_ids': [],
         })
 
         partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
@@ -524,7 +524,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         the sale price of the product when changing customer.
         """
         self.product_a.lst_price = 150
-        self.product_a.taxes_id = None
+        self.product_a.tax_ids = None
         self.product_a.available_in_pos = True
         self.product_a.name = 'Product A'
         self.env['res.partner'].create({'name': 'A Test Partner AAA'})
@@ -586,21 +586,21 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'name': 'Product A',
             'available_in_pos': True,
             'lst_price': 10.0,
-            'taxes_id': [tax_1.id],
+            'tax_ids': [tax_1.id],
         })
 
         product_b = self.env['product.product'].create({
             'name': 'Product B',
             'available_in_pos': True,
             'lst_price': 5.0,
-            'taxes_id': [tax_2.id],
+            'tax_ids': [tax_2.id],
         })
 
         product_c = self.env['product.product'].create({
             'name': 'Product C',
             'available_in_pos': True,
             'lst_price': 15.0,
-            'taxes_id': [],
+            'tax_ids': [],
         })
         partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
 
@@ -629,7 +629,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'name': 'Down Payment',
             'available_in_pos': True,
             'type': 'service',
-            'taxes_id': [],
+            'tax_ids': [],
         })
         self.main_pos_config.write({
             'down_payment_product_id': self.downpayment_product.id,
@@ -676,7 +676,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'name': 'Product',
             'available_in_pos': True,
             'lst_price': 10.0,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         sale_order = self.env['sale.order'].sudo().create({
@@ -698,7 +698,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'name': 'Test Product',
             'available_in_pos': True,
             'lst_price': 100.0,
-            'taxes_id': False,
+            'tax_ids': False,
         })
         sale_team = self.env['crm.team'].create({'name': 'Test team'})
         self.main_pos_config.write({'crm_team_id': sale_team})
@@ -724,7 +724,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'name': 'Product',
             'available_in_pos': True,
             'lst_price': 10,
-            'taxes_id': False,
+            'tax_ids': False,
         })
         sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
@@ -745,7 +745,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'name': 'Product A',
             'available_in_pos': True,
             'lst_price': 100.0,
-            'taxes_id': [],
+            'tax_ids': [],
         })
         partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
 
@@ -972,7 +972,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
             'is_storable': True,
             'lst_price': 10,
-            'taxes_id': [Command.clear()],
+            'tax_ids': [Command.clear()],
         })
         partner_1 = self.env['res.partner'].create({'name': 'Test Partner 1'})
         order = self.env['sale.order'].sudo().create({
@@ -1058,7 +1058,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'name': 'Product Test',
             'available_in_pos': True,
             'list_price': 1000,
-            'taxes_id': [(6, 0, [tax.id])],
+            'tax_ids': [(6, 0, [tax.id])],
         })
 
         self.env['sale.order'].sudo().create({
@@ -1166,7 +1166,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 "type": "service",
                 "invoice_policy": "order",
                 "lst_price": 100.0,
-                "taxes_id": [],
+                "tax_ids": [],
             }
         )
 

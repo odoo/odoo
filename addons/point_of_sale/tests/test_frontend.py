@@ -136,7 +136,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'name': 'Whiteboard Pen',
             'available_in_pos': True,
             'list_price': 1.20,
-            'taxes_id': False,
+            'tax_ids': False,
             'weight': 0.01,
             'to_weight': True,
             'pos_categ_ids': [(4, cls.pos_desk_misc_test.id)],
@@ -145,41 +145,41 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'name': 'Wall Shelf Unit',
             'available_in_pos': True,
             'list_price': 1.98,
-            'taxes_id': False,
+            'tax_ids': False,
             'barcode': '2100005000000',
         })
         cls.small_shelf = env['product.template'].create({
             'name': 'Small Shelf',
             'available_in_pos': True,
             'list_price': 2.83,
-            'taxes_id': False,
+            'tax_ids': False,
         })
         cls.magnetic_board = env['product.template'].create({
             'name': 'Magnetic Board',
             'available_in_pos': True,
             'list_price': 1.98,
-            'taxes_id': False,
+            'tax_ids': False,
             'barcode': '2305000000004',
         })
         cls.monitor_stand = env['product.template'].create({
             'name': 'Monitor Stand',
             'available_in_pos': True,
             'list_price': 3.19,
-            'taxes_id': False,
+            'tax_ids': False,
             'barcode': '0123456789',  # No pattern in barcode nomenclature
         })
         cls.desk_pad = env['product.template'].create({
             'name': 'Desk Pad',
             'available_in_pos': True,
             'list_price': 1.98,
-            'taxes_id': False,
+            'tax_ids': False,
             'pos_categ_ids': [(4, cls.pos_cat_desk_test.id)],
         })
         cls.letter_tray = env['product.template'].create({
             'name': 'Letter Tray',
             'available_in_pos': True,
             'list_price': 4.80,
-            'taxes_id': False,
+            'tax_ids': False,
             'categ_id': env.ref('product.product_category_services').id,
             'pos_categ_ids': [(4, cls.pos_cat_chair_test.id)],
         })
@@ -187,14 +187,14 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'name': 'Desk Organizer',
             'available_in_pos': True,
             'list_price': 5.10,
-            'taxes_id': False,
+            'tax_ids': False,
             'barcode': '2300002000007',
         })
         cls.configurable_chair = env['product.template'].create({
             'name': 'Configurable Chair',
             'available_in_pos': True,
             'list_price': 10,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         attribute = env['product.attribute'].create({
@@ -513,7 +513,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         env['account.tax'].create({'name': "DST", 'amount': 5, 'fiscal_position_ids': [Command.link(FP_POS_2M.id)], 'original_tax_ids': [Command.link(src_tax.id)]})
         env['account.tax'].create({'name': "DST2", 'amount': 10, 'fiscal_position_ids': [Command.link(FP_POS_2M.id)], 'original_tax_ids': [Command.link(src_tax.id)]})
 
-        cls.letter_tray.taxes_id = [(6, 0, [src_tax.id])]
+        cls.letter_tray.tax_ids = [(6, 0, [src_tax.id])]
 
         cls.main_pos_config.write({
             'tax_regime_selection': True,
@@ -559,7 +559,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 class TestUi(TestPointOfSaleHttpCommon):
     def test_01_pos_basic_order(self):
         self.tip.write({
-            'taxes_id': False
+            'tax_ids': False
         })
         self.main_pos_config.write({
             'iface_tipproduct': True,
@@ -690,7 +690,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Zero Amount Product',
             'available_in_pos': True,
             'list_price': 0,
-            'taxes_id': [(6, 0, [fixed_tax.id])],
+            'tax_ids': [(6, 0, [fixed_tax.id])],
             'categ_id': self.env.ref('product.product_category_services').id,
         })
 
@@ -740,7 +740,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Product Test',
             'available_in_pos': True,
             'list_price': 1.96,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         self.main_pos_config.write({
@@ -762,7 +762,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Product Test',
             'available_in_pos': True,
             'list_price': 1.98,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         self.main_pos_config.write({
@@ -786,21 +786,21 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Product Test 1.20',
             'available_in_pos': True,
             'list_price': 1.2,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         self.env['product.product'].create({
             'name': 'Product Test 1.25',
             'available_in_pos': True,
             'list_price': 1.25,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         self.env['product.product'].create({
             'name': 'Product Test 1.4',
             'available_in_pos': True,
             'list_price': 1.4,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         self.main_pos_config.write({
@@ -842,7 +842,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         #create a product with the tax
         self.product = self.env['product.product'].create({
             'name': 'Test Product',
-            'taxes_id': [(6, 0, [tax.id])],
+            'tax_ids': [(6, 0, [tax.id])],
             'list_price': 100,
             'available_in_pos': True,
         })
@@ -918,14 +918,14 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Test Product 1',
             'available_in_pos': True,
             'list_price': 100,
-            'taxes_id': [(6, 0, [tax_inclusive_1.id])],
+            'tax_ids': [(6, 0, [tax_inclusive_1.id])],
         })
 
         self.test_product_2 = self.env['product.product'].create({
             'name': 'Test Product 2',
             'available_in_pos': True,
             'list_price': 100,
-            'taxes_id': [(6, 0, [tax_exclusive_1.id])],
+            'tax_ids': [(6, 0, [tax_exclusive_1.id])],
         })
 
         # add the fiscal position to the PoS
@@ -948,7 +948,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Test Product',
             'available_in_pos': True,
             'list_price': 10,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         base_pricelist = self.env['product.pricelist'].create({
@@ -1037,7 +1037,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['product.product'].create({
             'name': 'Test Product',
             'list_price': 110,
-            'taxes_id': [(6, 0, [tax.id])],
+            'tax_ids': [(6, 0, [tax.id])],
             'available_in_pos': True,
         })
 
@@ -1072,7 +1072,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Packaging Product',
             'available_in_pos': True,
             'list_price': 10,
-            'taxes_id': False,
+            'tax_ids': False,
             'barcode': '12345601',
             'uom_ids': [Command.link(pack_of_10.id)],
         })
@@ -1098,7 +1098,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Product 1',
             'available_in_pos': True,
             'list_price': 10,
-            'taxes_id': False,
+            'tax_ids': False,
             'barcode': '08431673020125',
         })
 
@@ -1106,7 +1106,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Product 2',
             'available_in_pos': True,
             'list_price': 10,
-            'taxes_id': False,
+            'tax_ids': False,
             'barcode': '08431673020126',
         })
 
@@ -1115,7 +1115,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Product 3',
             'available_in_pos': True,
             'list_price': 10,
-            'taxes_id': False,
+            'tax_ids': False,
             'barcode': '3760171283370',
         })
 
@@ -1151,7 +1151,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'is_storable': True,
             'available_in_pos': True,
             'list_price': 100,
-            'taxes_id': [(6, 0, self.tax1.ids)],
+            'tax_ids': [(6, 0, self.tax1.ids)],
         })
 
         #add the fiscal position to the PoS
@@ -1199,7 +1199,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Test Product 1',
             'list_price': 100,
             'barcode': '0100100',
-            'taxes_id': False,
+            'tax_ids': False,
             'pos_categ_ids': [(4, limited_category.id)],
             'available_in_pos': True,
         })
@@ -1220,7 +1220,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         product_2_template = self.env['product.template'].create({
             'name': 'Test Product 2',
             'list_price': 200,
-            'taxes_id': False,
+            'tax_ids': False,
             'available_in_pos': True,
             'pos_categ_ids': [(4, limited_category.id)],
             'attribute_line_ids': [(0, 0, {
@@ -1238,7 +1238,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Test Product 3',
             'list_price': 300,
             'barcode': '0100300',
-            'taxes_id': False,
+            'tax_ids': False,
             'pos_categ_ids': [(4, limited_category.id)],
             'available_in_pos': True,
         })
@@ -1277,7 +1277,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Product A',
             'available_in_pos': True,
             'list_price': 10,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         chair_multi_attribute = self.env['product.attribute'].create({
@@ -1309,7 +1309,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         product = self.env['product.product'].create({
             'name': 'Test Product',
             'list_price': 100,
-            'taxes_id': False,
+            'tax_ids': False,
             'available_in_pos': True,
         })
         product.update_field_translations('name', {'fr_FR': 'Testez le produit'})
@@ -1326,7 +1326,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['product.product'].create({
             'name': 'Test Product',
             'list_price': 1_453.53,
-            'taxes_id': False,
+            'tax_ids': False,
             'available_in_pos': True,
         })
 
@@ -1351,7 +1351,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['product.product'].create({
             'name': 'Test Product',
             'list_price': 10.00,
-            'taxes_id': False,
+            'tax_ids': False,
             'available_in_pos': True,
         })
 
@@ -1378,7 +1378,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['product.product'].create({
             'name': 'Sugar',
             'list_price': 3,
-            'taxes_id': False,
+            'tax_ids': False,
             'available_in_pos': True,
             'uom_id': self.env.ref('uom.product_uom_kgm').id,
         })
@@ -1411,7 +1411,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 "standard_price": 10,
                 "name": "Desk Combo",
                 "type": "combo",
-                "taxes_id": False,
+                "tax_ids": False,
                 "combo_ids": [
                     (6, 0, [combo.id for combo in combos])
                 ],
@@ -1477,10 +1477,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         setup_product_combo_items(self)
-        self.office_combo.write({'list_price': 50, 'taxes_id': [(6, 0, [tax_1.id])]})
+        self.office_combo.write({'list_price': 50, 'tax_ids': [(6, 0, [tax_1.id])]})
         for combo in self.office_combo.combo_ids:  # Set the tax to all the products of the combo
             for item in combo.combo_item_ids:
-                item.product_id.taxes_id = [(6, 0, [tax_1.id])]
+                item.product_id.tax_ids = [(6, 0, [tax_1.id])]
 
         self.main_pos_config.write({
             'tax_regime_selection': True,
@@ -1624,7 +1624,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 "available_in_pos": True,
                 "list_price": 123456,
                 "name": "Test Expensive",
-                "taxes_id": False
+                "tax_ids": False
             }
         )
         self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -1696,7 +1696,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             {
                 'name': 'Test Product 1',
                 'list_price': 100,
-                'taxes_id': False,
+                'tax_ids': False,
                 'available_in_pos': True,
                 'barcode': '1234567890123',
                 'default_code': 'TESTPROD1',
@@ -1704,7 +1704,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             {
                 'name': 'Test Product 2',
                 'list_price': 100,
-                'taxes_id': False,
+                'tax_ids': False,
                 'available_in_pos': True,
                 'barcode': '1234567890124',
                 'default_code': 'TESTPROD2',
@@ -1712,7 +1712,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             {
                 'name': 'Apple',
                 'list_price': 100,
-                'taxes_id': False,
+                'tax_ids': False,
                 'available_in_pos': True,
             },
         ])
@@ -1734,7 +1734,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'tpmcapi product',
             'list_price': 1.0,
             'available_in_pos': True,
-            'taxes_id': False,
+            'tax_ids': False,
         })
         self.main_pos_config.pricelist_id.write({
             'item_ids': [Command.create({
@@ -1836,7 +1836,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Product Test',
             'available_in_pos': True,
             'list_price': 1000,
-            'taxes_id': [(6, 0, [tax.id])],
+            'tax_ids': [(6, 0, [tax.id])],
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -1864,7 +1864,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['product.product'].create({
             'name': 'Product with child category',
             'list_price': 100,
-            'taxes_id': False,
+            'tax_ids': False,
             'available_in_pos': True,
             'categ_id': child_category.id,
         })
@@ -1936,7 +1936,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.product = self.env['product.product'].create({
             'name': 'Test Product',
-            'taxes_id': [(6, 0, [tax_1.id])],
+            'tax_ids': [(6, 0, [tax_1.id])],
             'list_price': 100,
             'available_in_pos': True,
         })
@@ -1954,7 +1954,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['product.product'].create({
             'name': 'Test Product',
             'list_price': 100,
-            'taxes_id': False,
+            'tax_ids': False,
             'available_in_pos': True,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -1974,7 +1974,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['product.product'].create({
             'name': 'Test Product',
             'list_price': 100,
-            'taxes_id': False,
+            'tax_ids': False,
             'available_in_pos': True,
         })
 
@@ -2061,7 +2061,7 @@ class TestTaxCommonPOS(TestPointOfSaleHttpCommon, TestTaxCommon):
             **kwargs,
             'available_in_pos': True,
             'list_price': base_line['price_unit'],
-            'taxes_id': [Command.set(base_line['tax_ids'].ids)],
+            'tax_ids': [Command.set(base_line['tax_ids'].ids)],
             'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
         })
 

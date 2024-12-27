@@ -85,7 +85,7 @@ class TestUi(AccountTestInvoicingHttpCommon):
             'amount_type': 'percent',
             'amount': 10,
         })
-        product.supplier_taxes_id = new_tax
+        product.supplier_tax_ids = new_tax
 
         self.start_tour("/odoo", 'account_tax_group', login="admin")
 

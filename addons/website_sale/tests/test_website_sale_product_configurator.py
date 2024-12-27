@@ -381,7 +381,7 @@ class TestWebsiteSaleProductConfigurator(
                     'value_ids': [Command.set(attribute.value_ids.ids)],
                 }),
             ],
-            'taxes_id': tax,
+            'tax_ids': tax,
         })
 
         with MockRequest(self.env, website=self.website):
@@ -434,14 +434,14 @@ class TestWebsiteSaleProductConfigurator(
             'website_published': True,
             'list_price': 5,
             'compare_list_price': 10,
-            'taxes_id': tax,
+            'tax_ids': tax,
         })
         main_product = self.env['product.template'].create({
             'name': "Main product",
             'website_published': True,
             'list_price': 100,
             'optional_product_ids': [Command.set(optional_product.ids)],
-            'taxes_id': tax,
+            'tax_ids': tax,
         })
         # Make sure the custom pricelist from the product configurator common doesn't fail the test
         self.custom_pricelist.action_archive()

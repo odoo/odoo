@@ -598,8 +598,8 @@
             <field name="combo_ids" eval="[(6, 0, [ref('drink_combo'), ref('burger_combo')])]"/>
             <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
-            <field name="taxes_id" eval="[(5,)]"/>  <!-- no taxes -->
-            <field name="supplier_taxes_id" eval="[(5,)]"/>
+            <field name="tax_ids" eval="[(5,)]"/>  <!-- no taxes -->
+            <field name="supplier_tax_ids" eval="[(5,)]"/>
         </record>
 
         <record id="sushi_drink_combo" model="product.product">
@@ -613,8 +613,8 @@
             <field name="combo_ids" eval="[(6, 0, [ref('drink_combo'), ref('sushi_choice')])]"/>
             <field name="categ_id" ref="point_of_sale.product_category_food"/>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
-            <field name="taxes_id" eval="[(5,)]"/>
-            <field name="supplier_taxes_id" eval="[(5,)]"/>
+            <field name="tax_ids" eval="[(5,)]"/>
+            <field name="supplier_tax_ids" eval="[(5,)]"/>
         </record>
     </data>
 </odoo>

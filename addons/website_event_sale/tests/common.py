@@ -39,7 +39,7 @@ class TestWebsiteEventSaleCommon(WebsiteSaleCommon):
             'service_tracking': 'event',
             'list_price': 100,
             'name': 'Event Registration No Company Assigned',
-            'taxes_id': [Command.set(cls.zero_tax.ids)],
+            'tax_ids': [Command.set(cls.zero_tax.ids)],
         })
 
         cls.event, cls.event_2 = cls.env['event.event'].create([

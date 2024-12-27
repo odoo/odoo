@@ -372,7 +372,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(product_b.cost_currency_id, currency, 'The cost currency should be the one set on the company,'
                                                                ' as the product is now opened in another company')
 
-        product_b.supplier_taxes_id = False
+        product_b.supplier_tax_ids = False
         product_b.update({'standard_price': 10.0})
 
         #create a purchase order with the product from company B
@@ -671,19 +671,19 @@ class TestPurchase(AccountTestInvoicingCommon):
         # create several products with different taxes combination
         product_all_taxes = self.env['product.product'].create({
             'name': 'Product all taxes',
-            'supplier_taxes_id': [Command.set((tax_a + tax_b + tax_x + tax_xx).ids)],
+            'supplier_tax_ids': [Command.set((tax_a + tax_b + tax_x + tax_xx).ids)],
         })
         product_no_xx_tax = self.env['product.product'].create({
             'name': 'Product no tax from XX',
-            'supplier_taxes_id': [Command.set((tax_a + tax_b + tax_x).ids)],
+            'supplier_tax_ids': [Command.set((tax_a + tax_b + tax_x).ids)],
         })
         product_no_branch_tax = self.env['product.product'].create({
             'name': 'Product no tax from branch',
-            'supplier_taxes_id': [Command.set((tax_a + tax_b).ids)],
+            'supplier_tax_ids': [Command.set((tax_a + tax_b).ids)],
         })
         product_no_tax = self.env['product.product'].create({
             'name': 'Product no tax',
-            'supplier_taxes_id': [],
+            'supplier_tax_ids': [],
         })
         # create a PO from Branch XX
         po_form = Form(self.env['purchase.order'].with_company(branch_xx))

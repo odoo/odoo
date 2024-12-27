@@ -22,7 +22,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             'name': 'Test Product 1',
             'is_storable': True,
             'list_price': 10.0,
-            'taxes_id': False,
+            'tax_ids': False,
         })
         self.main_pos_config.open_ui()
         self.pos_order = self.env['pos.order'].create({
@@ -83,7 +83,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             'name': 'Test Product 1',
             'is_storable': True,
             'list_price': 10.0,
-            'taxes_id': False,
+            'tax_ids': False,
         })
         self.main_pos_config.open_ui()
         self.pos_order = self.env['pos.order'].create({

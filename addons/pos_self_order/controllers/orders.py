@@ -106,7 +106,7 @@ class PosSelfOrderController(http.Controller):
                     price_extra_child = sum(attr.price_extra for attr in selected_attributes)
                     price_unit += pos_order_line.combo_item_id.extra_price + price_extra_child
 
-                    taxes = fiscal_pos.map_tax(child_product.taxes_id) if fiscal_pos else child_product.taxes_id
+                    taxes = fiscal_pos.map_tax(child_product.tax_ids) if fiscal_pos else child_product.tax_ids
                     pdetails = taxes.compute_all(price_unit, pos_config.currency_id, pos_order_line.qty, child_product)
 
                     pos_order_line.write({
@@ -114,7 +114,7 @@ class PosSelfOrderController(http.Controller):
                         'price_subtotal': pdetails.get('total_excluded'),
                         'price_subtotal_incl': pdetails.get('total_included'),
                         'price_extra': price_extra_child,
-                        'tax_ids': child_product.taxes_id,
+                        'tax_ids': child_product.tax_ids,
                     })
                 lst_price = 0
 

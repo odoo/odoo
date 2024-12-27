@@ -32,7 +32,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'price_unit': 800.0,
             'price_subtotal': 800.0,
             'price_total': 920.0,
-            'tax_ids': cls.product_a.supplier_taxes_id.ids,
+            'tax_ids': cls.product_a.supplier_tax_ids.ids,
             'tax_line_id': False,
             'currency_id': cls.company_data['currency'].id,
             'amount_currency': 800.0,
@@ -51,7 +51,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'price_unit': 160.0,
             'price_subtotal': 160.0,
             'price_total': 208.0,
-            'tax_ids': cls.product_b.supplier_taxes_id.ids,
+            'tax_ids': cls.product_b.supplier_tax_ids.ids,
             'tax_line_id': False,
             'currency_id': cls.company_data['currency'].id,
             'amount_currency': 160.0,
@@ -187,7 +187,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'price_unit': 160.0,
                 'price_subtotal': 160.0,
                 'price_total': 208.0,
-                'tax_ids': self.product_b.supplier_taxes_id.ids,
+                'tax_ids': self.product_b.supplier_tax_ids.ids,
                 'amount_currency': 160.0,
                 'debit': 160.0,
             },
@@ -243,7 +243,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'name': 'product',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
             'standard_price': 110.0,
-            'supplier_taxes_id': [(6, 0, tax_price_include.ids)],
+            'supplier_tax_ids': [(6, 0, tax_price_include.ids)],
         })
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
@@ -383,7 +383,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'name': 'product',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
             'standard_price': 110.0,
-            'supplier_taxes_id': [(6, 0, tax_price_include_1.ids)],
+            'supplier_tax_ids': [(6, 0, tax_price_include_1.ids)],
         })
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
@@ -869,14 +869,14 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 (0, 0, {
                     'product_id': self.product_a.id,
                     'price_unit': 799.99,
-                    'tax_ids': [(6, 0, self.product_a.supplier_taxes_id.ids)],
+                    'tax_ids': [(6, 0, self.product_a.supplier_tax_ids.ids)],
                     'product_uom_id':  self.product_a.uom_id.id,
                 }),
 
                 (0, 0, {
                     'product_id': self.product_b.id,
                     'price_unit': self.product_b.standard_price,
-                    'tax_ids': [(6, 0, self.product_b.supplier_taxes_id.ids)],
+                    'tax_ids': [(6, 0, self.product_b.supplier_tax_ids.ids)],
                     'product_uom_id':  self.product_b.uom_id.id,
                 }),
             ],
@@ -2600,7 +2600,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'name': 'product',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
             'standard_price': 0.0,
-            'supplier_taxes_id': [Command.set(tax.ids)],
+            'supplier_tax_ids': [Command.set(tax.ids)],
         })
         expected_values = [
             {
@@ -2705,23 +2705,23 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         # create several products with different taxes combination
         product_all_taxes = self.env['product.product'].create({
             'name': 'Product all taxes',
-            'taxes_id': [Command.set((tax_a + tax_b + tax_x + tax_xx).ids)],
-            'supplier_taxes_id': [Command.set((tax_a + tax_b + tax_x + tax_xx).ids)],
+            'tax_ids': [Command.set((tax_a + tax_b + tax_x + tax_xx).ids)],
+            'supplier_tax_ids': [Command.set((tax_a + tax_b + tax_x + tax_xx).ids)],
         })
         product_no_xx_tax = self.env['product.product'].create({
             'name': 'Product no tax from XX',
-            'taxes_id': [Command.set((tax_a + tax_b + tax_x).ids)],
-            'supplier_taxes_id': [Command.set((tax_a + tax_b + tax_x).ids)],
+            'tax_ids': [Command.set((tax_a + tax_b + tax_x).ids)],
+            'supplier_tax_ids': [Command.set((tax_a + tax_b + tax_x).ids)],
         })
         product_no_branch_tax = self.env['product.product'].create({
             'name': 'Product no tax from branch',
-            'taxes_id': [Command.set((tax_a + tax_b).ids)],
-            'supplier_taxes_id': [Command.set((tax_a + tax_b).ids)],
+            'tax_ids': [Command.set((tax_a + tax_b).ids)],
+            'supplier_tax_ids': [Command.set((tax_a + tax_b).ids)],
         })
         product_no_tax = self.env['product.product'].create({
             'name': 'Product no tax',
-            'taxes_id': [],
-            'supplier_taxes_id': [],
+            'tax_ids': [],
+            'supplier_tax_ids': [],
         })
         # create a bill from Branch XX with the different products:
         # - Product all taxes           => tax from Branch XX should be set

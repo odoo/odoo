@@ -24,7 +24,7 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
             'uom_id': uom_unit.id,
             'purchase_method': 'purchase',
             'default_code': 'PROD_ORDER',
-            'taxes_id': False,
+            'tax_ids': False,
         })
         cls.product_order_other_price = cls.env['product.product'].create({
             'name': "Zed+ Antivirus",
@@ -34,7 +34,7 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
             'uom_id': uom_unit.id,
             'purchase_method': 'purchase',
             'default_code': 'PROD_ORDER',
-            'taxes_id': False,
+            'tax_ids': False,
         })
         cls.product_order_var_name = cls.env['product.product'].create({
             'name': "Zed+ Antivirus Var Name",
@@ -44,7 +44,7 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
             'uom_id': uom_unit.id,
             'purchase_method': 'purchase',
             'default_code': 'PROD_ORDER_VAR_NAME',
-            'taxes_id': False,
+            'tax_ids': False,
         })
         cls.service_deliver = cls.env['product.product'].create({
             'name': "Cost-plus Contract",
@@ -54,7 +54,7 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
             'uom_id': uom_unit.id,
             'purchase_method': 'receive',
             'default_code': 'SERV_DEL',
-            'taxes_id': False,
+            'tax_ids': False,
         })
         cls.service_order = cls.env['product.product'].create({
             'name': "Prepaid Consulting",
@@ -64,7 +64,7 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
             'uom_id': uom_hour.id,
             'purchase_method': 'purchase',
             'default_code': 'PRE-PAID',
-            'taxes_id': False,
+            'tax_ids': False,
         })
         cls.product_deliver = cls.env['product.product'].create({
             'name': "Switch, 24 ports",
@@ -74,7 +74,7 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
             'uom_id': uom_unit.id,
             'purchase_method': 'receive',
             'default_code': 'PROD_DEL',
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
     @classmethod
@@ -884,7 +884,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
             'uom_id': uom_unit.id,
             'purchase_method': 'purchase',
             'default_code': 'PROD_ORDER',
-            'taxes_id': False,
+            'tax_ids': False,
         })
         po = self.init_purchase(confirm=True, products=[product_order_zero_price])
         invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])

@@ -42,7 +42,7 @@ class ProductProduct(models.Model):
                 )
                 expense_vals = {
                     'product_has_cost': product_has_cost,
-                    'product_has_tax': bool(expense_product_sudo.supplier_taxes_id.filtered_domain(tax_domain)),
+                    'product_has_tax': bool(expense_product_sudo.supplier_tax_ids.filtered_domain(tax_domain)),
                 }
                 if product_has_cost:
                     expense_vals.update({

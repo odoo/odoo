@@ -963,7 +963,7 @@ class TestSaleToInvoice(TestSaleCommon):
         product_shared = self.env['product.template'].create({
             'name': 'shared product',
             'invoice_policy': 'order',
-            'taxes_id': [(6, False, (self.company_data['default_tax_sale'] + self.company_data_2['default_tax_sale']).ids)],
+            'tax_ids': [(6, False, (self.company_data['default_tax_sale'] + self.company_data_2['default_tax_sale']).ids)],
             'property_account_income_id': self.company_data['default_account_revenue'].id,
         })
 

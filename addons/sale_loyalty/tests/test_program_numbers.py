@@ -116,7 +116,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         })
         self.all_programs |= p_specific_product
         order = self.empty_order
-        self.largeCabinet.taxes_id = percent_tax
+        self.largeCabinet.tax_ids = percent_tax
         sol1 = self.env['sale.order.line'].create({
             'product_id': self.largeCabinet.id,
             'name': 'Large Cabinet',
@@ -221,10 +221,10 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         # Set tax and prices on products as neeed for the test
         (self.product_A + self.largeCabinet + self.conferenceChair + self.pedalBin + self.drawerBlack).write({'list_price': 100})
-        (self.largeCabinet + self.drawerBlack).write({'taxes_id': [(4, self.tax_15pc_excl.id, False)]})
-        self.conferenceChair.taxes_id = self.tax_10pc_incl
-        self.pedalBin.taxes_id = None
-        self.product_A.taxes_id = (self.tax_35pc_incl + self.tax_50pc_excl)
+        (self.largeCabinet + self.drawerBlack).write({'tax_ids': [(4, self.tax_15pc_excl.id, False)]})
+        self.conferenceChair.tax_ids = self.tax_10pc_incl
+        self.pedalBin.tax_ids = None
+        self.product_A.tax_ids = (self.tax_35pc_incl + self.tax_50pc_excl)
 
         # Add products in order
         self.env['sale.order.line'].create({
@@ -526,7 +526,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             'amount_type': 'percent',
             'amount': 0,
         })
-        fixed_amount_program.reward_ids.discount_line_product_id.write({'taxes_id': [(4, self.tax_0pc_excl.id, False)]})
+        fixed_amount_program.reward_ids.discount_line_product_id.write({'tax_ids': [(4, self.tax_0pc_excl.id, False)]})
         sol1 = self.env['sale.order.line'].create({
             'product_id': self.drawerBlack.id,
             'name': 'Drawer Black',
@@ -1239,7 +1239,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             'name': 'Product F',
             'list_price': 100,
             'sale_ok': True,
-            'taxes_id': [(6, 0, [])],
+            'tax_ids': [(6, 0, [])],
         })
         self.all_programs |= self.env['loyalty.program'].create({
             'name': '1 Product F = 5$ discount',
@@ -1290,19 +1290,19 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                 'name': 'Product A',
                 'list_price': 6,
                 'sale_ok': True,
-                'taxes_id': [(6, 0, [])],
+                'tax_ids': [(6, 0, [])],
             },
             {
                 'name': 'Product B',
                 'list_price': 4,
                 'sale_ok': True,
-                'taxes_id': [(6, 0, [])],
+                'tax_ids': [(6, 0, [])],
             },
             {
                 'name': 'Product C',
                 'list_price': 10,
                 'sale_ok': True,
-                'taxes_id': [(6, 0, [])],
+                'tax_ids': [(6, 0, [])],
             },
         ])
         programs = self.env['loyalty.program'].create([
@@ -1386,13 +1386,13 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                 'name': 'Product A',
                 'list_price': 10,
                 'sale_ok': True,
-                'taxes_id': [(6, 0, [self.tax_10pc_excl.id])],
+                'tax_ids': [(6, 0, [self.tax_10pc_excl.id])],
             },
             {
                 'name': 'Product B',
                 'list_price': 10,
                 'sale_ok': True,
-                'taxes_id': [(6, 0, [self.tax_20pc_excl.id])],
+                'tax_ids': [(6, 0, [self.tax_20pc_excl.id])],
             },
         ])
         program_a, program_b = self.env['loyalty.program'].create([
@@ -1704,7 +1704,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         # Set tax and prices on products as neeed for the test
         self.product_A.write({'list_price': 100})
-        self.product_A.taxes_id = (self.tax_15pc_excl + self.tax_10_fixed)
+        self.product_A.tax_ids = (self.tax_15pc_excl + self.tax_10_fixed)
 
         # Add products in order
         self.env['sale.order.line'].create({
@@ -1752,7 +1752,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         # Set tax and prices on products as neeed for the test
         self.product_A.write({'list_price': 100})
-        self.product_A.taxes_id = (self.tax_15pc_excl + self.tax_10_fixed)
+        self.product_A.tax_ids = (self.tax_15pc_excl + self.tax_10_fixed)
 
         # Add products in order
         self.env['sale.order.line'].create({
@@ -1802,7 +1802,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # Set tax and prices on products as neeed for the test
         self.product_A.write({
             'list_price': 140.0,
-            'taxes_id': [Command.set(tax_15pc_excl.ids)]
+            'tax_ids': [Command.set(tax_15pc_excl.ids)]
         })
 
         order.order_line = [

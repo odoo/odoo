@@ -241,7 +241,7 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
         tax_price_exclude.original_tax_ids = tax_price_include
 
         # Setting tax on delivery product
-        self.normal_delivery.product_id.taxes_id = tax_price_include
+        self.normal_delivery.product_id.tax_ids = tax_price_include
 
         # Create sales order
         # Required to see `pricelist_id` in the view
@@ -390,7 +390,7 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
         # create delivery product with taxes from both branch and parent company
         delivery_product = self.env['product.product'].create({
             'name': 'Delivery Product',
-            'taxes_id': [Command.set((tax_a + tax_b).ids)],
+            'tax_ids': [Command.set((tax_a + tax_b).ids)],
         })
         # create delivery
         delivery = self.env['delivery.carrier'].create({
@@ -421,7 +421,7 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
         self.assertRecordValues(delivery_line, [{'product_id': delivery_product.id, 'tax_ids': tax_b.ids}])
 
         # update delivery product by setting only the tax from parent company
-        delivery_product.write({'taxes_id': [Command.set((tax_a).ids)]})
+        delivery_product.write({'tax_ids': [Command.set((tax_a).ids)]})
         # update delivery
         wizard = self.env['choose.delivery.carrier'].create({
             'order_id': sale_order.id,

@@ -19,7 +19,7 @@ class TestEwallet(HttpCase, WebsiteSaleCommon):
         cls.WebsiteSaleController = WebsiteSale()
         cls.WebsiteSaleCartController = Cart()
 
-        cls.product.write({'taxes_id': [Command.clear()]})
+        cls.product.write({'tax_ids': [Command.clear()]})
 
         cls.topup = cls.env['product.product'].create({
             'name': 'Ewallet Top up',

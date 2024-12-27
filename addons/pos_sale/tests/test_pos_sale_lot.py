@@ -13,7 +13,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.twenty_dollars_no_tax.product_variant_id.write({
             'tracking': 'serial',
             'is_storable': True,
-            'taxes_id': []
+            'tax_ids': []
         })
         lot_1 = self.env['stock.lot'].create({
             'name': '1001',

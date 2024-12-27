@@ -20,7 +20,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Event Ticket',
             'type': 'service',
             'list_price': 100,
-            'taxes_id': False,
+            'tax_ids': False,
             'available_in_pos': True,
             'service_tracking': 'event',
             'pos_categ_ids': [(4, cls.event_category.id)],

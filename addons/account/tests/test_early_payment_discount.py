@@ -114,7 +114,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'invoice_line_ids': [Command.create({
                 'name': 'line',
                 'price_unit': 1000.0,
-                'tax_ids': [Command.set(self.product_a.taxes_id.ids + fixed_tax.ids)], #15% tax + fixed 0.05
+                'tax_ids': [Command.set(self.product_a.tax_ids.ids + fixed_tax.ids)],  # 15% tax + fixed 0.05
             })],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
@@ -174,7 +174,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'invoice_line_ids': [Command.create({
                 'name': 'line',
                 'price_unit': 1500.0,
-                'tax_ids': [Command.set(self.product_a.supplier_taxes_id.ids + fixed_tax.ids)]
+                'tax_ids': [Command.set(self.product_a.supplier_tax_ids.ids + fixed_tax.ids)]
             })],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
@@ -209,7 +209,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'invoice_line_ids': [Command.create({
                 'name': 'line',
                 'price_unit': 50.0,
-                'tax_ids': [Command.set(self.product_a.supplier_taxes_id.ids + fixed_tax.ids)]
+                'tax_ids': [Command.set(self.product_a.supplier_tax_ids.ids + fixed_tax.ids)]
             })],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
@@ -235,7 +235,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'invoice_date': '2019-01-01',
             'date': '2019-01-01',
-            'invoice_line_ids': [Command.create({'name': 'line', 'price_unit': 1500.0, 'tax_ids': [Command.set(self.product_a.supplier_taxes_id.ids)]})],
+            'invoice_line_ids': [Command.create({'name': 'line', 'price_unit': 1500.0, 'tax_ids': [Command.set(self.product_a.supplier_tax_ids.ids)]})],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
         inv_1500_10_percents_discount_tax_incl_15_percents_tax.action_post()
@@ -259,7 +259,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'invoice_date': '2019-01-01',
             'date': '2019-01-01',
-            'invoice_line_ids': [Command.create({'name': 'line', 'price_unit': 1500.0, 'tax_ids': [Command.set(self.product_a.taxes_id.ids)]})],
+            'invoice_line_ids': [Command.create({'name': 'line', 'price_unit': 1500.0, 'tax_ids': [Command.set(self.product_a.tax_ids.ids)]})],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
         inv_1500_10_percents_discount_tax_incl_15_percents_tax.action_post()
@@ -284,7 +284,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'invoice_date': '2019-01-01',
             'date': '2019-01-01',
             'invoice_line_ids': [
-                Command.create({'name': 'line', 'price_unit': 1000.0, 'tax_ids': [Command.set(self.product_a.supplier_taxes_id.ids)]}),
+                Command.create({'name': 'line', 'price_unit': 1000.0, 'tax_ids': [Command.set(self.product_a.supplier_tax_ids.ids)]}),
                 Command.create({'name': 'line', 'price_unit': 2000.0, 'tax_ids': None})
             ],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
@@ -346,7 +346,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'invoice_date': '2019-01-01',
             'partner_id': self.partner_a.id,
             'currency_id': self.other_currency.id,
-            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': [Command.set(self.product_a.taxes_id.ids)]})],
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': [Command.set(self.product_a.tax_ids.ids)]})],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
         out_invoice_2 = self.env['account.move'].create({
@@ -379,7 +379,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'invoice_date': '2019-01-01',
             'partner_id': self.partner_a.id,
             'currency_id': self.other_currency.id,
-            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': [Command.set(self.product_a.taxes_id.ids)]})],
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': [Command.set(self.product_a.tax_ids.ids)]})],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
         out_invoice_2 = self.env['account.move'].create({
@@ -412,7 +412,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'invoice_date': '2017-01-01',
             'partner_id': self.partner_a.id,
             'currency_id': self.other_currency.id,
-            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': [Command.set(self.product_a.taxes_id.ids)]})],
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': [Command.set(self.product_a.tax_ids.ids)]})],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
         out_invoice_2 = self.env['account.move'].create({
@@ -673,7 +673,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'invoice_date': '2019-01-01',
             'date': '2019-01-01',
             'invoice_line_ids': [
-                Command.create({'name': 'line', 'price_unit': 100.0, 'tax_ids': [Command.set(self.product_a.taxes_id.ids)]}),
+                Command.create({'name': 'line', 'price_unit': 100.0, 'tax_ids': [Command.set(self.product_a.tax_ids.ids)]}),
             ],
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
         })
@@ -866,7 +866,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                 Command.create({
                     'price_unit': 100.0,
                     'quantity': 1,
-                    'tax_ids': [Command.set(self.product_a.taxes_id.ids)],
+                    'tax_ids': [Command.set(self.product_a.tax_ids.ids)],
                 })
             ]
         })

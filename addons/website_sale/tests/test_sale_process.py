@@ -119,7 +119,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             'website_published': True,
             'invoice_policy': 'delivery',
         })
-        self.product_product_7.taxes_id = [tax.id]
+        self.product_product_7.tax_ids = [tax.id]
         self.env['res.config.settings'].create({
             'auth_signup_uninvited': 'b2c',
             'show_line_subtotals_tax_selection': 'tax_excluded',

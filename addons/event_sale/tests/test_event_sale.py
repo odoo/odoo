@@ -409,7 +409,7 @@ class TestEventSale(TestEventSaleCommon):
         event_product = self.env['product.template'].create({
             'name': 'Event Product',
             'list_price': 10.0,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         event = self.env['event.event'].create({
@@ -461,7 +461,7 @@ class TestEventSale(TestEventSaleCommon):
             'list_price': 10.0,
         })
 
-        event_product.taxes_id = tax
+        event_product.tax_ids = tax
 
         event = self.env['event.event'].create({
             'name': 'New Event',

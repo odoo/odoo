@@ -26,7 +26,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             'sale_ok': False,
             'purchase_ok': False,
             'list_price': 20.0,
-            'taxes_id': [(6, 0, [tax_15pc_excl.id])],
+            'tax_ids': [(6, 0, [tax_15pc_excl.id])],
         })
         cls.carrier = cls.env['delivery.carrier'].create({
             'name': 'The Poste',
@@ -158,7 +158,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         })
         programs = (p_minimum_threshold_free_delivery | p_2)
         order = self.empty_order
-        self.iPadMini.taxes_id = self.tax_10pc_incl
+        self.iPadMini.tax_ids = self.tax_10pc_incl
         sol1 = self.env['sale.order.line'].create({
             'product_id': self.iPadMini.id,
             'name': 'Large Cabinet',
@@ -224,7 +224,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         })
         programs = (p_1 | p_2)
         order = self.empty_order
-        self.iPadMini.taxes_id = self.tax_10pc_incl
+        self.iPadMini.tax_ids = self.tax_10pc_incl
         sol1 = self.env['sale.order.line'].create({
             'product_id': self.iPadMini.id,
             'name': 'Large Cabinet',
@@ -410,7 +410,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         })
         programs = (p_1)
         order = self.empty_order
-        self.iPadMini.taxes_id = self.tax_10pc_incl
+        self.iPadMini.tax_ids = self.tax_10pc_incl
         sol1 = self.env['sale.order.line'].create({
             'product_id': self.iPadMini.id,
             'name': 'Large Cabinet',

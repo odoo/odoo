@@ -196,97 +196,97 @@ class CommonPosTest(ValuationReconciliationTestCommon):
             'name': 'Ten dollars no tax',
             'list_price': 10.0,
             'pos_categ_ids': [(6, 0, [self.cat_no_tax.id])],
-            'taxes_id': [(5, 0)],
+            'tax_ids': [(5, 0)],
         })
         self.twenty_dollars_no_tax = self.env['product.template'].create({
             'available_in_pos': True,
             'name': 'Twenty dollars no tax',
             'list_price': 20.0,
             'pos_categ_ids': [(6, 0, [self.cat_no_tax.id])],
-            'taxes_id': [(5, 0)],
+            'tax_ids': [(5, 0)],
         })
         self.ten_dollars_with_5_incl = self.env['product.template'].create({
             'available_in_pos': True,
             'name': 'Ten dollars with 5 included',
             'list_price': 10.0,
-            'taxes_id': [(6, 0, [self.tax_five_incl.id])],
+            'tax_ids': [(6, 0, [self.tax_five_incl.id])],
             'pos_categ_ids': [(6, 0, [self.cat_tax_five_incl.id])],
         })
         self.twenty_dollars_with_5_incl = self.env['product.template'].create({
             'available_in_pos': True,
             'name': 'Twenty dollars with 5 included',
             'list_price': 20.0,
-            'taxes_id': [(6, 0, [self.tax_five_incl.id])],
+            'tax_ids': [(6, 0, [self.tax_five_incl.id])],
             'pos_categ_ids': [(6, 0, [self.cat_tax_five_incl.id])],
         })
         self.ten_dollars_with_10_incl = self.env['product.template'].create({
             'available_in_pos': True,
             'name': 'Ten dollars with 10 included',
             'list_price': 10.0,
-            'taxes_id': [(6, 0, [self.tax_ten_incl.id])],
+            'tax_ids': [(6, 0, [self.tax_ten_incl.id])],
             'pos_categ_ids': [(6, 0, [self.cat_tax_ten_incl.id])],
         })
         self.twenty_dollars_with_10_incl = self.env['product.template'].create({
             'available_in_pos': True,
             'name': 'Twenty dollars with 10 included',
             'list_price': 20.0,
-            'taxes_id': [(6, 0, [self.tax_ten_incl.id])],
+            'tax_ids': [(6, 0, [self.tax_ten_incl.id])],
             'pos_categ_ids': [(6, 0, [self.cat_tax_ten_incl.id])],
         })
         self.ten_dollars_with_15_incl = self.env['product.template'].create({
             'available_in_pos': True,
             'name': 'Ten dollars with 15 included',
             'list_price': 10.0,
-            'taxes_id': [(6, 0, [self.tax_fiften_incl.id])],
+            'tax_ids': [(6, 0, [self.tax_fiften_incl.id])],
             'pos_categ_ids': [(6, 0, [self.cat_tax_fiften_incl.id])],
         })
         self.twenty_dollars_with_15_incl = self.env['product.template'].create({
             'available_in_pos': True,
             'name': 'Twenty dollars with 15 included',
             'list_price': 20.0,
-            'taxes_id': [(6, 0, [self.tax_fiften_incl.id])],
+            'tax_ids': [(6, 0, [self.tax_fiften_incl.id])],
             'pos_categ_ids': [(6, 0, [self.cat_tax_fiften_incl.id])],
         })
         self.ten_dollars_with_5_excl = self.env['product.template'].create({
             'available_in_pos': True,
             'name': 'Ten dollars with 5 excluded',
             'list_price': 10.0,
-            'taxes_id': [(6, 0, [self.tax_five_excl.id])],
+            'tax_ids': [(6, 0, [self.tax_five_excl.id])],
             'pos_categ_ids': [(6, 0, [self.cat_tax_five_excl.id])],
         })
         self.twenty_dollars_with_5_excl = self.env['product.template'].create({
             'available_in_pos': True,
             'name': 'Twenty dollars with 5 excluded',
             'list_price': 20.0,
-            'taxes_id': [(6, 0, [self.tax_five_excl.id])],
+            'tax_ids': [(6, 0, [self.tax_five_excl.id])],
             'pos_categ_ids': [(6, 0, [self.cat_tax_five_excl.id])],
         })
         self.ten_dollars_with_10_excl = self.env['product.template'].create({
             'available_in_pos': True,
             'name': 'Ten dollars with 10 excluded',
             'list_price': 10.0,
-            'taxes_id': [(6, 0, [self.tax_ten_excl.id])],
+            'tax_ids': [(6, 0, [self.tax_ten_excl.id])],
             'pos_categ_ids': [(6, 0, [self.cat_tax_ten_excl.id])],
         })
         self.twenty_dollars_with_10_excl = self.env['product.template'].create({
             'available_in_pos': True,
             'name': 'Twenty dollars with 10 excluded',
             'list_price': 20.0,
-            'taxes_id': [(6, 0, [self.tax_ten_excl.id])],
+            'tax_ids': [(6, 0, [self.tax_ten_excl.id])],
             'pos_categ_ids': [(6, 0, [self.cat_tax_ten_excl.id])],
         })
         self.ten_dollars_with_15_excl = self.env['product.template'].create({
             'available_in_pos': True,
             'name': 'Ten dollars with 15 excluded',
             'list_price': 10.0,
-            'taxes_id': [(6, 0, [self.tax_fiften_excl.id])],
+            'tax_ids': [(6, 0, [self.tax_fiften_excl.id])],
             'pos_categ_ids': [(6, 0, [self.cat_tax_fiften_excl.id])],
         })
         self.twenty_dollars_with_15_excl = self.env['product.template'].create({
             'available_in_pos': True,
             'name': 'Twenty dollars with 15 excluded',
             'list_price': 20.0,
-            'taxes_id': [(6, 0, [self.tax_fiften_excl.id])],
+            'tax_ids': [(6, 0, [self.tax_fiften_excl.id])],
             'pos_categ_ids': [(6, 0, [self.cat_tax_fiften_excl.id])],
         })
 
@@ -312,7 +312,7 @@ class CommonPosTest(ValuationReconciliationTestCommon):
                 Command.create({
                     'price_unit': product_by_id[line_data['product_id']].lst_price,
                     'price_subtotal': product_by_id[line_data['product_id']].lst_price,
-                    'tax_ids': [(6, 0, product_by_id[line_data['product_id']].taxes_id.ids)],
+                    'tax_ids': [(6, 0, product_by_id[line_data['product_id']].tax_ids.ids)],
                     'price_subtotal_incl': 0,
                     **line_data,
                 }) for line_data in data.get('line_data', [])
@@ -353,7 +353,7 @@ class CommonPosTest(ValuationReconciliationTestCommon):
     def compute_tax(self, product, price, qty=1, taxes=None, pos_config=None):
         config = pos_config or self.pos_config_usd
         if not taxes:
-            taxes = product.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id)
+            taxes = product.tax_ids.filtered(lambda t: t.company_id.id == self.env.company.id)
         currency = config.currency_id
         res = taxes.compute_all(price, currency, qty, product=product)
         untax = res['total_excluded']
@@ -732,7 +732,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
 
         def create_order_line(product, quantity, **kwargs):
             price_unit = self.pricelist._get_product_price(product, quantity)
-            tax_ids = fiscal_position.map_tax(product.taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(self.env.company)))
+            tax_ids = fiscal_position.map_tax(product.tax_ids.filtered_domain(self.env['account.tax']._check_company_domain(self.env.company)))
             discount = kwargs.get('discount', 0.0)
             price_unit_after_discount = price_unit * (1 - discount / 100.0)
             tax_values = (
@@ -809,7 +809,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         product = cls.env['product.product'].create({
             'is_storable': True,
             'available_in_pos': True,
-            'taxes_id': [(5, 0, 0)] if not tax_ids else [(6, 0, tax_ids)],
+            'tax_ids': [(5, 0, 0)] if not tax_ids else [(6, 0, tax_ids)],
             'name': name,
             'categ_id': category.id,
             'lst_price': lst_price,

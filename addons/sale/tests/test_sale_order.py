@@ -538,19 +538,19 @@ class TestSaleOrder(SaleCommon):
         # create several products with different taxes combination
         product_all_taxes = self.env['product.product'].create({
             'name': 'Product all taxes',
-            'taxes_id': [Command.set((tax_a + tax_b + tax_x + tax_xx).ids)],
+            'tax_ids': [Command.set((tax_a + tax_b + tax_x + tax_xx).ids)],
         })
         product_no_xx_tax = self.env['product.product'].create({
             'name': 'Product no tax from XX',
-            'taxes_id': [Command.set((tax_a + tax_b + tax_x).ids)],
+            'tax_ids': [Command.set((tax_a + tax_b + tax_x).ids)],
         })
         product_no_branch_tax = self.env['product.product'].create({
             'name': 'Product no tax from branch',
-            'taxes_id': [Command.set((tax_a + tax_b).ids)],
+            'tax_ids': [Command.set((tax_a + tax_b).ids)],
         })
         product_no_tax = self.env['product.product'].create({
             'name': 'Product no tax',
-            'taxes_id': [],
+            'tax_ids': [],
         })
         # create a SO from Branch XX
         so_form = Form(self.env['sale.order'].with_company(branch_xx))
@@ -939,7 +939,7 @@ class TestSalesTeam(SaleCommon):
         # recomputed when changing the fiscal position.
         self.product.write({
             'lst_price': 300,
-            'taxes_id': [Command.set((special_tax + sales_tax).ids)],
+            'tax_ids': [Command.set((special_tax + sales_tax).ids)],
         })
 
         order = self.env['sale.order'].create({

@@ -81,8 +81,8 @@ class AccountTestInvoicingCommon(ProductCommon):
             standard_price=160.0,
             property_account_income_id=cls.copy_account(cls.company_data['default_account_revenue']).id,
             property_account_expense_id=cls.copy_account(cls.company_data['default_account_expense']).id,
-            taxes_id=[Command.set((cls.tax_sale_a + cls.tax_sale_b).ids)],
-            supplier_taxes_id=[Command.set((cls.tax_purchase_a + cls.tax_purchase_b).ids)],
+            tax_ids=[Command.set((cls.tax_sale_a + cls.tax_sale_b).ids)],
+            supplier_tax_ids=[Command.set((cls.tax_purchase_a + cls.tax_purchase_b).ids)],
         )
 
         # ==== Fiscal positions ====
@@ -265,7 +265,7 @@ class AccountTestInvoicingCommon(ProductCommon):
         # OVERRIDE
         create_values.setdefault('property_account_income_id', cls.company_data['default_account_revenue'].id)
         create_values.setdefault('property_account_expense_id', cls.company_data['default_account_expense'].id)
-        create_values.setdefault('taxes_id', [Command.set(cls.tax_sale_a.ids)])
+        create_values.setdefault('tax_ids', [Command.set(cls.tax_sale_a.ids)])
         return super()._create_product(**create_values)
 
     @classmethod

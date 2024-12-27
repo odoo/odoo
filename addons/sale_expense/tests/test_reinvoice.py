@@ -57,8 +57,8 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
                 'default_code': 'FURN_99991',
                 'invoice_policy': 'order',
                 'expense_policy': 'sales_price',
-                'taxes_id': [Command.set([new_sale_tax.id])],
-                'supplier_taxes_id': [Command.set([new_purchase_tax.id])],
+                'tax_ids': [Command.set([new_sale_tax.id])],
+                'supplier_tax_ids': [Command.set([new_purchase_tax.id])],
                 'can_be_expensed': True,
             }),
             'service_delivery_sales_price': cls.env['product.product'].with_company(cls.company_data['company']).create({
@@ -72,8 +72,8 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
                 'default_code': 'FURN_99992',
                 'invoice_policy': 'delivery',
                 'expense_policy': 'sales_price',
-                'taxes_id': [Command.set([new_sale_tax.id])],
-                'supplier_taxes_id': [Command.set([new_purchase_tax.id])],
+                'tax_ids': [Command.set([new_sale_tax.id])],
+                'supplier_tax_ids': [Command.set([new_purchase_tax.id])],
                 'can_be_expensed': True,
             }),
             'service_delivery_cost_price': cls.env['product.product'].with_company(cls.company_data['company']).create({
@@ -87,8 +87,8 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
                 'default_code': 'FURN_99993',
                 'invoice_policy': 'delivery',
                 'expense_policy': 'cost',
-                'taxes_id': [Command.set([new_sale_tax.id])],
-                'supplier_taxes_id': [Command.set([new_purchase_tax.id])],
+                'tax_ids': [Command.set([new_sale_tax.id])],
+                'supplier_tax_ids': [Command.set([new_purchase_tax.id])],
                 'can_be_expensed': True,
             }),
             'service_order_cost_price': cls.env['product.product'].with_company(cls.company_data['company']).create({
@@ -102,8 +102,8 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
                 'default_code': 'FURN_99994',
                 'invoice_policy': 'order',
                 'expense_policy': 'cost',
-                'taxes_id': [Command.set([new_sale_tax.id])],
-                'supplier_taxes_id': [Command.set([new_purchase_tax.id])],
+                'tax_ids': [Command.set([new_sale_tax.id])],
+                'supplier_tax_ids': [Command.set([new_purchase_tax.id])],
                 'can_be_expensed': True,
             }),
         })

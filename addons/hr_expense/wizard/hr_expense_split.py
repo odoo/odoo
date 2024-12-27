@@ -92,12 +92,12 @@ class HrExpenseSplit(models.TransientModel):
         if self.product_has_tax and self.tax_ids:
             self.tax_ids = self.tax_ids
         else:
-            self.tax_ids = self.product_id.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(self.company_id))
+            self.tax_ids = self.product_id.supplier_tax_ids.filtered_domain(self.env['account.tax']._check_company_domain(self.company_id))
 
     @api.depends('product_id')
     def _compute_product_has_tax(self):
         for split in self:
-            split.product_has_tax = split.product_id and split.product_id.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(split.company_id))
+            split.product_has_tax = split.product_id and split.product_id.supplier_tax_ids.filtered_domain(self.env['account.tax']._check_company_domain(split.company_id))
 
     def _get_values(self):
         self.ensure_one()

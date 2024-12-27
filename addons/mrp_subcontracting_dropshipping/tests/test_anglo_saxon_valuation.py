@@ -218,8 +218,8 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             'standard_price': 100.0,
             'property_account_income_id': self.copy_account(self.company_data['default_account_revenue']).id,
             'property_account_expense_id': self.copy_account(self.company_data['default_account_expense']).id,
-            'taxes_id': [Command.set((self.tax_sale_a + self.tax_sale_b).ids)],
-            'supplier_taxes_id': [Command.set((self.tax_purchase_a + self.tax_purchase_b).ids)],
+            'tax_ids': [Command.set((self.tax_sale_a + self.tax_sale_b).ids)],
+            'supplier_tax_ids': [Command.set((self.tax_purchase_a + self.tax_purchase_b).ids)],
         })
         kit_bom = self.env['mrp.bom'].create({
             'product_tmpl_id': kit_final_prod.product_tmpl_id.id,

@@ -93,7 +93,7 @@ class TestPERF(TransactionCaseWithUserDemo):
     @prepare
     def test_light_sales_orders_batch_creation_perf_without_taxes(self):
         self.env['res.country'].search([]).mapped('code')
-        self.products[0].taxes_id = [Command.set([])]
+        self.products[0].tax_ids = [Command.set([])]
         # + 2 SQL insert
         # + 2 queries to get analytic default tags
         # + 9 follower queries ?

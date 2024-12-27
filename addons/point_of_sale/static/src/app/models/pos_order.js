@@ -697,7 +697,7 @@ export class PosOrder extends Base {
         }
 
         this.lines.forEach((line) => {
-            var taxes_ids = this.tax_ids || line.getProduct().taxes_id;
+            var taxes_ids = this.tax_ids || line.getProduct().tax_ids;
             for (var i = 0; i < taxes_ids.length; i++) {
                 if (tax_set[taxes_ids[i]]) {
                     total += line.getPriceWithTax();

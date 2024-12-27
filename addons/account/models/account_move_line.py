@@ -888,12 +888,12 @@ class AccountMoveLine(models.Model):
         company_domain = self.env['account.tax']._check_company_domain(self.move_id.company_id)
         if self.move_id.is_sale_document(include_receipts=True):
             # Out invoice.
-            filtered_taxes_id = self.product_id.taxes_id.filtered_domain(company_domain)
+            filtered_taxes_id = self.product_id.tax_ids.filtered_domain(company_domain)
             tax_ids = filtered_taxes_id or self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'sale')
 
         elif self.move_id.is_purchase_document(include_receipts=True):
             # In invoice.
-            filtered_supplier_taxes_id = self.product_id.supplier_taxes_id.filtered_domain(company_domain)
+            filtered_supplier_taxes_id = self.product_id.supplier_tax_ids.filtered_domain(company_domain)
             tax_ids = filtered_supplier_taxes_id or self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'purchase')
 
         else:
@@ -1203,7 +1203,7 @@ class AccountMoveLine(models.Model):
         self._inverse_analytic_distribution()
         self._conditional_add_to_compute('tax_ids', lambda line: (
             line.account_id.tax_ids
-            and not line.product_id.taxes_id.filtered(lambda tax: tax.company_id == line.company_id)
+            and not line.product_id.tax_ids.filtered(lambda tax: tax.company_id == line.company_id)
         ))
 
     def _inverse_reconciled_lines_ids(self):

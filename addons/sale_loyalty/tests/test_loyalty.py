@@ -21,7 +21,7 @@ class TestLoyalty(TestSaleCouponCommon):
                 'name': 'Product C',
                 'list_price': 100,
                 'sale_ok': True,
-                'taxes_id': [Command.set([])],
+                'tax_ids': [Command.set([])],
             },
             {
                 'name': "Product B",
@@ -177,13 +177,13 @@ class TestLoyalty(TestSaleCouponCommon):
                 'name': 'Product A',
                 'list_price': 100,
                 'sale_ok': True,
-                'taxes_id': [Command.set(self.tax_15pc_excl.ids)],
+                'tax_ids': [Command.set(self.tax_15pc_excl.ids)],
             },
             {
                 'name': 'Product B',
                 'list_price': 100,
                 'sale_ok': True,
-                'taxes_id': [Command.set(self.tax_15pc_excl.ids)],
+                'tax_ids': [Command.set(self.tax_15pc_excl.ids)],
             },
         ])
 
@@ -268,8 +268,8 @@ class TestLoyalty(TestSaleCouponCommon):
     def test_discount_max_amount_on_specific_product(self):
         product_a = self.product_A
         product_b = self.product_B
-        product_a.write({'taxes_id': [Command.set(self.tax_20pc_excl.ids)]})
-        product_b.write({'list_price': -20, 'taxes_id': [Command.set(self.tax_20pc_excl.ids)]})
+        product_a.write({'tax_ids': [Command.set(self.tax_20pc_excl.ids)]})
+        product_b.write({'list_price': -20, 'tax_ids': [Command.set(self.tax_20pc_excl.ids)]})
 
         self.env['loyalty.program'].search([]).write({'active': False})
         promotion = self.env['loyalty.program'].create({
@@ -587,7 +587,7 @@ class TestLoyalty(TestSaleCouponCommon):
             'name': 'Product A',
             'list_price': 100,
             'sale_ok': True,
-            'taxes_id': [],
+            'tax_ids': [],
         })
 
         coupon_program = self.env['loyalty.program'].create([{
@@ -762,7 +762,7 @@ class TestLoyalty(TestSaleCouponCommon):
             'name': 'Product A',
             'list_price': 100,
             'sale_ok': True,
-            'taxes_id': [],
+            'tax_ids': [],
         })
 
         promotion_program = self.env['loyalty.program'].create([{
@@ -805,7 +805,7 @@ class TestLoyalty(TestSaleCouponCommon):
             'name': 'Product A',
             'list_price': 100,
             'sale_ok': True,
-            'taxes_id': [],
+            'tax_ids': [],
         })
 
         giftcard_program = self.env['loyalty.program'].create([{

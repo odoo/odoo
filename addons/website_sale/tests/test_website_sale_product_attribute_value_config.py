@@ -46,7 +46,7 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
         # Setup product with 15% tax.
         product_template = self.computer.with_context(website_id=website.id)
         product_template.write({
-            'taxes_id': [Command.set(self.company_data['default_tax_sale'].ids)],
+            'tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)],
             'company_id': self.env.company.id,
         })
 
@@ -74,7 +74,7 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
         product = self.env['product.template'].create({
             'name': 'Test Product',
             'list_price': 2000,
-            'taxes_id': [Command.set(self.company_data['default_tax_sale'].ids)],
+            'tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)],
             'company_id': self.env.company.id,
         })
 

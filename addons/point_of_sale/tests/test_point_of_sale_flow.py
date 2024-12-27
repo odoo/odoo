@@ -378,7 +378,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         })
 
         untax, atax = self.compute_tax(self.ten_dollars_with_10_excl.product_variant_id, 10.0)
-        self.ten_dollars_with_10_excl.taxes_id.unlink()
+        self.ten_dollars_with_10_excl.tax_ids.unlink()
         current_session = self.pos_config_usd.current_session_id
         payment = self.env['pos.make.payment'].create({
             'config_id': self.pos_config_usd.id,
@@ -519,7 +519,7 @@ class TestPointOfSaleFlow(CommonPosTest):
             for i in range(1, 5)
         ])
 
-        self.twenty_dollars_with_15_excl.taxes_id = [Command.set(self.tax_sale_a.ids)]
+        self.twenty_dollars_with_15_excl.tax_ids = [Command.set(self.tax_sale_a.ids)]
         self.tax_sale_a.invoice_repartition_line_ids.filtered(
             lambda l: l.repartition_type == 'base').write({'tag_ids': tags[0].ids})
         self.tax_sale_a.invoice_repartition_line_ids.filtered(
