@@ -148,10 +148,10 @@ patch(PosStore.prototype, {
         }
 
         if (
-            this.get_order()?.finalized &&
+            this.getOrder()?.finalized &&
             ![ReceiptScreen, TipScreen].includes([this.mainScreen.component])
         ) {
-            this.add_new_order();
+            this.addNewOrder();
         }
 
         if (isDraftOrder) {
