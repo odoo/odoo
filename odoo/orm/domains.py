@@ -1180,12 +1180,14 @@ def _optimize_in_boolean(condition, model):
     return DomainCondition(condition.field_expr, operator, value)
 
 
-def _value_to_date(value):
+def _value_to_date(value, inside_day=lambda dt: dt.date()):
     # check datetime first, because it's a subclass of date
     if isinstance(value, SQL):
         return value
     if isinstance(value, datetime):
-        return value.date()
+        if value.time() == time.min:
+            return value.date()
+        return inside_day(value)
     if isinstance(value, date) or value is False:
         return value
     if isinstance(value, str):
@@ -1200,9 +1202,9 @@ def _value_to_date(value):
                 return date(*[int(part) for part in parts])
             except (ValueError, TypeError):
                 raise ValueError(f"Invalid isoformat string {value!r}")
-        return datetime.fromisoformat(value).date()
+        return _value_to_date(datetime.fromisoformat(value), inside_day=inside_day)
     if isinstance(value, COLLECTION_TYPES):
-        return OrderedSet(_value_to_date(v) for v in value)
+        return OrderedSet(_value_to_date(v, inside_day=inside_day) for v in value)
     raise ValueError(f'Failed to cast {value!r} into a date')
 
 
@@ -1212,7 +1214,26 @@ def _optimize_type_date(condition, _):
     if condition.operator.endswith('like') or "." in condition.field_expr:
         return condition
     operator = condition.operator
-    value = _value_to_date(condition.value)
+
+    def inside_day(dt: datetime):
+        # when comparing to a date inside a day, update the operator
+        nonlocal operator
+        match operator:
+            case '<':
+                operator = '<='
+            case '>=':
+                operator = '>'
+            case '<=' | '>':
+                pass
+            case _:
+                return None  # filter out the value
+        return dt.date()
+
+    value = _value_to_date(condition.value, inside_day=inside_day)
+    if isinstance(value, OrderedSet):
+        value.discard(None)
+    elif value is None:
+        return Domain(operator in NEGATIVE_CONDITION_OPERATORS)
     if value is False and operator[0] in ('<', '>'):
         # comparison to False results in an empty domain
         return _FALSE_DOMAIN
@@ -1245,7 +1266,6 @@ def _optimize_type_datetime(condition, _):
     value, is_day = _value_to_datetime(condition.value)
     if value is False and operator[0] in ('<', '>'):
         # comparison to False results in an empty domain
-        # TODO we should raise an error, but it's currently used
         return _FALSE_DOMAIN
     if value == condition.value:
         assert not is_day

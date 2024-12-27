@@ -156,8 +156,8 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.assertEqual(len(holiday.timesheet_ids), 4, '4 timesheets should be generated for this time off.')
 
         timesheets = self.env['account.analytic.line'].search([
-            ('date', '>=', leave_start_datetime),
-            ('date', '<=', leave_end_datetime),
+            ('date', '>=', leave_start_datetime.date()),
+            ('date', '<=', leave_end_datetime.date()),
             ('employee_id', '=', self.empl_employee.id),
         ])
 

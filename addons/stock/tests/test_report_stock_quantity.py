@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+from datetime import date, timedelta
 
 from odoo import fields, tests
 from odoo.tests import Form
@@ -185,7 +185,7 @@ class TestReportStockQuantity(tests.TransactionCase):
             'is_storable': True,
         })
 
-        today = datetime.now()
+        today = date.today()
         two_days_ago = today - timedelta(days=2)
         in_two_days = today + timedelta(days=2)
 
