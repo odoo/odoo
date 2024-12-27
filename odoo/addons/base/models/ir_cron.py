@@ -151,6 +151,7 @@ class IrCron(models.Model):
                     # take into account overridings of _process_job() on that database
                     registry = Registry(db_name)
                     registry[cls._name]._process_job(db, cron_cr, job)
+                    cron_cr.commit()
                     _logger.debug("job %s updated and released", job_id)
 
         except BadVersion:
@@ -384,8 +385,6 @@ class IrCron(models.Model):
         else:
             raise RuntimeError("unreachable")
 
-        cron_cr.commit()
-
     @classmethod
     def _run_job(cls, job):
         """
@@ -422,6 +421,7 @@ class IrCron(models.Model):
                 job_cr.commit()
 
                 try:
+                    # signaling check and commit is done inside `_callback`
                     cron._callback(job['cron_name'], job['ir_actions_server_id'])
                 except Exception:  # noqa: BLE001
                     if progress.done and progress.remaining:
@@ -445,7 +445,7 @@ class IrCron(models.Model):
                 finally:
                     progress.timed_out_counter = 0
                     timed_out_counter = 0
-                    job_cr.commit()
+                    job_cr.commit()  # ensure we have no leftovers
                 _logger.info('Job %r (%s) processed %s records, %s records remaining',
                              job['cron_name'], job['id'], progress.done, progress.remaining)
                 if status in (CompletionStatus.FULLY_DONE, CompletionStatus.FAILED):
@@ -573,6 +573,7 @@ class IrCron(models.Model):
                 _logger.debug('Job %r (%s) server action #%s with uid %s executed in %.3fs',
                               cron_name, self.id, server_action_id, self.env.uid, end_time - start_time)
             self.pool.signal_changes()
+            self.env.cr.commit()
         except Exception:
             self.pool.reset_changes()
             _logger.exception('Job %r (%s) server action #%s failed', cron_name, self.id, server_action_id)
