@@ -57,6 +57,12 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Contacts" sample="1" multi_edit="1">
+<<<<<<< saas-17.2
+||||||| 2a040219d80a66b93f222c5900b70732e8dfa204
+                    <field name="display_name" string="Name" invisible="1"/>
+=======
+                    <field name="display_name" string="Name" column_invisible="1"/>
+>>>>>>> 83412b54de9787371af4f37eb2eb04ab17cbcd07
                     <field name="complete_name" string="Name"/>
                     <field name="function" column_invisible="True"/>
                     <field name="phone" class="o_force_ltr" optional="show"/>
