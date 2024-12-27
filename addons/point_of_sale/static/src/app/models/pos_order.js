@@ -508,8 +508,17 @@ export class PosOrder extends Base {
         }
         return false;
     }
+
     doNotAllowRefundAndSales() {
-        return false;
+        return true;
+    }
+
+    _isRefundAndSalesNotAllowed(values, options) {
+        return (
+            this._isRefundOrder() &&
+            this.doNotAllowRefundAndSales() &&
+            (!values.qty || values.qty > 0)
+        );
     }
 
     getSelectedOrderline() {
