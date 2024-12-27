@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
 
 from odoo import fields, tests
 from odoo.fields import Command
-from odoo.tests import tagged, Form
+from odoo.tests import Form
 from freezegun import freeze_time
 
 
@@ -184,7 +183,7 @@ class TestReportStockQuantity(tests.TransactionCase):
             'is_storable': True,
         })
 
-        today = datetime.now()
+        today = fields.Date.context_today(product)
         two_days_ago = today - timedelta(days=2)
         in_two_days = today + timedelta(days=2)
 
