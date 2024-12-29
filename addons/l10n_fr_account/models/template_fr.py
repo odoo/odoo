@@ -9,9 +9,9 @@ class AccountChartTemplate(models.AbstractModel):
     @template('fr')
     def _get_fr_template_data(self):
         return {
+            'name': self.env._('General accounting plan'),
+            'visible': False,
             'code_digits': 6,
-            'property_account_receivable_id': 'fr_pcg_recv',
-            'property_account_payable_id': 'fr_pcg_pay',
         }
 
     @template('fr', 'res.company')
@@ -22,7 +22,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'bank_account_code_prefix': '512',
                 'cash_account_code_prefix': '53',
                 'transfer_account_code_prefix': '58',
-                'account_default_pos_receivable_account_id': 'fr_pcg_recv_pos',
                 'income_currency_exchange_account_id': 'pcg_766',
                 'expense_currency_exchange_account_id': 'pcg_666',
                 'account_journal_suspense_account_id': 'pcg_471',
@@ -34,10 +33,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'l10n_fr_rounding_difference_profit_account_id': 'pcg_758',
                 'account_sale_tax_id': 'tva_normale',
                 'account_purchase_tax_id': 'tva_acq_normale',
-                'expense_account_id': 'pcg_607_account',
-                'income_account_id': 'pcg_707_account',
-                'downpayment_account_id': 'pcg_4191',
-                'account_stock_valuation_id': 'pcg_31_account',
             },
         }
 
