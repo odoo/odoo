@@ -3,8 +3,8 @@
 # 	* stock
 # 
 # Translators:
-# Thi Huong Nguyen, 2024
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -561,6 +561,39 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Xin chào <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"        Chúng tôi vui mừng thông báo với bạn rằng đơn hàng của bạn đã được vận chuyển.\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
+"            Mã số theo dõi đơn hàng của bạn là\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"            </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Vui lòng xem phiếu giao hàng được đính kèm trong thư này để biết thêm chi tiết.<br/><br/>\n"
+"        Cảm ơn bạn!\n"
+"        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"            <br/>\n"
+"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -2471,7 +2504,7 @@ msgstr "DEMO_UOM"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr "Kết nối DHL Express"
+msgstr "Liên kết DHL Express"
 
 #. module: stock
 #. odoo-javascript
@@ -3217,7 +3250,7 @@ msgstr "Dymo"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr "Kết nối Easypost"
+msgstr "Liên kết Easypost"
 
 #. module: stock
 #. odoo-python
@@ -3380,7 +3413,7 @@ msgstr "Tháng 2"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
 msgid "FedEx Connector"
-msgstr "Kết nối FedEx"
+msgstr "Liên kết FedEx"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
@@ -8220,7 +8253,7 @@ msgstr "Gửi email"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
-msgstr "Kết nối Sendcloud"
+msgstr "Liên kết Sendcloud"
 
 #. module: stock
 #: model:mail.template,description:stock.mail_template_data_delivery_confirmation
@@ -8402,7 +8435,7 @@ msgstr "Vận chuyển"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Shipping Connectors"
-msgstr "Kết nối hãng vận chuyển"
+msgstr "Liên kết hãng vận chuyển"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_type
@@ -8422,9 +8455,9 @@ msgid ""
 " labels and request carrier picking at your warehouse to ship to the "
 "customer. Apply shipping connector from delivery methods."
 msgstr ""
-"Kết nối vận chuyển cho phép tính toán chi phí giao hàng, in phiếu giao hàng "
-"và yêu cầu đơn vị vận chuyển lấy hàng từ kho hàng của bạn để giao cho khách "
-"hàng. Chọn kết nối vận chuyển từ phương thức giao hàng."
+"Liên kết vận chuyển cho phép tính toán chi phí giao hàng, in phiếu giao hàng"
+" và yêu cầu đơn vị vận chuyển lấy hàng từ kho hàng của bạn để giao cho khách"
+" hàng. Chọn liên kết vận chuyển từ phương thức giao hàng."
 
 #. module: stock
 #: model:mail.template,name:stock.mail_template_data_delivery_confirmation
@@ -8434,7 +8467,7 @@ msgstr "Vận chuyển: Gửi bằng email"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_shiprocket
 msgid "Shiprocket Connector"
-msgstr "Kết nối Shiprocket"
+msgstr "Liên kết Shiprocket"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
@@ -8669,7 +8702,7 @@ msgstr "Sản phẩm được gắn sao"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_starshipit
 msgid "Starshipit Connector"
-msgstr "Kết nối Starshipit"
+msgstr "Liên kết Starshipit"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -10083,12 +10116,12 @@ msgstr "Loại hoạt động ngoại lệ trong bản ghi."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
 msgid "UPS Connector"
-msgstr "Kết nối UPS"
+msgstr "Liên kết UPS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
 msgid "USPS Connector"
-msgstr "Kết nối USPS"
+msgstr "Liên kết USPS"
 
 #. module: stock
 #. odoo-javascript
@@ -11452,7 +11485,7 @@ msgstr "thấp hơn tồn kho"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr "Kết nối bpost"
+msgstr "Liên kết bpost"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_closest

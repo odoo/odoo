@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2024-12-23 10:41+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -25,13 +25,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid "%s (customer not on Peppol)"
-msgstr ""
+msgstr "%s (klant niet op Peppol)"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "%s has requested electronic invoices reception on Peppol."
-msgstr ""
+msgstr "%s heeft elektronische factuurontvangst aangevraagd op Peppol."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -109,42 +109,42 @@ msgstr "Activeer"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Activate Electronic Invoicing"
-msgstr ""
+msgstr "Elektronische facturatie activeren"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Activate Electronic Invoicing (via Peppol)"
-msgstr ""
+msgstr "Elektronische facturatie activeren (via Peppol)"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 msgid "Activate Peppol"
-msgstr ""
+msgstr "Peppol activeren"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 msgid "Activate Peppol (Demo)"
-msgstr ""
+msgstr "Peppol activeren (Demo)"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 msgid "Activate Peppol (Test)"
-msgstr ""
+msgstr "Peppol activeren (Test)"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Allow incoming invoices"
-msgstr ""
+msgstr "Inkomende facturen toestaan"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 msgid "Allow reception"
-msgstr ""
+msgstr "Ontvangst toestaan"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -298,7 +298,7 @@ msgstr "E-mailadres en telefoonnummer van contactpersoon zijn vereist."
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Create, send and receive e-invoices for free."
-msgstr ""
+msgstr "Gratis e-facturen maken, versturen en ontvangen."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__create_uid
@@ -319,6 +319,8 @@ msgstr "Aangemaakt op"
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Customer is on Peppol but did not enable receiving documents."
 msgstr ""
+"De klant zit op Peppol, maar heeft het ontvangen van documenten niet "
+"ingeschakeld."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__demo
@@ -358,7 +360,7 @@ msgstr "Gereed"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "E-invoices will soon be mandatory in many countries"
-msgstr ""
+msgstr "E-facturen worden binnenkort in veel landen verplicht"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__edi_mode
@@ -376,6 +378,12 @@ msgstr "EDI bedrijfsmodus"
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_user
 msgid "EDI user"
 msgstr "EDI-gebruiker"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+msgid "EDI user should be of type Peppol"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -416,13 +424,13 @@ msgstr "Ophalen bij Peppol"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Free on Odoo"
-msgstr ""
+msgstr "Gratis op Odoo"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Fully automated"
-msgstr ""
+msgstr "Volledig geautomatiseerd"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -442,6 +450,8 @@ msgstr "ID"
 msgid ""
 "If not check, you will only be able to send invoices but not receive them."
 msgstr ""
+"Als je dit niet aanvinkt, kun je alleen facturen versturen maar niet "
+"ontvangen."
 
 #. module: account_peppol
 #. odoo-python
@@ -557,7 +567,7 @@ msgstr "Odoo"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Odoo keeps you up to date with the new regulation."
-msgstr ""
+msgstr "Odoo houdt je op de hoogte van de nieuwe regelgeving."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
@@ -576,6 +586,8 @@ msgstr "PEPPOL Inkoopdagboek"
 msgid ""
 "PEPPOL allows for complete automation of sending and receiving e-invoices."
 msgstr ""
+"PEPPOL maakt het mogelijk om het verzenden en ontvangen van e-facturen "
+"volledig te automatiseren."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -584,6 +596,8 @@ msgid ""
 "PEPPOL is the secure standard for e-invoices used in EU and across the "
 "world."
 msgstr ""
+"PEPPOL is de veilige standaard voor e-facturen die in de EU en de rest van "
+"de wereld wordt gebruikt."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_message_uuid
@@ -807,6 +821,12 @@ msgstr "Als ontvanger inschrijven"
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Registered as a receiver."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/tools/demo_utils.py:0
 msgid "Registered as a sender (demo)."
 msgstr "Geregistreerd als verzender (demo)."
@@ -839,7 +859,7 @@ msgstr "Afgewezen"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 msgid "Remove from Peppol"
-msgstr ""
+msgstr "Verwijderen uit Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__peppol_verification_code
@@ -857,6 +877,7 @@ msgstr "Verstuur opnieuw"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Send electronic invoices, and receive bills automatically via Peppol"
 msgstr ""
+"Stuur elektronische facturen en ontvang facturen automatisch via Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__service_ids
@@ -890,6 +911,8 @@ msgid ""
 "Test mode allows sending e-invoices through the test Peppol network.\n"
 "                                    By clicking the button below I accept that Odoo may process my e-invoices."
 msgstr ""
+"Met de testmodus kun je e-facturen versturen via het test Peppol netwerk.\n"
+"                                    Door op onderstaande knop te klikken accepteer ik dat Odoo mijn e-facturen mag verwerken."
 
 #. module: account_peppol
 #. odoo-python
@@ -920,7 +943,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "The e-invoicing network"
-msgstr ""
+msgstr "Het e-factuurnetwerk"
 
 #. module: account_peppol
 #. odoo-python
@@ -1060,19 +1083,19 @@ msgstr "Bekijk contact(en)"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "What is Peppol and why it's great ?"
-msgstr ""
+msgstr "Wat is Peppol en waarom is het geweldig?"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use PEPPOL ?"
-msgstr ""
+msgstr "Waarom zou ik PEPPOL gebruiken?"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should you use it ?"
-msgstr ""
+msgstr "Waarom zou je het gebruiken?"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__wizard_id
@@ -1087,15 +1110,19 @@ msgstr "Je kunt nu demo-leveranciersfacturen ontvangen."
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "You can now send and receive electronic invoices via Peppol"
+msgstr ""
+
+#. module: account_peppol
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "You can now send electronic invoices via Peppol."
+msgstr ""
+
+#. module: account_peppol
 #: code:addons/account_peppol/tools/demo_utils.py:0
 msgid "You can now send invoices in demo mode."
 msgstr "Je kunt nu facturen in demomodus verzenden."
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/peppol_registration.py:0
-msgid "You can now send invoices via Peppol."
-msgstr "Je kunt nu facturen via Peppol verzenden."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1103,6 +1130,8 @@ msgid ""
 "You registration has been rejected, the reason has been sent to you via email.\n"
 "                            Please contact our support if you need further assistance."
 msgstr ""
+"Je registratie is afgewezen, de reden hiervoor is per e-mail naar je toegestuurd.\n"
+"                            Neem contact op met onze supportafdeling als je meer hulp nodig hebt."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1124,12 +1153,12 @@ msgstr "Je zal een verificatiecode ontvangen op dit telefoonnummer"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your Peppol ID"
-msgstr ""
+msgstr "Jouw Peppol ID"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Your endpoint"
-msgstr ""
+msgstr "Jouw eindpunt"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1139,7 +1168,7 @@ msgstr "Je migratiesleutel is:"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Your mobile"
-msgstr ""
+msgstr "Je mobiel"
 
 #. module: account_peppol
 #. odoo-python
@@ -1167,4 +1196,4 @@ msgstr "door Peppol"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "invoices and credit notes."
-msgstr ""
+msgstr "facturen en creditnota's."

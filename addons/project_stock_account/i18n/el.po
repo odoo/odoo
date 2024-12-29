@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Kostas Goutoudis <goutoudis@gmail.com>, 2024
-# Martin Trigaux, 2024
 # George Tarasidis <george_tarasidis@yahoo.com>, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-29 00:00+0000\n"
-"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,9 +35,19 @@ msgid "Analytic Costs"
 msgstr ""
 
 #. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Γραμμή Αναλυτικής"
+
+#. module: project_stock_account
 #: model:ir.model,name:project_stock_account.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
 msgstr ""
+
+#. module: project_stock_account
+#: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_line__category
+msgid "Category"
+msgstr "Κατηγορία"
 
 #. module: project_stock_account
 #: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_applicability__business_domain
@@ -45,9 +55,25 @@ msgid "Domain"
 msgstr "Τομέας"
 
 #. module: project_stock_account
+#: model:ir.model.fields.selection,name:project_stock_account.selection__account_analytic_line__category__picking_entry
+msgid "Inventory Transfer"
+msgstr ""
+
+#. module: project_stock_account
+#. odoo-python
+#: code:addons/project_stock_account/models/project_project.py:0
+msgid "Materials"
+msgstr ""
+
+#. module: project_stock_account
 #: model:ir.model,name:project_stock_account.model_stock_picking_type
 msgid "Picking Type"
 msgstr "Τύπος Διαλογής"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_project_project
+msgid "Project"
+msgstr "Έργο"
 
 #. module: project_stock_account
 #: model:ir.model,name:project_stock_account.model_stock_move

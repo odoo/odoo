@@ -6,8 +6,8 @@
 # Martin Trigaux, 2024
 # Felix Schubert <felix.schubert@go-erp.com>, 2024
 # Max-Milan Stoyanov, 2024
-# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-19 11:52+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -639,7 +639,7 @@ msgstr ""
 "            (mit der Referenz: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
 "        über den Betrag von <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">143.750,00 €</span>\n"
-"       von <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"       von <t t-out=\"object.company_id.name or ''\">IhrUnternehmen</t>.\n"
 "        <br/><br/>\n"
 "        Bei Rückfragen stehen wir gerne zur Verfügung.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
@@ -778,7 +778,7 @@ msgstr ""
 "        Hallo <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>,<br/><br/>\n"
 "        vielen Dank für Ihre Zahlung.\n"
 "        Hier ist Ihr Zahlungsbeleg <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> über die Zahlung\n"
-"        von <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">10,00 $</span> von <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        von <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">10,00 $</span> von <t t-out=\"object.company_id.name or ''\">IhrUnternehmen</t>.\n"
 "        <br/><br/>\n"
 "        Zögern Sie nicht uns zu kontaktieren, sollten Sie hierzu Fragen haben.\n"
 "        <br/><br/>\n"
@@ -1124,6 +1124,8 @@ msgstr "<span class=\"text-warning\">Mittleres Risiko</span>: Iban"
 msgid ""
 "<span invisible=\"name or name_placeholder or quick_edit_mode\">Draft</span>"
 msgstr ""
+"<span invisible=\"name or name_placeholder or "
+"quick_edit_mode\">Entwurf</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -6941,7 +6943,7 @@ msgstr "Rechnungen per E-Mail versenden"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "E-Mail-Domain z. B. 'example.com' in 'odoo@example.com'"
+msgstr "E-Mail-Domain z. B. 'beispiel.com' in 'odoo@beispiel.com'"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_template_id
@@ -9310,7 +9312,7 @@ msgstr "Ist zwischen"
 #: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
 #: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
 msgid "Is Coa Installed"
-msgstr ""
+msgstr "Ist Kontenplan installiert"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -10722,7 +10724,7 @@ msgstr "Name"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name_placeholder
 #: model:ir.model.fields,field_description:account.field_account_move__name_placeholder
 msgid "Name Placeholder"
-msgstr ""
+msgstr "Platzhalter für Name"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name_searchable
@@ -11714,7 +11716,7 @@ msgstr "PDF ohne Zahlung"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "PEPPOL Electronic Invoicing"
-msgstr ""
+msgstr "PEPPOL für elektronische Rechnungsstellung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
@@ -15836,7 +15838,7 @@ msgid ""
 "<jobs@example.odoo.com>"
 msgstr ""
 "Die Bezeichnung des E-Mail-Alias, z. B. „Jobs“, falls Sie E-Mails für "
-"<jobs@example.odoo.com> erhalten möchten"
+"<jobs@beispiel.odoo.com> erhalten möchten"
 
 #. module: account
 #. odoo-python
@@ -19052,7 +19054,7 @@ msgstr "Rechnungen für"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "by %s"
-msgstr ""
+msgstr "von %s"
 
 #. module: account
 #. odoo-python
