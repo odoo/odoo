@@ -10,7 +10,7 @@ from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_bis3 import CHOR
 class TestChorusProXml(AccountTestInvoicingCommon):
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('fr')
+    @AccountTestInvoicingCommon.setup_country('fr_comp')
     def setUpClass(cls):
         super().setUpClass()
         cls.company = cls.company_data['company']
