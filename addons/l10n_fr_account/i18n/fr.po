@@ -6,15 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-04 08:46+0000\n"
-"PO-Revision-Date: 2024-11-04 08:46+0000\n"
+"POT-Creation-Date: 2025-05-27 14:29+0000\n"
+"PO-Revision-Date: 2025-05-27 16:32+0200\n"
 "Last-Translator: Manon Rondou <ronm@odoo.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
+"Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.6\n"
 
 #. module: l10n_fr_account
 #: model_terms:ir.ui.view,arch_db:l10n_fr_account.fec_export_wizard_view
@@ -80,6 +81,12 @@ msgid "Account Chart Template"
 msgstr "Modèle de plan comptable"
 
 #. module: l10n_fr_account
+#. odoo-python
+#: code:addons/l10n_fr_account/models/template_fr_asso.py:0
+msgid "Associations accounting plan"
+msgstr "Plan comptable associatif"
+
+#. module: l10n_fr_account
 #: model_terms:ir.ui.view,arch_db:l10n_fr_account.fec_export_wizard_view
 msgid "Cancel"
 msgstr "Annuler"
@@ -123,6 +130,11 @@ msgstr "CompteLib"
 #: model_terms:ir.ui.view,arch_db:l10n_fr_account.fec_export_wizard_view
 msgid "CompteNum"
 msgstr "CompteNum"
+
+#. module: l10n_fr_account
+#: model:ir.model,name:l10n_fr_account.model_res_partner
+msgid "Contact"
+msgstr "Contact"
 
 #. module: l10n_fr_account
 #: model:ir.model.fields,field_description:l10n_fr_account.field_l10n_fr_fec_export_wizard__create_uid
@@ -220,6 +232,12 @@ msgid "France"
 msgstr "France"
 
 #. module: l10n_fr_account
+#. odoo-python
+#: code:addons/l10n_fr_account/models/template_fr.py:0
+msgid "General accounting plan"
+msgstr "Plan comptable général"
+
+#. module: l10n_fr_account
 #: model_terms:ir.ui.view,arch_db:l10n_fr_account.fec_export_wizard_view
 msgid "Generate"
 msgstr "Générer"
@@ -296,10 +314,15 @@ msgid "Montantdevise"
 msgstr "Montantdevise"
 
 #. module: l10n_fr_account
+#. odoo-python
+#: code:addons/l10n_fr_account/models/res_partner.py:0
+msgid "No. Tahiti"
+msgstr ""
+
+#. module: l10n_fr_account
 #: model:ir.model.fields.selection,name:l10n_fr_account.selection__l10n_fr_fec_export_wizard__export_type__nonofficial
 msgid "Non-official FEC report (posted and unposted entries)"
-msgstr ""
-"Rapport FEC non officiel (pièces comptabilisées et non comptabilisées)"
+msgstr "Rapport FEC non officiel (pièces comptabilisées et non comptabilisées)"
 
 #. module: l10n_fr_account
 #: model:ir.model.fields.selection,name:l10n_fr_account.selection__l10n_fr_fec_export_wizard__export_type__official
@@ -373,8 +396,8 @@ msgid ""
 "The encoding of this text file is UTF-8. The structure of file is CSV "
 "separated by pipe '|'."
 msgstr ""
-"Le fichier CSV généré est encodé avec UTF-8 et utilise la barre verticale («"
-" | ») comme séparateur."
+"Le fichier CSV généré est encodé avec UTF-8 et utilise la barre verticale (« "
+"| ») comme séparateur."
 
 #. module: l10n_fr_account
 #: model_terms:ir.ui.view,arch_db:l10n_fr_account.fec_export_wizard_view
@@ -390,21 +413,18 @@ msgstr "Nous utilisons partner.id"
 #: model_terms:ir.ui.view,arch_db:l10n_fr_account.fec_export_wizard_view
 msgid ""
 "When you download a FEC file, the lock date is set to the end date.\n"
-"                If you want to test the FEC file generation, please tick the test file checkbox."
+"                If you want to test the FEC file generation, please tick the "
+"test file checkbox."
 msgstr ""
-"Lorsque vous téléchargez un fichier FEC, la date de verrouillage est définie sur la date de fin.\n"
-"Si vous souhaitez tester la génération du fichier FEC, veuillez cocher la case du fichier de test."
+"Lorsque vous téléchargez un fichier FEC, la date de verrouillage est définie "
+"sur la date de fin.\n"
+"Si vous souhaitez tester la génération du fichier FEC, veuillez cocher la "
+"case du fichier de test."
 
 #. module: l10n_fr_account
 #: model_terms:ir.ui.view,arch_db:l10n_fr_account.fec_export_wizard_view
 msgid ""
 "You are in test mode. The FEC file generation will not set the lock date."
 msgstr ""
-"Vous êtes en mode test. La génération du fichier FEC ne définira pas la date"
-" de verrouillage."
-
-#. module: l10n_fr_account
-#. odoo-python
-#: code:addons/l10n_fr_account/models/res_partner.py:0
-msgid "SIRET Number"
-msgstr "Numéro SIRET"
+"Vous êtes en mode test. La génération du fichier FEC ne définira pas la date "
+"de verrouillage."
