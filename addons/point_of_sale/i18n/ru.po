@@ -29,6 +29,8 @@ msgid ""
 "\n"
 "This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
 msgstr ""
+"\n"
+"Проблема возникает, когда после округления при пересчёте количество становится равным нулю. Чтобы исправить это, измените коэффициенты пересчёта или метод округления, чтобы даже самое маленькое количество не превращалось в ноль."
 
 #. module: point_of_sale
 #. odoo-python
@@ -1819,7 +1821,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/product.py:0
 msgid "Combo products cannot contains variants or attributes"
-msgstr ""
+msgstr "Комбинированные продукты не могут содержать варианты или атрибуты"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_combo_form
@@ -1997,6 +1999,8 @@ msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero"
 " quantity due to rounding:"
 msgstr ""
+"Ошибка преобразования: Округление приводит к нулевому количеству для "
+"следующих единиц измерения:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -5491,7 +5495,7 @@ msgstr "Работает на"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "Powered by Odoo"
-msgstr ""
+msgstr "Работает на Odoo"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6686,7 +6690,7 @@ msgstr "Установите несколько цен на продукт, ав
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Set the new discount"
-msgstr ""
+msgstr "Установите новую скидку"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7291,6 +7295,8 @@ msgid ""
 "The amount of your payment lines must be rounded to validate the transaction.\n"
 "The rounding precision is %s so you should set %s or %s as payment amount instead of %s."
 msgstr ""
+"Суммы платежных строк должны быть округлены для проведения операции. \n"
+"Точность округления — %s. Укажите сумму %s или %s вместо %s."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8000,6 +8006,9 @@ msgid ""
 "\n"
 "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
 msgstr ""
+"Чтобы удалить продукт, убедитесь, что все сеансы торговой точки закрыты.\n"
+"\n"
+"Удаление продукта, доступного в сеансе, похоже на попытку выхватить гамбургер из рук клиента в момент укуса — это приведёт к хаосу, и кетчуп с майонезом разлетятся повсюду!"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -8669,6 +8678,8 @@ msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
 msgstr ""
+"У вас нет прав для открытия сеанса торговой точки. Попробуйте открыть сеанс "
+"с другим пользователем"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8970,7 +8981,7 @@ msgstr "используя"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 msgid "{{ !barcodeReader ? 'No nomenclature' : '' }}"
-msgstr ""
+msgstr "{{ !barcodeReader ? 'Нет номенклатуры' : '' }}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8979,6 +8990,8 @@ msgid ""
 "{{ line.has_valid_product_lot() ? 'Valid product lot' : 'Invalid product "
 "lot'}}"
 msgstr ""
+"{{ line.has_valid_product_lot() ? 'Действительная партия продукта' : "
+"'Недействительная партия продукта' }}"
 
 #. module: point_of_sale
 #. odoo-javascript

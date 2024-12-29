@@ -6,6 +6,7 @@
 # Anton Kaligin, 2024
 # Wil Odoo, 2024
 # Nadia Martynova, 2024
+# Ilya Rozhkov, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Nadia Martynova, 2024\n"
+"Last-Translator: Ilya Rozhkov, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,6 +52,9 @@ msgid ""
 "The quantity done for the product %(product)s doesn't respect the rounding precision defined on the unit of measure %(unit)s.\n"
 "Please change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"\n"
+"Количество выполнено для товара %(product)s не соответствует точности округления, заданной для единицы измерения %(unit)s. \n"
+"Пожалуйста, измените выполненное количество или точность округления вашей единицы измерения."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -81,7 +85,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 msgid " - Product: %(product)s, Lot/Serial Number: %(lot)s"
-msgstr ""
+msgstr " - Товар: %(product)s, Партия/Серийный номер: %(lot)s"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__cyclic_inventory_frequency
@@ -120,6 +124,9 @@ msgid ""
 "(%(product_uom_category)s) - Move UoM is %(move_uom)s "
 "(%(move_uom_category)s)"
 msgstr ""
+"%(product_name)s --> Единица измерения товара: %(product_uom)s "
+"(%(product_uom_category)s) - Единица измерения для перемещения: %(move_uom)s"
+" (%(move_uom_category)s)"
 
 #. module: stock
 #. odoo-python
@@ -456,6 +463,8 @@ msgid ""
 "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as "
 "specified from <b>%(operation)s</b> destination."
 msgstr ""
+"<br>Товары будут перемещены в <b>%(destination)s</b>, <br/> как указано в "
+"пункте назначения операции <b>%(operation)s</b>."
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -1724,7 +1733,7 @@ msgstr "Изменить количество товара"
 msgid ""
 "Changing the Lot/Serial number for move lines with different products is not"
 " allowed."
-msgstr ""
+msgstr "Нельзя менять партию или серийный номер для строк с разными товарами."
 
 #. module: stock
 #. odoo-python
@@ -3650,7 +3659,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Generate Serials/Lots"
-msgstr ""
+msgstr "Сгенерировать серийные номера/партии"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -4139,7 +4148,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Import Serials/Lots"
-msgstr ""
+msgstr "Импорт серийных номеров/партий"
 
 #. module: stock
 #. odoo-python
@@ -4164,6 +4173,8 @@ msgid ""
 "In case of outgoing flow, validate the transfer before this date to allow to deliver at promised date to the customer.\n"
 "        In case of incoming flow, validate the transfer before this date in order to have these products in stock at the date promised by the supplier"
 msgstr ""
+"Для исходящих перемещений подтвердите перемещение до этой даты, чтобы доставить клиенту в срок.\n"
+"          Для входящих перемещений подтвердите перемещение до этой даты, чтобы товары были на складе в срок, обещанный поставщиком."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -5619,7 +5630,7 @@ msgstr "Операции не найдены. Давайте создадим п
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "No product found to generate Serials/Lots for."
-msgstr ""
+msgstr "Не найдено товара для генерации серийных номеров/партий."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -5658,6 +5669,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
+"Не найдено правила для пополнения «%(product)s» в «%(location)s».\n"
+"Проверьте конфигурацию маршрутов для товара."
 
 #. module: stock
 #. odoo-python
@@ -6172,12 +6185,12 @@ msgstr "Пакет"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package A"
-msgstr "Пакет A"
+msgstr "Упаковка A"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package B"
-msgstr ""
+msgstr "Упаковка B"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
@@ -6282,7 +6295,7 @@ msgstr "Использование пакета"
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Package manually relocated"
-msgstr ""
+msgstr "Упаковка вручную перемещена"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__valid_sscc
@@ -6784,7 +6797,7 @@ msgstr "Пополнение продукта"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenish_mixin
 msgid "Product Replenish Mixin"
-msgstr ""
+msgstr "Миксин пополнения запаса продукта"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_stock_rule
@@ -6830,7 +6843,7 @@ msgstr "Варианты товаров"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "Product barcode"
-msgstr ""
+msgstr "Штрихкод товара"
 
 #. module: stock
 #. odoo-python
@@ -7580,7 +7593,7 @@ msgstr "Информация о пополнении запасов"
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "Replenishment Information for %(product)s in %(warehouse)s"
-msgstr ""
+msgstr "Информация о пополнении для %(product)s на %(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -8300,6 +8313,13 @@ msgid ""
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting).\n"
 "Least Packages: FIFO but with the least number of packages possible when there are several packages containing the same product."
 msgstr ""
+"Установите конкретную стратегию изъятия, которая будет использоваться независимо от исходного места для этой категории товаров.\n"
+"\n"
+"FIFO: сначала будут изъяты товары/партии, которые были запасены первыми.\n"
+"LIFO: сначала будут изъяты товары/партии, которые были запасены последними.\n"
+"Ближайшее место: сначала будут изъяты товары/партии, находящиеся ближе всего к целевому месту.\n"
+"FEFO: сначала будут изъяты товары/партии с ближайшей датой изъятия (доступность этого метода зависит от настройки «Сроки годности»).\n"
+"Минимальное количество упаковок: FIFO, но с минимальным количеством упаковок, когда есть несколько упаковок, содержащих один и тот же товар."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9005,7 +9025,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "The Lot/Serial number (%s) is linked to another product."
-msgstr ""
+msgstr "Партия/серийный номер (%s) связан с другим товаром."
 
 #. module: stock
 #. odoo-python
@@ -9137,7 +9157,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 msgid "The operation takes and suggests products from this location."
-msgstr ""
+msgstr "Операция берет и предлагает товары с этого места."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -9155,7 +9175,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "The operations brings product to this location"
-msgstr ""
+msgstr "Операция доставляет товары на это место"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__package_id
@@ -9205,12 +9225,15 @@ msgid ""
 "rounding precision defined on the unit of measure \"%(unit)s\". Please "
 "change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"Количество выполненного для товара «%(product)s» не соответствует точности "
+"округления единицы измерения «%(unit)s». Пожалуйста, измените количество или"
+" точность округления."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "The quantity per lot should always be a positive value."
-msgstr ""
+msgstr "Количество на партию должно быть положительным."
 
 #. module: stock
 #. odoo-python
@@ -9246,6 +9269,8 @@ msgid ""
 "The serial number has already been assigned: \n"
 " Product: %(product)s, Serial Number: %(serial_number)s"
 msgstr ""
+"Серийный номер уже назначен:\n"
+"Товар: %(product)s, Серийный номер: %(serial_number)s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
@@ -9946,7 +9971,7 @@ msgstr "Ручной триггер"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_scrap__should_replenish
 msgid "Trigger replenishment for scrapped products"
-msgstr ""
+msgstr "Пополнить списанные товары"
 
 #. module: stock
 #. odoo-javascript
@@ -10809,6 +10834,8 @@ msgid ""
 "reserved on a stock move. If you need to change the inventory tracking, you "
 "should first unreserve the stock move."
 msgstr ""
+"Нельзя изменить учет запасов товара, который сейчас зарезервирован. Если "
+"нужно изменить учет, сначала отмените резервирование."
 
 #. module: stock
 #. odoo-python
@@ -10816,7 +10843,7 @@ msgstr ""
 msgid ""
 "You can not change the inventory tracking of a product that was already "
 "used."
-msgstr ""
+msgstr "Нельзя изменить учет запасов товара, который уже был использован."
 
 #. module: stock
 #. odoo-python
@@ -10995,6 +11022,8 @@ msgid ""
 "package through this view. Try adding them to a batch picking and pack it "
 "there."
 msgstr ""
+"Нельзя упаковать товары из разных перемещений в одну упаковку. Попробуйте "
+"объединить их в одну партию и упаковать там."
 
 #. module: stock
 #. odoo-python
@@ -11035,6 +11064,8 @@ msgid ""
 "You cannot perform moves because their unit of measure has a different "
 "category from their product unit of measure."
 msgstr ""
+"Нельзя выполнить перемещения, так как их единица измерения отличается от "
+"единицы измерения товара."
 
 #. module: stock
 #. odoo-python

@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Fernanda Alvarez, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-15 18:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -408,14 +408,14 @@ msgstr ""
 "\n"
 "        <t t-if=\"not target_responsible\">\n"
 "            <t t-if=\"not object.event_id.user_id.active\">\n"
-"                El cliente le invitó a la reunión <strong t-out=\"object.event_id.name or ''\">Seguimiento para la propuesta de proyecto</strong>.\n"
+"                El cliente le invitó a la reunión <strong t-out=\"object.event_id.name or ''\">Seguimiento de la propuesta de proyecto</strong>.\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t> le invitó a la reunión <strong t-out=\"object.event_id.name or ''\">Seguimiento para la propuesta de proyecto</strong>.\n"
+"                <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t> le invitó a la reunión <strong t-out=\"object.event_id.name or ''\">Seguimiento de la propuesta de proyecto</strong>.\n"
 "            </t>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            Su reunión <strong t-out=\"object.event_id.name or ''\">Seguimiento para la propuesta de proyecto</strong> se agendó.\n"
+"            Su reunión <strong t-out=\"object.event_id.name or ''\">Seguimiento de la propuesta de proyecto</strong> se agendó.\n"
 "        </t>\n"
 "\n"
 "    </p>\n"
@@ -486,7 +486,7 @@ msgstr ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"not is_html_empty(object.event_id.description)\">\n"
-"                    <li>Descripción del evento::\n"
+"                    <li>Descripción del evento:\n"
 "                    <t t-out=\"object.event_id.description\">Reunión interna para hablar de los nuevos precios de los productos y servicios.</t></li>\n"
 "                </t>\n"
 "            </ul>\n"
@@ -1902,7 +1902,7 @@ msgstr "El organizador está solo"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Join Video Call"
-msgstr "Unirse a videollamada"
+msgstr "Unirse a la videollamada"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__-1
