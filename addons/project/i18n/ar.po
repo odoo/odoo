@@ -402,6 +402,16 @@ msgid ""
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    عزيزنا <t t-out=\"object.partner_id.name or 'customer'\">براندن فريمان</t>،<br/>\n"
+"    يسرنا إخبارك بأننا قد أتممنا المشروع \"<strong t-out=\"object.name or ''\">عمليات الترميم</strong>\".\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>ميتشل آدمن</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">لقد وصلتك هذه الرسالة لأنه قد تم نقل مشروعك إلى مرحلة <b t-out=\"object.stage_id.name or ''\">تم الانتهاء</b></span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -420,6 +430,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    عزيزنا <t t-out=\"object.partner_id.name or 'customer'\">براندن فريمان</t>،<br/><br/>\n"
+"    شكراً لتواصلك معنا. نحن نُقدِّر اهتمامك بمنتجاتنا/خدماتنا.<br/>\n"
+"    يقوم فريقنا بمراجعة استفسارك وسيقومون بالرد عليك في أقرب وقت ممكن.<br/>\n"
+"    إذا كانت لديك أي أسئلة أو استفسارات أخرى في الوقت الحالي، لا تتردد في التواصل معنا. تسرنا مساعدتك.<br/><br/>\n"
+"    شكراً لتعاونك.<br/>\n"
+"    مع أطيب التحيات،\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>ميتشل آدمن</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1067,7 +1090,7 @@ msgstr "المرفقات "
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
 msgid "Attachments that don't come from a message"
-msgstr ""
+msgstr "المرفقات التي لا تأتي من رسالة. "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__user_id
