@@ -2,5 +2,6 @@
 from . import account_move
 from . import template_fr
 from . import template_mc
+from . import template_fr_pca
 from . import res_company
 from . import res_partner

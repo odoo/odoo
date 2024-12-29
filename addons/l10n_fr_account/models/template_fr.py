@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, Command
+from odoo import Command, _, models
 from odoo.addons.account.models.chart_template import template
 
 
@@ -9,6 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('fr')
     def _get_fr_template_data(self):
         return {
+            'name': _('General accounting plan'),
             'code_digits': 6,
             'property_account_receivable_id': 'fr_pcg_recv',
             'property_account_payable_id': 'fr_pcg_pay',
