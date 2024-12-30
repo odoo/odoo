@@ -384,6 +384,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         Category = request.env['product.public.category']
         categs_domain = [('parent_id', '=', False)] + website_domain
+        if not self.env.user._is_internal():
+            categs_domain = expression.AND([categs_domain, [('has_published_products', '=', True)]])
         if search:
             search_categories = Category.search(
                 [('product_tmpl_ids', 'in', search_product.ids)] + website_domain

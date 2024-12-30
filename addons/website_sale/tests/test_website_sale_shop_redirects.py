@@ -17,6 +17,9 @@ class TestWebsiteSaleShopRedirects(HttpCase, WebsiteSaleCommon):
             'public_categ_ids': [Command.link(category_a.id)],
             'website_published': True,
         })
+        # Add a different published product to category B so that it is accessible to public users
+        self._create_product(website_published=True, public_categ_ids=[Command.link(category_b.id)])
+
         slug = self.env['ir.http']._slug
 
         response = self.url_open(

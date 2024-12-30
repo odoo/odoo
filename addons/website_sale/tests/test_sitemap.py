@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 
 
@@ -18,6 +19,13 @@ class TestSitemap(HttpCase):
         }])
         self.cats[2].parent_id = self.cats[1].id
         self.cats[1].parent_id = self.cats[0].id
+        # 'Level 2' cetegory must have at least one published product to be visible by public users
+        self.env['product.product'].create({
+            'name': 'Dummy product',
+            'list_price': 100.0,
+            'public_categ_ids': [Command.link(self.cats[2].id)],
+            'is_published': True,
+        })
 
     def test_01_shop_route_sitemap(self):
         resp = self.url_open('/sitemap.xml')
