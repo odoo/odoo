@@ -29,8 +29,3 @@ class AccountMove(models.Model):
                                            and move.country_code == 'ES' \
                                            and move.company_id.l10n_es_edi_tax_agency
 
-    @api.depends('l10n_es_edi_is_required')
-    def _compute_edi_show_cancel_button(self):
-        super()._compute_edi_show_cancel_button()
-        for move in self.filtered('l10n_es_edi_is_required'):
-            move.edi_show_cancel_button = False

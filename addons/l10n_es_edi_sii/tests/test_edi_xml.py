@@ -638,7 +638,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 'IDFactura': {
                     'FechaExpedicionFacturaEmisor': '01-01-2019',
                     'NumSerieFacturaEmisor': 'sup0001',
-                    'IDEmisorFactura': {'NIF': 'F35999705'}
+                    'IDEmisorFactura': {'NIF': 'F35999705', 'NombreRazon': 'partner_b'}
                 },
                 'FacturaRecibida': {
                     'TipoFactura': 'F1',
@@ -682,7 +682,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 'IDFactura': {
                     'FechaExpedicionFacturaEmisor': '01-01-2019',
                     'NumSerieFacturaEmisor': 'sup0001',
-                    'IDEmisorFactura': {'NIF': 'F35999705'},
+                    'IDEmisorFactura': {'NIF': 'F35999705', 'NombreRazon': 'partner_b'},
                 },
                 'FacturaRecibida': {
                     'TipoFactura': 'R4',
@@ -735,7 +735,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 'IDFactura': {
                     'FechaExpedicionFacturaEmisor': '01-01-2019',
                     'NumSerieFacturaEmisor': 'sup0001',
-                    'IDEmisorFactura': {'NIF': 'F35999705'},
+                    'IDEmisorFactura': {'NIF': 'F35999705', 'NombreRazon': 'partner_b'},
                 },
                 'FacturaRecibida': {
                     'TipoFactura': 'F1',
@@ -791,7 +791,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 'IDFactura': {
                     'FechaExpedicionFacturaEmisor': '01-01-2019',
                     'NumSerieFacturaEmisor': 'sup0001',
-                    'IDEmisorFactura': {'NIF': 'F35999705'},
+                    'IDEmisorFactura': {'NIF': 'F35999705', 'NombreRazon': 'partner_b'},
                 },
                 'FacturaRecibida': {
                     'TipoFactura': 'F1',
@@ -839,7 +839,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 'IDFactura': {
                     'FechaExpedicionFacturaEmisor': '01-01-2019',
                     'NumSerieFacturaEmisor': 'sup0001',
-                    'IDEmisorFactura': {'NIF': 'F35999705'},
+                    'IDEmisorFactura': {'NIF': 'F35999705', 'NombreRazon': 'partner_b'},
                 },
                 'FacturaRecibida': {
                     'TipoFactura': 'F1',
@@ -943,7 +943,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 'IDFactura': {
                     'FechaExpedicionFacturaEmisor': '01-01-2019',
                     'NumSerieFacturaEmisor': 'sup0001',
-                    'IDEmisorFactura': {'NIF': 'F35999705'},
+                    'IDEmisorFactura': {'NIF': 'F35999705', 'NombreRazon': 'partner_b'},
                 },
                 'FacturaRecibida': {
                     'TipoFactura': 'F1',
@@ -995,7 +995,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 'IDFactura': {
                     'FechaExpedicionFacturaEmisor': '01-01-2019',
                     'NumSerieFacturaEmisor': 'sup0001',
-                    'IDEmisorFactura': {'NIF': 'F35999705'},
+                    'IDEmisorFactura': {'NIF': 'F35999705', 'NombreRazon': 'partner_b'},
                 },
                 'FacturaRecibida': {
                     'TipoFactura': 'R4',
@@ -1049,7 +1049,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 'IDFactura': {
                     'FechaExpedicionFacturaEmisor': '01-01-2019',
                     'NumSerieFacturaEmisor': 'sup0001',
-                    'IDEmisorFactura': {'NIF': 'F35999705'},
+                    'IDEmisorFactura': {'NIF': 'F35999705', 'NombreRazon': 'partner_b'},
                 },
                 'FacturaRecibida': {
                     'TipoFactura': 'R4',
@@ -1107,7 +1107,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 'IDFactura': {
                     'FechaExpedicionFacturaEmisor': '01-01-2019',
                     'NumSerieFacturaEmisor': 'sup0001',
-                    'IDEmisorFactura': {'IDOtro': {'IDType': '02', 'ID': 'BE0477472701'}}
+                    'IDEmisorFactura': {'IDOtro': {'IDType': '02', 'ID': 'BE0477472701'}, 'NombreRazon': 'partner_a'}
                 },
                 'FacturaRecibida': {
                     'TipoFactura': 'F1',
@@ -1160,7 +1160,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 'IDFactura': {
                     'FechaExpedicionFacturaEmisor': '01-01-2019',
                     'NumSerieFacturaEmisor': 'sup0001',
-                    'IDEmisorFactura': {'IDOtro': {'IDType': '02', 'ID': 'BE0477472701'}}
+                    'IDEmisorFactura': {'IDOtro': {'IDType': '02', 'ID': 'BE0477472701'}, 'NombreRazon': 'partner_a'}
                 },
                 'FacturaRecibida': {
                     'TipoFactura': 'R4',
