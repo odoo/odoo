@@ -12,7 +12,7 @@
             <div t-if="props.feedback(this.state.buffer)" class="p-2 mx-auto mt-n2 mb-2" t-esc="props.feedback(this.state.buffer)" />
             <t t-set="isValid" t-value="props.isValid(state.buffer)"/>
             <div t-if="!isValid and props.isValidFeedback" class="p-2 mx-auto mt-n2 mb-2 text-center" t-esc="props.isValidFeedback(this.state.buffer)" />
-            <Numpad buttons="props.buttons" class="'p-1 rounded-3 bg-200'"/>
+            <Numpad buttons="props.buttons"/>
             <t t-set-slot="footer">
                 <div class="d-flex flex-grow-1 justify-content-center">
                     <button t-att-disabled="!props.isValid(state.buffer) and props.isValidBlocking" class="btn btn-primary btn-lg lh-lg o-default-button me-2" tabindex="1" t-on-click="confirm">

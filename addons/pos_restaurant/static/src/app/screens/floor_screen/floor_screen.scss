@@ -47,11 +47,13 @@
 }
 
 .floor-kanban {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
+
+    @include media-breakpoint-up(sm) {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
 }
 
-@include media-breakpoint-down(sm) {
-    .floor-kanban {
-        grid-template-columns: repeat(3, 1fr);
-    }
+.floor-screen:where(:has(.table-selector-small)) .floor-kanban {
+    padding-bottom: 80px !important;
 }

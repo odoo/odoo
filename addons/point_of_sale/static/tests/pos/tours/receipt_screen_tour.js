@@ -115,11 +115,11 @@ registry.category("web_tour.tours").add("ReceiptScreenDiscountWithPricelistTour"
             Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Test Product", "1"),
             ProductScreen.clickPriceList("special_pricelist"),
-            inLeftSide(Order.hasLine({ productName: "Test Product", oldPrice: "7.0" })),
+            inLeftSide(Order.hasLine({ productName: "Test Product", price: "6.30" })),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            Order.hasLine({ oldPrice: "7" }),
+            Order.hasLine({ price: "6.30" }),
 
             ReceiptScreen.clickNextOrder(),
             ProductScreen.addOrderline("Test Product", "1"),

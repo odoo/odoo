@@ -343,9 +343,6 @@ class PosSession(models.Model):
         """
         self.ensure_one()
 
-        if ref_prefix is None:
-            ref_prefix = _("Order")
-
         sequence_num = int(self.order_seq_id._next())
 
         YY = fields.Datetime.now().strftime('%y')
@@ -353,7 +350,7 @@ class PosSession(models.Model):
         SSS = f"{self.id:03}"
         F = 0  # -> means server-generated pos_reference
         OOOO = f"{sequence_num:04}"
-        order_ref = f"{ref_prefix} {YY}{LL}-{SSS}-{F}{OOOO}"
+        order_ref = f"{ref_prefix} {YY}{LL}-{SSS}-{F}{OOOO}" if ref_prefix else f"{YY}{LL}-{SSS}-{F}{OOOO}"
 
         return order_ref, sequence_num, tracking_prefix + f"{sequence_num:03}"
 
