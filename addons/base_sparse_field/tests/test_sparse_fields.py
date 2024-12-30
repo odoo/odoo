@@ -1,9 +1,35 @@
-# -*- coding: utf-8 -*-
-
+from odoo import models, fields
 from odoo.tests import common
+from odoo.tools import mute_logger
 
 
 class TestSparseFields(common.TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        class SparseFieldsTest(models.TransientModel):
+            _name = 'sparse_fields.test'
+            _description = 'Sparse fields Test'
+
+            data = fields.Json()
+            boolean = fields.Boolean(sparse='data')
+            integer = fields.Integer(sparse='data')
+            float = fields.Float(sparse='data')
+            char = fields.Char(sparse='data')
+            selection = fields.Selection([('one', 'One'), ('two', 'Two')], sparse='data')
+            partner = fields.Many2one('res.partner', sparse='data')
+
+
+        SparseFieldsTest._build_model(cls.registry, cls.env.cr)
+        cls.registry.setup_models(cls.env.cr)
+        cls.registry.init_models(cls.env.cr, [SparseFieldsTest._name], cls.env.context)
+
+    @classmethod
+    def tearDownClass(cls):
+        with mute_logger('odoo.models.unlink'):
+            del cls.env.registry['sparse_fields.test']
+            cls.env.registry.reset_changes()
 
     def test_sparse(self):
         """ test sparse fields. """
