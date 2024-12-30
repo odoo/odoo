@@ -1984,10 +1984,16 @@
             "colGroupBys": [],
             "context": {},
             "domain": [
+                "&",
                 [
                     "country_id",
                     "!=",
                     false
+                ],
+                [
+                    "state",
+                    "in",
+                    ["purchase", "done"]
                 ]
             ],
             "id": "1",
@@ -2016,7 +2022,7 @@
         "2": {
             "colGroupBys": [],
             "context": {},
-            "domain": [],
+            "domain": [["state", "in", ["purchase", "done"]]],
             "id": "2",
             "measures": [
                 {
@@ -2044,10 +2050,16 @@
             "colGroupBys": [],
             "context": {},
             "domain": [
+                "&",
                 [
                     "user_id",
                     "!=",
                     false
+                ],
+                [
+                   "state",
+                   "in",
+                   ["purchase", "done"]
                 ]
             ],
             "id": "3",
@@ -2076,7 +2088,7 @@
         "4": {
             "colGroupBys": [],
             "context": {},
-            "domain": [],
+            "domain": [["state", "in", ["purchase", "done"]]],
             "id": "4",
             "measures": [
                 {
@@ -2110,7 +2122,7 @@
         "5": {
             "colGroupBys": [],
             "context": {},
-            "domain": [],
+            "domain": [["state", "in", ["purchase", "done"]]],
             "id": "5",
             "measures": [
                 {
