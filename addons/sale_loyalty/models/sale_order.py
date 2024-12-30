@@ -790,9 +790,6 @@ class SaleOrder(models.Model):
             'used': order_coupon_history.used + points,
         })
 
-    def _remove_program_from_points(self, programs):
-        self.coupon_point_ids.filtered(lambda p: p.coupon_id.program_id in programs).sudo().unlink()
-
     def _get_reward_line_values(self, reward, coupon, **kwargs):
         self.ensure_one()
         self = self.with_context(lang=self._get_lang())

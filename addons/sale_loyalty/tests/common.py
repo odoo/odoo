@@ -232,6 +232,16 @@ class TestSaleCouponCommon(SaleCommon):
                 continue
             self._claim_reward(order, program, coupons_per_program[program])
 
+    def _clear_rewards(self, order, programs=None):
+        def filter_program(p): return programs is None or p in programs
+        order.order_line.filtered(
+            lambda l: l.reward_id.program_id and filter_program(l.reward_id.program_id)
+        ).unlink()
+        order.coupon_point_ids.filtered(lambda p: filter_program(p.coupon_id.program_id)).unlink()
+        order.code_enabled_rule_ids = order.code_enabled_rule_ids.filtered(
+            lambda r: not filter_program(r.program_id)
+        )
+
 class TestSaleCouponNumbersCommon(TestSaleCouponCommon):
     @classmethod
     def setUpClass(cls):
