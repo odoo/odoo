@@ -225,7 +225,7 @@ class MetaModel(type):
 
             if not attrs.get('_name'):
                 # add '.' before every uppercase letter preceded by any non-underscore char
-                attrs['_name'] = re.sub(r"(?<=[^_])([A-Z])", r".\1", name).lower
+                attrs['_name'] = re.sub(r"(?<=[^_])([A-Z])", r".\1", name).lower()
                 _logger.warning("Class %s has no _name, please make it explicit: _name = %r", name, attrs['_name'])
 
             assert attrs.get('_name')
