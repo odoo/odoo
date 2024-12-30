@@ -11,6 +11,6 @@ export class ReceiptHeader extends Component {
     }
 
     get partnerAddress() {
-        return this.order.partner_id.contact_address.split("\n");
+        return this.order.partner_id.pos_contact_address.split("\n");
     }
 }

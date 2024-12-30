@@ -17,7 +17,7 @@ class ComplianceLetter(models.TransientModel):
             "date": self._get_formatted_date(),
             "name": self.company_id.name,
             "vat": self.company_id.vat,
-            "address": self.company_id.partner_id.contact_address,
+            "address": self.company_id.partner_id.pos_contact_address,
         }
         return self.env.ref('l10n_mt_pos.report_compliance_letter').report_action([], data=data)
 

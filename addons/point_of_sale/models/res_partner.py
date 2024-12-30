@@ -12,6 +12,12 @@ class ResPartner(models.Model):
         groups="point_of_sale.group_pos_user",
     )
     pos_order_ids = fields.One2many('pos.order', 'partner_id', readonly=True)
+    pos_contact_address = fields.Char('PoS Address', compute='_compute_contact_address')
+
+    def _compute_contact_address(self):
+        super()._compute_contact_address()
+        for partner in self:
+            partner.pos_contact_address = partner._display_address(without_company=True)
 
     @api.model
     def get_new_partner(self, config_id, domain, offset):
@@ -40,7 +46,7 @@ class ResPartner(models.Model):
     def _load_pos_data_fields(self, config_id):
         return [
             'id', 'name', 'street', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'mobile', 'email',
-            'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name', 'contact_address'
+            'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name', 'pos_contact_address'
         ]
 
     def _compute_pos_order(self):
