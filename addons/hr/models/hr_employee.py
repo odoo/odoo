@@ -91,7 +91,7 @@ class HrEmployee(models.Model):
     birthday_public_display_string = fields.Char("Public Date of Birth", compute="_compute_birthday_public_display_string", default="hidden")
     ssnid = fields.Char('SSN No', help='Social Security Number', groups="hr.group_hr_user", tracking=True)
     sinid = fields.Char('SIN No', help='Social Insurance Number', groups="hr.group_hr_user", tracking=True)
-    identification_id = fields.Char(string='Identification No', groups="hr.group_hr_user", tracking=True)
+    identification_id = fields.Char(string='Identification No', groups="hr.group_hr_user")
     passport_id = fields.Char('Passport No', groups="hr.group_hr_user", tracking=True)
     bank_account_id = fields.Many2one(
         'res.partner.bank', 'Bank Account',
