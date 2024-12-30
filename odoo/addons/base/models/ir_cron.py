@@ -5,8 +5,7 @@ import time
 import os
 import psycopg2
 import psycopg2.errors
-import pytz
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dateutil.relativedelta import relativedelta
 
 import odoo
@@ -199,7 +198,7 @@ class IrCron(models.Model):
         if not jobs:
             raise BadModuleState()
 
-        oldest = min(fields.Datetime.from_string(job['nextcall']) for job in jobs)
+        oldest = min(job['nextcall'] for job in jobs)
         if datetime.now() - oldest < MAX_FAIL_TIME:
             raise BadModuleState()
 
@@ -213,19 +212,20 @@ class IrCron(models.Model):
     @staticmethod
     def _get_all_ready_jobs(cr):
         """ Return a list of all jobs that are ready to be executed """
+        now = cr.now()
         cr.execute("""
             SELECT *
             FROM ir_cron
             WHERE active = true
-              AND (nextcall <= (now() at time zone 'UTC')
+              AND (nextcall <= %s
                 OR id in (
                     SELECT cron_id
                     FROM ir_cron_trigger
-                    WHERE call_at <= (now() at time zone 'UTC')
+                    WHERE call_at <= %s
                 )
               )
             ORDER BY failure_count, priority, id
-        """)
+        """, (now, now))
         return cr.dictfetchall()
 
     @staticmethod
@@ -271,11 +271,11 @@ class IrCron(models.Model):
         #
         # Learn more: https://www.postgresql.org/docs/current/explicit-locking.html#LOCKING-ROWS
 
-        query = """
+        query = SQL("""
             WITH last_cron_progress AS (
                 SELECT id as progress_id, cron_id, timed_out_counter, done, remaining
                 FROM ir_cron_progress
-                WHERE cron_id = %s
+                WHERE cron_id = %(cron_id)s
                 ORDER BY id DESC
                 LIMIT 1
             )
@@ -283,20 +283,20 @@ class IrCron(models.Model):
             FROM ir_cron
             LEFT JOIN last_cron_progress lcp ON lcp.cron_id = ir_cron.id
             WHERE ir_cron.active = true
-              AND (nextcall <= (now() at time zone 'UTC')
+              AND (nextcall <= %(now)s
                 OR EXISTS (
                     SELECT cron_id
                     FROM ir_cron_trigger
-                    WHERE call_at <= (now() at time zone 'UTC')
+                    WHERE call_at <=  %(now)s
                       AND cron_id = ir_cron.id
                 )
               )
-              AND id = %s
+              AND id = %(cron_id)s
             ORDER BY priority
             FOR NO KEY UPDATE SKIP LOCKED
-        """
+        """, cron_id=job_id, now=cr.now())
         try:
-            cr.execute(query, [job_id, job_id], log_exceptions=False)
+            cr.execute(query, log_exceptions=False)
         except psycopg2.extensions.TransactionRollbackError:
             # A serialization error can occur when another cron worker
             # commits the new `nextcall` value of a cron it just ran and
@@ -481,15 +481,14 @@ class IrCron(models.Model):
         reached, ``active`` is set to ``False`` and both values are
         reset.
         """
-        now = fields.Datetime.context_timestamp(self, datetime.utcnow())
-
         if status == CompletionStatus.FAILED:
+            now = self.env.cr.now().replace(microsecond=0)
             failure_count = job['failure_count'] + 1
             first_failure_date = job['first_failure_date'] or now
             active = job['active']
             if (
                 failure_count >= MIN_FAILURE_COUNT_BEFORE_DEACTIVATION
-                and fields.Datetime.context_timestamp(self, first_failure_date) + MIN_DELTA_BEFORE_DEACTIVATION < now
+                and first_failure_date + MIN_DELTA_BEFORE_DEACTIVATION < now
             ):
                 failure_count = 0
                 first_failure_date = None
@@ -500,7 +499,7 @@ class IrCron(models.Model):
                     name=repr(job['cron_name']),
                     id=job['id'],
                     count=MIN_FAILURE_COUNT_BEFORE_DEACTIVATION,
-                    time=datetime.replace(datetime.utcnow(), microsecond=0),
+                    time=now,
                 ))
         else:
             failure_count = 0
@@ -522,24 +521,29 @@ class IrCron(models.Model):
 
     def _clear_schedule(self, job):
         """Remove triggers for the given job."""
+        now = self.env.cr.now().replace(microsecond=0)
         self.env.cr.execute("""
             DELETE FROM ir_cron_trigger
             WHERE cron_id = %s
-              AND call_at <= (now() at time zone 'UTC')
-        """, [job['id']])
+              AND call_at <= %s
+        """, [job['id'], now])
 
     def _reschedule_later(self, job):
         """
         Reschedule the job to be executed later, after its regular
         interval or upon a trigger.
         """
-        # Use the user's timezone to compare and compute datetimes, otherwise unexpected results may appear.
-        # For instance, adding 1 month in UTC to July 1st at midnight in GMT+2 gives July 30 instead of August 1st!
-        now = fields.Datetime.context_timestamp(self, datetime.utcnow())
-        nextcall = fields.Datetime.context_timestamp(self, job['nextcall'])
+        now = self.env.cr.now().replace(microsecond=0)
+        nextcall = job['nextcall']
+        # Use the timezone of the user when adding the interval. When adding a
+        # day or more, the user may want to keep the same hour each day.
+        # The interval won't be fixed, but the hour will stay the same,
+        # even when changing DST.
         interval = _intervalTypes[job['interval_type']](job['interval_number'])
         while nextcall <= now:
+            nextcall = fields.Datetime.context_timestamp(self, nextcall)
             nextcall += interval
+            nextcall = nextcall.astimezone(timezone.utc).replace(tzinfo=None)
 
         _logger.info('Job %r (%s) completed', job['cron_name'], job['id'])
         self.env.cr.execute("""
@@ -547,19 +551,18 @@ class IrCron(models.Model):
             SET nextcall = %s,
                 lastcall = %s
             WHERE id = %s
-        """, [
-            fields.Datetime.to_string(nextcall.astimezone(pytz.UTC)),
-            fields.Datetime.to_string(now.astimezone(pytz.UTC)),
-            job['id'],
-        ])
+        """, [nextcall, now, job['id']])
 
     def _reschedule_asap(self, job):
         """
         Reschedule the job to be executed ASAP, after the other cron
         jobs had a chance to run.
         """
-        # leave the existing nextcall and triggers, this leave the job "ready"
-        pass
+        now = self.env.cr.now().replace(microsecond=0)
+        self.env.cr.execute("""
+            INSERT INTO ir_cron_trigger(call_at, cron_id)
+            VALUES (%s, %s)
+        """, [now, job['id']])
 
     def _callback(self, cron_name, server_action_id):
         """ Run the method associated to a given job. It takes care of logging
