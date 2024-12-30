@@ -497,7 +497,9 @@ patch(PosStore.prototype, {
             this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
         }
 
-        return await super.afterProcessServerData(...arguments);
+        const data = await super.afterProcessServerData(...arguments);
+        this.restoreSampleDataState();
+        return data;
     },
     //@override
     addNewOrder(data = {}) {
@@ -881,5 +883,36 @@ patch(PosStore.prototype, {
         }
         order.selectCourse(destCourse);
         order.recomputeOrderData();
+    },
+    async loadSampleData() {
+        if (this.config.module_pos_restaurant) {
+            const data = { screen: "ProductScreen" };
+            const table_number = this.getOrder()?.table_id?.table_number;
+            if (table_number) {
+                data.tableNumber = table_number;
+            }
+            sessionStorage.setItem("posPreSampleDataLoadState", JSON.stringify(data));
+        }
+        return super.loadSampleData();
+    },
+    restoreSampleDataState() {
+        if (this.config.module_pos_restaurant) {
+            let parsedState = sessionStorage.getItem("posPreSampleDataLoadState");
+            if (!parsedState) {
+                return;
+            }
+            try {
+                sessionStorage.removeItem("posPreSampleDataLoadState");
+                parsedState = JSON.parse(parsedState);
+                const { tableNumber, screen } = parsedState;
+                if (tableNumber) {
+                    this.searchOrder(tableNumber);
+                } else if (screen) {
+                    this.showScreen(screen);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
     },
 });
