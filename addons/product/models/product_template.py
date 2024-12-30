@@ -184,7 +184,7 @@ class ProductTemplate(models.Model):
 
     @api.depends('image_1920', 'image_1024')
     def _compute_can_image_1024_be_zoomed(self):
-        for template in self:
+        for template in self.with_context(bin_size=False):
             template.can_image_1024_be_zoomed = template.image_1920 and tools.is_image_size_above(template.image_1920, template.image_1024)
 
     @api.depends(
