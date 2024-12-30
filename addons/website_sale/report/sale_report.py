@@ -8,6 +8,11 @@ class SaleReport(models.Model):
 
     website_id = fields.Many2one('website', readonly=True)
     is_abandoned_cart = fields.Boolean(string="Abandoned Cart", readonly=True)
+    public_categ_id = fields.Many2one(
+        comodel_name='product.public.category',
+        string="eCommerce Category",
+        readonly=True,
+    )
 
     def _select_additional_fields(self):
         res = super()._select_additional_fields()
@@ -17,17 +22,20 @@ class SaleReport(models.Model):
             AND s.website_id IS NOT NULL
             AND s.state = 'draft'
             AND s.partner_id != %s""" % self.env.ref('base.public_partner').id
+        res['public_categ_id'] = "pc.product_public_category_id"
         return res
 
     def _from_sale(self):
         res = super()._from_sale()
         res += """
-            LEFT JOIN website w ON w.id = s.website_id"""
+            LEFT JOIN website w ON w.id = s.website_id
+            LEFT JOIN product_public_category_product_template_rel pc ON pc.product_template_id = t.id"""
         return res
 
     def _group_by_sale(self):
         res = super()._group_by_sale()
         res += """,
             s.website_id,
-            w.cart_abandoned_delay"""
+            w.cart_abandoned_delay,
+            pc.product_public_category_id"""
         return res

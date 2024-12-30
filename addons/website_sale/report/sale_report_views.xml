@@ -21,6 +21,11 @@
                     <filter string="Customer" name="groupby_customer" context="{'group_by':'partner_id'}"/>
                     <filter string="Customer Country" name="groupby_country" context="{'group_by':'country_id'}"/>
                     <filter string="Status" name="groupby_status" context="{'group_by':'state'}"/>
+                    <filter
+                        string="eCommerce Category"
+                        name="groupby_product_public_category"
+                        context="{'group_by': 'public_categ_id'}"
+                    />
                     <separator orientation="vertical"/>
                     <filter string="Order Date" name="groupby_order_date" context="{'group_by':'date'}"/>
                     <!-- Dashboard filter - used by context -->
@@ -62,6 +67,7 @@
         <field name="arch" type="xml">
              <field name="order_reference" position="after">
                 <field name="website_id" optional="hide"/>
+                <field name="public_categ_id" optional="hide"/>
             </field>
         </field>
     </record>
