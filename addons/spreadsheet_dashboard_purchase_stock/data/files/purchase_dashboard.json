@@ -2195,10 +2195,16 @@
             "colGroupBys": [],
             "context": {},
             "domain": [
+                "&",
                 [
                     "country_id",
                     "!=",
                     false
+                ],
+                [
+                    "state",
+                    "in",
+                    ["purchase", "done"]
                 ]
             ],
             "id": "1",
@@ -2227,7 +2233,7 @@
         "2": {
             "colGroupBys": [],
             "context": {},
-            "domain": [],
+            "domain": [["state", "in", ["purchase", "done"]]],
             "id": "2",
             "measures": [
                 {
@@ -2255,10 +2261,16 @@
             "colGroupBys": [],
             "context": {},
             "domain": [
+                "&",
                 [
                     "category_id",
                     "!=",
                     false
+                ],
+                [
+                    "state",
+                    "in",
+                    ["purchase", "done"]
                 ]
             ],
             "id": "6",
@@ -2291,10 +2303,16 @@
             "colGroupBys": [],
             "context": {},
             "domain": [
+                "&",
                 [
                     "product_id",
                     "!=",
                     false
+                ],
+                [
+                    "state",
+                    "in",
+                    ["purchase", "done"]
                 ]
             ],
             "id": "7",
@@ -2327,10 +2345,16 @@
             "colGroupBys": [],
             "context": {},
             "domain": [
+                "&",
                 [
                     "user_id",
                     "!=",
                     false
+                ],
+                [
+                    "state",
+                    "in",
+                    ["purchase", "done"]
                 ]
             ],
             "id": "8",
@@ -2362,7 +2386,7 @@
         "10": {
             "colGroupBys": [],
             "context": {},
-            "domain": [],
+            "domain": [["state", "in", ["purchase", "done"]]],
             "id": "10",
             "measures": [
                 {
@@ -2396,7 +2420,7 @@
         "11": {
             "colGroupBys": [],
             "context": {},
-            "domain": [],
+            "domain": [["state", "in", ["purchase", "done"]]],
             "id": "11",
             "measures": [
                 {
