@@ -52,5 +52,9 @@ class AccountChartTemplate(models.AbstractModel):
                 'code': 'CBMX',
                 'default_account_id': "cuenta118_01",
                 'show_on_dashboard': True,
-            }
+            },
+            'cash': {
+                'name': _("Cash"),
+                'type': 'cash',
+            },
         }

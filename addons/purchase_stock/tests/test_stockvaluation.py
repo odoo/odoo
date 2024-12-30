@@ -7,7 +7,7 @@ from freezegun import freeze_time
 from unittest.mock import patch
 
 import odoo
-from odoo import fields, exceptions, Command
+from odoo import fields, Command
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase, tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -2992,10 +2992,10 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         picking2.button_validate()
         self.assertAlmostEqual(move2.stock_valuation_layer_ids.unit_cost, price_unit_USD)
 
-    def test_pdiff_date_usererror(self):
+    def test_pdiff_date(self):
         """
-        Test pdiff operations complete without errors in case we don't have
-        the bill date. A UserError is raised as usual.
+        Test pdiff operations complete without errors.
+        The created bill should have the date of today.
         """
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
 
@@ -3020,8 +3020,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         action = po.action_create_invoice()
         bill = self.env["account.move"].browse(action["res_id"])
-        with self.assertRaises(exceptions.UserError):
-            bill.action_post()
+        bill.action_post()
+        self.assertEqual(bill.invoice_date, fields.Date.context_today(bill))
 
     def test_bill_date_exchange_rate_for_price_diff_amls(self):
         """Ensure sure that the amls for price difference uses the bill date exchange rate. They originally used today's rate

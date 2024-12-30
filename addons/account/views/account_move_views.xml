@@ -1037,7 +1037,7 @@
                                        invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"/>
                                 <field name="invoice_date" nolabel="1" options="{'warn_future': true}"
                                        invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"
-                                       readonly="state != 'draft'"/>
+                                       readonly="state != 'draft'" placeholder="Today"/>
 
                                 <field name="date" string="Accounting Date"
                                        invisible="move_type in ('out_invoice', 'out_refund', 'out_receipt') and not quick_edit_mode and not (state == 'posted' and date != invoice_date)"
@@ -1138,7 +1138,7 @@
                                         <!-- Displayed fields -->
                                         <field name="sequence" widget="handle"/>
                                         <field name="product_id"
-                                               optional="show"
+                                               optional="conditional"
                                                widget="product_label_section_and_note_field"
                                                domain="
                                                     context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')

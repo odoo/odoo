@@ -3,7 +3,7 @@
         <field name="name">account.journal.dashboard.kanban</field>
         <field name="model">account.journal</field>
         <field name="arch" type="xml">
-            <kanban create="false" can_open="0" highlight_color="color" class="o_account_kanban" js_class="account_dashboard_kanban">
+            <kanban can_open="0" highlight_color="color" class="o_account_kanban" js_class="account_dashboard_kanban">
                 <field name="id"/>
                 <field name="type"/>
                 <field name="color"/>
@@ -85,6 +85,15 @@
                                     </div>
                                     <div>
                                         <a role="menuitem" type="object" name="create_supplier_payment">Vendor Payment</a>
+                                    </div>
+                                </div>
+
+                                <div class="col-4" groups="account.group_account_user" name="kanban_manage_reconciliation">
+                                    <h5 class="o_kanban_card_manage_title">
+                                        <span role="separator">Reconciliation</span>
+                                    </h5>
+                                    <div name="action_card_reconciliation">
+                                        <a type="action" name="%(account.action_account_reconcile_model)d">Models</a>
                                     </div>
                                 </div>
 

@@ -35,6 +35,22 @@ registry.category("web_tour.tours").add('account_tax_group', {
         trigger: '.ui-menu-item a:contains("Account Tax Group Partner")',
         run: "click",
     },
+    // Show product column
+    {
+        content: "Open line fields list",
+        trigger: ".o_optional_columns_dropdown_toggle",
+        run: "click"
+    },
+    {
+        content: "Show product column",
+        trigger: '.o-dropdown-item input[name="product_id"]',
+        run: "click"
+    },
+    {
+        content: "Close line fields list",
+        trigger: ".o_optional_columns_dropdown_toggle",
+        run: "click"
+    },
     // Add First product
     {
         content: "Add items",

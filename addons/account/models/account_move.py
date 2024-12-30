@@ -4880,11 +4880,8 @@ class AccountMove(models.Model):
 
             # Handle case when the invoice_date is not set. In that case, the invoice_date is set at today and then,
             # lines are recomputed accordingly.
-            if not invoice.invoice_date:
-                if invoice.is_sale_document(include_receipts=True):
-                    invoice.invoice_date = fields.Date.context_today(self)
-                elif invoice.is_purchase_document(include_receipts=True):
-                    validation_msgs.add(_("The Bill/Refund date is required to validate this document."))
+            if not invoice.invoice_date and invoice.is_invoice(include_receipts=True):
+                invoice.invoice_date = fields.Date.context_today(self)
 
         for move in self:
             if move.state in ['posted', 'cancel']:

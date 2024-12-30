@@ -44,12 +44,15 @@
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <div class="oe_title">
                             <label for="name"/>
-                            <h1><field name="name" placeholder="e.g. Sales"/></h1>
+                            <field name="name_placeholder" invisible="1" force_save="1"/>
+                            <field name="type" invisible="1"/>
+                            <h1><field name="name" options="{'placeholder_field': 'name_placeholder'}" required="not type"/></h1>
                         </div>
                         <group>
                             <group>
                                 <field name="active" invisible="1"/>
                                 <field name="type"/>
+                                <field name="code" placeholder="e.g. INV"/>
                             </group>
                             <group>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
@@ -59,7 +62,7 @@
                         <notebook>
                             <page name="bank_account" string="Journal Entries">
                                 <group>
-                                    <group string="Accounting Information">
+                                    <group>
                                         <field name="default_account_type" invisible="1"/>
                                         <label for="default_account_id" string="Bank Account"
                                                invisible="type != 'bank'" groups="account.group_account_readonly"/>
@@ -75,8 +78,14 @@
                                                help="If set, this account is used to automatically balance entries."
                                                invisible="type != 'general'" groups="account.group_account_readonly"/>
                                         <field name="default_account_id" nolabel="1"
-                                               invisible="not type"
-                                               required="(id and type in ('bank', 'cash', 'credit')) or type in ('sale', 'purchase')"
+                                               placeholder="Create new account"
+                                               invisible="not type or type in ('sale', 'purchase', 'general')"
+                                               required="(id and type in ('bank', 'cash', 'credit'))"
+                                               options="{'no_quick_create': True}"
+                                               groups="account.group_account_readonly"/>
+                                        <field name="default_account_id" nolabel="1"
+                                               invisible="type not in ('sale', 'purchase', 'general')"
+                                               required="type in ('sale', 'purchase')"
                                                options="{'no_quick_create': True}"
                                                groups="account.group_account_readonly"/>
                                         <field name="suspense_account_id"
@@ -88,16 +97,15 @@
                                         <field name="loss_account_id" invisible="type not in ('cash', 'bank')" groups="account.group_account_readonly"/>
                                         <field name="refund_sequence" invisible="type not in ['sale', 'purchase']"/>
                                         <field name="payment_sequence" invisible="type not in ('bank', 'cash', 'credit')"/>
-                                        <field name="code" placeholder="e.g. INV"/>
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     </group>
-                                    <group name="bank_account_number" string="Bank Account Number" invisible="type != 'bank'">
+                                    <group name="bank_account_number" invisible="type != 'bank'">
                                         <field name="company_partner_id" invisible="1"/>
-                                        <field name="bank_account_id" string="Account Number" context="{'default_partner_id': company_partner_id}"/>
+                                        <field name="bank_account_id" string="Bank Account Number" context="{'default_partner_id': company_partner_id}"/>
                                         <field name="bank_id" invisible="not bank_account_id"/>
                                         <field name="bank_statements_source" widget="radio" required="type == 'bank'"  groups="account.group_account_basic"/>
                                     </group>
-                                    <group name="bank_source" string="Credit Card Setup" invisible="type != 'credit'">
+                                    <group name="bank_source" invisible="type != 'credit'">
                                         <label for="bank_statements_source" string="Transaction Feeds" invisible="type != 'credit'" groups="account.group_account_readonly"/>
                                         <field name="bank_statements_source" nolabel="1" widget="radio" required="type != 'credit'" groups="account.group_account_basic"/>
                                     </group>
@@ -142,60 +150,27 @@
                             </page>
                             <page name="advanced_settings" string="Advanced Settings">
                                 <group>
-                                    <group string="Control-Access" groups="account.group_account_manager">
-                                        <div class="text-muted" colspan="2">Keep empty for no control</div>
-                                        <field name="account_control_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                                    <group string="Automation" groups="account.group_account_manager">
                                         <field name="restrict_mode_hash_table" groups="account.group_account_readonly" invisible="type not in ['sale', 'purchase', 'general']"
                                         />
                                         <field name="autocheck_on_post"/>
                                     </group>
-                                    <!-- email alias -->
-                                    <group class="oe_read_only" name="group_alias_ro"
-                                           string="Create Invoices upon Emails" invisible="type not in ('sale', 'purchase')">
-                                       <field name="alias_id"/>
-                                    </group>
-                                    <group class="oe_read_only" name="group_alias_ro_general"
-                                           string="Create Entries upon Emails" invisible="type != 'general'">
-                                       <field name="alias_id"/>
-                                    </group>
-                                    <field name="display_alias_fields" invisible="1"/>
-                                    <group name="group_alias_no_domain" string="Create Invoices upon Emails"
-                                           invisible="type not in ('sale', 'purchase') or display_alias_fields">
-                                        <div class="content-group" colspan="2">
+                                    <group string="Email Alias" name="group_email_alias"
+                                           invisible="type not in ('general', 'sale', 'purchase')">
+                                        <field name="display_alias_fields" invisible="1"/>
+                                        <div class="o_row" colspan="2" invisible="display_alias_fields">
                                             <a type='action' name='%(action_open_settings)d' class="btn btn-link" role="button">
                                                 <i class="oi oi-fw o_button_icon oi-arrow-right"/> Configure Alias Domain
                                             </a>
                                         </div>
-                                    </group>
-                                    <group name="group_alias_no_domain_general" string="Create Entries upon Emails"
-                                           invisible="type != 'general' or display_alias_fields">
-                                        <div class="content-group" colspan="2">
-                                            <a type='action' name='%(action_open_settings)d' class="btn btn-link" role="button">
-                                                <i class="oi oi-fw o_button_icon oi-arrow-right"/> Configure Alias Domain
-                                            </a>
-                                        </div>
-                                    </group>
-                                    <group class="oe_edit_only" name="group_alias_edit" string="Create Invoices upon Emails"
-                                           invisible="type not in ('sale', 'purchase') or not display_alias_fields">
-                                        <label string="Email Alias" for="alias_name"/>
-                                        <div class="oe_inline" name="edit_alias" style="display: inline;" dir="ltr" >
-                                            <field name="alias_name" placeholder="alias" class="oe_inline"/>@
-                                            <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
-                                                   options="{'no_create': True, 'no_open': True}"/>
-                                        </div>
-                                    </group>
-                                    <group class="oe_edit_only" name="group_alias_edit_general" string="Create Entries upon Emails"
-                                           invisible="type != 'general' or not display_alias_fields">
-                                        <label string="Email Alias" for="alias_name"/>
-                                        <div class="oe_inline" name="edit_alias" style="display: inline;" dir="ltr" >
-                                            <field name="alias_name" placeholder="alias" class="oe_inline"/>@
-                                            <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
-                                                   options="{'no_create': True, 'no_open': True}"/>
+                                        <div class="o_row" colspan="2" dir="ltr" invisible="not display_alias_fields">
+                                            <label string="Email Alias" for="alias_name"/>
+                                            <field name="alias_name" placeholder="alias"/>@
+                                            <field name="alias_domain_id" placeholder="e.g. mycompany.com" options="{'no_create': True, 'no_open': True}"/>
                                         </div>
                                     </group>
                                     <!-- edi -->
                                     <group name="group_edi_config" string="Electronic Data Interchange" invisible="1"/>
-                                    <!-- email alias end -->
                                     <group string="Payment Communications" invisible="type != 'sale'">
                                         <field name="invoice_reference_type"/>
                                         <field name="invoice_reference_model" invisible="invoice_reference_type == 'none'"/>

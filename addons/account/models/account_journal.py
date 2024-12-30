@@ -83,8 +83,9 @@ class AccountJournal(models.Model):
         ]"""
 
     name = fields.Char(string='Journal Name', required=True, translate=True)
+    name_placeholder = fields.Char(compute='_compute_name_placeholder')
     code = fields.Char(
-        string='Short Code',
+        string='Sequence Prefix',
         size=5,
         compute='_compute_code', readonly=False, store=True,
         required=True, precompute=True,
@@ -107,9 +108,6 @@ class AccountJournal(models.Model):
         Select 'General' for miscellaneous operations journals.
         """)
     autocheck_on_post = fields.Boolean(string="Auto-Check on Post", default=True)
-    account_control_ids = fields.Many2many('account.account', 'journal_account_control_rel', 'journal_id', 'account_id', string='Allowed accounts',
-        check_company=True,
-        domain="[('deprecated', '=', False), ('account_type', '!=', 'off_balance')]")
     default_account_type = fields.Char(string='Default Account Type', compute="_compute_default_account_type")
     default_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
@@ -225,9 +223,9 @@ class AccountJournal(models.Model):
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id', readonly=False)
 
     # alias configuration for journals
-    alias_id = fields.Many2one(help="Send one separate email for each invoice.\n\n"
-                                    "Any file extension will be accepted.\n\n"
-                                    "Only PDF and XML files will be interpreted by Odoo")
+    alias_name = fields.Char(help="Send one separate email for each invoice.\n"
+                                  "Any file extension will be accepted.\n"
+                                  "Only PDF and XML files will be interpreted by Odoo")
 
     journal_group_ids = fields.Many2many('account.journal.group',
         check_company=True,
@@ -257,8 +255,8 @@ class AccountJournal(models.Model):
     def _compute_code(self):
         cache = defaultdict(list)
         for record in self:
-            if not record.code and record.type in ('bank', 'cash', 'credit'):
-                record.code = self.get_next_bank_cash_default_code(
+            if not record.code and record.type:
+                record.code = self._get_next_journal_default_code(
                     record.type,
                     record.company_id,
                     cache.get(record.company_id)
@@ -459,9 +457,8 @@ class AccountJournal(models.Model):
             temp_move = self.env['account.move'].new({'journal_id': journal.id})
             journal.accounting_date = temp_move._get_accounting_date(move_date, has_tax)
 
-
     @api.onchange('type')
-    def _onchange_type_for_alias(self):
+    def _onchange_type(self):
         self.filtered(lambda journal: journal.type not in {'sale', 'purchase'}).alias_name = False
         for journal in self.filtered(lambda journal: (
             not journal.alias_name and journal.type in {'sale', 'purchase'})
@@ -469,20 +466,40 @@ class AccountJournal(models.Model):
             journal.alias_name = self._alias_prepare_alias_name(
                 False, journal.name, journal.code, journal.type, journal.company_id)
 
-    @api.constrains('account_control_ids')
-    def _constrains_account_control_ids(self):
-        self.env['account.move.line'].flush_model(['account_id', 'journal_id', 'display_type'])
-        self.flush_recordset(['account_control_ids'])
-        self._cr.execute("""
-            SELECT aml.id
-            FROM account_move_line aml
-            WHERE aml.journal_id in %s
-            AND EXISTS (SELECT 1 FROM journal_account_control_rel rel WHERE rel.journal_id = aml.journal_id)
-            AND NOT EXISTS (SELECT 1 FROM journal_account_control_rel rel WHERE rel.account_id = aml.account_id AND rel.journal_id = aml.journal_id)
-            AND aml.display_type NOT IN ('line_section', 'line_note')
-        """, [tuple(self.ids)])
-        if self._cr.fetchone():
-            raise ValidationError(_('Some journal items already exist in this journal but with other accounts than the allowed ones.'))
+        for journal in self:
+            journal.code = False
+            journal.default_account_id = False
+            journal.profit_account_id = False
+            journal.loss_account_id = False
+            if journal.type == 'sale':
+                journal.default_account_id = journal.company_id.income_account_id
+            elif journal.type == 'purchase':
+                journal.default_account_id = journal.company_id.expense_account_id
+            elif journal.type in ('cash', 'bank'):
+                journal.profit_account_id = journal.company_id.default_cash_difference_income_account_id
+                journal.loss_account_id = journal.company_id.default_cash_difference_expense_account_id
+
+        # codes are reset and recomputed whenever the
+        # journal type changes through the form view
+        self._compute_code()
+
+    @api.depends('type')
+    def _compute_name_placeholder(self):
+        type_to_default_name = {
+            'sale': _('Customer Invoices'),
+            'purchase': _('Vendor Bills'),
+            'cash': _('Cash'),
+            'bank': _('Bank'),
+            'credit': _('Credit Card'),
+            'general': _('Miscellaneous Operations'),
+        }
+        for journal in self:
+            if not journal.type:
+                journal.name_placeholder = _("Select a type")
+            else:
+                match = re.search(r'[0-9]+$', journal.code or '')
+                code_suffix = match.group() if match else '1'
+                journal.name_placeholder = f"{type_to_default_name[journal.type]} ({code_suffix})"
 
     @api.constrains('type', 'bank_account_id')
     def _check_bank_account(self):
@@ -757,8 +774,15 @@ class AccountJournal(models.Model):
         return self.env['mail.alias']._sanitize_alias_name(alias_name)
 
     @api.model
-    def get_next_bank_cash_default_code(self, journal_type, company, cache=None, protected_codes=False):
-        prefix_map = {'cash': 'CSH', 'general': 'GEN', 'bank': 'BNK', 'credit': 'CCD'}
+    def _get_next_journal_default_code(self, journal_type, company, cache=None, protected_codes=False):
+        prefix_map = {
+            'sale': 'INV',
+            'purchase': 'BILL',
+            'cash': 'CSH',
+            'bank': 'BNK',
+            'credit': 'CCD',
+            'general': 'MISC',
+        }
         journal_code_base = prefix_map.get(journal_type)
         existing_codes = set(self.env['account.journal'].with_context(active_test=False).search([
             *self.env['account.journal']._check_company_domain(company),
@@ -849,7 +873,7 @@ class AccountJournal(models.Model):
             has_loss_account = vals.get('loss_account_id')
 
             # === Fill missing name ===
-            vals['name'] = vals.get('name') or vals.get('bank_acc_number')
+            vals['name'] = vals.get('name') or vals.get('bank_acc_number') or vals.get('name_placeholder')
 
             # === Fill missing accounts ===
             if not has_liquidity_accounts:
@@ -873,7 +897,7 @@ class AccountJournal(models.Model):
 
         if is_import and not vals.get('code'):
             code = vals['name'][:5]
-            vals['code'] = code if not protected_codes or code not in protected_codes else self.get_next_bank_cash_default_code(journal_type, company, protected_codes)
+            vals['code'] = code if not protected_codes or code not in protected_codes else self._get_next_journal_default_code(journal_type, company, protected_codes)
             if not vals['code']:
                 raise UserError(_("Cannot generate an unused journal code. Please change the name for journal %s.", vals['name']))
 
@@ -884,6 +908,9 @@ class AccountJournal(models.Model):
                 False, vals.get('name'), vals.get('code'), journal_type, company
             )
             vals['alias_name'] = self._ensure_unique_alias(vals, company)
+
+        if not vals.get('name') and vals.get('name_placeholder'):
+            vals['name'] = vals['name_placeholder']
 
     @api.model_create_multi
     def create(self, vals_list):

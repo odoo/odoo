@@ -1073,11 +1073,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'show_on_dashboard': True,
                 'sequence': 7,
             },
-            "cash": {
-                'name': _('Cash'),
-                'type': 'cash',
-                'show_on_dashboard': True,
-            },
         }
 
     @template(model='account.reconcile.model')
@@ -1088,7 +1083,6 @@ class AccountChartTemplate(models.AbstractModel):
                 "sequence": 1,
                 "rule_type": 'invoice_matching',
                 "auto_reconcile": True,
-                "match_nature": 'both',
                 "match_same_currency": True,
                 "allow_payment_tolerance": True,
                 "payment_tolerance_type": 'percentage',
@@ -1100,7 +1094,6 @@ class AccountChartTemplate(models.AbstractModel):
                 "sequence": 2,
                 "rule_type": 'invoice_matching',
                 "auto_reconcile": False,
-                "match_nature": 'both',
                 "match_same_currency": True,
                 "allow_payment_tolerance": False,
                 "match_partner": True,
