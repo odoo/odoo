@@ -75,7 +75,7 @@
                     <div class="o_carousel_product_card_body card-body d-flex flex-column justify-content-between">
                         <div class="card-title h5" t-field="record.display_name"/>
                         <t t-if="showDescription">
-                            <div class="card-text flex-grow-1 text-muted h6" t-field="record.description_sale"/>
+                            <div class="card-text flex-grow-1 text-muted h6" t-field="record.description_ecommerce"/>
                         </t>
                         <div class="mt-2">
                             <t t-if="showReviews">
@@ -332,7 +332,7 @@
                                     </t>
                                 </div>
                                 <t t-if="showDescription">
-                                    <div class="card-text text-muted" t-field="record.description_sale"/>
+                                    <div class="card-text text-muted" t-field="record.description_ecommerce"/>
                                 </t>
                                 <div class="mt-4">
                                     <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
@@ -450,7 +450,7 @@
                             </t>
                         </div>
                         <t t-if="showDescription">
-                            <div class="card-text h6 flex-grow-1" t-field="record.description_sale"/>
+                            <div class="card-text h6 flex-grow-1" t-field="record.description_ecommerce"/>
                         </t>
                         <div class="d-flex justify-content-between align-items-center flex-wrap mt-3">
                             <t t-if="showPrice">
@@ -500,7 +500,7 @@
                             <div class="col-8 d-flex flex-column">
                                 <div class="card-title h5" t-field="record.display_name"/>
                                 <t t-if="showDescription">
-                                    <div class="card-text h6 text-muted" t-field="record.description_sale"/>
+                                    <div class="card-text h6 text-muted" t-field="record.description_ecommerce"/>
                                 </t>
                                 <div class="d-flex justify-content-between align-items-center flex-wrap w-100 mt-auto">
                                     <t t-if="showPrice">
