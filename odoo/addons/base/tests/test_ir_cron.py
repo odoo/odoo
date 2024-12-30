@@ -84,6 +84,10 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.env['ir.cron.trigger'].search(domain).unlink()
         self.env['ir.cron.progress'].search(domain).unlink()
 
+        # this ensures that cr.now() returns the frozen datetime, which is
+        # useful for knowing remaining jobs after "some time"
+        self.patch(self.env.cr, 'now', self.frozen_datetime)
+
     def test_cron_direct_trigger(self):
         self.cron.code = textwrap.dedent(f"""\
             model.search(
@@ -197,6 +201,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
         default_progress_values = {'done': 0, 'remaining': 0, 'timed_out_counter': 0}
         ten_days_ago = fields.Datetime.now() - MIN_DELTA_BEFORE_DEACTIVATION - timedelta(days=2)
         almost_failed = MIN_FAILURE_COUNT_BEFORE_DEACTIVATION - 1
+        frozen_datetime = self.frozen_datetime
 
         def nothing(cron):
             state = {'call_count': 0}
@@ -208,6 +213,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
             state = {'call_count': 0}
             CALL_TARGET = 11
             def f(self):
+                frozen_datetime.tick(delta=timedelta(seconds=1))
                 state['call_count'] += 1
                 self.env['ir.cron']._notify_progress(
                     done=1,
