@@ -26,6 +26,7 @@
 
         <record id="livechat_channel_session_10_message_1" model="mail.message">
             <field name="author_guest_id" ref="im_livechat.livechat_channel_session_10_guest"/>
+            <field name="author_id"/>
             <field name="email_from">Visitor</field>
             <field name="record_name">Visitor</field>
             <field name="date" eval="datetime.now() - timedelta(days=1)"/>
@@ -50,6 +51,7 @@
         </record>
         <record id="livechat_channel_session_10_message_3" model="mail.message">
             <field name="author_guest_id" ref="im_livechat.livechat_channel_session_10_guest"/>
+            <field name="author_id"/>
             <field name="email_from">Visitor</field>
             <field name="record_name">Visitor</field>
             <field name="date" eval="datetime.now() - timedelta(days=1, seconds=-25)"/>
@@ -65,6 +67,7 @@
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_10"/>
             <field name="author_guest_id" ref="im_livechat.livechat_channel_session_10_guest"/>
+            <field name="author_id"/>
             <field name="subtype_id" ref="mail.mt_note"/>
             <field name="message_type">notification</field>
             <field eval="datetime.now() - timedelta(days=1, seconds=-60)" name="date"/>

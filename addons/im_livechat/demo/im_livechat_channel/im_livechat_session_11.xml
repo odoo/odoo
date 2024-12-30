@@ -24,6 +24,7 @@
 
         <record id="livechat_channel_session_11_message_1" model="mail.message">
             <field name="author_guest_id" ref="im_livechat.livechat_channel_session_11_guest"/>
+            <field name="author_id"/>
             <field name="record_name">Visitor</field>
             <field name="date" eval="datetime.now()"/>
             <field name="create_date" eval="datetime.now()"/>
@@ -48,6 +49,7 @@
         </record>
         <record id="livechat_channel_session_11_message_3" model="mail.message">
             <field name="author_guest_id" ref="im_livechat.livechat_channel_session_11_guest"/>
+            <field name="author_id"/>
             <field name="record_name">Visitor</field>
             <field name="date" eval="datetime.now() - timedelta(seconds=-25)"/>
             <field name="create_date" eval="datetime.now() - timedelta(seconds=-25)"/>
