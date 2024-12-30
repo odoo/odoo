@@ -34,7 +34,7 @@
                     </div>
                 </button>
                 <button
-                    class="h-100 button btn btn-light btn-lg d-flex flex-row align-items-center justify-content-center w-50"
+                    class="h-100 button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center w-50"
                     t-on-click="() => this.pos.showDefault()"
                     t-elif="!this.currentOrder.isDirectSale and !this.displayCategoryCount.length and !this.currentOrder.isEmpty()"
                 >
@@ -64,7 +64,7 @@
                         <span>Assign</span>
                     </button>
                     <button
-                        class="h-100 plan-button button btn btn-light btn-lg d-flex flex-row align-items-center justify-content-center w-50"
+                        class="h-100 plan-button button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center w-50"
                         t-on-click="() => this.pos.showScreen('FloorScreen')"
                     >
                         <span>Plan</span>
@@ -73,7 +73,7 @@
                 <button t-if="!currentOrder.isEmpty() and this.pos.numpadMode != 'table'"
                     t-on-click="() => pos.pay()" 
                     class="button pay-order-button btn btn-lg w-50"
-                    t-attf-class="{{ this.highlightPay ? 'highlight btn-primary' : 'btn-light' }}" 
+                    t-attf-class="{{ this.highlightPay ? 'highlight btn-primary' : 'btn-secondary' }}" 
                 >
                     Payment
                 </button>

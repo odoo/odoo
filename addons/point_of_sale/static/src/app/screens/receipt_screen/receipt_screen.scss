@@ -1,6 +1,8 @@
 .pos-receipt-container {
     direction: ltr;
+}
 
+.pos-receipt {
     .order-container {
         padding: 0;
         pointer-events: none;
@@ -8,8 +10,11 @@
         .orderline:hover {
             background: none;
         }
-    
-    }    
+
+        .orderline::before {
+            display: none;
+        }
+    }
 }
 
 @page {
