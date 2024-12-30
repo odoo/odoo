@@ -78,7 +78,8 @@ registry.category("web_tour.tours").add("self_order_product_info", {
     steps: () => [
         Utils.clickBtn("Order Now"),
         {
-            trigger: ".self_order_product_card .product-information-tag",
+            trigger:
+                ".self_order_product_card:contains('Product Info Test') .product-information-tag",
             run: "click",
         },
         {

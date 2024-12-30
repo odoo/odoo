@@ -74,7 +74,7 @@ export class ColorPlugin extends Plugin {
      * @param {'foreground'|'background'} type
      */
     getPropsForColorSelector(type) {
-        const mode = type === "foreground" ? "color" : "background";
+        const mode = type === "foreground" ? "color" : "backgroundColor";
         return {
             type,
             getUsedCustomColors: () => this.getUsedCustomColors(mode),
@@ -316,7 +316,7 @@ export class ColorPlugin extends Plugin {
         const usedCustomColors = new Set();
         for (const font of allFont) {
             if (isCSSColor(font.style[mode])) {
-                usedCustomColors.add(font.style[mode]);
+                usedCustomColors.add(rgbToHex(font.style[mode]));
             }
         }
         return usedCustomColors;
