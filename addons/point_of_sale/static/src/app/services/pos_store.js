@@ -1460,7 +1460,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         if (order) {
             await this.sendOrderInPreparation(order, cancelled);
-            order.updateLastOrderChange();
+            this.getOrder().updateLastOrderChange();
             this.addPendingOrder([order.id]);
             await this.syncAllOrders();
         }

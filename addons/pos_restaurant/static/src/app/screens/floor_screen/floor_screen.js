@@ -564,9 +564,11 @@ export class FloorScreen extends Component {
             tablesNumber = this.activeTables.filter(
                 (table) =>
                     parseInt(table.table_number.toString().slice(0, floorPrefixLength)) ===
-                        floorPrefix && table.table_number.toString().length > floorPrefixLength
+                        parseInt(floorPrefix) &&
+                    table.table_number.toString().length > floorPrefixLength
             );
         }
+
         tablesNumber = tablesNumber
             .map((table) => parseInt(table.table_number.toString().slice(floorPrefixLength)))
             .sort(function (a, b) {
@@ -576,8 +578,6 @@ export class FloorScreen extends Component {
         for (let i = 0; i < tablesNumber.length; i++) {
             if (tablesNumber[i] == firstNum) {
                 firstNum += 1;
-            } else {
-                break;
             }
         }
         return parseInt(floorPrefix + firstNum.toString().padStart(2, "0"));
