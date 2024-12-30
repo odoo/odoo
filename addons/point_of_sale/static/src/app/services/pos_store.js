@@ -1849,6 +1849,10 @@ export class PosStore extends WithLazyGetterTrap {
             }
         );
     }
+    async loadSampleData() {
+        await this.data.call("pos.config", "load_demo_data", [[this.config.id]]);
+        await this.reloadData(true);
+    }
     async allowProductCreation() {
         return await user.hasGroup("base.group_system");
     }

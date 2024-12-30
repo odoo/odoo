@@ -1,5 +1,6 @@
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
+import { cookie } from "@web/core/browser/cookie";
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { onWillStart, useState, onWillRender } from "@odoo/owl";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
@@ -19,6 +20,7 @@ export class PosKanbanController extends KanbanController {
     setup() {
         super.setup();
         this.orm = useService("orm");
+        this.action = useService("action");
         this.initialPosState = {
             has_pos_config: true,
             has_chart_template: true,
@@ -43,6 +45,8 @@ export class PosKanbanRenderer extends KanbanRenderer {
             async ({ functionName, isRestaurant }) =>
                 await this.callWithViewUpdate(async () => {
                     let isInstalledWithDemo = false;
+                    // The demo data is not loaded for the first config
+                    const withDemoData = this.posState.has_pos_config;
                     if (isRestaurant && !this.posState.is_restaurant_installed) {
                         const result = await this.orm.call("pos.config", "install_pos_restaurant");
                         isInstalledWithDemo = result.installed_with_demo;
@@ -51,7 +55,12 @@ export class PosKanbanRenderer extends KanbanRenderer {
                         !isInstalledWithDemo ||
                         (isInstalledWithDemo && !this.posState.is_main_company)
                     ) {
-                        await this.orm.call("pos.config", functionName);
+                        const result = await this.orm.call("pos.config", functionName, [
+                            withDemoData,
+                        ]);
+                        if (!this.posState.has_pos_config) {
+                            return result;
+                        }
                     }
                 })
         );
@@ -64,10 +73,20 @@ export class PosKanbanRenderer extends KanbanRenderer {
         if (this.loadScenario.status == "error") {
             throw this.loadScenario.result;
         }
+        if (this.loadScenario.result?.config_id) {
+            // Open the POS
+            const { config_id } = this.loadScenario.result;
+            const action = await this.orm.call("pos.config", "open_ui", [[config_id]]);
+            await this.action.doAction(action);
+        }
     }
 
     checkDisplayedResult() {
         this.posState.show_predefined_scenarios = this.props.list.count === 0;
+    }
+
+    get isDarkTheme() {
+        return cookie.get("color_scheme") === "dark";
     }
 
     async callWithViewUpdate(func) {
@@ -82,8 +101,9 @@ export class PosKanbanRenderer extends KanbanRenderer {
                 });
                 return;
             }
-            await func();
+            const result = await func();
             await updatePosKanbanViewState(this.orm, this.posState);
+            return result;
         } finally {
             this.env.searchModel.clearQuery();
         }
@@ -95,19 +115,19 @@ export class PosKanbanRenderer extends KanbanRenderer {
                 name: _t("Clothes"),
                 description: _t("Multi colors and sizes"),
                 functionName: "load_onboarding_clothes_scenario",
-                iconFile: "clothes-icon.png",
+                iconFile: this.isDarkTheme ? "clothes-icon-dark.png" : "clothes-icon.png",
             },
             {
                 name: _t("Furniture"),
                 description: _t("Stock, product configurator, replenishment, discounts"),
                 functionName: "load_onboarding_furniture_scenario",
-                iconFile: "furniture-icon.png",
+                iconFile: this.isDarkTheme ? "furniture-icon-dark.png" : "furniture-icon.png",
             },
             {
                 name: _t("Bakery"),
                 description: _t("Food, but over the counter"),
                 functionName: "load_onboarding_bakery_scenario",
-                iconFile: "bakery-icon.png",
+                iconFile: this.isDarkTheme ? "bakery-icon-dark.png" : "bakery-icon.png",
             },
         ];
     }
@@ -119,14 +139,14 @@ export class PosKanbanRenderer extends KanbanRenderer {
                 isRestaurant: true,
                 description: _t("Tables, menus, kitchen display, etc."),
                 functionName: "load_onboarding_restaurant_scenario",
-                iconFile: "restaurant-icon.png",
+                iconFile: this.isDarkTheme ? "restaurant-icon-dark.png" : "restaurant-icon.png",
             },
             {
                 name: _t("Bar"),
                 isRestaurant: true,
                 description: _t("Floor plan, tips, self order, etc."),
                 functionName: "load_onboarding_bar_scenario",
-                iconFile: "cocktail-icon.png",
+                iconFile: this.isDarkTheme ? "cocktail-icon-dark.png" : "cocktail-icon.png",
             },
         ];
     }

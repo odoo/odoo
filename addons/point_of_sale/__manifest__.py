@@ -81,6 +81,9 @@
             'point_of_sale/static/src/backend/many2one_with_placeholder_field/*',
             'point_of_sale/static/src/backend/many2many_placeholder_list_view/*',
         ],
+        "web.assets_web_dark": [
+            'point_of_sale/static/src/scss/pos_dashboard.dark.scss',
+        ],
         'web.assets_tests': [
             'barcodes/static/tests/legacy/helpers.js',
             'point_of_sale/static/tests/pos/tours/**/*',
