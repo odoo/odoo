@@ -104,6 +104,7 @@
                         serverUrl: "<t t-out="info['server_url']"/>",
                         options: <t t-out="json.dumps(info.get('options', {}))"/>,
                     },
+                    test_mode: <t t-out="'true' if test_mode_enabled else 'false'"/>,
                 });
             </t>
         </template>
