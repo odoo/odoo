@@ -1243,6 +1243,7 @@
         <t t-else="">
             <t t-set="entries" t-value="categories"/>
         </t>
+        <t t-set="entries" t-value="request.env.user._is_internal() and entries or entries.filtered('has_published_products')"/>
 
         <div t-if="entries" class="o_wsale_filmstip_container d-flex align-items-stretch overflow-hidden">
             <div class="o_wsale_filmstip_wrapper pb-1 overflow-auto">
@@ -1251,6 +1252,7 @@
                         t-foreach="entries"
                         t-as="c"
                         t-attf-class="d-flex {{'pe-3' if not c_last else ''}}"
+                        t-att-data-publish="c.has_published_products and 'on' or 'off'"
                     >
                         <a
                             t-att-href="keep('%s/category/%s' % (shop_path, slug(c)))"
@@ -1368,7 +1370,7 @@
 
     <!-- Add to cart button-->
     <template id="categories_recursive" name="Category list">
-        <li class="nav-item mb-1">
+        <li class="nav-item mb-1" t-att-data-publish="c.has_published_products and 'on' or 'off'">
             <t t-call="website_sale.categorie_link"/>
             <ul t-if="c.child_id" class="nav flex-column nav-hierarchy mt-1 ps-3">
                 <t t-foreach="c.child_id" t-as="c">
@@ -1458,11 +1460,12 @@
 
     <template id="option_collapse_categories_recursive" name="Collapse Category Recursive">
         <t t-set="children" t-value="not search and c.child_id or c.child_id.filtered(lambda c: c.id in search_categories_ids)"/>
+        <t t-set="children" t-value="request.env.user._is_internal() and children or children.filtered('has_published_products')"/>
 
         <t t-if="children">
             <t t-set="isOpen" t-value="c.id in category.parents_and_self.ids"/>
 
-            <li class="nav-item">
+            <li class="nav-item" t-att-data-publish="c.has_published_products and 'on' or 'off'">
                 <div class="accordion-header d-flex mb-1">
                     <t t-call="website_sale.categorie_link"/>
                     <button t-attf-id="o_wsale_cat_accordion_title_{{c.id}}"
@@ -1486,7 +1489,8 @@
             </li>
         </t>
 
-        <li t-else="" class="nav-item mb-1">
+        <li t-else="" class="nav-item mb-1"
+            t-att-data-publish="c.has_published_products and 'on' or 'off'">
             <t t-if="isOffcanvas" t-set="parentCategoryId" t-valuef="offcanvas"/>
             <div class="d-flex flex-wrap justify-content-between align-items-center">
                 <t t-call="website_sale.categorie_link"/>

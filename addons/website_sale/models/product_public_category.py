@@ -46,6 +46,12 @@ class ProductPublicCategory(models.Model):
         comodel_name='product.template',
         relation='product_public_category_product_template_rel',
     )
+    has_published_products = fields.Boolean(
+        compute='_compute_has_published_products',
+        search='_search_has_published_products',
+        compute_sudo=True,
+        recursive=True,
+    )
 
     website_description = fields.Html(
         string="Category Description",
@@ -62,7 +68,7 @@ class ProductPublicCategory(models.Model):
         translate=html_translate,
     )
 
-    #=== COMPUTE METHODS ===#
+    # === COMPUTE METHODS === #
 
     @api.depends('parent_path')
     def _compute_parents_and_self(self):
@@ -79,14 +85,38 @@ class ProductPublicCategory(models.Model):
                 lambda cat: cat.name or self.env._("New")
             ))
 
-    #=== CONSTRAINT METHODS ===#
+    @api.depends('product_tmpl_ids.is_published', 'child_id.has_published_products')
+    def _compute_has_published_products(self):
+        for category in self:
+            category.has_published_products = (
+                any(category.mapped('product_tmpl_ids.is_published'))
+                or any(category.mapped('child_id.has_published_products'))
+            )
+
+    # === CONSTRAINT METHODS === #
 
     @api.constrains('parent_id')
     def check_parent_id(self):
         if self._has_cycle():
             raise ValueError(self.env._("Error! You cannot create recursive categories."))
 
-    #=== BUSINESS METHODS ===#
+    # === SEARCH METHODS === #
+
+    @api.model
+    def _search_has_published_products(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+        published_categ_ids = self._search(
+            [('product_tmpl_ids.is_published', 'in', True)]
+        ).get_result_ids()
+        # Note that if the `value` is False, the ORM will invert the domain below
+        return [
+            '|',
+            ('id', 'in', published_categ_ids),
+            ('id', 'parent_of', published_categ_ids),
+        ]
+
+    # === BUSINESS METHODS === #
 
     @api.model
     def _search_get_detail(self, website, order, options):
