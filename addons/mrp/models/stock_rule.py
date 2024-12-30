@@ -61,6 +61,7 @@ class StockRule(models.Model):
                     ('picking_type_id', '=', rule.picking_type_id.id),
                     ('company_id', '=', procurement.company_id.id),
                     ('user_id', '=', False),
+                    ('location_dest_id', 'child_of', procurement.location_id.id)
                 )
                 if procurement.values.get('orderpoint_id'):
                     procurement_date = datetime.combine(

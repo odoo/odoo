@@ -924,3 +924,76 @@ class TestProcurement(TestMrpCommon):
         ]
         self.assertRecordValues(mo.move_raw_ids, expected_vals)
         self.assertRecordValues(mo.picking_ids.move_ids, expected_vals)
+
+    def test_rr_with_different_location(self):
+        """Test that the location_dest_id is included in the domain when searching for a candidate MO
+        while running an orderpoint, ensuring it matches the location_id of the orderpoint."""
+        # Set-up multi-step routes
+#        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+        # Create two child locations.
+        parent_location = self.warehouse_1.lot_stock_id
+        child_location_1 = self.env['stock.location'].create({
+                'name': 'child_1',
+                'location_id': parent_location.id,
+        })
+        child_location_2 = self.env['stock.location'].create({
+                'name': 'child_2',
+                'location_id': parent_location.id,
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': self.product_1.id,
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+        })
+
+        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
+        # orderpoint for parent location
+        op1 = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Product A',
+            'location_id': parent_location.id,
+            'product_id': self.product_1.id,
+            'product_min_qty': 1,
+            'product_max_qty': 1,
+            'route_id': route_manufacture.id
+        })
+        # orderpoint for child location 1
+        op2 = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Product B',
+            'location_id': child_location_1.id,
+            'product_id': self.product_1.id,
+            'product_min_qty': 1,
+            'product_max_qty': 1,
+            'route_id': route_manufacture.id
+        })
+        # orderpoint for child location 2
+        op3 = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Product B',
+            'location_id': child_location_2.id,
+            'product_id': self.product_1.id,
+            'product_min_qty': 1,
+            'product_max_qty': 1,
+            'route_id': route_manufacture.id
+        })
+        # Confirming the parent order point should create an MO
+        # with location_dest = parent_location, as no candidate is available.
+        op1._procure_orderpoint_confirm()
+        mo1 = self.env['mrp.production'].search([('product_id', '=', self.product_1.id)])
+        self.assertEqual(mo1.location_dest_id, parent_location)
+        # Confirming the child 1 order point should create an MO
+        # with location_dest = child_location, as no candidate is available
+        op2._procure_orderpoint_confirm()
+        mo2 = self.env['mrp.production'].search([('product_id', '=', self.product_1.id), ('id', '!=', mo1.id)])
+        self.assertEqual(mo2.location_dest_id, child_location_1)
+        self.assertEqual(mo2.product_uom_qty, 1)
+        # Cancel the MO and then run the parent order point. As a candidate MO is available, it should be updated.
+        mo1.action_cancel()
+        op1.product_min_qty = 2
+        op1._procure_orderpoint_confirm()
+        self.assertEqual(mo2.product_uom_qty, 2)
+        # run child 2 orderpoint -> no MO candidate -> new MO
+        op3._procure_orderpoint_confirm()
+        mo3 = self.env['mrp.production'].search([('product_id', '=', self.product_1.id), ('id', 'not in', [mo1.id, mo2.id])])
+        self.assertEqual(mo3.location_dest_id, child_location_2)
