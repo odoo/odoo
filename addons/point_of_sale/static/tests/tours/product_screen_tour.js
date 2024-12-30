@@ -430,3 +430,52 @@ registry.category("web_tour.tours").add("PosSaveOrderlinesIndexedDB", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("frontendCreateUpdateProduct", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            Chrome.clickMenuOption("Create Product"),
+
+            // Verify that the "New Product" dialog is displayed.
+            Dialog.is({ title: "New Product" }),
+
+            // Create a new product from frontend.
+            ProductScreen.createProductFromFrontend(
+                "Test Frontend Product",
+                "710535977349",
+                "20.0",
+                "Chair test"
+            ),
+            Dialog.confirm(),
+
+            // Click on the category button for "Chair test" to verify the product's addition.
+            {
+                trigger: '.category-button:eq(1) > span:contains("Chair test")',
+                run: "click",
+            },
+            ProductScreen.productIsDisplayed("Test Frontend Product"),
+
+            // Open the product's information popup.
+            ProductScreen.clickInfoProduct("Test Frontend Product"),
+            Dialog.confirm("Edit", ".btn-secondary"),
+
+            // Verify that the "Edit Product" dialog is displayed.
+            Dialog.is({ title: "Edit Product" }),
+
+            // Edit the product with new details.
+            ProductScreen.editProductFromFrontend(
+                "Test Frontend Product Edited",
+                "710535977348",
+                "50.0"
+            ),
+            Dialog.confirm(),
+            {
+                trigger: '.category-button:eq(1) > span:contains("Chair test")',
+                run: "click",
+            },
+            ProductScreen.productIsDisplayed("Test Frontend Product Edited"),
+            Chrome.endTour(),
+        ].flat(),
+});
