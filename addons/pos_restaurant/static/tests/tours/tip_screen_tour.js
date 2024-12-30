@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             Chrome.clickPlanButton(),
             Chrome.clickOrders(),
             {
-                trigger: `.ticket-screen .orders > .order-row:contains(Tipping):contains($ 2.00)`,
+                trigger: `.ticket-screen .orders .order-row:contains(Tipping):contains($ 2.00)`,
             },
             Chrome.clickPlanButton(),
 
@@ -65,7 +65,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             ProductScreen.setTab("Test"),
             Chrome.clickOrders(),
             {
-                trigger: `.ticket-screen .orders > .order-row:contains(Tipping):contains($ 6.00)`,
+                trigger: `.ticket-screen .orders .order-row:contains(Tipping):contains($ 6.00)`,
             },
             // Tip 20% on order1
             TicketScreen.selectOrderByPrice("2.0"),
@@ -120,9 +120,9 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             TicketScreen.selectFilter("Tipping"),
             TicketScreen.tipContains("1.00"),
             TicketScreen.settleTips(),
-            TicketScreen.selectFilter("All active orders"),
+            TicketScreen.selectFilter("Active"),
             {
-                trigger: `.ticket-screen .orders > .order-row:contains(Ongoing):contains($ 4.00)`,
+                trigger: `.ticket-screen .orders .order-row:contains(Ongoing):contains($ 4.00)`,
             },
             // tip order2 during payment
             // tip screen should not show after validating payment screen

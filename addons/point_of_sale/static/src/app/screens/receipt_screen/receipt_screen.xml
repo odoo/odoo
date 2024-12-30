@@ -7,7 +7,7 @@
                 <div class="default-view d-flex flex-lg-row flex-column overflow-hidden flex-grow-1">
                     <div class="actions d-flex flex-column justify-content-between flex-lg-grow-1 flex-grow-0 flex-shrink-1 flex-basis-0 border-end">
                         <div class="o_payment_successful d-flex flex-column w-100 w-xxl-75 p-3 pt-xxl-5 mx-auto">
-                            <div class="d-flex flex-column align-items-center p-1 p-lg-3 border border-success rounded-3 bg-success-subtle text-success fs-3">
+                            <div class="d-flex flex-column align-items-center mb-3 p-1 p-lg-3 border border-success rounded-3 bg-success-subtle text-success fs-3">
                                 <i t-if="!ui.isSmall" class="fa fa-fw fa-2x fa-check-circle"/>
                                 <span class="fs-3 fw-bolder">
                                     <t t-if="pos.getOrder()._isRefundOrder()">Refund Initiated</t>
@@ -18,7 +18,6 @@
                                     <span t-if="this.currentOrder.nb_print === 0" class="edit-order-payment badge bg-success text-white rounded cursor-pointer pt-1" t-on-click="() => this.pos.orderDetails(this.pos.getOrder())">Edit payment</span>
                                 </div>
                             </div>
-                            <hr />
                             <div class="receipt-options d-flex flex-column gap-2">
                                 <div class="d-flex gap-1">
                                     <button class="button print btn btn-lg btn-secondary w-100 py-3" t-on-click="() => doFullPrint.call()">

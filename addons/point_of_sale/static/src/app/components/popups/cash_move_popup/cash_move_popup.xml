@@ -5,10 +5,10 @@
         <Dialog header="false">
             <div class="input-amount d-flex mb-2 gap-2">
                 <div class="input-group" t-att-class="{ 'w-50' : this.ui.isSmall }">
-                    <button t-on-click="() => this.onClickButton('in')" t-attf-class="input-type btn btn-secondary lh-lg #{this.ui.isSmall ? 'btn-md' : 'btn-lg'} #{state.type === 'in' ? 'highlight btn-success' : '' }">
+                    <button t-on-click="() => this.onClickButton('in')" t-attf-class="input-type btn lh-lg #{this.ui.isSmall ? 'btn-md' : 'btn-lg'} #{state.type === 'in' ? 'highlight btn-success' : 'btn-secondary' }">
                         Cash In
                     </button>
-                    <button t-on-click="() => this.onClickButton('out')" t-attf-class="input-type btn btn-secondary lh-lg #{this.ui.isSmall ? 'btn-md' : 'btn-lg'} #{state.type === 'out' ? 'red-highlight btn-danger' : '' }">
+                    <button t-on-click="() => this.onClickButton('out')" t-attf-class="input-type btn lh-lg #{this.ui.isSmall ? 'btn-md' : 'btn-lg'} #{state.type === 'out' ? 'red-highlight btn-danger' : 'btn-secondary' }">
                         Cash Out
                     </button>
                 </div>

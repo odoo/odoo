@@ -38,6 +38,7 @@ export function hasLine({
         trigger += `:has(.product-name:contains("${productName}"))`;
     }
     if (quantity) {
+        quantity = parseFloat(quantity) % 1 === 0 ? parseInt(quantity).toString() : quantity;
         trigger += `:has(.qty:contains("${quantity}"))`;
     }
     if (price) {
@@ -54,9 +55,6 @@ export function hasLine({
     }
     if (discount || discount === "") {
         trigger += `:has(.info-list .discount.em:contains("${discount}"))`;
-    }
-    if (oldPrice) {
-        trigger += `:has(.info-list .price-per-unit s:contains("${oldPrice}"))`;
     }
     if (priceNoDiscount) {
         trigger += `:has(.info-list:contains("${priceNoDiscount}"))`;

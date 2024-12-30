@@ -3,14 +3,14 @@
     <t t-name="point_of_sale.ProductScreen">
         <div class="product-screen d-flex h-100">
             <div t-att-class="{'flex-grow-1 w-100 mw-100': ui.isSmall, 'd-none': ui.isSmall and pos.mobile_pane !== 'left'}"
-                class="leftpane d-flex flex-column p-2">
+                class="leftpane d-flex flex-column pb-2 border-end bg-white">
                 <OrderSummary />
-                <div class="pads">
+                <div class="pads px-2">
                     <div class="control-buttons d-flex justify-content-between gap-2 w-100 py-2">
                         <ControlButtons t-if="!ui.isSmall" onClickMore.bind="displayAllControlPopup"/>
                     </div>
                     <div class="subpads d-flex flex-column gap-2">
-                        <Numpad t-if="!currentOrder?.isEmpty() and pos.getOrder()?.uiState.selected_orderline_uuid" class="'d-grid m-n1'" buttons="getNumpadButtons()" onClick.bind="onNumpadClick"/>
+                        <Numpad t-if="!currentOrder?.isEmpty() and pos.getOrder()?.uiState.selected_orderline_uuid" class="'d-grid'" buttons="getNumpadButtons()" onClick.bind="onNumpadClick"/>
                         <ActionpadWidget 
                             partner="currentOrder?.getPartner()" 
                             onClickMore.bind="displayAllControlPopup"
@@ -21,11 +21,11 @@
                     </div>
                 </div>
             </div>
-            <div class="rightpane d-flex flex-grow-1 flex-column" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
+            <div class="rightpane d-flex flex-grow-1 flex-column bg-secondary" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
                 <div class="position-relative d-flex flex-column flex-grow-1 overflow-hidden">
                     <CategorySelector t-if="!ui.isSmall || !pos.scanning" />
                     <CameraBarcodeScanner t-if="pos.scanning"/>
-                    <div t-elif="pos.productsToDisplay.length != 0 and pos.session._has_available_products" t-attf-class="product-list {{this.pos.productListViewMode}} overflow-y-auto px-2 pt-0 pb-2">
+                    <div t-elif="pos.productsToDisplay.length != 0 and pos.session._has_available_products" class="product-list d-grid gap-1 gap-lg-2 overflow-y-auto px-2 pt-0 pb-2">
                         <ProductCard
                             t-foreach="pos.productsToDisplay" t-as="product" t-key="product.id"
                             productId="product.id"

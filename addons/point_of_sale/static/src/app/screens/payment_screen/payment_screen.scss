@@ -41,14 +41,8 @@
     }
 }
 
-@for $size from 1 through length($o-colors) {
-  .btn.o_colorlist_item_color_transparent_#{$size - 1} {
-    &:hover {
-      filter: brightness(98%);
-    }
-
-    &:active {
-      border: $border-width solid nth($o-colors, $size);
-    }
-  }
+.paymentline.selected {
+  background: $o-component-active-bg;
+  border: $border-width solid $o-component-active-border;
+  color: $o-component-active-color;
 }

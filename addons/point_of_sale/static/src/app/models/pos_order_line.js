@@ -5,6 +5,8 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { formatFloat, roundDecimals, roundPrecision, floatIsZero } from "@web/core/utils/numbers";
 import { roundCurrency, formatCurrency } from "./utils/currency";
 import { _t } from "@web/core/l10n/translation";
+import { localization as l10n } from "@web/core/l10n/localization";
+
 import {
     getTaxesAfterFiscalPosition,
     getTaxesValues,
@@ -65,25 +67,36 @@ export class PosOrderline extends Base {
     }
 
     get quantityStr() {
-        let qtyStr = "";
+        let unitPart = "";
+        let decimalPart = "";
         const unit = this.product_id.uom_id;
+        const decimalPoint = l10n.decimalPoint;
 
         if (unit) {
             if (unit.rounding) {
                 const decimals = this.models["decimal.precision"].find(
                     (dp) => dp.name === "Product Unit of Measure"
                 ).digits;
-                qtyStr = formatFloat(this.qty, {
-                    digits: [69, decimals],
-                });
+
+                if (this.qty % 1 === 0) {
+                    unitPart = this.qty.toFixed(0);
+                } else {
+                    const formatted = formatFloat(this.qty, { digits: [69, decimals] });
+                    const parts = formatted.split(decimalPoint);
+                    unitPart = parts[0] + decimalPoint;
+                    decimalPart = parts[1] || "";
+                }
             } else {
-                qtyStr = this.qty.toFixed(0);
+                unitPart = this.qty.toFixed(0);
             }
         } else {
-            qtyStr = "" + this.qty;
+            unitPart = "" + this.qty;
         }
-
-        return qtyStr;
+        return {
+            qtyStr: unitPart + (decimalPart ? decimalPoint + decimalPart : ""),
+            unitPart: unitPart,
+            decimalPart: decimalPart,
+        };
     }
 
     get company() {

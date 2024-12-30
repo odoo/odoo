@@ -15,10 +15,10 @@
             <attribute name="t-if">!pos.config.module_pos_restaurant</attribute>
         </xpath>
         <xpath expr="//div[hasclass('pos-leftheader')]/OrderTabs" position="after">
-            <span t-if="pos.config.module_pos_restaurant and pos.getOrder()" t-esc="pos.getOrder().getName()" class="ps-1 text-wrap fw-bolder fst-italic"/>
+            <span t-if="pos.config.module_pos_restaurant and pos.getOrder()" t-esc="pos.getOrder().getName()" class="badge rounded-pill text-bg-info py-2 fs-6 fw-bolder text-truncate"/>
         </xpath>
         <xpath expr="//button[hasclass('register-label')]" position="before">
-            <button t-if="pos.config.module_pos_restaurant" class="table-button btn btn-lg lh-lg" t-att-class="{'fw-bolder text-primary': mainButton === 'table' and !this.ui.isSmall, 'btn-primary text-white': mainButton === 'table' and this.ui.isSmall, 'text-muted': this.pos.getOrder()?.isFilledDirectSale}" t-on-click="() => this.onClickPlanButton()">
+            <button t-if="pos.config.module_pos_restaurant" class="table-button btn btn-lg lh-lg" t-att-class="{'text-primary fw-bolder': mainButton === 'table', 'text-muted': this.pos.getOrder()?.isFilledDirectSale}" t-on-click="() => this.onClickPlanButton()">
                 <span t-if="!ui.isSmall">Tables</span>
                 <img t-else="" src="/pos_restaurant/static/img/plan.svg" class="navbar-icon" t-att-class="{'opacity-50': this.pos.getOrder()?.isFilledDirectSale}" alt="Floor Plan"/>
             </button>
@@ -31,7 +31,7 @@
             </div>
         </xpath>
         <xpath expr="//button[hasclass('orders-button')]" position="attributes">
-            <attribute name="t-att-class">{'fw-bolder text-primary': mainButton === 'order' and !this.ui.isSmall, 'btn-primary text-white': mainButton === 'order' and this.ui.isSmall, 'text-muted': this.pos.getOrder()?.isFilledDirectSale}</attribute>
+            <attribute name="t-att-class">{'text-primary fw-bolder': mainButton === 'order', 'text-muted': this.pos.getOrder()?.isFilledDirectSale}</attribute>
             <attribute name="t-on-click">() => this.onTicketButtonClick()</attribute>
         </xpath>
     </t>

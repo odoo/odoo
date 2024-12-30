@@ -4,7 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { SIZES, utils } from "@web/core/ui/ui_service";
 import {
     getButtons,
-    DECIMAL,
+    EMPTY,
     ZERO,
     BACKSPACE,
     Numpad,
@@ -30,15 +30,17 @@ export class NumpadDropdown extends Component {
     }
 
     get numpadButtons() {
-        return getButtons([{ ...DECIMAL, disabled: true }, ZERO, BACKSPACE]).map(
-            (button, index) => ({
-                ...button,
-                class: `
-                    ${button.class}
-                    ${index % 3 === 2 ? "mt-0 ms-0 me-0 mb-1" : "me-1 mb-1 mt-0 ms-0"}
-                `,
-            })
-        );
+        const colorClassMap = {
+            [BACKSPACE.value]: "o_colorlist_item_color_transparent_1",
+        };
+
+        return getButtons([{ ...EMPTY, disabled: true }, ZERO, BACKSPACE]).map((button, index) => ({
+            ...button,
+            class: `
+                ${button.class}
+                ${colorClassMap[button.value] || ""}
+            `,
+        }));
     }
 
     searchOrder() {

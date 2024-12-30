@@ -7,12 +7,12 @@
                 <BackButton t-if="!props.showActionButton and pos.showBackButton()" onClick="() => pos.onClickBackButton()"/>
                 <SelectPartnerButton partner="props.partner"/>
                 <button t-if="pos.config.use_presets"
-                    class="btn btn-light btn-lg flex-shrink-0 border-0"
+                    class="btn btn-secondary btn-lg flex-shrink-0 border-0"
                     t-attf-class="{{`o_colorlist_item_color_transparent_${currentOrder.preset_id?.color}`}}"
                     t-on-click="() => this.pos.selectPreset()">
                     <span t-esc="currentOrder.preset_id?.name" />
                 </button>
-                <button class="button mobile-more-button btn btn-light btn-lg flex-fill" t-if="props.onClickMore" t-on-click="props.onClickMore">
+                <button class="button mobile-more-button btn btn-secondary btn-lg flex-fill" t-if="props.onClickMore" t-on-click="props.onClickMore">
                     <span>Actions</span>
                 </button>
             </div>

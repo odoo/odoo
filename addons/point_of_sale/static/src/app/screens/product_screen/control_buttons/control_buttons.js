@@ -121,7 +121,7 @@ export class ControlButtons extends Component {
     get buttonClass() {
         return this.props.showRemainingButtons
             ? "btn btn-secondary btn-lg py-5"
-            : "btn btn-light btn-lg lh-lg";
+            : "btn btn-secondary btn-lg lh-lg";
     }
 }
 

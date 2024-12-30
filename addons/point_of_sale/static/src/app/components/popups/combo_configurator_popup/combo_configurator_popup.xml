@@ -5,8 +5,8 @@
             <div t-foreach="props.productTemplate.combo_ids" t-as="combo" t-key="combo.id" class="d-flex flex-column m-3 mb-4">
                 <t t-if="shouldShowCombo(combo)">
                     <h3 class="me-auto mb-3" t-esc="combo.name"/>
-                    <div class="product-list d-grid gap-1">
-                        <div t-foreach="combo.combo_item_ids" t-as="combo_item" t-key="combo_item.id" class="m-2" t-if="combo_item.product_id">
+                    <div class="product-list d-grid gap-1 gap-lg-2">
+                        <div t-foreach="combo.combo_item_ids" t-as="combo_item" t-key="combo_item.id" t-if="combo_item.product_id">
                             <t t-set="product" t-value="combo_item.product_id"/>
                             <input type="radio"
                                 t-attf-name="combo-{{combo.id}}"
@@ -28,16 +28,11 @@
                 </t>
             </div>
             <t t-set-slot="footer">
-                <div class="d-flex w-100 justify-content-start gap-2">
-                    <button class="confirm btn btn-lg btn-primary"
+                <div class="d-flex flex-column flex-lg-row-reverse align-items-center gap-2 w-100">
+                    <button class="confirm btn btn-primary btn-lg lh-lg w-100 w-lg-25 me-lg-auto"
                         t-att-disabled="!areAllCombosSelected()" t-on-click="confirm">
                         Add to order
                     </button>
-                    <div class="ms-auto">
-                        <t t-if="!areAllCombosSelected()">
-                            Complete the selection to proceed
-                        </t>
-                    </div>
                 </div>
             </t>
         </Dialog>

@@ -3,7 +3,7 @@
 }
 
 .product-list {
-    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
 
     @include media-breakpoint-down(xl) {
         grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -21,9 +21,10 @@
 .text-wrap-categ {
     box-sizing: border-box;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    max-width: min-content;
 }
 
 .btn-switchpane, .pay-order-button {

@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.CategorySelector">
-        <div class="d-grid product-list gap-2 p-2">
+        <div t-attf-class="{{this.pos.config.show_category_images ? 'd-flex category-list' : 'd-grid product-list'}} gap-1 gap-lg-2 p-2">
             <t t-foreach="this.getCategoriesAndSub()" t-as="category" t-key="category.id">
                 <button t-on-click="() => this.pos.setSelectedCategory(category.id)"
-                    t-attf-class="o_colorlist_item_color_{{!category.isSelected and !category.isChildren ? 'transparent_': ''}}{{category.color or 'none'}}"
+                    t-attf-class="o_colorlist_item_color_{{!category.isSelected and !category.isChildren ? 'transparent_ border-none': ''}}{{category.color or 'none'}}"
                     t-att-class="{'opacity-50': !category.isChildren and !category.isSelected, 'justify-content-center': ui.isSmall}"
-                    class="category-button px-1 btn btn-light d-flex align-items-center rounded-3"
-                    style="height: 4rem;"
-                >
+                    class="category-button p-1 btn btn-light d-flex justify-content-center align-items-center rounded-3">
                     <img t-if="category.imgSrc and !ui.isSmall" t-att-src="category.imgSrc"
-                        class="category-img-thumb h-100 rounded-3 object-fit-cover me-1"
+                        class="category-img-thumb bg-100 bg-opacity-25 h-100 rounded-3 object-fit-cover me-1"
                         alt="Category"
                     />
-                    <span t-if="category.name" class="text-wrap-categ text-center fs-5" t-esc="category.name" />
+                    <span t-if="category.name" t-attf-class="{{category.imgSrc ? 'px-2' : 'px-3'}} text-center text-wrap-categ fs-5" t-esc="category.name" />
                 </button>
             </t>
         </div>
