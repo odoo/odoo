@@ -212,3 +212,38 @@ Hello, I want to work for you.
             application_3.candidate_id,
             "Application 1 and 3 should not have the same candidate",
         )
+
+    def test_applicant_unsubscribe_manager_partner(self):
+        """
+        Ensure that a department manager's related partner is unsubscribed
+        from an applicant's messages.
+        """
+        department_manager = self.env['hr.employee'].create({
+            'name': 'Test Manager',
+            'email': 'manager@example.com'
+        })
+
+        test_department = self.env['hr.department'].create({
+            'name': 'Test Department',
+            'manager_id': department_manager.id
+        })
+
+        test_job = self.env['hr.job'].create({
+            'name': 'Experienced Developer',
+            'department_id': test_department.id,
+            'no_of_recruitment': 5,
+        })
+
+        test_applicant = self.env['hr.applicant'].create({
+            'candidate_id': self.env['hr.candidate'].create({'partner_name': 'Test Applicant'}).id,
+            'job_id': test_job.id
+        })
+
+        manager_related_partners = department_manager._get_related_partners()
+        remaining_subscribed_partners = test_applicant.message_partner_ids
+
+        self.assertNotIn(
+            manager_related_partners.id,
+            remaining_subscribed_partners.ids,
+            "Manager's related partner should be unsubscribed from the applicant's messages."
+        )
