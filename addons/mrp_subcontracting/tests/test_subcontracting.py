@@ -1338,7 +1338,7 @@ class TestSubcontractingTracking(TransactionCase):
         picking_form.partner_id = self.subcontractor_partner1
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.finished_product
-            move.quantity = nb_finished_product
+            move.product_uom_qty = nb_finished_product
         picking_receipt = picking_form.save()
         picking_receipt.action_confirm()
         picking_receipt.do_unreserve()
