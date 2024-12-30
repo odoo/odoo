@@ -122,6 +122,11 @@ export class PaymentRazorpay extends PaymentInterface {
             //Clear previous timeout before setting a new one
             clearTimeout(this.pollingTimeout);
 
+            // If the user navigates to another screen, stop the polling
+            if (this.pos.mainScreen.component.name !== "PaymentScreen") {
+                return;
+            }
+
             //Within 90 seconds, inactivity will result in transaction cancellation and payment termination.
             if (this.payment_stopped) {
                 this._razorpay_cancel().then(() => {
