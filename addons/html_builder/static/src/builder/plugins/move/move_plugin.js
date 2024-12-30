@@ -63,7 +63,7 @@ export function getVisibleSibling(target, direction) {
 
 export class MovePlugin extends Plugin {
     static id = "move";
-    static dependencies = ["overlay", "history"];
+    static dependencies = ["history"];
     resources = {
         get_overlay_buttons: this.getActiveOverlayButtons.bind(this),
     };

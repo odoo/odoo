@@ -10,7 +10,7 @@ function isGridItem(el) {
 
 export class GridLayoutPlugin extends Plugin {
     static id = "gridLayout";
-    static dependencies = ["overlay", "history"];
+    static dependencies = ["history"];
     resources = {
         get_overlay_buttons: this.getActiveOverlayButtons.bind(this),
     };
@@ -31,11 +31,11 @@ export class GridLayoutPlugin extends Plugin {
             buttons.push(
                 {
                     class: "o_send_back",
-                    handler: this.sendGridItemToBack.bind(this, "prev"),
+                    handler: this.sendGridItemToBack.bind(this),
                 },
                 {
                     class: "o_bring_front",
-                    handler: this.bringGridItemToFront.bind(this, "next"),
+                    handler: this.bringGridItemToFront.bind(this),
                 }
             );
         }

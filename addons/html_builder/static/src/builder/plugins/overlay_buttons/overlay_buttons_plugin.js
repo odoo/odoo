@@ -147,7 +147,7 @@ export class OverlayButtonsPlugin extends Plugin {
     addOverlayButtons(optionsContainer) {
         this.removeOverlayButtons();
 
-        // Find the innermost option neediing the overlay buttons.
+        // Find the innermost option needing the overlay buttons.
         const optionWithOverlayButtons = optionsContainer.findLast((option) =>
             this.hasOverlayOptions(option.element)
         );

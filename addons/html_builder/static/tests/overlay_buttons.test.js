@@ -5,8 +5,7 @@ import { contains } from "@web/../tests/web_test_helpers";
 defineWebsiteModels();
 
 test("Use the 'move arrows' overlay buttons", async () => {
-    await setupWebsiteBuilder(
-        `
+    await setupWebsiteBuilder(`
         <section>
             <div class="container">
                 <div class="row">
@@ -25,9 +24,7 @@ test("Use the 'move arrows' overlay buttons", async () => {
         <section>
             <p>TEST</p>
         </section>
-    `,
-        { loadIframeBundles: true }
-    );
+    `);
 
     await contains(":iframe section").click();
     expect(".overlay .o_overlay_options").toHaveCount(1);
@@ -56,8 +53,7 @@ test("Use the 'move arrows' overlay buttons", async () => {
 });
 
 test("Use the 'grid' overlay buttons", async () => {
-    await setupWebsiteBuilder(
-        `
+    await setupWebsiteBuilder(`
         <section>
             <div class="container">
                 <div class="row o_grid_mode" data-row-count="4">
@@ -70,9 +66,7 @@ test("Use the 'grid' overlay buttons", async () => {
                 </div>
             </div>
         </section>
-    `,
-        { loadIframeBundles: true }
-    );
+    `);
 
     await contains(":iframe .g-col-lg-5").click();
     expect(".overlay .o_overlay_options").toHaveCount(1);
@@ -87,8 +81,7 @@ test("Use the 'grid' overlay buttons", async () => {
 });
 
 test("Refresh the overlay buttons when toggling the mobile preview", async () => {
-    await setupWebsiteBuilder(
-        `
+    await setupWebsiteBuilder(`
         <section>
             <div class="container">
                 <div class="row o_grid_mode" data-row-count="4">
@@ -104,9 +97,7 @@ test("Refresh the overlay buttons when toggling the mobile preview", async () =>
                 </div>
             </div>
         </section>
-    `,
-        { loadIframeBundles: true }
-    );
+    `);
 
     await contains(":iframe .g-col-lg-4").click();
     await contains("[data-action='mobile']").click();
