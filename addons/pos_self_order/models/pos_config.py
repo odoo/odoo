@@ -379,8 +379,8 @@ class PosConfig(models.Model):
         })
 
     @api.model
-    def load_onboarding_restaurant_scenario(self):
-        super().load_onboarding_restaurant_scenario()
+    def load_onboarding_restaurant_scenario(self, with_demo_data=True):
+        res = super().load_onboarding_restaurant_scenario(with_demo_data)
         preset_ids = self.get_record_by_ref([
             'pos_restaurant.pos_takein_preset',
             'pos_restaurant.pos_takeout_preset',
@@ -393,3 +393,4 @@ class PosConfig(models.Model):
                 'available_in_self': True,
                 'service_at': stack.pop(0),
             })
+        return res
