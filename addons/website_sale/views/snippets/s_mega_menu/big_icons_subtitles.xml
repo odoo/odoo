@@ -14,12 +14,11 @@
             <div class="container">
                 <div class="row">
                     <t
-                        t-set="categories"
-                        t-value="request.env['product.public.category'].search([
-                            ('parent_id', '=', False)
-                        ])[:9]"
-                    />
-                    <t t-foreach="categories" t-as="category">
+                        t-foreach="request.env['product.public.category'].search([
+                            ('parent_id', '=', False), ('has_published_products', '=', True),
+                        ], limit=9)"
+                        t-as="category"
+                    >
                         <div class="col-12 col-lg-4">
                             <nav class="nav flex-column w-100">
                                 <a

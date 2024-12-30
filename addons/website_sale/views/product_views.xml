@@ -10,6 +10,13 @@
                 <separator/>
                 <filter string="Published" name="published" domain="[('is_published', '=', True)]"/>
             </filter>
+            <filter name="group_by_categ_id" position="after">
+                <filter
+                    string="eCommerce Category"
+                    name="groupby_public_category"
+                    context="{'group_by':'public_categ_ids'}"
+                />
+            </filter>
         </field>
     </record>
 

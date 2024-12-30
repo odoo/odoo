@@ -10,12 +10,11 @@
             <div class="container">
                 <div class="row">
                     <t
-                        t-set="categories"
-                        t-value="request.env['product.public.category'].search([
-                            ('parent_id', '=', False)
-                        ])[:4]"
-                    />
-                    <t t-foreach="categories" t-as="category">
+                        t-foreach="request.env['product.public.category'].search([
+                            ('parent_id', '=', False), ('has_published_products', '=', True),
+                        ], limit=4)"
+                        t-as="category"
+                    >
                         <div class="col-12 col-sm py-2 text-center">
                             <h4>
                                 <a
@@ -25,7 +24,8 @@
                                 />
                             </h4>
                             <nav class="nav flex-column">
-                                <t t-foreach="category.child_id" t-as="sub_category">
+                                <t t-foreach="category.child_id.filtered('has_published_products')"
+                                   t-as="sub_category">
                                     <a
                                         t-att-href="'/shop/category/%s' % sub_category.id"
                                         class="nav-link"

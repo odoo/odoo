@@ -10,12 +10,11 @@
             <div class="container">
                 <nav class="row">
                     <t
-                        t-set="categories"
-                        t-value="request.env['product.public.category'].search([
-                            ('parent_id', '=', False)
-                        ])[:8]"
-                    />
-                    <t t-foreach="categories" t-as="category">
+                        t-foreach="request.env['product.public.category'].search([
+                            ('parent_id', '=', False), ('has_published_products', '=', True),
+                        ], limit=8)"
+                        t-as="category"
+                    >
                         <div class="col-12 col-lg-3">
                             <a
                                 t-att-href="'/shop/category/%s' % category.id"
