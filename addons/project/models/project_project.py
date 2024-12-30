@@ -967,6 +967,12 @@ class Project(models.Model):
     def _get_plan_domain(self, plan):
         return AND([super()._get_plan_domain(plan), ['|', ('company_id', '=', False), ('company_id', '=?', unquote('company_id'))]])
 
+    def _get_account_node_context(self, plan):
+        return {
+            **super()._get_account_node_context(plan),
+            'default_company_id': unquote('company_id'),
+        }
+
     # ---------------------------------------------------
     # Rating business
     # ---------------------------------------------------
