@@ -59,7 +59,7 @@ export function checkFilterFieldMatching(fieldMatchings) {
 
 /**
  * Get a date domain relative to the current date.
- * The domain will span the amount of time specified in rangeType and end the day before the current day.
+ * The domain will span the amount of time specified in rangeType and end on the current day.
  *
  *
  * @param {Object} now current time, as luxon time
@@ -71,7 +71,7 @@ export function checkFilterFieldMatching(fieldMatchings) {
  * @returns {Domain|undefined}
  */
 export function getRelativeDateDomain(now, offset, rangeType, fieldName, fieldType) {
-    let endDate = now.minus({ day: 1 }).endOf("day");
+    let endDate = now.endOf("day");
     let startDate = endDate;
     switch (rangeType) {
         case "last_week": {
