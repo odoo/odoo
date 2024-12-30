@@ -1,10 +1,10 @@
 .table-selector {
-    width: clamp(150px, 35vw, 300px);
+    min-width: 300px;
     height: clamp(200px, 50vh, 500px);
 
     position: absolute;
     right: 5px;
-    top: $navbar-height;
+    top: $navbar-height + map-get($spacers, 1);
 }
 
 .table-selector-small, .table-selector {

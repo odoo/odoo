@@ -66,4 +66,10 @@ patch(PosOrder.prototype, {
     get isFilledDirectSale() {
         return this.isDirectSale && !this.isEmpty();
     },
+    setPartner(partner) {
+        if (this.config.module_pos_restaurant && this.isDirectSale) {
+            this.floating_order_name = partner.name;
+        }
+        return super.setPartner(...arguments);
+    },
 });

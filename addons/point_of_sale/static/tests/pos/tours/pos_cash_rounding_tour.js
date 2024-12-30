@@ -37,7 +37,7 @@ registry
 
                 // Refund.
                 Chrome.clickOrders(),
-                TicketScreen.selectFilter("All active orders"),
+                TicketScreen.selectFilter("Active"),
                 TicketScreen.selectFilter("Paid"),
 
                 TicketScreen.selectOrder("0001"),
@@ -98,7 +98,7 @@ registry
 
                     // Refund.
                     Chrome.clickOrders(),
-                    TicketScreen.selectFilter("All active orders"),
+                    TicketScreen.selectFilter("Active"),
                     TicketScreen.selectFilter("Paid"),
                     TicketScreen.selectOrder("0001"),
                     TicketScreen.confirmRefund(),
@@ -161,7 +161,7 @@ registry
 
                 // Refund.
                 Chrome.clickOrders(),
-                TicketScreen.selectFilter("All active orders"),
+                TicketScreen.selectFilter("Active"),
                 TicketScreen.selectFilter("Paid"),
 
                 TicketScreen.selectOrder("0001"),
@@ -226,7 +226,7 @@ registry
 
                     // Refund.
                     Chrome.clickOrders(),
-                    TicketScreen.selectFilter("All active orders"),
+                    TicketScreen.selectFilter("Active"),
                     TicketScreen.selectFilter("Paid"),
                     TicketScreen.selectOrder("0001"),
                     TicketScreen.confirmRefund(),
@@ -289,7 +289,7 @@ registry
 
                 // Refund.
                 Chrome.clickOrders(),
-                TicketScreen.selectFilter("All active orders"),
+                TicketScreen.selectFilter("Active"),
                 TicketScreen.selectFilter("Paid"),
                 TicketScreen.selectOrder("0001"),
                 TicketScreen.confirmRefund(),
@@ -347,7 +347,7 @@ registry
 
                 // Refund.
                 Chrome.clickOrders(),
-                TicketScreen.selectFilter("All active orders"),
+                TicketScreen.selectFilter("Active"),
                 TicketScreen.selectFilter("Paid"),
                 TicketScreen.selectOrder("0001"),
                 TicketScreen.confirmRefund(),
@@ -405,7 +405,7 @@ registry
 
                 // Refund.
                 Chrome.clickOrders(),
-                TicketScreen.selectFilter("All active orders"),
+                TicketScreen.selectFilter("Active"),
                 TicketScreen.selectFilter("Paid"),
                 TicketScreen.selectOrder("0001"),
                 TicketScreen.confirmRefund(),
@@ -462,7 +462,7 @@ registry
 
                 // Refund.
                 Chrome.clickOrders(),
-                TicketScreen.selectFilter("All active orders"),
+                TicketScreen.selectFilter("Active"),
                 TicketScreen.selectFilter("Paid"),
                 TicketScreen.selectOrder("0001"),
                 TicketScreen.confirmRefund(),
@@ -519,7 +519,7 @@ registry
 
                 // Refund.
                 Chrome.clickOrders(),
-                TicketScreen.selectFilter("All active orders"),
+                TicketScreen.selectFilter("Active"),
                 TicketScreen.selectFilter("Paid"),
                 TicketScreen.selectOrder("0001"),
                 TicketScreen.confirmRefund(),
@@ -577,7 +577,7 @@ registry
 
                 // Refund.
                 Chrome.clickOrders(),
-                TicketScreen.selectFilter("All active orders"),
+                TicketScreen.selectFilter("Active"),
                 TicketScreen.selectFilter("Paid"),
                 TicketScreen.selectOrder("0001"),
                 TicketScreen.confirmRefund(),
@@ -635,7 +635,7 @@ registry
 
                 // Refund.
                 Chrome.clickOrders(),
-                TicketScreen.selectFilter("All active orders"),
+                TicketScreen.selectFilter("Active"),
                 TicketScreen.selectFilter("Paid"),
                 TicketScreen.selectOrder("0001"),
                 TicketScreen.confirmRefund(),
