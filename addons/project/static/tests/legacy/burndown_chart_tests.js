@@ -220,7 +220,7 @@ QUnit.module("Project", {}, () => {
 
         function checkGroupByOrder(assert) {
             const dateSearchFacetXpath = `//div[contains(@class, 'o_searchview_facet')]
-                                            [.//small[@class='o_facet_value']
+                                            [.//small[contains(@class, 'o_facet_value')]
                                             [contains(., 'Date: Month')]]`;
             const dateSearchFacetElement = getFirstElementForXpath(target, dateSearchFacetXpath);
             const dateSearchFacetParts = dateSearchFacetElement.querySelectorAll('.o_facet_value');
@@ -241,7 +241,7 @@ QUnit.module("Project", {}, () => {
 
         function checkGroupByIsClosed(assert) {
             const dateSearchFacetXpath = `//div[contains(@class, 'o_searchview_facet')]
-                                            [.//small[@class='o_facet_value']
+                                            [.//small[contains(@class, 'o_facet_value')]
                                             [contains(., 'Date: Month')]]`;
             const dateSearchFacetElement = getFirstElementForXpath(target, dateSearchFacetXpath);
             const dateSearchFacetParts = dateSearchFacetElement.querySelectorAll('.o_facet_value');

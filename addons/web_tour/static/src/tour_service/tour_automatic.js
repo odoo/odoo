@@ -4,7 +4,7 @@ import { TourStepAutomatic } from "./tour_step_automatic";
 import { Macro } from "@web/core/macro";
 import { browser } from "@web/core/browser/browser";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
-import { delay } from "@odoo/hoot-dom";
+import * as hoot from "@odoo/hoot-dom";
 
 export class TourAutomatic {
     mode = "auto";
@@ -36,7 +36,6 @@ export class TourAutomatic {
         const macroSteps = this.steps
             .filter((step) => step.index >= this.currentIndex)
             .flatMap((step) => {
-                const timeout = (step.timeout || 10000) + this.config.stepDelay;
                 return [
                     {
                         action: async () => {
@@ -54,7 +53,7 @@ export class TourAutomatic {
                             // IMPROVEMENT: Find a way to remove this delay.
                             await new Promise((resolve) => requestAnimationFrame(resolve));
                             if (this.config.stepDelay > 0) {
-                                await delay(this.config.stepDelay);
+                                await hoot.delay(this.config.stepDelay);
                             }
                         },
                     },
@@ -63,7 +62,7 @@ export class TourAutomatic {
                             return this.previousStepIsJustACheck ? 0 : null;
                         },
                         trigger: () => step.findTrigger(),
-                        timeout,
+                        timeout: (step.timeout || 10000) + this.config.stepDelay,
                         action: async () => {
                             if (this.checkForUndeterminisms) {
                                 try {
@@ -80,7 +79,7 @@ export class TourAutomatic {
                                 if (!step.skipped && this.showPointerDuration > 0 && step.element) {
                                     // Useful in watch mode.
                                     pointer.pointTo(step.element, this);
-                                    await delay(this.showPointerDuration);
+                                    await hoot.delay(this.showPointerDuration);
                                     pointer.hide();
                                 }
                                 console.log(step.element);
@@ -103,6 +102,7 @@ export class TourAutomatic {
             });
 
         const end = () => {
+            delete window.hoot;
             transitionConfig.disabled = false;
             tourState.clear();
             pointer.stop();
@@ -113,7 +113,7 @@ export class TourAutomatic {
 
         this.macro = new Macro({
             name: this.name,
-            checkDelay: this.checkDelay || 400,
+            checkDelay: this.checkDelay || 300,
             steps: macroSteps,
             onError: (error) => {
                 this.throwError([error]);
@@ -143,6 +143,7 @@ export class TourAutomatic {
             debugger;
         }
         transitionConfig.disabled = true;
+        window.hoot = hoot;
         this.macro.start();
     }
 

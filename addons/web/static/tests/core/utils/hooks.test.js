@@ -2,6 +2,7 @@ import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockTouch } from "@odoo/hoot-mock";
 import {
+    contains,
     getService,
     makeMockEnv,
     mountWithCleanup,
@@ -586,6 +587,25 @@ describe("useSpellCheck", () => {
         expect(".textArea").toHaveProperty("spellcheck", false);
         expect(".textArea").toHaveAttribute("spellcheck", "false");
         expect(".editableDiv").toHaveProperty("spellcheck", false);
+        expect(".editableDiv").toHaveAttribute("spellcheck", "false");
+    });
+
+    test("ref is on an element with contenteditable attribute", async () => {
+        class MyComponent extends Component {
+            static props = ["*"];
+            static template = xml`
+                <div t-ref="spellcheck"  contenteditable="true" class="editableDiv" />`;
+            setup() {
+                useSpellCheck();
+            }
+        }
+
+        await mountWithCleanup(MyComponent);
+        expect(".editableDiv").toHaveProperty("spellcheck", true);
+        await contains(".editableDiv").click();
+        expect(".editableDiv").toBeFocused();
+        expect(".editableDiv").toHaveAttribute("spellcheck", "true");
+        await click(getFixture());
         expect(".editableDiv").toHaveAttribute("spellcheck", "false");
     });
 });

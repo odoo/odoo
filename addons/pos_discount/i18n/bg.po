@@ -3,9 +3,9 @@
 # 	* pos_discount
 # 
 # Translators:
-# Petko Karamotchev, 2024
 # Albena Mincheva <albena_vicheva@abv.bg>, 2024
 # Maria Boyadjieva <marabo2000@gmail.com>, 2024
+# Petko Karamotchev, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2024\n"
+"Last-Translator: Petko Karamotchev, 2024\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,7 +69,7 @@ msgstr "Продукт с отстъпка"
 #. odoo-javascript
 #: code:addons/pos_discount/static/src/overrides/components/control_buttons/control_buttons.js:0
 msgid "No discount product found"
-msgstr ""
+msgstr "Не е намерен продукт с отстъпка."
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
@@ -84,7 +84,7 @@ msgstr "Конфигурация на център за продажби"
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
 msgid "Pos Discount Product"
-msgstr ""
+msgstr "Продукт за отстъпка в ПОС"
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_product_product
@@ -96,6 +96,7 @@ msgstr "Продуктов вариант"
 #: model:ir.model.fields,help:pos_discount.field_res_config_settings__pos_discount_pc
 msgid "The default discount percentage when clicking on the Discount button"
 msgstr ""
+"Процентът на отстъпка по подразбиране при натискане на бутона за отстъпка"
 
 #. module: pos_discount
 #. odoo-javascript
@@ -104,8 +105,12 @@ msgid ""
 "The discount product seems misconfigured. Make sure it is flagged as 'Can be"
 " Sold' and 'Available in Point of Sale'."
 msgstr ""
+"Продуктът за отстъпка изглежда неправилно конфигуриран. Уверете се, че е "
+"маркиран като „Може да се продава“ и „Наличен в точка на продажба (Point of "
+"Sale)“."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
 msgid "The product used to apply the discount on the ticket."
 msgstr ""
+"Продуктът, използван за прилагане на отстъпката върху касовата бележка."

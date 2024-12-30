@@ -83,6 +83,13 @@ $link-hover-color: auto-contrast(darken($link-color, 15%), $body-bg, 'o-cc1-link
 $link-decoration: if(o-website-value('link-underline') == 'always', underline, none) !default;
 $link-hover-decoration: if(o-website-value('link-underline') != 'never', underline, none) !default;
 
+// Emphasis
+//
+// For higher contrast text. Not applicable for backgrounds.
+
+// Increase contrast when needed, otherwise fallback to BS default
+$primary-text-emphasis: if(not has-enough-contrast(o-color('primary'), $body-bg), increase-contrast(o-color('primary'), $body-bg), null) !default;
+
 // Grid
 $grid-gutter-width: 30px !default;
 
@@ -96,7 +103,7 @@ $border-color: var(--o-border-color) !default;
 // Note: for the 'active' color, color preset edition is not really flexible but
 // this could come in a future update.
 $component-active-bg: o-color('o-cc1-btn-primary') !default;
-$component-active-color: if($component-active-bg, color-contrast($component-active-bg), null) !default;
+$component-active-color: color-contrast($component-active-bg or o-color('primary')) !default;
 
 // Fonts
 //

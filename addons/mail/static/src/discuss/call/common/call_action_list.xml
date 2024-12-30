@@ -9,10 +9,8 @@
                         <t t-call="discuss.CallActionList.actionButton" />
                     </t>
                     <Dropdown position="'top-end'" menuClass="'d-flex flex-column py-0'">
-                        <button t-att-class="`btn smaller d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover ${ isSmall ? 'p-2' : 'p-3' }`" t-att-title="MORE">
-                            <div class="fa-stack">
-                                <i class="fa fa-ellipsis-v fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
-                            </div>
+                        <button t-att-class="`btn smaller d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover align-items-center ${ isSmall ? 'p-0' : 'p-1' }`" t-att-title="MORE">
+                            <i class="fa fa-ellipsis-v m-2 fa-fw" t-att-class="{ 'fa-lg': !isSmall }"/>
                         </button>
                         <t t-set-slot="content">
                             <DropdownItem t-foreach="callActions.actions.slice(isMobileOS ? 3 : 4)" t-as="action" t-key="action_index" class="'btn rounded-0 d-flex align-items-center px-2 py-2 m-0 opacity-75 opacity-100-hover'" attrs="{ title: action.name }" onSelected="action.select">
@@ -25,27 +23,31 @@
                         </t>
                     </Dropdown>
                 </t>
-                <button t-if="props.thread.rtcInvitingSession and !isOfActiveCall" class="btn smaller btn-danger d-flex m-1 border-0 rounded-circle shadow-none"
-                    t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
+                <button t-if="props.thread.rtcInvitingSession and !isOfActiveCall" class="btn smaller btn-danger d-flex m-1 border-0 rounded-circle shadow-none align-items-center"
+                    t-att-class="{ 'p-0': isSmall, 'p-1': !isSmall }"
                     aria-label="Reject"
                     title="Reject"
                     t-att-disabled="rtc.state.hasPendingRequest"
                     t-on-click="onClickRejectCall">
-                    <div class="fa-stack">
-                        <i class="fa fa-times fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
-                    </div>
+                    <i class="oi oi-close fa-fw m-2" t-att-class="{ 'fa-lg': !isSmall }"/>
+                </button>
+                <button t-if="props.thread.rtcInvitingSession?.isCameraOn" class="btn smaller btn-success d-flex m-1 border-0 rounded-circle shadow-none align-items-center"
+                    t-att-class="{ 'p-0': isSmall, 'p-1': !isSmall }"
+                    aria-label="Accept with camera"
+                    title="Accept with camera"
+                    t-att-disabled="rtc.state.hasPendingRequest"
+                    t-on-click="(ev) => this.onClickToggleAudioCall(ev, { camera: true })">
+                    <i class="fa fa-video-camera fa-fw m-2" t-att-class="{ 'fa-lg': !isSmall }"/>
                 </button>
                 <t t-if="props.thread.eq(rtc.state.channel)" t-set="callText">Disconnect</t>
                 <t t-else="" t-set="callText">Join Call</t>
-                <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none"
+                <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none align-items-center"
                     t-att-aria-label="callText"
-                    t-att-class="{ 'btn-danger': isOfActiveCall, 'p-2': isSmall, 'p-3': !isSmall, 'btn-success': !isOfActiveCall }"
+                    t-att-class="{ 'btn-danger': isOfActiveCall, 'p-0': isSmall, 'p-1': !isSmall, 'btn-success': !isOfActiveCall }"
                     t-att-disabled="rtc.state.hasPendingRequest"
                     t-att-title="callText"
                     t-on-click="onClickToggleAudioCall">
-                    <div class="fa-stack">
-                        <i class="fa fa-phone fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
-                    </div>
+                    <i class="fa fa-phone fa-fw m-2" t-att-class="{ 'fa-lg': !isSmall }"/>
                 </button>
             </div>
             <div t-if="isMobileOS and store.settings.use_push_to_talk and isOfActiveCall" class="d-flex align-items-center flex-wrap justify-content-between p-2">
@@ -60,19 +62,17 @@
     </t>
 
     <t t-name="discuss.CallActionList.actionButton">
-        <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
-            t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
+        <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover align-items-center"
+            t-att-class="{ 'p-0': isSmall, 'p-1': !isSmall }"
             t-att-aria-label="action.name"
             t-att-title="action.name"
             t-on-click="action.select">
-            <div class="fa-stack">
-                <i class="fa fa-stack-1x" t-att-class="{
-                    'fa-lg': !isSmall,
-                    [action.inactiveIcon]: !action.isActive,
-                    [action.icon]: action.isActive or !action.inactiveIcon,
-                    [action.activeClass]: action.isActive,
-                }"/>
-            </div>
+            <i class="fa fa-fw m-2 fa-fw" t-att-class="{
+                'fa-lg': !isSmall,
+                [action.inactiveIcon]: !action.isActive,
+                [action.icon]: action.isActive or !action.inactiveIcon,
+                [action.activeClass]: action.isActive,
+            }"/>
         </button>
     </t>
 

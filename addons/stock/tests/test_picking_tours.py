@@ -136,6 +136,52 @@ class TestStockPickingTour(HttpCase):
         names = self.receipt.move_ids.move_line_ids.mapped('lot_name')
         self.assertEqual(names, ["two", "one"])
 
+    def test_add_new_line_in_detailled_op(self):
+        """
+        Check that the unsaved quantity/location changes of the detailed operations impact dynamically
+        the creation of new move lines (considering the real avaible quantity rather than DB data's).
+        """
+        warehouse = self.env.ref("stock.warehouse0")
+        product_lot = self.env['product.product'].create({
+            'name': 'Product Lot',
+            'is_storable': True,
+            'tracking': 'lot',
+        })
+        lot_1, lot_2, lot_3 = self.env['stock.lot'].create([
+            {'name': 'LOT001', 'product_id': product_lot.id, 'company_id': warehouse.company_id.id},
+            {'name': 'LOT002', 'product_id': product_lot.id, 'company_id': warehouse.company_id.id},
+            {'name': 'LOT003', 'product_id': product_lot.id, 'company_id': warehouse.company_id.id},
+        ])
+        self.env['stock.quant']._update_available_quantity(product_lot, warehouse.lot_stock_id, quantity=10, lot_id=lot_1)
+        self.env['stock.quant']._update_available_quantity(product_lot, warehouse.lot_stock_id, quantity=15, lot_id=lot_2)
+        self.env['stock.quant']._update_available_quantity(product_lot, warehouse.lot_stock_id, quantity=10, lot_id=lot_3)
+        partner = self.env['res.partner'].create({'name': 'Bob'})
+        delivery = self.picking_in = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.out_type_id.id,
+            'partner_id': partner.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'move_ids': [Command.create({
+                'name': product_lot.name,
+                'product_id': product_lot.id,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': self.ref('stock.stock_location_customers'),
+                'product_uom_qty': 20,
+            })]
+        })
+        delivery.action_confirm()
+        self.assertRecordValues(delivery.move_line_ids, [
+            {'lot_id': lot_1.id, 'quantity': 10.0},
+            {'lot_id': lot_2.id, 'quantity': 10.0},
+        ])
+        url = self._get_picking_url(delivery.id)
+        self.start_tour(url, 'test_add_new_line_in_detailled_op', login='admin', timeout=100)
+        self.assertRecordValues(delivery.move_line_ids.sorted("quantity"), [
+            {'quantity': 2.0, 'lot_id': lot_1.id},
+            {'quantity': 3.0, 'lot_id': lot_1.id},
+            {'quantity': 15.0, 'lot_id': lot_2.id},
+        ])
+
     def test_edit_existing_line(self):
         self.uom_unit = self.env.ref('uom.product_uom_unit')
         product_one = self.env['product.product'].create({

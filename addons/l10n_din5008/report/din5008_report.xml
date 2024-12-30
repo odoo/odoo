@@ -51,7 +51,7 @@
                     <table class="din_company_info table-borderless">
                         <tr>
                             <td>
-                                <div class="address">
+                                <div class="address" id="din5008_report_main_address">
                                     <t t-if="company.name">
                                         <span t-field="company.name"/>
                                     </t>
@@ -71,13 +71,6 @@
                                         <span>|</span> <span t-field="company.country_id.name"/>
                                     </t>
                                     <hr class="company_invoice_line" />
-                                    <t t-if="o and 'l10n_din5008_addresses' in o" t-set="address">
-                                        <address class="mb-0" t-field="o.partner_id.commercial_partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
-                                        <div t-if="o.partner_id.commercial_partner_id.vat" id="partner_vat_address_same_as_shipping">
-                                            <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
-                                            <t t-else="">Tax ID</t>: <span t-field="o.partner_id.commercial_partner_id.vat"/>
-                                        </div>
-                                    </t>
                                     <div t-if="address">
                                         <t t-out="address"/>
                                     </div>
@@ -228,32 +221,20 @@
 
                         <t t-set="different_partner_count" t-value="len({partner.id for partner in [o.partner_id.commercial_partner_id, o.partner_id, o.partner_shipping_id] if partner})"/>
                         <tr t-if="different_partner_count > 1">
-                            <t t-if="different_partner_count == 3">
-                                <td class="shipping_address">
-                                    <span class="fw-bold">Shipping Address:</span>
-                                    <address t-esc="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
-                                </td>
-                                <td class="shipping_address">
-                                    <span class="fw-bold">Invoicing Address:</span>
-                                    <address t-esc="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
-                                </td>
-                            </t>
-                            <t t-elif="commercial_partner == invoice_partner">
+                            <t t-if="delivery_partner and delivery_partner != commercial_partner">
                                 <td class="shipping_address">
                                     <span class="fw-bold">Shipping Address:</span>
                                     <address t-esc="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
                                 </td>
                             </t>
-                            <t t-elif="commercial_partner == delivery_partner">
+                            <t t-if="invoice_partner and invoice_partner != commercial_partner">
                                 <td class="shipping_address">
-                                    <span class="fw-bold">Invoicing Address:</span>
-                                    <address t-esc="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
-                                </td>
-                            </t>
-                            <t t-elif="invoice_partner == delivery_partner">
-                                <td class="shipping_address">
-                                    <span class="fw-bold">Invoicing and Shipping Address:</span>
-                                    <address t-esc="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                                    <span class="fw-bold">Beneficiary:</span>
+                                    <address class="mb-0" t-esc="o.commercial_partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                                    <div t-if="o.commercial_partner_id.vat">
+                                        <t t-if="o.commercial_partner_id.company_id.account_fiscal_country_id.vat_label" t-out="o.commercial_partner_id.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                        <t t-else="">Tax ID</t>: <span t-field="o.commercial_partner_id.vat"/>
+                                    </div>
                                 </td>
                             </t>
                         </tr>

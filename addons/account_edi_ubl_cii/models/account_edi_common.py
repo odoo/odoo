@@ -60,7 +60,7 @@ EAS_MAPPING = {
     'GB': {'9932': 'vat'},
     'GR': {'9933': 'vat'},
     'HR': {'9934': 'vat'},
-    'HU': {'9910': 'vat'},
+    'HU': {'9910': 'l10n_hu_eu_vat'},
     'IE': {'9935': 'vat'},
     'IS': {'0196': 'vat'},
     'IT': {'0211': 'vat', '0210': 'l10n_it_codice_fiscale'},
@@ -647,6 +647,20 @@ class AccountEdiCommon(models.AbstractModel):
             elif delivered_qty == 0:
                 quantity = price_subtotal / price_unit
 
+        # Start and End date (enterprise fields)
+        deferred_values = {}
+        start_date = end_date = None
+        if self.env['account.move.line']._fields.get('deferred_start_date'):
+            start_date_node = tree.find('./{*}InvoicePeriod/{*}StartDate')
+            end_date_node = tree.find('./{*}InvoicePeriod/{*}EndDate')
+            if start_date_node is not None and end_date_node is not None:  # there is a constraint forcing none or the two to be set
+                start_date = start_date_node.text
+                end_date = end_date_node.text
+            deferred_values = {
+                'deferred_start_date': start_date,
+                'deferred_end_date': end_date,
+            }
+
         return {
             # vals to be written on the document line
             'name': self._find_value(xpath_dict['name'], tree),
@@ -657,6 +671,7 @@ class AccountEdiCommon(models.AbstractModel):
             'discount': discount,
             'tax_nodes': self._get_tax_nodes(tree),  # see `_retrieve_taxes`
             'charges': charges,  # see `_retrieve_line_charges`
+            **deferred_values,
         }
 
     def _import_product(self, **product_vals):

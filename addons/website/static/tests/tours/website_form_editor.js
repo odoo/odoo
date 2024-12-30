@@ -489,7 +489,7 @@ registerWebsitePreviewTour("website_form_editor_tour", {
         trigger: '.dropdown:has([name="link_style_color"]) > button',
         run: "click",
     }, {
-        trigger: "[data-value=secondary]",
+        trigger: "[data-value=custom]",
         run: "click",
     }, {
         trigger: ".dropdown:has([name=link_style_shape]) > button",
@@ -505,7 +505,7 @@ registerWebsitePreviewTour("website_form_editor_tour", {
         run: "click",
     }, {
         content: "Check the resulting button",
-        trigger: ':iframe .s_website_form_send.btn.btn-sm.btn-secondary.rounded-circle',
+        trigger: ':iframe .s_website_form_send.btn.btn-sm.btn-custom.rounded-circle',
     },
     // Add a default value to a auto-fillable field.
     {
@@ -620,7 +620,7 @@ registerWebsitePreviewTour("website_form_editor_tour", {
      {
         content: "Write anything in C",
         trigger: `:iframe ${triggerFieldByLabel("field C")} input`,
-        run: "edit Mellon",
+        run: "edit Mellon && press Tab",
     }, {
         content: "Check that field B is visible, but field A is not",
         trigger: `:iframe .s_website_form:has(${triggerFieldByLabel("field B")}:visible)` +
@@ -921,6 +921,28 @@ registerWebsitePreviewTour('website_form_contactus_change_random_option', {
         run: "edit ** && click body",
     },
 ]));
+
+registerWebsitePreviewTour("website_form_nested_forms", {
+    url: "/my/account",
+    edition: true,
+},
+() => [
+    {
+        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        noPrepend: true,
+    },
+    {
+        trigger: `#oe_snippets .oe_snippet[name="Form"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
+        content: "Try to drag the form into another form",
+        run: "drag_and_drop :iframe #wrap .o_portal_details a",
+    },
+    {
+        content: "Check the form was not dropped into another form",
+        trigger:
+            ":iframe form[action='/my/account']:not(:has([data-snippet='s_website_form']))",
+        run: () => null,
+    },
+]);
 
 // Check that the editable form content is actually editable.
 registerWebsitePreviewTour("website_form_editable_content", {

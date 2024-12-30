@@ -1,7 +1,8 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
-import { useDropzone } from "@web/core/dropzone/dropzone_hook";
+import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { Picker, usePicker } from "@mail/core/common/picker";
+import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
@@ -133,12 +134,10 @@ export class Composer extends Component {
         });
         useExternalListener(window, "beforeunload", this.saveContent.bind(this));
         if (this.props.dropzoneRef) {
-            useDropzone(
-                this.props.dropzoneRef,
-                this.onDropFile,
-                "o-mail-Composer-dropzone",
-                () => this.allowUpload
-            );
+            useCustomDropzone(this.props.dropzoneRef, MailAttachmentDropzone, {
+                extraClass: "o-mail-Composer-dropzone",
+                onDrop: this.onDropFile,
+            }, () => this.allowUpload);
         }
         if (this.props.messageEdition) {
             this.props.messageEdition.composerOfThread = this;
@@ -534,10 +533,13 @@ export class Composer extends Component {
             mentionedChannels: this.props.composer.mentionedChannels,
             mentionedPartners: this.props.composer.mentionedPartners,
         });
-        const default_body = await prettifyMessageContent(body, validMentions);
+        const signature = this.store.self.signature;
+        const default_body = await prettifyMessageContent(body, validMentions) +
+            ((this.props.composer.emailAddSignature && signature) ? ("<br>" + signature) : "");
         const context = {
             default_attachment_ids: attachmentIds,
             default_body: "<div>" + default_body + "</div>", // as to not wrap in <p> by html_sanitize,
+            default_email_add_signature: false,
             default_model: this.thread.model,
             default_partner_ids:
                 this.props.type === "note"
@@ -648,6 +650,7 @@ export class Composer extends Component {
         const composer = toRaw(this.props.composer);
         return {
             attachments: composer.attachments || [],
+            emailAddSignature: composer.emailAddSignature,
             isNote: this.props.type === "note",
             mentionedChannels: composer.mentionedChannels || [],
             mentionedPartners: composer.mentionedPartners || [],
@@ -686,6 +689,7 @@ export class Composer extends Component {
         this.suggestion?.clearRawMentions();
         this.suggestion?.clearCannedResponses();
         this.props.messageToReplyTo?.cancel();
+        this.props.composer.emailAddSignature = true;
     }
 
     async editMessage() {
@@ -737,18 +741,32 @@ export class Composer extends Component {
 
     saveContent() {
         const composer = toRaw(this.props.composer);
-        const fullComposerContent =
-            document
-                .querySelector(".o_mail_composer_form_view .note-editable")
-                ?.innerText.replace(/(\t|\n)+/g, "\n") ?? composer.text;
-        browser.localStorage.setItem(composer.localId, fullComposerContent);
+        const editable = document.querySelector(".o_mail_composer_form_view .note-editable");
+        const config = {};
+        if (editable) {
+            Object.assign(config, {
+                emailAddSignature: false,
+                text: editable.innerText.replace(/(\t|\n)+/g, "\n")
+            });
+        } else {
+            Object.assign(config, {
+                emailAddSignature: true,
+                text: composer.text
+            });
+        }
+        browser.localStorage.setItem(composer.localId, JSON.stringify(config));
     }
 
     restoreContent() {
         const composer = toRaw(this.props.composer);
-        const fullComposerContent = browser.localStorage.getItem(composer.localId);
-        if (fullComposerContent) {
-            composer.text = fullComposerContent;
-        }
+        try {
+            const config = JSON.parse(browser.localStorage.getItem(composer.localId));
+            if (config.text) {
+                composer.emailAddSignature = config.emailAddSignature;
+                composer.text = config.text;
+            }
+        } catch {
+            browser.localStorage.removeItem(composer.localId);
+        };
     }
 }

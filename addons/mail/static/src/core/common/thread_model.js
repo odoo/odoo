@@ -931,6 +931,8 @@ export class Thread extends Record {
         this.store.chatHub.opened.unshift(cw);
         if (!isMobileOS()) {
             cw.focus();
+        } else {
+            this.markAsRead();
         }
         this.state = "open";
         cw.notifyState();

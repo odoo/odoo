@@ -722,6 +722,20 @@ describe("Toolbar", () => {
         );
     });
 
+    test("Remove format button should be available if selection contains formatted nodes among unformatted nodes", async () => {
+        const { el } = await setupEditor(`<p>this <b>is[ a UX</b> te]st.</p>`);
+        await waitFor(".o-we-toolbar");
+        expect(".o-we-toolbar").toHaveCount(1); // toolbar open
+        expect(".btn[name='remove_format']").toHaveCount(1); // remove format
+        expect(".btn[name='remove_format']").not.toHaveClass("disabled"); // remove format button should not be disabled
+
+        await click(".btn[name='remove_format']");
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
+        expect(".btn[name='remove_format']").toHaveClass("disabled"); // remove format button should now be disabled
+        expect(getContent(el)).toBe(`<p>this <b>is</b>[ a UX te]st.</p>`);
+    });
+
     test("Remove format button should be the last one in the decoration button group", async () => {
         await setupEditor("<p>[abc]</p>");
         await waitFor(".o-we-toolbar");
@@ -734,5 +748,25 @@ describe("Toolbar", () => {
         await waitFor(".o-we-toolbar");
         expect(".btn[name='remove_format']").toHaveCount(1);
         expect(".btn[name='remove_format'].disabled").toHaveCount(0);
+    });
+
+    test("Should remove background color of text within a fully selected table", async () => {
+        const { el } = await setupEditor(
+            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p><font style="background-color: rgb(255, 0, 0);">[abc</font></p></td><td class="o_selected_td"><p><br></p></td></tr></tbody></table><p>]<br></p>`
+        );
+        await removeFormatClick();
+        expect(getContent(el)).toBe(
+            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[abc</p></td><td class="o_selected_td"><p>\u200b</p></td></tr></tbody></table><p>]\u200b</p>`
+        );
+    });
+
+    test("Should remove background color of a table cell", async () => {
+        const { el } = await setupEditor(
+            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="background-color: rgb(255, 0, 0);" class="o_selected_td"><p>[<br></p></td><td style="background-color: rgb(255, 0, 0);" class="o_selected_td"><p>]<br></p></td></tr></tbody></table>`
+        );
+        await removeFormatClick();
+        expect(getContent(el)).toBe(
+            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="" class="o_selected_td"><p>[\u200b</p></td><td style="" class="o_selected_td"><p>]\u200b</p></td></tr></tbody></table>`
+        );
     });
 });

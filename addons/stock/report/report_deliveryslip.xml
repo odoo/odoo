@@ -218,7 +218,10 @@
             <t t-if="not description and description != ''">
                 <t t-set="description" t-value="move_line.move_id.description_picking"/>
             </t>
-            <p t-if="description !='' and description != move_line.product_id.name">
+            <p t-if="description != '' and
+                     description != move_line.product_id.display_name and
+                     description != move_line.product_id.name"
+            >
                 <span t-esc="description"/>
             </p>
         </td>

@@ -20,6 +20,8 @@
 }
 
 .o-mail-NotificationItem-avatarContainer {
+    height: 40px;
+    aspect-ratio: 1;
     margin-top: map-get($spacers, 1) / 2;
     margin-bottom: map-get($spacers, 1) / 2;
 
@@ -61,4 +63,10 @@
     color: darken($info, 5%);
     font-size: 0.5rem;
     left: map-get($spacers, 1);
+    top: 40px;
+    transform: translateY(-125%);
+
+    .o-mail-NotificationItem.o-small & {
+        left: map-get($spacers, 1) / 2;
+    }
 }

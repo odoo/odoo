@@ -17,7 +17,6 @@
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2024
 # Jussi Lehto <jussi@gulfeo.com>, 2024
 # Tommi Rintala <tommi.rintala@gmail.com>, 2024
-# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2024
 # Jukka Paulin <jukka.paulin@gmail.com>, 2024
 # Kim Asplund <kim.asplund@gmail.com>, 2024
 # Kari Lindgren <karisatu@gmail.com>, 2024
@@ -31,16 +30,17 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
 # Miku Laitinen <miku.laitinen@gmail.com>, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Martin Trigaux, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,11 +97,6 @@ msgstr "1 puhelinsoitto"
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
 msgstr "12 päivää / vuosi, mukaan lukien <br>6 valitsemaasi päivää."
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "12345678901"
-msgstr "12345678901"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -166,12 +161,12 @@ msgstr "<small><b>LUE</b></small>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"flex-shrink-0 ml8 me-2\">IP Addresses</span>"
-msgstr ""
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">IP-osoitteet</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"flex-shrink-0 ml8 me-2\">Sent Emails</span>"
-msgstr ""
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">Lähetetyt sähköpostit</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -323,6 +318,8 @@ msgstr "Vaatii toimenpiteitä"
 msgid ""
 "Activate Remote Work to let Employees specify where they are working from."
 msgstr ""
+"Aktivoi etätyö, jotta työntekijät voivat määrittää, mistä käsin he "
+"työskentelevät."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
@@ -380,6 +377,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Onboarding\", \"Offboarding\", ...)"
 msgstr ""
+"Toimintasuunnitelmien avulla voidaan määrittää luettelo toiminnoista vain muutamalla napsautuksella\n"
+"                    (esim. \"Onboarding\", \"Offboarding\", ...)"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_schedule
@@ -487,7 +486,7 @@ msgstr "Käytä"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_apprenticeship
 msgid "Apprenticeship"
-msgstr ""
+msgstr "Oppisopimuskoulutus"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -660,6 +659,11 @@ msgid "Bank Account"
 msgstr "Tilinumero"
 
 #. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Pankkitilit"
+
+#. module: hr
 #: model:ir.model,name:hr.model_base
 msgid "Base"
 msgstr "Pohja"
@@ -716,6 +720,9 @@ msgid ""
 "Categorize your Employees by type. This field also has an impact on "
 "contracts. Only Employees, Students and Trainee will have contract history."
 msgstr ""
+"Luokittele työntekijät tyypin mukaan. Tämä kenttä vaikuttaa myös "
+"sopimuksiin. Vain työntekijöillä, opiskelijoilla ja harjoittelijoilla on "
+"sopimushistoria."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
@@ -752,7 +759,7 @@ msgstr "Alaosastot"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Child departments"
-msgstr ""
+msgstr "Lastenosastot"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -956,7 +963,7 @@ msgstr "Luo uusi työskentelypaikka"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.mail_activity_plan_action
 msgid "Create an Activity Plan"
-msgstr ""
+msgstr "Luo toimintasuunnitelma"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1038,11 +1045,15 @@ msgid ""
 "Define the allowed IP to be displayed as Present. In case of multiple "
 "addresses, separate them by a coma."
 msgstr ""
+"Määritä sallittu IP-osoite, joka näytetään Läsnä olevana. Jos osoitteita on "
+"useita, erota ne toisistaan pilkulla."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Define the minimum number of sent emails to be displayed as Present."
 msgstr ""
+"Määritä lähetettyjen sähköpostiviestien vähimmäismäärä, joka näytetään "
+"Läsnä."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
@@ -1051,6 +1062,8 @@ msgid ""
 "Define the working schedule of the resource. If not set, the resource will "
 "have fully flexible working hours."
 msgstr ""
+"Määritä resurssin työaikataulu. Jos sitä ei määritetä, resurssilla on täysin"
+" joustavat työajat."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_ceo
@@ -1098,7 +1111,7 @@ msgstr "Osasto"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan__department_assignable
 msgid "Department Assignable"
-msgstr ""
+msgstr "Osasto on määritettävissä"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__name
@@ -1238,6 +1251,11 @@ msgid ""
 "                            Several activities are often organized all over the year, such as weekly\n"
 "                            sports sessions, team building events, monthly drink, and much more."
 msgstr ""
+"Jokaisella työntekijällä on mahdollisuus nähdä työnsä vaikutus.\n"
+"                            Voit antaa todellisen panoksen yrityksen menestykseen.\n"
+"                           <br>\n"
+"                            Usein järjestetään useita toimintoja ympäri vuoden, kuten viikoittaisia\n"
+"                            urheilutilaisuudet, tiiminrakennustapahtumat, kuukausittaiset juomat ja paljon muuta."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1329,7 +1347,7 @@ msgstr "Employee Name"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.mail_activity_plan_action
 msgid "Employee Plans"
-msgstr ""
+msgstr "Työntekijöiden suunnitelmat"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__employee_properties_definition
@@ -1638,7 +1656,7 @@ msgstr "HR-asetukset"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__has_department_manager_access
 msgid "Has Department Manager Access"
-msgstr ""
+msgstr "Osaston esimiehen pääsyoikeudet"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__has_message
@@ -1676,13 +1694,13 @@ msgstr "Etäisyys kotoa konttorille"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 #: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Home-Work Distance in Km"
-msgstr ""
+msgstr "Etäisyys kotoa konttorille kilometreinä"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__distance_home_work_unit
 #: model:ir.model.fields,field_description:hr.field_res_users__distance_home_work_unit
 msgid "Home-Work Distance unit"
-msgstr ""
+msgstr "Mittayksikkö etäisyydelle kotoa konttorille"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
@@ -1695,7 +1713,7 @@ msgstr "HR-kuvakkeen näyttö"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_manager_department_report
 msgid "Hr Manager Department Report"
-msgstr ""
+msgstr "Henkilöstöpäällikön osaston raportti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
@@ -1841,14 +1859,14 @@ msgstr "Väliaikainen"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_part_time
 msgid "Intern"
-msgstr ""
+msgstr "Työharjoittelija"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__is_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_flexible
 msgid "Is Flexible"
-msgstr ""
+msgstr "On joustava"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
@@ -1862,7 +1880,7 @@ msgstr "On seuraaja"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__is_fully_flexible
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_fully_flexible
 msgid "Is Fully Flexible"
-msgstr ""
+msgstr "On täysin joustava"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_manager
@@ -2084,11 +2102,6 @@ msgid "Manager of employee %s is not set."
 msgstr "Työntekijän %s esimiestä ei ole asetettu."
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Marc Demo"
-msgstr "Marc Demo"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
 #: model:ir.model.fields,field_description:hr.field_res_users__marital
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2271,7 +2284,7 @@ msgstr "Olisi etua, jos olisi"
 #: code:addons/hr/static/src/views/hr_graph_controller.xml:0
 #: code:addons/hr/static/src/views/hr_pivot_controller.xml:0
 msgid "No Data"
-msgstr ""
+msgstr "Ei tietoja"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
@@ -2333,7 +2346,7 @@ msgstr "Huollettavien lasten lukumäärä"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
 msgid "Number of Employees"
-msgstr ""
+msgstr "Työntekijöiden lukumäärä"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_employee
@@ -2388,6 +2401,10 @@ msgid ""
 "that loop is linked to a user.                        Please double-check "
 "that everyone reports to the correct manager."
 msgstr ""
+"Hups! Vaikuttaa, että tiimirakenteessasi on ongelma.                        "
+"Löysimme raportointisilmukan, eikä kukaan siinä ole yhteydessä käyttäjään."
+"                        Tarkista vielä kerran, että kaikki raportoivat "
+"oikealle esimiehelle."
 
 #. module: hr
 #. odoo-javascript
@@ -2426,7 +2443,7 @@ msgstr "Tuotteemme"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 msgid "Out of Working Hours"
-msgstr ""
+msgstr "Työajan ulkopuolella"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_out_of_working_hour
@@ -2436,7 +2453,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_out_of_working_hour
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__out_of_working_hour
 msgid "Out of Working hours"
-msgstr ""
+msgstr "Työajan ulkopuolella"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
@@ -2564,11 +2581,13 @@ msgid ""
 "Plan %(plan_names)s cannot use a department as it is used only for some HR "
 "plans."
 msgstr ""
+"Suunnitelmassa %(plan_names)s ei voida käyttää osastoa, koska sitä käytetään"
+" vain joissakin henkilöstösuunnitelmissa."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_schedule__plan_department_filterable
 msgid "Plan Department Filterable"
-msgstr ""
+msgstr "Suunnitteluosasto suodatettavissa"
 
 #. module: hr
 #. odoo-python
@@ -2623,12 +2642,12 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Condition"
-msgstr ""
+msgstr "Läsnäolon olosuhteet"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Display"
-msgstr ""
+msgstr "Läsnäolon näyttö"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2761,6 +2780,8 @@ msgid ""
 "Quickly find all the information you need for your employees such as contact"
 " data, job position, availability, etc."
 msgstr ""
+"Löydät nopeasti kaikki tarvitsemasi tiedot työntekijöistäsi, kuten "
+"yhteystiedot, työtehtävät, saatavuus jne."
 
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_be
@@ -2829,7 +2850,7 @@ msgstr "Liittyvät työntekijät"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__related_partners_count
 msgid "Related Partners Count"
-msgstr ""
+msgstr "Liittyvien kumppanien määrä"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -3038,15 +3059,10 @@ msgid "Social Security Number"
 msgstr "Sosiaaliturvatunnus"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Software Developer"
-msgstr "Ohjelmistokehittäjä"
-
-#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee_base.py:0
 msgid "Some employee already have a work contact"
-msgstr ""
+msgstr "Joillakin työntekijöillä on jo työpaikan yhteyshenkilö"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3105,7 +3121,7 @@ msgstr ""
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_statutaire
 msgid "Statutory"
-msgstr ""
+msgstr "Lakisääteinen"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -3137,6 +3153,8 @@ msgid ""
 "Structure Employees per department and have an overview of e.g.\n"
 "                    expenses, timesheets, time off, recruitment, etc."
 msgstr ""
+"Työntekijöiden rakenne osastoittain ja yleiskatsaus\n"
+"                    kulut, työaikataulut, vapaat, rekrytointi jne."
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_student
@@ -3196,7 +3214,9 @@ msgstr "Väliaikainen"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
-msgid "The Badge ID must be a sequence of digits."
+msgid ""
+"The Badge ID must be alphanumeric without any accents and no longer than 18 "
+"characters."
 msgstr ""
 
 #. module: hr
@@ -3237,7 +3257,7 @@ msgstr "The PIN-koodin pitää olla merkkijono."
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "The default working hours are set in configuration."
-msgstr ""
+msgstr "Oletusarvoiset työajat määritetään asetuksissa."
 
 #. module: hr
 #. odoo-python
@@ -3257,6 +3277,8 @@ msgid ""
 "The fields “%s”, which you are trying to read, are not available for "
 "employee public profiles."
 msgstr ""
+"Kentät \"%s\", joita yrität lukea, eivät ole käytettävissä työntekijöiden "
+"julkisissa profiileissa."
 
 #. module: hr
 #. odoo-python
@@ -3304,7 +3326,7 @@ msgstr "%(employee)sn työlupa päättyy %(date)s."
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_thesis
 msgid "Thesis"
-msgstr ""
+msgstr "Opinnäytetyö"
 
 #. module: hr
 #. odoo-python
@@ -3320,6 +3342,8 @@ msgid ""
 "This field is used in order to define in which timezone the employee will "
 "work."
 msgstr ""
+"Tätä kenttää käytetään määrittämään, missä aikavyöhykkeessä työntekijä "
+"työskentelee."
 
 #. module: hr
 #. odoo-javascript
@@ -3329,11 +3353,13 @@ msgid ""
 "This report gives you an overview of your employees based on the measures of"
 " your choice."
 msgstr ""
+"Tämä raportti antaa sinulle yleiskuvan työntekijöistäsi valitsemiesi "
+"toimenpiteiden perusteella."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "This setting block is utilized to manage the frontend design."
-msgstr ""
+msgstr "Tätä asetuslohkoa käytetään etusivun suunnittelun hallintaan."
 
 #. module: hr
 #. odoo-python
@@ -3352,7 +3378,7 @@ msgstr "Aikavyöhyke"
 #: model:digest.tip,name:hr.digest_tip_hr_0
 #: model_terms:digest.tip,tip_description:hr.digest_tip_hr_0
 msgid "Tip: Where's Bryan?"
-msgstr ""
+msgstr "Vihje: Missä Bryan on?"
 
 #. module: hr
 #. odoo-python
@@ -3600,7 +3626,7 @@ msgstr "Työpaikan sijainti"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_name
 #: model:ir.model.fields,field_description:hr.field_res_users__work_location_name
 msgid "Work Location Name"
-msgstr ""
+msgstr "Työn sijainnin nimi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_location_type
@@ -3608,7 +3634,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_type
 #: model:ir.model.fields,field_description:hr.field_res_users__work_location_type
 msgid "Work Location Type"
-msgstr ""
+msgstr "Työn sijainnin tyyppi"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_work_location_action
@@ -3682,7 +3708,7 @@ msgstr "Työaikataulut"
 msgid ""
 "You are not allowed to create an employee because the user does not have "
 "access rights for %s"
-msgstr ""
+msgstr "Et voi luoda työntekijää, koska käyttäjällä ei ole käyttöoikeuksia %s"
 
 #. module: hr
 #. odoo-python
@@ -3774,7 +3800,7 @@ msgstr "osasto"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Building 2, Remote, etc."
-msgstr ""
+msgstr "esim. rakennus 2, Etä jne."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -3790,17 +3816,17 @@ msgstr "esim. Myyntipäällikkö"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Summarize the position in one or two lines..."
-msgstr ""
+msgstr "esim. Tiivistä tehtävä yhteen tai kahteen riviin...."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. johndoe@example.com"
-msgstr ""
+msgstr "esim. johndoe@example.com"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. myprivateemail@example.com"
-msgstr ""
+msgstr "esim. myprivateemail@example.com"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__distance_home_work_unit__kilometers

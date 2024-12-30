@@ -41,7 +41,7 @@ def _get_notification_message(proxy_state):
 # MOCKED FUNCTIONS
 # -------------------------------------------------------------------------
 
-def _mock_make_request(func, self, *args, **kwargs):
+def _mock_call_peppol_proxy(func, self, *args, **kwargs):
 
     def _mock_get_all_documents(user, args, kwargs):
         if not user.env['account.move'].search_count([
@@ -74,6 +74,9 @@ def _mock_make_request(func, self, *args, **kwargs):
     return {
         'ack': lambda _user, _args, _kwargs: {},
         'activate_participant': lambda _user, _args, _kwargs: {},
+        'register_sender': lambda _user, _args, _kwargs: {},
+        'register_receiver': lambda _user, _args, _kwargs: {},
+        'register_sender_as_receiver': lambda _user, _args, _kwargs: {},
         'get_all_documents': _mock_get_all_documents,
         'get_document': _mock_get_document,
         'participant_status': lambda _user, _args, _kwargs: {'peppol_state': 'receiver'},
@@ -84,11 +87,14 @@ def _mock_make_request(func, self, *args, **kwargs):
 def _mock_button_verify_partner_endpoint(func, self, *args, **kwargs):
     self.ensure_one()
     old_value = self.peppol_verification_state
+    company = kwargs.get('company') or self.env.company
     endpoint, eas, edi_format = self.peppol_endpoint, self.peppol_eas, self.invoice_edi_format
     if endpoint and eas and edi_format:
-        self.peppol_verification_state = 'valid'
-        self.invoice_sending_method = 'peppol'
-        self._log_verification_state_update(self.env.company, old_value, 'valid')
+        self.with_company(company).peppol_verification_state = 'valid'
+        self.with_company(company).invoice_sending_method = 'peppol'
+        self._log_verification_state_update(company, old_value, 'valid')
+    else:
+        self.with_company(company).peppol_verification_state = 'not_valid'
 
 
 def _mock_get_peppol_verification_state(func, self, *args, **kwargs):
@@ -170,7 +176,7 @@ def _mock_update_user_data(func, self, *args, **kwargs):
 
 
 def _mock_migrate_participant(func, self, *args, **kwargs):
-    self.account_peppol_migration_key = 'I9cz9yw*ruDM%4VSj94s'
+    self.company_id.account_peppol_migration_key = 'demo_migration_key'
 
 
 def _mock_check_company_on_peppol(func, self, *args, **kwargs):
@@ -178,15 +184,16 @@ def _mock_check_company_on_peppol(func, self, *args, **kwargs):
 
 
 _demo_behaviour = {
-    '_make_request': _mock_make_request,
+    '_call_peppol_proxy': _mock_call_peppol_proxy,
     'button_account_peppol_check_partner_endpoint': _mock_button_verify_partner_endpoint,
     '_get_peppol_verification_state': _mock_get_peppol_verification_state,
+    '_peppol_migrate_registration': _mock_migrate_participant,
     'button_peppol_sender_registration': _mock_user_creation,
     'button_deregister_peppol_participant': _mock_deregister_participant,
-    'button_migrate_peppol_registration': _mock_migrate_participant,
     'button_update_peppol_user_data': _mock_update_user_data,
     'button_peppol_smp_registration': _mock_receiver_registration,
     'button_check_peppol_verification_code': _mock_check_verification_code,
+    'button_register_peppol_participant': _mock_user_creation,
     '_check_company_on_peppol': _mock_check_company_on_peppol,
 }
 
@@ -199,42 +206,9 @@ def handle_demo(func, self, *args, **kwargs):
     """ This decorator is used on methods that should be mocked in demo mode.
 
     First handle the decision: "Are we in demo mode?", and conditionally decide which function to
-    execute. Whether we are in demo mode depends on the edi_mode of the EDI user, but the EDI user
-    is accessible in different ways depending on the model the function is called from and in some
-    contexts it might not yet exist, in which case demo mode should instead depend on the content
-    of the "account_peppol.edi.mode" config param.
+    execute.
     """
-    def get_demo_mode_account_edi_proxy_client_user(self, args, kwargs):
-        if self.id:
-            return self.edi_mode == 'demo' and self.proxy_type == 'peppol'
-        demo_param = self.env['ir.config_parameter'].get_param('account_peppol.edi.mode') == 'demo'
-        if len(args) > 1 and 'proxy_type' in args[1]:
-            return demo_param and args[1]['proxy_type'] == 'peppol'
-        return demo_param
-
-    def get_demo_mode_res_config_settings(self, args, kwargs):
-        if self.account_peppol_edi_user:
-            return self.account_peppol_edi_user.edi_mode == 'demo'
-        return self.env['ir.config_parameter'].get_param('account_peppol.edi.mode') == 'demo'
-
-    def get_demo_mode_peppol_registration(self, args, kwargs):
-        if self.edi_user_id:
-            return self.edi_user_id.edi_mode == 'demo'
-        return self.env['ir.config_parameter'].get_param('account_peppol.edi.mode') == 'demo'
-
-    def get_demo_mode_res_partner(self, args, kwargs):
-        peppol_user = self.env.company.sudo().account_edi_proxy_client_ids.filtered(lambda user: user.proxy_type == 'peppol')
-        if peppol_user:
-            return peppol_user.edi_mode == 'demo'
-        return False
-
-    get_demo_mode = {
-        'account_edi_proxy_client.user': get_demo_mode_account_edi_proxy_client_user,
-        'res.config.settings': get_demo_mode_res_config_settings,
-        'res.partner': get_demo_mode_res_partner,
-        'peppol.registration': get_demo_mode_peppol_registration,
-    }
-    demo_mode = get_demo_mode.get(self._name) and get_demo_mode[self._name](self, args, kwargs) or False
+    demo_mode = self.env.company._get_peppol_edi_mode() == 'demo'
 
     if not demo_mode or modules.module.current_test:
         return func(self, *args, **kwargs)

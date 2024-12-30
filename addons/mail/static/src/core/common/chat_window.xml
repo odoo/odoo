@@ -17,7 +17,7 @@
                 <div class="d-flex text-truncate">
                     <Dropdown position="'left-start'" onStateChanged="isOpen => this.onActionsMenuStateChanged(isOpen)" menuClass="'d-flex flex-column py-0'">
                         <button
-                            class="o-mail-ChatWindow-command o-actionsMenu btn rounded-0 d-flex align-items-center p-1 mx-1 my-0 w-100 rounded-end-0"
+                            class="o-mail-ChatWindow-command o-actionsMenu btn rounded-0 d-flex align-items-center px-2 py-1 my-0 w-100 rounded-end-0"
                             t-att-class="{ 'rounded-top-3': !ui.isSmall, 'o-active': state.actionsMenuOpened, 'o-hover': actionsMenuButtonHover.isHover and !parentChannelHover.isHover }"
                             t-att-disabled="state.editingName or state.actionsDisabled"
                             t-att-title="actionsMenuTitleText"
@@ -27,7 +27,7 @@
                             <i t-if="!state.editingName" class="fa fa-fw fa-caret-down"/>
                         </button>
                         <t t-set-slot="content">
-                            <t t-set="quickActionsInDropdown" t-value="partitionedActions.quick.slice(ui.isSmall ? 2 : 3)"/>
+                            <t t-set="quickActionsInDropdown" t-value="partitionedActions.quick.slice(ui.isSmall ? 2 : 4)"/>
                             <t t-if="quickActionsInDropdown.length > 0">
                                 <t t-set="groupBefore" t-value="true"/>
                                 <t t-foreach="quickActionsInDropdown" t-as="action" t-key="action.id">
@@ -78,8 +78,8 @@
             <div t-if="thread and thread.importantCounter > 0" class="o-mail-ChatWindow-counter mx-1 badge rounded-pill fw-bold o-discuss-badge" t-ref="needactionCounter">
                 <t t-out="thread.importantCounter"/>
             </div>
-            <div class="o-mail-ChatWindow-quickActions d-flex flex-shrink-0 me-2">
-                <t t-foreach="partitionedActions.quick.slice(0, ui.isSmall ? 2 : 3).reverse()" t-as="action" t-key="action.id" t-call="mail.ChatWindow.quickAction">
+            <div class="o-mail-ChatWindow-quickActions d-flex flex-shrink-0 me-2 o-gap-0_5">
+                <t t-foreach="partitionedActions.quick.slice(0, ui.isSmall ? 2 : 4).reverse()" t-as="action" t-key="action.id" t-call="mail.ChatWindow.quickAction">
                     <t t-if="action_last" t-set="itemClass" t-value="ui.isSmall ? 'mx-2' : ''"/>
                 </t>
             </div>
@@ -116,7 +116,7 @@
 </t>
 
 <t t-name="mail.ChatWindow.quickAction">
-    <button class="o-mail-ChatWindow-command btn d-flex opacity-100-hover align-items-center" style="aspect-ratio: 1;" t-att-class="{ 'border o-small': ui.isSmall, 'opacity-25': !ui.isSmall }" t-attf-class="{{ itemClass }}" t-att-title="action.name" t-att-disabled="state.actionsDisabled" t-on-click.stop="() => action.onSelect()"><i t-att-class="ui.isSmall ? 'fa-lg' : ''" t-attf-class="{{ action.icon }}"/></button>
+    <button class="o-mail-ChatWindow-command btn d-flex opacity-100-hover align-items-center" style="aspect-ratio: 1;" t-att-class="{ 'border border-secondary rounded-circle o-small p-2 my-1': ui.isSmall, 'opacity-25': !ui.isSmall }" t-attf-class="{{ itemClass }}" t-att-title="action.name" t-att-disabled="state.actionsDisabled" t-on-click.stop="() => action.onSelect()"><i t-att-class="ui.isSmall ? 'fa-lg' : ''" t-attf-class="{{ action.icon }}"/></button>
 </t>
 
 <t t-name="mail.ChatWindow.dropdownAction">

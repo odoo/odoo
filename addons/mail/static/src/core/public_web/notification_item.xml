@@ -7,36 +7,36 @@
             'o-important': props.muted === 0,
             'text-muted border-transparent': props.muted === 1,
             'opacity-50 border-transparent': props.muted === 2,
-            'py-2 o-small': ui.isSmall,
+            'p-2 o-small': ui.isSmall,
             'border-top-0': props.first,
-            'px-3 py-2': !ui.isSmall,
+            'ps-3 pe-2 py-2': !ui.isSmall,
             'o-active': props.isActive,
         }">
-            <span class="o-mail-NotificationItem-unreadIndicator position-absolute" t-att-class="{ 'opacity-0': props.muted, 'opacity-50': !props.muted }"><i class="fa fa-circle"/></span>
-            <div class="o-mail-NotificationItem-avatarContainer position-relative bg-inherit flex-shrink-0" t-att-class="{ 'o-small': ui.isSmall }" style="width:40px;height:40px;">
+            <span class="o-mail-NotificationItem-unreadIndicator position-absolute" t-att-class="{ 'opacity-0': props.muted, 'opacity-75': !props.muted }"><i class="fa fa-circle"/></span>
+            <div class="o-mail-NotificationItem-avatarContainer position-relative bg-inherit flex-shrink-0 align-self-start" t-att-class="{ 'o-small': ui.isSmall }">
                 <img class="o_avatar w-100 h-100 rounded" alt="Notification Item Image" t-att-src="props.iconSrc"/>
                 <t t-slot="icon"/>
             </div>
             <div class="d-flex flex-column flex-grow-1 align-self-start overflow-auto">
                 <div class="d-flex text-nowrap">
-                    <span class="o-mail-NotificationItem-name text-truncate fw-bold" t-att-class="{ 'fw-bold': props.muted, 'fw-bolder': !props.muted }">
+                    <span class="o-mail-NotificationItem-name fw-bold" t-att-class="{ 'fw-bold': props.muted, 'fw-bolder': !props.muted }" t-att-style="props.nameMaxLine !== undefined ? webkitLineClamp(props.nameMaxLine) : ''">
                         <t t-slot="name"/>
                     </span>
                     <span class="flex-grow-1"/>
-                    <small t-if="props.datetime" class="o-mail-NotificationItem-date ms-2 opacity-75" t-att-class="{ 'fw-bolder': !props.muted, 'text-muted': props.muted }" t-att-title="props.datetime?.toLocaleString(DateTime.DATETIME_SHORT) ?? ''">
-                        <t t-esc="dateText"/>
-                    </small>
-                </div>
-                <div class="d-flex">
-                    <div class="o-mail-NotificationItem-text text-truncate opacity-75" t-att-class="{ 'fw-bold': !props.muted }">
-                        <t t-slot="body-icon"/>
-                        <t t-if="props.body" t-esc="props.body" name="notificationBody"/>
-                    </div>
-                    <div class="flex-grow-1"/>
                     <div class="d-flex align-items-center">
                         <span t-if="props.counter > 0 and !rootHover.isHover" t-attf-class="o-mail-NotificationItem-badge o-discuss-badge {{props.muted === 2 ? 'o-muted' : ''}} d-flex align-items-center justify-content-center m-0 badge rounded-pill fw-bold o-mail-NotificationItem-counter"><t t-esc="props.counter"/></span>
                         <span t-if="props.hasMarkAsReadButton and rootHover.isHover" class="o-mail-NotificationItem-badge o-discuss-badgeShape text-success d-flex align-items-center justify-content-center m-0 badge rounded-pill fw-bold o-mail-NotificationItem-markAsRead fa fa-check text-600 opacity-75 opacity-100-hover cursor-pointer" title="Mark As Read" t-ref="markAsRead"/>
                     </div>
+                </div>
+                <div class="d-flex">
+                    <div class="o-mail-NotificationItem-text opacity-75" t-att-class="{ 'fw-bold': !props.muted, 'text-truncate': props.textTruncate, 'text-start': !props.textTruncate  }" t-att-style="props.textMaxLine !== undefined ? webkitLineClamp(props.textMaxLine) : ''">
+                        <t t-slot="body-icon"/>
+                        <t t-if="props.body" t-esc="props.body" name="notificationBody"/>
+                    </div>
+                    <div class="flex-grow-1"/>
+                    <small t-if="props.datetime" class="o-mail-NotificationItem-date ms-2 me-1 opacity-75 flex-shrink-0 align-self-end" t-att-class="{ 'fw-bold': !props.muted }" t-att-title="props.datetime?.toLocaleString(DateTime.DATETIME_SHORT) ?? ''">
+                        <t t-esc="dateText"/>
+                    </small>
                 </div>
             </div>
             <t t-if="props.slots and props.slots.requestContent">

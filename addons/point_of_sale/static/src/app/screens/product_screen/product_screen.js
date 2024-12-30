@@ -359,15 +359,19 @@ export class ProductScreen extends Component {
             ...this.pos.session._pos_special_products_ids,
         ];
 
-        list = list
-            .filter(
-                (product) => !excludedProductIds.includes(product.id) && product.available_in_pos
-            )
-            .slice(0, 100);
+        const filteredList = [];
+        for (const product of list) {
+            if (filteredList.length >= 100) {
+                break;
+            }
+            if (!excludedProductIds.includes(product.id) && product.available_in_pos) {
+                filteredList.push(product);
+            }
+        }
 
         return this.searchWord !== ""
-            ? list
-            : list.sort((a, b) => a.display_name.localeCompare(b.display_name));
+            ? filteredList
+            : filteredList.sort((a, b) => a.display_name.localeCompare(b.display_name));
     }
 
     getProductsBySearchWord(searchWord) {

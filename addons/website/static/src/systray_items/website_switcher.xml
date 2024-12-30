@@ -18,7 +18,7 @@
                     <DropdownItem
                         onSelected="element.callback"
                         class="element.class"
-                        attrs="!element.domain ? {'data-tooltip': tooltipValue, 'data-tooltip-position': 'left', 'data-website-id': element.id} : {'data-website-id': element.id}">
+                        attrs="element.dataset">
                         <t t-if="!element.domain">
                             <span class="fa fa-warning me-2 text-warning"/>
                         </t>

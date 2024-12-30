@@ -78,8 +78,11 @@ class PaymentTransaction(models.Model):
             "Sending '/checkout/orders' request for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(payload)
         )
+        idempotency_key = payment_utils.generate_idempotency_key(
+            self, scope='payment_request_order'
+        )
         order_data = self.provider_id._paypal_make_request(
-            '/v2/checkout/orders', json_payload=payload
+            '/v2/checkout/orders', json_payload=payload, idempotency_key=idempotency_key
         )
         _logger.info(
             "Response of '/checkout/orders' request for transaction with reference %s:\n%s",

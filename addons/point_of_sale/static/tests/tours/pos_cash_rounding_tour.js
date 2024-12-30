@@ -3,6 +3,7 @@ import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
+import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import { registry } from "@web/core/registry";
 
 registry
@@ -13,6 +14,7 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
+                // Order.
                 ProductScreen.addOrderline("random_product", "1"),
                 ProductScreen.clickPartnerButton(),
                 ProductScreen.clickCustomer("AAAAAA"),
@@ -30,6 +32,28 @@ registry
                 ReceiptScreen.receiptToPayAmountIs("15.70"),
                 ReceiptScreen.receiptChangeAmountIsNotThere(),
                 ReceiptScreen.clickNextOrder(),
+
+                // Refund.
+                Chrome.clickMenuOption("Orders"),
+                TicketScreen.selectFilter("All active orders"),
+                TicketScreen.selectFilter("Paid"),
+                TicketScreen.selectOrder("-0001"),
+                TicketScreen.confirmRefund(),
+
+                ProductScreen.clickPayButton(),
+
+                PaymentScreen.totalIs("15.70"),
+                PaymentScreen.clickPaymentMethod("Cash"),
+                PaymentScreen.remainingIs("0.0"),
+
+                PaymentScreen.clickInvoiceButton(),
+                PaymentScreen.clickValidate(),
+
+                ReceiptScreen.receiptAmountTotalIs("-15.72"),
+                ReceiptScreen.receiptRoundingAmountIs("0.02"),
+                ReceiptScreen.receiptToPayAmountIs("-15.70"),
+                ReceiptScreen.receiptChangeAmountIsNotThere(),
+                ReceiptScreen.clickNextOrder(),
             ].flat(),
     });
 
@@ -43,6 +67,7 @@ registry
                     Chrome.startPoS(),
                     Dialog.confirm("Open Register"),
 
+                    // Order.
                     ProductScreen.addOrderline("random_product", "1"),
                     ProductScreen.clickPartnerButton(),
                     ProductScreen.clickCustomer("AAAAAA"),
@@ -50,9 +75,7 @@ registry
 
                     PaymentScreen.totalIs("15.70"),
                     PaymentScreen.clickPaymentMethod("Bank"),
-                    PaymentScreen.clickNumpad(". 6"),
-                    PaymentScreen.remainingIs("15.10"),
-                    PaymentScreen.clickNumpad("8"),
+                    PaymentScreen.clickNumpad(". 6 8"),
                     PaymentScreen.fillPaymentLineAmountMobile("Bank", "0.68"),
                     PaymentScreen.remainingIs("15.02"),
                     PaymentScreen.clickPaymentMethod("Cash"),
@@ -64,6 +87,32 @@ registry
                     ReceiptScreen.receiptAmountTotalIs("15.72"),
                     ReceiptScreen.receiptRoundingAmountIs("0.01"),
                     ReceiptScreen.receiptToPayAmountIs("15.73"),
+                    ReceiptScreen.receiptChangeAmountIsNotThere(),
+                    ReceiptScreen.clickNextOrder(),
+
+                    // Refund.
+                    Chrome.clickMenuOption("Orders"),
+                    TicketScreen.selectFilter("All active orders"),
+                    TicketScreen.selectFilter("Paid"),
+                    TicketScreen.selectOrder("-0001"),
+                    TicketScreen.confirmRefund(),
+
+                    ProductScreen.clickPayButton(),
+
+                    PaymentScreen.totalIs("-15.70"),
+                    PaymentScreen.clickPaymentMethod("Bank"),
+                    PaymentScreen.clickNumpad("+/- . 6 8"),
+                    PaymentScreen.fillPaymentLineAmountMobile("Bank", "0.68"),
+                    PaymentScreen.remainingIs("-15.02"),
+                    PaymentScreen.clickPaymentMethod("Cash"),
+                    PaymentScreen.remainingIs("0.0"),
+
+                    PaymentScreen.clickInvoiceButton(),
+                    PaymentScreen.clickValidate(),
+
+                    ReceiptScreen.receiptAmountTotalIs("-15.72"),
+                    ReceiptScreen.receiptRoundingAmountIs("-0.01"),
+                    ReceiptScreen.receiptToPayAmountIs("-15.73"),
                     ReceiptScreen.receiptChangeAmountIsNotThere(),
                     ReceiptScreen.clickNextOrder(),
                 ].flat(),
@@ -78,6 +127,7 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
+                // Order.
                 ProductScreen.addOrderline("random_product", "1"),
                 ProductScreen.clickPartnerButton(),
                 ProductScreen.clickCustomer("AAAAAA"),
@@ -85,9 +135,7 @@ registry
 
                 PaymentScreen.totalIs("15.70"),
                 PaymentScreen.clickPaymentMethod("Bank"),
-                PaymentScreen.clickNumpad(". 6"),
-                PaymentScreen.remainingIs("15.10"),
-                PaymentScreen.clickNumpad("7"),
+                PaymentScreen.clickNumpad(". 6 7"),
                 PaymentScreen.fillPaymentLineAmountMobile("Bank", "0.67"),
                 PaymentScreen.remainingIs("15.03"),
                 PaymentScreen.clickPaymentMethod("Cash"),
@@ -97,6 +145,32 @@ registry
                 PaymentScreen.clickValidate(),
 
                 ReceiptScreen.receiptAmountTotalIs("15.72"),
+                ReceiptScreen.receiptRoundingAmountIsNotThere(),
+                ReceiptScreen.receiptToPayAmountIsNotThere(),
+                ReceiptScreen.receiptChangeAmountIsNotThere(),
+                ReceiptScreen.clickNextOrder(),
+
+                // Refund.
+                Chrome.clickMenuOption("Orders"),
+                TicketScreen.selectFilter("All active orders"),
+                TicketScreen.selectFilter("Paid"),
+                TicketScreen.selectOrder("-0001"),
+                TicketScreen.confirmRefund(),
+
+                ProductScreen.clickPayButton(),
+
+                PaymentScreen.totalIs("-15.70"),
+                PaymentScreen.clickPaymentMethod("Bank"),
+                PaymentScreen.clickNumpad("+/- . 6 7"),
+                PaymentScreen.fillPaymentLineAmountMobile("Bank", "-0.67"),
+                PaymentScreen.remainingIs("-15.03"),
+                PaymentScreen.clickPaymentMethod("Cash"),
+                PaymentScreen.remainingIs("0.0"),
+
+                PaymentScreen.clickInvoiceButton(),
+                PaymentScreen.clickValidate(),
+
+                ReceiptScreen.receiptAmountTotalIs("-15.72"),
                 ReceiptScreen.receiptRoundingAmountIsNotThere(),
                 ReceiptScreen.receiptToPayAmountIsNotThere(),
                 ReceiptScreen.receiptChangeAmountIsNotThere(),
@@ -114,6 +188,7 @@ registry
                     Chrome.startPoS(),
                     Dialog.confirm("Open Register"),
 
+                    // Order.
                     ProductScreen.addOrderline("random_product", "1"),
                     ProductScreen.clickPartnerButton(),
                     ProductScreen.clickCustomer("AAAAAA"),
@@ -121,9 +196,7 @@ registry
 
                     PaymentScreen.totalIs("15.70"),
                     PaymentScreen.clickPaymentMethod("Bank"),
-                    PaymentScreen.clickNumpad(". 6"),
-                    PaymentScreen.remainingIs("15.10"),
-                    PaymentScreen.clickNumpad("8"),
+                    PaymentScreen.clickNumpad(". 6 8"),
                     PaymentScreen.fillPaymentLineAmountMobile("Bank", "0.68"),
                     PaymentScreen.remainingIs("15.02"),
                     PaymentScreen.clickPaymentMethod("Cash"),
@@ -135,6 +208,32 @@ registry
                     ReceiptScreen.receiptAmountTotalIs("15.72"),
                     ReceiptScreen.receiptRoundingAmountIs("-0.04"),
                     ReceiptScreen.receiptToPayAmountIs("15.68"),
+                    ReceiptScreen.receiptChangeAmountIsNotThere(),
+                    ReceiptScreen.clickNextOrder(),
+
+                    // Refund.
+                    Chrome.clickMenuOption("Orders"),
+                    TicketScreen.selectFilter("All active orders"),
+                    TicketScreen.selectFilter("Paid"),
+                    TicketScreen.selectOrder("-0001"),
+                    TicketScreen.confirmRefund(),
+
+                    ProductScreen.clickPayButton(),
+
+                    PaymentScreen.totalIs("-15.70"),
+                    PaymentScreen.clickPaymentMethod("Bank"),
+                    PaymentScreen.clickNumpad("+/- . 6 8"),
+                    PaymentScreen.fillPaymentLineAmountMobile("Bank", "-0.68"),
+                    PaymentScreen.remainingIs("-15.02"),
+                    PaymentScreen.clickPaymentMethod("Cash"),
+                    PaymentScreen.remainingIs("0.0"),
+
+                    PaymentScreen.clickInvoiceButton(),
+                    PaymentScreen.clickValidate(),
+
+                    ReceiptScreen.receiptAmountTotalIs("-15.72"),
+                    ReceiptScreen.receiptRoundingAmountIs("0.04"),
+                    ReceiptScreen.receiptToPayAmountIs("-15.68"),
                     ReceiptScreen.receiptChangeAmountIsNotThere(),
                     ReceiptScreen.clickNextOrder(),
                 ].flat(),
@@ -149,6 +248,7 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
+                // Order.
                 ProductScreen.addOrderline("random_product", "1"),
                 ProductScreen.clickPartnerButton(),
                 ProductScreen.clickCustomer("AAAAAA"),
@@ -156,9 +256,7 @@ registry
 
                 PaymentScreen.totalIs("15.75"),
                 PaymentScreen.clickPaymentMethod("Bank"),
-                PaymentScreen.clickNumpad(". 6"),
-                PaymentScreen.remainingIs("15.15"),
-                PaymentScreen.clickNumpad("4"),
+                PaymentScreen.clickNumpad(". 6 4"),
                 PaymentScreen.fillPaymentLineAmountMobile("Bank", "0.64"),
                 PaymentScreen.remainingIs("15.11"),
                 PaymentScreen.clickPaymentMethod("Cash"),
@@ -172,6 +270,32 @@ registry
                 ReceiptScreen.receiptToPayAmountIs("15.74"),
                 ReceiptScreen.receiptChangeAmountIsNotThere(),
                 ReceiptScreen.clickNextOrder(),
+
+                // Refund.
+                Chrome.clickMenuOption("Orders"),
+                TicketScreen.selectFilter("All active orders"),
+                TicketScreen.selectFilter("Paid"),
+                TicketScreen.selectOrder("-0001"),
+                TicketScreen.confirmRefund(),
+
+                ProductScreen.clickPayButton(),
+
+                PaymentScreen.totalIs("-15.75"),
+                PaymentScreen.clickPaymentMethod("Bank"),
+                PaymentScreen.clickNumpad("+/- . 6 4"),
+                PaymentScreen.fillPaymentLineAmountMobile("Bank", "-0.64"),
+                PaymentScreen.remainingIs("-15.11"),
+                PaymentScreen.clickPaymentMethod("Cash"),
+                PaymentScreen.remainingIs("0.0"),
+
+                PaymentScreen.clickInvoiceButton(),
+                PaymentScreen.clickValidate(),
+
+                ReceiptScreen.receiptAmountTotalIs("-15.72"),
+                ReceiptScreen.receiptRoundingAmountIs("-0.02"),
+                ReceiptScreen.receiptToPayAmountIs("-15.74"),
+                ReceiptScreen.receiptChangeAmountIsNotThere(),
+                ReceiptScreen.clickNextOrder(),
             ].flat(),
     });
 
@@ -183,6 +307,7 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
+                // Order.
                 ProductScreen.addOrderline("random_product", "1"),
                 ProductScreen.clickPartnerButton(),
                 ProductScreen.clickCustomer("AAAAAA"),
@@ -200,6 +325,28 @@ registry
                 ReceiptScreen.receiptToPayAmountIs("15.70"),
                 ReceiptScreen.receiptChangeAmountIsNotThere(),
                 ReceiptScreen.clickNextOrder(),
+
+                // Refund.
+                Chrome.clickMenuOption("Orders"),
+                TicketScreen.selectFilter("All active orders"),
+                TicketScreen.selectFilter("Paid"),
+                TicketScreen.selectOrder("-0001"),
+                TicketScreen.confirmRefund(),
+
+                ProductScreen.clickPayButton(),
+
+                PaymentScreen.totalIs("-15.72"),
+                PaymentScreen.clickPaymentMethod("Cash"),
+                PaymentScreen.remainingIs("0.0"),
+
+                PaymentScreen.clickInvoiceButton(),
+                PaymentScreen.clickValidate(),
+
+                ReceiptScreen.receiptAmountTotalIs("-15.72"),
+                ReceiptScreen.receiptRoundingAmountIs("0.02"),
+                ReceiptScreen.receiptToPayAmountIs("-15.70"),
+                ReceiptScreen.receiptChangeAmountIsNotThere(),
+                ReceiptScreen.clickNextOrder(),
             ].flat(),
     });
 
@@ -211,6 +358,7 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
+                // Order.
                 ProductScreen.addOrderline("random_product", "1"),
                 ProductScreen.clickPartnerButton(),
                 ProductScreen.clickCustomer("AAAAAA"),
@@ -218,9 +366,7 @@ registry
 
                 PaymentScreen.totalIs("15.72"),
                 PaymentScreen.clickPaymentMethod("Bank"),
-                PaymentScreen.clickNumpad(". 6"),
-                PaymentScreen.remainingIs("15.12"),
-                PaymentScreen.clickNumpad("8"),
+                PaymentScreen.clickNumpad(". 6 8"),
                 PaymentScreen.fillPaymentLineAmountMobile("Bank", "0.68"),
                 PaymentScreen.remainingIs("15.04"),
                 PaymentScreen.clickPaymentMethod("Cash"),
@@ -234,6 +380,32 @@ registry
                 ReceiptScreen.receiptToPayAmountIs("15.73"),
                 ReceiptScreen.receiptChangeAmountIsNotThere(),
                 ReceiptScreen.clickNextOrder(),
+
+                // Refund.
+                Chrome.clickMenuOption("Orders"),
+                TicketScreen.selectFilter("All active orders"),
+                TicketScreen.selectFilter("Paid"),
+                TicketScreen.selectOrder("-0001"),
+                TicketScreen.confirmRefund(),
+
+                ProductScreen.clickPayButton(),
+
+                PaymentScreen.totalIs("-15.72"),
+                PaymentScreen.clickPaymentMethod("Bank"),
+                PaymentScreen.clickNumpad("+/- . 6 8"),
+                PaymentScreen.fillPaymentLineAmountMobile("Bank", "-0.68"),
+                PaymentScreen.remainingIs("-15.04"),
+                PaymentScreen.clickPaymentMethod("Cash"),
+                PaymentScreen.remainingIs("0.0"),
+
+                PaymentScreen.clickInvoiceButton(),
+                PaymentScreen.clickValidate(),
+
+                ReceiptScreen.receiptAmountTotalIs("-15.72"),
+                ReceiptScreen.receiptRoundingAmountIs("-0.01"),
+                ReceiptScreen.receiptToPayAmountIs("-15.73"),
+                ReceiptScreen.receiptChangeAmountIsNotThere(),
+                ReceiptScreen.clickNextOrder(),
             ].flat(),
     });
 
@@ -245,6 +417,7 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
+                // Order.
                 ProductScreen.addOrderline("random_product", "1"),
                 ProductScreen.clickPartnerButton(),
                 ProductScreen.clickCustomer("AAAAAA"),
@@ -261,6 +434,27 @@ registry
                 ReceiptScreen.receiptToPayAmountIsNotThere(),
                 ReceiptScreen.receiptChangeAmountIsNotThere(),
                 ReceiptScreen.clickNextOrder(),
+
+                // Refund.
+                Chrome.clickMenuOption("Orders"),
+                TicketScreen.selectFilter("All active orders"),
+                TicketScreen.selectFilter("Paid"),
+                TicketScreen.selectOrder("-0001"),
+                TicketScreen.confirmRefund(),
+
+                ProductScreen.clickPayButton(),
+
+                PaymentScreen.totalIs("-15.70"),
+                PaymentScreen.clickPaymentMethod("Cash"),
+                PaymentScreen.remainingIs("0.0"),
+
+                PaymentScreen.clickInvoiceButton(),
+                PaymentScreen.clickValidate(),
+
+                ReceiptScreen.receiptAmountTotalIs("-15.70"),
+                ReceiptScreen.receiptToPayAmountIsNotThere(),
+                ReceiptScreen.receiptChangeAmountIsNotThere(),
+                ReceiptScreen.clickNextOrder(),
             ].flat(),
     });
 
@@ -272,6 +466,7 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
+                // Order.
                 ProductScreen.addOrderline("random_product", "1"),
                 ProductScreen.clickPartnerButton(),
                 ProductScreen.clickCustomer("AAAAAA"),
@@ -279,9 +474,7 @@ registry
 
                 PaymentScreen.totalIs("15.70"),
                 PaymentScreen.clickPaymentMethod("Bank"),
-                PaymentScreen.clickNumpad(". 6"),
-                PaymentScreen.remainingIs("15.10"),
-                PaymentScreen.clickNumpad("7"),
+                PaymentScreen.clickNumpad(". 6 7"),
                 PaymentScreen.fillPaymentLineAmountMobile("Bank", "0.67"),
                 PaymentScreen.remainingIs("15.03"),
                 PaymentScreen.clickPaymentMethod("Cash"),
@@ -295,6 +488,32 @@ registry
                 ReceiptScreen.receiptToPayAmountIs("15.72"),
                 ReceiptScreen.receiptChangeAmountIsNotThere(),
                 ReceiptScreen.clickNextOrder(),
+
+                // Refund.
+                Chrome.clickMenuOption("Orders"),
+                TicketScreen.selectFilter("All active orders"),
+                TicketScreen.selectFilter("Paid"),
+                TicketScreen.selectOrder("-0001"),
+                TicketScreen.confirmRefund(),
+
+                ProductScreen.clickPayButton(),
+
+                PaymentScreen.totalIs("-15.70"),
+                PaymentScreen.clickPaymentMethod("Bank"),
+                PaymentScreen.clickNumpad("+/- . 6 7"),
+                PaymentScreen.fillPaymentLineAmountMobile("Bank", "-0.67"),
+                PaymentScreen.remainingIs("-15.03"),
+                PaymentScreen.clickPaymentMethod("Cash"),
+                PaymentScreen.remainingIs("0.0"),
+
+                PaymentScreen.clickInvoiceButton(),
+                PaymentScreen.clickValidate(),
+
+                ReceiptScreen.receiptAmountTotalIs("-15.70"),
+                ReceiptScreen.receiptRoundingAmountIs("-0.02"),
+                ReceiptScreen.receiptToPayAmountIs("-15.72"),
+                ReceiptScreen.receiptChangeAmountIsNotThere(),
+                ReceiptScreen.clickNextOrder(),
             ].flat(),
     });
 
@@ -306,6 +525,7 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
+                // Order.
                 ProductScreen.addOrderline("random_product", "1"),
                 ProductScreen.clickPartnerButton(),
                 ProductScreen.clickCustomer("AAAAAA"),
@@ -323,6 +543,28 @@ registry
                 ReceiptScreen.receiptToPayAmountIs("15.70"),
                 ReceiptScreen.receiptChangeAmountIsNotThere(),
                 ReceiptScreen.clickNextOrder(),
+
+                // Refund.
+                Chrome.clickMenuOption("Orders"),
+                TicketScreen.selectFilter("All active orders"),
+                TicketScreen.selectFilter("Paid"),
+                TicketScreen.selectOrder("-0001"),
+                TicketScreen.confirmRefund(),
+
+                ProductScreen.clickPayButton(),
+
+                PaymentScreen.totalIs("-15.72"),
+                PaymentScreen.clickPaymentMethod("Cash"),
+                PaymentScreen.remainingIs("0.0"),
+
+                PaymentScreen.clickInvoiceButton(),
+                PaymentScreen.clickValidate(),
+
+                ReceiptScreen.receiptAmountTotalIs("-15.72"),
+                ReceiptScreen.receiptRoundingAmountIs("0.02"),
+                ReceiptScreen.receiptToPayAmountIs("-15.70"),
+                ReceiptScreen.receiptChangeAmountIsNotThere(),
+                ReceiptScreen.clickNextOrder(),
             ].flat(),
     });
 
@@ -334,6 +576,7 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
+                // Order.
                 ProductScreen.addOrderline("random_product", "1"),
                 ProductScreen.clickPartnerButton(),
                 ProductScreen.clickCustomer("AAAAAA"),
@@ -341,9 +584,7 @@ registry
 
                 PaymentScreen.totalIs("15.72"),
                 PaymentScreen.clickPaymentMethod("Bank"),
-                PaymentScreen.clickNumpad(". 6"),
-                PaymentScreen.remainingIs("15.12"),
-                PaymentScreen.clickNumpad("8"),
+                PaymentScreen.clickNumpad(". 6 8"),
                 PaymentScreen.fillPaymentLineAmountMobile("Bank", "0.68"),
                 PaymentScreen.remainingIs("15.04"),
                 PaymentScreen.clickPaymentMethod("Cash"),
@@ -355,6 +596,32 @@ registry
                 ReceiptScreen.receiptAmountTotalIs("15.72"),
                 ReceiptScreen.receiptRoundingAmountIs("0.01"),
                 ReceiptScreen.receiptToPayAmountIs("15.73"),
+                ReceiptScreen.receiptChangeAmountIsNotThere(),
+                ReceiptScreen.clickNextOrder(),
+
+                // Refund.
+                Chrome.clickMenuOption("Orders"),
+                TicketScreen.selectFilter("All active orders"),
+                TicketScreen.selectFilter("Paid"),
+                TicketScreen.selectOrder("-0001"),
+                TicketScreen.confirmRefund(),
+
+                ProductScreen.clickPayButton(),
+
+                PaymentScreen.totalIs("-15.72"),
+                PaymentScreen.clickPaymentMethod("Bank"),
+                PaymentScreen.clickNumpad("+/- . 6 8"),
+                PaymentScreen.fillPaymentLineAmountMobile("Bank", "-0.68"),
+                PaymentScreen.remainingIs("-15.04"),
+                PaymentScreen.clickPaymentMethod("Cash"),
+                PaymentScreen.remainingIs("0.0"),
+
+                PaymentScreen.clickInvoiceButton(),
+                PaymentScreen.clickValidate(),
+
+                ReceiptScreen.receiptAmountTotalIs("-15.72"),
+                ReceiptScreen.receiptRoundingAmountIs("-0.01"),
+                ReceiptScreen.receiptToPayAmountIs("-15.73"),
                 ReceiptScreen.receiptChangeAmountIsNotThere(),
                 ReceiptScreen.clickNextOrder(),
             ].flat(),

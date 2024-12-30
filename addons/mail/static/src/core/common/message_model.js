@@ -226,6 +226,30 @@ export class Message extends Record {
         });
     }
 
+    get dateSimpleWithDay() {
+        const userLocale = { locale: user.lang };
+        if (this.datetime.hasSame(DateTime.now(), "day")) {
+            return _t("Today at %(time)s", {
+                time: this.datetime.toLocaleString(DateTime.TIME_24_SIMPLE, userLocale),
+            });
+        }
+        if (this.datetime.hasSame(DateTime.now().minus({ day: 1 }), "day")) {
+            return _t("Yesterday at %(time)s", {
+                time: this.datetime.toLocaleString(DateTime.TIME_24_SIMPLE, userLocale),
+            });
+        }
+        if (this.datetime?.year === DateTime.now().year) {
+            return this.datetime.toLocaleString(
+                { ...DateTime.DATETIME_MED, hourCycle: "h23", year: undefined },
+                userLocale
+            );
+        }
+        return this.datetime.toLocaleString(
+            { ...DateTime.DATETIME_MED, hourCycle: "h23" },
+            userLocale
+        );
+    }
+
     get datetime() {
         return this.date || DateTime.now();
     }

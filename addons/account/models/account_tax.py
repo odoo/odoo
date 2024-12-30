@@ -701,6 +701,7 @@ class AccountTax(models.Model):
         :param product:                 An optional product.product record.
         :return:                        The values representing the product.
         """
+        product = product and product.sudo()  # tax computation may depend on restricted fields
         product_values = {}
         for field_name, field_info in default_product_values.items():
             product_values[field_name] = product and product[field_name] or field_info['default_value']
@@ -2349,7 +2350,7 @@ class AccountTax(models.Model):
         taxes, company = self.env['account.tax'], company_id
         while not taxes and company:
             taxes = self.filtered(lambda t: t.company_id == company)
-            company = company.parent_id
+            company = company.sudo().parent_id
         return taxes
 
     @api.model

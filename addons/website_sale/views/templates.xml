@@ -213,7 +213,7 @@
             <div class="o_wsale_product_information position-relative d-flex flex-column flex-grow-1 flex-shrink-1">
                 <div class="o_wsale_product_information_text">
                     <h6 class="o_wsale_products_item_title mb-2 text-break">
-                        <a class="text-primary text-decoration-none" itemprop="name" t-att-href="product_href" t-att-content="product.name" t-field="product.name" />
+                        <a class="text-primary text-decoration-none text-primary-emphasis" itemprop="name" t-att-href="product_href" t-att-content="product.name" t-field="product.name" />
                         <a t-if="not product.website_published" role="button" t-att-href="product_href" class="btn btn-sm btn-danger" title="This product is unpublished.">
                             Unpublished
                         </a>
@@ -1351,6 +1351,7 @@
                                     <div id="o_wsale_cta_wrapper" class="d-flex flex-wrap align-items-center">
                                         <t t-set="hasQuantities" t-value="false"/>
                                         <t t-set="hasBuyNow" t-value="false"/>
+                                        <!-- TODO: remove line below in master -->
                                         <t t-set="ctaSizeBig" t-value="not hasQuantities or not hasBuyNow"/>
 
                                         <div id="add_to_cart_wrap" t-attf-class="{{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}} align-items-center mb-2 me-auto">
@@ -1361,6 +1362,15 @@
                                         </div>
                                         <div id="product_option_block" class="d-flex flex-wrap w-100"/>
                                     </div>
+                                    <t
+                                        t-if="is_view_active('website_sale.product_tags')"
+                                        t-call="website_sale.product_tags"
+                                    >
+                                      <t
+                                            t-set="all_product_tags"
+                                            t-value="product_variant.all_product_tag_ids"
+                                        />
+                                    </t>
                                 </div>
                             </form>
                             <p t-elif="not product.active" class="alert alert-warning">
@@ -1389,15 +1399,6 @@
                                     </div>
                                 </section>
                             </div>
-                            <t
-                                t-if="is_view_active('website_sale.product_tags')"
-                                t-call="website_sale.product_tags"
-                            >
-                                <t
-                                    t-set="all_product_tags"
-                                    t-value="product_variant.all_product_tag_ids"
-                                />
-                            </t>
                             <div
                                 t-if="not is_view_active('website_sale_comparison.accordion_specs_item')"
                                 id="product_attributes_simple"
@@ -1491,7 +1492,7 @@
     </template>
 
     <template id="product_tags" name="Product Tags" active="True">
-        <div class="o_product_tags o_field_tags d-flex flex-wrap align-items-center gap-2 mb-4">
+        <div class="o_product_tags o_field_tags d-flex flex-wrap align-items-center gap-2 mb-2 mt-1">
             <t t-foreach="all_product_tags" t-as="tag">
                 <t t-if="tag.visible_on_ecommerce">
                     <span t-if="tag.image"
@@ -1671,7 +1672,7 @@
             <attribute name="t-value" remove="false" add="true" separator=" "/>
         </xpath>
         <xpath expr="//a[@id='add_to_cart']" position="after">
-            <a role="button" t-attf-class="btn btn-outline-primary o_we_buy_now ms-1 #{'btn-lg' if ctaSizeBig else ''}" href="#">
+            <a role="button" class="btn btn-outline-primary o_we_buy_now ms-1" href="#">
                 <i class="fa fa-bolt me-2"/>
                 Buy now
             </a>
@@ -2187,7 +2188,7 @@
             - xmlid: The id of the xml templated rendered by the controller.
         -->
         <t t-set="step_specific_values" t-value="website._get_checkout_steps(xmlid)"/>
-        <div t-attf-class="#{_container_classes} d-flex #{_form_send_navigation and 'flex-column flex-lg-row align-items-lg-center' or 'flex-column'} pt-4">
+        <div t-attf-class="#{_container_classes} d-flex #{_form_send_navigation and 'flex-column flex-lg-row align-items-lg-center' or 'flex-column'} mb-5 mb-lg-0 pt-4">
             <t t-if="website_sale_order and website_sale_order.website_order_line">
                 <t t-if="xmlid == 'website_sale.payment'">
                     <div t-if="not errors and not website_sale_order.amount_total"
@@ -2830,7 +2831,7 @@
                         <!-- This div serves as an anchor for the navigation buttons on the mobile
                              view. -->
                         <div t-if="not show_shorter_cart_summary and show_navigation_button"
-                             class="o_cta_navigation_placeholder d-block d-lg-none order-lg-4"/>
+                             class="o_cta_navigation_placeholder d-block d-none d-lg-none order-lg-4"/>
                     </div>
                 </div>
                 <!-- This is the drag-and-drop area for website building blocs at the end of each

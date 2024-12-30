@@ -303,6 +303,8 @@ export class Link extends Component {
             if (doStripDomain) {
                 this.state.url = urlWithoutDomain;
             }
+        } else if (url.indexOf(location.origin) === 0 && !doStripDomain) {
+            this.state.url = url;
         }
         var allWhitespace = /\s+/gi;
         var allStartAndEndSpace = /^\s+|\s+$/gi;

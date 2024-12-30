@@ -381,8 +381,11 @@ class TestMessageController(HttpCaseWithUserDemo):
                         "post_data": {
                             "body": "test",
                         },
-                        "partner_emails": ["john2@test.be"],
-                        "partner_additional_values": {"john2@test.be": {'phone': '123456789'}},
+                        "partner_emails": ["john2@test.be", "john3@test.be"],  # Both emails in one request
+                        "partner_additional_values": {
+                            "john2@test.be": {'phone': '123456789'},  # Original partner
+                            "john3 <john3@test.be>": {'phone': '987654321'}  # Name-Addr formatted partner
+                        },
                     },
                 }
             ),
@@ -393,6 +396,11 @@ class TestMessageController(HttpCaseWithUserDemo):
             1,
             self.env["res.partner"].search_count([('email', '=', "john2@test.be"), ('phone', '=', "123456789")]),
             "authenticated users can create a partner from an email from message_post",
+        )
+        self.assertEqual(
+            1,
+            self.env["res.partner"].search_count([('email', '=', "john3@test.be"), ('phone', '=', "987654321")]),
+            "additional_values should be handled correctly when using keys in name_addr format",
         )
         # should not create another partner with same email
         res6 = self.url_open(

@@ -219,15 +219,16 @@
                                    string="Customer Invoices"
                                    groups="account.group_account_invoice,account.group_account_readonly">
                                 <field name="invoice_sending_method"/>
-                                <field name="invoice_edi_format" invisible="not display_invoice_edi_format"/>
+                                <field name="invoice_edi_format" groups="base.group_no_one" invisible="not display_invoice_edi_format"/>
                                 <field name="invoice_template_pdf_report_id"
                                        invisible="not display_invoice_template_pdf_report_id"
                                        options="{'no_create': True, 'no_edit': True}"/>
                             </group>
-                            <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_readonly">
+                            <group string="Accounting Entries" name="accounting_entries" invisible="not is_coa_installed" groups="account.group_account_readonly">
+                                <field name="is_coa_installed" invisible="1"/>
                                 <field name="currency_id" invisible="1"/>
-                                <field name="property_account_receivable_id" required="True"/>
-                                <field name="property_account_payable_id" required="True"/>
+                                <field name="property_account_receivable_id" required="is_coa_installed"/>
+                                <field name="property_account_payable_id" required="is_coa_installed"/>
                             </group>
                             <group string="Credit Limits"
                                    name="credit_limits"

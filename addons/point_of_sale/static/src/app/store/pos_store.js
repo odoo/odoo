@@ -235,9 +235,10 @@ export class PosStore extends Reactive {
         this.config = this.data.models["pos.config"].getFirst();
         this.company = this.data.models["res.company"].getFirst();
         this.user = this.data.models["res.users"].getFirst();
-        this.currency = this.data.models["res.currency"].getFirst();
+        this.currency = this.config.currency_id;
         this.pickingType = this.data.models["stock.picking.type"].getFirst();
         this.models = this.data.models;
+        this.models["pos.session"].getFirst().login_number = parseInt(odoo.login_number);
 
         // Check cashier
         this.checkPreviousLoggedCashier();
@@ -851,10 +852,9 @@ export class PosStore extends Reactive {
                     ScaleScreen,
                     this.scaleData
                 );
-                if (!weight) {
-                    return;
+                if (weight) {
+                    values.qty = weight;
                 }
-                values.qty = weight;
                 this.isScaleScreenVisible = false;
                 this.scaleWeight = 0;
                 this.scaleTare = 0;
@@ -1536,9 +1536,11 @@ export class PosStore extends Reactive {
 
         if (order) {
             await this.sendOrderInPreparation(order, cancelled);
-            order.updateLastOrderChange();
+            const getOrder = (uuid) => this.models["pos.order"].getBy("uuid", uuid);
+            getOrder(uuid).updateLastOrderChange();
             this.addPendingOrder([order.id]);
             await this.syncAllOrders();
+            getOrder(uuid).updateSavedQuantity();
         }
     }
 
@@ -1560,30 +1562,13 @@ export class PosStore extends Reactive {
                 printer.config.product_categories_ids,
                 orderChange
             );
-            const toPrintArray = this.preparePrintingData(order, changes);
             const diningModeUpdate = orderChange.modeUpdate;
             if (diningModeUpdate || !Object.keys(lastChangedLines).length) {
-                // Prepare orderlines based on the dining mode update
-                const lines =
-                    diningModeUpdate && Object.keys(lastChangedLines).length
-                        ? lastChangedLines
-                        : order.lines;
-
-                // converting in format we need to show on xml
-                const orderlines = Object.entries(lines).map(([key, value]) => ({
-                    basic_name: diningModeUpdate ? value.basic_name : value.product_id.name,
-                    isCombo: diningModeUpdate ? value.isCombo : value.combo_item_id?.id,
-                    quantity: diningModeUpdate ? value.quantity : value.qty,
-                    note: value.note,
-                    attribute_value_ids: value.attribute_value_ids,
-                }));
-
-                // Print detailed receipt
                 const printed = await this.printReceipts(
                     order,
                     printer,
                     "New",
-                    orderlines,
+                    changes.new,
                     true,
                     diningModeUpdate
                 );
@@ -1592,6 +1577,7 @@ export class PosStore extends Reactive {
                 }
             } else {
                 // Print all receipts related to line changes
+                const toPrintArray = this.preparePrintingData(order, changes);
                 for (const [key, value] of Object.entries(toPrintArray)) {
                     const printed = await this.printReceipts(order, printer, key, value, false);
                     if (!printed) {
@@ -1627,10 +1613,10 @@ export class PosStore extends Reactive {
 
         const printingChanges = {
             table_name: order.table_id ? order.table_id.table_number : "",
-            config_name: order.config_id.name,
+            config_name: order.config.name,
             time: order.write_date ? time : "",
             tracking_number: order.tracking_number,
-            takeaway: order.config_id.takeaway && order.takeaway,
+            takeaway: order.config.takeaway && order.takeaway,
             employee_name: order.employee_id?.name || order.user_id?.name,
             order_note: order.general_note,
             diningModeUpdate: diningModeUpdate,
@@ -1863,10 +1849,16 @@ export class PosStore extends Reactive {
 
         let existingLots = [];
         try {
-            existingLots = await this.data.call("pos.order.line", "get_existing_lots", [
-                this.company.id,
-                product.id,
-            ]);
+            existingLots = await this.data.call(
+                "pos.order.line",
+                "get_existing_lots",
+                [this.company.id, product.id],
+                {
+                    context: {
+                        config_id: this.config.id,
+                    },
+                }
+            );
             if (!canCreateLots && (!existingLots || existingLots.length === 0)) {
                 this.dialog.add(AlertDialog, {
                     title: _t("No existing serial/lot number"),

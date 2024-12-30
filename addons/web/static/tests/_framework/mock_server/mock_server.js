@@ -756,33 +756,24 @@ export class MockServer {
         // Computed & related fields
         for (const model of models) {
             for (const { compute, name, related } of Object.values(model._fields)) {
-                if (!compute) {
-                    if (related) {
-                        // Related field
-                        model._computes = {
-                            [name]: model._compute_related_field, // `related`: first
-                            ...model._computes,
-                        };
-                    }
-                    continue;
-                }
-
-                // Computed field
-                /** @type {(this: Model, fieldName: string) => void} */
-                let computeFn = compute;
-                if (typeof computeFn !== "function") {
-                    computeFn = model[computeFn];
+                if (compute) {
+                    // Computed field
+                    /** @type {(this: Model, fieldName: string) => void} */
+                    let computeFn = compute;
                     if (typeof computeFn !== "function") {
-                        throw new MockServerError(
-                            `could not find compute function "${computeFn}" on model "${model._name}"`
-                        );
+                        computeFn = model[computeFn];
+                        if (typeof computeFn !== "function") {
+                            throw new MockServerError(
+                                `could not find compute function "${computeFn}" on model "${model._name}"`
+                            );
+                        }
                     }
-                }
 
-                model._computes = {
-                    ...model._computes,
-                    [name]: computeFn, // `compute`: last
-                };
+                    model._computes[name] = computeFn;
+                } else if (related) {
+                    // Related field
+                    model._related.add(name);
+                }
             }
         }
     }

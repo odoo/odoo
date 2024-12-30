@@ -205,3 +205,30 @@ class TestController(HttpCase):
         )
         self.assertEqual(200, response_not_record.status_code)
         self.assertTrue('other_error_msg' in response_not_record.text)
+
+        # Attempt to retrieve metadata for path format `odoo/<model>/<record_id>`
+        response_model_record = self.url_open(
+            '/html_editor/link_preview_internal',
+            data=json_safe.dumps({
+                "params": {
+                    "preview_url": f"/odoo/res.users/{self.portal_user.id}",
+                }
+            }),
+            headers=self.headers
+        )
+        self.assertEqual(200, response_model_record.status_code)
+        self.assertTrue('display_name' in response_model_record.text)
+        self.assertIn(self.portal_user.display_name, response_model_record.text)
+
+        # Attempt to retrieve metadata for an abstract model
+        response_abstract_model = self.url_open(
+            '/html_editor/link_preview_internal',
+            data=json_safe.dumps({
+                "params": {
+                    "preview_url": "/odoo/mail.thread/1",
+                }
+            }),
+            headers=self.headers
+        )
+        self.assertEqual(200, response_abstract_model.status_code)
+        self.assertTrue('error_msg' in response_abstract_model.text)

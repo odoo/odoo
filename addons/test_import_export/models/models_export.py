@@ -23,5 +23,7 @@ class ExportAggregatorO2M(models.Model):
     _name = 'export.aggregator.one2many'
     _description = 'Export Aggregator One2Many'
 
+    name = fields.Char()
     parent_id = fields.Many2one('export.aggregator')
     value = fields.Integer()
+    active = fields.Boolean(default=True)

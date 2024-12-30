@@ -41,6 +41,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { pick } from "@web/core/utils/objects";
 import { SearchBar } from "@web/search/search_bar/search_bar";
+import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 class Partner extends models.Model {
     name = fields.Char();
     bar = fields.Many2one({ relation: "partner" });
@@ -195,6 +196,32 @@ test.tags`desktop`("navigation with facets (2)", async () => {
     await keyDown("ArrowRight");
     await animationFrame();
     expect(queryFirst`.o_searchview .o_searchview_facet:nth-child(1)`).toBeFocused();
+});
+
+test.tags("mobile");
+test("search input is focused when being toggled", async () => {
+    class Parent extends Component {
+        static template = xml`
+            <div>
+                <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
+                <SearchBar toggler="searchBarToggler"/>
+            </div>
+        `;
+        static components = { SearchBar };
+        static props = ["*"];
+        setup() {
+            this.searchBarToggler = useSearchBarToggler();
+        }
+    }
+    await mountWithSearch(Parent, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+    });
+    expect(".o_searchview input").toHaveCount(0);
+    await contains(`button .fa-search`).click();
+    expect(".o_searchview input").toHaveCount(1);
+    expect(queryFirst`.o_searchview input`).toBeFocused();
 });
 
 test("search date and datetime fields. Support of timezones", async () => {

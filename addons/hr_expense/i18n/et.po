@@ -7,29 +7,29 @@
 # Egon Raamat <egon@avalah.ee>, 2024
 # Andre Roomet <andreroomet@gmail.com>, 2024
 # Katrin Kampura, 2024
-# Stevin Lilla, 2024
 # Patrick-Jordan Kiudorv, 2024
 # Tairi Tiimann, 2024
 # Arma Gedonsky <armagedonsky@hot.ee>, 2024
 # Piia Paurson <piia@avalah.ee>, 2024
 # Algo Kärp <algokarp@gmail.com>, 2024
+# Martin Trigaux, 2024
 # Triine Aavik <triine@avalah.ee>, 2024
 # Aveli Kannel <aveli@avalah.ee>, 2024
 # Rivo Zängov <eraser@eraser.ee>, 2024
 # JanaAvalah, 2024
 # Eneli Õigus <enelioigus@gmail.com>, 2024
 # Siim Raasuke, 2024
-# Birgit Vijar, 2024
 # Anna, 2024
-# Martin Trigaux, 2024
+# Birgit Vijar, 2024
+# Stevin Lilla, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -629,11 +629,6 @@ msgid "Default outstanding account for expenses paid by company."
 msgstr ""
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Default outstanding account for expenses paid by employees."
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__department_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -738,11 +733,6 @@ msgstr "Töötaja (hüvitama)"
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Employee Expense Journal"
 msgstr "Töötaja kuluaruanne"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Employee Expense Oustanding Account"
-msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
@@ -930,7 +920,7 @@ msgstr "Kuluaruanne kinnitatud, kanne loodud raamatupidajale"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
 msgid "Expense report paid"
-msgstr "Kuluaruande eest on tasutud"
+msgstr "Kuluaruanne on saadetud maksmisele"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
@@ -1670,7 +1660,7 @@ msgstr "Postitatud"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
 msgid "Powered by"
-msgstr "Tootja"
+msgstr "Kiri saadetud läbi"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -1922,12 +1912,6 @@ msgid "Show missing work email employees"
 msgstr "Näita töötajaid, kellel puudub töö e-mail"
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid "Specify expense journal to generate accounting entries."
-msgstr "Määrake raamatupidamiskirjete genereerimiseks kuluandmik."
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__accounting_date
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__accounting_date
 msgid "Specify the bill date of the related vendor bill."
@@ -2073,11 +2057,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-msgid ""
-"The account used to record the outstanding amount of the employee expenses."
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
 msgid ""
@@ -2121,14 +2100,6 @@ msgid "The journal used when the expense is paid by employee."
 msgstr "Andmik, mida kasutatatakse juhul kui kulu eest tasus töötaja."
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid ""
-"The payment method %(method)s needs an account, or a default outstanding "
-"account must be defined in the settings."
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__payment_method_line_id
 msgid "The payment method used when the expense is paid by the company."
 msgstr "Makseviis, mida kasutatatakse juhul kui kulu eest tasus ettevõte."
@@ -2152,27 +2123,6 @@ msgid ""
 "form"
 msgstr ""
 "Mõnel töötajal on e-maili aadress puudu. Palun lisage see töötaja kaardile"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Employee(s) should have a bank account set."
-msgstr ""
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Go to Employee(s)"
-msgstr ""
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Employee(s)"
-msgstr "Töötaja(d)"
 
 #. module: hr_expense
 #. odoo-python

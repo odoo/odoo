@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:50+0000\n"
+"POT-Creation-Date: 2024-12-16 13:41+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -24,14 +24,15 @@ msgstr ""
 #. module: website_sale_collect
 #: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
 msgid ""
-"<i>Your order has been confirmed.</i><br> Please come to the store to pay "
-"for your products."
+"<i>Your order has been confirmed.</i><br>Please come to the store to pay for"
+" your products."
 msgstr ""
+"<i>لقد تم تأكيد طلبك.</i><br>يرجى الذهاب إلى المتجر لدفع قيمة منتجاتك "
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.payment_confirmation_status
 msgid "<span class=\"text-muted\"> (In-store pickup)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> (الاستلام من المتجر)</span> "
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -54,7 +55,7 @@ msgstr "تهيئة الإعدادات "
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.res_config_settings_form
 msgid "Configure Pickup Locations"
-msgstr ""
+msgstr "قم بتهيئة مواقع الاستلام "
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__custom_mode
@@ -70,7 +71,7 @@ msgstr "طرق التوصيل "
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_website__in_store_dm_id
 msgid "In-store Delivery Method"
-msgstr ""
+msgstr "طريقة التوصيل في المحل "
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -89,7 +90,7 @@ msgstr "فقط"
 #. odoo-python
 #: code:addons/website_sale_collect/models/sale_order.py:0
 msgid "Only %(new_qty)s available"
-msgstr ""
+msgstr "يتوفر %(new_qty)s فقط "
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__opening_hours
@@ -105,7 +106,7 @@ msgstr "نفدت الكمية "
 #. module: website_sale_collect
 #: model:payment.provider,name:website_sale_collect.payment_provider_on_site
 msgid "Pay on Site"
-msgstr ""
+msgstr "الدفع في المحل "
 
 #. module: website_sale_collect
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__payment_provider__custom_mode__on_site
@@ -119,13 +120,18 @@ msgid "Payment Provider"
 msgstr "مزود الدفع "
 
 #. module: website_sale_collect
+#: model:ir.model,name:website_sale_collect.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "معاملة الدفع "
+
+#. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: model:delivery.carrier,name:website_sale_collect.carrier_pick_up_in_store
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__delivery_carrier__delivery_type__in_store
 #: model:product.template,name:website_sale_collect.product_pick_up_in_store_product_template
 msgid "Pick up in store"
-msgstr ""
+msgstr "الاستلام من المتجر "
 
 #. module: website_sale_collect
 #. odoo-python
@@ -238,4 +244,4 @@ msgstr "متاح"
 #. odoo-python
 #: code:addons/website_sale_collect/models/payment_provider.py:0
 msgid "no in-store delivery methods available"
-msgstr ""
+msgstr "لا توجد طريقة توصيل متاحة في المتجر. "

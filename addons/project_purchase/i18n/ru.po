@@ -1,26 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* project_purchase
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
-
-#. module: project_purchase
-#: model:ir.model.fields,field_description:project_purchase.field_project_project__purchase_orders_count
-msgid "# Purchase Orders"
-msgstr "# Заказы на покупку"
 
 #. module: project_purchase
 #: model:product.template,name:project_purchase.product_product_bricks_product_template
@@ -33,9 +30,29 @@ msgid "Cement"
 msgstr ""
 
 #. module: project_purchase
+#. odoo-python
+#: code:addons/project_purchase/models/project_project.py:0
+msgid "No purchase order found. Let's create one."
+msgstr ""
+
+#. module: project_purchase
+#. odoo-python
+#: code:addons/project_purchase/models/project_project.py:0
+msgid ""
+"Once you ordered your products from your supplier, confirm your request for "
+"quotation and it will turn into a purchase order."
+msgstr ""
+
+#. module: project_purchase
 #: model:ir.model,name:project_purchase.model_project_project
+#: model:ir.model.fields,field_description:project_purchase.field_purchase_order__project_id
 msgid "Project"
 msgstr "Проект"
+
+#. module: project_purchase
+#: model:ir.model,name:project_purchase.model_purchase_order
+msgid "Purchase Order"
+msgstr "Заказ на покупку"
 
 #. module: project_purchase
 #. odoo-python
@@ -51,6 +68,7 @@ msgstr "Позиция заказа на покупку"
 #. module: project_purchase
 #. odoo-python
 #: code:addons/project_purchase/models/project_project.py:0
+#: model:ir.embedded.actions,name:project_purchase.project_embedded_action_purchase_orders
 msgid "Purchase Orders"
 msgstr "Заказы на покупку"
 

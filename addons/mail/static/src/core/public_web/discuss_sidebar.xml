@@ -6,7 +6,7 @@
                 <div class="d-flex align-items-center justify-content-center" t-att-class="{ 'flex-column gap-2': store.discuss.isSidebarCompact }">
                     <t name="options-btn">
                         <Dropdown position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-view border px-0 py-1 mx-2 my-0 min-w-0 shadow-sm'">
-                            <button class="o-mail-DiscussSidebar-optionsBtn btn btn-light p-0 align-items-center justify-content-center smaller border border-dark-subtle rounded-circle opacity-50 opacity-100-hover" title="Options" t-att-class="{ 'ms-auto': !store.discuss.isSidebarCompact, 'position-absolute': !store.discuss.isSidebarCompact and !store.inPublicPage, 'o-compact': store.discuss.isSidebarCompact }"><i class="fa fa-ellipsis-h fa-fw fa-lg" style="font-size: 15px;"/></button>
+                            <button class="o-mail-DiscussSidebar-optionsBtn btn btn-light p-0 align-items-center justify-content-center smaller border border-dark rounded-circle opacity-50 opacity-100-hover" title="Options" t-att-class="{ 'ms-auto': !store.discuss.isSidebarCompact, 'position-absolute': !store.discuss.isSidebarCompact and !store.inPublicPage, 'o-compact': store.discuss.isSidebarCompact }"><i class="fa fa-ellipsis-h fa-fw fa-lg" style="font-size: 15px;"/></button>
                             <t t-set-slot="content">
                                 <div>
                                     <DropdownItem class="'px-2 py-1 d-flex align-items-center rounded-0'" onSelected="() => this.store.discuss.isSidebarCompact = !this.store.discuss.isSidebarCompact">

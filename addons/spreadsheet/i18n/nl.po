@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -898,12 +898,6 @@ msgid ""
 msgstr ""
 "Alle data moeten groter of gelijk zijn aan de eerste datum in cashflow_dates"
 " (%s)."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "All the ranges and the range values must have the same size"
-msgstr "Alle bereiken en de bereikwaarden moeten dezelfde grootte hebben"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2144,7 +2138,7 @@ msgid ""
 "from the Data menu."
 msgstr ""
 "Overweeg het gebruik van een dynamische draaitabelformule: %s. Of plaats de "
-"statische spil opnieuw in het menu Gegevens."
+"statische draaitabel opnieuw in het menu Data."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3353,6 +3347,7 @@ msgstr "Veld %(field)s wordt niet ondersteund vanwege het type (%(type)s)"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/odoo_pivot.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_helpers.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 msgid "Field %s does not exist"
 msgstr "Veld %s bestaat niet"
 
@@ -3828,13 +3823,13 @@ msgstr "Haal de waarde uit een draaitabel."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Gets character associated with number."
-msgstr "Krijgt karakter gekoppeld aan nummer."
+msgstr "Geeft het teken dat overeenkomt met het nummer."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Gets information about a cell."
-msgstr "Krijgt informatie over een cel."
+msgstr "Geeft informatie over een cel."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5343,7 +5338,7 @@ msgstr "Geen kleur"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "No active dimension in the pivot"
-msgstr "Geen actieve dimensie in de spil"
+msgstr "Geen actieve dimensie in de draaitabel"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6722,6 +6717,12 @@ msgstr "Enkele kleur"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Single value from a table-like range."
 msgstr "Enkele waarde uit een tabelachtig bereik."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+msgid "Some measures are not available: %s"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8655,6 +8656,21 @@ msgstr "De minuutcomponent van de tijd."
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/data_sources/data_source.js:0
+#: code:addons/spreadsheet/static/src/pivot/odoo_pivot_loader.js:0
+msgid "The model \"%(model)s\" does not exist."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/global_filters/components/filter_value/filter_value.js:0
+msgid ""
+"The model (%(model)s) of this global filter is not valid (it may have been "
+"renamed/deleted)."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The month (%s) must be between 1 and 12 inclusive."
 msgstr "De maand (%s) moet tussen 1 en 12 liggen."
@@ -10441,27 +10457,27 @@ msgstr "De waarde moet een scalar of een 1x1 matrix zijn"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value the function returns if logical_expression is FALSE."
 msgstr ""
-"De waarde die de functie retourneert indien logical_expression ONWAAR is."
+"De waarde die de functie teruggeeft indien logical_expression ONWAAR is."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value the function returns if logical_expression is TRUE."
 msgstr ""
-"De waarde die de functie retourneert indien logical_expression WAAR is."
+"De waarde die de functie teruggeeft indien logical_expression WAAR is."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value the function returns if value is an #N/A error."
 msgstr ""
-"De waarde die de functie retourneert indien de waarde een #N/A-fout is."
+"De waarde die de functie teruggeeft indien de waarde een #N/B-fout is."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value the function returns if value is an error."
-msgstr "De waarde die de functie retourneert indien de waarde een fout is."
+msgstr "De waarde die de functie teruggeeft indien de waarde een fout is."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10816,8 +10832,8 @@ msgid ""
 "This function takes in two currency codes as arguments, and returns the "
 "exchange rate from the first currency to the second as float."
 msgstr ""
-"Deze functie neemt twee valutacodes als argumenten en retourneert de "
-"wisselkoers van de eerste valuta naar de tweede als float."
+"Deze functie neemt twee valutacodes als argumenten en geeft de wisselkoers "
+"van de eerste valuta naar de tweede als float terug."
 
 #. module: spreadsheet
 #. odoo-javascript

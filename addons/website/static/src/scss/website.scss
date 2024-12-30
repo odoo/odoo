@@ -346,11 +346,15 @@ body {
     }
 }
 
+.navbar-light .o_navbar_mobile {
+    @include o-add-gradient('menu-gradient');
+}
+
 // TODO this should be reviewed. While it allowed to choose a color for the
 // navbar text, there is no :hover effect, the active item is not visible and
 // the selector is probably too specific and should rather be about extending
 // bootstrap if possible.
-#wrapwrap:not(.o_header_overlay) header, header.o_header_is_scrolled {
+#wrapwrap:not(.o_header_overlay) header, header.o_header_is_scrolled, header .o_navbar_mobile {
     .nav-item > .nav-link > *, .nav-item > .nav-link::after, .js_language_selector span, .badge {
         $header-text-color: o-website-value('header-text-color');
         // Check if the value is wrapped in quotes (initially it wasn't, and it
@@ -1342,9 +1346,12 @@ $-transition-duration: 200ms;
             border-top: 1px solid map-get($grays, '200');
         }
         > a.dropdown-toggle {
-            background-color: map-get($grays, '200');
             color: inherit; // Useful when the toggle is active
             pointer-events: none; // hack to prevent clicking on it because dropdown always opened
+            
+            &:not(.active) {
+                background-color: map-get($grays, '200');
+            }
         }
         > ul, > .o_mega_menu { // remove dropdown-menu default style as it is nested in another one
             position: static;
@@ -1449,6 +1456,20 @@ header {
     // Prevent the color of the header to impact the color of the nav.
     &.o_header_is_scrolled, &.o_transitioning.o_header_affixed {
         background-color: transparent !important;
+    }
+    // When the page starts scrolling with the "standard" header, there’s a
+    // brief moment where the header has a "translate: transform" applied
+    // without being "affixed" yet. This causes the "off-canvas mobile" navbar
+    // to temporarily increase the page size, creating sometimes a scrolling bug
+    // that prevents further scrolling (e.g. "checkout shop" page on mobile
+    // device). To prevent this bug, we add a "display: none" to the "off-canvas
+    // mobile" navbar so it no longer affects the page dimensions. TODO: Check
+    // if this code can be removed once the "#wrapwrap" element is permanently
+    // removed.
+    &.o_transformed_not_affixed {
+        .o_navbar_mobile {
+            display: none;
+        }
     }
 }
 
@@ -2063,10 +2084,19 @@ input[value*="data-oe-translation-source-sha"] {
     visibility: visible;
 }
 .o_wanim_overflow_xy_hidden {
-    // "overflow-x: hidden" is added to the "body" and not to "html" because if
+    // "overflow-x: clip" is added to the "body" and not to "html" because if
     // it's added to "html", when a popup opens, the page scrolls to the top.
     > body {
-        overflow-x: hidden !important;
+        // We use clip instead of hidden to prevent scroll animations to an
+        // anchor from stopping working.
+        overflow-x: clip !important;
+        // For supporting browsers not updated since around 2021-2022.
+        @supports not (overflow-x: clip) {
+            overflow-x: hidden !important;
+        }
+        // Create a new formatting context. Without this, elements inside <body>
+        // may still overflow (e.g. animated elements in Firefox).
+        display: flow-root;
     }
     &.o_rtl, .o_rtl {
         // Fix for Chrome and Edge bug: resolves slow/stuck scrolling during

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, models, fields, _
 from odoo.exceptions import UserError
@@ -108,13 +109,14 @@ class ResCurrency(models.Model):
         for period_key, date_from, date_to in date_periods:
             main_company_unit_factor = main_company.currency_id._get_rates(main_company, date_to)[main_company.currency_id.id]
 
-            table_builders.append(self._get_table_builder_current(period_key, main_company, other_companies, date_to, main_company_unit_factor))
-
             if use_cta_rates:
                 table_builders += [
+                    self._get_table_builder_closing(period_key, main_company, other_companies, date_to, main_company_unit_factor),
                     self._get_table_builder_historical(main_company, other_companies, date_to, main_company_unit_factor, last_date_to),
                     self._get_table_builder_average(period_key, main_company, other_companies, date_from, date_to, main_company_unit_factor),
                 ]
+            else:
+                table_builders += [self._get_table_builder_current(period_key, main_company, other_companies, date_to, main_company_unit_factor)]
 
             last_date_to = date_to
 
@@ -143,13 +145,14 @@ class ResCurrency(models.Model):
         """
         rate_values = []
         for company in companies:
-            rate_values.append(SQL("(%s, CAST(NULL AS VARCHAR), CAST(NULL AS DATE), CAST(NULL AS DATE), 'current', 1)", company.id))
-
             if use_cta_rates:
                 rate_values += [
                     SQL("(%s, CAST(NULL AS VARCHAR), CAST(NULL AS DATE), CAST(NULL AS DATE), 'average', 1)", company.id),
                     SQL("(%s, CAST(NULL AS VARCHAR), CAST(NULL AS DATE), CAST(NULL AS DATE), 'historical', 1)", company.id),
+                    SQL("(%s, CAST(NULL AS VARCHAR), CAST(NULL AS DATE), CAST(NULL AS DATE), 'closing', 1)", company.id),
                 ]
+            else:
+                rate_values.append(SQL("(%s, CAST(NULL AS VARCHAR), CAST(NULL AS DATE), CAST(NULL AS DATE), 'current', 1)", company.id))
 
         return SQL(
             """
@@ -186,6 +189,54 @@ class ResCurrency(models.Model):
             date_to=date_to,
             main_company_unit_factor=main_company_unit_factor,
         )
+
+    def _get_table_builder_closing(self, period_key, main_company, other_companies, date_to, main_company_unit_factor) -> SQL:
+        fiscal_year_bounds = self._get_currency_table_fiscal_year_bounds(main_company)
+
+        return SQL(
+            """
+                SELECT DISTINCT ON (other_company.id, fiscal_year_bounds.date_from, fiscal_year_bounds.date_to)
+                    other_company.id,
+                    %(period_key)s,
+                    fiscal_year_bounds.date_from,
+                    CAST(fiscal_year_bounds.date_to::TIMESTAMP + INTERVAL '1' DAY AS DATE),
+                    'closing',
+                    CASE WHEN rate.id IS NOT NULL THEN %(main_company_unit_factor)s / rate.rate ELSE 1 END
+                FROM res_company other_company
+                LEFT JOIN res_currency_rate rate
+                    ON rate.currency_id = other_company.currency_id
+                    AND rate.name <= %(date_to)s
+                    AND rate.company_id = %(main_company_id)s
+                JOIN (VALUES %(fiscal_year_bounds_values)s) AS fiscal_year_bounds(date_from, date_to)
+                    ON fiscal_year_bounds.date_to IS NULL
+                    OR fiscal_year_bounds.date_to >= rate.name
+                WHERE
+                    other_company.id IN %(other_company_ids)s
+                ORDER BY other_company.id, fiscal_year_bounds.date_from, fiscal_year_bounds.date_to, rate.name DESC
+            """,
+            period_key=period_key,
+            main_company_id=main_company.root_id.id,
+            fiscal_year_bounds_values=SQL(",").join(SQL("(%(fy_from)s::date,%(fy_to)s::date)", fy_from=fy_from, fy_to=fy_to) for fy_from, fy_to in fiscal_year_bounds),
+            other_company_ids=tuple(other_companies.ids),
+            date_to=date_to,
+            main_company_unit_factor=main_company_unit_factor,
+        )
+
+    def _get_currency_table_fiscal_year_bounds(self, main_company):
+        today_fiscal_year = main_company.compute_fiscalyear_dates(fields.Date.today())
+        first_rate = self.env['res.currency.rate'].search(self.env['res.currency.rate']._check_company_domain(main_company), order="name ASC", limit=1)
+        fiscal_year_bounds = []
+        if first_rate:
+            first_rate_fiscal_year = main_company.compute_fiscalyear_dates(first_rate.name)
+            fiscal_year_bounds = [(None, first_rate_fiscal_year['date_from'] - relativedelta(days=1))]  # Initialized to have a value for everything before the first rate
+            for civil_year in range(first_rate_fiscal_year['date_from'].year, today_fiscal_year['date_from'].year):
+                year_delta = relativedelta(years=civil_year - first_rate_fiscal_year['date_from'].year)
+                fiscal_year_bounds.append((first_rate_fiscal_year['date_from'] + year_delta, first_rate_fiscal_year['date_to'] + year_delta))
+
+        # The current fiscal year is not closed yet, so we need to use its rates for everything after it
+        fiscal_year_bounds.append((today_fiscal_year['date_from'], None))
+
+        return fiscal_year_bounds
 
     def _get_table_builder_historical(self, main_company, other_companies, date_to, main_company_unit_factor, date_exclude) -> SQL:
         return SQL(
@@ -251,7 +302,7 @@ class ResCurrency(models.Model):
                     (
                         SELECT DISTINCT ON (other_company.id)
                             other_company.id as other_company_id,
-                            out_period_rate.rate AS rate,
+                            COALESCE(out_period_rate.rate, 1.0) AS rate,
                             EXTRACT('Day' FROM COALESCE(in_period_rate.name::TIMESTAMP, %(date_to)s::TIMESTAMP + INTERVAL '1' DAY) - %(date_from)s::TIMESTAMP) AS number_of_days
 
                         FROM res_company other_company

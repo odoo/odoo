@@ -1157,7 +1157,7 @@ class AccountMoveLine(models.Model):
         lines_to_modify = self.env['account.move.line'].browse([
             line.id for line in self if line.parent_state == "posted"
         ])
-        lines_to_modify.analytic_line_ids.with_context(force_analytic_line_delete=True).unlink()
+        lines_to_modify.analytic_line_ids.unlink()
 
         context = dict(self.env.context)
         context.pop('default_account_id', None)

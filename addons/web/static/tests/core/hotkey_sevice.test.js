@@ -1,6 +1,6 @@
 import { destroy, expect, getFixture, onError, test } from "@odoo/hoot";
 import { keyDown, keyUp, press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
-import { animationFrame, mockUserAgent } from "@odoo/hoot-mock";
+import { animationFrame, mockUserAgent, tick } from "@odoo/hoot-mock";
 import { Component, useRef, useState, xml } from "@odoo/owl";
 import {
     contains,
@@ -111,6 +111,7 @@ test("[accesskey] attrs replaced by [data-hotkey]", async () => {
     // try to press the related hotkey, just to make sure it works
     expect.verifySteps([]);
     await press(["alt", "a"]);
+    await tick();
     expect.verifySteps(["click"]);
 });
 
@@ -161,6 +162,7 @@ test("[accesskey] attrs replaced by [data-hotkey], part 2", async () => {
     );
     expect.verifySteps([]);
     await press(["alt", "a"]);
+    await tick();
     expect.verifySteps([]);
 
     // remove the UIOwnershipTakerComponent
@@ -177,6 +179,7 @@ test("[accesskey] attrs replaced by [data-hotkey], part 2", async () => {
 
     expect.verifySteps([]);
     await press(["alt", "a"]);
+    await tick();
     expect.verifySteps(["click"]);
 });
 
@@ -200,6 +203,7 @@ test("data-hotkey", async () => {
     const comp = await mountWithCleanup(MyComponent);
 
     await press(strokes);
+    await tick();
     expect.verifySteps(["click"]);
 
     destroy(comp);
@@ -228,6 +232,7 @@ test("invisible data-hotkeys are not enabled. ", async () => {
     await mountWithCleanup(MyComponent);
 
     await press(strokes);
+    await tick();
     expect.verifySteps(["click"]);
 
     queryOne(".myButton").disabled = true;
@@ -308,6 +313,7 @@ test("the overlay of hotkeys is correctly displayed", async () => {
     await keyDown("alt");
     expect(getOverlays()).toEqual(["B", "C"], { message: "should display the overlay" });
     await press("b");
+    await tick();
     expect.verifySteps(["click b"]);
     expect(getOverlays()).toEqual([], { message: "shouldn't display the overlay" });
 
@@ -339,6 +345,7 @@ test("the overlay of hotkeys is correctly displayed on MacOs", async () => {
     await keyDown("ctrl");
     expect(getOverlays()).toEqual(["B", "C"], { message: "should display the overlay" });
     await press("b");
+    await tick();
     expect.verifySteps(["click b"]);
     expect(getOverlays()).toEqual([], { message: "shouldn't display the overlay" });
 
@@ -421,6 +428,7 @@ test("[data-hotkey] alt is required", async () => {
     await mountWithCleanup(TestComponent);
 
     await press(["alt", key]);
+    await tick();
     expect.verifySteps([key]);
 
     await press(key);
@@ -475,6 +483,7 @@ test("[data-hotkey] never allow repeat", async () => {
     await mountWithCleanup(TestComponent);
 
     await keyDown(["alt", key]);
+    await tick();
     expect.verifySteps([key]);
 
     await keyDown([key]);
@@ -513,6 +522,7 @@ test("component can register many hotkeys", async () => {
     await press("a");
     await press("b");
     await press(["alt", "c"]);
+    await tick();
     expect.verifySteps(["callback:a", "callback:b", "click"]);
 });
 
@@ -542,6 +552,7 @@ test("many components can register same hotkeys (call order matters)", async () 
     await press("b");
     await press(["alt", "c"]);
     // the callbacks of comp1 are called
+    await tick();
     expect.verifySteps(["comp1:a", "comp1:b", "comp1:c:button"]);
 
     await press(["alt", "z"]);
@@ -551,10 +562,12 @@ test("many components can register same hotkeys (call order matters)", async () 
     await mountWithCleanup(getComp("comp2"));
     await press("a");
     await press("b");
+    await tick();
     // calls only the callbacks from last useHotkey registrations
     expect.verifySteps(["comp2:a", "comp2:b"]);
 
     await press(["alt", "c"]);
+    await tick();
     // calls only the callback of the first encountered button with proper [data-hotkey]
     expect.verifySteps(["comp1:c:button"]);
 
@@ -590,16 +603,19 @@ test("registrations and elements belong to the correct UI owner", async () => {
     await mountWithCleanup(MyComponent1);
     await press("a");
     await press(["alt", "b"]);
+    await tick();
     expect.verifySteps(["MyComponent1 subscription", "MyComponent1 [data-hotkey]"]);
 
     const comp2 = await mountWithCleanup(MyComponent2);
     await press("a");
     await press(["alt", "b"]);
+    await tick();
     expect.verifySteps(["MyComponent2 subscription", "MyComponent2 [data-hotkey]"]);
 
     destroy(comp2);
     await press("a");
     await press(["alt", "b"]);
+    await tick();
     expect.verifySteps(["MyComponent1 subscription", "MyComponent1 [data-hotkey]"]);
 });
 
@@ -621,6 +637,7 @@ test("replace the overlayModifier for non-MacOs", async () => {
     });
     const key = "b";
     await press(["alt", "shift", key]);
+    await tick();
     expect.verifySteps(["click"]);
 
     await press(["alt", key]);
@@ -648,6 +665,7 @@ test("replace the overlayModifier for MacOs", async () => {
 
     const key = "b";
     await press(["ctrl", "shift", key]);
+    await tick();
     expect.verifySteps(["click"]);
 
     await press(["ctrl", key]);

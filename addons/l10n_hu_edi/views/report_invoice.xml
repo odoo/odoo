@@ -107,7 +107,7 @@
         <xpath expr="//tr[hasclass('o_total')]" position="after">
             <tr t-if="o.currency_id.name != 'HUF'">
                 <td><strong>Total VAT amount in HUF</strong></td>
-                <td class="text-end">
+                <td class="text-end text-nowrap">
                     <span t-out="tax_totals['formatted_total_vat_amount_in_huf']"/>
                 </td>
             </tr>

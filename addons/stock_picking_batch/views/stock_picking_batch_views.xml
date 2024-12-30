@@ -133,7 +133,7 @@
         <field name="name">stock.picking.batch.list</field>
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
-            <list string="Stock Batch Transfer" multi_edit="1" sample="1">
+            <list string="Stock Batch Transfer" multi_edit="1" sample="1" class="oe_stock_picking_batch">
                 <field name="company_id" column_invisible="True"/>
                 <field name="name" decoration-bf="1"/>
                 <field name="description"/>
@@ -151,7 +151,7 @@
         <field name="name">stock.picking.batch.kanban</field>
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" sample="1">
+            <kanban class="o_kanban_mobile oe_stock_picking_batch" sample="1">
                 <field name="company_id"/>
                 <templates>
                     <t t-name="card">

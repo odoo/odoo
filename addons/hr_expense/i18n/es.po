@@ -3,16 +3,16 @@
 # 	* hr_expense
 # 
 # Translators:
-# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -613,11 +613,6 @@ msgid "Default outstanding account for expenses paid by company."
 msgstr "Cuenta pendiente por defecto para gastos pagados por la compañía."
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Default outstanding account for expenses paid by employees."
-msgstr "Cuenta pendiente por defecto para gastos pagados por los empleados."
-
-#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__department_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -721,11 +716,6 @@ msgstr "Empleado (a reembolsar)"
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Employee Expense Journal"
 msgstr "Diario de gastos del empleado "
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Employee Expense Oustanding Account"
-msgstr "Cuenta de gastos pendientes del empleado"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
@@ -1911,12 +1901,6 @@ msgid "Show missing work email employees"
 msgstr "Mostrar los empleados de correo electrónico de trabajo que faltan"
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid "Specify expense journal to generate accounting entries."
-msgstr "Especifique el diario de gastos para generar los asientos contables."
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__accounting_date
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__accounting_date
 msgid "Specify the bill date of the related vendor bill."
@@ -2064,13 +2048,6 @@ msgstr ""
 "compañía."
 
 #. module: hr_expense
-msgid ""
-"The account used to record the outstanding amount of the employee expenses."
-msgstr ""
-"La cuenta utilizada para registrar el importe pendiente de los gastos del "
-"empleado."
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
 msgid ""
@@ -2117,16 +2094,6 @@ msgid "The journal used when the expense is paid by employee."
 msgstr "El diario se utiliza cuando los gastos son pagados por el empleado."
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid ""
-"The payment method %(method)s needs an account, or a default outstanding "
-"account must be defined in the settings."
-msgstr ""
-"El método de pago %(method)s necesita una cuenta o deberá definir una cuenta"
-" pendiente por defecto en los ajustes."
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__payment_method_line_id
 msgid "The payment method used when the expense is paid by the company."
 msgstr "El método de pago que se utiliza cuando la empresa paga el gasto."
@@ -2151,27 +2118,6 @@ msgid ""
 msgstr ""
 "Falta el correo electrónico de trabajo de algunos empleados. Por favor, "
 "agréguelo en el formulario del empleado"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Employee(s) should have a bank account set."
-msgstr "Los empleados deben tener una cuenta bancaria."
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Go to Employee(s)"
-msgstr "Ir a los empleados"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Employee(s)"
-msgstr "Empleado(s)"
 
 #. module: hr_expense
 #. odoo-python
@@ -2440,7 +2386,7 @@ msgstr "Solo puede generar asientos contables para los gastos aprobados."
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid "You cannot add expenses of another employee."
-msgstr "No puede agregar gastos de otro empleado."
+msgstr "No puede añadir gastos de otro empleado."
 
 #. module: hr_expense
 #. odoo-python
@@ -2584,7 +2530,7 @@ msgid ""
 "You do not have the rights to add or remove any expenses on an approved or "
 "paid expense report."
 msgstr ""
-"No cuenta con los permisos para agregar o eliminar gastos de un informe de "
+"No cuenta con los permisos para añadir o eliminar gastos de un informe de "
 "gastos aprobado o pagado."
 
 #. module: hr_expense
@@ -2597,7 +2543,7 @@ msgstr "No tiene gastos a informar"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You need to add a manual payment method on the journal (%s)"
-msgstr "Debe agregar un método de pago manual en el diario (%s)"
+msgstr "Debe añadir un método de pago manual en el diario (%s)"
 
 #. module: hr_expense
 #. odoo-python

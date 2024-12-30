@@ -129,11 +129,11 @@
                 </a>
                 <div t-attf-class="dropdown-menu js_usermenu #{_dropdown_menu_class}" role="menu">
                     <a groups="base.group_user" href="/odoo" role="menuitem" class="dropdown-item ps-3" id="o_backend_user_dropdown_link">
-                        <i class="fa fa-fw fa-th me-1 small text-primary"/> Apps
+                        <i class="fa fa-fw fa-th me-1 small text-primary text-primary-emphasis"/> Apps
                     </a>
                     <div id="o_logout_divider" class="dropdown-divider"/>
                     <a t-attf-href="/web/session/logout?redirect=/" role="menuitem" id="o_logout" class="dropdown-item ps-3">
-                        <i class="fa fa-fw fa-sign-out me-1 small text-primary"/> Logout
+                        <i class="fa fa-fw fa-sign-out me-1 small text-primary text-primary-emphasis"/> Logout
                     </a>
                 </div>
             </li>
@@ -745,7 +745,7 @@
     <template id="my_account_link" name="Link to frontend portal" inherit_id="portal.user_dropdown">
         <xpath expr="//*[@id='o_logout_divider']" position="before">
             <a href="/my/home" role="menuitem" class="dropdown-item ps-3">
-                <i class="fa fa-fw fa-id-card-o me-1 small text-primary"/> My Account
+                <i class="fa fa-fw fa-id-card-o me-1 small text-primary text-primary-emphasis"/> My Account
             </a>
         </xpath>
     </template>

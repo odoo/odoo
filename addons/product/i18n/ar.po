@@ -4,17 +4,18 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Wil Odoo, 2024
 # Tiffany Chang, 2024
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-27 08:16+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,13 +87,13 @@ msgstr "%(percentage)s %% %(discount_type)s في %(base)s %(extra)s "
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on %(pricelist)s"
-msgstr ""
+msgstr "%(percentage)s %% خصم على %(pricelist)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on sales price"
-msgstr ""
+msgstr "%(percentage)s %% خصم على سعر المبيعات"
 
 #. module: product
 #. odoo-python
@@ -126,13 +127,13 @@ msgstr "(مثال: وصف المنتج، الكتاب الإلكتروني، ا�
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "+ %(amount)s extra fee"
-msgstr ""
+msgstr "+ %(amount)s تكلفة إضافية"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "- %(amount)s rebate"
-msgstr ""
+msgstr "- %(amount)s خصم"
 
 #. module: product
 #. odoo-python
@@ -150,6 +151,10 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
+"- على الفور: يتم إنشاء جميع المتغيرات الممكنة بمجرد إضافة السمة وقيمها إلى المنتج.\n"
+"- ديناميكيًا: يتم إنشاء كل متغير فقط عند إضافة السمات والقيم المقابلة له إلى أمر مبيعات.\n"
+"- أبدًا: لا يتم إنشاء متغيرات للسمة مطلقًا.\n"
+"ملاحظة: لا يمكن تغيير ذلك بمجرد استخدام السمة على المنتج."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -322,25 +327,25 @@ msgstr "يمكن تعيين الباركود لطرد واحد فقط. "
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice can't contain duplicate products."
-msgstr ""
+msgstr "لا يمكن أن يحتوي خِيار المجموعة على منتجات مكررة."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo_item.py:0
 msgid "A combo choice can't contain products of type \"combo\"."
-msgstr ""
+msgstr "لا يمكن أن يحتوي خِيار المجموعة على منتج من نوع \"مجموعة\""
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice must contain at least 1 product."
-msgstr ""
+msgstr "يجب أن يحتوي خِيار المجموعة على منتج واحد في الأقل. "
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A combo product must contain at least 1 combo choice."
-msgstr ""
+msgstr "يجب أن يحتوي خِيار المجموعة على خِيار مجموعة واحدة في الأقل."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -378,7 +383,7 @@ msgstr "هناك منتج يحمل هذا الباركود بالفعل "
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A sellable combo product can only contain sellable products."
-msgstr ""
+msgstr "منتج المجموعة القابل للبيع يمكن أن يحوي منتجات قابلة للبيع فقط."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -472,7 +477,7 @@ msgstr "إضافة المنتجات "
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Add Products to pricelist report"
-msgstr ""
+msgstr "أضف المنتجات لتقرير قائمة الأسعار"
 
 #. module: product
 #. odoo-javascript
@@ -487,22 +492,24 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
+"أضف منتجات باستخدام زر \"إضافة المنتجات\" من أعلى اليسار\n"
+"                                لتضمينها في التقرير."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Add to all products"
-msgstr ""
+msgstr "إضافة إلى كافة المنتجات "
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
 msgid "Add to existing products"
-msgstr ""
+msgstr "إضافة إلى المنتجات الموجودة "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Add to products"
-msgstr ""
+msgstr "أضف إلى المنتجات"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -754,7 +761,7 @@ msgstr "بناءً على"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Based price"
-msgstr ""
+msgstr "السعر الأساسي"
 
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
@@ -897,7 +904,7 @@ msgstr "سعر الكومبو "
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Combo products can't have attributes"
-msgstr ""
+msgstr "لا يمكن للمنتجات المجمعة أن تحتوي على سمات"
 
 #. module: product
 #. odoo-python
@@ -906,6 +913,7 @@ msgid ""
 "Combos allow to choose one product amongst a selection of choices per "
 "category."
 msgstr ""
+"تسمح المجموعات باختيار منتج واحد من بين مجموعة مختارة من الخيارات لكل فئة."
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -990,6 +998,16 @@ msgstr "يجب أن تكون الكمية المحتواة موجبة. "
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Contained quantity"
 msgstr "الكمية المحتواة"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__uom_category_id
+#: model:ir.model.fields,help:product.field_product_template__uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"لا يمكن التحويل بين وحدات القياس إلا إذا كانت تنتمي لنفس الفئة. سيتم إجراء "
+"التحويل بناءً على النسب."
 
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
@@ -1172,7 +1190,7 @@ msgstr "السعر الإضافي الافتراضي "
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price_changed
 msgid "Default Extra Price Changed"
-msgstr ""
+msgstr "لقد تغيير السعر الإضافي الافتراضي "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1424,7 +1442,7 @@ msgstr "مريح "
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Error exporting file. Please try again."
-msgstr ""
+msgstr "خطأ خلال تصدير الملف. يرجى المحاولة مرة أخرى."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
@@ -1738,7 +1756,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute__active
 msgid ""
 "If unchecked, it will allow you to hide the attribute without removing it."
-msgstr ""
+msgstr "إن لم يؤشر، سيسمح لك بإخفاء السمة من دون إزالتها."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -2049,7 +2067,7 @@ msgstr "الهوامش"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_markup
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Markup"
-msgstr ""
+msgstr "الترميز"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2206,7 +2224,7 @@ msgstr "لم يتم العثور على أي منتجات. "
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "No products found in the report"
-msgstr ""
+msgstr "لم يتم العثور على منتجات في التقرير"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2324,6 +2342,7 @@ msgstr ""
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
 msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
 msgstr ""
+"اوه! الملف '%(fileName)s' لم يتم رفعه لأن صيغة هذا الملف غير مسموح بها."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2414,7 +2433,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Please select some products first."
-msgstr ""
+msgstr "الرجاء تحديد بعض المنتجات أولًا."
 
 #. module: product
 #. odoo-python
@@ -2535,7 +2554,7 @@ msgstr "تقرير قائمة الأسعار "
 #. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 msgid "Pricelist Report Preview"
-msgstr ""
+msgstr "معاينة تقرير قائمة الأسعار"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2976,7 +2995,7 @@ msgstr "الكمية"
 #. odoo-python
 #: code:addons/product/controllers/pricelist_report.py:0
 msgid "Quantity (%s UoM)"
-msgstr ""
+msgstr "الكمية (%s من وحدة القياس)"
 
 #. module: product
 #. odoo-javascript
@@ -3181,7 +3200,7 @@ msgstr "الحجم"
 #: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_users__specific_property_product_pricelist
 msgid "Specific Property Product Pricelist"
-msgstr ""
+msgstr "قائمة أسعار المنتج للخاصية المحددة"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
@@ -3391,6 +3410,9 @@ msgid ""
 "combo product. This heuristic ensures that whatever product the user chooses"
 " in a combo, it will always be the same price."
 msgstr ""
+"السعر الأدنى بين المنتجات في هذه المجموعة. سيتم استخدام هذه القيمة لتقسيم "
+"سعر هذه المجموعة مقارنة بالمجموعات الأخرى في منتج المجموعة. تضمن هذه الطريقة"
+" أن أي منتج يختاره المستخدم في مجموعة سيكون سعره دائمًا هو نفسه."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -3626,25 +3648,31 @@ msgid "Units of Measure"
 msgstr "وحدات القياس"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__uom_category_id
+#: model:ir.model.fields,field_description:product.field_product_template__uom_category_id
+msgid "UoM Category"
+msgstr "فئة وحدة القياس "
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Update extra prices"
-msgstr ""
+msgstr "تحديث الأسعار الإضافية"
 
 #. module: product
 #: model:ir.model,name:product.model_update_product_attribute_value
 msgid "Update product attribute value"
-msgstr ""
+msgstr "تحديث قيمة خاصية المنتج "
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Update product extra prices"
-msgstr ""
+msgstr "تحديث الأسعار الإضافية للمنتج"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__update_extra_price
 msgid "Update the extra price on existing products"
-msgstr ""
+msgstr "تحديث السعر الإضافي للمنتجات الموجودة"
 
 #. module: product
 #. odoo-javascript
@@ -3962,12 +3990,14 @@ msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
 msgstr ""
+"أنت على وشك إضافة القيمة \"%(attribute_value)s\" إلى %(product_count)s من "
+"المنتجات."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/update_product_attribute_value.py:0
 msgid "You are about to update the extra price of %s products."
-msgstr ""
+msgstr "أنت على وشك تحديث سعر إضافي لـ %s من المنتجات."
 
 #. module: product
 #. odoo-python
@@ -4038,7 +4068,7 @@ msgstr "لا يمكنك تحرير هذا المنتج في الكتالوج. "
 #: code:addons/product/models/product_attribute.py:0
 msgid ""
 "You cannot archive this attribute as there are still products linked to it"
-msgstr ""
+msgstr "لا يمكنك أرشفة هذه السمة حيث لا تزال هناك منتجات مرتبطة بها"
 
 #. module: product
 #. odoo-python
@@ -4252,7 +4282,7 @@ msgstr "مثال: 1234567890 "
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "e.g. Burger Choice"
-msgstr ""
+msgstr "مثال: خيار البرغر "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
@@ -4284,7 +4314,7 @@ msgstr "مثلًا: بائعي التجزئة"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "markup"
-msgstr ""
+msgstr "ترميز"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form

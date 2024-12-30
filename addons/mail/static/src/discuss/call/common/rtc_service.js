@@ -10,7 +10,7 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
-import { loadBundle } from "@web/core/assets";
+import { loadBundle, loadJS } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 import { callActionsRegistry } from "./call_actions";
 
@@ -445,6 +445,7 @@ export class Rtc extends Record {
      * @param {boolean} [initialState.camera]
      */
     async toggleCall(channel, { audio = true, camera } = {}) {
+        await loadJS("/mail/static/lib/selfie_segmentation/selfie_segmentation.js");
         if (this.state.hasPendingRequest) {
             return;
         }
@@ -731,6 +732,7 @@ export class Rtc extends Record {
         const data = await rpc(
             "/mail/rtc/channel/join_call",
             {
+                camera,
                 channel_id: channel.id,
                 check_rtc_session_ids: channel.rtcSessions.map((session) => session.id),
             },
@@ -786,6 +788,9 @@ export class Rtc extends Record {
             { leading: true, trailing: true }
         );
         this.state.channel.rtcInvitingSession = undefined;
+        if (camera) {
+            await this.toggleVideo("camera");
+        }
         await this._initConnection();
         if (!this.state.channel?.id) {
             return;
@@ -799,9 +804,6 @@ export class Rtc extends Record {
         await this.resetAudioTrack({ force: audio });
         if (!this.state.channel?.id) {
             return;
-        }
-        if (camera) {
-            await this.toggleVideo("camera");
         }
     }
 
@@ -961,7 +963,10 @@ export class Rtc extends Record {
         if (this.selfSession) {
             switch (type) {
                 case "camera": {
-                    this.removeVideoFromSession(this.selfSession, "camera");
+                    this.removeVideoFromSession(this.selfSession, {
+                        type: "camera",
+                        cleanup: false,
+                    });
                     if (this.state.cameraTrack) {
                         this.updateStream(this.selfSession, this.state.cameraTrack);
                     }
@@ -969,7 +974,10 @@ export class Rtc extends Record {
                 }
                 case "screen": {
                     if (!this.state.screenTrack) {
-                        this.removeVideoFromSession(this.selfSession, "screen");
+                        this.removeVideoFromSession(this.selfSession, {
+                            type: "screen",
+                            cleanup: false,
+                        });
                     } else {
                         this.updateStream(this.selfSession, this.state.screenTrack);
                     }
@@ -1020,10 +1028,6 @@ export class Rtc extends Record {
      * @param {String} type 'camera' or 'screen'
      */
     async setVideo(track, type, activateVideo = false) {
-        if (this.blurManager) {
-            this.blurManager.close();
-            this.blurManager = undefined;
-        }
         const stopVideo = () => {
             if (track) {
                 track.stop();
@@ -1047,13 +1051,17 @@ export class Rtc extends Record {
             if (type === "screen") {
                 this.soundEffectsService.play("screen-sharing");
             }
+            if (type === "camera" && this.blurManager) {
+                this.blurManager.close();
+                this.blurManager = undefined;
+            }
             stopVideo();
             return;
         }
         let sourceStream;
         try {
             if (type === "camera") {
-                if (this.state.sourceCameraStream && this.state.sendCamera) {
+                if (this.state.sourceCameraStream) {
                     sourceStream = this.state.sourceCameraStream;
                 } else {
                     sourceStream = await browser.navigator.mediaDevices.getUserMedia({
@@ -1062,7 +1070,7 @@ export class Rtc extends Record {
                 }
             }
             if (type === "screen") {
-                if (this.state.sourceScreenStream && this.state.sendScreen) {
+                if (this.state.sourceScreenStream) {
                     sourceStream = this.state.sourceScreenStream;
                 } else {
                     sourceStream = await browser.navigator.mediaDevices.getDisplayMedia({
@@ -1080,14 +1088,21 @@ export class Rtc extends Record {
             stopVideo();
             return;
         }
-        let videoStream = sourceStream;
+        let outputTrack = sourceStream ? sourceStream.getVideoTracks()[0] : undefined;
+        if (outputTrack) {
+            outputTrack.addEventListener("ended", async () => {
+                await this.toggleVideo(type, false);
+            });
+        }
         if (this.store.settings.useBlur && type === "camera") {
             try {
+                this.blurManager?.close();
                 this.blurManager = new BlurManager(sourceStream, {
                     backgroundBlur: this.store.settings.backgroundBlurAmount,
                     edgeBlur: this.store.settings.edgeBlurAmount,
                 });
-                videoStream = await this.blurManager.stream;
+                const bluredStream = await this.blurManager.stream;
+                outputTrack = bluredStream.getVideoTracks()[0];
             } catch (_e) {
                 this.notification.add(
                     _t("%(name)s: %(message)s)", { name: _e.name, message: _e.message }),
@@ -1096,26 +1111,20 @@ export class Rtc extends Record {
                 this.store.settings.useBlur = false;
             }
         }
-        track = videoStream ? videoStream.getVideoTracks()[0] : undefined;
-        if (track) {
-            track.addEventListener("ended", async () => {
-                await this.toggleVideo(type, false);
-            });
-        }
         switch (type) {
             case "camera": {
                 Object.assign(this.state, {
                     sourceCameraStream: sourceStream,
-                    cameraTrack: track,
-                    sendCamera: Boolean(track),
+                    cameraTrack: outputTrack,
+                    sendCamera: Boolean(outputTrack),
                 });
                 break;
             }
             case "screen": {
                 Object.assign(this.state, {
                     sourceScreenStream: sourceStream,
-                    screenTrack: track,
-                    sendScreen: Boolean(track),
+                    screenTrack: outputTrack,
+                    sendScreen: Boolean(outputTrack),
                 });
                 break;
             }
@@ -1262,17 +1271,23 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {RtcSession} session
-     * @param {String} [videoType]
+     * @param {import("models").RtcSession} session
+     * @param {Object} [param1]
+     * @param {String} [param1.type]
+     * @param {boolean} [param1.cleanup]
      */
-    removeVideoFromSession(session, videoType = false) {
-        if (videoType) {
-            this.updateActiveSession(session, videoType);
-            closeStream(session.videoStreams.get(videoType));
-            session.videoStreams.delete(videoType);
+    removeVideoFromSession(session, { type, cleanup = true } = {}) {
+        if (type) {
+            this.updateActiveSession(session, type);
+            if (cleanup) {
+                closeStream(session.videoStreams.get(type));
+            }
+            session.videoStreams.delete(type);
         } else {
-            for (const stream of session.videoStreams.values()) {
-                closeStream(stream);
+            if (cleanup) {
+                for (const stream of session.videoStreams.values()) {
+                    closeStream(stream);
+                }
             }
             session.videoStreams.clear();
         }
@@ -1318,8 +1333,11 @@ export class Rtc extends Record {
         if (activeRtcSession.isMainVideoStreamActive) {
             if (videoType === session.mainVideoStreamType) {
                 if (videoType === "screen") {
-                    this.state.channel.activeRtcSession = undefined;
-                } else {
+                    session.mainVideoStreamType = "camera";
+                } else if (
+                    this.actionsStack.includes("camera-on") &&
+                    this.actionsStack.includes("share-screen")
+                ) {
                     session.mainVideoStreamType = "screen";
                 }
             }

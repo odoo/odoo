@@ -46,7 +46,7 @@ export class SelfOrder extends Reactive {
         this.session = this.models["pos.session"].getFirst();
         this.config = this.models["pos.config"].getFirst();
         this.company = this.models["res.company"].getFirst();
-        this.currency = this.models["res.currency"].getFirst();
+        this.currency = this.config.currency_id;
 
         this.markupDescriptions();
         this.access_token = this.config.access_token;
@@ -132,7 +132,7 @@ export class SelfOrder extends Reactive {
                 });
                 return;
             }
-            if (product.attributes.length) {
+            if (product.isConfigurable()) {
                 this.router.navigate("product", { id: product.id });
                 return;
             }
@@ -189,7 +189,18 @@ export class SelfOrder extends Reactive {
 
         this.categoryList = new Set(availableCategories);
         this.availableCategories = availableCategories.filter((c) => {
-            return now > c.hour_after && now < c.hour_until;
+            const hourStart = c.hour_after;
+            const hourUntil = c.hour_until;
+            if (hourStart === hourUntil || (hourStart === 0 && hourUntil === 24)) {
+                // if equal, it means open the whole day
+                return true;
+            } else if (hourStart < hourUntil) {
+                // in this case, if current time is in between, then shop is open
+                return now >= hourStart && now <= hourUntil;
+            } else {
+                // in this case, if current time is in between, then shop is closed
+                return !(now >= hourStart && now <= hourUntil);
+            }
         });
         this.currentCategory = this.productCategories[0] || null;
     }
@@ -589,6 +600,11 @@ export class SelfOrder extends Reactive {
         });
     }
 
+    resetTableIdentifier() {
+        this.router.deleteTableIdentifier();
+        this.currentTable = null;
+    }
+
     async initMobileData() {
         if (this.config.self_ordering_mode !== "qr_code") {
             if (
@@ -769,6 +785,9 @@ export class SelfOrder extends Reactive {
             } else if (error.data.name === "werkzeug.exceptions.NotFound") {
                 message = _t("Orders not found on server");
                 cleanOrders = true;
+            } else if (error?.data?.name === "odoo.exceptions.UserError") {
+                message = error.data.message;
+                this.resetTableIdentifier();
             }
         } else if (error instanceof ConnectionLostError) {
             message = _t("Connection lost, please try again later");

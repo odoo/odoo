@@ -118,6 +118,7 @@ paymentForm.include({
             return;
         }
         this.paypalData[paymentOptionId].paypalOrderId = processingValues['order_id'];
+        this.paypalData[paymentOptionId].paypalTxRef = processingValues['reference'];
     },
 
     /**
@@ -134,6 +135,7 @@ paymentForm.include({
         await rpc('/payment/paypal/complete_order', {
             'provider_id': provider_id,
             'order_id': orderID,
+            'reference': this.paypalData[this.selectedOptionId].paypalTxRef,
         }).then(() => {
             // Close the PayPal buttons that were rendered
             this.paypalData[this.selectedOptionId]['paypalButton'].close();

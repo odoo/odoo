@@ -27,6 +27,7 @@ export class PosOrderline extends Base {
         this.uiState = {
             hasChange: true,
         };
+        this.saved_quantity = 0;
     }
 
     set_full_product_name() {
@@ -99,7 +100,7 @@ export class PosOrderline extends Base {
     }
 
     get currency() {
-        return this.models["res.currency"].getFirst();
+        return this.order_id.currency;
     }
 
     get pickingType() {
@@ -539,14 +540,12 @@ export class PosOrderline extends Base {
 
     display_discount_policy() {
         // Sales dropped `discount_policy`, and we only show discount if applied pricelist rule
-        // is a percentage discount. However we don't have that information in pos
-        // so this is heuristic used to imitate the same behavior.
-        if (
-            this.order_id.pricelist_id &&
-            this.order_id.pricelist_id.item_ids
-                .map((rule) => rule.compute_price)
-                .includes("percentage")
-        ) {
+        // is a percentage discount.
+        const pricelistRule = this.product_id.getPricelistRule(
+            this.order_id.pricelist_id,
+            this.get_quantity()
+        );
+        if (pricelistRule && pricelistRule.compute_price === "percentage") {
             return "without_discount";
         }
         return "with_discount";
@@ -612,7 +611,7 @@ export class PosOrderline extends Base {
     }
     getComboTotalPriceWithoutTax() {
         const allLines = this.getAllLinesInCombo();
-        return allLines.reduce((total, line) => total + line.get_all_prices(1).priceWithoutTax, 0);
+        return allLines.reduce((total, line) => total + line.get_base_price() / line.qty, 0);
     }
 
     get_old_unit_display_price() {

@@ -52,7 +52,7 @@ class ProductProduct(models.Model):
         config_id = data['pos.config']['data'][0]['id']
 
         # Add custom fields for 'formula' taxes.
-        fields = set(self._load_pos_data_fields(config_id))
+        fields = set(self._load_pos_self_data_fields(config_id))
         taxes = self.env['account.tax'].search(self.env['account.tax']._load_pos_data_domain(data))
         product_fields = taxes._eval_taxes_computation_prepare_product_fields()
         fields = list(fields.union(product_fields))

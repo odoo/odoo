@@ -1,13 +1,14 @@
-import { useSequential } from "@mail/utils/common/hooks";
 import { status, useComponent, useEffect, useState } from "@odoo/owl";
-
+import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
+import { useDebounced } from "@web/core/utils/timing";
 
 class UseSuggestion {
     constructor(comp) {
         this.comp = comp;
+        this.fetchSuggestions = useDebounced(this.fetchSuggestions.bind(this), 250);
         useEffect(
-            (delimiter, position, term) => {
+            () => {
                 this.update();
                 if (this.search.position === undefined || !this.search.delimiter) {
                     return; // nothing else to fetch
@@ -15,51 +16,15 @@ class UseSuggestion {
                 if (this.composer.store.self.type !== "partner") {
                     return; // guests cannot access fetch suggestion method
                 }
-                this.sequential(async () => {
-                    if (
-                        this.search.delimiter !== delimiter ||
-                        this.search.position !== position ||
-                        this.search.term !== term
-                    ) {
-                        return; // ignore obsolete call
-                    }
-                    if (
-                        this.lastFetchedSearch?.count === 0 &&
-                        (!this.search.delimiter || this.isSearchMoreSpecificThanLastFetch)
-                    ) {
-                        return; // no need to fetch since this is more specific than last and last had no result
-                    }
-                    this.state.isFetching = true;
-                    try {
-                        await this.suggestionService.fetchSuggestions(this.search, {
-                            thread: this.thread,
-                        });
-                    } catch {
-                        this.lastFetchedSearch = null;
-                    } finally {
-                        this.state.isFetching = false;
-                    }
-                    if (status(comp) === "destroyed") {
-                        return;
-                    }
-                    this.update();
-                    this.lastFetchedSearch = {
-                        ...this.search,
-                        count: this.state.items?.suggestions.length ?? 0,
-                    };
-                    if (
-                        this.search.delimiter === delimiter &&
-                        this.search.position === position &&
-                        this.search.term === term &&
-                        !this.state.items?.suggestions.length
-                    ) {
-                        this.clearSearch();
-                    }
-                });
+                if (
+                    this.lastFetchedSearch?.count === 0 &&
+                    (!this.search.delimiter || this.isSearchMoreSpecificThanLastFetch)
+                ) {
+                    return; // no need to fetch since this is more specific than last and last had no result
+                }
+                this.fetchSuggestions();
             },
-            () => {
-                return [this.search.delimiter, this.search.position, this.search.term];
-            }
+            () => [this.search.delimiter, this.search.position, this.search.term]
         );
         useEffect(
             () => {
@@ -73,7 +38,6 @@ class UseSuggestion {
     get composer() {
         return this.comp.props.composer;
     }
-    sequential = useSequential();
     suggestionService = useService("mail.suggestion");
     state = useState({
         count: 0,
@@ -215,6 +179,40 @@ class UseSuggestion {
         const limit = 8;
         suggestions.length = Math.min(suggestions.length, limit);
         this.state.items = { type, suggestions };
+    }
+
+    async fetchSuggestions() {
+        let resetFetchingState = true;
+        try {
+            this.abortController?.abort();
+            this.abortController = new AbortController();
+            this.state.isFetching = true;
+            await this.suggestionService.fetchSuggestions(this.search, {
+                thread: this.thread,
+                abortSignal: this.abortController.signal,
+            });
+        } catch (e) {
+            if (e instanceof ConnectionAbortedError) {
+                resetFetchingState = false;
+                return;
+            }
+            this.lastFetchedSearch = null;
+        } finally {
+            if (resetFetchingState) {
+                this.state.isFetching = false;
+            }
+        }
+        if (status(this.comp) === "destroyed") {
+            return;
+        }
+        this.update();
+        this.lastFetchedSearch = {
+            ...this.search,
+            count: this.state.items?.suggestions.length ?? 0,
+        };
+        if (!this.state.items?.suggestions.length) {
+            this.clearSearch();
+        }
     }
 }
 

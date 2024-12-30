@@ -3,17 +3,17 @@
 # 	* pos_restaurant
 # 
 # Translators:
-# Wil Odoo, 2024
 # joel weber <joel2000.jw@gmail.com>, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -268,7 +268,7 @@ msgstr "Bourbon, bitter, suiker en een vleugje citrusschil."
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.burger_drink_combo_product_template
 msgid "Burger Menu Combo"
-msgstr "Combo burger menu"
+msgstr "Combinatie burgermenu"
 
 #. module: pos_restaurant
 #: model:pos.payment.method,name:pos_restaurant.payment_method
@@ -386,6 +386,12 @@ msgid "Design floors and assign orders to tables"
 msgstr "Ontwerp zaalplannen en wijs bestellingen toe aan tafels"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Dine in"
+msgstr "Ter plaatse eten"
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__display_name
 msgid "Display Name"
@@ -437,12 +443,6 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
 msgid "Enter a table number"
 msgstr "Voer een tafelnummer in"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
-msgid "Error"
-msgstr "Fout"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.espresso_product_template
@@ -552,12 +552,6 @@ msgstr "Gemakshalve bieden we de volgende fooiberekeningen:"
 #: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
 msgid "Funghi"
 msgstr "Fungi"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
-msgid "General Note"
-msgstr "Algemene notitie"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_negroni_product_template
@@ -691,6 +685,12 @@ msgid "Margarita"
 msgstr "Margarita"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Message"
+msgstr "Bericht"
+
+#. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.milkshake_banana_product_template
 msgid "Milkshake Banana"
 msgstr "Bananenmilkshake"
@@ -740,9 +740,9 @@ msgstr "Geen fooi"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
-msgid "No table or floating order found with this number"
-msgstr "Geen tafel of losse bestelling gevonden voor dit nummer"
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Note"
+msgstr "Notitie"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1195,6 +1195,12 @@ msgid "Take Away"
 msgstr "Afhaalmaaltijd"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Take out"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__takeaway
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_takeaway
 msgid "Takeaway"
@@ -1406,15 +1412,15 @@ msgstr "Breedte"
 msgid ""
 "You cannot delete a floor when orders are still in draft for this floor."
 msgstr ""
-"Je kan geen zaal verwijderen als bestellingen nog in concept zijn voor deze "
-"zaal."
+"Je kunt geen zaal verwijderen als bestellingen nog in concept zijn voor deze"
+" zaal."
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "You cannot delete a floor with orders still in draft for this floor."
 msgstr ""
-"Je kan een zaal niet verwijderen als er nog bestellingen in concept zijn "
+"Je kunt een zaal niet verwijderen als er nog bestellingen in concept zijn "
 "voor deze zaal."
 
 #. module: pos_restaurant
@@ -1423,7 +1429,7 @@ msgstr ""
 msgid ""
 "You cannot delete a table when orders are still in draft for this table."
 msgstr ""
-"Je kan een tafel niet verwijderen als er nog bestellingen in concept zijn "
+"Je kunt een tafel niet verwijderen als er nog bestellingen in concept zijn "
 "voor deze tafel."
 
 #. module: pos_restaurant
@@ -1431,7 +1437,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "You cannot delete a table with orders still in draft for this table."
 msgstr ""
-"Je kan geen tafel verwijderen waarvan de bestellingen nog in concept zijn."
+"Je kunt geen tafel verwijderen waarvan de bestellingen nog in concept zijn."
 
 #. module: pos_restaurant
 #. odoo-python

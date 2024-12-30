@@ -1,5 +1,6 @@
 import { browser } from "@web/core/browser/browser";
-import { regenerateAssets } from "@web/core/debug/debug_menu_items";
+import { user } from "@web/core/user";
+import { regenerateAssets, becomeSuperuser } from "@web/core/debug/debug_menu_items";
 import { openViewItem } from "@web/webclient/debug/debug_items";
 import { describe, test, expect, beforeEach } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -231,6 +232,14 @@ describe("DebugMenu", () => {
         await click(item);
         await animationFrame();
         expect.verifySteps(["ir.attachment/regenerate_assets_bundles", "reloadPage"]);
+    });
+
+    test("cannot acess the Become superuser menu if not admin", async () => {
+        debugRegistry.category("default").add("becomeSuperuser", becomeSuperuser);
+        user.isAdmin = false;
+        await mountWithCleanup(DebugMenuParent);
+        await contains("button.dropdown-toggle").click();
+        expect(".dropdown-menu .dropdown-item").toHaveCount(0);
     });
 
     test("can open a view", async () => {

@@ -9,6 +9,7 @@ from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.modules.registry import Registry
 from odoo.osv import expression
+from odoo.sql_db import BaseCursor
 from odoo.tools import float_compare, float_is_zero
 from odoo.tools.misc import split_every
 
@@ -562,6 +563,8 @@ class ProcurementGroup(models.Model):
         locations if it could not be found.
         """
         result = self.env['stock.rule']
+        if not location_id:
+            return result
         locations = location_id
         # Get the location hierarchy, starting from location_id up to its root location.
         while locations[-1].location_id:
@@ -715,6 +718,7 @@ class ProcurementGroup(models.Model):
         we run functions as SUPERUSER to avoid intercompanies and access rights issues. """
         try:
             if use_new_cursor:
+                assert isinstance(self._cr, BaseCursor)
                 cr = Registry(self._cr.dbname).cursor()
                 self = self.with_env(self.env(cr=cr))  # TDE FIXME
 

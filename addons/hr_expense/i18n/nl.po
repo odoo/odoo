@@ -3,17 +3,17 @@
 # 	* hr_expense
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
-# Manon Rondou, 2024
 # Wil Odoo, 2024
+# Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,7 +103,7 @@ msgstr "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "2023-08-11"
-msgstr "11-08-2023"
+msgstr "2023-08-11"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -622,12 +622,6 @@ msgstr ""
 "Standaard openstaande rekening voor declaraties betaald door het bedrijf."
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Default outstanding account for expenses paid by employees."
-msgstr ""
-"Standaard openstaande rekening voor declaraties betaald door werknemers."
-
-#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__department_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -680,8 +674,8 @@ msgid ""
 "again."
 msgstr ""
 "Wens je echt je eigen bedrijf te factureren? Verwijder de “Bedrijfsnaam” van"
-" de partner om de configuratie te herstellen. Annuleer deze factuur en begin"
-" opnieuw."
+" het contact om de configuratie te herstellen. Annuleer deze factuur en "
+"begin opnieuw."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__business_domain
@@ -731,11 +725,6 @@ msgstr "Werknemer (terug te betalen)"
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Employee Expense Journal"
 msgstr "Kostendagboek voor werknemers"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Employee Expense Oustanding Account"
-msgstr "Werknemerskosten Uitgavenrekening"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
@@ -1029,7 +1018,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_partner_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
+msgstr "Volgers (Contacten)"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_type_icon
@@ -1907,7 +1896,7 @@ msgstr "Formulier"
 #: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__show_commercial_partner_warning
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__show_commercial_partner_warning
 msgid "Show Commercial Partner Warning"
-msgstr "Waarschuwing commerciële partner tonen"
+msgstr "Waarschuwing commerciële contact tonen"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1920,12 +1909,6 @@ msgstr "Toon alle records welke een actiedatum voor vandaag hebben"
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid "Show missing work email employees"
 msgstr "Toon werknemers met ontbrekende werkmail"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid "Specify expense journal to generate accounting entries."
-msgstr "Geef een kostendagboek op om boekingen te genereren."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__accounting_date
@@ -2075,13 +2058,6 @@ msgstr ""
 "registreren die door het bedrijf betaald worden."
 
 #. module: hr_expense
-msgid ""
-"The account used to record the outstanding amount of the employee expenses."
-msgstr ""
-"De rekening die wordt gebruikt om het openstaande bedrag aan declaraties te "
-"registreren die door de werknemers betaald worden."
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
 msgid ""
@@ -2128,16 +2104,6 @@ msgid "The journal used when the expense is paid by employee."
 msgstr "Het gebruikte dagboek als de declaratie is betaald door de werknemer."
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid ""
-"The payment method %(method)s needs an account, or a default outstanding "
-"account must be defined in the settings."
-msgstr ""
-"De betaalmethode %(method)s heeft een rekening nodig, of er moet een "
-"standaard openstaande rekening worden gedefinieerd in de instellingen."
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__payment_method_line_id
 msgid "The payment method used when the expense is paid by the company."
 msgstr ""
@@ -2163,27 +2129,6 @@ msgid ""
 msgstr ""
 "De werkmail van bepaalde werknemers ontbreekt. Voeg dit toe om de "
 "werknemersfiche"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Employee(s) should have a bank account set."
-msgstr ""
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Go to Employee(s)"
-msgstr ""
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Employee(s)"
-msgstr "Werknemer(s)"
 
 #. module: hr_expense
 #. odoo-python
@@ -2310,7 +2255,7 @@ msgstr "Ter goedkeuring"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Unit Price"
-msgstr "Eenheidsprijs"
+msgstr "Prijs"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_id
@@ -2464,7 +2409,7 @@ msgid ""
 "You cannot approve:\n"
 " %s"
 msgstr ""
-"Je kan niet goedkeuren:\n"
+"Je kunt niet goedkeuren:\n"
 " %s"
 
 #. module: hr_expense
@@ -2499,7 +2444,7 @@ msgstr ""
 #: code:addons/hr_expense/models/analytic.py:0
 msgid "You cannot delete an analytic account that is used in an expense."
 msgstr ""
-"Je kan geen analytische rekening verwijderen die in een onkost gebruikt "
+"Je kunt geen analytische rekening verwijderen die in een onkost gebruikt "
 "wordt."
 
 #. module: hr_expense
@@ -2509,7 +2454,7 @@ msgid ""
 "You cannot delete only some entries linked to an expense report. All entries"
 " must be deleted at the same time."
 msgstr ""
-"Je kan niet slechts bepaalde boekingen gekoppeld aan een declaratie "
+"Je kunt niet slechts bepaalde boekingen gekoppeld aan een declaratie "
 "verwijderen. Alle boekingen moeten tegelijkertijd worden verwijderd."
 
 #. module: hr_expense
@@ -2519,7 +2464,7 @@ msgid ""
 "You cannot delete only some payments linked to an expense report. All "
 "payments must be deleted at the same time."
 msgstr ""
-"Je kan niet slechts bepaalde betalingen gekoppeld aan een declaratie "
+"Je kunt niet slechts bepaalde betalingen gekoppeld aan een declaratie "
 "verwijderen. Alle betalingen moeten tegelijkertijd worden verwijderd."
 
 #. module: hr_expense
@@ -2529,8 +2474,8 @@ msgid ""
 "You cannot do this modification since the payment is linked to an expense "
 "report."
 msgstr ""
-"Je kan deze wijziging niet doorvoeren omdat de betaling gekoppeld is aan een"
-" declaratie."
+"Je kunt deze wijziging niet doorvoeren omdat de betaling gekoppeld is aan "
+"een declaratie."
 
 #. module: hr_expense
 #. odoo-python
@@ -2557,7 +2502,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot report expenses for different companies in the same report."
 msgstr ""
-"Je kan geen declaratie indienen voor verschillende bedrijven in dezelfde "
+"Je kunt geen declaratie indienen voor verschillende bedrijven in dezelfde "
 "declaratie."
 
 #. module: hr_expense

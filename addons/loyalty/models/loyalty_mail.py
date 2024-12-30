@@ -17,4 +17,4 @@ class LoyaltyMail(models.Model):
         ('points_reach', 'When Reaching')], string='When', required=True
     )
     points = fields.Float()
-    mail_template_id = fields.Many2one('mail.template', string="Email Template", required=True, domain=[('model', '=', 'loyalty.card')])
+    mail_template_id = fields.Many2one('mail.template', string="Email Template", required=True, domain=[('model', '=', 'loyalty.card')], ondelete='cascade')

@@ -4,18 +4,18 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Wil Odoo, 2024
-# Tiffany Chang, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Manon Rondou, 2024
+# Tiffany Chang, 2024
+# Wil Odoo, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-27 08:16+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -326,19 +326,20 @@ msgstr "Een barcode kan slechts aan één verpakking worden toegekend."
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice can't contain duplicate products."
-msgstr "Een combokeuze kan geen dubbele producten bevatten."
+msgstr "Een combinatiekeuze kan geen dubbele producten bevatten."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo_item.py:0
 msgid "A combo choice can't contain products of type \"combo\"."
-msgstr "Een combo keuze kan geen producten van het type \"combo\" bevatten."
+msgstr ""
+"Een combinatiekeuze kan geen producten van het type \"combinatie\" bevatten."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice must contain at least 1 product."
-msgstr "Een combokeuze moet minstens 1 product bevatten."
+msgstr "Een combinatiekeuze moet minstens 1 product bevatten."
 
 #. module: product
 #. odoo-python
@@ -882,7 +883,7 @@ msgstr "Combinatie"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "Combo Choice"
-msgstr "Combokeuze"
+msgstr "Combinatiekeuze"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_combo_action
@@ -890,23 +891,23 @@ msgstr "Combokeuze"
 #: model:ir.model.fields,field_description:product.field_product_template__combo_ids
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_tree
 msgid "Combo Choices"
-msgstr "Combo-keuzes"
+msgstr "Combinatiekeuzes"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_ids
 msgid "Combo Item"
-msgstr "Combo Artikel"
+msgstr "Combinatieproduct"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__base_price
 msgid "Combo Price"
-msgstr "Comboprijs"
+msgstr "Combinatieprijs"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Combo products can't have attributes"
-msgstr "Combo-producten kunnen geen attributen hebben"
+msgstr "Combinatieproducten kunnen geen kenmerken hebben"
 
 #. module: product
 #. odoo-python
@@ -915,7 +916,8 @@ msgid ""
 "Combos allow to choose one product amongst a selection of choices per "
 "category."
 msgstr ""
-"Met combo's kun je één product kiezen uit een selectie keuzes per categorie."
+"Met combinaties kun je één product kiezen uit een selectie keuzes per "
+"categorie."
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -1000,6 +1002,16 @@ msgstr "Ingesloten hoeveelheid moet positief zijn."
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Contained quantity"
 msgstr "Bevatte hoeveelheid"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__uom_category_id
+#: model:ir.model.fields,help:product.field_product_template__uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Conversie tussen maateenheden kan alleen plaatsvinden als deze behoren tot "
+"dezelfde categorie. De conversie wordt gemaakt op basis van ratio's."
 
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
@@ -1215,7 +1227,7 @@ msgstr "Geef je volumeeenheid in"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your weight unit of measure"
-msgstr "Geef je gewichtseenheid in"
+msgstr "Definieer je gewichtsmaateenheid"
 
 #. module: product
 #. odoo-javascript
@@ -1541,7 +1553,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:product.field_product_product__message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
+msgstr "Volgers (Contacten)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__activity_type_icon
@@ -1876,7 +1888,7 @@ msgstr "Interne referentie"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__barcode
 msgid "International Article Number used for product identification."
-msgstr "Internationaal artikelnummer voor product identificatie."
+msgstr "Internationaal productnummer voor productidentificatie."
 
 #. module: product
 #. odoo-javascript
@@ -2309,7 +2321,7 @@ msgstr "Kantoorstoel zwart"
 #. module: product
 #: model:product.template,name:product.office_combo_product_template
 msgid "Office Combo"
-msgstr "Kantoor Combo"
+msgstr "Kantoorcombinatie"
 
 #. module: product
 #: model:product.template,name:product.product_order_01_product_template
@@ -2688,12 +2700,12 @@ msgstr "Productcategorie"
 #. module: product
 #: model:ir.model,name:product.model_product_combo
 msgid "Product Combo"
-msgstr "Product Combo"
+msgstr "Productcombinatie"
 
 #. module: product
 #: model:ir.model,name:product.model_product_combo_item
 msgid "Product Combo Item"
-msgstr "Product Combo Artikel"
+msgstr "Combinatieproduct"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_count
@@ -3417,10 +3429,11 @@ msgid ""
 "combo product. This heuristic ensures that whatever product the user chooses"
 " in a combo, it will always be the same price."
 msgstr ""
-"De minimumprijs van de producten in deze combo. Deze waarde wordt gebruikt "
-"om de prijs van deze combo te delen ten opzichte van de andere combo's in "
-"een combo product. Deze heuristiek zorgt ervoor dat welk product de "
-"gebruiker ook kiest in een combo, het altijd dezelfde prijs heeft."
+"De minimumprijs van de producten in deze combinatie. Deze waarde wordt "
+"gebruikt om de prijs van deze combinatie te delen vergeleken met de andere "
+"combinaties in een combinatieproduct. Deze heuristiek zorgt ervoor dat welk "
+"product de gebruiker ook kiest in een combinatie, het altijd dezelfde prijs "
+"heeft."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -3463,7 +3476,7 @@ msgid ""
 "expressed in the vendor Product Unit of Measure if not any, in the default "
 "unit of measure of the product otherwise."
 msgstr ""
-"De hoeveelheid in te kopen van deze leverancier om van de eenheidsprijs te "
+"De hoeveelheid in te kopen van deze leverancier om van de prijs te "
 "profiteren, uitgedrukt in de eventuele producteenheid van de leverancier, "
 "anders in de standaard maateenheid van het product."
 
@@ -3546,7 +3559,7 @@ msgid ""
 "current partner"
 msgstr ""
 "Deze prijslijst wordt gebruikt i.p.v. de standaard prijslijst bij verkopen "
-"aan de huidige partner"
+"aan de huidige contact"
 
 #. module: product
 #. odoo-python
@@ -3576,7 +3589,7 @@ msgid ""
 "quotation. Keep empty to use the internal one."
 msgstr ""
 "Deze leverancier productnaam wordt gebruikt bij het afdrukken van een "
-"offerteaanvraag. Laat dit leeg om een interne productcode te gebruiken."
+"inkoopofferte. Laat dit leeg om een interne productcode te gebruiken."
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
@@ -3627,7 +3640,7 @@ msgstr "Eenheid"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Unit Price"
-msgstr "Eenheidsprijs"
+msgstr "Prijs"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__product_uom_id
@@ -3648,7 +3661,7 @@ msgstr "Naam maateenheid"
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "Unit price:"
-msgstr "Eenheidsprijs:"
+msgstr "Prijs:"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -3660,6 +3673,12 @@ msgstr "Stuks"
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Units of Measure"
 msgstr "Maateenheden"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__uom_category_id
+#: model:ir.model.fields,field_description:product.field_product_template__uom_category_id
+msgid "UoM Category"
+msgstr "Maateenheid categorie"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -4075,14 +4094,14 @@ msgid ""
 "You can upload an image that will be used as the color of the attribute "
 "value."
 msgstr ""
-"Je kan een afbeeling uploaden die gebruikt zal worden als de kleur van de "
+"Je kunt een afbeeling uploaden die gebruikt zal worden als de kleur van de "
 "kenmerkwaarde."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "You can't edit this product in the catalog."
-msgstr "Je kan dit product niet in de catalogus bijwerken."
+msgstr "Je kunt dit product niet in de catalogus bijwerken."
 
 #. module: product
 #. odoo-python
@@ -4109,7 +4128,7 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
-"Je kan de Variant Aanmaakmodus van het kenmerk %(attribute)s niet veranderen, omdat het wordt gebruikt voor de volgende producten:\n"
+"Je kunt de Variant Aanmaakmodus van het kenmerk %(attribute)s niet veranderen, omdat het wordt gebruikt voor de volgende producten:\n"
 "%(products)s"
 
 #. module: product
@@ -4119,7 +4138,7 @@ msgid ""
 "You cannot change the attribute of the value %(value)s because it is used on"
 " the following products: %(products)s"
 msgstr ""
-"Je kan het kenmerk van de waarde %(value)s niet veranderen omdat het wordt "
+"Je kunt het kenmerk van de waarde %(value)s niet veranderen omdat het wordt "
 "gebruikt op de volgende producten: %(products)s"
 
 #. module: product
@@ -4129,7 +4148,7 @@ msgid ""
 "You cannot change the product of the value %(value)s set on product "
 "%(product)s."
 msgstr ""
-"Je kan het product van de waarde %(value)s dat ingesteld is op het product "
+"Je kunt het product van de waarde %(value)s dat ingesteld is op het product "
 "%(product)s niet veranderen."
 
 #. module: product
@@ -4139,7 +4158,7 @@ msgid ""
 "You cannot change the value of the value %(value)s set on product "
 "%(product)s."
 msgstr ""
-"Je kan de waarde van de waarde %(value)s die is ingesteld op het product "
+"Je kunt de waarde van de waarde %(value)s die is ingesteld op het product "
 "%(product)s niet veranderen."
 
 #. module: product
@@ -4185,7 +4204,7 @@ msgid ""
 "You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
-"Je kan het kenmerk %(attribute)s niet verwijderen omdat het wordt gebruikt op de volgende producten:\n"
+"Je kunt het kenmerk %(attribute)s niet verwijderen omdat het wordt gebruikt op de volgende producten:\n"
 "%(products)s"
 
 #. module: product
@@ -4195,7 +4214,7 @@ msgid ""
 "You cannot delete the value %(value)s because it is used on the following products:\n"
 "%(products)s\n"
 msgstr ""
-"Je kan de waarde %(value)s niet verwijderen omdat het wordt gebruikt op de volgende producten:\n"
+"Je kunt de waarde %(value)s niet verwijderen omdat het wordt gebruikt op de volgende producten:\n"
 "%(products)s\n"
 
 #. module: product
@@ -4214,7 +4233,7 @@ msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s"
 " to the product %(product_dest)s."
 msgstr ""
-"Je kan het kenmerk %(attribute)s niet verplaatsen van product "
+"Je kunt het kenmerk %(attribute)s niet verplaatsen van product "
 "%(product_src)s naar product %(product_dest)s."
 
 #. module: product
@@ -4234,7 +4253,7 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                            whether it's a storable product, a consumable or a service."
 msgstr ""
-"Je moet een product definiëren voor alles dat je verkoopt of inkoopt,\n"
+"Je moet een product definiëren voor alles wat je verkoopt of inkoopt,\n"
 "of het nu een fysiek product, een verbruiksartikel of een dienst is."
 
 #. module: product

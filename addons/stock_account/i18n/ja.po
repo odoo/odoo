@@ -905,6 +905,17 @@ msgstr "自動評価を使用するには、在庫勘定を設定する必要が
 
 #. module: stock_account
 #. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"The stock valuation of a move is based on the type of the source and "
+"destination locations. As the move is already processed, you cannot modify "
+"the locations in a way that changes the valuation logic defined during the "
+"initial processing."
+msgstr ""
+"移動の在庫評価は、移動元と移動先ロケーションのタイプに基づいて行われます。移動はすでに処理されているため、初回処理中に定義された評価ロジックを変更するような方法でロケーションを修正することはできません。"
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid ""
 "The value of a stock valuation layer cannot be negative. Landed cost could "

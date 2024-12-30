@@ -301,7 +301,10 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
      * @override
      */
     destroy() {
+        this.options.wysiwyg?.odooEditor.observerUnactive("destroyStandardHeader");
         this.$el.css('transform', '');
+        this.el.classList.remove("o_transformed_not_affixed");
+        this.options.wysiwyg?.odooEditor.observerActive("destroyStandardHeader");
         this._super(...arguments);
     },
 
@@ -329,7 +332,11 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
         const fixedUpdate = (this.fixedHeader !== mainPosScrolled);
         const showUpdate = (this.fixedHeaderShow !== reachPosScrolled);
 
+        this.options.wysiwyg?.odooEditor.observerUnactive("updateHeaderOnScroll");
         if (fixedUpdate || showUpdate) {
+            if (fixedUpdate && (reachPosScrolled || mainPosScrolled)) {
+                this.el.classList.add("o_transformed_not_affixed");
+            }
             this.$el.css('transform',
                 reachPosScrolled
                 ? `translate(0, -${this.topGap}px)`
@@ -344,9 +351,11 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
 
         if (fixedUpdate) {
             this._toggleFixedHeader(mainPosScrolled);
+            this.el.classList.remove("o_transformed_not_affixed");
         } else if (showUpdate) {
             this._adaptToHeaderChange();
         }
+        this.options.wysiwyg?.odooEditor.observerActive("updateHeaderOnScroll");
     },
 });
 
@@ -769,6 +778,7 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
             }
         }
 
+        this._updateActiveMenuLinks();
         return this._super(...arguments);
     },
 
@@ -803,6 +813,41 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
         Dropdown.getOrCreateInstance(previousMegaMenuToggleEl).hide();
         megaMenuToggleEl.insertAdjacentElement("afterend", megaMenuEl);
         this.options.wysiwyg?.odooEditor.observerActive("moveMegaMenu");
+    },
+
+    /**
+     * @private
+     */
+    _updateActiveMenuLinks() {
+        // Prevent having several active links in the menu.
+        if (this.el.querySelector(".navbar #top_menu a.nav-link.active")) {
+            return;
+        }
+        const currentHrefWithoutHash = `${window.location.origin}${window.location.pathname}`;
+        // Check and update the active state of menu items based on the current
+        // page
+        const megaMenuEls = this.el.querySelectorAll(".o_mega_menu");
+        let matchingLink = null;
+        megaMenuEls.forEach((megaMenuEl, position) => {
+            const linkEls = Array.from(megaMenuEl.querySelectorAll(`a:not([href="#"])`));
+            matchingLink = linkEls.find((linkEl) => {
+                const url = new URL(linkEl.href);
+                return `${url.origin}${url.pathname}` === currentHrefWithoutHash;
+            });
+            if (matchingLink) {
+                const megaMenuToggleEl = megaMenuEl
+                    .closest(".nav-item")
+                    .querySelector(".o_mega_menu_toggle");
+                // Target the corresponding link in the mobile navigation. Since the
+                // mega-menu for mobile is dynamically rendered, it is not
+                // accessible at this moment.
+                const mobileMegaMenuToggleEl = this.el.querySelectorAll(
+                    "#top_menu_collapse_mobile .top_menu .o_mega_menu_toggle"
+                )[position];
+                megaMenuToggleEl.classList.add("active");
+                mobileMegaMenuToggleEl.classList.add("active");
+            }
+        });
     },
 
     //--------------------------------------------------------------------------
