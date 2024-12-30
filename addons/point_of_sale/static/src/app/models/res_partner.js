@@ -13,7 +13,7 @@ export class ResPartner extends Base {
             "email",
             "vat",
             "parent_name",
-            "contact_address",
+            "pos_contact_address",
         ];
         return fields
             .map((field) => {
