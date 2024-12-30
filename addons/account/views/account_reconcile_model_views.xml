@@ -2,46 +2,6 @@
 <odoo>
     <data>
 
-        <record id="view_account_reconcile_model_line_form" model="ir.ui.view">
-            <field name="name">account.reconcile.model.line.form</field>
-            <field name="model">account.reconcile.model.line</field>
-            <field name="arch" type="xml">
-                <form>
-                    <field name="model_id" invisible="1"/>
-                    <field name="allow_payment_tolerance" invisible="1"/>
-                    <field name="payment_tolerance_param" invisible="1"/>
-                    <field name="rule_type" invisible="1"/>
-                    <group>
-                        <group>
-                            <field name="account_id" options="{'no_create': True}"
-                                   required="rule_type != 'invoice_matching' or (rule_type == 'invoice_matching' and allow_payment_tolerance and payment_tolerance_param != 0.0)"/>
-                            <field name="amount_type"/>
-                            <field name="tax_ids"
-                                   domain="[('company_id', '=', company_id)]"
-                                   options="{'no_create': True}"
-                                   context="{'append_type_to_tax_name': True}"
-                                   widget="many2many_tax_tags"/>
-                            <field name="show_force_tax_included" invisible="1"/>
-                            <field name="force_tax_included"
-                                   invisible="not show_force_tax_included" force_save="1"/>
-                            <field name="analytic_distribution" widget="analytic_distribution"
-                                   groups="analytic.group_analytic_accounting"
-                                   options="{'account_field': 'account_id', 'business_domain': 'general'}"/>
-                            <field name="company_id" invisible="1"/>
-                        </group>
-                        <group>
-                            <field name="label"/>
-                            <label for="amount_string"/>
-                            <div>
-                                <field name="amount_string" class="oe_inline"/>
-                                <span class="o_form_label oe_inline" invisible="amount_type != 'percentage'">%</span>
-                            </div>
-                        </group>
-                    </group>
-                </form>
-            </field>
-        </record>
-
         <record id="view_account_reconcile_model_tree" model="ir.ui.view">
             <field name="name">account.reconcile.model.list</field>
             <field name="model">account.reconcile.model</field>
@@ -62,7 +22,6 @@
             <field name="arch" type="xml">
                 <form string="Operation Templates">
                     <field name="active" invisible="1"/>
-                    <field name="payment_tolerance_param" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -80,29 +39,91 @@
                                 <field name="rule_type" widget="radio"/>
                             </group>
                             <group>
+                                <field name="match_journal_ids"
+                                       placeholder="All bank &amp; cash journals"
+                                       widget="many2many_tags"
+                                       options="{'no_create': True}"/>
                                 <field name="auto_reconcile" invisible="rule_type == 'writeoff_button'"/>
                                 <field name="to_check" invisible="rule_type != 'writeoff_button'"/>
-                                <field name="past_months_limit" invisible="rule_type != 'invoice_matching'"/>
-                                <field name="matching_order" invisible="rule_type != 'invoice_matching'"/>
                                 <field name="counterpart_type"
                                        required="rule_type == 'writeoff_button'"
                                        invisible="rule_type != 'writeoff_button'"/>
+                                <field name="journal_id"
+                                       invisible="rule_type != 'writeoff_button' or counterpart_type not in ('sale', 'purchase')"
+                                       options="{'no_create': True}"
+                                       domain="[('type', '=', counterpart_type)]"/>
+                                <field name="show_decimal_separator" invisible="1"/>
+                                <field name="decimal_separator"
+                                       invisible="not show_decimal_separator"
+                                       groups="base.group_no_one"/>
                             </group>
                         </group>
                         <notebook>
-                            <page id="conditions_tab" string="Bank Transactions Conditions" name="page_bank_transactions_conditions">
-                                <group id="conditions_tab_group">
-                                    <group id="left_column" class="col-6">
-                                        <label for="match_journal_ids"/>
-                                        <div>
-                                            <field name="match_journal_ids"
-                                                   widget="many2many_tags"
-                                                   nolabel="1"
-                                                   options="{'no_create': True}"/>
+                            <page id="counterpart_items_tab"
+                                  string="Counterpart Items"
+                                  name="counterpart_items"
+                                  invisible="rule_type == 'invoice_matching'">
+                                <group class="oe_inline">
+                                    <field name="line_ids"
+                                           default="{'default_model_id': self, 'default_company_id': self.company_id}"
+                                           nolabel="1">
+                                        <list editable="bottom">
+                                            <field name="company_id" column_invisible="True"/>
+
+                                            <field name="sequence"
+                                                   widget="handle"/>
+                                            <field name="account_id"
+                                                   required="(parent.counterpart_type == 'general' and parent.rule_type == 'writeoff_button') or parent.rule_type == 'writeoff_suggestion'"/>
+                                            <field name="amount_type"/>
+                                            <field name="amount_string"/>
+                                            <field name="tax_ids"
+                                                   widget="many2many_tax_tags"
+                                                   optional="hide"
+                                                   domain="[('type_tax_use', '=?', parent.counterpart_type if parent.counterpart_type in ('sale', 'purchase') and rule_type == 'writeoff_button' else None)]"/>
+                                            <field name="analytic_distribution" widget="analytic_distribution"
+                                                   groups="analytic.group_analytic_accounting"
+                                                   options="{'account_field': 'account_id', 'business_domain': 'general'}"/>
+                                            <field name="label"/>
+                                        </list>
+                                    </field>
+                                </group>
+                            </page>
+                            <page id="matching_tab" string="Matching" name="page_matching" invisible="rule_type != 'invoice_matching'">
+                                <group>
+                                    <group class="col-6">
+                                        <span class="o_form_label o_td_label">Match with</span>
+                                        <div class="d-flex gap-3">
+                                            <label for="match_text_location_label" string="Label"/>
+                                            <field name="match_text_location_label"/>
+                                            <label for="match_text_location_note" string="Note"/>
+                                            <field name="match_text_location_note"/>
+                                            <label for="match_text_location_reference" string="Reference"/>
+                                            <field name="match_text_location_reference"/>
                                         </div>
-                                        <field name="match_nature" invisible="rule_type == 'writeoff_button'"/>
-                                        <label for="match_amount" invisible="rule_type == 'writeoff_button'"/>
-                                        <div class="d-flex gap-2" invisible="rule_type == 'writeoff_button'">
+                                        <label for="allow_payment_tolerance"/>
+                                        <div class="d-flex gap-2">
+                                            <field name="allow_payment_tolerance"/>
+                                            <span invisible="not allow_payment_tolerance" class="d-flex gap-2 w-100">
+                                                <field name="payment_tolerance_param"/>
+                                                <field name="payment_tolerance_type" class="o_field_highlight o_show_selection_caret"/>
+                                            </span>
+                                        </div>
+                                        <field name="match_same_currency"/>
+                                    </group>
+                                    <group class="col-6">
+                                        <field name="past_months_limit"/>
+                                        <field name="matching_order"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page id="transactions_filter_tab"
+                                  string="Bank Transactions Filter"
+                                  name="page_bank_transactions_filter"
+                                  invisible="rule_type == 'writeoff_button'">
+                                <group id="transactions_filter_tab_group">
+                                    <group id="left_column" class="col-6">
+                                        <label for="match_amount"/>
+                                        <div class="d-flex gap-2">
                                             <field name="match_amount"/>
                                             <field name="match_amount_min"
                                                    invisible="match_amount in (False, 'lower')"
@@ -113,105 +134,37 @@
                                                    invisible="match_amount in (False, 'greater')"
                                                    required="match_amount == 'between'"/>
                                         </div>
-                                        <label for="allow_payment_tolerance"
-                                               invisible="rule_type != 'invoice_matching'"/>
-                                        <div class="d-flex gap-2" invisible="rule_type != 'invoice_matching'">
-                                            <field name="allow_payment_tolerance"/>
-                                            <span invisible="not allow_payment_tolerance" class="d-flex gap-2 w-100">
-                                                <field name="payment_tolerance_param"/>
-                                                <field name="payment_tolerance_type" class="o_field_highlight o_show_selection_caret"/>
-                                            </span>
-                                        </div>
-                                        <field name="match_same_currency" invisible="rule_type != 'invoice_matching'"/>
-                                    </group>
-                                    <group id="right column" class="col-6">
-                                        <span invisible="rule_type != 'invoice_matching'"
-                                              class="o_form_label o_td_label">Match Invoice/bill with</span>
-                                        <div class="d-flex gap-3" invisible="rule_type != 'invoice_matching'">
-                                            <label for="match_text_location_label" string="Label"/>
-                                            <field name="match_text_location_label"/>
-                                            <label for="match_text_location_note" string="Note"/>
-                                            <field name="match_text_location_note"/>
-                                            <label for="match_text_location_reference" string="Reference"/>
-                                            <field name="match_text_location_reference"/>
-                                        </div>
-                                        <label for="match_label" invisible="rule_type == 'writeoff_button'"/>
-                                        <div class="d-flex gap-3" invisible="rule_type == 'writeoff_button'">
+                                        <label for="match_label"/>
+                                        <div class="d-flex gap-3">
                                             <field name="match_label"/>
                                             <field name="match_label_param"
                                                    invisible="not match_label"
                                                    required="match_label"/>
                                         </div>
-                                        <label for="match_note" invisible="rule_type == 'writeoff_button'"/>
-                                        <div class="d-flex gap-3" invisible="rule_type == 'writeoff_button'">
+                                        <label for="match_note"/>
+                                        <div class="d-flex gap-3">
                                             <field name="match_note"/>
                                             <field name="match_note_param"
                                                    invisible="not match_note"
                                                    required="match_note"/>
                                         </div>
-                                        <label for="match_transaction_type" invisible="rule_type == 'writeoff_button'"/>
-                                        <div class="d-flex gap-3" invisible="rule_type == 'writeoff_button'">
-                                            <field name="match_transaction_type"/>
-                                            <field name="match_transaction_type_param"
-                                                   invisible="not match_transaction_type"
-                                                   required="match_transaction_type"/>
-                                        </div>
-                                        <field name="match_partner"
-                                               invisible="rule_type == 'writeoff_button'"/>
+                                    </group>
+                                    <group id="right column" class="col-6">
+                                        <field name="match_partner"/>
                                         <label for="match_partner_ids" class="ml16"
-                                               invisible="not match_partner or rule_type == 'writeoff_button'"/>
+                                               invisible="not match_partner"/>
                                         <field name="match_partner_ids" nolabel="1"
                                                widget="many2many_tags"
                                                options="{'no_quick_create': True}"
-                                               invisible="not match_partner or rule_type == 'writeoff_button'"/>
+                                               placeholder="All"
+                                               invisible="not match_partner"/>
                                         <label for="match_partner_category_ids" class="ml16"
-                                               invisible="not match_partner or rule_type == 'writeoff_button'"/>
+                                               invisible="not match_partner"/>
                                         <field name="match_partner_category_ids" nolabel="1"
                                                widget="many2many_tags"
-                                               invisible="not match_partner or rule_type == 'writeoff_button'"/>
+                                               placeholder="All"
+                                               invisible="not match_partner"/>
                                     </group>
-                                </group>
-                                <group string="Counterpart Items" colespan="4"
-                                       class="oe_inline"
-                                       invisible="rule_type == 'invoice_matching' and (not allow_payment_tolerance or allow_payment_tolerance and payment_tolerance_param == 0.0)">
-                                    <group>
-                                        <field name="show_decimal_separator" invisible="1"/>
-                                        <field name="decimal_separator"
-                                               invisible="not show_decimal_separator"
-                                               groups="base.group_no_one"/>
-                                    </group>
-                                    <field name="line_ids"
-                                           default="{'default_model_id': self, 'default_company_id': self.company_id}"
-                                           nolabel="1">
-                                        <list editable="bottom">
-                                            <field name="show_force_tax_included" column_invisible="True"/>
-                                            <field name="company_id" column_invisible="True"/>
-
-                                            <field name="sequence"
-                                                   widget="handle"/>
-                                            <field name="account_id"
-                                                   required="(parent.counterpart_type == 'general' and parent.rule_type == 'writeoff_button') or parent.rule_type == 'writeoff_suggestion'"/>
-                                            <field name="amount_type"/>
-                                            <field name="journal_id"
-                                                   column_invisible="parent.rule_type != 'writeoff_button'"
-                                                   optional="hide"
-                                                   domain="[('type', '=', parent.counterpart_type)]"/>
-                                            <field name="amount_string"/>
-                                            <field name="tax_ids"
-                                                   widget="many2many_tax_tags"
-                                                   optional="hide"
-                                                   domain="[('type_tax_use', '=?', parent.counterpart_type if parent.counterpart_type in ('sale', 'purchase') and rule_type == 'writeoff_button' else None)]"/>
-                                            <field name="analytic_distribution" widget="analytic_distribution"
-                                                   groups="analytic.group_analytic_accounting"
-                                                   options="{'account_field': 'account_id', 'business_domain': 'general'}"/>
-                                            <field name="force_tax_included"
-                                                   widget="boolean_toggle"
-                                                   invisible="not show_force_tax_included"
-                                                   column_invisible="parent.rule_type == 'writeoff_button' and parent.counterpart_type != 'general'"
-                                                   optional="hide"/>
-                                            <field name="label"/>
-                                        </list>
-                                    </field>
                                 </group>
                             </page>
                             <page id="partner_tab"

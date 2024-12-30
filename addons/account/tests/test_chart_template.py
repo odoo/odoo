@@ -841,9 +841,9 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         translation_update_for_test_get_data = {
             # Use code translations from module 'translation'
             'account.journal': {
-                'cash': {
-                    'name': "Cash",
-                    'code': "C",  # untranslatable field; shortened due to length restriction (for _translation)
+                'bank': {
+                    'name': "Bank",
+                    'code': "B",  # untranslatable field; shortened due to length restriction (for _translation)
                     '__translation_module__': {
                         'name': 'translation',
                         'code': 'translation',
@@ -893,8 +893,8 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             ('translation', 'fr', "Taxes", "WRONG"),  # there is a value in the chart data
             ('translation', 'fr', "Free Account", "Free Account FR"),  # there is a value for fr_BE
             # correct translations
-            ('translation', 'fr', "Cash", "Cash FR"),
-            ('translation', 'fr', "C", "C FR"),
+            ('translation', 'fr', "Bank", "Bank FR"),
+            ('translation', 'fr', "B", "B FR"),
             ('translation', 'fr', "Tax 1", "Tax 1 FR"),
             ('translation', 'fr_BE', "Free Account", "Free Account FR_BE"),
             ('translation', 'fr', "Free Tax", "Free Tax FR"),
@@ -926,10 +926,10 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             for field in record_data if field in fields_to_translate.get(model, set())
             for lang in ['en_US', 'fr_BE']
         }, {
-            'cash.code@en_US': 'C FR',  # untranslatable field loaded in lang fr_BE
-            'cash.code@fr_BE': 'C FR',
-            'cash.name@en_US': 'Cash',
-            'cash.name@fr_BE': 'Cash FR',
+            'bank.code@en_US': 'B FR',  # untranslatable field loaded in lang fr_BE
+            'bank.code@fr_BE': 'B FR',
+            'bank.name@en_US': 'Bank',
+            'bank.name@fr_BE': 'Bank FR',
             'no_translation.test_chart_template_company_test_free_account_group.name@en_US': 'Free Account Group',
             'no_translation.test_chart_template_company_test_free_account_group.name@fr_BE': 'Free Account Group account/FR',  # fallback to account
             'tax_group_taxes.name@en_US': 'Taxes',
