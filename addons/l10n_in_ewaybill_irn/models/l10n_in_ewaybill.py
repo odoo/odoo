@@ -12,7 +12,19 @@ class L10nInEwaybill(models.Model):
 
     _inherit = 'l10n.in.ewaybill'
 
-    is_process_through_irn = fields.Boolean(compute='_compute_is_process_through_irn')
+    is_process_through_irn = fields.Boolean(compute='_compute_is_process_through_irn', store=True)
+    display_is_process_through_irn = fields.Boolean(compute='_compute_display_is_process_through_irn')
+
+    @api.depends('account_move_id')
+    def _compute_display_is_process_through_irn(self):
+        edi_format = self.env.ref('l10n_in_edi.edi_in_einvoice_json_1_03', raise_if_not_found=False)
+        for ewaybill in self:
+            move_id = ewaybill.account_move_id
+            ewaybill.display_is_process_through_irn = (
+                move_id
+                and edi_format
+                and edi_format._get_move_applicability(move_id)
+            )
 
     @api.depends('account_move_id')
     def _compute_is_process_through_irn(self):
@@ -81,7 +93,7 @@ class L10nInEwaybill(models.Model):
             raise EWayBillError({
                 'error': [{
                     'code': 'waiting',
-                    'message': _("waiting For IRN generation To create E-waybill")
+                    'message': _("Please generate IRN before generating E-waybill.")
                 }]
             })
         if not (token := self.company_id._l10n_in_edi_get_token()):
