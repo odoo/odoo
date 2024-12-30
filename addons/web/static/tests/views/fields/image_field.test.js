@@ -8,7 +8,7 @@ import {
     setInputFiles,
     waitFor,
 } from "@odoo/hoot-dom";
-import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, runAllTimers, mockDate } from "@odoo/hoot-mock";
 import {
     clickSave,
     defineModels,
@@ -167,6 +167,8 @@ test("ImageField on a many2one", async () => {
     Partner._fields.parent_id = fields.Many2one({ relation: "partner" });
     Partner._records[1].parent_id = 1;
 
+    mockDate("2017-02-06 10:00:00");
+
     await mountView({
         type: "form",
         resModel: "partner",
@@ -180,7 +182,7 @@ test("ImageField on a many2one", async () => {
     expect(".o_field_widget[name=parent_id] img").toHaveCount(1);
     expect('div[name="parent_id"] img').toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/partner/1/document`
+        `${getOrigin()}/web/image/partner/1/document?unique=1486375200000`
     );
     expect(".o_field_widget[name='parent_id'] img").toHaveAttribute("data-alt", "first record");
 });
