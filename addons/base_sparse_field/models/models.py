@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from odoo import models, fields, api, _
+from odoo import models, fields, _
 from odoo.exceptions import UserError
 
 
@@ -20,7 +20,7 @@ class IrModelFields(models.Model):
         ('serialized', 'serialized'),
     ], ondelete={'serialized': 'cascade'})
     serialization_field_id = fields.Many2one('ir.model.fields', string='Serialization Field',
-        ondelete='cascade', domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]",
+        ondelete='cascade', domain="[('ttype','in',('json', 'serialized')), ('model_id', '=', model_id)]",
         help="If set, this field will be stored in the sparse structure of the "
              "serialization field, instead of having its own database column. "
              "This cannot be changed after creation.",
@@ -35,8 +35,7 @@ class IrModelFields(models.Model):
                     raise UserError(_('Changing the storing system for field "%s" is not allowed.', field.name))
                 if field.serialization_field_id and (field.name != vals['name']):
                     raise UserError(_('Renaming sparse field "%s" is not allowed', field.name))
-
-        return super(IrModelFields, self).write(vals)
+        return super().write(vals)
 
     def _reflect_fields(self, model_names):
         super()._reflect_fields(model_names)
@@ -82,7 +81,7 @@ class IrModelFields(models.Model):
         self.pool.post_init(records.modified, ['serialization_field_id'])
 
     def _instanciate_attrs(self, field_data):
-        attrs = super(IrModelFields, self)._instanciate_attrs(field_data)
+        attrs = super()._instanciate_attrs(field_data)
         if attrs and field_data.get('serialization_field_id'):
             serialization_record = self.browse(field_data['serialization_field_id'])
             attrs['sparse'] = serialization_record.name
@@ -93,7 +92,7 @@ class Sparse_FieldsTest(models.TransientModel):
     _name = 'sparse_fields.test'
     _description = 'Sparse fields Test'
 
-    data = fields.Serialized()
+    data = fields.Json()
     boolean = fields.Boolean(sparse='data')
     integer = fields.Integer(sparse='data')
     float = fields.Float(sparse='data')

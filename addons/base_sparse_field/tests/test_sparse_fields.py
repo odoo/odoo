@@ -29,7 +29,7 @@ class TestSparseFields(common.TransactionCase):
 
         for n, (key, _val) in enumerate(values):
             record.write({key: False})
-            self.assertEqual(record.data, dict(values[n+1:]))
+            self.assertEqual(record.data or {}, dict(values[n+1:]))
 
         # check reflection of sparse fields in 'ir.model.fields'
         names = [name for name, _ in values]
