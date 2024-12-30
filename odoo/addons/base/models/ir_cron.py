@@ -113,7 +113,10 @@ class IrCron(models.Model):
         self.browse().check_access('write')
         self._try_lock()
         _logger.info('Job %r (%s) started manually', self.name, self.id)
-        self, _ = self.with_user(self.user_id).with_context({'lastcall': self.lastcall})._add_progress()  # noqa: PLW0642
+        self, _ = self.with_user(self.user_id).with_context({  # noqa: PLW0642
+            'lastcall': self.lastcall,
+            'cron_id': self.id,
+        })._add_progress()
         self.ir_actions_server_id.run()
         self.lastcall = fields.Datetime.now()
         self.env.flush_all()
@@ -737,7 +740,9 @@ class IrCron(models.Model):
             return
         if done < 0 or remaining < 0:
             raise ValueError("`done` and `remaining` must be positive integers.")
-        self.env['ir.cron.progress'].sudo().browse(progress_id).write({
+        progress = self.env['ir.cron.progress'].sudo().browse(progress_id)
+        assert progress.cron_id.id == self.env.context.get('cron_id'), "Progress on the wrong cron_id"
+        progress.write({
             'remaining': remaining,
             'done': done,
             'deactivate': deactivate,
