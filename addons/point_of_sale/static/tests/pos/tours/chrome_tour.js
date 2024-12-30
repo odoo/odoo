@@ -95,8 +95,8 @@ registry.category("web_tour.tours").add("ChromeTour", {
             TicketScreen.deleteOrder("004"),
 
             // After deleting order 1 above, order 2 became
-            // the 2nd-row order and it has payment status
-            TicketScreen.nthRowContains(2, "Payment"),
+            // the 1st-row order and it has payment status
+            TicketScreen.nthRowContains(1, "Payment"),
             TicketScreen.deleteOrder("002"),
             Dialog.confirm(),
             Chrome.createFloatingOrder(),

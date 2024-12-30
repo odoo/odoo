@@ -58,7 +58,7 @@ export function clickTableSelectorButton() {
     return [
         {
             content: "click on table selector button",
-            trigger: ".floor-screen .right-buttons button.btn-secondary:contains('#')",
+            trigger: ".floor-screen .right-buttons button.btn-secondary",
             run: "click",
         },
     ];

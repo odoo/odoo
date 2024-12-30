@@ -2,37 +2,30 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.Orderline">
         <li t-if="line.order_id" class="orderline position-relative d-flex align-items-center lh-sm cursor-pointer"
-            t-attf-class="{{ line.combo_parent_id?.getFullProductName() ? 'orderline-combo ms-4 fst-italic' : '' }}"
+            t-attf-class="{{ line.combo_parent_id?.getFullProductName() ? 'orderline-combo fst-italic' : '' }}"
             t-att-class="{'selected' : line.isSelected() and this.props.mode === 'display', ...line.getDisplayClasses(), ...(props.class || [])}">
             <div class="product-order"></div>
             <div t-if="props.showImage and line.product_id.getImageUrl()" class="o_line_container d-flex align-items-center justify-content-center">
                 <img t-attf-style="border-radius: 1rem;" t-att-src="line.product_id.getImageUrl()"/>
             </div>
-            <div class="d-flex flex-column w-100 gap-1 p-1">
-                <div class="line-details d-flex justify-content-between">
-                    <div class="product-name d-inline-block flex-grow-1 fw-bolder pe-1 text-truncate">
-                    <span class="qty px-1 fw-bolder me-1" t-esc="line.qty"/>
+            <div class="d-flex flex-column w-100 p-2">
+                <div class="line-details d-flex justify-content-between align-items-center">
+                    <div class="product-name d-flex flex-grow-1 align-items-center pe-2 text-truncate">
+                        <span class="qty d-inline-block px-1 fw-bolder">
+                            <t t-esc="line.getQuantityStr().unitPart"/>
+                            <small t-if="line.getQuantityStr().decimalPart" class="fw-normal text-muted" t-esc="line.getQuantityStr().decimalPart"/>
+                        </span>
                         <span class="text-wrap" t-esc="line.getFullProductName()"/>
                         <t t-slot="product-name" />
                     </div>
                     <div t-if="!line.config.basic_receipt" t-esc="line.getPriceString()" class="product-price price fw-bolder"/>
                     <div t-if="props.showTaxGroup" t-esc="this.taxGroup" class="text-end" style="width: 2rem"/>
                 </div>
-                <ul class="info-list px-1 d-flex flex-column">
+                <ul class="info-list d-flex flex-column">
                     <li class="price-per-unit">
-                        <t t-if="priceChange and !line.config.basic_receipt">
-                            <t t-set="oldUnitPrice" t-value="line.getOldUnitDisplayPrice() ? formatCurrency(line.getOldUnitDisplayPrice()) : ''" />
-                            <t t-if="line.price !== 0">
-                                <i class="fa fa-money center pe-1"/>
-                                <s t-esc="oldUnitPrice" t-if="oldUnitPrice" />
-                                <t t-esc="formatCurrency(line.unitDisplayPrice)" />
-                            </t>
-                            /
-                            <t t-if="line.product_id.uom_id?.name" t-esc="line.product_id.uom_id?.name" />
-                        </t>
                         <t t-set="discount" t-value="line.getDiscountStr()" />
                         <t t-if="!props.basic_receipt and line.price_unit !== 0 and discount and discount !== '0'">
-                            <i class="fa fa-tag ps-2 pe-1"/><t t-esc="line.allPrices.priceWithTaxBeforeDiscount"/> With a <em><t t-esc="discount" />% </em> discount
+                            <i class="fa fa-tag pe-1"/><t t-esc="line.allPrices.priceWithTaxBeforeDiscount"/> With a <em><t t-esc="discount" />% </em> discount
                         </t>
                     </li>
                     <li t-if="line.customer_note" class="customer-note w-100 rounded text-break bg-opacity-25" t-att-class="{'text-bg-warning p-2 mt-2': this.props.mode === 'display'}">

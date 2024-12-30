@@ -2,45 +2,46 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.Navbar">
-        <div class="pos-topheader navbar-height d-flex align-items-center justify-content-between px-2 py-1 m-0 bg-white border-bottom">
-            <div class="pos-leftheader d-flex align-items-center overflow-hidden" t-att-class="{ 'flex-grow-1': ui.isSmall }">
+        <div class="pos-topheader navbar-height d-flex align-items-center justify-content-between p-2 m-0 bg-white border-bottom">
+            <div class="pos-leftheader d-flex align-items-center gap-2" t-att-class="{ 'flex-grow-1': ui.isSmall, 'd-none': ui.isSmall and state.searchBarOpen }">
                 <div class="d-flex flex-shrink-0 gap-1 position-relative">
                     <div class="navbar-menu d-flex d-lg-grid overflow-hidden position-relative">
-                        <button class="register-label btn btn-lg lh-lg" t-att-class="{'fw-bolder text-primary': mainButton === 'register' and !this.ui.isSmall, 'btn-primary text-white': mainButton === 'register' and this.ui.isSmall}" t-on-click="() => this.pos.showOrderScreen(true)">
+                        <button class="register-label btn btn-lg lh-lg" t-att-class="{'text-primary fw-bolder': mainButton === 'register'}" t-on-click="() => this.pos.showOrderScreen(true)">
                             <span t-if="!ui.isSmall">Register</span>
-                            <i t-else="" class="fa fa-pencil"/>
+                            <i t-else="" class="fa fa-fw fa-pencil" t-att-class="{'fa-lg' : !ui.isSmall}"/>
                         </button>
-                        <button class="orders-button btn btn-lg lh-lg" t-att-class="{'fw-bolder text-primary': mainButton === 'order' and !this.ui.isSmall, 'btn-primary text-white': mainButton === 'order' and this.ui.isSmall}" t-on-click="() => this.pos.onTicketButtonClick()">
+                        <button class="orders-button btn btn-lg lh-lg" t-att-class="{'text-primary fw-bolder': mainButton === 'order'}" t-on-click="() => this.pos.onTicketButtonClick()">
                             <t t-if="!ui.isSmall">
                                 <span>Orders</span>
                             </t>
-                            <i t-else="" class="fa fa-book"/>
+                            <i t-else="" class="fa fa-fw fa-book" t-att-class="{'fa-lg' : !ui.isSmall}"/>
                         </button>
                     </div>
-                    <div t-if="!ui.isSmall" class="navbar-separator ms-1 me-2 my-2 border-start border"/>
+                    <div t-if="!ui.isSmall" class="navbar-separator"/>
                 </div>
                 <OrderTabs orders="getOrderTabs()"/>
                 <button class="btn btn-light d-flex align-items-center gap-2 h-100 fs-3" t-on-click="openPresetTiming" t-if="shouldDisplayPresetTime">
                     <i class="fa fa-clock-o" aria-hidden="true"></i>
-                    <div class="lh-1" t-esc="this.pos.getOrder()?.presetTime || '--:--'" />
+                    <div class="d-inline lh-1" t-esc="this.pos.getOrder()?.presetTime || '--:--'" />
                 </button>
             </div>
-            <div t-if="!ui.isSmall"  class="pos-centerheader d-flex justify-content-center overflow-hidden">
-                <img class="pos-logo pos-logo mw-100" height="42" t-on-click="() => debug.toggleWidget()" src="/web/static/img/logo.png" alt="Logo" />
+            <div class="pos-centerheader d-none d-xl-flex -content-center overflow-hidden">
+                <img class="pos-logo mw-100" height="42" t-on-click="() => debug.toggleWidget()" src="/web/static/img/logo.png" alt="Logo" />
             </div>
-            <div class="pos-rightheader d-flex justify-content-end overflow-hidden"
-                t-att-class="{ 'ms-auto': !ui.isSmall, 'me-1 end-0 width-100 pos-nav-small': ui.isSmall }"
+            <div class="pos-rightheader d-flex justify-content-end"
+                t-att-class="{ 'ms-auto': !ui.isSmall, 'end-0 flex-grow-1 pos-nav-small': ui.isSmall }"
             >
                 <div class="status-buttons d-flex flex-grow-1 align-items-center justify-content-end gap-1">
                     <Input tModel="[pos, 'searchProductWord']"
-                    class="'p-0'"
+                    class="ui.isSmall ? 'p-0' : 'p-0 search-input-reduced'"
                     isSmall="ui.isSmall"
                     placeholder.translate="Search products..."
                     icon="{type: 'fa', value: 'fa-search fa-lg fa-fw'}"
                     debounceMillis="500"
                     getRef="(ref) => this.inputRef = ref"
-                    t-if="pos.showSearchButton()" />
-                    <button class="btn btn-light btn-lg lh-lg" t-if="isBarcodeScannerSupported() and pos.mainScreen.component.name == 'ProductScreen' and !ui.isSmall" t-on-click="onClickScan">
+                    t-if="pos.showSearchButton()"
+                    isOpenCallback="(isOpen) => state.searchBarOpen = isOpen" />
+                    <button class="btn btn-light btn-lg lh-lg" t-if="isBarcodeScannerSupported() and pos.mainScreen.component.name == 'ProductScreen' and !pos.config.module_pos_restaurant" t-on-click="onClickScan">
                         <i class="fa fa-fw fa-lg fa-barcode" /><span t-if="this.pos.scanning" class="ms-1">Stop</span>
                     </button>
                     <div t-if="this.pos.data.network.offline or this.pos.data.network.loading" class="oe_status btn btn-light btn-lg lh-lg h-100 pe-none">
@@ -52,7 +53,7 @@
                     <CashierName t-if="!ui.isSmall"/>
                     <Dropdown>
                         <button class="btn btn-light btn-lg lh-lg">
-                            <i class="fa fa-fw fa-lg fa-bars"/>
+                            <i class="fa fa-fw fa-bars"/>
                         </button>
                         <t t-set-slot="content">
                             <div t-if="customerFacingDisplayButtonIsShown" class="d-flex gap-2 p-2 border-bottom">
@@ -68,15 +69,15 @@
                                 <DropdownItem t-if="showCashMoveButton and this.pos.cashier._role != 'minimal'" onSelected="() => this.pos.cashMove()">
                                     Cash In/Out
                                 </DropdownItem>
-                                <DropdownItem t-if="showToggleProductView" onSelected="() => this.toggleProductView()">
-                                    Switch Product View
+                                <DropdownItem t-if="!this.pos.data.network.offline" onSelected="() => this.reloadProducts()">
+                                    Reload products
                                 </DropdownItem>
                                 <DropdownItem t-if="showCreateProductButton" onSelected="() => this.pos.editProduct()">
                                     Create Product
                                 </DropdownItem>
-                                <DropdownItem t-if="isBarcodeScannerSupported() and pos.mainScreen.component.name == 'ProductScreen' and ui.isSmall" onSelected="() => this.onClickScan()">
+                                <DropdownItem t-if="isBarcodeScannerSupported() and pos.mainScreen.component.name == 'ProductScreen' and ui.isSmall and pos.config.module_pos_restaurant" onSelected="() => this.onClickScan()">
                                     <span t-if="this.pos.scanning">Stop Barcode Scanner</span>
-                                    <span t-else="">Open Barcode Scanner</span>
+                                    <span t-else="">Barcode Scanner</span>
                                 </DropdownItem>
                                 <DropdownItem t-if="hardwareProxy.printer" onSelected="() => this.showSaleDetails()">
                                     Print Report
@@ -89,9 +90,6 @@
                                 </DropdownItem>
                                 <DropdownItem t-if="this.env.debug and this.pos.cashier._role != 'minimal'" onSelected="() => debug.toggleWidget()">
                                     Debug Window
-                                </DropdownItem>
-                                <DropdownItem t-if="!this.pos.data.network.offline" onSelected="() => this.reloadProducts()">
-                                    Reload products
                                 </DropdownItem>
                             </div>
                         </t>
