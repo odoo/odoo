@@ -1091,7 +1091,7 @@
                         "searchParams": {
                             "comparison": null,
                             "context": {},
-                            "domain": [],
+                            "domain": [["state", "in", ["purchase", "done"]]],
                             "groupBy": ["partner_id"],
                             "orderBy": []
                         },
@@ -1336,7 +1336,7 @@
                 }
             },
             "context": {},
-            "domain": [["country_id", "!=", false]],
+            "domain": ["&", ["state", "in", ["purchase", "done"]], ["country_id", "!=", false]],
             "id": "1",
             "measures": [{ "name": "order_id" }, { "name": "untaxed_total" }],
             "model": "purchase.report",
@@ -1372,7 +1372,7 @@
                 }
             },
             "context": {},
-            "domain": [],
+            "domain": [["state", "in", ["purchase", "done"]]],
             "id": "2",
             "measures": [{ "name": "order_id" }, { "name": "untaxed_total" }],
             "model": "purchase.report",
@@ -1408,7 +1408,7 @@
                 }
             },
             "context": {},
-            "domain": [["user_id", "!=", false]],
+            "domain": ["&", ["state", "in", ["purchase", "done"]], ["user_id", "!=", false]],
             "id": "3",
             "measures": [{ "name": "order_id" }, { "name": "untaxed_total" }],
             "model": "purchase.report",
@@ -1444,7 +1444,7 @@
                 }
             },
             "context": {},
-            "domain": [],
+            "domain": [["state", "in", ["purchase", "done"]]],
             "id": "4",
             "measures": [
                 { "name": "untaxed_total" },
@@ -1486,7 +1486,7 @@
                 }
             },
             "context": {},
-            "domain": [],
+            "domain": [["state", "in", ["purchase", "done"]]],
             "id": "5",
             "measures": [
                 { "name": "untaxed_total" },
