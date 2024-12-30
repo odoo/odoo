@@ -30,6 +30,7 @@
                                     icon="fa-pencil"
                                     colspan="2"
                                     groups="base.group_system,base.group_no_one"
+                                    invisible="not (datas and form_field_ids)"
                                 />
                             </div>
                             <field
@@ -97,7 +98,11 @@
                                 <span>Document type:</span>
                                 <field name="document_type" class="ms-2" widget="selection"/>
                             </div>
-                            <div t-if="!!record.quotation_template_ids.raw_value.length" class="mt-2">
+                            <div
+                                t-if="!context.hide_template_ids
+                                      and !!record.quotation_template_ids.raw_value.length"
+                                class="mt-2"
+                            >
                                 <span class="pe-2">Templates:</span>
                                 <field name="quotation_template_ids" class="d-inline-block" widget="many2many_tags"/>
                             </div>
@@ -116,6 +121,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="document_type"/>
+                <field name="quotation_template_ids" widget="many2many_tags"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
             </list>
         </field>
