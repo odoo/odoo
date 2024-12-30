@@ -5108,6 +5108,7 @@ class AccountMove(models.Model):
         return action
 
     def action_send_and_print(self):
+        self.env['account.move.send']._check_move_constrains(self)
         return {
             'name': _("Print & Send"),
             'type': 'ir.actions.act_window',
