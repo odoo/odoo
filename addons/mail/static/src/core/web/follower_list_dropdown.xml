@@ -9,12 +9,18 @@
             <sup t-else="" class="o-mail-Followers-counter" t-esc="props.thread.followersCount ?? 0"/>
         </button>
         <t t-set-slot="content" t-if="followerListView">
-            <t t-if="props.thread.hasWriteAccess">
-                <DropdownItem onSelected="() => this.onClickAddFollowers()" attrs="{ href: '#' }">
+            <div t-if="props.thread.hasWriteAccess" class="d-flex o-mail-Followers-container justify-content-around px-2 flex-row">
+                <div t-if="!state.isSearchOpen" class="o-Add-followers flex-grow-1" t-on-click="() => this.onClickAddFollowers()" attrs="{ href: '#' }">
                     Add Followers
-                </DropdownItem>
-                <div t-if="followerListView.followers.length > 0" role="separator" class="dropdown-divider"/>
-            </t>
+                </div>
+                <div t-if="(followerListView.selfFollower and followerListView.followersCount > 99) or followerListView.followersCount > 100" class="d-flex align-items-center justify-content-center">
+                    <SearchFollowerInput t-if="state.isSearchOpen" followerSearch="followerSearch" closeSearch.bind="toggleSearch" thread="props.thread"/>
+                    <div class="rounded border border-1 cursor-pointer" t-on-click="() => this.toggleSearch()" t-else="">
+                        <i class="oi oi-search py-2 px-3" role="img" aria-label="Search Followers" title="Search Followers"/>
+                    </div>
+                </div>
+            </div>
+            <div t-if="followerListView.followers.length > 0" role="separator" class="dropdown-divider"/>
             <FollowerList thread="props.thread" onClickDetails.bind="onClickDetails" onClickEdit.bind="onClickEdit" onClickRemove.bind="onClickRemove" followerListView="followerListView"/>
         </t>
     </Dropdown>

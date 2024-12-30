@@ -15,6 +15,8 @@ export class FollowerListView extends Record {
         return super.insert(...arguments);
     }
 
+    /** @type {string} */
+    searchTerm;
     /** @type {number} */
     threadId;
     /** @type {string} */
@@ -28,6 +30,7 @@ export class FollowerListView extends Record {
             thread_id: this.threadId,
             thread_model: this.threadModel,
             limit: 20,
+            search_term: this.searchTerm,
             offset: offset,
         });
         this.store.insert(res);
