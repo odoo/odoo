@@ -141,7 +141,9 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
         }
     }
     refreshSelection() {
-        this.avatarOverlay.replaceChildren();
+        if (!this.selectionInfos.size) {
+            this.avatarOverlay.replaceChildren();
+        }
         this.avatarsCountersOverlay.replaceChildren();
         for (const selection of this.selectionInfos.values()) {
             this.drawPeerAvatar(selection);
