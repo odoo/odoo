@@ -9,7 +9,7 @@
                 <div class="w-100 h-100 d-flex flex-column block" t-att-class="snippet.moduleId ? 'to_install' : '' " t-on-click="() => this.openSnippetDialog(snippet)">
                     <div class="img-container">
                         <img t-att-src="snippet.thumbnailSrc" class="w-100"/>
-                        <button t-if="snippet.moduleId" class="btn btn-primary" t-on-click="() => this.onClickInstall(snippet)">install</button>
+                        <button t-if="snippet.moduleId" class="btn btn-primary" t-on-click="() => this.props.installSnippetModule(snippet)">Install</button>
                     </div>
                     <span class="text-center" t-esc="snippet.title"/>
                 </div>
@@ -24,7 +24,7 @@
                 <div class="w-100 h-100 d-flex flex-column block" t-att-class="snippet.moduleId ? 'to_install' : '' ">
                     <div class="img-container">
                         <img t-att-src="snippet.thumbnailSrc" class="w-100"/>
-                        <button t-if="snippet.moduleId" class="btn btn-primary" t-on-click="() => this.onClickInstall(snippet)">install</button>
+                        <button t-if="snippet.moduleId" class="btn btn-primary" t-on-click="() => this.props.installSnippetModule(snippet)">Install</button>
                     </div>
                     <span class="text-center" t-esc="snippet.title"/>
                 </div>

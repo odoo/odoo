@@ -4,14 +4,16 @@ import { uniqueId } from "@web/core/utils/functions";
 import { Reactive } from "@web/core/utils/reactive";
 import { escape } from "@web/core/utils/strings";
 import { useService } from "@web/core/utils/hooks";
+import { AddSnippetDialog } from "@html_builder/builder/builder_sidebar/tabs/block_tab/add_snippet_dialog/add_snippet_dialog";
 
 export class SnippetModel extends Reactive {
-    constructor(services, { snippetsName }) {
+    constructor(services, { snippetsName, installSnippetModule }) {
         super();
         this.orm = services.orm;
         this.dialog = services.dialog;
         this.snippetsName = snippetsName;
         this.websiteService = useService("website");
+        this.installSnippetModule = installSnippetModule;
 
         this.snippetsByCategory = {
             snippet_groups: [],
@@ -155,5 +157,29 @@ export class SnippetModel extends Reactive {
         for (const snippetEl of snippetsDocument.body.querySelectorAll("snippets > *")) {
             snippetEl.children[0].dataset["name"] = snippetEl.getAttribute("name");
         }
+    }
+
+    async replaceSnippet(snippetToReplace) {
+        // Find the original snippet to open the dialog on the same group.
+        const originalSnippet = this.snippetStructures.find(
+            (snippet) => snippet.name === snippetToReplace.dataset.snippet
+        );
+        let newSnippet;
+        await new Promise((resolve) => {
+            this.dialog.add(
+                AddSnippetDialog,
+                {
+                    selectedSnippet: originalSnippet,
+                    snippetModel: this,
+                    selectSnippet: (selectedSnippet) => {
+                        newSnippet = selectedSnippet.content.cloneNode(true);
+                        snippetToReplace.replaceWith(newSnippet);
+                    },
+                    installModule: this.installSnippetModule,
+                },
+                { onClose: () => resolve() }
+            );
+        });
+        return newSnippet;
     }
 }

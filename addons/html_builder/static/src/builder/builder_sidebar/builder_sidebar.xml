@@ -27,7 +27,7 @@
         </div>
         <div class="overflow-auto flex-grow-1 pt-1">
             <t t-if="state.activeTab === 'blocks'">
-                <BlockTab snippetModel="snippetModel"/>
+                <BlockTab snippetModel="snippetModel" installSnippetModule.bind="installSnippetModule"/>
             </t>
             <t t-if="state.activeTab === 'customize'">
                 <CustomizeTab currentOptionsContainers="state.currentOptionsContainers" />

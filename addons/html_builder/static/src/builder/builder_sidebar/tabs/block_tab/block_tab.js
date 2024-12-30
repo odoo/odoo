@@ -1,10 +1,6 @@
-import { Component, markup } from "@odoo/owl";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _t } from "@web/core/l10n/translation";
-import { RPCError } from "@web/core/network/rpc";
+import { Component } from "@odoo/owl";
 import { useDraggable } from "@web/core/utils/draggable";
 import { useService } from "@web/core/utils/hooks";
-import { escape } from "@web/core/utils/strings";
 import { AddSnippetDialog } from "./add_snippet_dialog/add_snippet_dialog";
 
 // TODO move it in web (copy from web_studio)
@@ -38,6 +34,7 @@ export class BlockTab extends Component {
     static template = "html_builder.BlockTab";
     static props = {
         snippetModel: { type: Object },
+        installSnippetModule: { type: Function },
     };
 
     setup() {
@@ -101,51 +98,11 @@ export class BlockTab extends Component {
                 selectSnippet: (snippet) => {
                     addElement(snippet.content.cloneNode(true));
                 },
-                installModule: this.onClickInstall.bind(this),
+                installModule: this.props.installSnippetModule,
             },
             {
                 onClose: () => this.dropzonePlugin.clearDropZone(),
             }
         );
-    }
-
-    onClickInstall(snippet) {
-        // TODO: Should be the app name, not the snippet name ... Maybe both ?
-        const bodyText = _t("Do you want to install %s App?", snippet.title);
-        const linkText = _t("More info about this app.");
-        const linkUrl =
-            "/odoo/action-base.open_module_tree/" + encodeURIComponent(snippet.moduleId);
-
-        this.dialog.add(ConfirmationDialog, {
-            title: _t("Install %s", snippet.title),
-            body: markup(
-                `${escape(bodyText)}\n<a href="${linkUrl}" target="_blank">${escape(linkText)}</a>`
-            ),
-            confirm: async () => {
-                try {
-                    await this.orm.call("ir.module.module", "button_immediate_install", [
-                        [Number(snippet.moduleId)],
-                    ]);
-                    // TODO Need to Reload webclient
-                    // this._onSaveRequest({
-                    //     data: {
-                    //         reloadWebClient: true,
-                    //     },
-                    // });
-                } catch (e) {
-                    if (e instanceof RPCError) {
-                        const message = escape(_t("Could not install module %s", snippet.title));
-                        this.notification.add(message, {
-                            type: "danger",
-                            sticky: true,
-                        });
-                        return;
-                    }
-                    throw e;
-                }
-            },
-            confirmLabel: _t("Save and Install"),
-            cancel: () => {},
-        });
     }
 }

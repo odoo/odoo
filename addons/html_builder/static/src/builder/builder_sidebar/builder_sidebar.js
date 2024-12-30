@@ -11,6 +11,7 @@ import {
     useRef,
     useState,
     useSubEnv,
+    markup,
 } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -18,6 +19,8 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
+import { RPCError } from "@web/core/network/rpc";
+import { escape } from "@web/core/utils/strings";
 import { useSetupAction } from "@web/search/action_hook";
 import { BuilderActionsPlugin } from "../plugins/builder_actions_plugin";
 import { BuilderOptionsPlugin } from "../plugins/builder_options_plugin";
@@ -31,6 +34,7 @@ import { MovePlugin } from "../plugins/move/move_plugin";
 import { OperationPlugin } from "../plugins/operation_plugin";
 import { OverlayButtonsPlugin } from "../plugins/overlay_buttons/overlay_buttons_plugin";
 import { RemovePlugin } from "../plugins/remove/remove_plugin";
+import { ReplacePlugin } from "../plugins/replace/replace_plugin";
 import { SetupEditorPlugin } from "../plugins/setup_editor_plugin";
 import { SnippetLifecyclePlugin } from "../plugins/snippet_lifecycle_plugin";
 import { VisibilityPlugin } from "../plugins/visibility_plugin";
@@ -47,6 +51,7 @@ const BUILDER_PLUGIN = [
     OverlayButtonsPlugin,
     MovePlugin,
     GridLayoutPlugin,
+    ReplacePlugin,
     RemovePlugin,
     DropZonePlugin,
     MediaWebsitePlugin,
@@ -135,6 +140,7 @@ export class BuilderSidebar extends Component {
                     key: this.env.localOverlayContainerKey,
                     ref: this.props.overlayRef,
                 },
+                replaceSnippet: async (snippet) => await this.snippetModel.replaceSnippet(snippet),
             },
             this.env.services
         );
@@ -142,6 +148,7 @@ export class BuilderSidebar extends Component {
         this.snippetModel = useState(
             new SnippetModel(this.env.services, {
                 snippetsName: this.props.snippetsName,
+                installSnippetModule: this.installSnippetModule.bind(this),
             })
         );
 
@@ -319,6 +326,46 @@ export class BuilderSidebar extends Component {
         this.state.invisibleEls = [
             ...this.editor.editable.querySelectorAll(this.getInvisibleSelector(isMobile)),
         ];
+    }
+
+    installSnippetModule(snippet) {
+        // TODO: Should be the app name, not the snippet name ... Maybe both ?
+        const bodyText = _t("Do you want to install %s App?", snippet.title);
+        const linkText = _t("More info about this app.");
+        const linkUrl =
+            "/odoo/action-base.open_module_tree/" + encodeURIComponent(snippet.moduleId);
+
+        this.dialog.add(ConfirmationDialog, {
+            title: _t("Install %s", snippet.title),
+            body: markup(
+                `${escape(bodyText)}\n<a href="${linkUrl}" target="_blank">${escape(linkText)}</a>`
+            ),
+            confirm: async () => {
+                try {
+                    await this.orm.call("ir.module.module", "button_immediate_install", [
+                        [Number(snippet.moduleId)],
+                    ]);
+                    // TODO Need to Reload webclient
+                    // this._onSaveRequest({
+                    //     data: {
+                    //         reloadWebClient: true,
+                    //     },
+                    // });
+                } catch (e) {
+                    if (e instanceof RPCError) {
+                        const message = escape(_t("Could not install module %s", snippet.title));
+                        this.notification.add(message, {
+                            type: "danger",
+                            sticky: true,
+                        });
+                        return;
+                    }
+                    throw e;
+                }
+            },
+            confirmLabel: _t("Save and Install"),
+            cancel: () => { },
+        });
     }
 }
 
