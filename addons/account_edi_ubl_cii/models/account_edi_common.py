@@ -555,7 +555,7 @@ class AccountEdiCommon(models.AbstractModel):
         """
         xpath_dict = self._get_invoice_line_xpaths(invoice_line, qty_factor)
         # basis_qty (optional)
-        basis_qty = float(self._find_value(xpath_dict['basis_qty'], tree) or 1)
+        basis_qty = float(self._find_value(xpath_dict['basis_qty'], tree) or 1) or 1.0
 
         # gross_price_unit (optional)
         gross_price_unit = None
