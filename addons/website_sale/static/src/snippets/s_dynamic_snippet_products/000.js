@@ -6,11 +6,42 @@ import { WebsiteSale } from "../../js/website_sale";
 
 const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
     selector: '.s_dynamic_snippet_products',
+    events: {
+        'slid.bs.carousel': '_preloadCarouselItems',
+    },
+
+    /**
+     * @override
+     */
+    start: async function () {
+        await this._super.apply(this, arguments);
+        this._preloadCarouselItems();
+    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Preload next and prev carousel items to avoid animation lag
+     *
+     * @private
+     */
+    _preloadCarouselItems: function () {
+        const activeCarouselItemEl = this.el.querySelector('.carousel-item.active');
+        if (activeCarouselItemEl) {
+            const carouselItemArray = [
+                activeCarouselItemEl.previousElementSibling || this.el.querySelector('.carousel-item:last-child'),
+                activeCarouselItemEl.nextElementSibling || this.el.querySelector('.carousel-item:first-child')
+            ];
+
+            carouselItemArray.forEach(carouselItemEl => {
+                carouselItemEl.querySelectorAll('img[loading="lazy"]').forEach(img => {
+                    img.setAttribute('loading', 'eager');
+                });
+            });
+        }
+    },
     /**
      * Gets the category search domain
      *
