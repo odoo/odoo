@@ -5,7 +5,8 @@
         <div class="pos-search-bar d-flex align-items-center flex-grow-1 rounded">
             <div class="search position-relative h-100 d-flex flex-grow-1">
                 <div class="input-group">
-                    <input class="form-control bg-view border-light ps-2 ps-5" t-ref="autofocus"
+                    <span class="input-group-text"><i class="fa-fw oi oi-search" role="img" aria-label="Search Products" title="Search Products"/></span>
+                    <input class="form-control form-control-lg" t-ref="autofocus"
                     t-model="state.searchInput" t-on-keydown="onSearchInputKeydown" t-on-keyup="onSearchInputKeyup" type="text" t-att-placeholder="props.placeholder" />
                     <div t-if="state.showSearchFields and state.searchInput" class="fields z-1">
                         <ul class="py-1 bg-view small">
@@ -25,7 +26,7 @@
                         </ul>
                     </div>
                     <div t-if="props.config.filter.show"
-                        class="filter btn btn-secondary d-flex align-items-center dropdown-toggle"
+                        class="filter btn btn-outline-secondary d-flex align-items-center dropdown-toggle"
                         t-on-click.stop="() => { state.showFilterOptions = !state.showFilterOptions }">
                         <span>
                             <t t-esc="props.config.filter.options.get(state.selectedFilter).text" />
@@ -40,7 +41,6 @@
                         </ul>
                     </div>
                 </div>
-                <span class="search-icon position-absolute start-0 top-50 translate-middle ms-4 z-3" t-if="!ui.isSmall"><i class="oi oi-search"></i></span>
             </div>
         </div>
     </t>

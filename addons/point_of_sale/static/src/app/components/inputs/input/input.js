@@ -27,6 +27,7 @@ export class Input extends TModelInput {
         placeholder: { type: String, optional: true },
         class: { type: String, optional: true },
         callback: { type: Function, optional: true },
+        isOpenCallback: { type: Function, optional: true },
     };
     static defaultProps = {
         class: "",

@@ -35,10 +35,8 @@ registry.category("web_tour.tours").add("PosHrTour", {
             Dialog.confirm(),
             Dialog.confirm("Open Register"),
             ProductScreen.isShown(),
-            PosHr.cashierNameIs("Pos Employee1"),
             PosHr.clickCashierName(),
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
-            PosHr.cashierNameIs("Mitchell Admin"),
             PosHr.clickCashierName(),
             SelectionPopup.has("Pos Employee2", { run: "click" }),
             NumberPopup.enterValue("12"),
@@ -53,7 +51,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
             ProductScreen.addOrderline("Desk Pad", "1"),
             ProductScreen.totalAmountIs("1.98"),
             Chrome.clickOrders(),
-            TicketScreen.nthRowContains(2, "Pos Employee2", false),
+            TicketScreen.nthRowContains(1, "Pos Employee2", false),
 
             // order for employee 1
             PosHr.clickLockButton(),
@@ -63,8 +61,8 @@ registry.category("web_tour.tours").add("PosHrTour", {
             ProductScreen.addOrderline("Desk Pad", "1"),
             ProductScreen.totalAmountIs("1.98"),
             Chrome.clickOrders(),
-            TicketScreen.nthRowContains(2, "Pos Employee2", false),
-            TicketScreen.nthRowContains(3, "Pos Employee1", false),
+            TicketScreen.nthRowContains(1, "Pos Employee2", false),
+            TicketScreen.nthRowContains(2, "Pos Employee1", false),
 
             // Cash in/out should be accessible for all users.
             Chrome.clickMenuOption("Cash In/Out"),
@@ -73,12 +71,11 @@ registry.category("web_tour.tours").add("PosHrTour", {
             // order for admin
             PosHr.clickCashierName(),
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
-            PosHr.cashierNameIs("Mitchell Admin"),
             Chrome.createFloatingOrder(),
             ProductScreen.addOrderline("Desk Pad", "1", "8"),
             ProductScreen.totalAmountIs("8.0"),
             Chrome.clickOrders(),
-            TicketScreen.nthRowContains(4, "Mitchell Admin", false),
+            TicketScreen.nthRowContains(3, "Mitchell Admin", false),
 
             // Close register should be accessible by the admin user.
             Chrome.clickMenuOption("Close Register"),
@@ -97,10 +94,8 @@ registry.category("web_tour.tours").add("CashierStayLogged", {
             SelectionPopup.has("Mitchell Admin"),
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
             Dialog.confirm("Open Register"),
-            PosHr.cashierNameIs("Mitchell Admin"),
             PosHr.refreshPage(),
             ProductScreen.isShown(),
-            PosHr.cashierNameIs("Mitchell Admin"),
             Chrome.clickMenuButton(),
             PosHr.clickLockButton(),
             PosHr.refreshPage(),
@@ -117,7 +112,7 @@ registry.category("web_tour.tours").add("CashierCanSeeProductInfo", {
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
             Dialog.confirm("Open Register"),
             ProductScreen.clickInfoProduct("product_a"),
-            Dialog.confirm("Ok"),
+            Dialog.confirm("Close"),
             Dialog.isNot(),
         ].flat(),
 });
@@ -134,6 +129,5 @@ registry.category("web_tour.tours").add("CashierCannotClose", {
             {
                 trigger: negate(".close-button"),
             },
-            PosHr.cashierNameIs("Test Employee 3"),
         ].flat(),
 });

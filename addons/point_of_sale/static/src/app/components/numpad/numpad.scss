@@ -4,10 +4,6 @@
 
 .numpad-4-cols {
   grid-template-columns: repeat(4, 1fr);
-
-  .numpad-button:nth-child(4n) {
-    margin-left: map-get($spacers, 2) !important;
-  }
 }
 
 .modal-body .numpad-button {
@@ -20,13 +16,55 @@
   @include media-breakpoint-down(xl) {
     padding: 0;
   }
+  background-color: var(--bg, var(--btn-bg));
+  border: $border-width solid var(--hover-bg, var(--border-color));
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left:  0px;
+    right:  0;
+    bottom:  0;
+    border: $border-width * .5 solid var(--border-color);
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  &:where(:not(.modal-body .numpad-button, .table-selector .numpad-button)) {
+    &:first-child {
+      border-radius: $btn-border-radius 0 0 0 !important;
+    }
+
+    &:nth-child(4) {
+      border-radius: 0 $btn-border-radius 0 0 !important;
+    }
+
+    &:nth-last-child(4) {
+      border-radius: 0 0 0 $btn-border-radius !important;
+    }
+
+    &:last-child {
+      border-radius: 0 0 $btn-border-radius 0 !important;
+    }
+  }
+
+  &:hover:where(:not(.active)) {
+    background-color: var(--hover-bg, var(--btn-hover-bg));
+  }
+
+  &.active, &:active {
+    color: $o-action;
+    --border-color: var(--hover-bg, #{$o-component-active-border});
+    --btn-active-bg: var(--bg, #{$o-component-active-bg});
+  }
+
+  &:disabled {
+    opacity: 1;
+    background-color: $o-gray-200;
+  }
 }
 
 .numpad-3-cols {
   grid-template-columns: repeat(3, 1fr);
-}
-
-.numpad-discount.active {
-  border-bottom: $border-width solid $o-component-active-border !important;
-  border-top: $border-width solid $o-component-active-border !important;
 }

@@ -12,7 +12,14 @@
                         t-attf-class="{{ primaryOrderButton ? 'btn-primary' : 'btn-light' }}">
                         <!-- Replace the payment button by the order button -->
                         <span class="d-block">Order</span>
-                        <small><t t-esc="nbrOfChanges"/> changes</small>
+                        <t t-if="displayCategoryCount.length">
+                            <t t-foreach="displayCategoryCount" t-as="categoryCountLine"  t-key="categoryCountLine_index">
+                                <div class="d-flex align-items-center justify-content-center mt-1 small" t-att-class="{ 'gap-2' : !(displayCategoryCount.length > 2) }">
+                                    <label class="text-truncate"><t t-esc="categoryCountLine.name"/></label>
+                                    <label class="rounded px-2 py-0" style="background-color:rgba(0, 0, 0, 0.3);"><t t-esc="categoryCountLine.count"/></label>
+                                </div>
+                            </t>
+                        </t>
                     </button>
                     <button
                         class="btn-switchpane new-button btn btn-lg flex-grow-1 lh-sm btn-secondary"

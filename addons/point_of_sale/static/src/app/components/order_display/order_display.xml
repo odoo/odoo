@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderDisplay">
         <t t-if="order.lines.length">
-            <div class="d-flex flex-column flex-grow-1 rounded-3 bg-white overflow-hidden">
-                <div t-ref="scrollable" class="bg-light order-container d-flex flex-column flex-grow-1 overflow-y-auto text-start">
+            <div class="d-flex flex-column flex-grow-1 overflow-hidden">
+                <div t-ref="scrollable" class="order-container d-flex flex-column flex-grow-1 overflow-y-auto text-start">
                     <t t-foreach="order.lines" t-as="line" t-key="line_index">
                         <t t-if="props.slots.default" t-slot="default" line="line" />
                         <Orderline t-else="" line="line" mode="this.props.mode" />
@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <t t-set="taxTotals" t-value="order.taxTotals" />
-                <div t-if="taxTotals and props.mode !== 'receipt'" class="order-summary d-flex flex-column gap-1 px-3 py-2 border-top fw-bolder lh-sm">
+                <div t-if="taxTotals and props.mode !== 'receipt'" class="order-summary d-flex flex-column gap-1 p-2 border-bottom fw-bolder lh-sm">
                     <div t-if="taxTotals.has_tax_groups" class="tax-info subentry d-flex justify-content-between w-100 fs-6 text-muted ">
                         Taxes
                         <div id="order-widget-taxes">
@@ -51,7 +51,7 @@
                                   class="rounding"/>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between w-100 fs-2">
+                    <div class="d-flex justify-content-between w-100 fs-3">
                         Total
                         <span t-esc="formatCurrency(taxTotals.order_sign * taxTotals.total_amount_currency)"
                               class="total"/>
@@ -61,7 +61,7 @@
             <t t-slot="details"/>
         </t>
         <t t-else="">
-            <div t-if="!props.slots?.emptyCart" class="d-flex flex-column align-items-center justify-content-center flex-grow-1 bg-100 rounded-3 gap-3">
+            <div t-if="!props.slots?.emptyCart" class="d-flex flex-column align-items-center justify-content-center flex-grow-1 rounded-3 gap-3">
                 <CenteredIcon icon="'fa-shopping-cart fa-4x'" text="emptyCartText()" class="'h-unset'"/>
                 <t t-slot="details"/>
             </div>

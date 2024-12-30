@@ -12,7 +12,7 @@
                 <button t-esc="order.getName()"
                     t-att-class="{ 'active': pos.getOrder()?.id === order.id }"
                     t-attf-class="{{`o_colorlist_item_color_transparent_${order.preset_id?.color}`}}"
-                    class="btn btn-lg btn-secondary text-truncate mx-1 border-0"
+                    class="btn btn-lg btn-secondary text-truncate mx-1 border-transparent"
                     style="min-width: 4rem;"
                     t-on-click="() => this.selectFloatingOrder(order)"
                 />

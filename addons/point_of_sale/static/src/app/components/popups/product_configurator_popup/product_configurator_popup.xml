@@ -137,13 +137,15 @@
                 </div>
             </div>
             <t t-set-slot="footer">
-                <button 
-                        class="btn btn-primary btn-lg lh-lg o-default-button"
-                        t-att-class="{'disabled': isArchivedCombination()}"
-                        t-on-click="confirm">
-                        Add
-                    </button>
-                <button class="btn btn-secondary btn-lg lh-lg o-default-button" t-on-click="close">Discard</button>
+                <div class="d-flex flex-row gap-2 w-100">
+                    <button
+                            class="btn btn-primary btn-lg lh-lg w-50 o-default-button"
+                            t-att-class="{'disabled': isArchivedCombination()}"
+                            t-on-click="confirm">
+                            Add
+                        </button>
+                    <button class="btn btn-secondary btn-lg lh-lg w-50 o-default-button" t-on-click="close">Discard</button>
+                </div>
             </t>
         </Dialog>
     </t>
