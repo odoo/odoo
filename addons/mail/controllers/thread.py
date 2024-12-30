@@ -4,6 +4,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
+from odoo.osv import expression
 from odoo.tools import frozendict
 from odoo.tools import email_normalize
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
@@ -209,16 +210,22 @@ class ThreadController(http.Controller):
         return cls._can_edit_message(message, **kwargs)
 
     @http.route("/mail/thread/get_followers", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
-    def mail_thread_get_followers(self, thread_id, thread_model, limit=20, offset=0):
+    def mail_thread_get_followers(self, thread_id, thread_model, limit=20, offset=0, search_term=None):
         domain = [
             ("res_id", "=", thread_id),
             ("res_model", "=", thread_model),
             ("partner_id", "!=", request.env.user.partner_id.id)
         ]
+        if search_term:
+            name_domain = [("partner_id.name", "ilike", search_term)]
+            domain = expression.AND([domain, name_domain])
+
         data = request.env["mail.followers"].search(domain, offset=offset, limit=limit, order="name ASC")
-        return Store(data).add_global_values(followerListView = {
-                "threadId": thread_id,
-                "threadModel": thread_model,
-                "followersCount": request.env["mail.followers"].search_count(domain),
-                "followers": Store.Many(data, mode="ADD")._get_id() if offset else Store.Many(data)._get_id(),
+        follower_count = request.env["mail.followers"].search_count(domain)
+
+        return Store(data).add_global_values(followerListView={
+            "threadId": thread_id,
+            "threadModel": thread_model,
+            "followersCount": follower_count,
+            "followers": Store.Many(data, mode="ADD")._get_id() if offset else Store.Many(data)._get_id(),
         }).get_result()
