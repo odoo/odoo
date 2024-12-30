@@ -174,3 +174,36 @@ test("Use the 'remove' overlay buttons: removing the last element will remove th
     // Check that the parent sibling is selected.
     expect(".oe_overlay.oe_active").toHaveRect(":iframe .second-section");
 });
+
+test("Use the 'replace' overlay buttons", async () => {
+    await setupWebsiteBuilder(`
+        <section class="s_text_image" data-snippet="s_text_image" data-name="Text - Image">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <p>TEST</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `);
+
+    await contains(":iframe .col-lg-5").click();
+    expect(".overlay .o_snippet_replace").toHaveCount(0);
+
+    await contains(":iframe section").click();
+    expect(".overlay .o_snippet_replace").toHaveCount(1);
+
+    await contains(".overlay .o_snippet_replace").click();
+    // Check that the snippet dialog is open on the right category.
+    expect(".o_add_snippet_dialog").toHaveCount(1);
+    expect(".o_add_snippet_dialog button:contains('Content')").toHaveClass("active");
+
+    await contains(
+        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe section.s_shape_image"
+    ).click();
+    // Check that the snippet was replaced by the chosen one.
+    expect(":iframe section.s_text_image").toHaveCount(0);
+    expect(":iframe section.s_shape_image").toHaveCount(1);
+    // TODO add checks of the overlay + options if the behavior is kept.
+});
