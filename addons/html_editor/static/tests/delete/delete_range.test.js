@@ -258,6 +258,29 @@ describe("deleteRange method", () => {
             expect(hr.childNodes.length).toBe(0);
         });
     });
+    describe("Delete Columns", () => {
+        test("should delete columns when all selected", async () => {
+            await testEditor({
+                contentBefore: `[<div class="container o_text_columns"><div class="row"><div class="col-4"><p>a</p></div><div class="col-4"><p>b</p></div><div class="col-4"><p>c</p></div></div></div>]`,
+                stepFunction: deleteRange,
+                contentAfter: `[]<p><br></p>`,
+            });
+        });
+        test("should delete columns when all selected along with text from an outer node", async () => {
+            await testEditor({
+                contentBefore: `<p>a[b</p><div class="container o_text_columns"><div class="row"><div class="col-4"><p><br></p></div><div class="col-4"><p><br></p></div><div class="col-4"><p>c</p></div></div></div>]`,
+                stepFunction: deleteRange,
+                contentAfter: `<p>a[]</p>`,
+            });
+        });
+        test("should delete all columns when all selected within a text", async () => {
+            await testEditor({
+                contentBefore: `<p>a[b</p><div class="container o_text_columns"><div class="row"><div class="col-4"><p><br></p></div><div class="col-4"><p><br></p></div><div class="col-4"><p><br></p></div></div></div><p>a]b</p>`,
+                stepFunction: deleteRange,
+                contentAfter: `<p>a[]b</p>`,
+            });
+        });
+    });
 });
 
 describe("deleteSelection", () => {
