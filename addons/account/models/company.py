@@ -5,8 +5,7 @@ from datetime import timedelta, datetime, date
 import calendar
 
 from odoo import fields, models, api, _, Command
-from odoo.exceptions import ValidationError, UserError, RedirectWarning
-from odoo.osv import expression
+from odoo.exceptions import LockError, ValidationError, UserError, RedirectWarning
 from odoo.tools import date_utils, format_list, SQL
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
@@ -1026,16 +1025,16 @@ class ResCompany(models.Model):
         we use this generic method to lock the records passed as parameter.
 
         :param records: The records to lock.
+        :return: Whether we have locked all records (if there were records to lock)
         """
-        if not records.ids:
-            return
-        self._cr.execute(f'SELECT * FROM {records._table} WHERE id IN %s FOR UPDATE SKIP LOCKED', [tuple(records.ids)])
-        available_ids = {r[0] for r in self._cr.fetchall()}
-        all_locked = available_ids == set(records.ids)
-        if not all_locked and allow_raising:
+        # TODO deprecate and use lock_for_update directly
+        try:
+            records.lock_for_update()
+        except LockError:
+            if not allow_raising:
+                return False
             raise UserError(_("Some documents are being sent by another process already."))
-        else:
-            return all_locked
+        return True
 
     def compute_fiscalyear_dates(self, current_date):
         """

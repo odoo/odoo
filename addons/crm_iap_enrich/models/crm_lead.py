@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
 import logging
 
-from psycopg2 import OperationalError
-
 from odoo import _, api, fields, models, modules, tools
 from odoo.addons.iap.tools import iap_tools
+from odoo.exceptions import LockError
 
 _logger = logging.getLogger(__name__)
 
@@ -53,11 +51,9 @@ class CrmLead(models.Model):
         batches = [self[index:index + 50] for index in range(0, len(self), 50)]
         for leads in batches:
             lead_emails = {}
-            with self._cr.savepoint():
-                try:
-                    self._cr.execute(
-                        "SELECT 1 FROM {} WHERE id in %(lead_ids)s FOR UPDATE NOWAIT".format(self._table),
-                        {'lead_ids': tuple(leads.ids)}, log_exceptions=False)
+            try:
+                leads.lock_for_update()
+                with self.env.cr.savepoint():
                     for lead in leads:
                         # If lead is lost, active == False, but is anyway removed from the search in the cron.
                         if lead.probability == 100 or lead.iap_enrich_done:
@@ -107,9 +103,10 @@ class CrmLead(models.Model):
                                     message=_("The leads/opportunities have successfully been enriched"))
                             _logger.info('Batch of %s leads successfully enriched', len(lead_emails))
                             self._iap_enrich_from_response(iap_response)
-                except OperationalError:
-                    _logger.error('A batch of leads could not be enriched :%s', repr(leads))
-                    continue
+            except LockError:
+                _logger.error('A batch of leads could not be enriched (locked): %s', repr(leads))
+            except Exception:
+                _logger.error('A batch of leads could not be enriched: %s', repr(leads))
             # Commit processed batch to avoid complete rollbacks and therefore losing credits.
             if not modules.module.current_test:
                 self.env.cr.commit()

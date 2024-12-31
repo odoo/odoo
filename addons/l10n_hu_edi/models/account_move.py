@@ -6,11 +6,10 @@ import logging
 import re
 
 from lxml import etree
-from psycopg2.errors import LockNotAvailable
 
 from odoo import fields, models, api, _
 from odoo.http import request
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import LockError, UserError, ValidationError
 from odoo.tools import formatLang, float_compare, float_is_zero, float_round, float_repr, cleanup_xml_node, groupby
 from odoo.tools.misc import split_every
 from odoo.addons.base_iban.models.res_partner_bank import normalize_iban
@@ -311,12 +310,9 @@ class AccountMove(models.Model):
 
     def _l10n_hu_edi_acquire_lock(self):
         """ Acquire a write lock on the invoices in self. """
-        if not self:
-            return
         try:
-            with self.env.cr.savepoint(flush=False):
-                self.env.cr.execute('SELECT * FROM account_move WHERE id = ANY(%s) FOR UPDATE NOWAIT', [self.ids])
-        except LockNotAvailable:
+            self.lock_for_update()
+        except LockError:
             raise UserError(_('Could not acquire lock on invoices - is another user performing operations on them?')) from None
 
     # === EDI: Flow === #

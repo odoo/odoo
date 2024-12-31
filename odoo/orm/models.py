@@ -47,7 +47,7 @@ import psycopg2.errors
 import psycopg2.extensions
 from psycopg2.extras import Json
 
-from odoo.exceptions import AccessError, MissingError, ValidationError, UserError
+from odoo.exceptions import AccessError, LockError, MissingError, ValidationError, UserError
 from odoo.tools import (
     clean_context, config, date_utils,
     DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, format_list,
@@ -5157,9 +5157,37 @@ class BaseModel(metaclass=MetaModel):
             return self
         query = Query(self.env, self._table, self._table_sql)
         query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(ids)))
-        self.env.cr.execute(query.select())
-        valid_ids = set([r[0] for r in self._cr.fetchall()] + new_ids)
+        real_ids = (id_ for [id_] in self.env.execute_query(query.select()))
+        valid_ids = {*real_ids, *new_ids}
         return self.browse(i for i in self._ids if i in valid_ids)
+
+    @api.private
+    def lock_for_update(self, *, allow_referencing: bool = False) -> None:
+        """ Grab an exclusive write-lock to the rows with the given ids.
+
+        This avoids blocking processing on the records due to concurrent
+        modifications. If all records couldn't be locked, a `LockError`
+        exception is raised.
+
+        :param allow_referencing: Acquire a row lock which allows for other
+            transactions to reference this record. Use only when modifying
+            values that are not identifiers.
+        :raises: ``LockError`` when some records could not be locked
+        """
+        ids = {id_ for id_ in self._ids if id_}
+        if not ids:
+            return
+        query = Query(self.env, self._table, self._table_sql)
+        query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(ids)))
+        # Use SKIP LOCKED instead of NOWAIT because the later aborts the
+        # transaction and we do not want to use SAVEPOINTS.
+        if allow_referencing:
+            lock_sql = SQL("FOR NO KEY UPDATE SKIP LOCKED")
+        else:
+            lock_sql = SQL("FOR UPDATE SKIP LOCKED")
+        rows = self.env.execute_query(SQL("%s %s", query.select(), lock_sql))
+        if len(rows) != len(ids):
+            raise LockError(self.env._("Cannot grab a lock on records"))
 
     def _has_cycle(self, field_name=None) -> bool:
         """

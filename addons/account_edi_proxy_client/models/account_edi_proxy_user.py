@@ -2,11 +2,10 @@ import base64
 import logging
 import uuid
 
-import psycopg2.errors
 import requests
 
 from odoo import _, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import LockError, UserError
 from .account_edi_proxy_auth import OdooEdiProxyAuth
 
 _logger = logging.getLogger(__name__)
@@ -182,9 +181,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         This method makes a request to get a new refresh token.
         '''
         try:
-            with self.env.cr.savepoint(flush=False):
-                self.env.cr.execute('SELECT * FROM account_edi_proxy_client_user WHERE id IN %s FOR UPDATE NOWAIT', [tuple(self.ids)])
-        except psycopg2.errors.LockNotAvailable:
+            self.lock_for_update()
+        except LockError:
             return
         response = self._make_request(self._get_server_url() + '/iap/account_edi/1/renew_token')
         if 'error' in response:
