@@ -2,7 +2,6 @@ import { AND, Record } from "@mail/core/common/record";
 import { rpc } from "@web/core/network/rpc";
 import { browser } from "@web/core/browser/browser";
 import { debounce } from "@web/core/utils/timing";
-import { escape } from "@web/core/utils/strings";
 
 export class Chatbot extends Record {
     static id = AND("script", "thread");
@@ -145,18 +144,7 @@ export class Chatbot extends Record {
      * @returns {Promise<boolean>} Whether the script is ready to go to the next step.
      */
     async _processAnswerQuestionSelection(message) {
-        if (this.currentStep.selectedAnswer) {
-            return true;
-        }
-        const answer = this.currentStep.answers.find(({ name }) =>
-            message.body.includes(escape(name))
-        );
-        this.currentStep.selectedAnswer = answer;
-        await rpc("/chatbot/answer/save", {
-            channel_id: this.thread.id,
-            message_id: this.currentStep.message.id,
-            selected_answer_id: answer.id,
-        });
+        const answer = this.currentStep.selectedAnswer;
         if (!answer.redirect_link) {
             return true;
         }

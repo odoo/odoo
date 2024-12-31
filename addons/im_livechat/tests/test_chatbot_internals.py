@@ -34,7 +34,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
 
         self.assertNotEqual(step_email_copy, self.step_email)
         self.assertEqual(len(step_email_copy.triggering_answer_ids), 1)
-        self.assertEqual(step_email_copy.triggering_answer_ids.name, 'I want to buy the software')
+        self.assertEqual(step_email_copy.triggering_answer_ids.name, 'I\'d like to buy the software')
         self.assertNotEqual(step_email_copy.triggering_answer_ids, self.step_dispatch_buy_software)
 
     def test_chatbot_is_forward_operator_child(self):

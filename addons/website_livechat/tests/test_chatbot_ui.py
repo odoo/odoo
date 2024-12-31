@@ -45,7 +45,7 @@ class TestLivechatChatbotUI(TestGetOperatorCommon, TestWebsiteLivechatCommon, Ch
             # next message would normally have 'self.step_dispatch_buy_software' as answer
             # but it's wiped when restarting the script
             ("How can I help you?", operator, False),
-            ("I want to buy the software", False, False),
+            ("I\'d like to buy the software", False, False),
             ("Can you give us your email please?", operator, False),
             ("No, you won't get my email!", False, False),
             ("'No, you won't get my email!' does not look like a valid email. Can you please try again?", operator, False),
@@ -269,3 +269,59 @@ class TestLivechatChatbotUI(TestGetOperatorCommon, TestWebsiteLivechatCommon, Ch
         channel = self.livechat_channel.channel_ids[0]
         self.assertIn(channel.channel_member_ids.partner_id.user_ids, en_op)
         self.assertNotIn(channel.channel_member_ids.partner_id.user_ids, fr_op)
+
+    def test_question_selection_overlapping_answers(self):
+        chatbot_script = self.env["chatbot.script"].create({"title": "Question selection bot"})
+        question_1 = self.env["chatbot.script.step"].create(
+            [
+                {
+                    "chatbot_script_id": chatbot_script.id,
+                    "message": "Choose an option",
+                    "step_type": "question_selection",
+                },
+            ]
+        )
+        not_x_answer = self.env["chatbot.script.answer"].create({
+            "name": "not X",
+            "script_step_id": question_1.id,
+        })
+        x_answer = self.env["chatbot.script.answer"].create({
+            "name": "X",
+            "script_step_id": question_1.id,
+        })
+        maybe_x_answer = self.env["chatbot.script.answer"].create({
+            "name": "Maybe X",
+            "script_step_id": question_1.id,
+        })
+        self.env["chatbot.script.step"].create(
+            [
+                {
+                    "chatbot_script_id": chatbot_script.id,
+                    "step_type": "text",
+                    "triggering_answer_ids": [not_x_answer.id],
+                    "message": "You selected not X",
+                },
+                {
+                    "chatbot_script_id": chatbot_script.id,
+                    "step_type": "text",
+                    "triggering_answer_ids": [x_answer.id],
+                    "message": "You selected X",
+                },
+                {
+                    "chatbot_script_id": chatbot_script.id,
+                    "step_type": "text",
+                    "triggering_answer_ids": [maybe_x_answer.id],
+                    "message": "You selected maybe X",
+                },
+            ]
+        )
+        self.livechat_channel.rule_ids = self.env["im_livechat.channel.rule"].create(
+            [
+                {
+                    "channel_id": self.livechat_channel.id,
+                    "chatbot_script_id": chatbot_script.id,
+                    "regex_url": "/",
+                },
+            ]
+        )
+        self.start_tour("/", "website_livechat.question_selection_overlapping_answers")
