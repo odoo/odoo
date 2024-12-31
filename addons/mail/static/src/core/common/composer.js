@@ -329,10 +329,6 @@ export class Composer extends Component {
         );
     }
 
-    get hasSendButtonNonEditing() {
-        return !this.extended;
-    }
-
     get hasSuggestions() {
         return Boolean(this.suggestion?.state.items);
     }
