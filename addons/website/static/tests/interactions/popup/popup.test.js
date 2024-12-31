@@ -73,7 +73,7 @@ function getPopupTemplate(options = {}) {
                     <div class="modal-content oe_structure">
                         <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" aria-label="Close">×</div>
                         <section>
-                            <a href="#" class="btn btn-primary ${extraPrimaryBtnClasses}">Primary button</a>
+                            <a href="#test" class="btn btn-primary ${extraPrimaryBtnClasses}">Primary button</a>
                             ${focusableElements ? '<button id="focus">Button 1</button>' : ""}
                         </section>
                     </div>
@@ -190,7 +190,7 @@ describe("trap focus", () => {
 
     test("focus is trapped when popup opens", async () => {
         const { core } = await startInteractions(`
-            <a href="#">Link</a>
+            <a href="#test">Link</a>
             ${getPopupTemplate({ modalId: "modal", focusableElements: true })}
         `);
         expect(core.interactions).toHaveLength(1);
@@ -211,7 +211,7 @@ describe("trap focus", () => {
 
     test("reset focus on the previous active element when popup is closed", async () => {
         const { core } = await startInteractions(`
-            <a id="showLink" href="#">Link</a>
+            <a id="showLink" href="#test">Link</a>
             ${getPopupTemplate({ modalId: "modal" })}
         `);
         expect(core.interactions).toHaveLength(1);
@@ -263,7 +263,7 @@ describe("trap focus", () => {
 
     test("intercept & reset focus with no backdrop popup", async () => {
         const { core } = await startInteractions(`
-            <a id="link1" href="#">Link</a>
+            <a id="link1" href="#test">Link</a>
             ${getPopupTemplate({ modalId: "modal", backdrop: false })}
         `);
         expect(core.interactions).toHaveLength(1);
@@ -283,9 +283,9 @@ describe("trap focus", () => {
 
     test("don't trap focus if no backdrop", async () => {
         const { core } = await startInteractions(`
-            <a id="link1" href="#">Link before</a>
+            <a id="link1" href="#test">Link before</a>
             ${getPopupTemplate({ modalId: "modal", backdrop: false, focusableElements: true })}
-            <a id="link2" href="#">Link after</a>
+            <a id="link2" href="#test">Link after</a>
         `);
         expect(core.interactions).toHaveLength(1);
         await tick();

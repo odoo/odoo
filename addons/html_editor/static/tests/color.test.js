@@ -315,17 +315,17 @@ test("should apply background color to a list of 3 links", async () => {
         contentBefore:
             "<ul>" +
             "<li>" +
-            '<a href="#">' +
+            '<a href="#test">' +
             "[abc" +
             "</a>" +
             "</li>" +
             "<li>" +
-            '<a href="#">' +
+            '<a href="#test">' +
             "bcd" +
             "</a>" +
             "</li>" +
             "<li>" +
-            '<a href="#">' +
+            '<a href="#test">' +
             "cde]" +
             "</a>" +
             "</li>" +
@@ -334,21 +334,21 @@ test("should apply background color to a list of 3 links", async () => {
         contentAfter:
             "<ul>" +
             "<li>" +
-            '<a href="#">' +
+            '<a href="#test">' +
             '<font style="background-color: rgb(255, 0, 0);">' +
             "[abc" +
             "</font>" +
             "</a>" +
             "</li>" +
             "<li>" +
-            '<a href="#">' +
+            '<a href="#test">' +
             '<font style="background-color: rgb(255, 0, 0);">' +
             "bcd" +
             "</font>" +
             "</a>" +
             "</li>" +
             "<li>" +
-            '<a href="#">' +
+            '<a href="#test">' +
             '<font style="background-color: rgb(255, 0, 0);">' +
             "cde]" +
             "</font>" +

@@ -36,7 +36,7 @@ const getTemplate = function (options = {}) {
     const withButtonCenter = options.withButtonCenter || false;
 
     const emptyDiv = `<div style="height: 50px; width: 150px;"></div>`;
-    const buttonEl = `<a href="#" style="background-color: white; border: solid; height: 50px; width: 150px;"></a>`;
+    const buttonEl = `<a href="#test" style="background-color: white; border: solid; height: 50px; width: 150px;"></a>`;
 
     return `
         <header style="height: 50px; background-color: #CCCCFF;"></header>

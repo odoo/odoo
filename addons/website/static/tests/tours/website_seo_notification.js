@@ -15,12 +15,12 @@ registerWebsitePreviewTour(
         // Part one checks that the SEO notification is displayed when the page title is not set.
         {
             content: "Open new page menu",
-            trigger: ".o_menu_systray .o_new_content_container > a",
+            trigger: ".o_menu_systray .o_new_content_container > button",
             run: "click",
         },
         {
             content: "Click on new page",
-            trigger: ".o_new_content_element a",
+            trigger: ".o_new_content_element button",
             run: "click",
         },
         {
@@ -51,7 +51,7 @@ registerWebsitePreviewTour(
         ...clickOnSave(),
         {
             content: "Publish your website",
-            trigger: ".o_menu_systray_item.o_website_publish_container a",
+            trigger: ".o_menu_systray_item.o_website_publish_container button",
             run: "click",
         },
         {
@@ -66,7 +66,7 @@ registerWebsitePreviewTour(
         {
             content: "Open the dropdown menu",
             trigger:
-                ":iframe #o_main_nav .navbar-nav .dropdown.o_no_autohide_item > a.dropdown-toggle",
+                ":iframe #o_main_nav .navbar-nav .dropdown.o_no_autohide_item > button.dropdown-toggle",
             run: "click",
         },
         {
