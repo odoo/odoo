@@ -49,7 +49,7 @@ registerWebsitePreviewTour('edit_megamenu', {
     },
     {
         content: "Confirm the mega menu label",
-        trigger: ".modal .modal-footer button:contains(ok)",
+        trigger: ".modal .modal-footer button:contains(Continue)",
         run: "click",
     },
     {
@@ -128,7 +128,7 @@ registerWebsitePreviewTour("megamenu_active_nav_link", {
     ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Home')", "Home"),
     {
         content: "Click on 'Link' to open Link Dialog",
-        trigger: ".o-we-linkpopover a.js_edit_menu",
+        trigger: ".o-we-linkpopover button.js_edit_menu",
         run: "click",
     },
     {
@@ -146,7 +146,7 @@ registerWebsitePreviewTour("megamenu_active_nav_link", {
     },
     {
         content: "Confirm the mega menu label",
-        trigger: ".modal .modal-footer .btn-primary:contains(ok)",
+        trigger: ".modal .modal-footer .btn-primary:contains(Continue)",
         run: "click",
     },
     {
@@ -198,7 +198,7 @@ registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     ...openLinkPopup(":iframe .top_menu .nav-item a", "Home"),
     {
         content: "Click on 'Link' to open Link Dialog",
-        trigger: ".o-we-linkpopover a.js_edit_menu",
+        trigger: ".o-we-linkpopover .js_edit_menu",
         run: "click",
     },
     {
@@ -216,7 +216,7 @@ registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     },
     {
         content: "Confirm the mega menu label",
-        trigger: ".modal .modal-footer .btn-primary:contains(ok)",
+        trigger: ".modal .modal-footer .btn-primary:contains(Continue)",
         run: "click",
     },
     {

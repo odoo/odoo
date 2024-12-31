@@ -65,10 +65,10 @@
 
 <t t-name="website.DeletePageDialog">
     <WebsiteDialog title.translate="Delete Page" close="props.close">
-        <p t-if="props.resIds.length > 1">Ready to make these web pages disappear into thin air? Are you sure?\n They will be gone forever!\n
+        <p t-if="props.resIds.length > 1">Ready to make these web pages disappear into thin air? Are you sure?<br/> They will be gone forever!<br/><br/>
             <span class="text-warning">But before deleting, make sure you update all links referring to them. That way, your customers won't bump into the not-so-famous 404 error page.</span>
         </p>
-        <p t-else="">Ready to make this web page disappear into thin air? Are you sure?\n It will be gone forever!\n
+        <p t-else="">Ready to make this web page disappear into thin air? Are you sure?<br/> It will be gone forever!<br/><br/>
             <span class="text-warning">But before deleting, make sure you update all links referring to it. That way, your customers won't bump into the not-so-famous 404 error page.</span>
         </p>  
         <PageDependencies resIds="props.resIds" resModel="props.resModel" mode="'collapse'"/>
