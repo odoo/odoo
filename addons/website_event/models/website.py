@@ -11,7 +11,7 @@ class Website(models.Model):
     _inherit = "website"
 
     @api.model
-    def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None, page_values=None, menu_values=None, sections_arch=None):
+    def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None, page_values=None, menu_values=None, sections_arch=None, page_title=None):
         """ Override the page creation in the context of events.
 
          When creating a page for an event, the page needs to be embedded inside the
@@ -42,7 +42,7 @@ class Website(models.Model):
             if website_event_menu:
                 template = "website_event.layout"
 
-        new_page = super().new_page(name, add_menu, template, ispage, namespace, page_values, menu_values, sections_arch)
+        new_page = super().new_page(name, add_menu, template, ispage, namespace, page_values, menu_values, sections_arch, page_title)
 
         if website_event_menu and new_page.get('view_id'):
             website_event_menu.view_id = new_page['view_id']
