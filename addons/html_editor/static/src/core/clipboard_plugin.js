@@ -134,7 +134,7 @@ export class ClipboardPlugin extends Plugin {
         // Repair the copied range.
         if (clonedContents.firstChild.nodeName === "LI") {
             const list = selection.commonAncestorContainer.cloneNode();
-            list.replaceChildren(...clonedContents.childNodes);
+            list.replaceChildren(...childNodes(clonedContents));
             clonedContents = list;
         }
         if (
@@ -199,7 +199,7 @@ export class ClipboardPlugin extends Plugin {
                 // related ones like headings etc.
                 if (!isBlock(ancestor) || paragraphRelatedElements.includes(ancestor.nodeName)) {
                     const clone = ancestor.cloneNode();
-                    clone.append(...clonedContents.childNodes);
+                    clone.append(...childNodes(clonedContents));
                     clonedContents.appendChild(clone);
                 }
             }
@@ -495,14 +495,14 @@ export class ClipboardPlugin extends Plugin {
                 }
             } else if (
                 ["S", "U"].includes(node.nodeName) &&
-                node.childNodes.length === 1 &&
+                childNodes(node).length === 1 &&
                 node.firstChild.nodeName === "FONT"
             ) {
                 // S and U tags sometimes contain FONT tags. We prefer the
                 // strike to adopt the style of the text, so we invert them.
                 const fontNode = node.firstChild;
                 node.before(fontNode);
-                node.replaceChildren(...fontNode.childNodes);
+                node.replaceChildren(...childNodes(fontNode));
                 fontNode.appendChild(node);
             } else if (
                 node.nodeName === "IMG" &&
@@ -543,7 +543,7 @@ export class ClipboardPlugin extends Plugin {
                     node.classList.remove(klass);
                 }
             }
-            for (const child of [...node.childNodes]) {
+            for (const child of childNodes(node)) {
                 this.cleanForPaste(child);
             }
         }
