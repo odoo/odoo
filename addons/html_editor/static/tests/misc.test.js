@@ -13,7 +13,7 @@ test("can instantiate a Editor", async () => {
     expect(getContent(el)).toBe(`<p>hel[lo] world</p>`);
     setContent(el, "<div>a[dddb]</div>");
     execCommand(editor, "formatBold");
-    expect(getContent(el)).toBe(`<div>a<strong>[dddb]</strong></div>`);
+    expect(getContent(el)).toBe(`<div class="o-paragraph">a<strong>[dddb]</strong></div>`);
 });
 
 test("cannot reattach an editor", async () => {
@@ -38,29 +38,29 @@ test("can instantiate a Editor in an iframe", async () => {
     expect(getContent(el)).toBe(`<p>hel[lo] world</p>`);
     setContent(el, "<div>a[dddb]</div>");
     execCommand(editor, "formatBold");
-    expect(getContent(el)).toBe(`<div>a<strong>[dddb]</strong></div>`);
+    expect(getContent(el)).toBe(`<div class="o-paragraph">a<strong>[dddb]</strong></div>`);
 });
 
 test("with an empty selector", async () => {
     const { el } = await setupEditor("<div>[]</div>", {});
     expect(el.innerHTML).toBe(
-        `<div placeholder="Type &quot;/&quot; for commands" class="o-we-hint"></div>`
+        `<div class="o-paragraph o-we-hint" placeholder="Type &quot;/&quot; for commands"><br></div>`
     );
     expect(getContent(el)).toBe(
-        `<div placeholder='Type "/" for commands' class="o-we-hint">[]</div>`
+        `<div class="o-paragraph o-we-hint" placeholder='Type "/" for commands'>[]<br></div>`
     );
 });
 
 test("with a part of the selector in an empty HTMLElement", async () => {
     const { el } = await setupEditor("<div>a[bc<div>]</div></div>", {});
-    expect(el.innerHTML).toBe(`<div>abc<div></div></div>`);
-    expect(getContent(el)).toBe(`<div>a[bc<div>]</div></div>`);
+    expect(el.innerHTML).toBe(`<div>abc<div class="o-paragraph"><br></div></div>`);
+    expect(getContent(el)).toBe(`<div>a[bc<div class="o-paragraph">]<br></div></div>`);
 });
 
 test("inverse selection", async () => {
     const { el } = await setupEditor("<div>a]bc<div>[</div></div>", {});
-    expect(el.innerHTML).toBe(`<div>abc<div></div></div>`);
-    expect(getContent(el)).toBe(`<div>a]bc<div>[</div></div>`);
+    expect(el.innerHTML).toBe(`<div>abc<div class="o-paragraph"><br></div></div>`);
+    expect(getContent(el)).toBe(`<div>a]bc<div class="o-paragraph">[<br></div></div>`);
 });
 
 test("with an empty selector and a <br>", async () => {
