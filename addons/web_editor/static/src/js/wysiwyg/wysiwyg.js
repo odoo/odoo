@@ -430,6 +430,7 @@ export class Wysiwyg extends Component {
             defaultLinkAttributes: this.options.userGeneratedContent ? {rel: 'ugc' } : {},
             allowCommandVideo: this.options.allowCommandVideo,
             allowInlineAtRoot: this.options.allowInlineAtRoot,
+            allowPastingFiles: 'allowPastingFiles' in this.options ? this.options.allowPastingFiles : true,
             getYoutubeVideoElement: getYoutubeVideoElement,
             getContextFromParentRect: options.getContextFromParentRect,
             getScrollContainerRect: () => {
