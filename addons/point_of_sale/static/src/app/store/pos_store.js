@@ -36,6 +36,7 @@ import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
 import { ClosePosPopup } from "../navbar/closing_popup/closing_popup";
 import { user } from "@web/core/user";
+import { debounce } from "@web/core/utils/timing";
 
 const { DateTime } = luxon;
 
@@ -148,6 +149,7 @@ export class PosStore extends Reactive {
             await this.connectToProxy();
         }
         this.closeOtherTabs();
+        this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
     }
 
     get firstScreen() {
@@ -486,7 +488,7 @@ export class PosStore extends Reactive {
                     await this.sendOrderInPreparation(order, true);
                 }
 
-                const cancelled = this.removeOrder(order, true);
+                const cancelled = this.removeOrder(order, false);
                 this.removePendingOrder(order);
                 if (!cancelled) {
                     return false;
@@ -1083,6 +1085,7 @@ export class PosStore extends Reactive {
         if (this.isOpenOrderShareable() || removeFromServer) {
             if (typeof order.id === "number" && !order.finalized) {
                 this.addPendingOrder([order.id], true);
+                this.syncAllOrdersDebounced();
             }
         }
 
@@ -1091,7 +1094,7 @@ export class PosStore extends Reactive {
             return;
         }
 
-        return this.data.localDeleteCascade(order, removeFromServer);
+        return this.data.localDeleteCascade(order);
     }
 
     /**

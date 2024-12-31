@@ -286,7 +286,7 @@ export class PosData extends Reactive {
 
                 for (const id of ids) {
                     if (!serverIds.includes(id)) {
-                        this.localDeleteCascade(this.models["pos.order"].get(id), true);
+                        this.localDeleteCascade(this.models["pos.order"].get(id));
                     }
                 }
             }
@@ -627,14 +627,8 @@ export class PosData extends Reactive {
         return await this.execute({ type: "delete", model, ids, queue });
     }
 
-    localDeleteCascade(record, force = false) {
+    localDeleteCascade(record, removeFromServer = false) {
         const recordModel = record.constructor.pythonModel;
-        if (typeof record.id === "number" && !force) {
-            console.info(
-                `Record ID ${record.id} MODEL ${recordModel}. If you want to delete a record saved on the server, you need to pass the force parameter as true.`
-            );
-            return;
-        }
 
         const relationsToDelete = Object.values(this.relations[recordModel])
             .filter((rel) => this.opts.cascadeDeleteModels.includes(rel.relation))
@@ -648,11 +642,11 @@ export class PosData extends Reactive {
         this.indexedDB.delete(recordModel, [record.uuid]);
         for (const item of recordsToDelete) {
             this.indexedDB.delete(item.model.modelName, [item.uuid]);
-            item.delete();
+            item.delete({ silent: !removeFromServer });
         }
 
         // Delete the main record
-        const result = record.delete();
+        const result = record.delete({ silent: !removeFromServer });
         return result;
     }
 

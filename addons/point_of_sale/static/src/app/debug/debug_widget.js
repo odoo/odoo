@@ -118,7 +118,7 @@ export class DebugWidget extends Component {
                 );
 
                 for (const order of orders) {
-                    this.pos.data.localDeleteCascade(order, true);
+                    this.pos.data.localDeleteCascade(order, !paid);
                 }
 
                 if (!this.pos.get_order()) {
