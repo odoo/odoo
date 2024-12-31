@@ -592,7 +592,7 @@ class L10nInEwaybill(models.Model):
                 ),
                 "transDistance": str(self.distance),
                 "docNo": self.document_number,
-                "docDate": self.document_date.strftime("%d/%m/%Y"),
+                "docDate": (self.document_date or fields.Datetime.now()).strftime("%d/%m/%Y"),
                 # bill details
                 **prepare_details(
                     key_paired_function={
