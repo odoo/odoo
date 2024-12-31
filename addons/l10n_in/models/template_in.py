@@ -78,6 +78,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': _('Export/SEZ'),
                 'sequence': 3,
                 'auto_apply': True,
+                'note': _('SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX.'),
                 'tax_ids': (
                     self._get_l10n_in_fiscal_tax_vals(trailing_id='_sez_exp')
                     + self._get_l10n_in_zero_rated_with_igst_zero_tax_vals()
@@ -86,6 +87,7 @@ class AccountChartTemplate(models.AbstractModel):
             'fiscal_position_in_lut_sez': {
                 'name': _('LUT - Export/SEZ'),
                 'sequence': 4,
+                'note': _('SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT PAYMENT OF INTEGRATED TAX.'),
                 'tax_ids': (
                     self._get_l10n_in_fiscal_tax_vals(use_zero_rated_igst=True, trailing_id='_sez_exp_lut')
                     + self._get_l10n_in_zero_rated_with_igst_zero_tax_vals()
