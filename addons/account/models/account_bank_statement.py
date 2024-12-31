@@ -94,6 +94,10 @@ class AccountBankStatement(models.Model):
         search='_search_is_valid',
     )
 
+    journal_has_invalid_statements = fields.Boolean(
+        related='journal_id.has_invalid_statements',
+    )
+
     problem_description = fields.Text(
         compute='_compute_problem_description',
     )
