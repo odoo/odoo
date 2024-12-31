@@ -744,3 +744,6 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_website_seo_notification(self):
         self.start_tour(self.env['website'].get_client_action_url("/"), "website_seo_notification", login="admin")
+
+    def test_create_missing_page(self):
+        self.start_tour("/", "create_missing_page", login="admin")

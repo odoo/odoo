@@ -2961,6 +2961,23 @@ options.registry.topMenuColor = options.Class.extend({
     },
 });
 
+options.registry.HeaderMenuEditor = options.Class.extend({
+    isTopOption: true,
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Opens the menu editor dialog.
+     */
+    openMenuEditor(previewMode, value, params) {
+        this.trigger_up("action_demand", {
+            actionName: "edit_menu",
+        });
+    },
+});
+
 /**
  * Manage the visibility of snippets on mobile/desktop.
  */

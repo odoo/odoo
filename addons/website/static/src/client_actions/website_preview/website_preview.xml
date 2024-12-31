@@ -10,7 +10,22 @@
     </div>
 </t>
 
+<t t-name="website.CreatePageMessage">
+    <!-- The wrapping <div> is necessary to avoid a traceback due to the dismiss -->
+    <div class="o_create_page_message">
+        <div class="alert alert-warning alert-dismissible m-0 rounded-0 border-0 border-top">
+            <div class="container d-flex align-items-center">
+                <i class="fa fa-lg fa-info-circle me-2"></i>
+                <span class="me-auto">This page does not exist, but you can create it as you are editor of this site.</span>
+                <a role="button" class="btn btn-info" t-on-click="createPage">Create Page</a>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+</t>
+
 <t t-name="website.WebsitePreview">
+    <CreatePageMessage t-if="this.websitePage.is404"/>
     <div class="o_website_preview" t-ref="container"
          t-att-class="{ 'editor_enable editor_has_snippets': this.websiteContext.snippetsLoaded,
                         'o_is_blocked': this.blockedState.isBlocked,

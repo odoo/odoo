@@ -300,14 +300,19 @@ body.editor_enable {
         background-color: $o-we-popover-bg;
         font-family: $o-we-font-family;
 
-        a {
+        a:not(.js_edit_menu) {
             color: $o-brand-primary;
 
             &.text-muted {
                 color: rgba(0, 0, 0, 0.65) !important;
             }
         }
-        i:not(.js_edit_menu > i) {
+        .js_edit_menu {
+            color: white;
+            background-color: $o-brand-primary;
+            border-color: $o-brand-primary;
+        }
+        i {
             color: rgba(0, 0, 0, 0.9);
         }
         &.bs-popover-top > .popover-arrow::after {
