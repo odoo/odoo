@@ -21,7 +21,7 @@ import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { RPCError } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
 import { uniqueId } from "@web/core/utils/functions";
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { useChildRef, useService, useBus } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
 import { redirect } from "@web/core/utils/urls";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
@@ -33,12 +33,13 @@ import { renderToElement } from "@web/core/utils/render";
 import { isBrowserChrome, isBrowserMicrosoftEdge } from "@web/core/browser/feature_detection";
 import { router } from "@web/core/browser/router";
 import { getScrollingElement } from "@web/core/utils/scrolling";
+import { CreatePageMessage } from "./create_page_message";
 
 const websiteSystrayRegistry = registry.category("website_systray");
 
 export class WebsiteBuilderClientAction extends Component {
     static template = "website.WebsiteBuilderClientAction";
-    static components = { LazyComponent, LocalOverlayContainer, ResizablePanel, ResourceEditor };
+    static components = { LazyComponent, LocalOverlayContainer, ResizablePanel, ResourceEditor, CreatePageMessage };
     static props = {
         ...standardActionServiceProps,
         editTranslations: { type: Boolean, optional: true },
@@ -77,9 +78,15 @@ export class WebsiteBuilderClientAction extends Component {
         useSubEnv({
             builderRef: useRef("container"),
         });
-        this.state = useState({ isEditing: false, showSidebar: true, key: 1 });
+        this.state = useState({ isEditing: false, showSidebar: true, key: 1, is404: false });
         this.websiteContext = useState(this.websiteService.context);
         this.component = useComponent();
+
+        useBus(
+            websiteSystrayRegistry,
+            "CONTENT-UPDATED",
+            () => (this.state.is404 = this.websiteService.is404)
+        );
 
         onMounted(() => {
             // You can't wait for rendering because the Builder depends on the

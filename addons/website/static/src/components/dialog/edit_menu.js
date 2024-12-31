@@ -2,31 +2,66 @@ import { useService, useAutofocus } from '@web/core/utils/hooks';
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from '@website/js/utils';
 import { WebsiteDialog } from './dialog';
-import { Component, useState, useEffect, onWillStart, useRef } from "@odoo/owl";
+import {
+    Component,
+    useState,
+    useEffect,
+    onWillStart,
+    useRef,
+    onMounted,
+} from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
+import { isEmail } from "@web/core/utils/strings";
+import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
+import { isAbsoluteURLInCurrentDomain } from "@html_editor/utils/url";
 
-const useControlledInput = (initialValue, validate) => {
-    const input = useState({
-        value: initialValue,
-        hasError: false,
-    });
+const isPageNotFound = (url, allPages) => {
+    let relativeUrl = false;
 
-    const isValid = () => {
-        if (validate(input.value)) {
-            return true;
-        }
-        input.hasError = true;
+    // Do not check if the page exists if the input is empty, an anchor, an
+    // email, or a phone number.
+    if (!url.trim() || url.startsWith("#") || isEmail(url) || /^(mailto:|tel:)/.test(url)) {
         return false;
-    };
+    }
 
-    useEffect(() => {
-        input.hasError = false;
-    }, () => [input.value]);
+    try {
+        relativeUrl = toRelativeIfSameDomain(url);
+        if (relativeUrl === url) {
+            // External URL
+            return false;
+        }
+    } catch {
+        // Relative or invalid URL; proceed with original.
+        relativeUrl = url;
+    }
 
-    return {
-        input,
-        isValid,
-    };
-};
+    // Remove query params and hash.
+    relativeUrl = relativeUrl.split("?")[0].split("#")[0];
+    // Ensure the URL starts with "/".
+    relativeUrl = relativeUrl.startsWith("/") ? relativeUrl : "/" + relativeUrl;
+    // Remove trailing slash if it's not the root "/".
+    relativeUrl = relativeUrl.endsWith("/") && relativeUrl !== "/" ? relativeUrl.slice(0, -1) : relativeUrl;
+    // Check if the page exists.
+    return !allPages.includes(relativeUrl);
+}
+
+const toRelativeIfSameDomain = (url) => {
+    // Remove domain from url to keep only the relative path if same domain.
+    const urlObj = new URL(url);
+    const isSameDomain = isAbsoluteURLInCurrentDomain(url, this.env);
+    return isSameDomain ? url.replace(urlObj.origin, "") : url;
+}
+
+const getAllPages = async () => {
+    const res = await rpc("/website/get_suggested_links", {
+        needle: "/",
+        limit: "no_limit",
+    });
+    const allPages = res.matching_pages.map((page) => page.value);
+    allPages.push(...res.others.flatMap(o => o.values?.map(v => v.value) || []));
+    return allPages;
+}
 
 export class MenuDialog extends Component {
     static template = "website.MenuDialog";
@@ -35,17 +70,32 @@ export class MenuDialog extends Component {
         name: { type: String, optional: true },
         url: { type: String, optional: true },
         isMegaMenu: { type: Boolean, optional: true },
+        allPages: { type: Array, optional: true },
         save: Function,
         close: Function,
     };
 
     setup() {
         this.website = useService('website');
+        this.title = this.props.isMegaMenu ? _t("Mega menu item") : _t("Menu item");
         useAutofocus();
 
-        this.name = useControlledInput(this.props.name, value => !!value);
-        this.url = useControlledInput(this.props.url, value => !!value);
         this.urlInputRef = useRef('url-input');
+        this.urlInputEdited = !!this.props.url;
+
+        this.state = useState({
+            pageNotFound: false,
+            url: this.props.url,
+            name: this.props.name,
+            invalidName: false,
+            invalidUrl: false,
+        });
+
+        onWillStart(async () => {
+            if (!this.props.isMegaMenu) {
+                this.allPages = this.props.allPages || await getAllPages();
+            }
+        });
 
         useEffect((input) => {
             if (!input) {
@@ -58,20 +108,58 @@ export class MenuDialog extends Component {
                     'ui-autocomplete': 'o_edit_menu_autocomplete'
                 },
                 urlChosen: () => {
-                    this.url.input.value = input.value;
+                    this.state.url = input.value;
+                    this.state.pageNotFound = false;
                 },
             };
             const unmountAutocompleteWithPages = wUtils.autocompleteWithPages(input, options, this.env);
             return () => unmountAutocompleteWithPages();
         }, () => [this.urlInputRef.el]);
+
+        useEffect(() => {
+            this.state.pageNotFound = isPageNotFound(this.state.url, this.allPages);
+        }, () => [this.state.url]);
+
+        onMounted(() => {
+            if (!this.props.isMegaMenu) {
+                this.state.pageNotFound =
+                    isPageNotFound(this.urlInputRef.el.value, this.allPages);
+            }
+        });
     }
 
     onClickOk() {
-        if (this.name.isValid()) {
-            if (this.props.isMegaMenu || this.url.isValid()) {
-                this.props.save(this.name.input.value, this.url.input.value);
-                this.props.close();
+        this.state.invalidName = !this.state.name;
+        if (this.state.invalidName) {
+            return;
+        }
+
+        let url = this.state.url;
+        if (!this.props.isMegaMenu) {
+            try {
+                url = toRelativeIfSameDomain(url);
+            } catch {
+                // Do nothing if URL is invalid.
             }
+        }
+        this.props.save(this.state.name, url, this.state.pageNotFound);
+        this.props.close();
+    }
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    onUrlInput(ev) {
+        this.state.invalidUrl = false;
+        this.urlInputEdited = true;
+    }
+
+    onTitleInput(ev) {
+        this.state.invalidName = false;
+        if (!this.urlInputEdited && !this.props.isMegaMenu) {
+            const title = ev.target.value;
+            this.state.url = title ? "/" + wUtils.slugify(title) : "";
         }
     }
 }
@@ -82,6 +170,7 @@ class MenuRow extends Component {
         menu: Object,
         edit: Function,
         delete: Function,
+        createPage: Function,
     };
     static components = {
         MenuRow,
@@ -93,6 +182,10 @@ class MenuRow extends Component {
 
     delete() {
         this.props.delete(this.props.menu.fields['id']);
+    }
+
+    createPage() {
+        this.props.createPage(this.props.menu.fields["id"]);
     }
 }
 
@@ -114,12 +207,14 @@ export class EditMenuDialog extends Component {
         this.state = useState({ rootMenu: {} });
 
         onWillStart(async () => {
+            this.allPages = await getAllPages();
             const menu = await this.orm.call(
                 'website.menu',
                 'get_tree',
                 [this.website.currentWebsite.id, this.props.rootID],
                 { context: { lang: this.website.currentWebsite.metadata.lang } }
             );
+            this.markPageNotFound(menu);
             this.state.rootMenu = menu;
             this.map = new Map();
             this.populate(this.map, this.state.rootMenu);
@@ -148,6 +243,7 @@ export class EditMenuDialog extends Component {
                     ? "2rem"
                     : "";
             },
+            preventDrag: (el) => el.querySelector(":scope > button"),
         });
     }
 
@@ -155,6 +251,16 @@ export class EditMenuDialog extends Component {
         map.set(menu.fields['id'], menu);
         for (const submenu of menu.children) {
             this.populate(map, submenu);
+        }
+    }
+
+    markPageNotFound(menu) {
+        for (const menuItem of menu.children) {
+            menuItem.page_not_found =
+                isPageNotFound(menuItem.fields["url"], this.allPages);
+            if (menuItem.children) {
+                this.markPageNotFound(menuItem);
+            }
         }
     }
 
@@ -200,19 +306,21 @@ export class EditMenuDialog extends Component {
     addMenu(isMegaMenu) {
         this.dialogs.add(MenuDialog, {
             isMegaMenu,
-            url: "#",
-            save: (name, url, isNewWindow) => {
+            allPages: this.allPages,
+            url: "",
+            save: (name, url, pageNotFound, isNewWindow) => {
                 const newMenu = {
                     fields: {
                         id: `menu_${(new Date).toISOString()}`,
                         name,
-                        url,
+                        url: isMegaMenu || !url ? '#' : url,
                         new_window: isNewWindow,
                         'is_mega_menu': isMegaMenu,
                         sequence: 0,
                         'parent_id': false,
                     },
                     'children': [],
+                    'page_not_found': pageNotFound,
                 };
                 this.state.rootMenu.children.push(newMenu);
                 // this.state.rootMenu.children.at(-1) to forces a rerender
@@ -227,9 +335,11 @@ export class EditMenuDialog extends Component {
             name: menuToEdit.fields['name'],
             url: menuToEdit.fields['url'],
             isMegaMenu: menuToEdit.fields['is_mega_menu'],
-            save: (name, url) => {
+            allPages: this.allPages,
+            save: (name, url, pageNotFound) => {
                 menuToEdit.fields['name'] = name;
-                menuToEdit.fields['url'] = url;
+                menuToEdit.fields["url"] = url || "#";
+                menuToEdit.page_not_found = pageNotFound;
             },
         });
     }
@@ -251,7 +361,7 @@ export class EditMenuDialog extends Component {
         }
     }
 
-    async onClickSave() {
+    async onClickSave(goToWebsite = true, url) {
         const data = [];
         this.map.forEach((menu, id) => {
             if (this.state.rootMenu.fields['id'] !== id) {
@@ -273,9 +383,24 @@ export class EditMenuDialog extends Component {
         ],
         { context: { lang: this.website.currentWebsite.metadata.lang } });
         if (this.props.save) {
-            this.props.save();
-        } else {
+            this.props.save(url);
+        } else if (goToWebsite) {
             this.website.goToWebsite();
         }
+    }
+
+    async createPage(id) {
+        const menu = this.map.get(id);
+        let url = menu.fields["url"];
+        url = url.startsWith("/") ? url : "/" + url;
+        this.dialogs.add(AddPageDialog, {
+            onAddPage: () => {
+                this.onClickSave(false, url);
+            },
+            websiteId: this.website.currentWebsite.id,
+            forcedURL: url,
+            goToPage: !this.props.save,
+            pageTitle: menu.fields["name"],
+        });
     }
 }

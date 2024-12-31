@@ -10,6 +10,7 @@ import { HeaderElementsOption } from "./header_elements_option";
 import { HeaderFontOption } from "./header_font_option";
 import { HeaderTemplateOption } from "./header_template_option";
 import { HeaderIconBackgroundOption } from "./header_icon_background_option";
+import { HeaderTopOptions } from "./header_top_options";
 
 const [
     HEADER_TEMPLATE,
@@ -43,9 +44,19 @@ export const basicHeaderOptionSettings = {
 
 class HeaderOptionPlugin extends Plugin {
     static id = "headerOption";
-    static dependencies = ["customizeWebsite"];
+    static dependencies = ["customizeWebsite", "menuDataPlugin"];
 
     resources = {
+        builder_header_middle_buttons: [
+            {
+                Component: HeaderTopOptions,
+                editableOnly: false,
+                selector: "#wrapwrap > header",
+                props: {
+                    openEditMenu: () => this.dependencies.menuDataPlugin.openEditMenu(),
+                },
+            },
+        ],
         builder_options: [
             withSequence(HEADER_TEMPLATE, {
                 ...basicHeaderOptionSettings,

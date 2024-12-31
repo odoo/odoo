@@ -402,9 +402,18 @@ export class AddPageDialog extends Component {
             type: String,
             optional: true,
         },
+        goToPage: {
+            type: Boolean,
+            optional: true,
+        },
+        pageTitle: {
+            type: String,
+            optional: true,
+        },
     };
     static defaultProps = {
         onAddPage: NO_OP,
+        goToPage: true,
     };
     static components = {
         WebsiteDialog,
@@ -441,7 +450,7 @@ export class AddPageDialog extends Component {
             // We also skip the possibility to choose to add in menu in that
             // case (e.g. in creation from 404 page button). The user can still
             // create its menu afterwards if needed.
-            await this.createPage(sectionsArch, this.props.forcedURL);
+            await this.createPage(sectionsArch, this.props.forcedURL, false, this.props.pageTitle);
         } else {
             this.dialogs.add(AddPageConfirmDialog, {
                 createPage: (...args) => this.createPage(sectionsArch, ...args),
@@ -450,7 +459,7 @@ export class AddPageDialog extends Component {
         }
     }
 
-    async createPage(sectionsArch, name = "", addMenu = false) {
+    async createPage(sectionsArch, name = "", addMenu = false, pageTitle = "") {
         // Remove any leading slash.
         const pageName = name.replace(/^\/*/, "") || _t("New Page");
         const data = await this.http.post(`/website/add/${encodeURIComponent(pageName)}`, {
@@ -461,6 +470,7 @@ export class AddPageDialog extends Component {
 
             'website_id': this.props.websiteId,
             'csrf_token': odoo.csrf_token,
+            'page_title': pageTitle,
         });
         if (data.view_id) {
             this.action.doAction({
@@ -470,7 +480,7 @@ export class AddPageDialog extends Component {
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
             });
-        } else {
+        } else if (this.props.goToPage) {
             this.website.goToWebsite({path: data.url, edition: true, websiteId: this.props.websiteId});
         }
         this.props.onAddPage();
