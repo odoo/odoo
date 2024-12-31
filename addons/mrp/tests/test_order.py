@@ -4901,6 +4901,91 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.workorder_ids[0].duration_expected, 1440.0)
 
+    def test_additional_transfer_creation_in_progress_state(self):
+        """
+        Test the creation of additional component transfers for MOs in 'progress' and 'to_close'
+        state for both 2-step and 3-step MRP processes:
+            - If the picking is not validated, the extra quantity updates the existing move within the picking.
+            - If the picking is validated, a new picking is created for that extra quantity.
+        """
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        warehouse.write({'manufacture_steps': 'pbm'})
+
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'is_storable': True,
+            'bom_ids': [Command.create({
+                'product_qty': 2.0,
+                'bom_line_ids': [Command.create({
+                    'product_id': self.product_1.id,
+                    'product_qty': 2.0,
+                })],
+            })],
+        })
+
+        mo = self.env['mrp.production'].create({
+            'product_id': product.id,
+            'product_uom_qty': 1.0,
+        })
+        mo.action_confirm()
+
+        # Verify that initially only one picking is created.
+        self.assertEqual(mo.delivery_count, 1.0)
+        mo.picking_ids.button_validate()
+
+        # Unlock MO and update the raw material quantity.
+        mo.is_locked = False
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.edit(0) as move:
+            move.product_uom_qty = 3
+        mo = mo_form.save()
+
+        # Verify that a new picking is created when mo is in confirmed state.
+        self.assertEqual(mo.delivery_count, 2.0)
+        mo.picking_ids.filtered(lambda picking: picking.state != "done").button_validate()
+
+        # Start the MO so that mo state is in progress.
+        mo.action_start()
+
+        # Update the raw material quantity again.
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.edit(0) as move:
+            move.product_uom_qty += 2
+        mo = mo_form.save()
+
+        # Verify that new picking is also created when mo is in 'progress' state.
+        self.assertEqual(mo.delivery_count, 3.0)
+
+        # Update the raw material quantity again but now quantity updates in exiting moves of picking.
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.edit(0) as move:
+            move.product_uom_qty += 3
+        mo = mo_form.save()
+
+        # For that new picking is not created.
+        self.assertEqual(mo.delivery_count, 3.0)
+
+        # Now check the latest not-done picking's quantity.
+        not_done_picking = mo.picking_ids.filtered(lambda picking: picking.state != "done")
+        self.assertEqual(not_done_picking.move_ids.product_uom_qty, 5.0)
+        not_done_picking.button_validate()
+
+        # Verify that new picking is also created when mo is in 'to_close' state.
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1.0
+        mo = mo_form.save()
+
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.edit(0) as move:
+            move.product_uom_qty += 3
+        mo = mo_form.save()
+
+        # Now check the latest not-done picking's quantity.
+        self.assertEqual(mo.delivery_count, 4.0)
+        not_done_picking = mo.picking_ids.filtered(lambda picking: picking.state != "done")
+        self.assertEqual(not_done_picking.move_ids.product_uom_qty, 3.0)
+
+
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
     def test_mrp_order_product_catalog(self):
