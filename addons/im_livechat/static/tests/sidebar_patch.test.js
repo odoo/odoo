@@ -338,7 +338,7 @@ test("Active category item should be visible even if the category is closed", as
     await contains(".o-mail-DiscussSidebarChannel", { text: "Visitor 11" });
 });
 
-test("Clicking on unpin button unpins the channel", async () => {
+test("Clicking on leave button leaves the channel", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
@@ -348,11 +348,12 @@ test("Clicking on unpin button unpins the channel", async () => {
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
+        create_uid: serverState.publicUserId,
     });
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "Visitor 11" });
-    await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
+    await click(".o-mail-DiscussSidebarChannel [title='Leave Channel']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Visitor 11" });
 });
 
@@ -398,6 +399,7 @@ test("unknown livechat can be displayed and interacted with", async () => {
         ],
         channel_type: "livechat",
         livechat_operator_id: partnerId,
+        create_uid: serverState.publicUserId,
     });
     const env = await start();
     await openDiscuss();
@@ -413,7 +415,7 @@ test("unknown livechat can be displayed and interacted with", async () => {
     await waitNotifications([env, "discuss.channel/new_message"]);
     await click("button", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Jane" });
-    await click("[title='Unpin Conversation']", {
+    await click("[title='Leave Channel']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "Jane" }],
     });
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
