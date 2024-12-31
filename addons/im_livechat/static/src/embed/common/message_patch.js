@@ -19,6 +19,6 @@ patch(Message.prototype, {
      * @param {import("@im_livechat/embed/common/chatbot/chatbot_step_model").StepAnswer} answer
      */
     answerChatbot(answer) {
-        return this.props.message.thread.post(answer.name);
+        return this.props.message.thread.post(answer.name, {}, { selected_answer_id: answer.id });
     },
 });
