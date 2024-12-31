@@ -42,11 +42,19 @@ describe("to paragraph", () => {
         });
     });
 
-    test("should not turn a div into a paragraph", async () => {
+    test("should turn a div into a paragraph (if div is eligible for a baseContainer)", async () => {
         await testEditor({
-            contentBefore: "<div>[ab]</div>",
+            contentBefore: `<div>[ab]</div>`,
             stepFunction: setTag("p"),
-            contentAfter: "<div><p>[ab]</p></div>",
+            contentAfter: "<p>[ab]</p>",
+        });
+    });
+
+    test("should not turn an unbreakable div into a paragraph", async () => {
+        await testEditor({
+            contentBefore: `<div class="oe_unbreakable">[ab]</div>`,
+            stepFunction: setTag("p"),
+            contentAfter: `<div class="oe_unbreakable"><p>[ab]</p></div>`,
         });
     });
 
@@ -162,11 +170,11 @@ describe("to heading 1", () => {
         });
     });
 
-    test("should not turn a div into a heading 1", async () => {
+    test("should turn a div into a heading 1 (if div is eligible for a baseContainer)", async () => {
         await testEditor({
             contentBefore: "<div>[ab]</div>",
             stepFunction: setTag("h1"),
-            contentAfter: "<div><h1>[ab]</h1></div>",
+            contentAfter: "<h1>[ab]</h1>",
         });
     });
 
@@ -223,11 +231,11 @@ describe("to heading 2", () => {
         });
     });
 
-    test("should not turn a div into a heading 2", async () => {
+    test("should turn a div into a heading 2 (if div is eligible for a baseContainer)", async () => {
         await testEditor({
             contentBefore: "<div>[ab]</div>",
             stepFunction: setTag("h2"),
-            contentAfter: "<div><h2>[ab]</h2></div>",
+            contentAfter: "<h2>[ab]</h2>",
         });
     });
 
@@ -284,11 +292,11 @@ describe("to heading 3", () => {
         });
     });
 
-    test("should not turn a div into a heading 3", async () => {
+    test("should turn a div into a heading 3 (if div is eligible for a baseContainer)", async () => {
         await testEditor({
             contentBefore: "<div>[ab]</div>",
             stepFunction: setTag("h3"),
-            contentAfter: "<div><h3>[ab]</h3></div>",
+            contentAfter: "<h3>[ab]</h3>",
         });
     });
 
@@ -409,11 +417,11 @@ describe("to blockquote", () => {
         });
     });
 
-    test("should not turn a div into a blockquote", async () => {
+    test("should turn a div into a blockquote (if div is eligible for a baseContainer)", async () => {
         await testEditor({
             contentBefore: "<div>[ab]</div>",
             stepFunction: setTag("blockquote"),
-            contentAfter: "<div><blockquote>[ab]</blockquote></div>",
+            contentAfter: "<blockquote>[ab]</blockquote>",
         });
     });
 

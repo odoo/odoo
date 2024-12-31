@@ -414,7 +414,7 @@ test("moving a protected node at an unprotected location, only remove should be 
                 <div class="b" data-oe-protected="false"></div>
             </div>
             <div data-oe-protected="true">
-                <div class="a"></div>
+                <p class="a"></p>
             </div>
         `)
     );
@@ -435,7 +435,7 @@ test("moving a protected node at an unprotected location, only remove should be 
         unformat(`
             <div data-oe-protected="true" contenteditable="false">
                 <div class="b" data-oe-protected="false" contenteditable="true">
-                    <div class="a"></div>
+                    <p class="a"></p>
                 </div>
             </div>
             <div data-oe-protected="true" contenteditable="false"></div>
@@ -448,7 +448,7 @@ test("moving an unprotected node at a protected location, only add should be ign
         unformat(`
             <div data-oe-protected="true">
                 <div data-oe-protected="false">
-                    <div class="a"></div>
+                    <p class="a">content</p>
                 </div>
             </div>
             <div class="b" data-oe-protected="true"></div>
@@ -473,7 +473,7 @@ test("moving an unprotected node at a protected location, only add should be ign
                 <div data-oe-protected="false" contenteditable="true"></div>
             </div>
             <div class="b" data-oe-protected="true" contenteditable="false">
-                <div class="a"></div>
+                <p class="a">content</p>
             </div>
         `)
     );
