@@ -10,9 +10,9 @@
         </xpath>
 
         <xpath expr="//t[@t-foreach='controls']" position="after">
-            <a t-if="ShowX2MRecords" role="button" class="ml16 o_toggle_closed_task_button" href="#" t-on-click="() => this.toggleHideClosed()">
+            <button t-if="ShowX2MRecords" role="button" class="ml16 o_toggle_closed_task_button btn btn-link" t-on-click="() => this.toggleHideClosed()">
                 <t t-esc="toggleListHideLabel"/>
-            </a>
+            </button>
         </xpath>
     </t>
 </templates>

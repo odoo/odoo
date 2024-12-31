@@ -11,7 +11,6 @@
                     <div>
                         <span class="btn pe-none px-1 fw-normal">or</span>
                         <a class="btn btn-link px-0 fw-normal"
-                            href="#"
                             type="object"
                             name="action_create_vendor_bill"
                             journal_type="purchase"
@@ -44,14 +43,14 @@
                         </div>
                         <div>
                             <span class="btn pe-none px-1 fw-normal">or</span>
-                            <a href="#"
+                            <button
                                 type="object"
                                 class="btn btn-link px-0 fw-normal"
                                 t-on-click="() => this.handleButtonClick('action_create_new')"
                                 groups="account.group_account_invoice"
                             >
                                 Create manually
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -63,14 +62,14 @@
                     </div>
                     <div class="text-center mt-2">
                         <div class="">
-                            <a href="#"
+                            <button
                                 type="object"
-                                class="o_invoice_new"
+                                class="o_invoice_new btn btn-link p-0 fw-normal"
                                 t-on-click="() => this.handleButtonClick('action_create_new')"
                                 groups="account.group_account_invoice"
                             >
                                 Create a bill manually
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>

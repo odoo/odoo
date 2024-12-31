@@ -8,15 +8,14 @@
                     <div t-att-class="`alert alert-${level} m-0 p-1 ps-3`" role="alert">
                         <div t-att-name="error" style="white-space: pre-wrap;">
                             <t t-out="error_value.message"/>
-                            <a class="fw-bold"
+                            <button class="fw-bold btn btn-link p-0"
                                t-if="error_value.action"
-                               href="#"
                                t-on-click.prevent="() => this.handleOnClick(error_value)"
                             >
                                 <i class="oi oi-arrow-right ms-1"/>
                                 <span class="ms-1" t-out="error_value.action_text"/>
                                 <i t-if="level === 'danger'" class="fa fa-warning ms-1"/>
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </t>

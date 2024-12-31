@@ -5,7 +5,7 @@ import { unformat } from "../_helpers/format";
 describe("button style", () => {
     test("editable button should have cursor text", async () => {
         const { el } = await setupEditor(
-            '<p><a href="#" class="btn btn-fill-primary">Link styled as button</a></p>'
+            '<p><a href="#test" class="btn btn-fill-primary">Link styled as button</a></p>'
         );
 
         const button = el.querySelector("a");
