@@ -221,7 +221,6 @@
                 </div>
                 <div class="o_wsale_product_sub d-flex justify-content-between align-items-end gap-2 flex-wrap">
                     <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
-                    <div class="o_wsale_product_btn d-flex gap-2"/>
                     <div class="product_price" itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer">
                         <span class="h6 mb-0"
                               t-if="template_price_vals['price_reduce'] or not website.prevent_zero_price_sale"
@@ -237,6 +236,7 @@
                         <span itemprop="price" style="display:none;" t-esc="template_price_vals['price_reduce']" />
                         <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
                     </div>
+                    <div class="o_wsale_product_btn d-flex gap-2"/>
                 </div>
             </div>
         </form>
@@ -550,6 +550,11 @@
         <xpath expr="//section[@id='o_wsale_products_grid']" position="attributes">
             <attribute name="t-attf-class" add="o_wsale_context_thumb_2_3" separator=" "/>
         </xpath>
+    </template>
+    <template id="products_thumb_hidden" name="thumb_hidden" inherit_id="website_sale.products" active="False">
+        <section id="o_wsale_products_grid" position="attributes">
+            <attribute name="t-attf-class" add="o_wsale_context_thumb_hidden" separator=" "/>
+        </section>
     </template>
 
     <!-- (Option) Products: Define products' images filling mode -->
