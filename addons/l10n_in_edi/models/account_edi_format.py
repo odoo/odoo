@@ -87,9 +87,7 @@ class AccountEdiFormat(models.Model):
     def _l10n_in_is_global_discount(self, line):
         return not line.tax_ids and line.price_subtotal < 0 or False
 
-    def _check_move_configuration(self, move):
-        if self.code != "in_einvoice_1_03":
-            return super()._check_move_configuration(move)
+    def _l10n_in_check_move_configuration_after_posted(self, move):
         error_message = []
         error_message += self._l10n_in_validate_partner(move.partner_id)
         error_message += self._l10n_in_validate_partner(move.company_id.partner_id, is_company=True)
@@ -124,6 +122,13 @@ class AccountEdiFormat(models.Model):
         )
 
     def _l10n_in_edi_post_invoice(self, invoice):
+        error_message = self._l10n_in_check_move_configuration_after_posted(invoice)
+        if error_message:
+            return {invoice: {
+                "success": False,
+                "error": _("Invalid invoice configuration:\n\n%s", '\n'.join(error_message)),
+                "blocking_level": "error",
+            }}
         generate_json = self._l10n_in_edi_generate_invoice_json(invoice)
         response = self._l10n_in_edi_generate(invoice.company_id, generate_json)
         if response.get("error"):
