@@ -569,7 +569,7 @@ export class ClipboardPlugin extends Plugin {
                 okClass instanceof RegExp ? okClass.test(item) : okClass === item
             );
         } else {
-            return isTextNode(item) || item.matches?.(CLIPBOARD_WHITELISTS.nodes);
+            return isTextNode(item) || item.matches?.(CLIPBOARD_WHITELISTS.nodes.join(","));
         }
     }
     /**
