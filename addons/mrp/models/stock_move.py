@@ -431,7 +431,7 @@ class StockMove(models.Model):
             # when updating consumed qty need to update related pickings
             # context no_procurement means we don't want the qty update to modify stock i.e create new pickings
             # ex. when spliting MO to backorders we don't want to move qty from pre prod to stock in 2/3 step config
-            self.filtered(lambda m: m.raw_material_production_id.state == 'confirmed')._run_procurement(old_demand)
+            self.filtered(lambda m: m.raw_material_production_id.state in ('confirmed', 'progress', 'to_close'))._run_procurement(old_demand)
         return res
 
     def _run_procurement(self, old_qties=False):
