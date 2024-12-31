@@ -127,6 +127,7 @@ PKGS_TO_INSTALL="
     python3-geoip2 \
     python3-jinja2 \
     python3-ldap \
+    python3-libcamera \
     python3-libsass \
     python3-lxml \
     python3-mako \
