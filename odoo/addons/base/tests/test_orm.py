@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import mute_logger
 from odoo import Command
@@ -152,6 +152,35 @@ class TestORM(TransactionCase):
         # check that there is no record with id 0
         recs = partner.browse([0])
         self.assertFalse(recs.exists())
+
+    def test_lock_records(self):
+        partner = self.env['res.partner']
+        p1, p2 = partner.search([], limit=2)
+
+        # lock p1
+        self.assertEqual(p1.lock_records(lockfk=False), p1)
+        self.assertEqual(p1.lock_records(lockfk=True), p1)
+
+        with self.env.registry.cursor() as cr:
+            recs = (p1 + p2).with_env(partner.env(cr=cr))
+            self.assertEqual(recs.lock_records(strict=False).ids, p2.ids)
+            with self.assertRaises(MissingError):
+                recs.lock_records(strict=True)
+            with self.assertRaises(MissingError):
+                p2.lock_records()
+
+            # can still read after lock failures
+            p1.invalidate_model()
+            self.assertTrue(p1.name)
+
+        # can lock p2 now
+        p2.lock_records()
+
+        # cannot lock inexisting record
+        inexisting = partner.create({'name': 'inexisting'})
+        inexisting.unlink()
+        self.assertFalse(inexisting.exists())
+        self.assertFalse(inexisting.lock_records(strict=False))
 
     def test_write_duplicate(self):
         p1 = self.env['res.partner'].create({'name': 'W'})

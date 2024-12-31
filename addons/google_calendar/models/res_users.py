@@ -100,8 +100,8 @@ class ResUsers(models.Model):
             return False
         # don't attempt to sync when another sync is already in progress, as we wouldn't be
         # able to commit the transaction anyway (row is locked)
-        self.env.cr.execute("""SELECT id FROM res_users WHERE id = %s FOR NO KEY UPDATE SKIP LOCKED""", [self.id])
-        if not self.env.cr.rowcount:
+        self.ensure_one()
+        if not self.lock_records(strict=False, lockfk=False):
             _logger.info("skipping calendar sync, locked user %s", self.login)
             return False
 

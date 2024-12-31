@@ -589,7 +589,7 @@ class BaseAutomation(models.Model):
         cron = self.env.ref('base_automation.ir_cron_data_base_automation_check', raise_if_not_found=False)
         if cron:
             automations = self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)])
-            cron.try_write({
+            cron.lock_records(strict=False, lockfk=False).write({
                 'active': bool(automations),
                 'interval_type': 'minutes',
                 'interval_number': self._get_cron_interval(automations),

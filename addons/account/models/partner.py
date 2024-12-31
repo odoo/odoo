@@ -6,12 +6,10 @@ import time
 import re
 import logging
 
-from psycopg2 import errors as pgerrors
-
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, mute_logger
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import MissingError, ValidationError, UserError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.tools import SQL, unique
 from odoo.addons.base_vat.models.res_partner import _ref_vat
@@ -792,22 +790,16 @@ class ResPartner(models.Model):
             raise UserError(_("The partner cannot be deleted because it is used in Accounting"))
 
     def _increase_rank(self, field, n=1):
-        if self.ids and field in ['customer_rank', 'supplier_rank']:
-            try:
-                with self.env.cr.savepoint(flush=False), mute_logger('odoo.sql_db'):
-                    self.env.execute_query(SQL("""
-                        SELECT %(field)s FROM res_partner WHERE ID IN %(partner_ids)s FOR NO KEY UPDATE NOWAIT;
-                        UPDATE res_partner SET %(field)s = %(field)s + %(n)s
-                        WHERE id IN %(partner_ids)s
-                        """,
-                        field=SQL.identifier(field),
-                        partner_ids=tuple(self.ids),
-                        n=n,
-                    ))
-                    self.invalidate_recordset([field])
-                    self.modified([field])
-            except (pgerrors.LockNotAvailable, pgerrors.SerializationFailure):
-                _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
+        assert isinstance(n, int) and field in ('customer_rank', 'supplier_rank')
+        try:
+            self.lock_records(lockfk=False)
+        except MissingError:
+            _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
+            return
+        records = self.sudo()
+        for record in records:
+            record[field] += n
+        records.flush_recordset([field])
 
     @api.model
     def _run_vat_test(self, vat_number, default_country, partner_is_company=True):

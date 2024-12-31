@@ -5158,7 +5158,40 @@ class BaseModel(metaclass=MetaModel):
         query = Query(self.env, self._table, self._table_sql)
         query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(ids)))
         self.env.cr.execute(query.select())
-        valid_ids = set([r[0] for r in self._cr.fetchall()] + new_ids)
+        valid_ids = {r[0] for r in self._cr.fetchall()}
+        valid_ids.update(new_ids)
+        return self.browse(i for i in self._ids if i in valid_ids)
+
+    @api.private
+    def lock_records(self, *, strict: bool = True, lockfk: bool = True) -> Self:
+        """ Grab an exclusive write-lock to the rows with the given ids.
+
+        This avoids blocking processing on the records due to concurrent
+        modifications. In strict mode, if all records couldn't be locked,
+        a `MissingError` exception is risen.
+
+        :param strict: Whether to raise `MissingError` when some records
+            cannot be locked or don't exist.
+        :param lockfk: Acquire a strong row lock which conflicts with
+            the lock acquired by foreign keys when they reference this row.
+        :return: Locked records with prefetch
+        """
+        new_ids, ids = partition(lambda i: isinstance(i, NewId), self._ids)
+        if not ids:
+            return self
+        query = Query(self.env, self._table, self._table_sql)
+        query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(ids)))
+        if lockfk:
+            lock_sql = SQL("FOR UPDATE")
+        else:
+            lock_sql = SQL("FOR NO KEY UPDATE")
+        # For strict check, use SKIP LOCKED instead of NOWAIT because the later
+        # aborts the transaction and we do not want to use SAVEPOINTS.
+        valid_ids = self.env.execute_query(SQL("%s %s SKIP LOCKED", query.select(), lock_sql))
+        valid_ids = {id_ for [id_] in valid_ids}
+        if strict and len(valid_ids) != len(set(ids)):
+            raise MissingError(_("Cannot grab a lock on records"))
+        valid_ids.update(new_ids)
         return self.browse(i for i in self._ids if i in valid_ids)
 
     def _has_cycle(self, field_name=None) -> bool:
