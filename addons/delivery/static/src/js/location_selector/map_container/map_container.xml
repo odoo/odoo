@@ -12,7 +12,7 @@
                 t-else=""
                 class="d-flex justify-content-center align-items-center flex-grow-1 w-100 bg-200"
             >
-                <span>There was an error loading the map</span>
+                <span t-out="errorMessage"/>
             </div>
 
             <!-- Desktop infos -->
@@ -34,9 +34,8 @@
                         type="button"
                         class="btn btn-primary d-none d-lg-block mt-3"
                         t-att-disabled="!this.props.selectedLocationId"
-                        t-on-click="this.props.validateSelection">
-                            Choose this location
-                    </button>
+                        t-on-click="this.props.validateSelection"
+                        t-out="chooseLocationButtonLabel"/>
                 </div>
 
                 <!-- Schedule -->
@@ -50,9 +49,8 @@
                     type="button"
                     class="btn btn-primary d-block d-lg-none align-self-stretch ms-lg-4"
                     t-att-disabled="!this.props.selectedLocationId"
-                    t-on-click="this.props.validateSelection">
-                        Choose this location
-                </button>
+                    t-on-click="this.props.validateSelection"
+                    t-out="chooseLocationButtonLabel"/>
             </div>
 
             <!-- Mobile infos -->
@@ -79,7 +77,7 @@
                     </span>
                     <span class="d-flex align-items-center gap-1 small fw-bold">
                         <i class="fa fa-clock-o" role="img"/>
-                        Opening hours
+                        <t t-out="openingHoursLabel"/>
                         <i class="o_location_selector_hours_caret fa fa-caret-up ms-auto transition-base"/>
                     </span>
 
