@@ -261,6 +261,7 @@ class AccountJournal(models.Model):
     )
     accounting_date = fields.Date(compute='_compute_accounting_date')
     display_alias_fields = fields.Boolean(compute='_compute_display_alias_fields')
+    has_invalid_statements = fields.Boolean(compute='_compute_has_invalid_statements')
 
     show_fetch_in_einvoices_button = fields.Boolean(
         string="Show E-Invoice Buttons",
@@ -283,6 +284,16 @@ class AccountJournal(models.Model):
         'unique (company_id, code)',
         'Journal codes must be unique per company.',
     )
+
+    def _compute_has_invalid_statements(self):
+        journals_with_invalid_statements = self.env['account.bank.statement'].search([
+            ('journal_id', 'in', self.ids),
+            '|',
+            ('is_valid', '=', False),
+            ('is_complete', '=', False),
+        ]).journal_id
+        journals_with_invalid_statements.has_invalid_statements = True
+        (self - journals_with_invalid_statements).has_invalid_statements = False
 
     def _compute_display_alias_fields(self):
         self.display_alias_fields = self.env['mail.alias.domain'].search_count([], limit=1)
