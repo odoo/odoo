@@ -1051,6 +1051,21 @@ export class HistoryPlugin extends Plugin {
     }
     /**
      * Unserialize a node and its children if the collaboration is true.
+     *
+     * TODO: find a solution so that the following issue can never happen:
+     *   If there is already another node in `nodeToIdMap` pointing to the
+     *   current id before executing `this.nodeToIdMap.set(node, id)` in this
+     *   function, there will be 2 different nodes pointing to the same id.
+     *
+     *   2 different nodes for the same id is pretty common:
+     *     Unserializing a text node in `_unserializeNode` always creates
+     *     another (new) node.
+     *
+     *   If mutations concerning both nodes are bundled in the same step, they
+     *   will all be erroneously serialized as if they concern the node which
+     *   had its id set the latest, which is likely to cause issues when
+     *   applying these mutations (undo/redo, collaboration).
+     *
      * @param { SerializedNode } node
      * @returns { Node }
      */

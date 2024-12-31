@@ -200,8 +200,10 @@ describe("wrapInlinesInBlocks", () => {
                 `<div contenteditable="false" style="display: inline;">inline</div>`
             )
         );
+        const cursors = editor.shared.selection.preserveSelection();
         // First part (inserted content) is wrapped manually
-        wrapInlinesInBlocks(div);
+        wrapInlinesInBlocks(div, cursors);
+        cursors.restore();
         expect(getContent(el)).toBe(
             unformat(`
                     <div>
@@ -229,8 +231,10 @@ describe("wrapInlinesInBlocks", () => {
                 `text<div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>`
             )
         );
+        const cursors = editor.shared.selection.preserveSelection();
         // First part (inserted content) is wrapped manually
-        wrapInlinesInBlocks(div);
+        wrapInlinesInBlocks(div, cursors);
+        cursors.restore();
         expect(getContent(el)).toBe(
             unformat(`
                 <div>
@@ -257,8 +261,10 @@ describe("wrapInlinesInBlocks", () => {
                 `text<br><div contenteditable="false" style="display: inline;">inline</div><br><span class="a">span</span>`
             )
         );
+        const cursors = editor.shared.selection.preserveSelection();
         // First part (inserted content) is wrapped manually
-        wrapInlinesInBlocks(div);
+        wrapInlinesInBlocks(div, cursors);
+        cursors.restore();
         expect(getContent(el)).toBe(
             unformat(`
                 <div>
