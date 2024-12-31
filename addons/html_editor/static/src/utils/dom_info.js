@@ -664,5 +664,12 @@ export function isElement(node) {
 
 export function isContentEditable(node) {
     const element = isTextNode(node) ? node.parentElement : node;
-    return element.isContentEditable;
+    return element && element.isContentEditable;
+}
+
+export function isContentEditableAncestor(node) {
+    if (node.nodeType !== Node.ELEMENT_NODE) {
+        return false;
+    }
+    return node.isContentEditable && node.matches("[contenteditable]");
 }
