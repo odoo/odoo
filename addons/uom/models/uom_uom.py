@@ -11,6 +11,7 @@ from odoo.exceptions import UserError
 
 
 if TYPE_CHECKING:
+    from odoo.orm.types import Self
     from odoo.tools.float_utils import RoundingMethod
 
 
@@ -98,7 +99,14 @@ class UomUom(models.Model):
         digits = self.env['decimal.precision'].precision_get('Product Unit')
         return tools.float_is_zero(value, precision_digits=digits)
 
-    def _compute_quantity(self, qty, to_unit, round=True, rounding_method='UP', raise_if_failure=True):
+    def _compute_quantity(
+        self,
+        qty: float,
+        to_unit: Self,
+        round: bool = True,
+        rounding_method: RoundingMethod = 'UP',
+        raise_if_failure: bool = True,
+    ) -> float:
         """ Convert the given quantity from the current UoM `self` into a given one
             :param qty: the quantity to convert
             :param to_unit: the destination UomUom record (uom.uom)
@@ -122,7 +130,7 @@ class UomUom(models.Model):
 
         return amount
 
-    def _compute_price(self, price, to_unit):
+    def _compute_price(self, price: float, to_unit: Self) -> float:
         self.ensure_one()
         if not self or not price or not to_unit or self == to_unit:
             return price
@@ -146,7 +154,7 @@ class UomUom(models.Model):
         decimal_precision = self.env['decimal.precision'].precision_get('Product Unit')
         self.rounding = 10 ** -decimal_precision
 
-    def _filter_protected_uoms(self):
+    def _filter_protected_uoms(self) -> Self:
         """Verifies self does not contain protected uoms."""
         linked_model_data = self.env['ir.model.data'].sudo().search([
             ('model', '=', self._name),
@@ -159,7 +167,7 @@ class UomUom(models.Model):
         else:
             return self.browse(set(linked_model_data.mapped('res_id')))
 
-    def _has_common_reference(self, other_uom):
+    def _has_common_reference(self, other_uom: Self) -> bool:
         """ Check if `self` and `other_uom` have a common reference unit """
         self.ensure_one()
         other_uom.ensure_one()
