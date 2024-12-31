@@ -25,6 +25,11 @@
                     </group>
                 </group>
             </xpath>
+            <xpath expr="//field[@name='document_date']" position="attributes">
+                <attribute name="invisible">
+                    picking_id and supply_type == 'I'
+                </attribute>
+            </xpath>
             <xpath expr="//field[@name='type_id']" position="attributes">
                 <attribute name="domain">
                     [
