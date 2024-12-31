@@ -119,30 +119,6 @@ export function unwrapContents(node) {
     return contents;
 }
 
-// @todo @phoenix
-// This utils seem to handle a particular case of LI element.
-// If only relevant to the list plugin, a specific util should be created
-// that plugin instead.
-export function setTagName(el, newTagName) {
-    const document = el.ownerDocument;
-    if (el.tagName === newTagName) {
-        return el;
-    }
-    const newEl = document.createElement(newTagName);
-    while (el.firstChild) {
-        newEl.append(el.firstChild);
-    }
-    if (el.tagName === "LI") {
-        el.append(newEl);
-    } else {
-        for (const attribute of el.attributes) {
-            newEl.setAttribute(attribute.name, attribute.value);
-        }
-        el.parentNode.replaceChild(newEl, el);
-    }
-    return newEl;
-}
-
 /**
  * Removes the specified class names from the given element.  If the element has
  * no more class names after removal, the "class" attribute is removed.
