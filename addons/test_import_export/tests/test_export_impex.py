@@ -236,10 +236,9 @@ class test_selection_function(CreatorCase):
         self.assertEqual(self.export(False), [['']])
 
     def test_value(self):
-        # selection functions export the *value* itself
-        self.assertEqual(self.export('1'), [['1']])
-        self.assertEqual(self.export('3'), [['3']])
-        self.assertEqual(self.export('0'), [['0']])
+        self.assertEqual(self.export('1'), [['Grault']])
+        self.assertEqual(self.export('3'), [['Moog']])
+        self.assertEqual(self.export('0'), [['Corge']])
 
 
 class test_m2o(CreatorCase):
