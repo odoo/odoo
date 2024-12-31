@@ -4,6 +4,7 @@ import {
 import { Map } from '@delivery/js/location_selector/map/map';
 import { Component, onWillStart, useState } from '@odoo/owl';
 import { AssetsLoadingError, loadCSS, loadJS } from '@web/core/assets';
+import { _t } from '@web/core/l10n/translation';
 
 export class MapContainer extends Component {
     static components = { LocationSchedule, Map };
@@ -84,5 +85,17 @@ export class MapContainer extends Component {
      */
     get selectedLocation() {
         return this.props.locations.find(l => String(l.id) === this.props.selectedLocationId);
+    }
+
+    get errorMessage() {
+        return _t("There was an error loading the map");
+    }
+
+    get chooseLocationButtonLabel() {
+        return _t("Choose this location");
+    }
+
+    get openingHoursLabel() {
+        return _t("Opening hours");
     }
 }
