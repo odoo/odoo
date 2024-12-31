@@ -2349,7 +2349,7 @@ describe("link", () => {
 
         test("should replace link for new content when pasting in an empty link (collapsed)", async () => {
             await testEditor({
-                contentBefore: '<p><a href="#" oe-zws-empty-inline="">[]\u200B</a></p>',
+                contentBefore: '<p><a href="#test" oe-zws-empty-inline="">[]\u200B</a></p>',
                 stepFunction: async (editor) => {
                     pasteText(editor, "abc");
                 },
@@ -2358,7 +2358,7 @@ describe("link", () => {
         });
         test("should replace link for new content when pasting in an empty link (collapsed)(2)", async () => {
             await testEditor({
-                contentBefore: '<p>xy<a href="#" oe-zws-empty-inline="">\u200B[]</a>z</p>',
+                contentBefore: '<p>xy<a href="#test" oe-zws-empty-inline="">\u200B[]</a>z</p>',
                 stepFunction: async (editor) => {
                     pasteText(editor, "abc");
                 },
@@ -2368,7 +2368,7 @@ describe("link", () => {
 
         test("should replace link for new content (url) when pasting in an empty link (collapsed)", async () => {
             const { el, editor } = await setupEditor(
-                `<p>xy<a href="#" oe-zws-empty-inline="">\u200B[]</a>z</p>`
+                `<p>xy<a href="#test" oe-zws-empty-inline="">\u200B[]</a>z</p>`
             );
             pasteText(editor, "http://odoo.com");
             await animationFrame();
@@ -2379,9 +2379,9 @@ describe("link", () => {
         });
 
         test("should replace link for new content (imgUrl) when pasting in an empty link (collapsed) (1)", async () => {
-            const { el, editor } = await setupEditor(`<p>xy<a href="#">[]</a>z</p>`);
+            const { el, editor } = await setupEditor(`<p>xy<a href="#test">[]</a>z</p>`);
             expect(getContent(el)).toBe(
-                `<p>xy\ufeff<a href="#" class="o_link_in_selection">\ufeff[]</a>\ufeffz</p>`
+                `<p>xy\ufeff<a href="#test" class="o_link_in_selection">\ufeff[]</a>\ufeffz</p>`
             );
             pasteText(editor, imgUrl);
             await animationFrame();
@@ -2394,7 +2394,7 @@ describe("link", () => {
 
         test("should replace link for new content (url) when pasting in an empty link (collapsed) (2)", async () => {
             const { el, editor } = await setupEditor(
-                `<p>xy<a href="#" oe-zws-empty-inline="">\u200B[]</a>z</p>`
+                `<p>xy<a href="#test" oe-zws-empty-inline="">\u200B[]</a>z</p>`
             );
             pasteText(editor, imgUrl);
             await animationFrame();
@@ -2412,14 +2412,14 @@ describe("link", () => {
 
         test("should paste and transform plain text content over an empty link (collapsed)", async () => {
             await testEditor({
-                contentBefore: '<p><a href="#">[]\u200B</a></p>',
+                contentBefore: '<p><a href="#test">[]\u200B</a></p>',
                 stepFunction: async (editor) => {
                     pasteText(editor, "abc www.odoo.com xyz");
                 },
                 contentAfter: '<p>abc <a href="http://www.odoo.com">www.odoo.com</a> xyz[]</p>',
             });
             await testEditor({
-                contentBefore: '<p><a href="#">[]\u200B</a></p>',
+                contentBefore: '<p><a href="#test">[]\u200B</a></p>',
                 stepFunction: async (editor) => {
                     pasteText(editor, "odoo.com\ngoogle.com");
                 },
@@ -2431,7 +2431,7 @@ describe("link", () => {
 
         test("should paste html content over an empty link (collapsed)", async () => {
             await testEditor({
-                contentBefore: '<p><a href="#">[]\u200B</a></p>',
+                contentBefore: '<p><a href="#test">[]\u200B</a></p>',
                 stepFunction: async (editor) => {
                     pasteHtml(
                         editor,
@@ -2495,11 +2495,11 @@ describe("link", () => {
 
         test("should paste plain text inside non empty link (collapsed)", async () => {
             await testEditor({
-                contentBefore: '<p><a href="#">a[]b</a></p>',
+                contentBefore: '<p><a href="#test">a[]b</a></p>',
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<span>123</span>");
                 },
-                contentAfter: '<p><a href="#">a123[]b</a></p>',
+                contentAfter: '<p><a href="#test">a123[]b</a></p>',
             });
         });
 
@@ -2656,7 +2656,7 @@ describe("link", () => {
 
         test("should paste plain text content over a link if all of its contents is selected (not collapsed)", async () => {
             await testEditor({
-                contentBefore: '<p>a<a href="#">[xyz]</a>d</p>',
+                contentBefore: '<p>a<a href="#test">[xyz]</a>d</p>',
                 stepFunction: async (editor) => {
                     pasteText(editor, "bc");
                 },
@@ -2666,14 +2666,14 @@ describe("link", () => {
 
         test("should paste and transform plain text content over a link if all of its contents is selected (not collapsed)", async () => {
             await testEditor({
-                contentBefore: '<p><a href="#">[xyz]</a></p>',
+                contentBefore: '<p><a href="#test">[xyz]</a></p>',
                 stepFunction: async (editor) => {
                     pasteText(editor, "www.odoo.com");
                 },
                 contentAfter: '<p><a href="http://www.odoo.com">www.odoo.com</a>[]</p>',
             });
             await testEditor({
-                contentBefore: '<p><a href="#">[xyz]</a></p>',
+                contentBefore: '<p><a href="#test">[xyz]</a></p>',
                 stepFunction: async (editor) => {
                     pasteText(editor, "abc www.odoo.com xyz");
                 },
@@ -2714,7 +2714,7 @@ describe("link", () => {
 
         test("should paste html content over a link if all of its contents is selected (not collapsed)", async () => {
             await testEditor({
-                contentBefore: '<p><a href="#">[xyz]</a></p>',
+                contentBefore: '<p><a href="#test">[xyz]</a></p>',
                 stepFunction: async (editor) => {
                     pasteHtml(
                         editor,

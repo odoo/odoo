@@ -127,7 +127,7 @@ registry.category("web_tour.tours").add('account_tour', {
     },
     {
         isActive: ["auto"],
-        trigger: "div[name=account_missing_email] a",
+        trigger: "div[name=account_missing_email] span",
         content: _t("Complete the partner data with email."),
         run: "click",
     },
