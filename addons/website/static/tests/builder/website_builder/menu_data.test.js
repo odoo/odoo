@@ -8,6 +8,7 @@ import { patchWithCleanup, mockService, onRpc } from "@web/../tests/web_test_hel
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { MenuDataPlugin } from "@website/builder/plugins/menu_data_plugin";
 import { MenuDialog } from "@website/components/dialog/edit_menu";
+import { SavePlugin } from "@html_builder/core/save_plugin";
 
 defineWebsiteModels();
 
@@ -23,7 +24,7 @@ describe("NavbarLinkPopover", () => {
             </ul>
             <p>Outside</p>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
             }
         );
         await expectElementCount(".o-we-linkpopover", 0);
@@ -32,7 +33,7 @@ describe("NavbarLinkPopover", () => {
         await waitFor(".o-we-linkpopover");
         // remove link button replaced with sitemap button
         expect(".o-we-linkpopover:has(i.fa-chain-broken)").toHaveCount(0);
-        expect(".o-we-linkpopover:has(i.fa-sitemap)").toHaveCount(1);
+        expect(".o-we-linkpopover:has(button.js_edit_menu)").toHaveCount(1);
         // selection outside a top menu link
         setSelection({ anchorNode: el.querySelector("p"), anchorOffset: 0 });
         await expectElementCount(".o-we-linkpopover", 0);
@@ -48,18 +49,18 @@ describe("NavbarLinkPopover", () => {
                 </li>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
             }
         );
-        expect(".o-we-linkpopover:has(i.fa-sitemap)").toHaveCount(0);
+        expect(".o-we-linkpopover:has(button.js_edit_menu)").toHaveCount(0);
         // open navbar link popover
         setSelection({ anchorNode: el.querySelector(".nav-link > span"), anchorOffset: 0 });
         await waitFor(".o-we-linkpopover");
-        expect(".o-we-linkpopover:has(i.fa-sitemap)").toHaveCount(1);
+        expect(".o-we-linkpopover:has(button.js_edit_menu)").toHaveCount(1);
         // selection in the same link
         setSelection({ anchorNode: el.querySelector(".nav-link > span"), anchorOffset: 1 });
         await waitFor(".o-we-linkpopover");
-        expect(".o-we-linkpopover:has(i.fa-sitemap)").toHaveCount(1);
+        expect(".o-we-linkpopover:has(button.js_edit_menu)").toHaveCount(1);
     });
 
     test("should open a navbar popover when the selection is inside a top menu dropdown link", async () => {
@@ -82,14 +83,14 @@ describe("NavbarLinkPopover", () => {
                 </div>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
             }
         );
-        expect(".o-we-linkpopover:has(i.fa-sitemap)").toHaveCount(0);
+        expect(".o-we-linkpopover:has(button.js_edit_menu)").toHaveCount(0);
         // selection in dropdown menu
         setSelection({ anchorNode: el.querySelector(".dropdown-item > span"), anchorOffset: 0 });
         await waitFor(".o-we-linkpopover");
-        expect(".o-we-linkpopover:has(i.fa-sitemap)").toHaveCount(1);
+        expect(".o-we-linkpopover:has(button.js_edit_menu)").toHaveCount(1);
     });
 });
 
@@ -104,7 +105,7 @@ describe("MenuDialog", () => {
                 </li>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
             }
         );
         patchWithCleanup(MenuDialog.prototype, {
@@ -113,11 +114,17 @@ describe("MenuDialog", () => {
                 this.website.pageDocument = el.ownerDocument;
             },
         });
-        expect(".o-we-linkpopover:has(i.fa-sitemap)").toHaveCount(0);
+        onRpc("/website/get_suggested_links", () => {
+            return {
+                matching_pages: [],
+                others: [],
+            };
+        });
+        expect(".o-we-linkpopover:has(button.js_edit_menu)").toHaveCount(0);
         // open navbar link popover
         setSelection({ anchorNode: el.querySelector(".nav-link > span"), anchorOffset: 0 });
         await waitFor(".o-we-linkpopover");
-        expect(".o-we-linkpopover:has(i.fa-sitemap)").toHaveCount(1);
+        expect(".o-we-linkpopover:has(button.js_edit_menu)").toHaveCount(1);
         // click the link edit button
         await click(".o_we_edit_link");
         // check that MenuDialog is open and that name and url have been passed correctly
@@ -161,6 +168,12 @@ describe("EditMenuDialog", () => {
                 is_homepage: false,
             };
         });
+        onRpc("/website/get_suggested_links", () => {
+            return {
+                matching_pages: [],
+                others: [],
+            };
+        });
         const { el } = await setupEditor(
             `<ul class="top_menu">
                 <li>
@@ -170,7 +183,7 @@ describe("EditMenuDialog", () => {
                 </li>
             </ul>`,
             {
-                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin] },
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
             }
         );
         mockService("website", {
@@ -183,11 +196,11 @@ describe("EditMenuDialog", () => {
                 };
             },
         });
-        expect(".o-we-linkpopover:has(i.fa-sitemap)").toHaveCount(0);
+        expect(".o-we-linkpopover:has(button.js_edit_menu)").toHaveCount(0);
         // open navbar link popover
         setSelection({ anchorNode: el.querySelector(".nav-link > span"), anchorOffset: 0 });
         await waitFor(".o-we-linkpopover");
-        expect(".o-we-linkpopover:has(i.fa-sitemap)").toHaveCount(1);
+        expect(".o-we-linkpopover:has(button.js_edit_menu)").toHaveCount(1);
         // click on edit menu button
         await click(".js_edit_menu");
         // check that EditMenuDialog is open with correct values

@@ -10,6 +10,7 @@ import { CheckBox } from '@web/core/checkbox/checkbox';
 import { MediaDialog } from '@web_editor/components/media_dialog/media_dialog';
 import { WebsiteDialog } from './dialog';
 import { Component, onMounted, onWillStart, reactive, useEffect, useState } from "@odoo/owl";
+import { slugify } from "@website/js/utils";
 
 // This replaces \b, because accents(e.g. à, é) are not seen as word boundaries.
 // Javascript \b is not unicode aware, and words beginning or ending by accents won't match \b
@@ -589,12 +590,7 @@ class TitleDescription extends Component {
      * @param {InputEvent} ev
      */
     _updateInputValue(ev) {
-        // `NFKD` as in `http_routing` python `slugify()`
-        ev.target.value = ev.target.value.trim().normalize('NFKD').toLowerCase()
-            .replace(/\s+/g, '-') // Replace spaces with -
-            .replace(/[^\w-]+/g, '') // Remove all non-word chars
-            .replace(/--+/g, '-'); // Replace multiple - with single -
-        this.seoContext.seoName = ev.target.value;
+        this.seoContext.seoName = slugify(ev.target.value);
     }
 }
 
