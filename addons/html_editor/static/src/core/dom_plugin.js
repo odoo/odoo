@@ -26,7 +26,14 @@ import {
     isUnprotecting,
     paragraphRelatedElements,
 } from "../utils/dom_info";
-import { closestElement, descendants, firstLeaf, lastLeaf } from "../utils/dom_traversal";
+import {
+    childNodes,
+    children,
+    closestElement,
+    descendants,
+    firstLeaf,
+    lastLeaf,
+} from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
 import { DIRECTIONS, childNodeIndex, nodeSize, rightPos } from "../utils/position";
 import { normalizeCursorPosition } from "@html_editor/utils/selection";
@@ -118,7 +125,7 @@ export class DomPlugin extends Plugin {
             if (content.nodeType === Node.ELEMENT_NODE) {
                 this.dispatchTo("normalize_handlers", content);
             } else {
-                for (const child of content.children) {
+                for (const child of children(content)) {
                     this.dispatchTo("normalize_handlers", child);
                 }
             }
@@ -171,7 +178,7 @@ export class DomPlugin extends Plugin {
         // <p> or <li>.
         if (container.childElementCount === 1 && shouldUnwrap(container.firstChild)) {
             const p = container.firstElementChild;
-            container.replaceChildren(...p.childNodes);
+            container.replaceChildren(...childNodes(p));
         } else if (container.childElementCount > 1) {
             const isSelectionAtStart =
                 firstLeaf(block) === selection.anchorNode && selection.anchorOffset === 0;
@@ -185,9 +192,9 @@ export class DomPlugin extends Plugin {
                 if (container.firstChild.nodeName === "LI") {
                     const deepestBlock = closestBlock(firstLeaf(container.firstChild));
                     this.dependencies.split.splitAroundUntil(deepestBlock, container.firstChild);
-                    container.firstElementChild.replaceChildren(...deepestBlock.childNodes);
+                    container.firstElementChild.replaceChildren(...childNodes(deepestBlock));
                 }
-                containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
+                containerFirstChild.replaceChildren(...childNodes(container.firstElementChild));
                 container.firstElementChild.remove();
             }
             // Grab the content of the last child block and isolate it.
@@ -197,9 +204,9 @@ export class DomPlugin extends Plugin {
                 if (container.lastChild.nodeName === "LI") {
                     const deepestBlock = closestBlock(lastLeaf(container.lastChild));
                     this.dependencies.split.splitAroundUntil(deepestBlock, container.lastChild);
-                    container.lastElementChild.replaceChildren(...deepestBlock.childNodes);
+                    container.lastElementChild.replaceChildren(...childNodes(deepestBlock));
                 }
-                containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
+                containerLastChild.replaceChildren(...childNodes(container.lastElementChild));
                 container.lastElementChild.remove();
             }
         }
@@ -215,7 +222,7 @@ export class DomPlugin extends Plugin {
                 startNode = textNode;
                 allInsertedNodes.push(textNode);
             } else {
-                startNode = startNode.childNodes[selection.anchorOffset - 1];
+                startNode = childNodes(startNode).at(selection.anchorOffset - 1);
             }
         }
 
@@ -231,16 +238,16 @@ export class DomPlugin extends Plugin {
                 reference = child;
             }
         };
-        const lastInsertedNodes = [...containerLastChild.childNodes];
+        const lastInsertedNodes = childNodes(containerLastChild);
         if (containerLastChild.hasChildNodes()) {
-            const toInsert = [...containerLastChild.childNodes]; // Prevent mutation
+            const toInsert = childNodes(containerLastChild); // Prevent mutation
             _insertAt(currentNode, [...toInsert], insertBefore);
             currentNode = insertBefore ? toInsert[0] : currentNode;
             toInsert[toInsert.length - 1];
         }
-        const firstInsertedNodes = [...containerFirstChild.childNodes];
+        const firstInsertedNodes = childNodes(containerFirstChild);
         if (containerFirstChild.hasChildNodes()) {
-            const toInsert = [...containerFirstChild.childNodes]; // Prevent mutation
+            const toInsert = childNodes(containerFirstChild); // Prevent mutation
             _insertAt(currentNode, [...toInsert], insertBefore);
             currentNode = toInsert[toInsert.length - 1];
             insertBefore = false;
@@ -258,7 +265,7 @@ export class DomPlugin extends Plugin {
             } else {
                 // If we arrive here, the o_enter index should always be 0.
                 const parent = currentNode.nextSibling.parentElement;
-                const index = [...parent.childNodes].indexOf(currentNode.nextSibling);
+                const index = childNodes(parent).indexOf(currentNode.nextSibling);
                 this.dependencies.split.splitBlockNode({
                     targetNode: parent,
                     targetOffset: index,
@@ -268,8 +275,8 @@ export class DomPlugin extends Plugin {
 
         let nodeToInsert;
         let doesCurrentNodeAllowsP = allowsParagraphRelatedElements(currentNode);
-        const insertedNodes = [...container.childNodes];
         const candidatesForRemoval = [];
+        const insertedNodes = childNodes(container);
         while ((nodeToInsert = container.firstChild)) {
             if (isBlock(nodeToInsert) && !doesCurrentNodeAllowsP) {
                 // Split blocks at the edges if inserting new blocks (preventing
@@ -289,7 +296,7 @@ export class DomPlugin extends Plugin {
                             continue;
                         } else {
                             makeContentsInline(container);
-                            nodeToInsert = container.childNodes[0];
+                            nodeToInsert = container.firstChild;
                             break;
                         }
                     }
@@ -521,7 +528,7 @@ export class DomPlugin extends Plugin {
                 // eg do not change a <div> into a h1: insert the h1
                 // into it instead.
                 const newBlock = this.document.createElement(tagName);
-                newBlock.append(...block.childNodes);
+                newBlock.append(...childNodes(block));
                 block.append(newBlock);
                 cursors.remapNode(block, newBlock);
             }

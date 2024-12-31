@@ -1,5 +1,5 @@
 import { closestBlock, isBlock } from "./blocks";
-import { closestElement, firstLeaf, lastLeaf } from "./dom_traversal";
+import { childNodes, closestElement, firstLeaf, lastLeaf } from "./dom_traversal";
 import { DIRECTIONS, nodeSize } from "./position";
 
 export function isEmpty(el) {
@@ -259,7 +259,7 @@ export function isVisible(node) {
     );
 }
 export function hasVisibleContent(node) {
-    return [...(node?.childNodes || [])].some((n) => isVisible(n));
+    return (node ? childNodes(node) : []).some((n) => isVisible(n));
 }
 
 export function isZwnbsp(node) {
@@ -271,7 +271,7 @@ export function isTangible(node) {
 }
 
 export function hasTangibleContent(node) {
-    return [...(node?.childNodes || [])].some((n) => isTangible(n));
+    return (node ? childNodes(node) : []).some((n) => isTangible(n));
 }
 
 export const isNotEditableNode = (node) =>
@@ -562,8 +562,9 @@ export function getDeepestPosition(node, offset) {
                 [node, offset] = [next, direction ? 0 : nodeSize(next)];
             }
             // First switch direction to left if offset is at the end.
-            direction = offset < node.childNodes.length;
-            next = node.childNodes[direction ? offset : offset - 1];
+            const childrenNodes = childNodes(node);
+            direction = offset < childrenNodes.length;
+            next = childrenNodes[direction ? offset : offset - 1];
         } else if (direction && next.nextSibling && closestBlock(node).contains(next.nextSibling)) {
             // Invalid node: skip to next sibling (without crossing blocks).
             next = next.nextSibling;
