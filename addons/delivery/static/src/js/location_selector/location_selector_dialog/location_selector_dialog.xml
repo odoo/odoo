@@ -17,16 +17,14 @@
                         class="o_location_selector_mobile_tab btn flex-grow-1 border-0 border-bottom rounded-0 py-3 bg-transparent"
                         t-att-class="{'active': this.state.viewMode === 'list'}"
                         t-on-click="() => this.state.viewMode = 'list'"
-                    >
-                        List view
-                    </button>
+                        t-out="listViewButtonLabel"
+                    />
                     <button
                         class="o_location_selector_mobile_tab btn flex-grow-1 border-0 border-bottom rounded-0 py-3 bg-transparent"
                         t-att-class="{'active' : this.state.viewMode === 'map'}"
                         t-on-click="() => this.state.viewMode = 'map'"
-                    >
-                        Map view
-                    </button>
+                        t-out="mapViewButtonLabel"
+                    />
                 </div>
 
                 <!-- Component -->
@@ -40,10 +38,10 @@
                         validateSelection.bind="validateSelection"
                     />
                     <t t-else="">
-                        <p t-if="this.state.error" class="p-3 fw-bold">No result</p>
+                        <p t-if="this.state.error" class="p-3 fw-bold" t-out="errorMessage"/>
                         <div t-else="" class="position-absolute start-50 top-50 translate-middle">
                             <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                                <span class="visually-hidden" t-out="loadingMessage"/>
                             </div>
                         </div>
                     </t>
@@ -70,10 +68,10 @@
                         validateSelection.bind="validateSelection"
                     />
                     <t t-else="">
-                        <p t-if="this.state.error" class="p-3 fw-bold">No result</p>
+                        <p t-if="this.state.error" class="p-3 fw-bold" t-out="errorMessage"/>
                         <div t-else="" class="position-absolute start-50 top-50 translate-middle">
                             <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                                <span class="visually-hidden" t-out="loadingMessage"/>
                             </div>
                         </div>
                     </t>
