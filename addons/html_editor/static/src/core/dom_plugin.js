@@ -40,6 +40,7 @@ import {
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
 import { DIRECTIONS, childNodeIndex, nodeSize, rightPos } from "../utils/position";
 import { normalizeCursorPosition } from "@html_editor/utils/selection";
+import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 
 /**
  * Get distinct connected parents of nodes
@@ -65,7 +66,7 @@ function getConnectedParents(nodes) {
 
 export class DomPlugin extends Plugin {
     static id = "dom";
-    static dependencies = ["selection", "history", "split", "delete", "lineBreak"];
+    static dependencies = ["baseContainer", "selection", "history", "split", "delete", "lineBreak"];
     static shared = ["insert", "copyAttributes", "setTag", "setTagName"];
     resources = {
         user_commands: [
@@ -166,10 +167,14 @@ export class DomPlugin extends Plugin {
             (isContentEditable(node) ||
                 (!node.isConnected && !closestElement(node, "[contenteditable]"))) &&
             !this.dependencies.split.isUnsplittable(node) &&
-            // TODO add: when PRE is considered as a paragraphRelatedElement
-            // again, consider unwrapping in PRE by adding in the following
-            // Array.
-            [node.nodeName, "DIV"].includes(block.nodeName) &&
+            (node.nodeName === block.nodeName ||
+                (this.dependencies.baseContainer.isCandidateForBaseContainer(node) &&
+                    this.dependencies.baseContainer.isCandidateForBaseContainer(block)) ||
+                // TODO add: when PRE is considered as a paragraphRelatedElement
+                // again, consider unwrapping in PRE by re-enabling the
+                // following condition:
+                // block.nodeName === "PRE" ||
+                (block.nodeName === "DIV" && this.dependencies.split.isUnsplittable(block))) &&
             // If the selection anchorNode is the editable itself, the content
             // should not be unwrapped.
             !this.isEditionBoundary(selection.anchorNode);
@@ -187,8 +192,8 @@ export class DomPlugin extends Plugin {
         // tag, we take the all content of the <p> or <li> and avoid inserting the
         // <p> or <li>.
         if (container.childElementCount === 1 && shouldUnwrap(container.firstChild)) {
-            const p = container.firstElementChild;
-            container.replaceChildren(...childNodes(p));
+            const nodeToUnwrap = container.firstElementChild;
+            container.replaceChildren(...childNodes(nodeToUnwrap));
         } else if (container.childElementCount > 1) {
             const isSelectionAtStart =
                 firstLeaf(block) === selection.anchorNode && selection.anchorOffset === 0;
@@ -372,7 +377,9 @@ export class DomPlugin extends Plugin {
                 allowsParagraphRelatedElements(parent)
             ) {
                 // Ensure that edition boundaries do not have inline content.
-                wrapInlinesInBlocks(parent);
+                wrapInlinesInBlocks(parent, {
+                    baseContainerNodeName: this.dependencies.baseContainer.getDefaultNodeName(),
+                });
             }
         }
         insertedNodesParents = getConnectedParents(allInsertedNodes);
@@ -534,7 +541,17 @@ export class DomPlugin extends Plugin {
      * @param {string} [param0.extraClass]
      */
     setTag({ tagName, extraClass = "" }) {
-        tagName = tagName.toUpperCase();
+        let newCandidate = this.document.createElement(tagName.toUpperCase());
+        if (extraClass) {
+            newCandidate.classList.add(extraClass);
+        }
+        if (this.dependencies.baseContainer.isCandidateForBaseContainer(newCandidate)) {
+            const baseContainer = this.dependencies.baseContainer.createBaseContainer(
+                newCandidate.nodeName
+            );
+            this.copyAttributes(newCandidate, baseContainer);
+            newCandidate = baseContainer;
+        }
         const cursors = this.dependencies.selection.preserveSelection();
         const selectedBlocks = [...this.dependencies.selection.getTraversedBlocks()];
         const deepestSelectedBlocks = selectedBlocks.filter(
@@ -548,7 +565,7 @@ export class DomPlugin extends Plugin {
                 block.nodeName === "PRE" || // TODO remove: PRE should be a paragraphRelatedElement
                 isListItemElement(block)
             ) {
-                if (tagName === "P" && isListItemElement(block)) {
+                if (newCandidate.matches(baseContainerGlobalSelector) && isListItemElement(block)) {
                     continue;
                 }
                 const newEl = this.setTagName(block, tagName);
@@ -567,10 +584,9 @@ export class DomPlugin extends Plugin {
             } else {
                 // eg do not change a <div> into a h1: insert the h1
                 // into it instead.
-                const newBlock = this.document.createElement(tagName);
-                newBlock.append(...childNodes(block));
-                block.append(newBlock);
-                cursors.remapNode(block, newBlock);
+                newCandidate.append(...childNodes(block));
+                block.append(newCandidate);
+                cursors.remapNode(block, newCandidate);
             }
         }
         cursors.restore();

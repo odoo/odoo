@@ -1,16 +1,24 @@
 import { isTextNode, isParagraphRelatedElement } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
-import { unwrapContents } from "../utils/dom";
+import { unwrapContents, wrapInlinesInBlocks } from "../utils/dom";
 import { ancestors, childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
+import {
+    baseContainerGlobalSelector,
+    getBaseContainerSelector,
+} from "@html_editor/utils/base_container";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
  */
 
 const CLIPBOARD_BLACKLISTS = {
-    unwrap: [".Apple-interchange-newline", "DIV"], // These elements' children will be unwrapped.
+    unwrap: [
+        // These elements' children will be unwrapped.
+        ".Apple-interchange-newline",
+        "DIV", // DIV is unwrapped unless eligible to be a baseContainer, see cleanForPaste
+    ],
     remove: ["META", "STYLE", "SCRIPT"], // These elements will be removed along with their children.
 };
 export const CLIPBOARD_WHITELISTS = {
@@ -88,6 +96,7 @@ const ONLY_LINK_REGEX = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
 export class ClipboardPlugin extends Plugin {
     static id = "clipboard";
     static dependencies = [
+        "baseContainer",
         "dom",
         "selection",
         "sanitize",
@@ -337,16 +346,28 @@ export class ClipboardPlugin extends Plugin {
             if (textIndex < textFragments.length) {
                 // Break line by inserting new paragraph and
                 // remove current paragraph's bottom margin.
-                const p = closestElement(selection.anchorNode, "p");
+                const block = closestBlock(selection.anchorNode);
                 if (
-                    this.dependencies.split.isUnsplittable(closestBlock(selection.anchorNode)) ||
+                    this.dependencies.split.isUnsplittable(block) ||
                     closestElement(selection.anchorNode).tagName === "PRE"
                 ) {
                     this.dependencies.lineBreak.insertLineBreak();
                 } else {
-                    const [pBefore] = this.dependencies.split.splitBlock();
-                    if (p) {
-                        pBefore.style.marginBottom = "0px";
+                    const [blockBefore] = this.dependencies.split.splitBlock();
+                    if (
+                        block &&
+                        block.matches(baseContainerGlobalSelector) &&
+                        blockBefore &&
+                        !blockBefore.matches(getBaseContainerSelector("DIV"))
+                    ) {
+                        // Do something only if blockBefore is not a DIV (which is the no-margin option)
+                        // replace blockBefore by a DIV.
+                        const div = this.dependencies.baseContainer.createBaseContainer("DIV");
+                        const cursors = this.dependencies.selection.preserveSelection();
+                        blockBefore.before(div);
+                        div.replaceChildren(...childNodes(blockBefore));
+                        blockBefore.remove();
+                        cursors.remapNode(blockBefore, div).restore();
                     }
                     selection = this.dependencies.selection.getEditableSelection();
                 }
@@ -390,56 +411,52 @@ export class ClipboardPlugin extends Plugin {
                 }
             }
         }
-        for (const child of childNodes(container)) {
+        const childContent = childNodes(container);
+        for (const child of childContent) {
             this.cleanForPaste(child);
         }
-        // Force inline nodes at the root of the container into separate P
+        // Identify the closest baseContainer from the selection. This will
+        // determine which baseContainer will be used by default for the
+        // clipboard content if it has to be modified.
+        const selection = this.dependencies.selection.getEditableSelection();
+        const closestBaseContainer =
+            selection.anchorNode &&
+            closestElement(selection.anchorNode, baseContainerGlobalSelector);
+        // Force inline nodes at the root of the container into separate `baseContainers`
         // elements. This is a tradeoff to ensure some features that rely on
         // nodes having a parent (e.g. convert to list, title, etc.) can work
         // properly on such nodes without having to actually handle that
         // particular case in all of those functions. In fact, this case cannot
         // happen on a new document created using this editor, but will happen
         // instantly when editing a document that was created from Etherpad.
+        wrapInlinesInBlocks(container, {
+            baseContainerNodeName:
+                closestBaseContainer?.nodeName ||
+                this.dependencies.baseContainer.getDefaultNodeName(),
+        });
         const result = this.document.createDocumentFragment();
-        let p = this.document.createElement("p");
-        for (const child of childNodes(container)) {
-            if (isBlock(child)) {
-                if (p.hasChildNodes()) {
-                    result.appendChild(p);
-                    p = this.document.createElement("p");
-                }
-                result.appendChild(child);
-            } else {
-                p.appendChild(child);
-            }
+        result.replaceChildren(...childNodes(container));
 
-            if (p.hasChildNodes()) {
-                result.appendChild(p);
-            }
-
-            // Split elements containing <br> into seperate elements for each line.
-            const brs = result.querySelectorAll("br");
-            for (const br of brs) {
-                const block = closestBlock(br);
-                if (
-                    isParagraphRelatedElement(block) &&
-                    // TODO specific exception for "PRE" to keep everything inside one PRE.
-                    // Consider removing this if PRE is to be used as a paragraph.
-                    block.nodeName !== "PRE" &&
-                    !block.closest("li")
-                ) {
-                    // A linebreak at the beginning of a block is an empty line.
-                    const isEmptyLine = block.firstChild.nodeName === "BR";
-                    // Split blocks around it until only the BR remains in the
-                    // block.
-                    const remainingBrContainer = this.dependencies.split.splitAroundUntil(
-                        br,
-                        block
-                    );
-                    // Remove the container unless it represented an empty line.
-                    if (!isEmptyLine) {
-                        remainingBrContainer.remove();
-                    }
+        // Split elements containing <br> into separate elements for each line.
+        const brs = result.querySelectorAll("br");
+        for (const br of brs) {
+            const block = closestBlock(br);
+            if (
+                (isParagraphRelatedElement(block) ||
+                    this.dependencies.baseContainer.isCandidateForBaseContainer(block)) &&
+                // TODO specific exception for "PRE" to keep everything inside one PRE.
+                // Consider removing this if PRE is to be used as a paragraph.
+                block.nodeName !== "PRE" &&
+                !block.closest("li")
+            ) {
+                // A linebreak at the beginning of a block is an empty line.
+                const isEmptyLine = block.firstChild.nodeName === "BR";
+                // Split blocks around it until only the BR remains in the
+                // block.
+                const remainingBrContainer = this.dependencies.split.splitAroundUntil(br, block);
+                // Remove the container unless it represented an empty line.
+                if (!isEmptyLine) {
+                    remainingBrContainer.remove();
                 }
             }
         }
@@ -462,23 +479,18 @@ export class ClipboardPlugin extends Plugin {
             if (!node.matches || node.matches(CLIPBOARD_BLACKLISTS.remove.join(","))) {
                 node.remove();
             } else {
-                let childNodes;
-                if (node.nodeName === "DIV" && [...node.childNodes].every((n) => !isBlock(n))) {
-                    // Convert <div> to <p> to preserve the inline structure
-                    // while maintaining block-level behaviour.
-                    const dir = node.getAttribute("dir");
-                    const p = this.document.createElement("p");
-                    if (dir) {
-                        p.setAttribute("dir", dir);
+                let childrenNodes;
+                if (node.nodeName === "DIV") {
+                    if (this.dependencies.baseContainer.isCandidateForBaseContainer(node)) {
+                        childrenNodes = childNodes(node);
+                    } else {
+                        childrenNodes = unwrapContents(node);
                     }
-                    p.append(...node.childNodes);
-                    node.replaceWith(p);
-                    childNodes = p.childNodes;
                 } else {
                     // Unwrap the illegal node's contents.
-                    childNodes = unwrapContents(node);
+                    childrenNodes = unwrapContents(node);
                 }
-                for (const child of childNodes) {
+                for (const child of childrenNodes) {
                     this.cleanForPaste(child);
                 }
             }
