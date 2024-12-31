@@ -66,11 +66,11 @@ test("correct selection after triple click with bold", async () => {
 
 test("fix selection P in the beggining being a direct child of the editable p after selection", async () => {
     const { el } = await setupEditor("<div>a</div>[]<p>b</p>");
-    expect(getContent(el)).toBe(`<div>a</div><p>[]b</p>`);
+    expect(getContent(el)).toBe(`<div class="o-paragraph">a</div><p>[]b</p>`);
 });
-test("fix selection P in the beggining being a direct child of the editable p before selection", async () => {
+test("fix selection P in the beginning being a direct child of the editable p before selection", async () => {
     const { el } = await setupEditor("<p>a</p>[]<div>b</div>");
-    expect(getContent(el)).toBe(`<p>a[]</p><div>b</div>`);
+    expect(getContent(el)).toBe(`<p>a</p><div class="o-paragraph">[]b</div>`);
 });
 
 describe("documentSelectionIsInEditable", () => {
