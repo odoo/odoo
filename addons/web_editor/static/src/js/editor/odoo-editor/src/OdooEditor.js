@@ -4465,6 +4465,16 @@ export class OdooEditor extends EventTarget {
         // Ignore any changes that might have happened before this point.
         this.observer.takeRecords();
 
+        // Reset selection when editable is empty.
+        const selection = this.document.getSelection();
+        if (!selection.isCollapsed) {
+            const range = selection.getRangeAt(0);
+            const rangeContentChildNodes = range.cloneContents().childNodes;
+            if (rangeContentChildNodes.length === 1 && rangeContentChildNodes[0].nodeName === 'BR') {
+                setSelection(selection.anchorNode, 0, selection.anchorNode, 0);
+            }
+        }
+
         const node = ev.target;
         // handle checkbox lists
         if (node.tagName == 'LI' && getListMode(node.parentElement) == 'CL') {
