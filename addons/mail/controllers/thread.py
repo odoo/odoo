@@ -117,6 +117,8 @@ class ThreadController(http.Controller):
         guest.env["ir.attachment"].browse(post_data.get("attachment_ids", []))._check_attachments_access(
             kwargs.get("attachment_tokens")
         )
+        store = Store()
+        request.update_context(message_post_store=store)
         if context:
             request.update_context(**context)
         canned_response_ids = tuple(cid for cid in kwargs.get('canned_response_ids', []) if isinstance(cid, int))
@@ -149,7 +151,7 @@ class ThreadController(http.Controller):
             }
         # sudo: mail.thread - users can post on accessible threads
         message = thread.sudo().message_post(**self._prepare_post_data(post_data, thread, **kwargs))
-        return Store(message, for_current_user=True).get_result()
+        return store.add(message, for_current_user=True).get_result()
 
     @http.route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
