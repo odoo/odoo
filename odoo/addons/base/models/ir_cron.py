@@ -12,7 +12,7 @@ from dateutil.relativedelta import relativedelta
 
 import odoo
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import LockError, UserError
 from odoo.modules.registry import Registry
 from odoo.tools import SQL
 from odoo.tools.constants import GC_UNLINK_LIMIT
@@ -615,54 +615,29 @@ class IrCron(models.Model):
             self.env.cr.rollback()
             raise
 
-    def _lock_records(self, lockfk=False):
-        """Try to grab a dummy exclusive write-lock to the rows with the given ids,
-           to make sure a following write() or unlink() will not block due
-           to a process currently executing those cron tasks.
-
-           :param lockfk: acquire a strong row lock which conflicts with
-                          the lock acquired by foreign keys when they
-                          reference this row.
-        """
-        if not self:
-            return
-        row_level_lock = "UPDATE" if lockfk else "NO KEY UPDATE"
-        try:
-            self._cr.execute(f"""
-                SELECT id
-                FROM "{self._table}"
-                WHERE id IN %s
-                FOR {row_level_lock} NOWAIT
-            """, [tuple(self.ids)], log_exceptions=False)
-        except psycopg2.OperationalError:
-            self._cr.rollback()  # early rollback to allow translations to work for the user feedback
-            raise UserError(_("Record cannot be modified right now: "
-                              "This cron task is currently being executed and may not be modified "
-                              "Please try again in a few minutes"))
-
     def write(self, vals):
-        self._lock_records()
+        try:
+            self.lock_for_update(allow_referencing=True)
+        except LockError:
+            raise UserError(self.env._(
+                "Record cannot be modified right now: "
+                "This cron task is currently being executed and may not be modified "
+                "Please try again in a few minutes"
+            )) from None
         if ('nextcall' in vals or vals.get('active')) and os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
             self._cr.postcommit.add(self._notifydb)
         return super().write(vals)
 
     def unlink(self):
-        self._lock_records(lockfk=True)
-        return super().unlink()
-
-    def try_write(self, values):
         try:
-            with self._cr.savepoint(flush=False):
-                self._cr.execute(f"""
-                    SELECT id
-                    FROM "{self._table}"
-                    WHERE id IN %s
-                    FOR NO KEY UPDATE NOWAIT
-                """, [tuple(self.ids)], log_exceptions=False)
-        except psycopg2.OperationalError:
-            return False
-        else:
-            return super().write(values)
+            self.lock_for_update()
+        except LockError:
+            raise UserError(self.env._(
+                "Record cannot be modified right now: "
+                "This cron task is currently being executed and may not be modified "
+                "Please try again in a few minutes"
+            )) from None
+        return super().unlink()
 
     @api.model
     def toggle(self, model, domain):
@@ -672,7 +647,11 @@ class IrCron(models.Model):
             return True
 
         active = bool(self.env[model].search_count(domain))
-        return self.try_write({'active': active})
+        try:
+            self.lock_for_update(allow_referencing=True)
+        except LockError:
+            return True
+        return self.write({'active': active})
 
     def _trigger(self, at=None):
         """

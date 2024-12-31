@@ -6,13 +6,11 @@ import logging
 import pytz
 import re
 
-import psycopg2.errors
-
 from datetime import datetime
 from itertools import starmap
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import LockError, UserError
 from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillApi, EWayBillError
 
 _logger = logging.getLogger(__name__)
@@ -405,10 +403,8 @@ class L10nInEwaybill(models.Model):
 
     def _lock_ewaybill(self):
         try:
-            # Lock e-Waybill
-            with self.env.cr.savepoint(flush=False):
-                self._cr.execute('SELECT * FROM l10n_in_ewaybill WHERE id IN %s FOR UPDATE NOWAIT', [tuple(self.ids)])
-        except psycopg2.errors.LockNotAvailable:
+            self.lock_for_update()
+        except LockError:
             raise UserError(_('This document is being sent by another process already.')) from None
 
     def _l10n_in_ewaybill_handle_zero_distance_alert_if_present(self, response_data):

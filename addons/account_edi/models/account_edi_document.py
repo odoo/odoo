@@ -1,12 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import logging
 
-import psycopg2.errors
-
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import LockError, UserError
 
 
 _logger = logging.getLogger(__name__)
@@ -222,15 +219,10 @@ class AccountEdiDocument(models.Model):
             move_to_lock = documents.move_id
             attachments_potential_unlink = documents.sudo().attachment_id.filtered(lambda a: not a.res_model and not a.res_id)
             try:
-                with self.env.cr.savepoint(flush=False):
-                    self._cr.execute('SELECT * FROM account_edi_document WHERE id IN %s FOR UPDATE NOWAIT', [tuple(documents.ids)])
-                    self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(move_to_lock.ids)])
-
-                    # Locks the attachments that might be unlinked
-                    if attachments_potential_unlink:
-                        self._cr.execute('SELECT * FROM ir_attachment WHERE id IN %s FOR UPDATE NOWAIT', [tuple(attachments_potential_unlink.ids)])
-
-            except psycopg2.errors.LockNotAvailable:
+                documents.lock_for_update()
+                move_to_lock.lock_for_update()
+                attachments_potential_unlink.lock_for_update()
+            except LockError:
                 _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
                 if not with_commit:
                     raise UserError(_('This document is being sent by another process already. ')) from None

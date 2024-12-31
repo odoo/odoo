@@ -10,6 +10,7 @@ from uuid import uuid4
 
 from dateutil.relativedelta import relativedelta
 from odoo import _, api, exceptions, fields, models
+from odoo.exceptions import LockError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import safe_eval
@@ -588,8 +589,12 @@ class BaseAutomation(models.Model):
         """
         cron = self.env.ref('base_automation.ir_cron_data_base_automation_check', raise_if_not_found=False)
         if cron:
+            try:
+                cron.lock_for_update(allow_referencing=True)
+            except LockError:
+                return
             automations = self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)])
-            cron.try_write({
+            cron.write({
                 'active': bool(automations),
                 'interval_type': 'minutes',
                 'interval_number': self._get_cron_interval(automations),

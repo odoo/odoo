@@ -7,6 +7,7 @@ from odoo import api, fields, models, Command
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService, InvalidSyncToken
 from odoo.addons.google_calendar.models.google_sync import google_calendar_token
 from odoo.addons.google_account.models import google_service
+from odoo.exceptions import LockError
 from odoo.loglevels import exception_to_unicode
 from odoo.tools import str2bool
 
@@ -100,8 +101,10 @@ class ResUsers(models.Model):
             return False
         # don't attempt to sync when another sync is already in progress, as we wouldn't be
         # able to commit the transaction anyway (row is locked)
-        self.env.cr.execute("""SELECT id FROM res_users WHERE id = %s FOR NO KEY UPDATE SKIP LOCKED""", [self.id])
-        if not self.env.cr.rowcount:
+        self.ensure_one()
+        try:
+            self.lock_for_update(allow_referencing=True)
+        except LockError:
             _logger.info("skipping calendar sync, locked user %s", self.login)
             return False
 

@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, LockError
 from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import mute_logger
 from odoo import Command
@@ -152,6 +151,41 @@ class TestORM(TransactionCase):
         # check that there is no record with id 0
         recs = partner.browse([0])
         self.assertFalse(recs.exists())
+
+    def test_lock_for_update(self):
+        partner = self.env['res.partner']
+        p1, p2 = partner.search([], limit=2)
+
+        # lock p1
+        p1.lock_for_update(allow_referencing=True)
+        p1.lock_for_update(allow_referencing=False)
+
+        with self.env.registry.cursor() as cr:
+            recs = (p1 + p2).with_env(partner.env(cr=cr))
+            with self.assertRaises(LockError):
+                recs.lock_for_update()
+            sub_p2 = recs[1]
+            sub_p2.lock_for_update()
+
+            # parent transaction and read, but cannot lock the p2 records
+            p2.invalidate_model()
+            self.assertTrue(p2.name)
+            with self.assertRaises(LockError):
+                p2.lock_for_update()
+
+            # can still read from parent after locks and lock failures
+            p1.invalidate_model()
+            self.assertTrue(p1.name)
+
+        # can lock p2 now
+        p2.lock_for_update()
+
+        # cannot lock inexisting record
+        inexisting = partner.create({'name': 'inexisting'})
+        inexisting.unlink()
+        self.assertFalse(inexisting.exists())
+        with self.assertRaises(LockError):
+            inexisting.lock_for_update()
 
     def test_write_duplicate(self):
         p1 = self.env['res.partner'].create({'name': 'W'})
