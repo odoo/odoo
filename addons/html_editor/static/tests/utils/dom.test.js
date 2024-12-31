@@ -189,58 +189,60 @@ describe("wrapInlinesInBlocks", () => {
     test("wrap block with display style inline in div", async () => {
         // Second part should be wrapped automatically during initElementForEdition
         const { el, editor } = await setupEditor(
-            `<div><br></div><div contenteditable="false" style="display: inline;">inline</div>`
+            `<p><br></p><div contenteditable="false" style="display: inline;">inline</div>`
         );
-        const div = el.querySelector("div");
-        editor.shared.selection.setSelection({ anchorNode: div, anchorOffset: 0 });
+        const p = el.querySelector("p");
+        editor.shared.selection.setSelection({ anchorNode: p, anchorOffset: 0 });
         editor.shared.selection.focusEditable();
+        // dom insert should take care not to insert inline content at the root
+        // inline non-phrasing content should not be added in a paragraph-related
+        // element.
         editor.shared.dom.insert(
             parseHTML(
                 editor.document,
                 `<div contenteditable="false" style="display: inline;">inline</div>`
             )
         );
-        const cursors = editor.shared.selection.preserveSelection();
-        // First part (inserted content) is wrapped manually
-        wrapInlinesInBlocks(div, cursors);
-        cursors.restore();
+        editor.shared.history.addStep();
+        // It is debatable whether an empty paragraph-related element
+        // should be kept or not after inserting an inline flow-content element
+        // (which would be wrapped inside a div, not in the paragraph-related
+        // element).
         expect(getContent(el)).toBe(
             unformat(`
-                    <div>
-                        <div>
-                            <div contenteditable="false" style="display: inline;">inline</div>
-                        </div>[]
-                    </div>
-                    <div style="margin-bottom: 0px;">
-                        <div contenteditable="false" style="display: inline;">inline</div>
-                    </div>
+                <div>
+                    <div contenteditable="false" style="display: inline;">inline</div>[]
+                </div>
+                <p><br></p>
+                <div style="margin-bottom: 0px;">
+                    <div contenteditable="false" style="display: inline;">inline</div>
+                </div>
             `)
         );
     });
     test("wrap a mix of inline elements in div", async () => {
         // Second part should be wrapped automatically during initElementForEdition
         const { el, editor } = await setupEditor(
-            `<div><br></div>text<div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>`
+            `<p><br></p>text<div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>`
         );
-        const div = el.querySelector("div");
-        editor.shared.selection.setSelection({ anchorNode: div, anchorOffset: 0 });
+        const p = el.querySelector("p");
+        editor.shared.selection.setSelection({ anchorNode: p, anchorOffset: 0 });
         editor.shared.selection.focusEditable();
+        // dom insert should take care not to insert inline content at the root
+        // inline non-phrasing content should not be added in a paragraph-related
+        // element.
         editor.shared.dom.insert(
             parseHTML(
                 editor.document,
                 `text<div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>`
             )
         );
-        const cursors = editor.shared.selection.preserveSelection();
-        // First part (inserted content) is wrapped manually
-        wrapInlinesInBlocks(div, cursors);
-        cursors.restore();
+        editor.shared.history.addStep();
         expect(getContent(el)).toBe(
             unformat(`
+                <p>text</p>
                 <div>
-                    <div>
-                        text<div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>
-                    </div>[]
+                    <div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>[]
                 </div>
                 <div style="margin-bottom: 0px;">
                     text<div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>
@@ -251,34 +253,36 @@ describe("wrapInlinesInBlocks", () => {
     test("wrap a mix of inline elements in div with br", async () => {
         // Second part should be wrapped automatically during initElementForEdition
         const { el, editor } = await setupEditor(
-            `<div>[]<br></div>text<br><div contenteditable="false" style="display: inline;">inline</div><br><span class="a">span</span>`
+            `<p>[]<br></p>text<br><div contenteditable="false" style="display: inline;">inline</div><br><span class="a">span</span>`
         );
-        const div = el.querySelector("div");
-        editor.shared.selection.setSelection({ anchorNode: div, anchorOffset: 0 });
+        const p = el.querySelector("p");
+        editor.shared.selection.setSelection({ anchorNode: p, anchorOffset: 0 });
+        // dom insert should take care not to insert inline content at the root
+        // inline non-phrasing content should not be added in a paragraph-related
+        // element.
         editor.shared.dom.insert(
             parseHTML(
                 editor.document,
                 `text<br><div contenteditable="false" style="display: inline;">inline</div><br><span class="a">span</span>`
             )
         );
-        const cursors = editor.shared.selection.preserveSelection();
-        // First part (inserted content) is wrapped manually
-        wrapInlinesInBlocks(div, cursors);
-        cursors.restore();
+        editor.shared.history.addStep();
         expect(getContent(el)).toBe(
             unformat(`
+                <p>text</p>
                 <div>
-                    <p>text</p>
-                    <div>
-                        <div contenteditable="false" style="display: inline;">inline</div>
-                    </div>
-                    <p><span class="a">span</span></p>[]
+                    <div contenteditable="false" style="display: inline;">inline</div>
                 </div>
+                <p>
+                    <span class="a">span</span>[]
+                </p>
                 <p style="margin-bottom: 0px;">text</p>
                 <div style="margin-bottom: 0px;">
                     <div contenteditable="false" style="display: inline;">inline</div>
                 </div>
-                <p style="margin-bottom: 0px;"><span class="a">span</span></p>
+                <p style="margin-bottom: 0px;">
+                    <span class="a">span</span>
+                </p>
             `)
         );
     });
