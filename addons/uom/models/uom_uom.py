@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from __future__ import annotations
+
 from datetime import timedelta
+from typing import TYPE_CHECKING, Literal
 
 from odoo import api, fields, tools, models, _
 from odoo.exceptions import UserError
+
+
+if TYPE_CHECKING:
+    from odoo.tools.float_utils import RoundingMethod
 
 
 class UomUom(models.Model):
@@ -67,6 +74,29 @@ class UomUom(models.Model):
                 "The following units of measure are used by the system and cannot be deleted: %s\nYou can archive them instead.",
                 ", ".join(locked_uoms.mapped('name')),
             ))
+
+    def round(self, value: float, rounding_method: RoundingMethod = 'HALF-UP') -> float:
+        """Round the value using the 'Product Unit' precision"""
+        self.ensure_one()
+        digits = self.env['decimal.precision'].precision_get('Product Unit')
+        return tools.float_round(value, precision_digits=digits, rounding_method=rounding_method)
+
+    def compare(self, value1: float, value2: float) -> Literal[-1, 0, 1]:
+        """Compare two measures after rounding them with the 'Product Unit' precision
+
+        :param value1: origin value to compare
+        :param value2: value to compare to
+        :return: -1, 0 or 1, if ``value1`` is lower than, equal to, or greater than ``value2``.
+        """
+        self.ensure_one()
+        digits = self.env['decimal.precision'].precision_get('Product Unit')
+        return tools.float_compare(value1, value2, precision_digits=digits)
+
+    def is_zero(self, value: float) -> bool:
+        """Check if the value is zero after rounding with the 'Product Unit' precision"""
+        self.ensure_one()
+        digits = self.env['decimal.precision'].precision_get('Product Unit')
+        return tools.float_is_zero(value, precision_digits=digits)
 
     def _compute_quantity(self, qty, to_unit, round=True, rounding_method='UP', raise_if_failure=True):
         """ Convert the given quantity from the current UoM `self` into a given one
