@@ -320,6 +320,14 @@ describe("prevent system classes to be set from history", () => {
 
         expect(getContent(el)).toBe(`<p class="y">a</p>`);
     });
+
+    test("should not copy system classes when changing a tag name", async () => {
+        const { el, editor } = await setupEditor(`<p class="x">a[]</p>`, { config: { Plugins } });
+        editor.shared.dom.setTag({
+            tagName: "h1",
+        });
+        expect(getContent(el)).toBe(`<h1>a[]</h1>`);
+    });
 });
 
 describe("makeSavePoint", () => {

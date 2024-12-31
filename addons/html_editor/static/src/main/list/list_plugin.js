@@ -21,17 +21,9 @@ import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import { _t } from "@web/core/l10n/translation";
 import { compareListTypes, createList, insertListAfter, isListItem } from "./utils";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
-import { getListMode, switchListMode } from "@html_editor/utils/list";
 import { withSequence } from "@html_editor/utils/resource";
 import { FONT_SIZE_CLASSES, getFontSizeOrClass } from "@html_editor/utils/formatting";
 import { getTextColorOrClass } from "@html_editor/utils/color";
-
-function isListActive(listMode) {
-    return (selection) => {
-        const block = closestBlock(selection.anchorNode);
-        return block?.tagName === "LI" && getListMode(block.parentNode) === listMode;
-    };
-}
 
 export class ListPlugin extends Plugin {
     static id = "list";
@@ -79,19 +71,19 @@ export class ListPlugin extends Plugin {
                 id: "bulleted_list",
                 groupId: "list",
                 commandId: "toggleListUL",
-                isActive: isListActive("UL"),
+                isActive: this.isListActive("UL"),
             },
             {
                 id: "numbered_list",
                 groupId: "list",
                 commandId: "toggleListOL",
-                isActive: isListActive("OL"),
+                isActive: this.isListActive("OL"),
             },
             {
                 id: "checklist",
                 groupId: "list",
                 commandId: "toggleListCL",
-                isActive: isListActive("CL"),
+                isActive: this.isListActive("CL"),
             },
         ],
         powerbox_items: [
@@ -131,6 +123,7 @@ export class ListPlugin extends Plugin {
         color_apply_overrides: this.applyColorToListItem.bind(this),
         format_selection_overrides: this.applyFormatToListItem.bind(this),
         set_tag_overrides: this.handleListStylePosition.bind(this),
+        node_to_insert_processors: this.processNodeToInsert.bind(this),
     };
 
     setup() {
@@ -237,7 +230,7 @@ export class ListPlugin extends Plugin {
             }
             const li = closestElement(block, isListItem);
             if (li) {
-                if (getListMode(li.parentElement) === mode) {
+                if (this.getListMode(li.parentElement) === mode) {
                     sameModeListItems.add(li);
                 } else {
                     listsToSwitch.add(li.parentElement);
@@ -251,7 +244,7 @@ export class ListPlugin extends Plugin {
         if (listsToSwitch.size || nonListBlocks.size) {
             for (const list of listsToSwitch) {
                 const cursors = this.dependencies.selection.preserveSelection();
-                const newList = switchListMode(list, mode);
+                const newList = this.switchListMode(list, mode);
                 cursors.remapNode(list, newList).restore();
             }
             for (const block of nonListBlocks) {
@@ -354,6 +347,79 @@ export class ListPlugin extends Plugin {
     }
 
     /**
+     * Converts a list element and its nested elements to the given list mode.
+     *
+     * @see switchListMode
+     * @param {HTMLUListElement|HTMLOListElement|HTMLLIElement} node - HTML element
+     * representing a list or list item.
+     * @param {string} newMode - Target list mode
+     * @param {Object} options
+     * @returns {HTMLUListElement|HTMLOListElement|HTMLLIElement} node - Modified
+     * list element after conversion.
+     */
+    convertList(node, newMode) {
+        if (!["UL", "OL", "LI"].includes(node.tagName)) {
+            return;
+        }
+        const listMode = this.getListMode(node);
+        if (listMode && newMode !== listMode) {
+            node = this.switchListMode(node, newMode);
+        }
+        for (const child of node.children) {
+            this.convertList(child, newMode);
+        }
+        return node;
+    }
+
+    getListMode(listContainerEl) {
+        if (!["UL", "OL"].includes(listContainerEl.tagName)) {
+            return;
+        }
+        if (listContainerEl.tagName === "OL") {
+            return "OL";
+        }
+        return listContainerEl.classList.contains("o_checklist") ? "CL" : "UL";
+    }
+
+    isListActive(listMode) {
+        return (selection) => {
+            const block = closestBlock(selection.anchorNode);
+            return block?.tagName === "LI" && this.getListMode(block.parentNode) === listMode;
+        };
+    }
+
+    /**
+     * Switches the list mode of the given list element.
+     *
+     * @param {HTMLOListElement|HTMLUListElement} list - The list element to switch the mode of.
+     * @param {"UL"|"OL"|"CL"} newMode - The new mode to switch to.
+     * @param {Object} options
+     * @returns {HTMLOListElement|HTMLUListElement} The modified list element.
+     */
+    switchListMode(list, newMode) {
+        if (this.getListMode(list) === newMode) {
+            return;
+        }
+        const newTag = newMode === "CL" ? "UL" : newMode;
+        const newList = this.dependencies.dom.setTagName(list, newTag);
+        // Clear list style (@todo @phoenix - why??)
+        newList.style.removeProperty("list-style");
+        for (const li of newList.children) {
+            if (li.style.listStyle !== "none") {
+                li.style.listStyle = null;
+                if (!li.style.all) {
+                    li.removeAttribute("style");
+                }
+            }
+        }
+        removeClass(newList, "o_checklist");
+        if (newMode === "CL") {
+            newList.classList.add("o_checklist");
+        }
+        return newList;
+    }
+
+    /**
      * Unwraps LI's content into blocks. Equivalent to fully outdenting the LI.
      *
      * @param {HTMLLIElement} li
@@ -452,7 +518,7 @@ export class ListPlugin extends Plugin {
             li.nextElementSibling?.querySelector("ol, ul") ||
             li.closest("ol, ul");
 
-        const ul = createList(this.document, getListMode(destul));
+        const ul = createList(this.document, this.getListMode(destul));
         lip.append(ul);
 
         const cursors = this.dependencies.selection.preserveSelection();
@@ -648,6 +714,27 @@ export class ListPlugin extends Plugin {
     // Handlers of other plugins commands
     // --------------------------------------------------------------------------
 
+    processNodeToInsert({ nodeToInsert, container }) {
+        if (
+            container.nodeName === "LI" &&
+            paragraphRelatedElements.includes(nodeToInsert.nodeName)
+        ) {
+            nodeToInsert = this.dependencies.dom.setTagName(nodeToInsert, "LI");
+        }
+        const listEl = container && closestElement(container, "UL, OL");
+        if (!listEl) {
+            return nodeToInsert;
+        }
+        const mode = container && this.getListMode(listEl);
+        if (
+            (nodeToInsert.nodeName === "LI" && nodeToInsert.classList.contains("oe-nested")) ||
+            ["UL", "OL"].includes(nodeToInsert.nodeName)
+        ) {
+            return this.convertList(nodeToInsert, mode);
+        }
+        return nodeToInsert;
+    }
+
     handleTab() {
         const selection = this.dependencies.selection.getEditableSelection();
         const closestLI = closestElement(selection.anchorNode, "LI");
@@ -795,7 +882,8 @@ export class ListPlugin extends Plugin {
      */
     onPointerdown(ev) {
         const node = ev.target;
-        const isChecklistItem = node.tagName == "LI" && getListMode(node.parentElement) == "CL";
+        const isChecklistItem =
+            node.tagName == "LI" && this.getListMode(node.parentElement) == "CL";
         if (!isChecklistItem) {
             return;
         }
