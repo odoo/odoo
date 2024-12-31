@@ -176,12 +176,6 @@ export class AddSnippetDialog extends Component {
             });
         }
 
-        if (!snippetsToDisplay.length && this.state.groupSelected === "custom") {
-            this.snippetGroups = this.snippetGroups.filter(group => group.name !== "custom");
-            this.state.groupSelected = this.snippetGroups[0].name;
-            return;
-        }
-
         // Create the new 2-column structure
         this.iframeDocument.body.scrollTop = 0;
         const rowEl = document.createElement("div");
@@ -434,7 +428,17 @@ export class AddSnippetDialog extends Component {
     _onDeleteCustomBtnClick(ev) {
         const snippetKey = ev.currentTarget.closest(".o_custom_snippet_wrap")
             .querySelector("[data-snippet-key]").dataset.snippetKey;
-        this.props.deleteCustomSnippet(parseInt(snippetKey));
+        Promise.resolve(this.props.deleteCustomSnippet(parseInt(snippetKey))).then(() => {
+            // Remove the "Custom" tab if the last custom snippet was removed
+            const snippetsData = [...this.props.snippets.values()];
+            const stillHasCustom = !!snippetsData.find(snippet => snippet.group === "custom");
+            if (!stillHasCustom) {
+                this.snippetGroups = this.snippetGroups.filter(group => group.name !== "custom");
+                if (this.state.groupSelected === "custom") {
+                    this.state.groupSelected = this.snippetGroups[0].name;
+                }
+            }
+        });
     }
 
     /**
