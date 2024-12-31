@@ -45,7 +45,7 @@ class DiscussChannel(models.Model):
             "chatbot_current_step",
             Store.One("country_id", ["code", "name"], rename="anonymous_country"),
             Store.One(
-                "livechat_operator_id", ["user_livechat_username", "write_date"], rename="operator"
+                "livechat_operator_id", ["user_livechat_username", "write_date"], rename="operator", sudo=True
             ),
         ]
         if self.env.user._is_internal():
@@ -243,3 +243,6 @@ class DiscussChannel(models.Model):
 
     def _types_allowing_seen_infos(self):
         return super()._types_allowing_seen_infos() + ["livechat"]
+
+    def _types_allowing_unfollow(self):
+        return super()._types_allowing_unfollow() + ["livechat"]

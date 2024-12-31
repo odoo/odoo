@@ -24,15 +24,11 @@ patch(Thread.prototype, {
         return this.channel_type === "livechat" || super.hasMemberList;
     },
     get canLeave() {
-        return this.channel_type !== "livechat" && super.canLeave;
-    },
-    get canUnpin() {
         if (this.channel_type === "livechat") {
             return !this.selfMember || this.selfMember.message_unread_counter === 0;
         }
-        return super.canUnpin;
+        return super.canLeave;
     },
-
     get correspondents() {
         return super.correspondents.filter((correspondent) => !correspondent.is_bot);
     },

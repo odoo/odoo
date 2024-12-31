@@ -1107,6 +1107,11 @@ class DiscussChannel(models.Model):
         on the channel """
         return ["chat", "group"]
 
+    def _types_allowing_unfollow(self):
+        """ Return the channel types which allow leaving the channel, channel will be unpinned
+        otherwise """
+        return ["channel", "group"]
+
     def channel_fetched(self):
         """ Broadcast the channel_fetched notification to channel members
         """
@@ -1342,7 +1347,7 @@ class DiscussChannel(models.Model):
         return msg
 
     def execute_command_leave(self, **kwargs):
-        if self.channel_type in ('channel', 'group'):
+        if self.channel_type in self._types_allowing_unfollow():
             self.action_unfollow()
         else:
             self.channel_pin(False)
