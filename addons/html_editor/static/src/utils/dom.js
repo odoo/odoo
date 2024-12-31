@@ -208,14 +208,16 @@ export function fillShrunkPhrasingParent(el) {
  * is not a BR, remove the BR.
  *
  * @param {HTMLElement} el
+ * @param {Array} predicates exceptions where a trailing BR should not be removed
  * @returns {HTMLElement|undefined} the removed br, if any
  */
-export function cleanTrailingBR(el) {
+export function cleanTrailingBR(el, predicates = []) {
     const candidate = el?.lastChild;
     if (
         candidate?.nodeName === "BR" &&
         candidate.previousSibling?.nodeName !== "BR" &&
-        !isEmptyBlock(el)
+        !isEmptyBlock(el) &&
+        !predicates.some((predicate) => predicate(candidate))
     ) {
         candidate.remove();
         return candidate;

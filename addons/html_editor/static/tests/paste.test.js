@@ -2439,7 +2439,7 @@ describe("link", () => {
                     );
                 },
                 contentAfter:
-                    '<p><a href="www.odoo.com">odoo.com</a></p><p><a href="www.google.com">google.com</a>[]</p>',
+                    '<p><a href="www.odoo.com">odoo.com</a></p><p><a href="https://google.com">google.com[]</a></p>',
             });
         });
 
@@ -2722,7 +2722,7 @@ describe("link", () => {
                     );
                 },
                 contentAfter:
-                    '<p><a href="www.odoo.com">odoo.com</a></p><p><a href="www.google.com">google.com</a>[]</p>',
+                    '<p><a href="www.odoo.com">odoo.com</a></p><p><a href="https://google.com">google.com[]</a></p>',
             });
         });
     });

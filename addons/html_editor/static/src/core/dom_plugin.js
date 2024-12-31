@@ -10,19 +10,43 @@ import {
     setTagName,
     splitTextNode,
     unwrapContents,
+    wrapInlinesInBlocks,
 } from "../utils/dom";
 import {
     allowsParagraphRelatedElements,
     getDeepestPosition,
+    isContentEditable,
+    isContentEditableAncestor,
     isEmptyBlock,
+    isProtecting,
+    isProtected,
     isSelfClosingElement,
     isShrunkBlock,
+    isTangible,
+    isUnprotecting,
     paragraphRelatedElements,
 } from "../utils/dom_info";
 import { closestElement, descendants, firstLeaf, lastLeaf } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
 import { DIRECTIONS, childNodeIndex, nodeSize, rightPos } from "../utils/position";
+import { normalizeCursorPosition } from "@html_editor/utils/selection";
 import { convertList, getListMode } from "@html_editor/utils/list";
+
+/**
+ * Get distinct connected parents of nodes
+ *
+ * @param {Iterable} nodes
+ * @returns {Set}
+ */
+function getConnectedParents(nodes) {
+    const parents = new Set();
+    for (const node of nodes) {
+        if (node.isConnected && node.parentElement) {
+            parents.add(node.parentElement);
+        }
+    }
+    return parents;
+}
 
 /**
  * @typedef {Object} DomShared
@@ -65,7 +89,7 @@ export class DomPlugin extends Plugin {
     // Shared
 
     /**
-     * @param {string | DocumentFragment | null} content
+     * @param {string | DocumentFragment | Element | null} content
      */
     insert(content) {
         if (!content) {
@@ -91,11 +115,16 @@ export class DomPlugin extends Plugin {
         if (typeof content === "string") {
             container.textContent = content;
         } else {
-            for (const child of content.children) {
-                this.dispatchTo("normalize_handlers", child);
+            if (content.nodeType === Node.ELEMENT_NODE) {
+                this.dispatchTo("normalize_handlers", content);
+            } else {
+                for (const child of content.children) {
+                    this.dispatchTo("normalize_handlers", child);
+                }
             }
             container.replaceChildren(content);
         }
+        const allInsertedNodes = [];
 
         // In case the html inserted starts with a list and will be inserted within
         // a list, unwrap the list elements from the list.
@@ -118,12 +147,15 @@ export class DomPlugin extends Plugin {
 
         const shouldUnwrap = (node) =>
             [...paragraphRelatedElements, "LI"].includes(node.nodeName) &&
-            block.textContent !== "" &&
-            node.textContent !== "" &&
+            !isEmptyBlock(block) &&
+            !isEmptyBlock(node) &&
+            (isContentEditable(node) ||
+                (!node.isConnected && !closestElement(node, "[contenteditable]"))) &&
+            !this.dependencies.split.isUnsplittable(node) &&
             [node.nodeName, "DIV"].includes(block.nodeName) &&
             // If the selection anchorNode is the editable itself, the content
             // should not be unwrapped.
-            selection.anchorNode !== this.editable;
+            !this.isEditionBoundary(selection.anchorNode);
 
         // Empty block must contain a br element to allow cursor placement.
         if (
@@ -137,12 +169,7 @@ export class DomPlugin extends Plugin {
         // In case the html inserted is all contained in a single root <p> or <li>
         // tag, we take the all content of the <p> or <li> and avoid inserting the
         // <p> or <li>.
-        if (
-            container.childElementCount === 1 &&
-            (["P", "LI"].includes(container.firstChild.nodeName) ||
-                shouldUnwrap(container.firstChild)) &&
-            selection.anchorNode !== this.editable
-        ) {
+        if (container.childElementCount === 1 && shouldUnwrap(container.firstChild)) {
             const p = container.firstElementChild;
             container.replaceChildren(...p.childNodes);
         } else if (container.childElementCount > 1) {
@@ -186,6 +213,7 @@ export class DomPlugin extends Plugin {
                     startNode.prepend(textNode);
                 }
                 startNode = textNode;
+                allInsertedNodes.push(textNode);
             } else {
                 startNode = startNode.childNodes[selection.anchorOffset - 1];
             }
@@ -194,7 +222,6 @@ export class DomPlugin extends Plugin {
         // If we have isolated block content, first we split the current focus
         // element if it's a block then we insert the content in the right places.
         let currentNode = startNode;
-        let lastChildNode = false;
         const currentList = currentNode && closestElement(currentNode, "UL, OL");
         const mode = currentList && getListMode(currentList);
 
@@ -209,7 +236,7 @@ export class DomPlugin extends Plugin {
             const toInsert = [...containerLastChild.childNodes]; // Prevent mutation
             _insertAt(currentNode, [...toInsert], insertBefore);
             currentNode = insertBefore ? toInsert[0] : currentNode;
-            lastChildNode = toInsert[toInsert.length - 1];
+            toInsert[toInsert.length - 1];
         }
         const firstInsertedNodes = [...containerFirstChild.childNodes];
         if (containerFirstChild.hasChildNodes()) {
@@ -218,6 +245,7 @@ export class DomPlugin extends Plugin {
             currentNode = toInsert[toInsert.length - 1];
             insertBefore = false;
         }
+        allInsertedNodes.push(...firstInsertedNodes);
 
         // If all the Html have been isolated, We force a split of the parent element
         // to have the need new line in the final result
@@ -252,9 +280,9 @@ export class DomPlugin extends Plugin {
                             !this.dependencies.split.isUnsplittable(nodeToInsert)))
                 ) {
                     if (this.dependencies.split.isUnsplittable(currentNode.parentElement)) {
-                        // If we have to insert a table, we cannot afford to unwrap it
-                        // we need to search for a more suitable spot to put the table in
-                        if (nodeToInsert.nodeName === "TABLE") {
+                        // If we have to insert an unsplittable element, we cannot afford to
+                        // unwrap it we need to search for a more suitable spot to put it
+                        if (this.dependencies.split.isUnsplittable(nodeToInsert)) {
                             currentNode = currentNode.parentElement;
                             doesCurrentNodeAllowsP = allowsParagraphRelatedElements(currentNode);
                             continue;
@@ -283,15 +311,9 @@ export class DomPlugin extends Plugin {
                         } else if (isEmptyBlock(otherNode)) {
                             otherNode.remove();
                         }
-                        if (otherNode.nodeType === Node.ELEMENT_NODE) {
-                            cleanTrailingBR(otherNode);
-                        }
                     } else {
                         if (isBlock(currentNode)) {
                             fillShrunkPhrasingParent(currentNode);
-                        }
-                        if (currentNode.nodeType === Node.ELEMENT_NODE) {
-                            cleanTrailingBR(currentNode);
                         }
                         currentNode = currentNode.parentElement;
                     }
@@ -303,7 +325,9 @@ export class DomPlugin extends Plugin {
                     this.dependencies.split.isUnsplittable(nodeToInsert)
                 ) {
                     const br = document.createElement("br");
-                    currentNode[currentNode.textContent ? "after" : "before"](br);
+                    currentNode[
+                        isEmptyBlock(currentNode) || !isTangible(currentNode) ? "before" : "after"
+                    ](br);
                 }
             }
             // Ensure that all adjacent paragraph elements are converted to
@@ -312,7 +336,14 @@ export class DomPlugin extends Plugin {
                 block.nodeName === "LI" &&
                 paragraphRelatedElements.includes(nodeToInsert.nodeName)
             ) {
-                setTagName(nodeToInsert, "LI");
+                nodeToInsert = setTagName(nodeToInsert, "LI");
+            }
+            if (
+                currentList &&
+                ((nodeToInsert.nodeName === "LI" && nodeToInsert.classList.contains("oe-nested")) ||
+                    isList(nodeToInsert))
+            ) {
+                nodeToInsert = convertList(nodeToInsert, mode);
             }
             if (insertBefore) {
                 currentNode.before(nodeToInsert);
@@ -320,42 +351,61 @@ export class DomPlugin extends Plugin {
             } else {
                 currentNode.after(nodeToInsert);
             }
-            let convertedList;
-            if (
-                currentList &&
-                ((nodeToInsert.nodeName === "LI" && nodeToInsert.classList.contains("oe-nested")) ||
-                    isList(nodeToInsert))
-            ) {
-                convertedList = convertList(nodeToInsert, mode);
-            }
-            if (
-                (nodeToInsert.nodeType !== Node.ELEMENT_NODE ||
-                    nodeToInsert.tagName !== "BR" ||
-                    nodeToInsert.nextSibling) &&
-                !(isBlock(nodeToInsert) && this.dependencies.split.isUnsplittable(nodeToInsert))
-            ) {
-                // Avoid cleaning the trailing BR if it is nodeToInsert
-                cleanTrailingBR(currentNode.parentElement);
-            }
+            allInsertedNodes.push(nodeToInsert);
             if (currentNode.tagName !== "BR" && isShrunkBlock(currentNode)) {
                 currentNode.remove();
             }
-            currentNode = convertedList || nodeToInsert;
+            currentNode = nodeToInsert;
         }
-        const previousNode = currentNode.previousSibling;
-        if (
-            !(isBlock(currentNode) && this.dependencies.split.isUnsplittable(currentNode)) &&
-            cleanTrailingBR(currentNode.parentElement)
-        ) {
-            // Clean the last inserted trailing BR if any
-            currentNode = previousNode;
+        allInsertedNodes.push(...lastInsertedNodes);
+        let insertedNodesParents = getConnectedParents(allInsertedNodes);
+        for (const parent of insertedNodesParents) {
+            if (
+                !this.config.allowInlineAtRoot &&
+                this.isEditionBoundary(parent) &&
+                allowsParagraphRelatedElements(parent)
+            ) {
+                // Ensure that edition boundaries do not have inline content.
+                wrapInlinesInBlocks(parent);
+            }
         }
-        currentNode = lastChildNode || currentNode;
+        insertedNodesParents = getConnectedParents(allInsertedNodes);
+        for (const parent of insertedNodesParents) {
+            if (
+                !isProtecting(parent) &&
+                !(isProtected(parent) && !isUnprotecting(parent)) &&
+                parent.isContentEditable
+            ) {
+                cleanTrailingBR(parent, [
+                    (node) => {
+                        // Don't remove the last BR in cases where the
+                        // previous sibling is an unsplittable block
+                        // (i.e. a table, a non-editable div, ...)
+                        // to allow placing the cursor after that unsplittable
+                        // element. This can be removed when the cursor
+                        // is properly handled around these elements.
+                        const previousSibling = node.previousSibling;
+                        return (
+                            previousSibling &&
+                            isBlock(previousSibling) &&
+                            this.dependencies.split.isUnsplittable(previousSibling)
+                        );
+                    },
+                ]);
+            }
+        }
+        for (const insertedNode of allInsertedNodes.reverse()) {
+            if (insertedNode.isConnected) {
+                currentNode = insertedNode;
+                break;
+            }
+        }
         let lastPosition = [...paragraphRelatedElements, "LI", "OL", "UL"].includes(
             currentNode.nodeName
         )
             ? rightPos(lastLeaf(currentNode))
             : rightPos(currentNode);
+        lastPosition = normalizeCursorPosition(lastPosition[0], lastPosition[1], "right");
 
         if (!this.config.allowInlineAtRoot && this.isEditionBoundary(lastPosition[0])) {
             // Correct the position if it happens to be in the editable root.
@@ -369,10 +419,13 @@ export class DomPlugin extends Plugin {
     }
 
     isEditionBoundary(node) {
+        if (!node) {
+            return false;
+        }
         if (node === this.editable) {
             return true;
         }
-        return node.hasAttribute("contenteditable");
+        return isContentEditableAncestor(node);
     }
 
     /**
