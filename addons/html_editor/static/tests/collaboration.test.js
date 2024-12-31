@@ -33,6 +33,7 @@ import { unformat } from "./_helpers/format";
 import { getContent } from "./_helpers/selection";
 import { addStep, deleteBackward, deleteForward, redo, undo } from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
+import { wrapInlinesInBlocks } from "@html_editor/utils/dom";
 
 /**
  * @param {Editor} editor
@@ -245,6 +246,27 @@ describe("history addExternalStep", () => {
         expect(getContent(peerInfos.c1.editor.editable)).toBe(`<p>ia[]b</p>`);
         expect(getContent(peerInfos.c2.editor.editable)).toBe(`<p>ia[]b</p>`);
     });
+});
+test("wrapInlinesInBlocks should not create impossible mutations in a collaborative step", async () => {
+    const peerInfos = await setupMultiEditor({
+        peerIds: ["c1", "c2"],
+        contentBefore: `<div class="oe_unbreakable">myNode[c1}{c1][c2}{c2]</div>`,
+    });
+    const e1 = peerInfos.c1.editor;
+    const e2 = peerInfos.c2.editor;
+    const div1 = e1.editable.querySelector("div");
+    const cursors1 = e1.shared.selection.preserveSelection();
+    wrapInlinesInBlocks(div1, cursors1);
+    cursors1.restore();
+    e1.shared.history.addStep();
+    mergePeersSteps(peerInfos);
+    expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+        `<div class="oe_unbreakable"><p>myNode[]</p></div>`
+    );
+    // TODO selection in collab should be handled better.
+    expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+        `<div class="oe_unbreakable">[]<p>myNode</p></div>`
+    );
 });
 test("should reset from snapshot", async () => {
     await testMultiEditor({
