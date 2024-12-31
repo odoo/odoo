@@ -7735,6 +7735,19 @@ X[]
                     contentAfter: '<table></table><p>[]<br></p><table></table>'
                 });
             });
+            it('should reset selection on mousedown on empty editable', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[<br>]</p>',
+                    stepFunction: async editor => {
+                        const paragraph = editor.editable.querySelector('p');
+                        await triggerEvent(paragraph, 'mousedown');
+                        await nextTick();
+                        await triggerEvent(paragraph, 'mouseup');
+                        triggerEvent(paragraph, 'click');
+                    },
+                    contentAfter: '<p>[]<br></p>'
+                });
+            });
         });
         describe('no arrow key press or mouse click', () => {
             it('should remove selection', async () => {
