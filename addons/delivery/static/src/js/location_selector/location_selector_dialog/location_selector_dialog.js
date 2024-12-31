@@ -165,6 +165,22 @@ export class LocationSelectorDialog extends Component {
         return _t("Your postal code");
     }
 
+    get listViewButtonLabel() {
+        return _t("List view");
+    }
+
+    get mapViewButtonLabel() {
+        return _t("Map view");
+    }
+
+    get errorMessage() {
+        return _t("No result");
+    }
+
+    get loadingMessage() {
+        return _t("Loading...");
+    }
+
     /**
      *
      * @return {void}
