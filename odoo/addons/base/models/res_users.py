@@ -80,8 +80,6 @@ class CryptContext:
         return self.__obj__.update(**kwargs)
 
 
-# Only users who can modify the user (incl. the user herself) see the real contents of these fields
-USER_PRIVATE_FIELDS = []
 MIN_ROUNDS = 600_000
 concat = chain.from_iterable
 
@@ -601,15 +599,6 @@ class ResUsers(models.Model):
     def onchange_parent_id(self):
         return self.partner_id.onchange_parent_id()
 
-    def _fetch_query(self, query, fields):
-        records = super()._fetch_query(query, fields)
-        if not set(USER_PRIVATE_FIELDS).isdisjoint(field.name for field in fields):
-            if self.browse().has_access('write'):
-                return records
-            for fname in USER_PRIVATE_FIELDS:
-                self.env.cache.update(records, self._fields[fname], repeat('********'))
-        return records
-
     @api.constrains('company_id', 'company_ids', 'active')
     def _check_company(self):
         for user in self.filtered(lambda u: u.active):
@@ -699,31 +688,6 @@ class ResUsers(models.Model):
             and operation == 'read'
             and field.name in self.SELF_READABLE_FIELDS
         )
-
-    @api.model
-    def _read_group_select(self, aggregate_spec, query):
-        try:
-            fname, __, __ = models.parse_read_group_spec(aggregate_spec)
-        except Exception:
-            # may happen if aggregate_spec == '__count', for instance
-            fname = None
-        if fname in USER_PRIVATE_FIELDS:
-            raise AccessError(_("Cannot aggregate on %s parameter", fname))
-        return super()._read_group_select(aggregate_spec, query)
-
-    @api.model
-    def _read_group_groupby(self, groupby_spec, query):
-        fname, __, __ = models.parse_read_group_spec(groupby_spec)
-        if fname in USER_PRIVATE_FIELDS:
-            raise AccessError(_("Cannot groupby on %s parameter", fname))
-        return super()._read_group_groupby(groupby_spec, query)
-
-    @api.model
-    def _search(self, domain, offset=0, limit=None, order=None):
-        domain = Domain(domain)
-        if not self.env.su and any(condition.field_expr in USER_PRIVATE_FIELDS for condition in domain.iter_conditions()):
-            raise AccessError(_('Invalid search criterion'))
-        return super()._search(domain, offset, limit, order)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -931,7 +895,6 @@ class ResUsers(models.Model):
     def _get_invalidation_fields(self):
         return {
             'groups_id', 'active', 'lang', 'tz', 'company_id', 'company_ids',
-            *USER_PRIVATE_FIELDS,
             *self._get_session_token_fields()
         }
 
