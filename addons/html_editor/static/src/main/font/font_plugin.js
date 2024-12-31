@@ -264,7 +264,7 @@ export class FontPlugin extends Plugin {
         const matchingItemsWitoutExtraClass = matchingItems.filter((item) => !item.extraClass);
 
         if (!matchingItems.length) {
-            return "Normal";
+            return _t("Normal");
         }
 
         return (
