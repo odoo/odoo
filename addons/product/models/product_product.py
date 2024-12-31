@@ -873,11 +873,12 @@ class ProductProduct(models.Model):
         :return: a dictionary for each non-service product in this recordset.
         :rtype: list[dict]
         """
+        self = self.with_context(display_default_code=False)
         return {
             product: {
                 # Required
                 'id': product.default_code or product.id,
-                'title': product.name,
+                'title': product.display_name,
                 'availability': 'in_stock',
             }
             for product in self

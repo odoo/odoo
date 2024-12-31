@@ -293,7 +293,7 @@ class ProductProduct(models.Model):
                         )
             items.update({
                 # Required
-                'description': product.description_ecommerce or "",
+                'description': product.website_meta_description or product.description_sale,
                 'link': format_product_link(product.website_url),
                 'image_link': (
                     # don't send any image link if there isn't. Google does not allow placeholder
