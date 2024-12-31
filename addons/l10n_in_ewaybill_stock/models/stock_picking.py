@@ -25,9 +25,14 @@ class StockPicking(models.Model):
         if self.l10n_in_ewaybill_id:
             raise UserError(_("Ewaybill already created for this picking."))
         action = self._get_l10n_in_ewaybill_form_action()
+        type_xml_trailing_id = (
+            'type_delivery_challan_sub_sales_return'
+            if self.picking_type_code == 'incoming'
+            else 'type_delivery_challan_sub_others'
+        )
         ewaybill = self.env['l10n.in.ewaybill'].create({
             'picking_id': self.id,
-            'type_id': self.env.ref('l10n_in_ewaybill_stock.type_delivery_challan_sub_others').id,
+            'type_id': self.env.ref(f'l10n_in_ewaybill_stock.{type_xml_trailing_id}').id,
         })
         action['res_id'] = ewaybill.id
         return action
