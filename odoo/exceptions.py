@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """The Odoo Exceptions module defines a few core exception types.
@@ -88,6 +87,15 @@ class MissingError(UserError):
     .. admonition:: Example
 
         When you try to write on a deleted record.
+    """
+
+
+class LockError(UserError):
+    """Record(s) could not be locked.
+
+    .. admonition:: Example
+
+        Code tried to lock records, but could not succeed.
     """
 
 
