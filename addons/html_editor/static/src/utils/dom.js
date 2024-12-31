@@ -46,9 +46,17 @@ export function wrapInlinesInBlocks(element, cursors = { update: () => {} }) {
         const block = isPhrasingContent(node)
             ? node.ownerDocument.createElement("P")
             : node.ownerDocument.createElement("DIV");
-        cursors.update(callbacksForCursorUpdate.before(node, block));
-        node.before(block);
         cursors.update(callbacksForCursorUpdate.append(block, node));
+        cursors.update(callbacksForCursorUpdate.before(node, block));
+        if (node.nextSibling) {
+            const sibling = node.nextSibling;
+            node.remove();
+            sibling.before(block);
+        } else {
+            const parent = node.parentElement;
+            node.remove();
+            parent.append(block);
+        }
         block.append(node);
         return block;
     };
