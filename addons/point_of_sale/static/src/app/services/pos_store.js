@@ -37,6 +37,7 @@ import { user } from "@web/core/user";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { unaccent } from "@web/core/utils/strings";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
+import { debounce } from "@web/core/utils/timing";
 
 const { DateTime } = luxon;
 
@@ -150,6 +151,7 @@ export class PosStore extends WithLazyGetterTrap {
             await this.connectToProxy();
         }
         this.closeOtherTabs();
+        this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
     }
 
     get firstScreen() {
@@ -531,7 +533,7 @@ export class PosStore extends WithLazyGetterTrap {
                     await this.sendOrderInPreparation(order, true, true);
                 }
 
-                const cancelled = this.removeOrder(order, true);
+                const cancelled = this.removeOrder(order, false);
                 this.removePendingOrder(order);
                 if (!cancelled) {
                     return false;
@@ -1050,6 +1052,7 @@ export class PosStore extends WithLazyGetterTrap {
         if (this.config.isShareable || removeFromServer) {
             if (typeof order.id === "number" && !order.finalized) {
                 this.addPendingOrder([order.id], true);
+                this.syncAllOrdersDebounced();
             }
         }
 
@@ -1058,7 +1061,7 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
 
-        return this.data.localDeleteCascade(order, removeFromServer);
+        return this.data.localDeleteCascade(order);
     }
 
     /**
