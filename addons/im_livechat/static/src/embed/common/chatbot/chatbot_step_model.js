@@ -11,6 +11,7 @@ export class ChatbotStep extends Record {
             return this.scriptStep?.answers;
         },
     });
+    completed = false;
     selectedAnswer = Record.one("chatbot.script.answer");
     type = Record.attr("", {
         compute() {
