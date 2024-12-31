@@ -24,7 +24,7 @@ import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
  */
 
 export class SplitPlugin extends Plugin {
-    static dependencies = ["selection", "history", "input", "delete", "lineBreak"];
+    static dependencies = ["baseContainer", "selection", "history", "input", "delete", "lineBreak"];
     static id = "split";
     static shared = [
         "splitBlock",
@@ -71,7 +71,7 @@ export class SplitPlugin extends Plugin {
                         isExplicitlyNotContentEditable(node.parentElement))
                 );
             },
-            (node) => ["DIV", "SECTION"].includes(node.nodeName),
+            (node) => node.nodeName === "SECTION",
         ],
     };
 
