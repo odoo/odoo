@@ -425,7 +425,7 @@ class PosConfig(models.Model):
 
         self._preprocess_x2many_vals_from_settings_view(vals)
         vals = self._keep_new_vals(vals)
-        opened_session = self.mapped('session_ids').filtered(lambda s: s.state != 'closed')
+        opened_session = self.session_ids.filtered(lambda s: s.state != 'closed')
         if opened_session:
             forbidden_fields = []
             for key in self._get_forbidden_change_fields():

@@ -92,7 +92,7 @@ class AccountPayment(models.Model):
                     msgs.append(_(
                         'Some checks are not anymore in journal, it seems it has been moved by another payment.')
                     )
-                elif rec.payment_type == 'inbound' and not rec._is_latam_check_transfer() and any(rec.l10n_latam_move_check_ids.mapped('current_journal_id')):
+                elif rec.payment_type == 'inbound' and not rec._is_latam_check_transfer() and rec.l10n_latam_move_check_ids.current_journal_id:
                     msgs.append(
                         _("Some checks are already in hand and can't be received again. Checks: %s",
                           ', '.join(rec.l10n_latam_move_check_ids.mapped('display_name')))

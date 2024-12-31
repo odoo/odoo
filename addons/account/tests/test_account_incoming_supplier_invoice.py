@@ -214,7 +214,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         self.assertEqual(len(message_ids), 1, 'Only one message should be posted in the chatter')
         self.assertEqual(message_ids.body, '<p>Vendor Bill Created</p>', 'Only the invoice creation should be posted')
 
-        following_partners = invoice.message_follower_ids.mapped('partner_id')
+        following_partners = invoice.message_follower_ids.partner_id
         self.assertEqual(following_partners, self.env.user.partner_id)
         self.assertRegex(invoice.name_placeholder, r'BILL/\d{4}/\d{2}/0001')
 
@@ -236,7 +236,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         self.assertEqual(len(message_ids), 1, 'Only one message should be posted in the chatter')
         self.assertEqual(message_ids.body, '<p>Vendor Bill Created</p>', 'Only the invoice creation should be posted')
 
-        following_partners = invoice.message_follower_ids.mapped('partner_id')
+        following_partners = invoice.message_follower_ids.partner_id
         self.assertEqual(following_partners, self.env.user.partner_id | self.internal_user.partner_id)
 
     def test_supplier_invoice_forwarded_by_internal_with_supplier_in_body(self):
@@ -257,7 +257,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         self.assertEqual(len(message_ids), 1, 'Only one message should be posted in the chatter')
         self.assertEqual(message_ids.body, '<p>Vendor Bill Created</p>', 'Only the invoice creation should be posted')
 
-        following_partners = invoice.message_follower_ids.mapped('partner_id')
+        following_partners = invoice.message_follower_ids.partner_id
         self.assertEqual(following_partners, self.env.user.partner_id | self.internal_user.partner_id)
 
     def test_supplier_invoice_forwarded_by_internal_with_internal_in_body(self):
@@ -278,7 +278,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         self.assertEqual(len(message_ids), 1, 'Only one message should be posted in the chatter')
         self.assertEqual(message_ids.body, '<p>Vendor Bill Created</p>', 'Only the invoice creation should be posted')
 
-        following_partners = invoice.message_follower_ids.mapped('partner_id')
+        following_partners = invoice.message_follower_ids.partner_id
         self.assertEqual(following_partners, self.env.user.partner_id | self.internal_user.partner_id)
 
     def test_extend_with_attachments_multi_pdf(self):

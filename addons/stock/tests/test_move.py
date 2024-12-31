@@ -2147,8 +2147,8 @@ class StockMove(TransactionCase):
         move._action_confirm()
         move._action_assign()
         self.assertEqual(move.state, 'assigned')
-        self.assertEqual(len(move.move_line_ids.mapped('product_uom_id')), 1)
-        self.assertEqual(move.move_line_ids.mapped('product_uom_id'), self.uom_unit)
+        self.assertEqual(len(move.move_line_ids.product_uom_id), 1)
+        self.assertEqual(move.move_line_ids.product_uom_id, self.uom_unit)
 
         for move_line in move.move_line_ids:
             move_line.quantity = 1

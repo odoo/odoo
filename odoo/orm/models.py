@@ -3670,8 +3670,11 @@ class BaseModel(metaclass=MetaModel):
         # In these cases, only all translations of the first stored translation field will be updated
         # For other stored related translated field, the translation for the flush language will be updated
         if field.related and not field.store:
-            related_path, field_name = field.related.rsplit(".", 1)
-            return self.mapped(related_path)._update_field_translations(field_name, translations, digest)
+            *related_path, field_name = field.related.split('.')
+            records = self
+            for path_part in related_path:
+                records = records[path_part]
+            return records._update_field_translations(field_name, translations, digest)
 
         if field.translate is True:
             # falsy values (except emtpy str) are used to void the corresponding translation
@@ -6268,7 +6271,7 @@ class BaseModel(metaclass=MetaModel):
         list or a recordset (if ``func`` return recordsets). In the latter
         case, the order of the returned recordset is arbitrary.
 
-        :param func: a function or a dot-separated sequence of field names
+        :param func: a function or a field name
         :type func: callable or str
         :return: self if func is falsy, result of func applied to all ``self`` records.
         :rtype: list or recordset
@@ -6289,12 +6292,14 @@ class BaseModel(metaclass=MetaModel):
             records.mapped('partner_id')
 
             # returns the union of all partner banks, with duplicates removed
-            records.mapped('partner_id.bank_ids')
+            records.partner_id.mapped('bank_ids')
         """
         if not func:
             return self                 # support for an empty path of fields
 
         if isinstance(func, str):
+            if '.' in func:
+                warnings.warn("Deprecated in 19.0, mapped() will stop supporting path traversal (using a '.')", DeprecationWarning)
             # special case: sequence of field names
             *rel_field_names, field_name = func.split('.')
             records = self
@@ -6325,17 +6330,20 @@ class BaseModel(metaclass=MetaModel):
     def filtered(self, func) -> Self:
         """Return the records in ``self`` satisfying ``func``.
 
-        :param func: a function or a dot-separated sequence of field names
+        :param func: a function or a field name
         :type func: callable or str
         :return: recordset of records satisfying func, may be empty.
 
         .. code-block:: python3
 
+            # only keep active records
+            records.filtered('active')
+
             # only keep records whose company is the current user's
             records.filtered(lambda r: r.company_id == user.company_id)
 
             # only keep records whose partner is a company
-            records.filtered("partner_id.is_company")
+            records.filtered(lambda r: r.partner_id.is_company)
         """
         if not func:
             # align with mapped()

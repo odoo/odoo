@@ -50,7 +50,7 @@ class PosPayment(models.Model):
 
     @api.constrains('payment_method_id')
     def _check_payment_method_id(self):
-        bypass_check_payments = self.filtered('payment_method_id.is_online_payment')
+        bypass_check_payments = self.filtered(lambda rec: rec.payment_method_id.is_online_payment)
         if any(payment.payment_method_id != payment.pos_order_id.online_payment_method_id for payment in bypass_check_payments):
             # An online payment must always be saved for the POS, even if the online payment method is no longer configured/allowed in the pos.config, because in any case it is saved by account_payment and payment modules.
             _logger.warning("Allow to save a POS online payment with an unexpected online payment method")

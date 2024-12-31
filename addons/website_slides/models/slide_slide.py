@@ -850,7 +850,7 @@ class SlideSlide(models.Model):
             ('slide_id', 'in', self.ids),
             ('partner_id', '=', self.env.user.partner_id.id)
         ])
-        slide_id = slide_partners.mapped('slide_id')
+        slide_id = slide_partners.slide_id
         new_slides = self_sudo - slide_id
 
         for slide_partner in slide_partners:
@@ -882,7 +882,7 @@ class SlideSlide(models.Model):
             sql.increment_fields_skiplock(existing_sudo, 'quiz_attempts_count')
             existing_sudo.invalidate_recordset(['quiz_attempts_count'])
 
-        new_slides = self_sudo - existing_sudo.mapped('slide_id')
+        new_slides = self_sudo - existing_sudo.slide_id
         return SlidePartnerSudo.create([{
             'slide_id': new_slide.id,
             'channel_id': new_slide.channel_id.id,
@@ -908,7 +908,7 @@ class SlideSlide(models.Model):
         ])
         existing_sudo.write({'completed': True})
 
-        new_slides = uncompleted_slides.sudo() - existing_sudo.mapped('slide_id')
+        new_slides = uncompleted_slides.sudo() - existing_sudo.slide_id
         SlidePartnerSudo.create([{
             'slide_id': new_slide.id,
             'channel_id': new_slide.channel_id.id,

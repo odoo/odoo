@@ -23,7 +23,7 @@ class TtuRoot(models.Model):
     @api.depends('move_finished_ids.move_line_ids.qty_done')
     def _get_produced_qty(self):
         for r in self:
-            r.qty_produced = sum(r.mapped('move_finished_ids.move_line_ids.qty_done'))
+            r.qty_produced = sum(r.move_finished_ids.move_line_ids.mapped('qty_done'))
     @api.onchange('qty_producing')
     def _onchange_producing(self):
         production_move = self.move_finished_ids.filtered(
@@ -130,7 +130,7 @@ class TtuChild(models.Model):
     @api.depends('move_line_ids.qty_done')
     def _quantity_done_compute(self):
         for move in self:
-            move.quantity_done = sum(move.mapped('move_line_ids.qty_done'))
+            move.quantity_done = sum(move.move_line_ids.mapped('qty_done'))
 
     def _quantity_done_set(self):
         quantity_done = self[0].quantity_done  # any call to create will invalidate `move.quantity_done`

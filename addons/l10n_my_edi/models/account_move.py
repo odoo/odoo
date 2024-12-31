@@ -459,7 +459,7 @@ class AccountMove(models.Model):
 
         invoices_per_company = invoices.grouped('company_id')
         # Use _notify_progress to ensure that we continue if all batches have not been done in time..
-        total_submissions_to_process = len(invoices.mapped('l10n_my_edi_submission_uid'))
+        total_submissions_to_process = len(invoices.l10n_my_edi_submission_uid)
         submission_processed = 0
         self.env['ir.cron']._notify_progress(done=submission_processed, remaining=total_submissions_to_process - submission_processed)
         for company, company_invoices in invoices_per_company.items():

@@ -597,12 +597,6 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertEqual(ps.filtered(lambda p: p.employee), customers)
         self.assertEqual(ps.filtered('employee'), customers)
 
-        # filter on a sequence of fields
-        self.assertEqual(
-            ps.filtered(lambda p: p.parent_id.employee),
-            ps.filtered('parent_id.employee')
-        )
-
     @mute_logger('odoo.models')
     def test_80_map(self):
         """ Check map on recordsets. """
@@ -620,10 +614,6 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertEqual(
             ps.mapped(lambda p: p.parent_id.name),
             [p.parent_id.name for p in ps]
-        )
-        self.assertEqual(
-            ps.mapped('parent_id.name'),
-            [p.name for p in parents]
         )
         self.assertEqual(
             ps.parent_id.mapped('name'),

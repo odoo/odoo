@@ -7,7 +7,7 @@ import re
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Domain
-from odoo.tools import frozendict, float_compare, format_list, Query, SQL
+from odoo.tools import frozendict, float_compare, format_list, OrderedSet, Query, SQL
 from odoo.addons.web.controllers.utils import clean_action
 
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
@@ -1287,7 +1287,7 @@ class AccountMoveLine(models.Model):
 
             is_refund = base_aml.is_refund
             repartition_field = is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids'
-            return taxes.mapped(repartition_field)
+            return taxes[repartition_field]
 
         for aml in self:
             caba_taxes = aml.tax_ids.filtered(lambda x: x.tax_exigibility == 'on_payment')
@@ -2198,7 +2198,11 @@ class AccountMoveLine(models.Model):
             raise UserError(_("You are trying to reconcile some entries that are already reconciled."))
         if any(aml.parent_state != 'posted' for aml in self):
             raise UserError(_("You can only reconcile posted entries."))
-        accounts = self.mapped(lambda x: x._get_reconciliation_aml_field_value('account_id', shadowed_aml_values))
+        accounts = self.account_id.browse(OrderedSet(
+            account.id
+            for aml in self
+            for account in aml._get_reconciliation_aml_field_value('account_id', shadowed_aml_values)
+        ))
         if len(accounts) > 1:
             raise UserError(_(
                 "Entries are not from the same account: %s",

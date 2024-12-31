@@ -2136,7 +2136,11 @@ class Website(models.Model):
             if indirect_fields:
                 records = model.search(domain, limit=limit)
                 for indirect_field in indirect_fields:
-                    for value in records.mapped(indirect_field):
+                    indirect_records = records
+                    *path_parts, last_name = indirect_field.split('.')
+                    for path_part in path_parts:
+                        indirect_records = indirect_records[path_part]
+                    for value in indirect_records.mapped(last_name):
                         if isinstance(value, str):
                             value = value.lower()
                             yield from re.findall(match_pattern, value)

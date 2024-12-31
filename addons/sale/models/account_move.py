@@ -24,7 +24,7 @@ class AccountMove(models.Model):
     sale_order_count = fields.Integer(compute="_compute_origin_so_count", string='Sale Order Count')
 
     def unlink(self):
-        downpayment_lines = self.mapped('line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.mapped('line_ids'))
+        downpayment_lines = self.line_ids.sale_line_ids.filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.line_ids)
         res = super(AccountMove, self).unlink()
         if downpayment_lines:
             downpayment_lines.unlink()
@@ -95,7 +95,7 @@ class AccountMove(models.Model):
         posted = super()._post(soft)
 
         for invoice in posted.filtered(lambda move: move.is_invoice()):
-            payments = invoice.mapped('transaction_ids.payment_id').filtered(lambda x: x.state == 'in_process')
+            payments = invoice.transaction_ids.payment_id.filtered(lambda x: x.state == 'in_process')
             move_lines = payments.move_id.line_ids.filtered(lambda line: line.account_type in ('asset_receivable', 'liability_payable') and not line.reconciled)
             for line in move_lines:
                 invoice.js_assign_outstanding_line(line.id)

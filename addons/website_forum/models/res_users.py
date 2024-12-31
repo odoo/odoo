@@ -11,7 +11,7 @@ class ResUsers(models.Model):
 
     # Wrapper for call_kw with inherits
     def open_website_url(self):
-        return self.mapped('partner_id').open_website_url()
+        return self.partner_id.open_website_url()
 
     def get_gamification_redirection_data(self):
         res = super().get_gamification_redirection_data()

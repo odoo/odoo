@@ -619,8 +619,8 @@ class SurveyQuestion(models.Model):
             question_data.update(
                 answer_line_ids=answer_lines,
                 answer_line_done_ids=done_lines,
-                answer_input_done_ids=done_lines.mapped('user_input_id'),
-                answer_input_ids=answer_lines.mapped('user_input_id'),
+                answer_input_done_ids=done_lines.user_input_id,
+                answer_input_ids=answer_lines.user_input_id,
                 comment_line_ids=comment_line_ids)
             question_data.update(question._get_stats_summary_data(answer_lines))
 
@@ -650,7 +650,7 @@ class SurveyQuestion(models.Model):
         choice.). A corner case with a void record survey.question.answer is added
         to count comments that should be considered as valid answers. This small hack
         allow to have everything available in the same standard structure. """
-        suggested_answers = [answer for answer in self.mapped('suggested_answer_ids')]
+        suggested_answers = list(self.suggested_answer_ids)
         if self.comment_count_as_answer:
             suggested_answers += [self.env['survey.question.answer']]
 
@@ -675,8 +675,8 @@ class SurveyQuestion(models.Model):
         return table_data, graph_data
 
     def _get_stats_graph_data_matrix(self, user_input_lines):
-        suggested_answers = self.mapped('suggested_answer_ids')
-        matrix_rows = self.mapped('matrix_row_ids')
+        suggested_answers = self.suggested_answer_ids
+        matrix_rows = self.matrix_row_ids
 
         count_data = dict.fromkeys(itertools.product(matrix_rows, suggested_answers), 0)
         for line in user_input_lines:
@@ -742,13 +742,13 @@ class SurveyQuestion(models.Model):
         right_answers = self.suggested_answer_ids.filtered(lambda label: label.is_correct)
         if self.question_type == 'multiple_choice':
             for user_input, lines in tools.groupby(user_input_lines, operator.itemgetter('user_input_id')):
-                user_input_answers = self.env['survey.user_input.line'].concat(*lines).filtered(lambda l: l.answer_is_correct).mapped('suggested_answer_id')
+                user_input_answers = self.env['survey.user_input.line'].concat(*lines).filtered(lambda l: l.answer_is_correct).suggested_answer_id
                 if user_input_answers and user_input_answers < right_answers:
                     partial_inputs += user_input
                 elif user_input_answers:
                     right_inputs += user_input
         else:
-            right_inputs = user_input_lines.filtered(lambda line: line.answer_is_correct).mapped('user_input_id')
+            right_inputs = user_input_lines.filtered(lambda line: line.answer_is_correct).user_input_id
         return {
             'right_answers': right_answers,
             'right_inputs_count': len(right_inputs),
@@ -769,7 +769,7 @@ class SurveyQuestion(models.Model):
             'common_lines': collections.Counter(
                 user_input_lines.filtered(lambda line: not line.skipped).mapped('value_%s' % self.question_type)
             ).most_common(5),
-            'right_inputs_count': len(user_input_lines.filtered(lambda line: line.answer_is_correct).mapped('user_input_id'))
+            'right_inputs_count': len(user_input_lines.filtered(lambda line: line.answer_is_correct).user_input_id)
         }
 
     # ------------------------------------------------------------

@@ -256,7 +256,7 @@ class PurchaseOrder(models.Model):
     def _merge_alternative_po(self, rfqs):
         if self.alternative_po_ids:
             super()._merge_alternative_po(rfqs)
-            self.alternative_po_ids += rfqs.mapped('alternative_po_ids')
+            self.alternative_po_ids += rfqs.alternative_po_ids
 
 
 class PurchaseOrderLine(models.Model):
@@ -315,7 +315,7 @@ class PurchaseOrderLine(models.Model):
         return False
 
     def action_choose(self):
-        order_lines = (self.order_id | self.order_id.alternative_po_ids).mapped('order_line')
+        order_lines = (self.order_id | self.order_id.alternative_po_ids).order_line
         order_lines = order_lines.filtered(lambda l: l.product_qty and l.product_id.id in self.product_id.ids and l.id not in self.ids)
         if order_lines:
             return order_lines.action_clear_quantities()

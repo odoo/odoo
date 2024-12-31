@@ -664,7 +664,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # Deliver the three finished products
         pick = self.so.picking_ids
         # To check the products on the picking
-        self.assertEqual(pick.move_ids.mapped('product_id'), self.component1 | self.component2)
+        self.assertEqual(pick.move_ids.product_id, self.component1 | self.component2)
         pick.button_validate()
         # Create the invoice
         self.so._create_invoices()

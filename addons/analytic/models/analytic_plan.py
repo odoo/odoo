@@ -211,8 +211,7 @@ class AccountAnalyticPlan(models.Model):
         # If we have accounts that are already selected (before the applicability rules changed or from a model),
         # we want the plans that were unavailable to be shown in the list (and in optional, because the previous
         # percentage could be different from 0)
-        forced_plans = self.env['account.analytic.account'].browse(record_account_ids).exists().mapped(
-            'root_plan_id') - root_plans
+        forced_plans = self.env['account.analytic.account'].browse(record_account_ids).exists().root_plan_id - root_plans
         return [
             {
                 "id": plan.id,

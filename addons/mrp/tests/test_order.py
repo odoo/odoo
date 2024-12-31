@@ -213,16 +213,16 @@ class TestMrpOrder(TestMrpCommon):
         details_operation_form.save()
 
         self.assertEqual(len(mo.move_raw_ids), 2)
-        self.assertEqual(len(mo.move_raw_ids.mapped('move_line_ids')), 2)
+        self.assertEqual(len(mo.move_raw_ids.move_line_ids), 2)
         self.assertEqual(mo.move_raw_ids[0].move_line_ids.mapped('quantity'), [2])
         self.assertEqual(mo.move_raw_ids[1].move_line_ids.mapped('quantity'), [11])
         self.assertEqual(mo.move_raw_ids[0].quantity, 2)
         self.assertEqual(mo.move_raw_ids[1].quantity, 11)
         mo.button_mark_done()
         self.assertEqual(len(mo.move_raw_ids), 2)
-        self.assertEqual(len(mo.move_raw_ids.mapped('move_line_ids')), 2)
+        self.assertEqual(len(mo.move_raw_ids.move_line_ids), 2)
         self.assertEqual(mo.move_raw_ids.mapped('quantity'), [2, 11])
-        self.assertEqual(mo.move_raw_ids.mapped('move_line_ids.quantity'), [2, 11])
+        self.assertEqual(mo.move_raw_ids.move_line_ids.mapped('quantity'), [2, 11])
 
     def test_under_consumption(self):
         """ Consume less component quantity than the initial demand.
@@ -249,18 +249,18 @@ class TestMrpOrder(TestMrpCommon):
         details_operation_form.save()
 
         self.assertEqual(len(mo.move_raw_ids), 2)
-        self.assertEqual(len(mo.move_raw_ids.mapped('move_line_ids')), 2)
+        self.assertEqual(len(mo.move_raw_ids.move_line_ids), 2)
         self.assertEqual(mo.move_raw_ids[0].move_line_ids.mapped('quantity'), [0])
         self.assertEqual(mo.move_raw_ids[1].move_line_ids.mapped('quantity'), [5])
         self.assertEqual(mo.move_raw_ids[0].quantity, 0)
         self.assertEqual(mo.move_raw_ids[1].quantity, 5)
         mo.button_mark_done()
         self.assertEqual(len(mo.move_raw_ids), 2)
-        self.assertEqual(len(mo.move_raw_ids.mapped('move_line_ids')), 1)
+        self.assertEqual(len(mo.move_raw_ids.move_line_ids), 1)
         self.assertEqual(mo.move_raw_ids.mapped('quantity'), [0, 5])
         self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [1, 10])
         self.assertEqual(mo.move_raw_ids.mapped('state'), ['cancel', 'done'])
-        self.assertEqual(mo.move_raw_ids.mapped('move_line_ids.quantity'), [5])
+        self.assertEqual(mo.move_raw_ids.move_line_ids.mapped('quantity'), [5])
 
     def test_update_quantity_1(self):
         """ Build 5 final products with different consumed lots,
@@ -761,8 +761,8 @@ class TestMrpOrder(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 1)
 
         mo.action_assign()
-        ml_p1 = mo.move_raw_ids.filtered(lambda x: x.product_id == p1).mapped('move_line_ids')
-        ml_p2 = mo.move_raw_ids.filtered(lambda x: x.product_id == p2).mapped('move_line_ids')
+        ml_p1 = mo.move_raw_ids.filtered(lambda x: x.product_id == p1).move_line_ids
+        ml_p2 = mo.move_raw_ids.filtered(lambda x: x.product_id == p2).move_line_ids
         self.assertEqual(len(ml_p1), 2)
         self.assertEqual(len(ml_p2), 1)
 
@@ -772,7 +772,7 @@ class TestMrpOrder(TestMrpCommon):
         mo = mo_form.save()
 
         m_p1 = mo.move_raw_ids.filtered(lambda x: x.product_id == p1)
-        ml_p1 = m_p1.mapped('move_line_ids')
+        ml_p1 = m_p1.move_line_ids
         self.assertEqual(len(ml_p1), 2)
         self.assertEqual(sorted(ml_p1.mapped('quantity')), [2.0, 3.0], 'Quantity should be 2.0 and 3.0')
         self.assertEqual(m_p1.quantity, 5.0, 'Total qty done should be 5.0')
@@ -1165,15 +1165,15 @@ class TestMrpOrder(TestMrpCommon):
         details_operation_form.save()
 
         mo2.button_mark_done()
-        move_lines_byproduct_1 = (mo | mo2).move_finished_ids.filtered(lambda l: l.product_id == self.byproduct1).mapped('move_line_ids')
-        move_lines_byproduct_2 = (mo | mo2).move_finished_ids.filtered(lambda l: l.product_id == self.byproduct2).mapped('move_line_ids')
-        move_lines_byproduct_3 = (mo | mo2).move_finished_ids.filtered(lambda l: l.product_id == self.byproduct3).mapped('move_line_ids')
+        move_lines_byproduct_1 = (mo | mo2).move_finished_ids.filtered(lambda l: l.product_id == self.byproduct1).move_line_ids
+        move_lines_byproduct_2 = (mo | mo2).move_finished_ids.filtered(lambda l: l.product_id == self.byproduct2).move_line_ids
+        move_lines_byproduct_3 = (mo | mo2).move_finished_ids.filtered(lambda l: l.product_id == self.byproduct3).move_line_ids
         self.assertEqual(move_lines_byproduct_1.filtered(lambda ml: ml.lot_id == self.serial_1).quantity, 1.0)
         self.assertEqual(move_lines_byproduct_1.filtered(lambda ml: ml.lot_id == self.serial_2).quantity, 1.0)
         self.assertEqual(move_lines_byproduct_2.filtered(lambda ml: ml.lot_id == self.lot_1).quantity, 2.0)
         self.assertEqual(move_lines_byproduct_2.filtered(lambda ml: ml.lot_id == self.lot_2).quantity, 2.0)
         self.assertEqual(sum(move_lines_byproduct_3.mapped('quantity')), 5.0)
-        self.assertEqual(move_lines_byproduct_3.mapped('product_uom_id'), dozen)
+        self.assertEqual(move_lines_byproduct_3.product_uom_id, dozen)
 
     def test_product_produce_11(self):
         """ Checks that, for a BOM with two components, when creating a manufacturing order for one
@@ -1811,7 +1811,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.lot_producing_id = final_product_lot
         mo = mo_form.save()
 
-        move_line_raw = mo.move_raw_ids.mapped('move_line_ids').filtered(lambda m: m.quantity)
+        move_line_raw = mo.move_raw_ids.move_line_ids.filtered(lambda m: m.quantity)
         self.assertEqual(move_line_raw.quantity, 1)
         self.assertEqual(move_line_raw.product_uom_id, unit, 'Should be 1 unit since the tracking is serial.')
 
@@ -4427,7 +4427,7 @@ class TestMrpOrder(TestMrpCommon):
         bom.operation_ids.time_mode = 'manual'
         bom.operation_ids.time_cycle_manual = 60.0
         product = bom.product_id
-        component_1, component_2 = bom.bom_line_ids.mapped('product_id')
+        component_1, component_2 = bom.bom_line_ids.product_id
         stock_location = self.env.ref('stock.stock_location_stock')
         self.env['stock.quant']._update_available_quantity(component_1, stock_location, 50.0)
         self.env['stock.quant']._update_available_quantity(component_2, stock_location, 50.0)
@@ -4576,7 +4576,7 @@ class TestMrpOrder(TestMrpCommon):
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.move_finished_ids.lot_ids, producing_lot)
-        self.assertEqual(mo.move_finished_ids.move_line_ids.mapped('lot_id'), producing_lot)
+        self.assertEqual(mo.move_finished_ids.move_line_ids.lot_id, producing_lot)
         mo.qty_producing = 10.0
         self.assertTrue(all(sml.lot_id == producing_lot for sml in mo.move_finished_ids.move_line_ids))
         self.assertEqual(sum(sml.quantity for sml in mo.move_finished_ids.move_line_ids), 10.0)

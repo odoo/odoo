@@ -274,7 +274,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
     def test_transfer_wizard_reconcile(self):
         """ Tests reconciliation when doing a transfer with the wizard
         """
-        active_move_lines = (self.move_1 + self.move_2).mapped('line_ids').filtered(lambda x: x.account_id.account_type in ('asset_receivable', 'liability_payable'))
+        active_move_lines = (self.move_1 + self.move_2).line_ids.filtered(lambda x: x.account_id.account_type in ('asset_receivable', 'liability_payable'))
 
         # We use a form to pass the context properly to the depends_context move_line_ids field
         context = {'active_model': 'account.move.line', 'active_ids': active_move_lines.ids, 'default_action': 'change_account'}
@@ -299,7 +299,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
     def test_transfer_wizard_grouping(self):
         """ Tests grouping (by account and partner) when doing a transfer with the wizard
         """
-        active_move_lines = (self.move_1 + self.move_2).mapped('line_ids').filtered(lambda x: x.name in ('test1_3', 'test1_4', 'test1_5', 'test2_3', 'test2_4', 'test2_5', 'test2_6', 'test2_8'))
+        active_move_lines = (self.move_1 + self.move_2).line_ids.filtered(lambda x: x.name in ('test1_3', 'test1_4', 'test1_5', 'test2_3', 'test2_4', 'test2_5', 'test2_6', 'test2_8'))
 
         # We use a form to pass the context properly to the depends_context move_line_ids field
         context = {'active_model': 'account.move.line', 'active_ids': active_move_lines.ids, 'default_action': 'change_account'}
@@ -329,7 +329,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         """ Tests multi currency use of the transfer wizard, checking the conversion
         is propperly done when using a destination account with a currency_id set.
         """
-        active_move_lines = self.move_1.mapped('line_ids').filtered(lambda x: x.name in ('test1_6', 'test1_9'))
+        active_move_lines = self.move_1.line_ids.filtered(lambda x: x.name in ('test1_6', 'test1_9'))
 
         # We use a form to pass the context properly to the depends_context move_line_ids field
         context = {'active_model': 'account.move.line', 'active_ids': active_move_lines.ids, 'default_action': 'change_account'}
@@ -351,7 +351,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         currency amounts are kept on distinct lines when transferring to an
         account without any currency specified.
         """
-        active_move_lines = self.move_2.mapped('line_ids').filtered(lambda x: x.name in ('test2_9', 'test2_6', 'test2_8'))
+        active_move_lines = self.move_2.line_ids.filtered(lambda x: x.name in ('test2_9', 'test2_6', 'test2_8'))
 
         # We use a form to pass the context properly to the depends_context move_line_ids field
         context = {'active_model': 'account.move.line', 'active_ids': active_move_lines.ids, 'default_action': 'change_account'}

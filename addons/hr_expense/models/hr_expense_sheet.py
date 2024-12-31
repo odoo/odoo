@@ -330,7 +330,7 @@ class HrExpenseSheet(models.Model):
     def _compute_is_multiple_currency(self):
         for sheet in self:
             sheet.is_multiple_currency = any(sheet.expense_line_ids.mapped('is_multiple_currency')) \
-                                         or len(sheet.expense_line_ids.mapped('currency_id')) > 1
+                                         or len(sheet.expense_line_ids.currency_id) > 1
 
     @api.depends('employee_id')
     def _compute_can_reset(self):
@@ -421,14 +421,14 @@ class HrExpenseSheet(models.Model):
     @api.constrains('expense_line_ids')
     def _check_payment_mode(self):
         for sheet in self:
-            expense_lines = sheet.mapped('expense_line_ids')
+            expense_lines = sheet.expense_line_ids
             if expense_lines and any(expense.payment_mode != expense_lines[:1].payment_mode for expense in expense_lines):
                 raise ValidationError(_("All expenses in an expense report must have the same \"paid by\" criteria."))
 
     @api.depends('expense_line_ids')
     def _compute_product_ids(self):
         for sheet in self:
-            sheet.product_ids = sheet.expense_line_ids.mapped('product_id')
+            sheet.product_ids = sheet.expense_line_ids.product_id
 
     @api.constrains('expense_line_ids', 'employee_id')
     def _check_employee(self):

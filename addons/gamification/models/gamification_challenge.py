@@ -603,7 +603,7 @@ class GamificationChallenge(models.Model):
             # send to every follower and participant of the challenge
             challenge.message_post(
                 body=body_html,
-                partner_ids=challenge.mapped('user_ids.partner_id.id'),
+                partner_ids=challenge.user_ids.partner_id._ids,
                 subtype_xmlid='mail.mt_comment',
                 email_layout_xmlid='mail.mail_notification_light',
                 )

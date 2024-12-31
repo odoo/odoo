@@ -67,7 +67,7 @@ class PurchaseOrder(models.Model):
     @api.depends('order_line.invoice_lines.move_id')
     def _compute_invoice(self):
         for order in self:
-            invoices = order.mapped('order_line.invoice_lines.move_id')
+            invoices = order.order_line.invoice_lines.move_id
             order.invoice_ids = invoices
             order.invoice_count = len(invoices)
 
@@ -560,7 +560,7 @@ class PurchaseOrder(models.Model):
         for line in self.order_line:
             # Do not add a contact as a supplier
             partner = self.partner_id if not self.partner_id.parent_id else self.partner_id.parent_id
-            already_seller = (partner | self.partner_id) & line.product_id.seller_ids.mapped('partner_id')
+            already_seller = (partner | self.partner_id) & line.product_id.seller_ids.partner_id
             if line.product_id and not already_seller and len(line.product_id.seller_ids) <= 10:
                 price = line.price_unit
                 # Compute the price for the template's UoM, because the supplier's UoM is related to that UoM.
@@ -982,7 +982,7 @@ class PurchaseOrder(models.Model):
             ('state', 'in', ['purchase', 'done']),
             ('mail_reminder_confirmed', '=', False)
         ]).filtered(lambda p: p.partner_id.with_company(p.company_id).receipt_reminder_email and\
-            p.mapped('order_line.product_id.product_tmpl_id.type') != ['service'])
+            p.order_line.product_id.product_tmpl_id.mapped('type') != ['service'])
 
     def _default_order_line_values(self, child_field=False):
         default_data = super()._default_order_line_values(child_field)

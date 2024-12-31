@@ -55,7 +55,7 @@ class ProductWishlist(models.Model):
         """Assign all wishlist withtout partner from this the current session"""
         session_wishes = self.sudo().search([('id', 'in', request.session.get('wishlist_ids', []))])
         partner_wishes = self.sudo().search([("partner_id", "=", self.env.user.partner_id.id)])
-        partner_products = partner_wishes.mapped("product_id")
+        partner_products = partner_wishes.product_id
         # Remove session products already present for the user
         duplicated_wishes = session_wishes.filtered(lambda wish: wish.product_id <= partner_products)
         session_wishes -= duplicated_wishes
@@ -84,7 +84,7 @@ class ProductTemplate(models.Model):
 
     def _is_in_wishlist(self):
         self.ensure_one()
-        return self in self.env['product.wishlist'].current().mapped('product_id.product_tmpl_id')
+        return self in self.env['product.wishlist'].current().product_id.product_tmpl_id
 
 
 class ProductProduct(models.Model):
@@ -92,4 +92,4 @@ class ProductProduct(models.Model):
 
     def _is_in_wishlist(self):
         self.ensure_one()
-        return self in self.env['product.wishlist'].current().mapped('product_id')
+        return self in self.env['product.wishlist'].current().product_id

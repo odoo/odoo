@@ -42,7 +42,7 @@ def _uninstall_hook(env):
     update_action_window('project.open_view_project_all_group_stage')
 
     # archive the internal projects
-    project_ids = env['res.company'].search([('internal_project_id', '!=', False)]).mapped('internal_project_id')
+    project_ids = env['res.company'].search([('internal_project_id', '!=', False)]).internal_project_id
     if project_ids:
         project_ids.write({'active': False})
 

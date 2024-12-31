@@ -69,9 +69,9 @@ class SurveyUser_Input(models.Model):
             total_possible_score = 0
             for question in user_input.predefined_question_ids:
                 if question.question_type == 'simple_choice':
-                    total_possible_score += max([score for score in question.mapped('suggested_answer_ids.answer_score') if score > 0], default=0)
+                    total_possible_score += max([score for score in question.suggested_answer_ids.mapped('answer_score') if score > 0], default=0)
                 elif question.question_type == 'multiple_choice':
-                    total_possible_score += sum(score for score in question.mapped('suggested_answer_ids.answer_score') if score > 0)
+                    total_possible_score += sum(score for score in question.suggested_answer_ids.mapped('answer_score') if score > 0)
                 elif question.is_scored_question:
                     total_possible_score += question.answer_score
 
@@ -436,7 +436,7 @@ class SurveyUser_Input(models.Model):
             'by_section': {}
         }) for user_input in self)
 
-        scored_questions = self.mapped('predefined_question_ids').filtered(lambda question: question.is_scored_question)
+        scored_questions = self.predefined_question_ids.filtered(lambda question: question.is_scored_question)
 
         for question in scored_questions:
             if question.question_type == 'simple_choice':
@@ -490,7 +490,7 @@ class SurveyUser_Input(models.Model):
         return res
 
     def _multiple_choice_question_answer_result(self, user_input_lines, question_correct_suggested_answers):
-        correct_user_input_lines = user_input_lines.filtered(lambda line: line.answer_is_correct and not line.skipped).mapped('suggested_answer_id')
+        correct_user_input_lines = user_input_lines.filtered(lambda line: line.answer_is_correct and not line.skipped).suggested_answer_id
         incorrect_user_input_lines = user_input_lines.filtered(lambda line: not line.answer_is_correct and not line.skipped)
         if question_correct_suggested_answers and correct_user_input_lines == question_correct_suggested_answers:
             return 'correct'
@@ -569,7 +569,7 @@ class SurveyUser_Input(models.Model):
         Maybe someday, conditional questions feature will be extended to work with matrix question.
         :return: all the suggested answer selected by the user.
         """
-        return self.mapped('user_input_line_ids.suggested_answer_id')
+        return self.user_input_line_ids.suggested_answer_id
 
     def _clear_inactive_conditional_answers(self):
         """
@@ -629,7 +629,7 @@ class SurveyUser_Input(models.Model):
             return self.env['survey.question']
 
         page_or_question_key = 'page_id' if self.survey_id.questions_layout == 'page_per_section' else 'question_id'
-        page_or_question_ids = skipped_mandatory_answer_ids.mapped(page_or_question_key).sorted()
+        page_or_question_ids = skipped_mandatory_answer_ids[page_or_question_key].sorted()
 
         if self.last_displayed_page_id not in page_or_question_ids\
             or self.last_displayed_page_id == page_or_question_ids[-1]:

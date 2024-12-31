@@ -23,14 +23,14 @@ class ReportStockReport_Stock_Rule(models.AbstractModel):
         # Some routes don't have a warehouse_id but contain rules of different warehouses,
         # we filter here the ones we want to display and build for each one a dict containing the rule,
         # their source and destination location.
-        relevant_rules = routes.mapped('rule_ids').filtered(lambda r: not r.warehouse_id or r.warehouse_id in warehouses)
+        relevant_rules = routes.rule_ids.filtered(lambda r: not r.warehouse_id or r.warehouse_id in warehouses)
         rules_and_loc = []
         for rule in relevant_rules:
             rules_and_loc.append(self._get_rule_loc(rule, product))
 
         locations = self._sort_locations(rules_and_loc, warehouses)
         reordering_rules = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', product.id)])
-        locations |= reordering_rules.mapped('location_id').filtered(lambda l: l not in locations)
+        locations |= reordering_rules.location_id.filtered(lambda l: l not in locations)
         locations_names = locations.mapped('display_name')
         # Here we handle reordering rules and putaway strategies by creating the header_lines dict. This dict is indexed
         # by location_id and contains itself another dict with the relevant reordering rules and putaway strategies.
@@ -80,7 +80,7 @@ class ReportStockReport_Stock_Rule(models.AbstractModel):
         """
         product = self.env['product.product'].browse(data['product_id'])
         warehouse_ids = self.env['stock.warehouse'].browse(data['warehouse_ids'])
-        return product.route_ids | product.categ_id.total_route_ids | warehouse_ids.mapped('route_ids')
+        return product.route_ids | product.categ_id.total_route_ids | warehouse_ids.route_ids
 
     @api.model
     def _get_rule_loc(self, rule, product):

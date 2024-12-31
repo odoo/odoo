@@ -11,7 +11,7 @@ class ResCurrency(models.Model):
     _inherit = 'res.currency'
 
     def _get_fiscal_country_codes(self):
-        return ','.join(self.env.companies.mapped('account_fiscal_country_id.code'))
+        return ','.join(self.env.companies.account_fiscal_country_id.mapped('code'))
 
     display_rounding_warning = fields.Boolean(string="Display Rounding Warning", compute='_compute_display_rounding_warning',
         help="The warning informs a rounding factor change might be dangerous on res.currency's form view.")

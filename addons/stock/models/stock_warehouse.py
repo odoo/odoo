@@ -248,7 +248,7 @@ class StockWarehouse(models.Model):
                 if move_ids:
                     raise UserError(_(
                         'You still have ongoing operations for operation types %(operations)s in warehouse %(warehouse)s',
-                        operations=format_list(self.env, move_ids.mapped('picking_type_id.name')),
+                        operations=format_list(self.env, move_ids.picking_type_id.mapped('name')),
                         warehouse=warehouse.name,
                     ))
                 else:
@@ -937,7 +937,7 @@ class StockWarehouse(models.Model):
 
     def _update_name_and_code(self, new_name=False, new_code=False):
         if new_code:
-            self.mapped('lot_stock_id').mapped('location_id').write({'name': new_code})
+            self.lot_stock_id.location_id.write({'name': new_code})
         if new_name:
             # TDE FIXME: replacing the route name ? not better to re-generate the route naming ?
             for warehouse in self:
@@ -963,12 +963,12 @@ class StockWarehouse(models.Model):
             warehouse.xdock_type_id.sequence_id.write(sequence_data['xdock_type_id'])
 
     def _update_location_reception(self, new_reception_step):
-        self.mapped('wh_qc_stock_loc_id').write({'active': new_reception_step == 'three_steps'})
-        self.mapped('wh_input_stock_loc_id').write({'active': new_reception_step != 'one_step'})
+        self.wh_qc_stock_loc_id.write({'active': new_reception_step == 'three_steps'})
+        self.wh_input_stock_loc_id.write({'active': new_reception_step != 'one_step'})
 
     def _update_location_delivery(self, new_delivery_step):
-        self.mapped('wh_pack_stock_loc_id').write({'active': new_delivery_step == 'pick_pack_ship'})
-        self.mapped('wh_output_stock_loc_id').write({'active': new_delivery_step != 'ship_only'})
+        self.wh_pack_stock_loc_id.write({'active': new_delivery_step == 'pick_pack_ship'})
+        self.wh_output_stock_loc_id.write({'active': new_delivery_step != 'ship_only'})
 
     # Misc
     # ------------------------------------------------------------
@@ -1163,7 +1163,7 @@ class StockWarehouse(models.Model):
         return '%s: %s' % (self.name, name)
 
     def _get_all_routes(self):
-        routes = self.mapped('route_ids') | self.mapped('mto_pull_id').mapped('route_id')
+        routes = self.route_ids | self.mto_pull_id.route_id
         routes |= self.env["stock.route"].with_context(active_test=False).search([('supplied_wh_id', 'in', self.ids)])
         return routes
 

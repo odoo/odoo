@@ -444,7 +444,7 @@ class ForumPost(models.Model):
 
     def _notify_state_update(self):
         for post in self:
-            tag_partners = post.tag_ids.sudo().mapped('message_partner_ids')
+            tag_partners = post.tag_ids.sudo().message_partner_ids
 
             if post.state == 'active' and post.parent_id:
                 post.parent_id.message_post_with_source(
@@ -762,7 +762,7 @@ class ForumPost(models.Model):
                     ('res_model', '=', self._name),
                     ('res_id', '=', self.parent_id.id),
                     ('partner_id', '!=', False),
-                ]).filtered(lambda fol: comment_subtype in fol.subtype_ids).mapped('partner_id')
+                ]).filtered(lambda fol: comment_subtype in fol.subtype_ids).partner_id
                 partner_ids += question_followers.ids
                 kwargs['partner_ids'] = partner_ids
 

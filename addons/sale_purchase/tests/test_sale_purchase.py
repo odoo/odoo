@@ -219,7 +219,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
 
         self.assertEqual(purchase_line.product_qty, sale_line_old_quantity, "The quantity on the PO line should not have changed.")
         self.assertEqual(len(purchase_order.activity_ids), 2, "a second activity should have been created on the PO")
-        self.assertEqual(purchase_order.activity_ids.mapped('user_id'), purchase_order.user_id, "Activities assigned to PO responsible")
+        self.assertEqual(purchase_order.activity_ids.user_id, purchase_order.user_id, "Activities assigned to PO responsible")
         self.assertEqual(purchase_order.activity_ids.mapped('state'), ['today', 'today'], "Activities are for today, as it is urgent")
 
         # increase the ordered quantity on sale line

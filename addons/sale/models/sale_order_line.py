@@ -1244,7 +1244,7 @@ class SaleOrderLine(models.Model):
         ]
 
     def _update_line_quantity(self, values):
-        orders = self.mapped('order_id')
+        orders = self.order_id
         for order in orders:
             order_lines = self.filtered(lambda x: x.order_id == order)
             msg = Markup("<b>%s</b><ul>") % _("The ordered quantity has been updated.")

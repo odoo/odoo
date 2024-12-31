@@ -74,7 +74,7 @@ class AccountMove(models.Model):
         if not invoices:
             return
 
-        company_ids = invoices.mapped('company_id')
+        company_ids = invoices.company_id
         # since the middleware accepts only one drive at a time, we have to limit signing to one company at a time
         if len(company_ids) > 1:
             raise UserError(_('Please only sign invoices from one company at a time'))

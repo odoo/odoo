@@ -10,7 +10,7 @@ class PosOrder(models.Model):
     @api.depends('lines.event_registration_ids')
     def _compute_attendee_count(self):
         for order in self:
-            order.attendee_count = len(order.lines.mapped('event_registration_ids'))
+            order.attendee_count = len(order.lines.event_registration_ids)
 
     def action_view_attendee_list(self):
         action = self.env["ir.actions.actions"]._for_xml_id("event.event_registration_action_tree")
@@ -25,15 +25,15 @@ class PosOrder(models.Model):
         if not paid_orders:
             return results
 
-        lines_with_event = paid_orders.mapped('lines').filtered(lambda line: line.event_ticket_id)
+        lines_with_event = paid_orders.lines.filtered(lambda line: line.event_ticket_id)
         event_event_fields = self.env['event.event']._load_pos_data_fields(paid_orders[0].config_id.id)
         event_ticket_fields = self.env['event.event.ticket']._load_pos_data_fields(paid_orders[0].config_id.id)
         event_registrations_fields = self.env['event.registration']._load_pos_data_fields(paid_orders[0].config_id.id)
         event_registrations_answer_fields = self.env['event.registration.answer']._load_pos_data_fields(paid_orders[0].config_id.id)
         results['event.registration'] = lines_with_event.event_registration_ids.read(event_registrations_fields, load=False)
-        results['event.event'] = lines_with_event.event_registration_ids.mapped('event_id').read(event_event_fields, load=False)
-        results['event.event.ticket'] = lines_with_event.event_registration_ids.mapped('event_ticket_id').read(event_ticket_fields, load=False)
-        results['event.registration.answer'] = lines_with_event.event_registration_ids.mapped('registration_answer_ids').read(event_registrations_answer_fields, load=False)
+        results['event.event'] = lines_with_event.event_registration_ids.event_id.read(event_event_fields, load=False)
+        results['event.event.ticket'] = lines_with_event.event_registration_ids.event_ticket_id.read(event_ticket_fields, load=False)
+        results['event.registration.answer'] = lines_with_event.event_registration_ids.registration_answer_ids.read(event_registrations_answer_fields, load=False)
 
         for registration in lines_with_event.event_registration_ids:
             if registration.email:

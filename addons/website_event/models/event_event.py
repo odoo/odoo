@@ -392,7 +392,7 @@ class EventEvent(models.Model):
                 new_menu = self._create_menu(menu_sequence, name, url, xml_id, menu_type)
         elif not self[fname_bool]:
             # will cascade delete to the website.event.menu
-            self[fname_o2m].mapped('menu_id').sudo().unlink()
+            self[fname_o2m].menu_id.sudo().unlink()
 
         return new_menu
 

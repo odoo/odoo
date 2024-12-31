@@ -42,7 +42,7 @@ class GamificationBadge(models.Model):
             ])
 
     def get_granted_employees(self):
-        employee_ids = self.mapped('owner_ids.employee_id').ids
+        employee_ids = self.owner_ids.employee_id.ids
         return {
             'type': 'ir.actions.act_window',
             'name': 'Granted Employees',

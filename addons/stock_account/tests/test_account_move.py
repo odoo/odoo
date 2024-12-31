@@ -66,16 +66,16 @@ class TestAccountMove(TestAccountMoveStockCommon):
         invoice = move_form.save()
 
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
-        self.assertEqual(len(invoice.mapped("line_ids")), 2)
-        self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 1)
+        self.assertEqual(len(invoice.line_ids), 2)
+        self.assertEqual(len(invoice.line_ids.currency_id), 1)
 
         invoice._post()
 
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_residual)
-        self.assertEqual(len(invoice.mapped("line_ids")), 4)
-        self.assertEqual(len(invoice.mapped("line_ids").filtered(lambda l: l.display_type == 'cogs')), 2)
-        self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 2)
+        self.assertEqual(len(invoice.line_ids), 4)
+        self.assertEqual(len(invoice.line_ids.filtered(lambda l: l.display_type == 'cogs')), 2)
+        self.assertEqual(len(invoice.line_ids.currency_id), 2)
 
     def test_fifo_perpetual_01_mc_01(self):
         self.product_A.categ_id.property_cost_method = "fifo"
@@ -90,16 +90,16 @@ class TestAccountMove(TestAccountMoveStockCommon):
         invoice = move_form.save()
 
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
-        self.assertEqual(len(invoice.mapped("line_ids")), 2)
-        self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 1)
+        self.assertEqual(len(invoice.line_ids), 2)
+        self.assertEqual(len(invoice.line_ids.currency_id), 1)
 
         invoice._post()
 
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_residual)
-        self.assertEqual(len(invoice.mapped("line_ids")), 4)
-        self.assertEqual(len(invoice.mapped("line_ids").filtered(lambda l: l.display_type == 'cogs')), 2)
-        self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 2)
+        self.assertEqual(len(invoice.line_ids), 4)
+        self.assertEqual(len(invoice.line_ids.filtered(lambda l: l.display_type == 'cogs')), 2)
+        self.assertEqual(len(invoice.line_ids.currency_id), 2)
 
     def test_average_perpetual_01_mc_01(self):
         self.product_A.categ_id.property_cost_method = "average"
@@ -114,16 +114,16 @@ class TestAccountMove(TestAccountMoveStockCommon):
         invoice = move_form.save()
 
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
-        self.assertEqual(len(invoice.mapped("line_ids")), 2)
-        self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 1)
+        self.assertEqual(len(invoice.line_ids), 2)
+        self.assertEqual(len(invoice.line_ids.currency_id), 1)
 
         invoice._post()
 
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_residual)
-        self.assertEqual(len(invoice.mapped("line_ids")), 4)
-        self.assertEqual(len(invoice.mapped("line_ids").filtered(lambda l: l.display_type == 'cogs')), 2)
-        self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 2)
+        self.assertEqual(len(invoice.line_ids), 4)
+        self.assertEqual(len(invoice.line_ids.filtered(lambda l: l.display_type == 'cogs')), 2)
+        self.assertEqual(len(invoice.line_ids.currency_id), 2)
 
     def test_storno_accounting(self):
         """Storno accounting uses negative numbers on debit/credit to cancel other moves.
@@ -171,14 +171,14 @@ class TestAccountMove(TestAccountMoveStockCommon):
         tax_totals['subtotals'][0]['tax_groups'][0]['tax_amount_currency'] = 14.0
         invoice.tax_totals = tax_totals
 
-        self.assertEqual(len(invoice.mapped("line_ids")), 3)
+        self.assertEqual(len(invoice.line_ids), 3)
         self.assertEqual(invoice.amount_total, 114)
         self.assertEqual(invoice.amount_untaxed, 100)
         self.assertEqual(invoice.amount_tax, 14)
 
         invoice._post()
 
-        self.assertEqual(len(invoice.mapped("line_ids")), 5)
+        self.assertEqual(len(invoice.line_ids), 5)
         self.assertEqual(invoice.amount_total, 114)
         self.assertEqual(invoice.amount_untaxed, 100)
         self.assertEqual(invoice.amount_tax, 14)

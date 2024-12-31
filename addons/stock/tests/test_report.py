@@ -1746,8 +1746,8 @@ class TestReports(TestReportsCommon):
 
         # check that delivery move splits correctly when receipt move is assigned to it
         self.assertEqual(len(delivery.move_ids_without_package), 2, "Delivery moves should have split into assigned + not assigned")
-        self.assertEqual(len(delivery.move_ids_without_package.mapped('move_orig_ids')), 1, "Only 1 delivery + 1 receipt move should be assigned")
-        self.assertEqual(len(receipt.move_ids_without_package.mapped('move_dest_ids')), 1, "Receipt move should remain unsplit")
+        self.assertEqual(len(delivery.move_ids_without_package.move_orig_ids), 1, "Only 1 delivery + 1 receipt move should be assigned")
+        self.assertEqual(len(receipt.move_ids_without_package.move_dest_ids), 1, "Receipt move should remain unsplit")
 
         # check that assigned (MTO) move is correctly created
         self.assertEqual(len(mto_move), 1, "Only 1 delivery move should be MTO")

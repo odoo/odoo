@@ -774,7 +774,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                     if values.get('employee_id'):
                         employees = self.env['hr.employee'].browse(values.get('employee_id'))
                     else:
-                        employees = self.mapped('employee_id')
+                        employees = self.employee_id
                     self._check_double_validation_rules(employees, values['state'])
             if 'date_from' in values:
                 values['request_date_from'] = values['date_from']
@@ -1039,7 +1039,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         current_employee = self.env.user.employee_id
         leaves = self._get_leaves_on_public_holiday()
         if leaves:
-            raise ValidationError(_('The following employees are not supposed to work during that period:\n %s') % ','.join(leaves.mapped('employee_id.name')))
+            raise ValidationError(_('The following employees are not supposed to work during that period:\n %s') % ','.join(leaves.employee_id.mapped('name')))
         if check_state and any(holiday.state not in ['confirm', 'validate1'] and holiday.validation_type != 'no_validation' for holiday in self):
             raise UserError(_('Time off request must be confirmed in order to approve it.'))
 
@@ -1072,7 +1072,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         validated_holidays.write({'state': 'refuse', 'first_approver_id': current_employee.id})
         (self - validated_holidays).write({'state': 'refuse', 'second_approver_id': current_employee.id})
         # Delete the meeting
-        self.mapped('meeting_id').write({'active': False})
+        self.meeting_id.write({'active': False})
         # Post a second message, more verbose than the tracking message
         for holiday in self:
             if holiday.employee_id.user_id:

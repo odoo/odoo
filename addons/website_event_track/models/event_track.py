@@ -543,7 +543,7 @@ class EventTrack(models.Model):
     def open_track_speakers_list(self):
         return {
             'name': _('Speakers'),
-            'domain': [('id', 'in', self.mapped('partner_id').ids)],
+            'domain': [('id', 'in', self.partner_id.ids)],
             'view_mode': 'kanban,form',
             'res_model': 'res.partner',
             'view_id': False,

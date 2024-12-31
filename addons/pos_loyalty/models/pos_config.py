@@ -29,7 +29,7 @@ class PosConfig(models.Model):
                         reward_product=product.name,
                     )
         gift_card_programs = self._get_program_ids().filtered(lambda p: p.program_type == 'gift_card')
-        for product in gift_card_programs.mapped('rule_ids.valid_product_ids'):
+        for product in gift_card_programs.rule_ids.valid_product_ids:
             if product.available_in_pos:
                 continue
             invalid_reward_products_msg += "\n\t"

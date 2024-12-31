@@ -62,7 +62,7 @@ class SaleOrder(models.Model):
     @api.depends('order_line.product_uom_qty', 'order_line.product_id')
     def _compute_cart_info(self):
         for order in self:
-            order.cart_quantity = int(sum(order.mapped('website_order_line.product_uom_qty')))
+            order.cart_quantity = int(sum(order.website_order_line.mapped('product_uom_qty')))
             order.only_services = all(sol.product_id.type == 'service' for sol in order.website_order_line)
 
     @api.depends('website_id', 'date_order', 'order_line', 'state', 'partner_id')
@@ -210,7 +210,7 @@ class SaleOrder(models.Model):
         otherwise we return the default template.
         If the default is not found, the empty ['mail.template'] is returned.
         """
-        websites = self.mapped('website_id')
+        websites = self.website_id
         template = websites.cart_recovery_mail_template_id if len(websites) == 1 else False
         template = template or self.env.ref('website_sale.mail_template_sale_cart_recovery', raise_if_not_found=False)
         return template or self.env['mail.template']

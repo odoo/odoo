@@ -98,5 +98,5 @@ class ProjectProject(models.Model):
         if not expenses_read_group:
             return move_line_ids
         for sale_order, count in expenses_read_group:
-            move_line_ids.extend(sale_order.invoice_ids.mapped('invoice_line_ids').ids)
+            move_line_ids.extend(sale_order.invoice_ids.invoice_line_ids.ids)
         return move_line_ids

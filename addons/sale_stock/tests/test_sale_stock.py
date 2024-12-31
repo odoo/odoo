@@ -421,7 +421,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         # ```
         # for moves in moves_to_merge:
         #     # link all move lines to record 0 (the one we will keep).
-        #     moves.mapped('move_line_ids').write({'move_id': moves[0].id})
+        #     moves.move_line_ids.write({'move_id': moves[0].id})
         #     # merge move data
         #     moves[0].write(moves._merge_moves_fields())
         #     # update merged moves dicts

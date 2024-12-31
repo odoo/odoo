@@ -7,7 +7,7 @@ class PaymentMethod(models.Model):
     _inherit = 'payment.method'
 
     def _get_fiscal_country_codes(self):
-        return ','.join(self.env.companies.mapped('account_fiscal_country_id.code'))
+        return ','.join(self.env.companies.account_fiscal_country_id.mapped('code'))
 
     l10n_ec_sri_payment_id = fields.Many2one(
         comodel_name="l10n_ec.sri.payment",

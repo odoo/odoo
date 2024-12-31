@@ -30,8 +30,8 @@ class IrHttp(models.AbstractModel):
     @api.model
     def get_timesheet_uoms(self):
         company_ids = self.env.user.company_ids
-        uom_ids = company_ids.mapped('timesheet_encode_uom_id') | \
-                  company_ids.mapped('project_time_mode_id')
+        uom_ids = company_ids.timesheet_encode_uom_id | \
+                  company_ids.project_time_mode_id
         return {
             uom.id:
                 {

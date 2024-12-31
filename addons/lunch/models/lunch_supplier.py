@@ -267,7 +267,7 @@ class LunchSupplier(models.Model):
             'amount_total': sum(order.price for order in orders),
         }
 
-        sites = orders.mapped('user_id.last_lunch_location_id').sorted(lambda x: x.name)
+        sites = orders.user_id.last_lunch_location_id.sorted(lambda x: x.name)
         orders_per_site = orders.sorted(lambda x: x.user_id.last_lunch_location_id.id)
 
         email_orders = [{

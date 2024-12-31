@@ -31,9 +31,9 @@ class CalendarAttendee(models.Model):
         # For weird reasons, we can't sync status when we are not the responsible
         # We can't adapt google_value to only keep ['id', 'summary', 'attendees', 'start', 'end', 'reminders']
         # and send that. We get a Forbidden for non-organizer error even if we only send start, end that are mandatory !
-        all_events = self.mapped('event_id').filtered(lambda e: e.google_id)
+        all_events = self.event_id.filtered(lambda e: e.google_id)
         other_events = all_events.filtered(lambda e: e.user_id and e.user_id.id != self.env.user.id)
-        for user in other_events.mapped('user_id'):
+        for user in other_events.user_id:
             service = GoogleCalendarService(self.env['google.service'].with_user(user))
             other_events.filtered(lambda ev: ev.user_id.id == user.id).with_user(user)._sync_odoo2google(service)
         google_service = GoogleCalendarService(self.env['google.service'])

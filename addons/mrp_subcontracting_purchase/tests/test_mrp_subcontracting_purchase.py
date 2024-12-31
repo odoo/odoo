@@ -643,12 +643,12 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         po.button_confirm()
         ressuply_pick = self.env['stock.picking'].search([('location_dest_id', '=', self.env.company.subcontracting_location_id.id)])
         self.assertEqual(len(ressuply_pick.move_ids), 2)
-        self.assertEqual(ressuply_pick.move_ids.mapped('product_id'), self.comp1 | self.comp2)
+        self.assertEqual(ressuply_pick.move_ids.product_id, self.comp1 | self.comp2)
 
         # should have create a purchase order for the components
         comp_po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)])
         self.assertEqual(len(comp_po.order_line), 2)
-        self.assertEqual(comp_po.order_line.mapped('product_id'), self.comp1 | self.comp2)
+        self.assertEqual(comp_po.order_line.product_id, self.comp1 | self.comp2)
         # confirm the po should create stock moves linked to the resupply
         comp_po.button_confirm()
         comp_receipt = comp_po.picking_ids

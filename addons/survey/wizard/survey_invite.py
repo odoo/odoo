@@ -79,7 +79,7 @@ class SurveyInvite(models.TransientModel):
     def _compute_existing_emails(self):
         for wizard in self:
             emails = list(set(emails_split.split(wizard.emails or "")))
-            existing_emails = wizard.survey_id.mapped('user_input_ids.email')
+            existing_emails = wizard.survey_id.user_input_ids.mapped('email')
             wizard.existing_emails = '\n'.join(email for email in emails if email in existing_emails)
 
     @api.depends('existing_partner_ids', 'existing_emails')
@@ -89,7 +89,7 @@ class SurveyInvite(models.TransientModel):
             if wizard.existing_partner_ids:
                 existing_text = '%s: %s.' % (
                     _('The following customers have already received an invite'),
-                    ', '.join(wizard.mapped('existing_partner_ids.name'))
+                    ', '.join(wizard.existing_partner_ids.mapped('name'))
                 )
             if wizard.existing_emails:
                 existing_text = '%s\n' % existing_text if existing_text else ''
@@ -207,7 +207,7 @@ class SurveyInvite(models.TransientModel):
         emails_done = []
         if existing_answers:
             if self.existing_mode == 'resend':
-                partners_done = existing_answers.mapped('partner_id')
+                partners_done = existing_answers.partner_id
                 emails_done = existing_answers.mapped('email')
 
                 # only add the last answer for each user of each type (partner_id & email)

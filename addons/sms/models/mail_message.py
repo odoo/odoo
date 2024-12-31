@@ -19,7 +19,7 @@ class MailMessage(models.Model):
         sms_error_from_notification = self.env['mail.notification'].sudo().search([
             ('notification_type', '=', 'sms'),
             ('mail_message_id', 'in', self.ids),
-            ('notification_status', '=', 'exception')]).mapped('mail_message_id')
+            ('notification_status', '=', 'exception')]).mail_message_id
         for message in self:
             message.has_sms_error = message in sms_error_from_notification
 

@@ -1350,8 +1350,8 @@ class TestComposerInternals(TestMailComposer):
                         len(new_partners), len(test_records)
                     )
                     self.assertEqual(
-                        new_partners.mapped('company_id'),
-                        test_records.mapped('company_id')
+                        new_partners.company_id,
+                        test_records.company_id
                     )
                     self.assertEqual(
                         new_partners.mapped('mobile'),

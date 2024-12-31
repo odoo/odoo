@@ -148,7 +148,7 @@ class AnalyticMixin(models.AbstractModel):
     def mapped(self, func):
         # Get the related analytic accounts as a recordset instead of the distribution
         if func == 'analytic_distribution' and self.env.context.get('distribution_ids'):
-            return self.distribution_analytic_account_ids
+            func = 'distribution_analytic_account_ids'
         return super().mapped(func)
 
     def filtered_domain(self, domain):

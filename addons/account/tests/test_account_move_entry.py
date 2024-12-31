@@ -295,7 +295,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # lines[2] = 'move 1 receivable line'
         # lines[3] = 'move 2 counterpart line'
         draft_moves.action_post()
-        lines = draft_moves.mapped('line_ids').sorted('balance')
+        lines = draft_moves.line_ids.sorted('balance')
 
         (lines[0] + lines[2]).reconcile()
 
@@ -653,7 +653,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         payment.action_post()
         (payment.move_id + move).line_ids.filtered(lambda x: x.account_id == self.company_data['default_account_receivable']).reconcile()
         # check caba move
-        partial_rec = move.mapped('line_ids.matched_credit_ids')
+        partial_rec = move.line_ids.matched_credit_ids
         caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
         expected_values = [
             {
@@ -716,7 +716,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.env.invalidate_all()
         lines = self.test_move.line_ids
         # prefetch
-        lines.mapped('move_id.name')
+        lines.move_id.mapped('name')
         # check account.move cache
         self.assertEqual(self._get_cache_count(), 1)
         lines.invalidate_recordset()

@@ -90,7 +90,7 @@ class SaleOrderTemplate(models.Model):
     @api.constrains('company_id', 'sale_order_template_line_ids', 'sale_order_template_option_ids')
     def _check_company_id(self):
         for template in self:
-            companies = template.mapped('sale_order_template_line_ids.product_id.company_id') | template.mapped('sale_order_template_option_ids.product_id.company_id')
+            companies = template.sale_order_template_line_ids.product_id.company_id | template.sale_order_template_option_ids.product_id.company_id
             if len(companies) > 1:
                 raise ValidationError(_("Your template cannot contain products from multiple companies."))
             elif companies and companies != template.company_id:

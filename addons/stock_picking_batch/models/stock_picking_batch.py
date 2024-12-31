@@ -236,8 +236,8 @@ class StockPickingBatch(models.Model):
         self.ensure_one()
         self._check_company()
         # Empty 'assigned' or 'waiting for another operation' pickings will be removed from the batch when it is validated.
-        pickings = self.mapped('picking_ids').filtered(lambda picking: picking.state not in ('cancel', 'done'))
-        empty_waiting_pickings = self.mapped('picking_ids').filtered(lambda p: (p.state in ('waiting', 'confirmed') and has_no_quantity(p)) or (p.state == 'assigned' and is_empty(p)))
+        pickings = self.picking_ids.filtered(lambda picking: picking.state not in ('cancel', 'done'))
+        empty_waiting_pickings = self.picking_ids.filtered(lambda p: (p.state in ('waiting', 'confirmed') and has_no_quantity(p)) or (p.state == 'assigned' and is_empty(p)))
         pickings = pickings - empty_waiting_pickings
 
         empty_pickings = set()

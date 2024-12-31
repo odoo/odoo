@@ -268,7 +268,7 @@ class IrUiView(models.Model):
 
     @api.model
     def _set_noupdate(self):
-        self.sudo().mapped('model_data_id').write({'noupdate': True})
+        self.sudo().model_data_id.write({'noupdate': True})
 
     def save(self, value, xpath=None):
         """ Update a view section. The view section may embed fields to write

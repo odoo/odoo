@@ -101,7 +101,7 @@ class ChangeProductionQty(models.TransientModel):
                 if wo == production.workorder_ids[-1]:
                     moves_raw |= production.move_raw_ids.filtered(lambda move: not move.operation_id)
                 moves_finished = production.move_finished_ids.filtered(lambda move: move.operation_id == operation) #TODO: code does nothing, unless maybe by_products?
-                moves_raw.mapped('move_line_ids').write({'workorder_id': wo.id})
+                moves_raw.move_line_ids.write({'workorder_id': wo.id})
                 (moves_finished + moves_raw).write({'workorder_id': wo.id})
 
         # run scheduler for moves forecasted to not have enough in stock

@@ -550,7 +550,7 @@ class HrApplicant(models.Model):
 
     def _notify_get_reply_to(self, default=None):
         """ Override to set alias of applicants to their job definition if any. """
-        aliases = self.mapped('job_id')._notify_get_reply_to(default=default)
+        aliases = self.job_id._notify_get_reply_to(default=default)
         res = {app.id: aliases.get(app.job_id.id) for app in self}
         leftover = self.filtered(lambda rec: not rec.job_id)
         if leftover:
@@ -682,7 +682,7 @@ class HrApplicant(models.Model):
     def reset_applicant(self):
         """ Reinsert the applicant into the recruitment pipe in the first stage"""
         default_stage = dict()
-        for job_id in self.mapped('job_id'):
+        for job_id in self.job_id:
             default_stage[job_id.id] = self.env['hr.recruitment.stage'].search(
                 [
                     '|',

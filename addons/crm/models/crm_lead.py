@@ -400,7 +400,7 @@ class CrmLead(models.Model):
         """ compute the lang based on partner, erase any value to force the partner
         one if set. """
         # prepare cache
-        lang_codes = [code for code in self.mapped('partner_id.lang') if code]
+        lang_codes = [code for code in self.partner_id.mapped('lang') if code]
         if lang_codes:
             lang_id_by_code = dict(
                 (code, self.env['res.lang']._get_data(code=code).id)
@@ -1437,7 +1437,7 @@ class CrmLead(models.Model):
             'description': lambda fname, leads: '<br/><br/>'.join(desc for desc in leads.mapped('description') if not is_html_empty(desc)),
             'type': lambda fname, leads: 'opportunity' if any(lead.type == 'opportunity' for lead in leads) else 'lead',
             'priority': lambda fname, leads: max(leads.mapped('priority')) if leads else False,
-            'tag_ids': lambda fname, leads: leads.mapped('tag_ids'),
+            'tag_ids': lambda fname, leads: leads.tag_ids,
             'lost_reason_id': lambda fname, leads:
                 False if leads and leads[0].probability
                 else next((lead.lost_reason_id for lead in leads if lead.lost_reason_id), False),
@@ -1931,7 +1931,7 @@ class CrmLead(models.Model):
 
     def _notify_get_reply_to(self, default=None):
         # Override to set alias of lead and opportunities to their sales team if any
-        aliases = self.mapped('team_id').sudo()._notify_get_reply_to(default=default)
+        aliases = self.team_id.sudo()._notify_get_reply_to(default=default)
         res = {lead.id: aliases.get(lead.team_id.id) for lead in self}
         leftover = self.filtered(lambda rec: not rec.team_id)
         if leftover:
@@ -2115,7 +2115,7 @@ class CrmLead(models.Model):
         frequencies = self.env['crm.lead.scoring.frequency'].search([('variable', 'in', list(leads_fields))], order="team_id asc, id")
 
         # get all team_ids from frequencies
-        frequency_teams = frequencies.mapped('team_id')
+        frequency_teams = frequencies.team_id
         frequency_team_ids = [team.id for team in frequency_teams]
 
         # 1. Compute each variable value count individually
@@ -2377,7 +2377,7 @@ class CrmLead(models.Model):
             team_ids = self.env['crm.team'].with_context(active_test=False).search([]).ids + [0]  # If team_id is unset, consider it as team 0
         else:  # increment
             domain = [('id', 'in', pls_leads.ids)]
-            team_ids = pls_leads.mapped('team_id').ids + [0]
+            team_ids = pls_leads.team_id.ids + [0]
 
         leads_values_dict = pls_leads._pls_get_lead_pls_values(domain=domain)
 
@@ -2413,7 +2413,7 @@ class CrmLead(models.Model):
             # read all fields to get everything in memory in one query (instead of having query + prefetch)
             existing_frequencies = self.env['crm.lead.scoring.frequency'].search_read(
                 ['&', ('variable', 'in', leads_pls_fields),
-                      '|', ('team_id', 'in', pls_leads.mapped('team_id').ids), ('team_id', '=', False)])
+                      '|', ('team_id', 'in', pls_leads.team_id.ids), ('team_id', '=', False)])
             for frequency in existing_frequencies:
                 team_id = frequency['team_id'][0] if frequency.get('team_id') else 0
                 if team_id not in existing_frequencies_by_team:

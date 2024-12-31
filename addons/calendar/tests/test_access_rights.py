@@ -130,7 +130,7 @@ class TestAccessRights(TransactionCase):
             privacy='private',
             location='in the Sky',
         )
-        partners = (self.john|self.raoul).mapped('partner_id')
+        partners = (self.john | self.raoul).partner_id
         event.write({'partner_ids': [(6, 0, partners.ids)]})
         self.assertEqual(self.read_event(self.raoul, event, 'location'), 'in the Sky',
                          "Owner should be able to read the event")

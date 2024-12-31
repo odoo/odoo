@@ -12,5 +12,5 @@ class AccountMove(models.Model):
         paid, update booths accordingly as they are booked when invoice is paid.
         """
         res = super(AccountMove, self)._invoice_paid_hook()
-        self.mapped('line_ids.sale_line_ids')._update_event_booths(set_paid=True)
+        self.line_ids.sale_line_ids._update_event_booths(set_paid=True)
         return res

@@ -284,7 +284,7 @@ class ProductProduct(models.Model):
             warehouse = [warehouse]
         # filter by location and/or warehouse
         if warehouse:
-            w_ids = set(Warehouse.browse(_search_ids('stock.warehouse', warehouse)).mapped('view_location_id').ids)
+            w_ids = set(Warehouse.browse(_search_ids('stock.warehouse', warehouse)).view_location_id.ids)
             if location:
                 l_ids = _search_ids('stock.location', location)
                 parents = Location.browse(w_ids).mapped("parent_path")
@@ -301,7 +301,7 @@ class ProductProduct(models.Model):
             else:
                 location_ids = set(Warehouse.search(
                     [('company_id', 'in', self.env.companies.ids)]
-                ).mapped('view_location_id').ids)
+                ).view_location_id.ids)
 
         return self._get_domain_locations_new(location_ids)
 
@@ -497,7 +497,7 @@ class ProductProduct(models.Model):
         return action
 
     def action_view_routes(self):
-        return self.mapped('product_tmpl_id').action_view_routes()
+        return self.product_tmpl_id.action_view_routes()
 
     def action_view_stock_move_lines(self):
         self.ensure_one()
@@ -863,7 +863,7 @@ class ProductTemplate(models.Model):
 
     @api.onchange('tracking')
     def _onchange_tracking(self):
-        return self.mapped('product_variant_ids')._onchange_tracking()
+        return self.product_variant_ids._onchange_tracking()
 
     @api.depends('is_storable')
     def _compute_tracking(self):
@@ -909,20 +909,20 @@ class ProductTemplate(models.Model):
         if 'uom_id' in vals:
             new_uom = self.env['uom.uom'].browse(vals['uom_id'])
             updated = self.filtered(lambda template: template.uom_id != new_uom)
-            done_moves = self.env['stock.move'].sudo().search([('product_id', 'in', updated.with_context(active_test=False).mapped('product_variant_ids').ids)], limit=1)
+            done_moves = self.env['stock.move'].sudo().search([('product_id', 'in', updated.with_context(active_test=False).product_variant_ids.ids)], limit=1)
             if done_moves:
                 raise UserError(_("You cannot change the unit of measure as there are already stock moves for this product. If you want to change the unit of measure, you should rather archive this product and create a new one."))
         if 'is_storable' in vals and not vals['is_storable'] and sum(self.mapped('nbr_reordering_rules')) != 0:
             raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
         if any('is_storable' in vals and vals['is_storable'] != prod_tmpl.is_storable for prod_tmpl in self):
             existing_done_move_lines = self.env['stock.move.line'].sudo().search([
-                ('product_id', 'in', self.with_context(active_test=False).mapped('product_variant_ids').ids),
+                ('product_id', 'in', self.with_context(active_test=False).product_variant_ids.ids),
                 ('state', '=', 'done'),
             ], limit=1)
             if existing_done_move_lines:
                 raise UserError(_("You can not change the inventory tracking of a product that was already used."))
             existing_reserved_move_lines = self.env['stock.move.line'].sudo().search([
-                ('product_id', 'in', self.with_context(active_test=False).mapped('product_variant_ids').ids),
+                ('product_id', 'in', self.with_context(active_test=False).product_variant_ids.ids),
                 ('state', 'in', ['partially_available', 'assigned']),
             ], limit=1)
             if existing_reserved_move_lines:

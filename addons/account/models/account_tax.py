@@ -2233,7 +2233,7 @@ class AccountTax(models.Model):
         document_type = 'refund' if is_refund else 'invoice'
         return self.repartition_line_ids\
             .filtered(lambda x: x.repartition_type == repartition_type and x.document_type == document_type)\
-            .mapped('tag_ids')
+            .tag_ids
 
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False, handle_price_include=True, include_caba_tags=False, rounding_method=None):
         """Compute all information required to apply taxes (in self + their children in case of a tax group).

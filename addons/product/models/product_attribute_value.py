@@ -75,7 +75,7 @@ class ProductAttributeValue(models.Model):
     @api.depends('pav_attribute_line_ids')
     def _compute_is_used_on_products(self):
         for pav in self:
-            pav.is_used_on_products = bool(pav.pav_attribute_line_ids.filtered('product_tmpl_id.active'))
+            pav.is_used_on_products = bool(pav.pav_attribute_line_ids.filtered(lambda rec: rec.product_tmpl_id.active))
 
     @api.depends('default_extra_price')
     def _compute_default_extra_price_changed(self):

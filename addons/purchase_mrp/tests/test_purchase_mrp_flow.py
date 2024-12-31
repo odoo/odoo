@@ -328,7 +328,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         order_line = po.order_line[0]
         picking_original = po.picking_ids[0]
         move_ids = picking_original.move_ids
-        products = move_ids.mapped('product_id')
+        products = move_ids.product_id
         kits = [self.kit_parent, self.kit_3, self.kit_2, self.kit_1]
         components = [self.component_a, self.component_b, self.component_c, self.component_d, self.component_e,
                       self.component_f, self.component_g]

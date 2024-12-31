@@ -254,7 +254,7 @@ class TestReInvoice(TestSaleCommon):
         invoice_a.action_post()
 
         self.assertEqual(len(self.sale_order.order_line), 1, "No SO line should have been created (or removed) when validating vendor bill")
-        self.assertTrue(invoice_a.mapped('line_ids.analytic_line_ids'), "Analytic lines should be generated")
+        self.assertTrue(invoice_a.line_ids.analytic_line_ids, "Analytic lines should be generated")
 
     def test_not_reinvoicing_invoiced_so_lines(self):
         """ Test that invoiced SO lines are not re-invoiced. """

@@ -35,7 +35,7 @@ class ProjectCreateInvoice(models.TransientModel):
     def _compute_candidate_orders(self):
         for p in self:
             p._candidate_orders = p.project_id\
-                .mapped('tasks.sale_line_id.order_id')\
+                .tasks.sale_line_id.order_id\
                 .filtered(lambda so: so.invoice_status == 'to invoice')
 
     @api.depends('sale_order_id')

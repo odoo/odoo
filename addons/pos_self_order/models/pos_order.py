@@ -61,7 +61,7 @@ class PosOrder(models.Model):
                 'pos.order': order.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
                 'pos.order.line': order.lines.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
                 'pos.payment': order.payment_ids.read(order.payment_ids._load_pos_data_fields(order.config_id.id), load=False),
-                'pos.payment.method': order.payment_ids.mapped('payment_method_id').read(self.env['pos.payment.method']._load_pos_data_fields(order.config_id.id), load=False),
+                'pos.payment.method': order.payment_ids.payment_method_id.read(self.env['pos.payment.method']._load_pos_data_fields(order.config_id.id), load=False),
                 'product.attribute.custom.value':  order.lines.custom_attribute_value_ids.read(order.lines.custom_attribute_value_ids._load_pos_data_fields(order.config_id.id), load=False),
             })
 

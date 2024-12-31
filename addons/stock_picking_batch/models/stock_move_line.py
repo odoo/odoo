@@ -146,7 +146,7 @@ class StockMoveLine(models.Model):
             if lines:
                 domain = [
                     ('picking_type_id', '=', picking_type.id),
-                    ('company_id', 'in', lines.mapped('company_id').ids),
+                    ('company_id', 'in', lines.company_id.ids),
                     ('is_wave', '=', True)
                 ]
                 if picking_type.batch_auto_confirm:
@@ -199,8 +199,8 @@ class StockMoveLine(models.Model):
 
                         wave_new_move_ids = wave_to_new_moves[wave]
                         wave_new_picking_ids = waves_to_new_pickings[wave]
-                        wave_move_ids = set(wave.move_line_ids.mapped('move_id.id'))
-                        wave_picking_ids = set(wave.move_line_ids.mapped('picking_id.id'))
+                        wave_move_ids = set(wave.move_line_ids.move_id._ids)
+                        wave_picking_ids = set(wave.move_line_ids.picking_id._ids)
                         # `is_line_auto_mergeable` is a method that checks if the line can be added to the wave without exceeding the limits
                         # It takes as arguments the number of new moves that will be added to the wave, the number of new pickings that will be added to the wave
                         # and the extra weight that will be added to the wave. So we need to check that the move/picking of the line is not already in the wave

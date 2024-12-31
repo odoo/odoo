@@ -72,7 +72,7 @@ class StockWarehouse(models.Model):
 
     def _get_all_routes(self):
         routes = super(StockWarehouse, self)._get_all_routes()
-        routes |= self.filtered(lambda self: self.buy_to_resupply and self.buy_pull_id and self.buy_pull_id.route_id).mapped('buy_pull_id').mapped('route_id')
+        routes |= self.filtered(lambda self: self.buy_to_resupply and self.buy_pull_id and self.buy_pull_id.route_id).buy_pull_id.route_id
         return routes
 
     def get_rules_dict(self):
@@ -186,7 +186,7 @@ class StockWarehouseOrderpoint(models.Model):
         # Remvove the context since the action basically display RFQ and not PO.
         result['context'] = {}
         order_line_ids = self.env['purchase.order.line'].search([('orderpoint_id', '=', self.id)])
-        purchase_ids = order_line_ids.mapped('order_id')
+        purchase_ids = order_line_ids.order_id
 
         result['domain'] = "[('id','in',%s)]" % (purchase_ids.ids)
 
@@ -269,7 +269,7 @@ class StockLot(models.Model):
     def action_view_po(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("purchase.purchase_form_action")
-        action['domain'] = [('id', 'in', self.mapped('purchase_order_ids.id'))]
+        action['domain'] = [('id', 'in', self.purchase_order_ids.ids)]
         action['context'] = dict(self._context, create=False)
         return action
 

@@ -86,4 +86,4 @@ class TestPointOfSale(TransactionCase):
             })],
         })
         # Check that original product should not be in combo anymore (replace by variants)
-        self.assertTrue(original_product_id not in product_combo.combo_item_ids.mapped('product_id').ids, "Original product should not be in combo")
+        self.assertTrue(original_product_id not in product_combo.combo_item_ids.product_id.ids, "Original product should not be in combo")

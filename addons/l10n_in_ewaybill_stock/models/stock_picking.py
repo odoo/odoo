@@ -18,7 +18,7 @@ class StockPicking(models.Model):
 
     def action_l10n_in_ewaybill_create(self):
         self.ensure_one()
-        if product_with_no_hsn := self.move_ids.mapped('product_id').filtered(lambda p: not p.l10n_in_hsn_code):
+        if product_with_no_hsn := self.move_ids.product_id.filtered(lambda p: not p.l10n_in_hsn_code):
             raise UserError(
                 _("Please set HSN code in below products: \n%s", '\n'.join(product_with_no_hsn.mapped('name'))))
         if self.l10n_in_ewaybill_ids:

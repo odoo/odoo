@@ -17,7 +17,7 @@ class HrWorkEntry(models.Model):
 
     def write(self, vals):
         if 'state' in vals and vals['state'] == 'cancelled':
-            self.mapped('leave_id').filtered(lambda l: l.state != 'refuse').action_refuse()
+            self.leave_id.filtered(lambda l: l.state != 'refuse').action_refuse()
         return super().write(vals)
 
     def _reset_conflicting_state(self):

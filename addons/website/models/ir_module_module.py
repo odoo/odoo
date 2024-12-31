@@ -157,7 +157,7 @@ class IrModuleModule(models.Model):
                     _logger.info('Record queued: %s' % rec.display_name)
                     continue
 
-                find = rec.with_context(active_test=False).mapped('copy_ids').filtered(lambda m: m.website_id == website)
+                find = rec.with_context(active_test=False).copy_ids.filtered(lambda m: m.website_id == website)
 
                 # special case for attachment
                 # if module B override attachment from dependence A, we update it
@@ -266,7 +266,7 @@ class IrModuleModule(models.Model):
 
             for model_name in module._theme_model_names:
                 template = module._get_module_data(model_name)
-                models = template.with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).mapped('copy_ids').filtered(lambda m: m.website_id == website)
+                models = template.with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).copy_ids.filtered(lambda m: m.website_id == website)
                 models.unlink()
                 module._theme_cleanup(model_name, website)
 

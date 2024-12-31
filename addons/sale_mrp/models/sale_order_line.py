@@ -16,7 +16,7 @@ class SaleOrderLine(models.Model):
             # Hide the widget for kits since forecast doesn't support them.
             boms = self.env['mrp.bom']
             if line.state == 'sale':
-                boms = line.move_ids.mapped('bom_line_id.bom_id')
+                boms = line.move_ids.bom_line_id.bom_id
             elif line.state in ['draft', 'sent'] and line.product_id:
                 boms = boms._bom_find(line.product_id, company_id=line.company_id.id, bom_type='phantom')[line.product_id]
             relevant_bom = boms.filtered(lambda b: b.type == 'phantom' and
@@ -34,7 +34,7 @@ class SaleOrderLine(models.Model):
         super(SaleOrderLine, self)._compute_qty_delivered()
         for order_line in self:
             if order_line.qty_delivered_method == 'stock_move':
-                boms = order_line.move_ids.filtered(lambda m: m.state != 'cancel').mapped('bom_line_id.bom_id')
+                boms = order_line.move_ids.filtered(lambda m: m.state != 'cancel').bom_line_id.bom_id
                 dropship = any(m._is_dropshipped() for m in order_line.move_ids)
                 # We fetch the BoMs of type kits linked to the order_line,
                 # the we keep only the one related to the finished produst.

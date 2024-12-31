@@ -8,7 +8,7 @@ class AccountMoveLine(models.Model):
     def _l10n_ar_prices_and_taxes(self):
         self.ensure_one()
         invoice = self.move_id
-        included_taxes = self.tax_ids.filtered('tax_group_id.l10n_ar_vat_afip_code') if self.move_id._l10n_ar_include_vat() else False
+        included_taxes = self.tax_ids.filtered(lambda rec: rec.tax_group_id.l10n_ar_vat_afip_code) if self.move_id._l10n_ar_include_vat() else False
         if not included_taxes:
             price_unit = self.tax_ids.compute_all(
                 self.price_unit,

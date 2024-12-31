@@ -244,13 +244,13 @@ class TestPacking(TestPackingCommon):
             'company_id': picking.company_id.id,
         })
         picking.action_confirm()
-        self.assertEqual(picking.package_level_ids.mapped('location_id.id'), [shelf1_location.id],
+        self.assertEqual(picking.package_level_ids.location_id.ids, [shelf1_location.id],
                          'The package levels should still in the same location after confirmation.')
         picking.action_assign()
         package_level_reserved = picking.package_level_ids.filtered(lambda pl: pl.state == 'assigned')
         self.assertEqual(package_level_reserved.location_id.id, shelf1_location.id, 'The reserved package level must be reserved in shelf1')
         picking.do_unreserve()
-        self.assertEqual(picking.package_level_ids.mapped('location_id.id'), [shelf1_location.id],
+        self.assertEqual(picking.package_level_ids.location_id.ids, [shelf1_location.id],
                          'The package levels should have back the original location.')
         picking.package_level_ids.write({'is_done': True})
         picking.action_assign()
@@ -1722,7 +1722,7 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(pack_1.location_id, self.shelf1)
         self.assertEqual(pack_2.location_id, self.shelf1)
         self.assertEqual(len(moves), 2)
-        self.assertEqual(moves.mapped('product_id'), self.productA | self.productB)
+        self.assertEqual(moves.product_id, self.productA | self.productB)
         with self.assertRaises(UserError):
             pack_1.location_id = False
         pack_1.quant_ids = False

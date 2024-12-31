@@ -146,7 +146,7 @@ class PurchaseRequisition(models.Model):
         """
         Generate all purchase order based on selected lines, should only be called on one agreement at a time
         """
-        if any(purchase_order.state in ['draft', 'sent', 'to approve'] for purchase_order in self.mapped('purchase_ids')):
+        if any(purchase_order.state in ['draft', 'sent', 'to approve'] for purchase_order in self.purchase_ids):
             raise UserError(_("To close this purchase requisition, cancel related Requests for Quotation.\n\n"
                 "Imagine the mess if someone confirms these duplicates: double the order, double the trouble :)"))
         for requisition in self:
@@ -235,7 +235,8 @@ class PurchaseRequisitionLine(models.Model):
             return res
         if vals['price_unit'] <= 0.0 and any(
                 requisition.requisition_type == 'blanket_order' and
-                requisition.state not in ['draft', 'cancel', 'done'] for requisition in self.mapped('requisition_id')):
+                requisition.state not in ['draft', 'cancel', 'done']
+                for requisition in self.requisition_id):
             raise UserError(_("You cannot have a negative or unit price of 0 for an already confirmed blanket order."))
         # If the price is updated, we have to update the related SupplierInfo
         self.supplier_info_ids.write({'price': vals['price_unit']})

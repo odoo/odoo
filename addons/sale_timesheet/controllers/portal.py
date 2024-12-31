@@ -22,7 +22,7 @@ class PortalProjectAccount(PortalAccount, ProjectCustomerPortal):
         domain = expression.AND([
             domain,
             request.env['account.analytic.line']._timesheet_get_sale_domain(
-                invoice.mapped('line_ids.sale_line_ids'),
+                invoice.line_ids.sale_line_ids,
                 request.env['account.move'].browse([invoice.id])
             )
         ])
@@ -76,7 +76,7 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
             return ['|', ('so_line', 'ilike', search), ('so_line.order_id.name', 'ilike', search)]
         elif search_in == 'invoice':
             invoices = request.env['account.move'].sudo().search(['|', ('name', 'ilike', search), ('id', 'ilike', search)])
-            return request.env['account.analytic.line']._timesheet_get_sale_domain(invoices.mapped('invoice_line_ids.sale_line_ids'), invoices)
+            return request.env['account.analytic.line']._timesheet_get_sale_domain(invoices.invoice_line_ids.sale_line_ids, invoices)
         else:
             return super()._get_search_domain(search_in, search)
 

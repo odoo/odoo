@@ -152,7 +152,7 @@ class StockMove(models.Model):
     def _clean_repair_sale_order_line(self):
         self.filtered(
             lambda m: m.repair_id and m.sale_line_id
-        ).mapped('sale_line_id').write({'product_uom_qty': 0.0})
+        ).sale_line_id.write({'product_uom_qty': 0.0})
 
     def _update_repair_sale_order_line(self):
         if not self:

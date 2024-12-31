@@ -120,7 +120,7 @@ class SaleOrderLine(models.Model):
             grouped_lines[(line.warehouse_id.id, line.order_id.commitment_date or line._expected_date())] |= line
 
         for (warehouse, scheduled_date), lines in grouped_lines.items():
-            product_qties = lines.mapped('product_id').with_context(to_date=scheduled_date, warehouse_id=warehouse).read([
+            product_qties = lines.product_id.with_context(to_date=scheduled_date, warehouse_id=warehouse).read([
                 'qty_available',
                 'free_qty',
                 'virtual_available',
@@ -387,7 +387,7 @@ class SaleOrderLine(models.Model):
             self.env['procurement.group'].run(procurements)
 
         # This next block is currently needed only because the scheduler trigger is done by picking confirmation rather than stock.move confirmation
-        orders = self.mapped('order_id')
+        orders = self.order_id
         for order in orders:
             pickings_to_confirm = order.picking_ids.filtered(lambda p: p.state not in ['cancel', 'done'])
             if pickings_to_confirm:
