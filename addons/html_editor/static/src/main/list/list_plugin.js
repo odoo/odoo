@@ -4,9 +4,12 @@ import { removeClass, toggleClass, wrapInlinesInBlocks } from "@html_editor/util
 import {
     getDeepestPosition,
     isEmptyBlock,
+    isListElement,
+    isListItemElement,
+    isParagraphRelatedElement,
     isProtected,
     isProtecting,
-    paragraphRelatedElements,
+    listElementSelector,
 } from "@html_editor/utils/dom_info";
 import {
     closestElement,
@@ -669,20 +672,17 @@ export class ListPlugin extends Plugin {
     // --------------------------------------------------------------------------
 
     processNodeToInsert({ nodeToInsert, container }) {
-        if (
-            container.nodeName === "LI" &&
-            paragraphRelatedElements.includes(nodeToInsert.nodeName)
-        ) {
+        if (isListItemElement(container) && isParagraphRelatedElement(nodeToInsert)) {
             nodeToInsert = this.dependencies.dom.setTagName(nodeToInsert, "LI");
         }
-        const listEl = container && closestElement(container, "UL, OL");
+        const listEl = container && closestElement(container, listElementSelector);
         if (!listEl) {
             return nodeToInsert;
         }
         const mode = container && this.getListMode(listEl);
         if (
-            (nodeToInsert.nodeName === "LI" && nodeToInsert.classList.contains("oe-nested")) ||
-            ["UL", "OL"].includes(nodeToInsert.nodeName)
+            (isListItemElement(nodeToInsert) && nodeToInsert.classList.contains("oe-nested")) ||
+            isListElement(nodeToInsert)
         ) {
             return this.convertList(nodeToInsert, mode);
         }
@@ -695,7 +695,7 @@ export class ListPlugin extends Plugin {
         if (closestLI) {
             const block = closestBlock(selection.anchorNode);
             const isLiContainsUnSpittable =
-                paragraphRelatedElements.includes(block.nodeName) &&
+                isParagraphRelatedElement(block) &&
                 ancestors(block, closestLI).find((node) =>
                     this.dependencies.split.isUnsplittable(node)
                 );
@@ -719,7 +719,7 @@ export class ListPlugin extends Plugin {
         if (closestLI) {
             const block = closestBlock(selection.anchorNode);
             const isLiContainsUnSpittable =
-                paragraphRelatedElements.includes(block.nodeName) &&
+                isParagraphRelatedElement(block) &&
                 ancestors(block, closestLI).find((node) =>
                     this.dependencies.split.isUnsplittable(node)
                 );
