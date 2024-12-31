@@ -378,9 +378,14 @@ export class AddPageDialog extends Component {
             type: String,
             optional: true,
         },
+        goToPage: {
+            type: Boolean,
+            optional: true,
+        },
     };
     static defaultProps = {
         onAddPage: NO_OP,
+        goToPage: true,
     };
     static components = {
         WebsiteDialog,
@@ -446,7 +451,7 @@ export class AddPageDialog extends Component {
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
             });
-        } else {
+        } else if (this.props.goToPage) {
             this.website.goToWebsite({path: data.url, edition: true, websiteId: this.props.websiteId});
         }
         this.props.onAddPage();

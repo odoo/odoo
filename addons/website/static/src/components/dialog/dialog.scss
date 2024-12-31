@@ -2,4 +2,21 @@
     label {
         font-weight: $font-weight-bold;
     }
+    ul.oe_menu_editor {
+        .input-group:hover > * {
+            background-color: $table-hover-bg !important;
+        }
+    }
+    .o_page_not_found {
+        input {
+            // The value of 34% was set to ensure the visibility of the "Page
+            // not found" text in cases where it is displayed in languages that
+            // make it longer, such as Portuguese, for example: "Página não
+            // encontrada".
+            padding-right: 34%;
+        }
+        .badge {
+            max-width: 32%;
+        }
+    }
 }
