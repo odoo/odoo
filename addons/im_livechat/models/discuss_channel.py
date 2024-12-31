@@ -252,3 +252,6 @@ class DiscussChannel(models.Model):
 
     def _types_allowing_seen_infos(self):
         return super()._types_allowing_seen_infos() + ["livechat"]
+
+    def _types_allowing_unfollow(self):
+        return super()._types_allowing_unfollow() + ["livechat"]
