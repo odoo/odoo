@@ -6,6 +6,7 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class MenuDataPlugin extends Plugin {
     static id = "menuDataPlugin";
+    static shared = ["openEditMenu"];
     static dependencies = ["savePlugin"];
     resources = {
         link_popovers: [
@@ -43,19 +44,47 @@ export class MenuDataPlugin extends Plugin {
                             },
                         });
                     },
-                    onClickEditMenu: () => {
-                        this.services.dialog.add(EditMenuDialog, {
-                            save: async () => {
-                                await this.dependencies.savePlugin.save();
-                                await this.config.reloadEditor();
-                            },
-                        });
-                    },
+                    onClickEditMenu: this.openEditMenu.bind(this),
                 }),
             }),
         ],
         is_link_editable_predicates: this.isMenuLink.bind(this),
     };
+
+    setup() {
+        this.websiteService = this.services.website;
+    }
+
+    openEditMenu() {
+        if (this.isEditMenuOpening) {
+            return Promise.resolve();
+        }
+        this.isEditMenuOpening = true;
+        return new Promise((resolve) => {
+            this.services.dialog.add(EditMenuDialog,
+                {
+                    save: async (newPageUrl) => {
+                        // Save the page before reloading the editor.
+                        await this.dependencies.savePlugin.save();
+                        await this.config.reloadEditor();
+                        if (newPageUrl) {
+                            this.websiteService.goToWebsite({
+                                path: newPageUrl,
+                                edition: true,
+                                websiteId: this.websiteService.currentWebsite.id,
+                            });
+                        }
+                    },
+                },
+                {
+                    onClose: () => {
+                        this.isEditMenuOpening = false;
+                        resolve();
+                    },
+                }
+            );
+        });
+    }
 
     /**
      * This predicate is used to determine if the link element is editable.

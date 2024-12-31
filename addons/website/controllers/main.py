@@ -372,7 +372,8 @@ class Website(Home):
         current_website = request.website
 
         matching_pages = []
-        for page in current_website.search_pages(needle, limit=int(limit)):
+        limit = None if limit == "no_limit" else int(limit)
+        for page in current_website.search_pages(needle, limit):
             matching_pages.append({
                 'value': page['loc'],
                 'label': 'name' in page and '%s (%s)' % (page['loc'], page['name']) or page['loc'],
@@ -672,7 +673,13 @@ class Website(Home):
         if website_id:
             website = request.env['website'].browse(int(website_id))
             website._force()
-        page = request.env['website'].new_page(path, add_menu=add_menu, sections_arch=kwargs.get('sections_arch'), **template)
+        page = request.env['website'].new_page(
+            path,
+            add_menu=add_menu,
+            sections_arch=kwargs.get('sections_arch'),
+            page_title=kwargs.get('page_title'),
+            **template
+        )
         url = page['url']
         # In case the page is created through the 404 "Create Page" button, the
         # URL may use special characters which are slugified on page creation.

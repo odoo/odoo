@@ -1162,7 +1162,7 @@ class Website(models.Model):
                 copy_menu(submenu, new_top_menu)
 
     @api.model
-    def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None, page_values=None, menu_values=None, sections_arch=None):
+    def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None, page_values=None, menu_values=None, sections_arch=None, page_title=None):
         """ Create a new website page, and assign it a xmlid based on the given one
             :param name: the name of the page
             :param add_menu: if True, add a menu for that page
@@ -1171,6 +1171,7 @@ class Website(models.Model):
             :param page_values: default values for the page to be created
             :param menu_values: default values for the menu to be created
             :param sections_arch: HTML content of sections
+            :param page_title: if set, it allows using 'name' for the URL and a different title
         """
         if namespace:
             template_module = namespace
@@ -1199,7 +1200,7 @@ class Website(models.Model):
 
         view.with_context(lang=None).write({
             'arch': arch.replace(template, key),
-            'name': name,
+            'name': page_title or name,
         })
         result['view_id'] = view.id
 

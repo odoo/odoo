@@ -206,7 +206,7 @@ registerWebsitePreviewTour('link_tools', {
     },
     // 6. Add mega menu with Cards template and edit URL on text-selected card.
     clickOnElement("menu link", ":iframe header .nav-item a"),
-    clickOnElement("'Edit menu' icon", ":iframe .o_edit_menu_popover .fa-sitemap"),
+    clickOnElement("'Edit menu' icon", ":iframe .o_edit_menu_popover .js_edit_menu"),
     {
         trigger: ".o_website_dialog:visible",
     },
@@ -221,15 +221,15 @@ registerWebsitePreviewTour('link_tools', {
         run: "edit Mega",
     },
     {
-        content: "Clicking on the OK button",
-        trigger: ".modal button:contains(ok)",
+        content: "Clicking on the Continue button",
+        trigger: ".modal button:contains(Continue)",
         run: "click",
     },
     {
         content: "Drag Mega at the top",
-        trigger: '.oe_menu_editor li:contains("Mega") .fa-bars',
+        trigger: '.oe_menu_editor li:contains("Mega") .oi-draggable',
         run(helpers) {
-            return helpers.drag_and_drop(".oe_menu_editor li:contains('Home') .fa-bars", {
+            return helpers.drag_and_drop(".oe_menu_editor li:contains('Home') .oi-draggable", {
                 position : {
                     top: 20,
                 },

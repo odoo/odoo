@@ -598,12 +598,7 @@ class TitleDescription extends Component {
      * @param {InputEvent} ev
      */
     _updateInputValue(ev) {
-        // `NFKD` as in `http_routing` python `slugify()`
-        ev.target.value = ev.target.value.trim().normalize('NFKD').toLowerCase()
-            .replace(/\s+/g, '-') // Replace spaces with -
-            .replace(/[^\w-]+/g, '') // Remove all non-word chars
-            .replace(/--+/g, '-'); // Replace multiple - with single -
-        this.seoContext.seoName = ev.target.value;
+        this.seoContext.seoName = wUtils.slugify(ev.target.value);
     }
 }
 
