@@ -1105,3 +1105,39 @@ test("Export dialog: no column_invisible fields in default export list", async (
     expect(".modal .o_export_field").toHaveCount(1);
     expect(".modal .o_export_field").toHaveText("Foo");
 });
+
+test("Export dialog: fields displayed in same Order as list view when export", async () => {
+    Partner._fields.abc = fields.Char();
+    Partner._fields.demo = fields.Char();
+    onRpc("/web/export/formats", () => [{ tag: "csv", label: "CSV" }]);
+    onRpc("/web/export/get_fields", async (request) => [
+        ...fetchedFields.root,
+        {
+            id: "abc",
+            string: "Abc",
+        },
+        {
+            id: "demo",
+            string: "Demo",
+        },
+    ]);
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `
+            <list>
+                <field name="demo"/>
+                <field name="abc"/>
+            </list>`,
+        loadActionMenus: true,
+    });
+
+    await openExportDialog();
+    expect(".modal .o_export_field:first-child").toHaveText("Demo", {
+        message: "Field demo should appear first in the export list",
+    });
+    expect(".modal .o_export_field:nth-child(2)").toHaveText("Abc", {
+        message: "Field abc should appear second in the export list",
+    });
+});
