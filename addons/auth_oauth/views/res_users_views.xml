@@ -10,7 +10,7 @@
                         <group>
                             <field name="oauth_provider_id"/>
                             <field name="oauth_uid"/>
-                            <field name="oauth_access_token"/>
+                            <button name="remove_oauth_access_token" type="object" string="Remove Token" invisible="not has_oauth_access_token" groups="base.group_erp_manager"/>
                         </group>
                     </page>
                 </xpath>
