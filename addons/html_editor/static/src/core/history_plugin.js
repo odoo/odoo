@@ -550,12 +550,20 @@ export class HistoryPlugin extends Plugin {
 
         this.handleObserverRecords();
         const currentStep = this.currentStep;
-        if (!currentStep.mutations.length) {
+        const currentMutationsCount = currentStep.mutations.length;
+        if (currentMutationsCount === 0) {
             return false;
         }
         const stepCommonAncestor = this.getMutationsRoot(currentStep.mutations) || this.editable;
         this.dispatchTo("normalize_handlers", stepCommonAncestor);
         this.handleObserverRecords();
+        if (currentMutationsCount === currentStep.mutations.length) {
+            // If there was no registered mutation during the normalization step,
+            // force the dispatch of a content_updated to allow i.e. the hint
+            // plugin to react to non-observed changes (i.e. a div becoming
+            // a baseContainer).
+            this.dispatchContentUpdated();
+        }
 
         currentStep.previousStepId = this.steps.at(-1)?.id;
 

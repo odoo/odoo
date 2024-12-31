@@ -7,7 +7,6 @@ import {
     fillShrunkPhrasingParent,
     makeContentsInline,
     removeClass,
-    setTagName,
     splitTextNode,
     unwrapContents,
     wrapInlinesInBlocks,
@@ -37,7 +36,6 @@ import {
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
 import { DIRECTIONS, childNodeIndex, nodeSize, rightPos } from "../utils/position";
 import { normalizeCursorPosition } from "@html_editor/utils/selection";
-import { convertList, getListMode } from "@html_editor/utils/list";
 
 /**
  * Get distinct connected parents of nodes
@@ -64,7 +62,7 @@ function getConnectedParents(nodes) {
 export class DomPlugin extends Plugin {
     static id = "dom";
     static dependencies = ["selection", "history", "split", "delete", "lineBreak"];
-    static shared = ["insert", "copyAttributes", "setTag"];
+    static shared = ["insert", "copyAttributes", "setTag", "setTagName"];
     resources = {
         user_commands: [
             { id: "insertFontAwesome", run: this.insertFontAwesome.bind(this) },
@@ -229,9 +227,6 @@ export class DomPlugin extends Plugin {
         // If we have isolated block content, first we split the current focus
         // element if it's a block then we insert the content in the right places.
         let currentNode = startNode;
-        const currentList = currentNode && closestElement(currentNode, "UL, OL");
-        const mode = currentList && getListMode(currentList);
-
         const _insertAt = (reference, nodes, insertBefore) => {
             for (const child of insertBefore ? nodes.reverse() : nodes) {
                 reference[insertBefore ? "before" : "after"](child);
@@ -340,18 +335,9 @@ export class DomPlugin extends Plugin {
             }
             // Ensure that all adjacent paragraph elements are converted to
             // <li> when inserting in a list.
-            if (
-                block.nodeName === "LI" &&
-                paragraphRelatedElements.includes(nodeToInsert.nodeName)
-            ) {
-                nodeToInsert = setTagName(nodeToInsert, "LI");
-            }
-            if (
-                currentList &&
-                ((nodeToInsert.nodeName === "LI" && nodeToInsert.classList.contains("oe-nested")) ||
-                    isList(nodeToInsert))
-            ) {
-                nodeToInsert = convertList(nodeToInsert, mode);
+            const container = closestBlock(currentNode);
+            for (const processor of this.getResource("node_to_insert_processors")) {
+                nodeToInsert = processor({ nodeToInsert, container });
             }
             if (insertBefore) {
                 currentNode.before(nodeToInsert);
@@ -462,13 +448,57 @@ export class DomPlugin extends Plugin {
      */
     copyAttributes(source, target) {
         this.dispatchTo("clean_handlers", source);
+        if (source?.nodeType !== Node.ELEMENT_NODE || target?.nodeType !== Node.ELEMENT_NODE) {
+            return;
+        }
+        // TODO: provide a resource to ignore some attributes.
+        const ignoredAttrs = new Set();
+        const ignoredClasses = new Set(this.getResource("system_classes"));
         for (const attr of source.attributes) {
-            if (attr.name === "class") {
-                target.classList.add(...source.classList);
-            } else {
+            if (ignoredAttrs.has(attr)) {
+                continue;
+            }
+            if (attr.name !== "class" || ignoredClasses.size === 0) {
                 target.setAttribute(attr.name, attr.value);
+            } else {
+                const classes = [...source.classList];
+                for (const className of classes) {
+                    if (!ignoredClasses.has(className)) {
+                        target.classList.add(className);
+                    }
+                }
             }
         }
+    }
+
+    /**
+     * Basic method to change an element tagName.
+     * It is a technical function which only modifies a tag and its attributes.
+     * It does not modify descendants nor handle the cursor.
+     * @see setTag for the more thorough command.
+     *
+     * @param {HTMLElement} el
+     * @param {string} newTagName
+     */
+    setTagName(el, newTagName) {
+        const document = el.ownerDocument;
+        if (el.tagName === newTagName) {
+            return el;
+        }
+        const newEl = document.createElement(newTagName);
+        const content = childNodes(el);
+        if (el.tagName === "LI") {
+            el.append(newEl);
+            newEl.replaceChildren(...content);
+        } else {
+            if (el.parentElement) {
+                el.before(newEl);
+            }
+            this.copyAttributes(el, newEl);
+            newEl.replaceChildren(...content);
+            el.remove();
+        }
+        return newEl;
     }
 
     // --------------------------------------------------------------------------
@@ -507,8 +537,7 @@ export class DomPlugin extends Plugin {
                 if (tagName === "P" && block.nodeName === "LI") {
                     continue;
                 }
-
-                const newEl = setTagName(block, tagName);
+                const newEl = this.setTagName(block, tagName);
                 cursors.remapNode(block, newEl);
                 // We want to be able to edit the case `<h2 class="h3">`
                 // but in that case, we want to display "Header 2" and
