@@ -123,6 +123,7 @@ export function unwrapContents(node) {
 // This utils seem to handle a particular case of LI element.
 // If only relevant to the list plugin, a specific util should be created
 // that plugin instead.
+// TODO: deprecated, use the DomPlugin shared function instead.
 export function setTagName(el, newTagName) {
     const document = el.ownerDocument;
     if (el.tagName === newTagName) {
