@@ -195,7 +195,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
-            'memo': Like(f'BATCH/{self.current_year}/...'),
+            'memo': Like(f'GROUP/{self.current_year}/...'),
             'payment_method_line_id': self.inbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
@@ -228,7 +228,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
-            'memo': Like(f'BATCH/{self.current_year}/...'),
+            'memo': Like(f'GROUP/{self.current_year}/...'),
             'payment_method_line_id': self.inbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
@@ -263,7 +263,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
-            'memo': Like(f'BATCH/{self.current_year}/...'),
+            'memo': Like(f'GROUP/{self.current_year}/...'),
             'payment_method_line_id': self.inbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
@@ -306,7 +306,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
-            'memo': Like(f'BATCH/{self.current_year}/...'),
+            'memo': Like(f'GROUP/{self.current_year}/...'),
             'payment_method_line_id': self.inbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
@@ -349,7 +349,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
-            'memo': Like(f'BATCH/{self.current_year}/...'),
+            'memo': Like(f'GROUP/{self.current_year}/...'),
             'payment_method_line_id': self.outbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
@@ -392,7 +392,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
-            'memo': Like(f'BATCH/{self.current_year}/...'),
+            'memo': Like(f'GROUP/{self.current_year}/...'),
             'payment_method_line_id': self.outbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
@@ -548,7 +548,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
         self.assertRecordValues(payments, [
             {
-                'memo': Like(f'BATCH/{self.current_year}/...'),
+                'memo': Like(f'GROUP/{self.current_year}/...'),
                 'payment_method_line_id': self.outbound_payment_method_line.id,
             },
         ])
@@ -669,7 +669,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
         self.assertRecordValues(payments, [
             {
-                'memo': Like(f'BATCH/{self.current_year}/...'),
+                'memo': Like(f'GROUP/{self.current_year}/...'),
                 'payment_method_line_id': self.outbound_payment_method_line.id,
             },
             {
@@ -1740,7 +1740,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'installments_mode': 'next',
             'installments_switch_amount': 1333.33,
             'currency_id': self.company.currency_id.id,  # Different currencies, so we get the company's one
-            'communication': Like(f'BATCH/{self.current_year}/...'),
+            'communication': Like(f'GROUP/{self.current_year}/...'),
         }])
 
         wizard = self.env['account.payment.register'].with_context(
@@ -1777,7 +1777,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'payment_difference': 0.5,
             'installments_mode': 'next',
             'installments_switch_amount': 357.83,  # 24.5 for in_invoice_epd_applied + 1000 / 3 (rate) for the second
-            'communication': Like(f'BATCH/{self.current_year}/...'),
+            'communication': Like(f'GROUP/{self.current_year}/...'),
         }])
 
         # Clicking on the button to full gets the amount from js, so we need to put it by hand here
@@ -1791,7 +1791,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'payment_difference': 0.5,
             'installments_mode': 'full',
             'installments_switch_amount': 57.83,  # The previous 'next' amount
-            'communication': Like(f'BATCH/{self.current_year}/...'),
+            'communication': Like(f'GROUP/{self.current_year}/...'),
         }])
 
     def test_payment_register_with_next_payment_date(self):
