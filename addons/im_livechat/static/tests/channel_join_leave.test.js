@@ -33,6 +33,7 @@ test("from the discuss app", async () => {
         ],
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: serverState.partnerId,
+        create_uid: serverState.publicUserId,
     });
     await start();
     await openDiscuss();
@@ -42,7 +43,7 @@ test("from the discuss app", async () => {
     await click("[title='Join HR']", {
         parent: [".o-mail-DiscussSidebarCategory-livechat", { text: "HR" }],
     });
-    await click("[title='Unpin Conversation']", {
+    await click("[title='Leave Channel']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "Visitor" }],
     });
     await click("[title='Leave HR']", {
