@@ -106,11 +106,15 @@ class ProductProduct(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return [
+        fields = [
             'id', 'display_name', 'lst_price', 'list_price', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode', 'name',
             'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'product_tmpl_id', 'tracking', 'type', 'service_tracking', 'is_storable',
             'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_template_variant_value_ids', 'product_tag_ids'
         ]
+        custom_sort_field = self.get_custom_pos_sort_int_field()
+        if custom_sort_field and custom_sort_field not in fields:
+            fields.append(custom_sort_field)
+        return fields
 
     def _load_pos_data(self, data):
         config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
@@ -267,6 +271,12 @@ class ProductProduct(models.Model):
             'variants': variant_list,
             'total_qty_available': self.product_tmpl_id.qty_available
         }
+
+    def get_custom_pos_sort_int_field(self):
+        field_name = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.product_sort_field')
+        if field_name and self._fields.get(field_name) and self._fields.get(field_name).type == 'integer':
+            return field_name
+        return False
 
 
 class ProductAttribute(models.Model):

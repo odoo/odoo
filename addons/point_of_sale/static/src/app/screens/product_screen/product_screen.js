@@ -339,9 +339,16 @@ export class ProductScreen extends Component {
             }
         }
 
+        const customSearchField = this.pos.session._pos_product_sort_int_field;
+
         return this.searchWord !== ""
             ? filteredList
-            : filteredList.sort((a, b) => a.display_name.localeCompare(b.display_name));
+            : filteredList.sort((a, b) => {
+                  if (customSearchField) {
+                      return a[customSearchField] - b[customSearchField];
+                  }
+                  return a.display_name.localeCompare(b.display_name);
+              });
     }
 
     getProductsBySearchWord(searchWord) {
