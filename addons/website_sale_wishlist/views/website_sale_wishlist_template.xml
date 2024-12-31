@@ -27,18 +27,17 @@
     </template>
 
     <template id="product_cart_lines" inherit_id="website_sale.cart_lines" active="True">
-        <xpath expr="//div[@name='o_wsale_cart_line_button_container']/a" position="after">
+        <xpath expr="//div[@name='o_wsale_cart_line_button_container']/button" position="after">
             <t t-if="line._is_sellable()">
                 <span class="text-300">|</span>
-                <a
-                    href="#"
-                    class="o_add_wishlist js_delete_product small"
+                <button
+                    class="o_add_wishlist js_delete_product small text-primary btn btn-link btn-sm p-0 btn-small-text o_remove"
                     t-att-data-product-template-id="line.product_id.product_tmpl_id.id"
                     t-att-data-product-product-id="line.product_id.id"
                     data-action="o_wishlist"
                 >
                     Save for Later
-                </a>
+                </button>
             </t>
         </xpath>
 
