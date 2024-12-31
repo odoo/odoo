@@ -90,6 +90,7 @@ const registerSteps = [
     {
         content: "Fill attendees details",
         trigger: '.modal form[id="attendee_registration"] .btn[type=submit]',
+        run: "hover",
     },
     {
         trigger: ".modal input[name*='1-name']",
