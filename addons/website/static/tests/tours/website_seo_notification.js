@@ -66,7 +66,7 @@ registerWebsitePreviewTour(
         {
             content: "Open the dropdown menu",
             trigger:
-                ":iframe #o_main_nav .navbar-nav .dropdown.o_no_autohide_item > a.dropdown-toggle",
+                ":iframe #o_main_nav .navbar-nav .dropdown.o_no_autohide_item > button.dropdown-toggle",
             run: "click",
         },
         {
