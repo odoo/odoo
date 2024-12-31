@@ -27,10 +27,12 @@ import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { withSequence } from "@html_editor/utils/resource";
 import { FONT_SIZE_CLASSES, getFontSizeOrClass } from "@html_editor/utils/formatting";
 import { getTextColorOrClass } from "@html_editor/utils/color";
+import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 
 export class ListPlugin extends Plugin {
     static id = "list";
     static dependencies = [
+        "baseContainer",
         "tabulation",
         "history",
         "input",
@@ -292,8 +294,8 @@ export class ListPlugin extends Plugin {
      * @param {"UL"|"OL"|"CL"} mode
      */
     blockToList(element, mode) {
-        if (element.tagName === "P") {
-            return this.pToList(element, mode);
+        if (element.matches(baseContainerGlobalSelector)) {
+            return this.baseContainerToList(element, mode);
         }
         // @todo @phoenix: check for callbacks registered as resources instead?
         if (element.matches("td, th, li.nav-item")) {
@@ -330,15 +332,18 @@ export class ListPlugin extends Plugin {
     }
 
     /**
-     * @param {HTMLParagraphElement} p
+     * @param {HTMLElement} baseContainer baseContainer Element (can be a div with the
+     *        necessary classes/attributes).
      * @param {"UL"|"OL"|"CL"} mode
      */
-    pToList(p, mode) {
+    baseContainerToList(baseContainer, mode) {
         const cursors = this.dependencies.selection.preserveSelection();
-        const list = insertListAfter(this.document, p, mode, [[...p.childNodes]]);
-        this.dependencies.dom.copyAttributes(p, list);
-        p.remove();
-        cursors.remapNode(p, list.firstChild).restore();
+        const list = insertListAfter(this.document, baseContainer, mode, [
+            childNodes(baseContainer),
+        ]);
+        this.dependencies.dom.copyAttributes(baseContainer, list);
+        baseContainer.remove();
+        cursors.remapNode(baseContainer, list.firstChild).restore();
         return list;
     }
 
@@ -443,7 +448,7 @@ export class ListPlugin extends Plugin {
             return;
         }
         // Transform <li> into <p> if they are not in a <ul> / <ol>.
-        const paragraph = this.document.createElement("p");
+        const paragraph = this.dependencies.baseContainer.createBaseContainer();
         element.replaceWith(paragraph);
         paragraph.replaceChildren(...element.childNodes);
     }
@@ -486,7 +491,10 @@ export class ListPlugin extends Plugin {
             )
         ) {
             const cursors = this.dependencies.selection.preserveSelection();
-            wrapInlinesInBlocks(element, cursors);
+            wrapInlinesInBlocks(element, {
+                baseContainerNodeName: this.dependencies.baseContainer.getDefaultNodeName(),
+                cursors,
+            });
             cursors.restore();
         }
     }
@@ -620,13 +628,16 @@ export class ListPlugin extends Plugin {
         const cursors = this.dependencies.selection.preserveSelection();
         const ul = li.parentNode;
         // Transform LI's children into blocks
-        wrapInlinesInBlocks(li, cursors);
+        wrapInlinesInBlocks(li, {
+            baseContainerNodeName: this.dependencies.baseContainer.getDefaultNodeName(),
+            cursors,
+        });
         if (!li.hasChildNodes()) {
-            // Outdenting an empty LI produces an empty P
-            const p = this.document.createElement("p");
-            p.append(this.document.createElement("br"));
-            li.append(p);
-            cursors.remapNode(li, p);
+            // Outdenting an empty LI produces an empty baseContainer
+            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            baseContainer.append(this.document.createElement("br"));
+            li.append(baseContainer);
+            cursors.remapNode(li, baseContainer);
         }
         // Move LI's children to after UL
         const blocksToMove = childNodes(li);

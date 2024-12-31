@@ -405,13 +405,13 @@ test("edit a html field in new form view dialog and close the dialog with 'escap
             </form>`,
     });
     expect(".modal").toHaveCount(1);
-    expect(".odoo-editor-editable p").toHaveText("");
+    expect(".odoo-editor-editable div.o-paragraph").toHaveText("");
 
     await contains("[name='txt'] .odoo-editor-editable").focus();
-    setSelectionInHtmlField();
+    setSelectionInHtmlField("div.o-paragraph");
     await insertText(htmlEditor, "test");
     await animationFrame();
-    expect(".odoo-editor-editable p").toHaveText("test");
+    expect(".odoo-editor-editable div.o-paragraph").toHaveText("test");
     expect(".o_form_button_save").toBeVisible();
 
     await press("escape");
@@ -900,21 +900,21 @@ test("html field with a placeholder", async () => {
     });
 
     expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
-        '<p placeholder="test" class="o-we-hint"><br></p>',
+        '<div class="o-paragraph o-we-hint" placeholder="test"><br></div>',
         { type: "html" }
     );
 
-    setSelectionInHtmlField();
+    setSelectionInHtmlField("div.o-paragraph");
     await tick();
     expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
-        '<p placeholder="Type &quot;/&quot; for commands" class="o-we-hint"><br></p>',
+        '<div class="o-paragraph o-we-hint" placeholder="Type &quot;/&quot; for commands"><br></div>',
         { type: "html" }
     );
 
     moveSelectionOutsideEditor();
     await tick();
     expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
-        '<p placeholder="test" class="o-we-hint"><br></p>',
+        '<div class="o-paragraph o-we-hint" placeholder="test"><br></div>',
         { type: "html" }
     );
 });
