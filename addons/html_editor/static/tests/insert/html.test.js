@@ -212,6 +212,44 @@ describe("collapsed selection", () => {
         );
     });
 
+    test("should unwrap a paragraphRelated element inside another", async () => {
+        const { editor } = await setupEditor(`<p>cont[]ent</p>`, {});
+        editor.shared.dom.insert(parseHTML(editor.document, `<p>in</p>`));
+        expect(getContent(editor.editable)).toBe(`<p>contin[]ent</p>`);
+    });
+
+    test("should unwrap a contenteditable='true' ancestor which is not descendant of a contenteditable='false'", async () => {
+        const { editor } = await setupEditor(`<p>cont[]ent</p>`, {});
+        editor.shared.dom.insert(parseHTML(editor.document, `<p contenteditable="true">in</p>`));
+        expect(getContent(editor.editable)).toBe(`<p>contin[]ent</p>`);
+    });
+
+    test("should not unwrap a contenteditable='false'", async () => {
+        const { editor } = await setupEditor(`<p>cont[]ent</p>`, {});
+        editor.shared.dom.insert(parseHTML(editor.document, `<p contenteditable="false">in</p>`));
+        expect(getContent(editor.editable)).toBe(
+            `<p>cont</p><p contenteditable="false">in</p><p>[]ent</p>`
+        );
+    });
+
+    test("should not unwrap an unsplittable", async () => {
+        const { editor } = await setupEditor(`<p>cont[]ent</p>`, {});
+        editor.shared.dom.insert(parseHTML(editor.document, `<p class="oe_unbreakable">in</p>`));
+        expect(getContent(editor.editable)).toBe(
+            `<p>cont</p><p class="oe_unbreakable">in[]</p><p>ent</p>`
+        );
+    });
+
+    test("should normalize the parent when inserting a single element", async () => {
+        const { editor } = await setupEditor(`<p>[]<br></p>`, {});
+        editor.shared.dom.insert(
+            parseHTML(editor.document, `<p data-oe-protected="true">in</p>`).firstElementChild
+        );
+        expect(getContent(editor.editable, { sortAttrs: true })).toBe(
+            `<p contenteditable="false" data-oe-protected="true">in</p><p>[]<br></p>`
+        );
+    });
+
     test("insert inline in empty paragraph", async () => {
         const { el, editor } = await setupEditor(`<p>[]<br></p>`);
         editor.shared.dom.insert(parseHTML(editor.document, `<span class="a">a</span>`));
