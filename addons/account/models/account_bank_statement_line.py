@@ -480,6 +480,12 @@ class AccountBankStatementLine(models.Model):
     # HELPERS
     # -------------------------------------------------------------------------
 
+    @api.ondelete(at_uninstall=False)
+    def _check_allow_unlink(self):
+        if self.statement_id.filtered(lambda stmt: stmt.is_valid and stmt.is_complete):
+            raise UserError(_("You can not delete a transaction from a valid statement.\n"
+                              "If you want to delete it, please remove the statement first."))
+
     def _find_or_create_bank_account(self):
         self.ensure_one()
 
