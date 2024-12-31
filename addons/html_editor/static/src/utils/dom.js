@@ -1,5 +1,5 @@
 import { closestBlock, isBlock } from "./blocks";
-import { isShrunkBlock, isVisible, paragraphRelatedElements } from "./dom_info";
+import { isParagraphRelatedElement, isShrunkBlock, isVisible } from "./dom_info";
 import { callbacksForCursorUpdate } from "./selection";
 import { isEmptyBlock, isPhrasingContent } from "../utils/dom_info";
 import { childNodes } from "./dom_traversal";
@@ -19,7 +19,7 @@ export function makeContentsInline(node) {
     let childIndex = 0;
     for (const child of node.childNodes) {
         if (isBlock(child)) {
-            if (childIndex && paragraphRelatedElements.includes(child.nodeName)) {
+            if (childIndex && isParagraphRelatedElement(child)) {
                 child.before(document.createElement("br"));
             }
             for (const grandChild of child.childNodes) {

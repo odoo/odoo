@@ -440,17 +440,7 @@ export function isUnprotecting(node) {
 
 // This is a list of "paragraph-related elements", defined as elements that
 // behave like paragraphs.
-export const paragraphRelatedElements = [
-    "P",
-    "H1",
-    "H2",
-    "H3",
-    "H4",
-    "H5",
-    "H6",
-    "PRE",
-    "BLOCKQUOTE",
-];
+export const paragraphRelatedElements = ["P", "H1", "H2", "H3", "H4", "H5", "H6", "PRE"];
 
 /**
  * Return true if the given node allows "paragraph-related elements".
@@ -460,15 +450,16 @@ export const paragraphRelatedElements = [
  * @returns {boolean}
  */
 export function allowsParagraphRelatedElements(node) {
-    return isBlock(node) && !["P", "H1", "H2", "H3", "H4", "H5", "H6"].includes(node.nodeName);
+    return isBlock(node) && !isParagraphRelatedElement(node);
 }
 
 export const phrasingContent = new Set(["#text", ...phrasingTagNames]);
 const flowContent = new Set([...phrasingContent, ...paragraphRelatedElements, "DIV", "HR"]);
 export const listItem = new Set(["LI"]);
+const listContainers = new Set(["UL", "OL"]);
 
 const allowedContent = {
-    BLOCKQUOTE: phrasingContent, // HTML spec: flow content
+    BLOCKQUOTE: flowContent,
     DIV: flowContent,
     H1: phrasingContent,
     H2: phrasingContent,
@@ -485,6 +476,27 @@ const allowedContent = {
     TD: flowContent,
     TR: new Set(["TD"]),
 };
+
+export function isParagraphRelatedElement(node) {
+    if (!node) {
+        return false;
+    }
+    return paragraphRelatedElements.includes(node.nodeName);
+}
+
+export const paragraphRelatedElementsSelector = paragraphRelatedElements.join(",");
+
+export function isListItemElement(node) {
+    return [...listItem].includes(node.nodeName);
+}
+
+export const listItemElementSelector = [...listItem].join(",");
+
+export function isListElement(node) {
+    return [...listContainers].includes(node.nodeName);
+}
+
+export const listElementSelector = [...listContainers].join(",");
 
 /**
  * @param {Element} parentBlock

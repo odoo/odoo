@@ -1,4 +1,4 @@
-import { isTextNode, paragraphRelatedElements } from "../utils/dom_info";
+import { isTextNode, isParagraphRelatedElement } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import { unwrapContents } from "../utils/dom";
@@ -198,7 +198,7 @@ export class ClipboardPlugin extends Plugin {
             for (const ancestor of ancestorsList) {
                 // Keep the formatting by keeping inline ancestors and paragraph
                 // related ones like headings etc.
-                if (!isBlock(ancestor) || paragraphRelatedElements.includes(ancestor.nodeName)) {
+                if (!isBlock(ancestor) || isParagraphRelatedElement(ancestor)) {
                     const clone = ancestor.cloneNode();
                     clone.append(...childNodes(clonedContents));
                     clonedContents.appendChild(clone);
@@ -422,7 +422,8 @@ export class ClipboardPlugin extends Plugin {
             for (const br of brs) {
                 const block = closestBlock(br);
                 if (
-                    ["P", "H1", "H2", "H3", "H4", "H5", "H6"].includes(block.nodeName) &&
+                    isParagraphRelatedElement(block) &&
+                    block.nodeName !== "PRE" &&
                     !block.closest("li")
                 ) {
                     // A linebreak at the beginning of a block is an empty line.
