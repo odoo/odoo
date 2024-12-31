@@ -65,7 +65,7 @@ export function wrapInlinesInBlocks(element, cursors = { update: () => {} }) {
             const block = document.createElement("DIV");
             cursors.update(callbacksForCursorUpdate.before(currentBlock, block));
             currentBlock.before(block);
-            for (const child of [...currentBlock.childNodes]) {
+            for (const child of childNodes(currentBlock)) {
                 cursors.update(callbacksForCursorUpdate.append(block, child));
                 block.append(child);
             }
