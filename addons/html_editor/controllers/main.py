@@ -254,7 +254,7 @@ class HTML_Editor(http.Controller):
             # only supported image types are incorporated into the data.
             response = requests.head(url, timeout=10)
             if response.status_code == 200:
-                mime_type = response.headers['content-type']
+                mime_type = response.headers.get('content-type')
                 if mime_type in SUPPORTED_IMAGE_MIMETYPES:
                     attachment_data['mimetype'] = mime_type
         else:
