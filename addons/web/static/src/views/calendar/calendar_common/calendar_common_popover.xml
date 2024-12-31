@@ -48,7 +48,8 @@
                 <t t-foreach="slot.record.fieldNames" t-as="fieldName" t-key="fieldName">
                     <t t-if="!slot.record.isInvisible(fieldName)">
                         <t t-set="fieldInfo" t-value="props.model.popoverFields[fieldName]" />
-                        <li class="list-group-item d-flex text-nowrap align-items-center" t-att-class="fieldInfo.rawAttrs.class" t-att-data-tooltip="getFormattedValue(fieldName, slot.record)">
+                        <t t-set="fieldType" t-value="props.model.fields[fieldName].type" />
+                        <li class="list-group-item d-flex text-nowrap align-items-center" t-att-class="fieldInfo.rawAttrs.class" t-att-data-tooltip="fieldType === 'html' ? '' : getFormattedValue(fieldName, slot.record)">
                             <strong class="me-2">
                                 <t t-if="fieldInfo.options.icon">
                                     <b>
