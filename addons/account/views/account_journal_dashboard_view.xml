@@ -257,7 +257,7 @@
                                     <span dir="ltr"><t t-out="dashboard.account_balance"/></span>
                                 </div>
                             </div>
-                            <t t-if="dashboard.has_at_least_one_statement and dashboard.account_balance != dashboard.last_balance">
+                            <t t-if="dashboard.has_at_least_one_statement and dashboard.account_balance != dashboard.last_balance and dashboard.last_statement_visible">
                                 <div class="row" name="latest_statement">
                                     <div class="col overflow-hidden text-start">
                                         <span title="Latest Statement">Last Statement</span>
@@ -290,6 +290,16 @@
                                 </div>
                             </div>
                             <t t-call="JournalChecks"/>
+                            <t t-if="dashboard.has_invalid_statements">
+                                <div class="row">
+                                    <a type="object"
+                                       name="open_invalid_statements_action"
+                                       title="Invalid Statement(s)"
+                                       class="text-danger">
+                                        Invalid Statement(s)
+                                    </a>
+                                </div>
+                            </t>
                         </div>
                     </t>
                     <t t-name="JournalBodySalePurchase" id="account.JournalBodySalePurchase">
