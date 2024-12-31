@@ -16,11 +16,11 @@
                         <tr class="revenue_section">
                             <t t-set="revenue_label" t-value="props.labels[revenue.id] or revenue.id"/>
                             <td class="align-middle">
-                                <a class="revenue_section" t-if="revenue.action" href="#"
+                                <button class="revenue_section btn btn-link fw-normal p-0" t-if="revenue.action"
                                     t-on-click="() => this.props.onClick(revenue.action)"
                                 >
                                     <t t-esc="revenue_label"/>
-                                </a>
+                                </button>
                                 <t t-esc="revenue_label" t-else=""/>
                             </td>
                             <td t-attf-class="text-end align-middle {{ revenue.invoiced + revenue.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.invoiced + revenue.to_invoice)"/></td>
@@ -53,11 +53,11 @@
                     <tr t-foreach="costs.data" t-as="cost" t-key="cost.id" t-if="cost.billed !== 0 || cost.to_bill !== 0">
                         <t t-set="cost_label" t-value="props.labels[cost.id] or cost.id"/>
                         <td class="align-middle">
-                            <a t-if="cost.action" href="#"
+                            <button t-if="cost.action" class="btn btn-link fw-normal p-0"
                                 t-on-click="() => this.props.onClick(cost.action)"
                             >
                                 <t t-esc="cost_label"/>
-                            </a>
+                            </button>
                             <t t-esc="cost_label" t-else=""/>
                         </td>
                         <td t-attf-class="text-end align-middle {{ cost.billed + cost.to_bill === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(cost.billed + cost.to_bill)"/></td>

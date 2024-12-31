@@ -242,11 +242,11 @@ describe("Around ZWS", () => {
 describe("Around links", () => {
     test("should move into a link (ArrowRight)", async () => {
         await testEditor({
-            contentBefore: '<p>ab[]<a href="#">cd</a>ef</p>',
+            contentBefore: '<p>ab[]<a href="#test">cd</a>ef</p>',
             contentBeforeEdit:
                 "<p>ab[]" +
                 "\ufeff" + // before zwnbsp
-                '<a href="#">' +
+                '<a href="#test">' +
                 "\ufeff" + // start zwnbsp
                 "cd" + // content
                 "\ufeff" + // end zwnbsp
@@ -257,24 +257,24 @@ describe("Around links", () => {
             contentAfterEdit:
                 "<p>ab" +
                 "\ufeff" + // before zwnbsp
-                '<a href="#" class="o_link_in_selection">' +
+                '<a href="#test" class="o_link_in_selection">' +
                 "\ufeff" + // start zwnbsp
                 "[]cd" + // content
                 "\ufeff" + // end zwnbsp
                 "</a>" +
                 "\ufeff" + // after zwnbsp
                 "ef</p>",
-            contentAfter: '<p>ab<a href="#">[]cd</a>ef</p>',
+            contentAfter: '<p>ab<a href="#test">[]cd</a>ef</p>',
         });
     });
 
     test("should move into a link (ArrowLeft)", async () => {
         await testEditor({
-            contentBefore: '<p>ab<a href="#">cd</a>[]ef</p>',
+            contentBefore: '<p>ab<a href="#test">cd</a>[]ef</p>',
             contentBeforeEdit:
                 "<p>ab" +
                 "\ufeff" + // before zwnbsp
-                '<a href="#">' +
+                '<a href="#test">' +
                 "\ufeff" + // start zwnbsp
                 "cd" + // content
                 "\ufeff" + // end zwnbsp
@@ -285,24 +285,24 @@ describe("Around links", () => {
             contentAfterEdit:
                 "<p>ab" +
                 "\ufeff" + // before zwnbsp
-                '<a href="#" class="o_link_in_selection">' +
+                '<a href="#test" class="o_link_in_selection">' +
                 "\ufeff" + // start zwnbsp
                 "cd[]" + // content
                 "\ufeff" + // end zwnbsp
                 "</a>" +
                 "\ufeff" + // after zwnbsp
                 "ef</p>",
-            contentAfter: '<p>ab<a href="#">cd[]</a>ef</p>',
+            contentAfter: '<p>ab<a href="#test">cd[]</a>ef</p>',
         });
     });
 
     test("should move out of a link (ArrowRight)", async () => {
         await testEditor({
-            contentBefore: '<p>ab<a href="#">cd[]</a>ef</p>',
+            contentBefore: '<p>ab<a href="#test">cd[]</a>ef</p>',
             contentBeforeEdit:
                 "<p>ab" +
                 "\ufeff" + // before zwnbsp
-                '<a href="#" class="o_link_in_selection">' +
+                '<a href="#test" class="o_link_in_selection">' +
                 "\ufeff" + // start zwnbsp
                 "cd[]" + // content
                 "\ufeff" + // end zwnbsp
@@ -313,24 +313,24 @@ describe("Around links", () => {
             contentAfterEdit:
                 "<p>ab" +
                 "\ufeff" + // before zwnbsp
-                '<a href="#">' +
+                '<a href="#test">' +
                 "\ufeff" + // start zwnbsp
                 "cd" + // content
                 "\ufeff" + // end zwnbsp
                 "</a>" +
                 "\ufeff" + // after zwnbsp
                 "[]ef</p>",
-            contentAfter: '<p>ab<a href="#">cd</a>[]ef</p>',
+            contentAfter: '<p>ab<a href="#test">cd</a>[]ef</p>',
         });
     });
 
     test("should move out of a link (ArrowLeft)", async () => {
         await testEditor({
-            contentBefore: '<p>ab<a href="#">[]cd</a>ef</p>',
+            contentBefore: '<p>ab<a href="#test">[]cd</a>ef</p>',
             contentBeforeEdit:
                 "<p>ab" +
                 "\ufeff" + // before zwnbsp
-                '<a href="#" class="o_link_in_selection">' +
+                '<a href="#test" class="o_link_in_selection">' +
                 "\ufeff" + // start zwnbsp
                 "[]cd" + // content
                 "\ufeff" + // end zwnbsp
@@ -341,14 +341,14 @@ describe("Around links", () => {
             contentAfterEdit:
                 "<p>ab[]" +
                 "\ufeff" + // before zwnbsp
-                '<a href="#">' +
+                '<a href="#test">' +
                 "\ufeff" + // start zwnbsp
                 "cd" + // content
                 "\ufeff" + // end zwnbsp
                 "</a>" +
                 "\ufeff" + // after zwnbsp
                 "ef</p>",
-            contentAfter: '<p>ab[]<a href="#">cd</a>ef</p>',
+            contentAfter: '<p>ab[]<a href="#test">cd</a>ef</p>',
         });
     });
 });
@@ -555,7 +555,7 @@ describe("Around invisible chars in RTL languages", () => {
     });
 
     describe("ZWNBSP", () => {
-        const content = "<p>" + "الرجال" + '<a href="#">اءيتجنب</a>' + "هؤلاء" + "</p>";
+        const content = "<p>" + "الرجال" + '<a href="#test">اءيتجنب</a>' + "هؤلاء" + "</p>";
         // Displayed as "هؤلاء<a href="#">اءيتجنب</a>الرجال" in the editor:
         //                third +         link      + first
         test("should move into a link (ArrowLeft)", async () => {
@@ -574,7 +574,7 @@ describe("Around invisible chars in RTL languages", () => {
             expect(selection.anchorOffset).toBe(1);
             // Displayed as هؤلاء\uFEFF<a href="#">\uFEFFاءيتجنب[]\uFEFF</a>\uFEFFالرجال
             expect(getContent(el)).toBe(
-                '<p>الرجال\uFEFF<a href="#" class="o_link_in_selection">\uFEFF[]اءيتجنب\uFEFF</a>\uFEFFهؤلاء</p>'
+                '<p>الرجال\uFEFF<a href="#test" class="o_link_in_selection">\uFEFF[]اءيتجنب\uFEFF</a>\uFEFFهؤلاء</p>'
             );
         });
         test("should move into a link (ArrowRight)", async () => {
@@ -594,7 +594,7 @@ describe("Around invisible chars in RTL languages", () => {
             expect(selection.anchorOffset).toBe(link2ndChild.length);
             // Displayed as هؤلاء\uFEFF<a href="#">\uFEFF[]اءيتجنب\uFEFF</a>\uFEFFالرجال
             expect(getContent(el)).toBe(
-                '<p>الرجال\uFEFF<a href="#" class="o_link_in_selection">\uFEFFاءيتجنب[]\uFEFF</a>\uFEFFهؤلاء</p>'
+                '<p>الرجال\uFEFF<a href="#test" class="o_link_in_selection">\uFEFFاءيتجنب[]\uFEFF</a>\uFEFFهؤلاء</p>'
             );
         });
         test("should move out of a link (ArrowLeft)", async () => {
@@ -613,7 +613,7 @@ describe("Around invisible chars in RTL languages", () => {
             expect(selection.anchorOffset).toBe(1);
             // Displayed as هؤلاء[]\uFEFF<a href="#">\uFEFFاءيتجنب\uFEFF</a>\uFEFFالرجال
             expect(getContent(el)).toBe(
-                '<p>الرجال\uFEFF<a href="#">\uFEFFاءيتجنب\uFEFF</a>\uFEFF[]هؤلاء</p>'
+                '<p>الرجال\uFEFF<a href="#test">\uFEFFاءيتجنب\uFEFF</a>\uFEFF[]هؤلاء</p>'
             );
         });
         test("should move out of a link (ArrowRight)", async () => {
@@ -633,7 +633,7 @@ describe("Around invisible chars in RTL languages", () => {
             expect(selection.anchorOffset).toBe(pFirstChild.length);
             // Displayed as هؤلاء\uFEFF<a href="#">\uFEFFاءيتجنب\uFEFF</a>\uFEFF[]الرجال
             expect(getContent(el)).toBe(
-                '<p>الرجال[]\uFEFF<a href="#">\uFEFFاءيتجنب\uFEFF</a>\uFEFFهؤلاء</p>'
+                '<p>الرجال[]\uFEFF<a href="#test">\uFEFFاءيتجنب\uFEFF</a>\uFEFFهؤلاء</p>'
             );
         });
     });

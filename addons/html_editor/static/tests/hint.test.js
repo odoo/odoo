@@ -58,7 +58,7 @@ test("placeholder must not be visible if there is content in the editor", async 
 
 test("placeholder must not be visible if there is content in the editor (2)", async () => {
     const content =
-        '<p><a href="#" title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></a></p>';
+        '<p><span title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></span></p>';
     const { el } = await setupEditor(content, { config: { placeholder: "test" } });
     // Unchanged, no placeholder hint.
     expect(getContent(el)).toBe(content);
@@ -66,7 +66,7 @@ test("placeholder must not be visible if there is content in the editor (2)", as
 
 test("should not display hint in paragraph with media content", async () => {
     const content =
-        '<p><a href="#" title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></a>[]</p>';
+        '<p><span title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></span>[]</p>';
     const { el } = await setupEditor(content);
     // Unchanged, no empty paragraph hint.
     expect(getContent(el)).toBe(content);

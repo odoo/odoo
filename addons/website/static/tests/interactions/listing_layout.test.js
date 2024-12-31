@@ -28,7 +28,7 @@ test("listing_layout toggle to list mode", async () => {
             </section>
             <div class="o_website_grid">
                 <div class="col-lg-3 col-md-4 col-sm-6 px-2 col-xs-12">
-                    <a class="o_website_record text-decoration-none d-grid card w-100 mb-3" href="#">
+                    <a class="o_website_record text-decoration-none d-grid card w-100 mb-3" href="#test">
                         Some data
                     </a>
                 </div>
@@ -78,7 +78,7 @@ test("listing_layout toggle to grid mode", async () => {
             </section>
             <div class="o_website_list">
                 <div>
-                    <a class="o_website_record text-decoration-none d-grid card w-100 mb-3" href="#">
+                    <a class="o_website_record text-decoration-none d-grid card w-100 mb-3" href="#test">
                         Some data
                     </a>
                 </div>

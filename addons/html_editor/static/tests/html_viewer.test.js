@@ -13,12 +13,12 @@ test(`XML-like self-closing elements are fixed in a standalone HtmlViewer`, asyn
         Component: HtmlViewer,
         props: {
             config: {
-                value: markup(`<a href="#"/>outside<a href="#">inside</a>`),
+                value: markup(`<a href="#test"/>outside<a href="#test">inside</a>`),
             },
         },
     });
     await animationFrame();
     expect(".o_readonly").toHaveInnerHTML(
-        `<a href="#" target="_blank" rel="noreferrer"></a>outside<a href="#" target="_blank" rel="noreferrer">inside</a>`
+        `<a href="#test" target="_blank" rel="noreferrer"></a>outside<a href="#test" target="_blank" rel="noreferrer">inside</a>`
     );
 });

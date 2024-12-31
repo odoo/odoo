@@ -54,7 +54,7 @@
                 data-bs-trigger="focus"
                 data-bs-toggle="popover"
                 t-on-click="(event) => this._onOpenPopover(event, employee)">
-            <a href="#"
+            <button
                 t-attf-class="badge rounded-pill bg-300 border {{employee.indirect_sub_count &lt; 10 ? 'px-2' : 'px-1' }}"
                 t-esc="employee.indirect_sub_count"
                 />
@@ -73,9 +73,9 @@
     <t t-set="emp_count" t-value="0"/>
     <div t-if='managers.length &gt; 0' class="o_org_chart_group_up position-relative">
         <div t-if='managers_more' class="o_org_chart_more pe-3">
-            <a href="#" t-att-data-employee-id="managers[0].id" class="o_employee_more_managers d-block bg-100 px-3" t-on-click.prevent="() => this._onEmployeeMoreManager(managers[0].id)">
+            <button t-att-data-employee-id="managers[0].id" class="o_employee_more_managers d-block bg-100 px-3 btn btn-link text-start w-100" t-on-click.prevent="() => this._onEmployeeMoreManager(managers[0].id)">
                 <i class="fa fa-angle-double-up" role="img" aria-label="More managers" title="More managers"/>
-            </a>
+            </button>
         </div>
 
         <t t-foreach="managers" t-as="employee" t-key="employee_index">
@@ -111,11 +111,11 @@
         <t t-if="(children.length + managers.length) &gt; 19">
             <div class="o_org_chart_entry o_org_chart_more d-flex overflow-visible">
                 <div class="o_media_left position-relative">
-                    <a href="#"
+                    <button
                         t-att-data-employee-id="self.id"
                         t-att-data-employee-name="self.name"
                         class="o_org_chart_show_more o_employee_sub_redirect btn btn-link ps-2"
-                        t-on-click.prevent="_onEmployeeSubRedirect">See All</a>
+                        t-on-click.prevent="_onEmployeeSubRedirect">See All</button>
                 </div>
             </div>
         </t>
@@ -131,7 +131,7 @@
             <div class="d-flex align-items-center">
                 <span class="flex-shrink-0" t-att-style='"background-image:url(\"/web/image/hr.employee.public/" + props.employee.id + "/avatar_1024/\")"'/>
                 <b class="flew-grow-1"><t t-esc="props.employee.name"/></b>
-                <a href="#" class="ms-auto o_employee_redirect" t-att-data-employee-id="props.employee.id" t-on-click.prevent="() => this._onEmployeeRedirect(props.employee.id)"><i class="fa fa-external-link" role="img" aria-label='Redirect' title="Redirect"></i></a>
+                <button class="ms-auto o_employee_redirect btn btn-link p-0" t-att-data-employee-id="props.employee.id" t-on-click.prevent="() => this._onEmployeeRedirect(props.employee.id)"><i class="fa fa-external-link" role="img" aria-label='Redirect' title="Redirect"></i></button>
             </div>
         </h3>
         <div class="popover-body">
@@ -140,10 +140,10 @@
                     <tr>
                         <td class="text-end"><b t-esc="props.employee.direct_sub_count"/></td>
                         <td>
-                            <a href="#" class="o_employee_sub_redirect" data-type='direct'
+                            <button class="o_employee_sub_redirect btn btn-link p-0" data-type='direct'
                                     t-att-data-employee-name="props.employee.name" t-att-data-employee-id="props.employee.id"
                                     t-on-click.prevent="_onEmployeeSubRedirect">
-                                <b>Direct subordinates</b></a>
+                                <b>Direct subordinates</b></button>
                         </td>
                     </tr>
                     <tr>
@@ -151,19 +151,19 @@
                             <b t-esc="props.employee.indirect_sub_count - props.employee.direct_sub_count"/>
                         </td>
                         <td>
-                            <a href="#" class="o_employee_sub_redirect" data-type='indirect'
+                            <button class="o_employee_sub_redirect btn btn-link fw-normal p-0" data-type='indirect'
                                     t-att-data-employee-name="props.employee.name" t-att-data-employee-id="props.employee.id"
                                     t-on-click.prevent="_onEmployeeSubRedirect">
-                                Indirect subordinates</a>
+                                Indirect subordinates</button>
                         </td>
                     </tr>
                     <tr>
                         <td class="text-end"><b t-esc="props.employee.indirect_sub_count"/></td>
                         <td>
-                            <a href="#" class="o_employee_sub_redirect" data-type='total'
+                            <button class="o_employee_sub_redirect btn btn-link fw-normal p-0" data-type='total'
                                     t-att-data-employee-name="props.employee.name" t-att-data-employee-id="props.employee.id"
                                     t-on-click.prevent="_onEmployeeSubRedirect">
-                                Total</a>
+                                Total</button>
                         </td>
                     </tr>
                 </tbody>

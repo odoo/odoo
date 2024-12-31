@@ -94,7 +94,7 @@ const cannotAddNewContent = () => [{
 
 const canEditInBackEnd = () => [{
     content: "Edit in backend",
-    trigger: '.o_menu_systray .o_website_edit_in_backend a',
+    trigger: '.o_menu_systray .o_website_edit_in_backend button',
     run: "click",
 }, {
     content: "Check that the form is editable",
@@ -107,7 +107,7 @@ const canEditInBackEnd = () => [{
 
 const canViewInBackEnd = () => [{
     content: "Go to backend",
-    trigger: '.o_menu_systray .o_website_edit_in_backend a',
+    trigger: '.o_menu_systray .o_website_edit_in_backend button',
     run: "click",
 }, {
     content: "Check that the form is read-only",

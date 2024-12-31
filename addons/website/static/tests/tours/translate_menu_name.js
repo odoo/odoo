@@ -10,7 +10,7 @@ registerWebsitePreviewTour('translate_menu_name', {
 }, () => [
     {
         content: "Open Edit dropdown",
-        trigger: '.o_edit_website_container button',
+        trigger: '.o_edit_website_container .o-dropdown-toggle-custo',
         run: "click",
     },
     {

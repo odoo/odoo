@@ -29,8 +29,8 @@ const cookiesBarTemplate = `
                     <section>
                         <div class="container">
                             <p>
-                                <a href="#" id="cookies-consent-essential" role="button" class="js_close_popup btn btn-outline-primary">Only essentials</a>
-                                <a href="#" id="cookies-consent-all" role="button" class="js_close_popup btn btn-outline-primary">I agree</a>
+                                <a href="#test" id="cookies-consent-essential" role="button" class="js_close_popup btn btn-outline-primary">Only essentials</a>
+                                <a href="#test" id="cookies-consent-all" role="button" class="js_close_popup btn btn-outline-primary">I agree</a>
                             </p>
                         </div>
                     </section>

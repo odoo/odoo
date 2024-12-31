@@ -15,9 +15,8 @@
         </a>
     </li>
     <li t-elif="show_dropdown" t-attf-class="#{item_class or ''} #{submenu.is_mega_menu and 'position-static'} #{offcanvas_is_leftside and 'o_mega_menu_left'} #{is_accordion_nav and 'accordion accordion-flush' or 'dropdown'}" role="presentation">
-        <a
+        <button
             t-if="not is_accordion_nav"
-            href="#"
             t-attf-class="dropdown-toggle #{link_class or ''} #{submenu.is_mega_menu and 'o_mega_menu_toggle'} #{submenu._is_active() and 'active'} #{dropdown_toggler_classes}"
             data-bs-toggle="dropdown"
             t-att-data-bs-display="'static' if submenu.is_mega_menu else None"
@@ -25,7 +24,7 @@
             role="menuitem"
         >
             <span t-field="submenu.name"/>
-        </a>
+        </button>
         <!-- Avoid rendering the mega menu element twice (Desktop + Mobile) -->
         <div
             t-if="submenu.is_mega_menu and not is_mobile"
@@ -43,8 +42,7 @@
         </div>
         <!-- Is a dropdown in desktop -> becomes accordion in Mobile / Sidebar / Hamburger -->
         <div t-elif="is_accordion_nav" class="accordion-item">
-            <a
-                href="#"
+            <button
                 t-attf-class="#{link_class or ''} accordion-button collapsed"
                 data-bs-toggle="collapse"
                 t-attf-data-bs-target=".o_accordion_target_#{submenu.id}"
@@ -52,7 +50,7 @@
                 t-attf-aria-controls="o_accordion_target_#{submenu.id}"
             >
                 <span t-field="submenu.name"/>
-            </a>
+            </button>
             <div
                 t-attf-class="o_accordion_target_#{submenu.id} accordion-collapse collapse"
                 t-attf-aria-labelledby="o_accordion_target_#{submenu.id}"
@@ -1739,10 +1737,10 @@
                             <h5 class="mb-3">Useful Links</h5>
                             <ul class="list-unstyled">
                                 <li><a href="/">Home</a></li>
-                                <li><a href="#">About us</a></li>
-                                <li><a href="#">Products</a></li>
-                                <li><a href="#">Services</a></li>
-                                <li><a href="#">Legal</a></li>
+                                <li><button class="btn btn-link p-0">About us</button></li>
+                                <li><button class="btn btn-link p-0">Products</button></li>
+                                <li><button class="btn btn-link p-0">Services</button></li>
+                                <li><button class="btn btn-link p-0">Legal</button></li>
                                 <t t-set="configurator_footer_links" t-value="[]"/>
                                 <li t-foreach="configurator_footer_links" t-as="link">
                                     <a t-att-href="link['href']" t-esc="link['text']"/>
@@ -1873,9 +1871,9 @@
                             <h5>Explore</h5>
                             <ul class="list-unstyled">
                                 <li class="list-item py-1"><a href="/">Home</a></li>
-                                <li class="list-item py-1"><a href="#">Our Company</a></li>
-                                <li class="list-item py-1"><a href="#">Case Studies</a></li>
-                                <li class="list-item py-1"><a href="#">Blog</a></li>
+                                <li class="list-item py-1"><button class="btn btn-link p-0">Our Company</button></li>
+                                <li class="list-item py-1"><button class="btn btn-link p-0">Case Studies</button></li>
+                                <li class="list-item py-1"><button class="btn btn-link p-0">Blog</button></li>
                                 <t t-set="configurator_footer_links" t-value="[]"/>
                                 <li t-foreach="configurator_footer_links" t-as="link" class="list-item py-1">
                                     <a t-att-href="link['href']" t-esc="link['text']"/>
@@ -1885,10 +1883,10 @@
                         <div class="col-lg-2 pb16">
                             <h5>Services</h5>
                             <ul class="list-unstyled">
-                                <li class="py-1"><a href="#">Documentation</a></li>
-                                <li class="py-1"><a href="#">Marketplace</a></li>
-                                <li class="py-1"><a href="#">Design</a></li>
-                                <li class="py-1"><a href="#">Resources</a></li>
+                                <li class="py-1"><button class="btn btn-link p-0">Documentation</button></li>
+                                <li class="py-1"><button class="btn btn-link p-0">Marketplace</button></li>
+                                <li class="py-1"><button class="btn btn-link p-0">Design</button></li>
+                                <li class="py-1"><button class="btn btn-link p-0">Resources</button></li>
                             </ul>
                         </div>
                         <div class="col-lg-2 pb16">
@@ -1932,9 +1930,9 @@
                         <div class="col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start pt16 pb16">
                             <ul class="list-inline mb-0 ms-3">
                                 <li class="list-inline-item"><a href="/">Home</a></li>
-                                <li class="list-inline-item"><a href="#">About us</a></li>
-                                <li class="list-inline-item"><a href="#">Products</a></li>
-                                <li class="list-inline-item"><a href="#">Services</a></li>
+                                <li class="list-inline-item"><button class="btn btn-link p-0">About us</button></li>
+                                <li class="list-inline-item"><button class="btn btn-link p-0">Products</button></li>
+                                <li class="list-inline-item"><button class="btn btn-link p-0">Services</button></li>
                                 <t t-set="configurator_footer_links" t-value="[]"/>
                                 <li t-foreach="configurator_footer_links" t-as="link" class="list-inline-item">
                                     <a t-att-href="link['href']" t-esc="link['text']"/>
@@ -2029,15 +2027,15 @@
                                 </li>
                                 <li class="list-inline-item">•</li>
                                 <li class="list-inline-item">
-                                    <a href="#">About us</a>
+                                    <button class="btn btn-link p-0">About us</button>
                                 </li>
                                 <li class="list-inline-item">•</li>
                                 <li class="list-inline-item">
-                                    <a href="#">Products</a>
+                                    <button class="btn btn-link p-0">Products</button>
                                 </li>
                                 <li class="list-inline-item">•</li>
                                 <li class="list-inline-item">
-                                    <a href="#">Terms of Services</a>
+                                    <button class="btn btn-link p-0">Terms of Services</button>
                                 </li>
                                 <t t-set="configurator_footer_links" t-value="[]"/>
                                 <t t-foreach="configurator_footer_links" t-as="link" class="list-inline-item">
@@ -2211,10 +2209,10 @@
                                         </p>
                                     </div>
                                     <div class="col-lg-4 text-end pt16 pb16">
-                                        <a href="#" id="cookies-consent-essential" role="button"
-                                           class="js_close_popup btn btn-outline-primary rounded-circle btn-sm px-2">Only essentials</a>
-                                        <a href="#" id="cookies-consent-all" role="button"
-                                           class="js_close_popup btn btn-outline-primary rounded-circle btn-sm">I agree</a>
+                                        <button id="cookies-consent-essential" role="button"
+                                           class="js_close_popup btn btn-outline-primary rounded-circle btn-sm px-2">Only essentials</button>
+                                        <button id="cookies-consent-all" role="button"
+                                           class="js_close_popup btn btn-outline-primary rounded-circle btn-sm">I agree</button>
                                     </div>
                                 </div>
                             </div>
@@ -3038,9 +3036,9 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                         </div>
                     </div>
                 </div>
-                <a t-attf-class="btn rounded-circle p-1 lh-1 #{_button_classes or 'bg-o-color-3'} o_not_editable" data-bs-target="#o_search_modal" data-bs-toggle="modal" role="button" title="Search" href="#">
+                <button t-attf-class="btn rounded-circle p-1 lh-1 #{_button_classes or 'bg-o-color-3'} o_not_editable" data-bs-target="#o_search_modal" data-bs-toggle="modal" role="button" title="Search">
                     <i class="oi oi-search fa-stack lh-lg"/>
-                </a>
+                </button>
             </t>
             <t t-else="">
                 <t t-call="website.header_search_box_input"/>

@@ -51,7 +51,7 @@ registerWebsitePreviewTour(
         ...clickOnSave(),
         {
             content: "Publish your website",
-            trigger: ".o_menu_systray_item.o_website_publish_container a",
+            trigger: ".o_menu_systray_item.o_website_publish_container button",
             run: "click",
         },
         {
@@ -66,7 +66,7 @@ registerWebsitePreviewTour(
         {
             content: "Open the dropdown menu",
             trigger:
-                ":iframe #o_main_nav .navbar-nav .dropdown.o_no_autohide_item > a.dropdown-toggle",
+                ":iframe #o_main_nav .navbar-nav .dropdown.o_no_autohide_item > button.dropdown-toggle",
             run: "click",
         },
         {

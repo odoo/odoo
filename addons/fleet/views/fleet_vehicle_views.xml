@@ -311,8 +311,8 @@
                             <field name="vehicle_properties" widget="properties"/>
                             <footer class="pt-0 mt-0" t-if="!selection_mode">
                                 <div class="d-flex fs-6">
-                                    <a t-if="record.contract_count.raw_value>0" type="object"
-                                        name="return_action_to_open" href="#" data-context='{"xml_id":"fleet_vehicle_log_contract_action"}'>
+                                    <button t-if="record.contract_count.raw_value>0" type="object"
+                                        name="return_action_to_open" data-context='{"xml_id":"fleet_vehicle_log_contract_action"}' class="btn btn-link fw-normal p-0">
                                         <field name="contract_count"/>
                                         Contract(s)
                                         <span t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value"
@@ -321,7 +321,7 @@
                                         <span t-if="record.contract_renewal_overdue.raw_value"
                                             class="fa fa-exclamation-triangle text-danger" role="img" aria-label="Attention: renewal overdue" title="Attention: renewal overdue">
                                         </span>
-                                    </a>
+                                    </button>
                                     <field name="activity_ids" widget="kanban_activity" class="ms-2"/>
                                 </div>
                             </footer>

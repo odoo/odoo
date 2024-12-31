@@ -7,11 +7,11 @@
                 <t t-if="this.props.revenue.isSectionFoldable">
                     <button t-attf-class="btn o_group_caret fa fa-fw me-1 #{state.isFolded ? 'fa-caret-right' : 'fa-caret-down'}" t-on-click="() => this.toggleSaleItems()"/>
                 </t>
-                <a class="revenue_section" t-if="revenue.action" href="#"
+                <button class="revenue_section btn btn-link fw-normal p-0" t-if="revenue.action"
                     t-on-click="() => this.props.onClick(revenue.action)"
                 >
                     <t t-esc="revenue_label"/>
-                </a>
+                </button>
                 <t t-esc="revenue_label" t-else=""/>
             </td>
             <td t-attf-class="text-end align-middle {{ revenue.invoiced + revenue.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.invoiced + revenue.to_invoice)"/></td>
@@ -34,9 +34,9 @@
                             <tr class="bg-light" t-foreach="sale_items" t-as="sale_item" t-key="sale_item.id">
                                 <t t-set="uom_name" t-value="sale_item.product_uom_id and sale_item.product_uom_id[1]"/>
                                 <td style="padding-left: 30px">
-                                    <a t-if="sale_item.action" href="#" t-on-click="() => this.onSaleItemActionClick(sale_item.action)">
+                                    <button t-if="sale_item.action" class="btn btn-link fw-normal p-0 text-start" t-on-click="() => this.onSaleItemActionClick(sale_item.action)">
                                         <t t-esc="sale_item.display_name"/>
-                                    </a>
+                                    </button>
                                     <t t-else="" t-esc="sale_item.display_name"/>
                                 </td>
                                 <td class="text-end align-middle"><t t-esc="formatValue(sale_item.product_uom_qty, uom_name)"/> <t t-esc="uom_name"/></td>

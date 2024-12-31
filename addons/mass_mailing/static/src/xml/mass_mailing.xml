@@ -23,12 +23,12 @@
             </div>
         </div>
         <div class="d-inline-block w-100">
-            <a t-foreach="themes" t-as="theme" t-key="theme_index"
-                t-att-id="theme.name" role="menuitem" href="#" class="dropdown-item px-4">
+            <button t-foreach="themes" t-as="theme" t-key="theme_index"
+                t-att-id="theme.name" role="menuitem" class="dropdown-item px-4">
                 <div class="o_thumb small mb-2"  t-attf-style="background-image: url(#{theme.img}_small.png)"/>
                 <div class="o_thumb large mb-2" t-attf-style="background-image: url(#{theme.img}_large.png)"/>
                 <h5 class="text-white text-capitalize text-truncate" t-esc="theme.title"/>
-            </a>
+            </button>
         </div>
     </div>
 </templates>

@@ -12,7 +12,7 @@ registry.category("web_tour.tours").add('sale_signature', {
     },
     {
         content: "click sign",
-        trigger: 'a:contains("Sign")',
+        trigger: 'button:contains("Sign")',
         run: "click",
     },
     {

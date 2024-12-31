@@ -15,7 +15,7 @@ patch(EventAdditionalTourSteps.prototype, {
                 tooltipPosition: 'bottom',
                 run: "click",
             }, {
-                trigger: '.o_edit_website_container a',
+                trigger: '.o_edit_website_container button',
                 content: markup(_t("With the Edit button, you can <b>customize</b> the web page visitors will see when registering.")),
                 tooltipPosition: 'bottom',
                 run: "click",
@@ -35,7 +35,7 @@ patch(EventAdditionalTourSteps.prototype, {
                 trigger: ":iframe body:not(.editor_enable) .o_wevent_event",
             },
             {
-                trigger: '.o_menu_systray_item.o_website_publish_container a',
+                trigger: '.o_menu_systray_item.o_website_publish_container button',
                 content: markup(_t("Looking great! Let's now <b>publish</b> this page so that it becomes <b>visible</b> on your website!")),
                 tooltipPosition: 'bottom',
                 run: "click",

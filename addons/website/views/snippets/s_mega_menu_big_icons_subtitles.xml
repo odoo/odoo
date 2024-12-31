@@ -69,7 +69,7 @@
 </template>
 
 <template id="s_mega_menu_big_icons_subtitles_item">
-    <a href="#" class="nav-link px-2 my-2 rounded text-wrap" data-name="Menu Item">
+    <button class="nav-link px-2 my-2 rounded text-wrap text-start" data-name="Menu Item">
         <div class="d-flex align-items-center">
             <i t-attf-class="fa rounded rounded-circle me-3 #{_icon_classes}"/>
             <div class="flex-grow-1">
@@ -77,7 +77,7 @@
                 <span class="small"><t t-esc="_text"/></span>
             </div>
         </div>
-    </a>
+    </button>
 </template>
 
 <record id="website.s_mega_menu_big_icons_subtitles_000_scss" model="ir.asset">

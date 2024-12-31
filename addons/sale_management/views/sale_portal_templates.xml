@@ -15,15 +15,14 @@
 
         <xpath expr="//section[@id='details']//t[@name='product_line_row']" position="inside">
             <td class="text-center" t-if="display_remove">
-                <a t-if="line._can_be_edited_on_portal()"
+                <button t-if="line._can_be_edited_on_portal()"
                    t-att-data-line-id="line.id"
                    t-att-data-unlink="True"
-                   href="#"
-                   class="mb8 js_update_line_json d-print-none"
+                   class="mb8 js_update_line_json d-print-none btn btn-link p-0"
                    aria-label="Remove"
                    title="Remove">
                     <span class="fa fa-trash-o"></span>
-                </a>
+                </button>
             </td>
         </xpath>
 
@@ -65,9 +64,9 @@
                                         </strong>
                                     </td>
                                     <td class="text-end" t-if="sale_order._can_be_edited_on_portal() and report_type == 'html'" name="td_option_add_button">
-                                        <a t-att-data-option-id="option.id" href="#" class="mb8 js_add_optional_products d-print-none" aria-label="Add to cart" title="Add to cart">
+                                        <button t-att-data-option-id="option.id" class="mb8 js_add_optional_products d-print-none border-0 bg-transparent p-0" aria-label="Add to cart" title="Add to cart">
                                             <span class="btn btn-secondary">Add to order</span>
-                                        </a>
+                                        </button>
                                     </td>
                                 </t>
                             </tr>
@@ -82,16 +81,16 @@
                 <div class="input-group js_quantity_container pull-right">
 
                     <span class="d-print-none input-group-text d-none d-md-inline-block">
-                        <a t-att-data-line-id="line.id" t-att-data-remove="True" href="#" class="js_update_line_json" aria-label="Remove one" title="Remove one">
+                        <button t-att-data-line-id="line.id" t-att-data-remove="True" class="js_update_line_json btn btn-link p-0" aria-label="Remove one" title="Remove one">
                             <span class="fa fa-minus"/>
-                        </a>
+                        </button>
                     </span>
                     <!-- TODO add uom in this case too -->
                     <input type="text" class="js_quantity form-control" t-att-data-line-id="line.id" t-att-value="line.product_uom_qty"/>
                     <span class="d-print-none input-group-text d-none d-md-inline-block">
-                        <a t-att-data-line-id="line.id" href="#" class="js_update_line_json" aria-label="Add one" title="Add one">
+                        <button t-att-data-line-id="line.id" class="js_update_line_json btn btn-link p-0" aria-label="Add one" title="Add one">
                             <span class="fa fa-plus"/>
-                        </a>
+                        </button>
                     </span>
                 </div>
             </t>

@@ -23,7 +23,7 @@
                                             </t>
                                             <h3 class="mt-2 h6">Link</h3>
                                             <t t-foreach="bs_theme_colors" t-as="color">
-                                                <a href="#" t-attf-class="badge mb-1 text-bg-#{color[0]}"><t t-esc="color[1]"/></a>
+                                                <button t-attf-class="badge mb-1 text-bg-#{color[0]}"><t t-esc="color[1]"/></button>
                                             </t>
                                             <h3 class="mt-2 h6">Autosizing</h3>
                                             <div class="h3">
@@ -65,10 +65,10 @@
                                                 <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">Toggle</button>
                                                 <div class="dropdown-menu">
                                                     <div class="dropdown-header">Header</div>
-                                                    <a class="dropdown-item" href="#">Action</a>
-                                                    <a class="dropdown-item" href="#">Something else here</a>
+                                                    <button class="dropdown-item">Action</button>
+                                                    <button class="dropdown-item">Something else here</button>
                                                     <div class="dropdown-divider"/>
-                                                    <a class="dropdown-item" href="#">Separated link</a>
+                                                    <button class="dropdown-item">Separated link</button>
                                                 </div>
                                             </div>
 
@@ -76,36 +76,36 @@
                                             <h6 class="mt-2">Default</h6>
                                             <ul class="nav">
                                                 <li class="nav-item">
-                                                    <a class="nav-link active" aria-current="page" href="#">Active</a>
+                                                    <button class="nav-link active" aria-current="page">Active</button>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" href="#">Link</a>
+                                                    <button class="nav-link">Link</button>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" href="#">Link</a>
+                                                    <button class="nav-link">Link</button>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                                                    <button class="nav-link disabled" tabindex="-1" aria-disabled="true">Disabled</button>
                                                 </li>
                                             </ul>
                                             <h6 class="mt-2">Tabs</h6>
                                             <ul class="nav nav-tabs">
                                                 <li class="nav-item">
-                                                    <a class="nav-link active" aria-current="page" href="#">Active</a>
+                                                    <button class="nav-link active" aria-current="page">Active</button>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" href="#">Link</a>
+                                                    <button class="nav-link">Link</button>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" href="#">Link</a>
+                                                    <button class="nav-link">Link</button>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                                                    <button class="nav-link disabled" tabindex="-1" aria-disabled="true">Disabled</button>
                                                 </li>
                                             </ul>
                                             <h2 class="mt-4">Navbar</h2>
                                             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                                                <a class="navbar-brand" href="#">Navbar</a>
+                                                <button class="navbar-brand btn btn-link p-0">Navbar</button>
                                                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                                                 <span class="navbar-toggler-icon"></span>
                                                 </button>
@@ -113,13 +113,13 @@
                                                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                                                     <ul class="navbar-nav me-auto">
                                                         <li class="nav-item active">
-                                                            <a class="nav-link" href="#">Home <span class="visually-hidden">(current)</span></a>
+                                                            <button class="nav-link">Home <span class="visually-hidden">(current)</span></button>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="nav-link" href="#">Link</a>
+                                                            <button class="nav-link">Link</button>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="nav-link disabled" href="#">Disabled</a>
+                                                            <button class="nav-link disabled">Disabled</button>
                                                         </li>
                                                     </ul>
                                                     <form class="d-flex align-items-center my-2 my-lg-0">
@@ -178,19 +178,19 @@
                                             <nav>
                                                 <ul class="pagination">
                                                     <li class="page-item disabled">
-                                                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                                        <button class="page-link" tabindex="-1">Previous</button>
                                                     </li>
                                                     <li class="page-item">
-                                                        <a class="page-link" href="#">1</a>
+                                                        <button class="page-link">1</button>
                                                     </li>
                                                     <li class="page-item active">
-                                                        <a class="page-link" href="#">2 <span class="visually-hidden">(current)</span></a>
+                                                        <button class="page-link">2 <span class="visually-hidden">(current)</span></button>
                                                     </li>
                                                     <li class="page-item">
-                                                        <a class="page-link" href="#">3</a>
+                                                        <button class="page-link">3</button>
                                                     </li>
                                                     <li class="page-item">
-                                                        <a class="page-link" href="#">Next</a>
+                                                        <button class="page-link">Next</button>
                                                     </li>
                                                 </ul>
                                             </nav>
@@ -199,8 +199,8 @@
                                             <h2>Breadcrumb</h2>
                                             <nav aria-label="breadcrumb">
                                                 <ol class="breadcrumb">
-                                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                                    <li class="breadcrumb-item"><a href="#">Library</a></li>
+                                                    <li class="breadcrumb-item"><button class="btn btn-link p-0">Home</button></li>
+                                                    <li class="breadcrumb-item"><button class="btn btn-link p-0">Library</button></li>
                                                     <li class="breadcrumb-item active" aria-current="page">Data</li>
                                                 </ol>
                                             </nav>
@@ -287,8 +287,8 @@
                                                         <li class="list-group-item">A third item</li>
                                                     </ul>
                                                     <div class="card-body">
-                                                        <a href="#" class="card-link btn btn-primary">Card link</a>
-                                                        <a href="#" class="card-link">Another link</a>
+                                                        <button class="card-link btn btn-primary">Card link</button>
+                                                        <button class="card-link btn btn-link p-0">Another link</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -517,10 +517,10 @@
                                                         <p class="small">Small text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. <i>Integer posuere erat a ante</i>.</p>
                                                     </div>
                                                     <div class="col-5 border-start">
-                                                        <a href="#" class="mb-3 btn-block btn btn-primary">btn-primary</a>
-                                                        <a href="#" class="mb-3 btn-block btn btn-secondary">btn-secondary</a>
-                                                        <a href="#" class="mb-3 btn-block btn btn-outline-primary">btn-outline-primary</a>
-                                                        <a href="#" class="mb-3 btn-block btn btn-outline-secondary">btn-outline-secondary</a>
+                                                        <button class="mb-3 btn-block btn btn-primary">btn-primary</button>
+                                                        <button class="mb-3 btn-block btn btn-secondary">btn-secondary</button>
+                                                        <button class="mb-3 btn-block btn btn-outline-primary">btn-outline-primary</button>
+                                                        <button class="mb-3 btn-block btn btn-outline-secondary">btn-outline-secondary</button>
                                                     </div>
                                                 </div>
                                                 <hr class="my-4"/>
@@ -540,27 +540,27 @@
                                                                 <p class="card-text">Paragraph. <a class="o_translate_inline" href="#">text link</a></p>
 
                                                                 <t t-foreach="['primary','secondary', 'info', 'warning', 'danger', 'success']" t-as="btn">
-                                                                    <a href="#" t-attf-class="mb-2 btn-sm btn btn-#{btn}" t-esc="'btn-' + btn"/>
+                                                                    <button t-attf-class="mb-2 btn-sm btn btn-#{btn}" t-esc="'btn-' + btn"/>
                                                                 </t>
                                                             </div>
                                                         </div>
                                                         <nav aria-label="breadcrumb">
                                                             <ol class="breadcrumb">
-                                                                <li class="breadcrumb-item"><a href="#">Breadcrumb</a></li>
-                                                                <li class="breadcrumb-item"><a href="#">Library</a></li>
+                                                                <li class="breadcrumb-item"><button class="btn btn-link p-0">Breadcrumb</button></li>
+                                                                <li class="breadcrumb-item"><button class="btn btn-link p-0">Library</button></li>
                                                                 <li class="breadcrumb-item active">Data</li>
                                                             </ol>
                                                         </nav>
                                                         <small>TABS</small>
                                                         <ul class="nav nav-tabs mb-3">
                                                             <li class="nav-item">
-                                                                <a class="nav-link active" href="#">Active</a>
+                                                                <button class="nav-link active">Active</button>
                                                             </li>
                                                             <li class="nav-item">
-                                                                <a class="nav-link" href="#">Link</a>
+                                                                <button class="nav-link">Link</button>
                                                             </li>
                                                             <li class="nav-item">
-                                                                <a class="nav-link disabled" href="#">Disabled</a>
+                                                                <button class="nav-link disabled">Disabled</button>
                                                             </li>
                                                         </ul>
                                                         <div class="progress">
@@ -569,8 +569,8 @@
                                                     </div>
                                                     <div class="col-5 border-start">
                                                         <div t-foreach="['info', 'warning', 'danger', 'success']" t-as="btn">
-                                                            <a href="#" t-attf-class="mb-2 btn-block btn btn-#{btn}" t-esc="'btn-' + btn"/>
-                                                            <a href="#" t-attf-class="mb-3 btn-block btn btn-outline-#{btn}" t-esc="'btn-outline-' + btn"/>
+                                                            <button t-attf-class="mb-2 btn-block btn btn-#{btn}" t-esc="'btn-' + btn"/>
+                                                            <button t-attf-class="mb-3 btn-block btn btn-outline-#{btn}" t-esc="'btn-outline-' + btn"/>
                                                         </div>
                                                     </div>
                                                 </div>

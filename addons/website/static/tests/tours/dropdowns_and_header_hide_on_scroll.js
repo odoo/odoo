@@ -11,7 +11,7 @@ const checkIfUserMenuNotMasked = function () {
     return [
         {
             content: "Click on the user dropdown",
-            trigger: ":iframe #wrapwrap header li.dropdown > a:contains(mitchell admin)",
+            trigger: ":iframe #wrapwrap header li.dropdown > button:contains(mitchell admin)",
             run: "click",
         },
         checkIfVisibleOnScreen(

@@ -7,22 +7,22 @@
         <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//footer/div" position="inside">
-                <a t-if="record.invoiced_amount" href="#" title="Revenues" role="button"
+                <button t-if="record.invoiced_amount" title="Revenues" role="button"
                     groups="sales_team.group_sale_salesman" type="object" name="action_redirect_to_invoiced"
-                    class="btn-outline-primary rounded-pill me-1 order-1">
+                    class="rounded-pill me-1 order-1 p-0">
                     <span class="badge">
                         <field name="currency_id" invisible="True"/>
                         <field name="invoiced_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     </span>
-                </a>
-                <a t-if="record.quotation_count" href="#" title="Quotations" role="button"
+                </button>
+                <button t-if="record.quotation_count" title="Quotations" role="button"
                     groups="sales_team.group_sale_salesman" type="object" name="action_redirect_to_quotations"
-                    class="btn-outline-primary rounded-pill me-1 order-2">
+                    class="rounded-pill me-1 order-2 p-0">
                     <span class="badge">
                         <i class="fa fa-fw fa-money me-1" aria-label="Quotations" role="img"/>
                         <field name="quotation_count"/>
                     </span>
-                </a>
+                </button>
             </xpath>
         </field>
     </record>
