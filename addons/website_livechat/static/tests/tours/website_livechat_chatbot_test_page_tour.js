@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour
             run: "click",
         },
         {
-            trigger: '.o-livechat-root:shadow li:contains("I want to buy the software")',
+            trigger: '.o-livechat-root:shadow li:contains("I\'d like to buy the software")',
             run: "click",
         },
         {
