@@ -76,11 +76,11 @@ test("should not remove an unremovable element on CTRL+SHIFT+BACKSPACE", async (
 test("should not merge an unbreakable element on CTRL+SHIFT+BACKSPACE", async () => {
     await testEditor({
         contentBefore: unformat(`
-            <div>abc</div>
+            <div class="oe_unbreakable">abc</div>
             <p>[]def</p>`),
         stepFunction: ctrlShiftBackspace,
         contentAfter: unformat(`
-            <div>abc</div>
+            <div class="oe_unbreakable">abc</div>
             <p>[]def</p>`),
     });
 });
@@ -89,10 +89,10 @@ test("should not merge an unbreakable element on CTRL+SHIFT+BACKSPACE (2)", asyn
     await testEditor({
         contentBefore: unformat(`
             <p>abc</p>
-            <div>[]def</div>`),
+            <div class="oe_unbreakable">[]def</div>`),
         stepFunction: ctrlShiftBackspace,
         contentAfter: unformat(`
             <p>abc</p>
-            <div>[]def</div>`),
+            <div class="oe_unbreakable">[]def</div>`),
     });
 });
