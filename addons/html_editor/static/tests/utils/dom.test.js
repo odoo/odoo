@@ -189,10 +189,10 @@ describe("wrapInlinesInBlocks", () => {
     test("wrap block with display style inline in div", async () => {
         // Second part should be wrapped automatically during initElementForEdition
         const { el, editor } = await setupEditor(
-            `<p><br></p><div contenteditable="false" style="display: inline;">inline</div>`
+            `<div><br></div><div contenteditable="false" style="display: inline;">inline</div>`
         );
-        const p = el.querySelector("p");
-        editor.shared.selection.setSelection({ anchorNode: p, anchorOffset: 0 });
+        const div = el.querySelector("div");
+        editor.shared.selection.setSelection({ anchorNode: div, anchorOffset: 0 });
         editor.shared.selection.focusEditable();
         // dom insert should take care not to insert inline content at the root
         // inline non-phrasing content should not be added in a paragraph-related
@@ -213,8 +213,8 @@ describe("wrapInlinesInBlocks", () => {
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div>[]
                 </div>
-                <p><br></p>
-                <div style="margin-bottom: 0px;">
+                <div class="o-paragraph"><br></div>
+                <div>
                     <div contenteditable="false" style="display: inline;">inline</div>
                 </div>
             `)
@@ -223,10 +223,10 @@ describe("wrapInlinesInBlocks", () => {
     test("wrap a mix of inline elements in div", async () => {
         // Second part should be wrapped automatically during initElementForEdition
         const { el, editor } = await setupEditor(
-            `<p><br></p>text<div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>`
+            `<div><br></div>text<div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>`
         );
-        const p = el.querySelector("p");
-        editor.shared.selection.setSelection({ anchorNode: p, anchorOffset: 0 });
+        const div = el.querySelector("div");
+        editor.shared.selection.setSelection({ anchorNode: div, anchorOffset: 0 });
         editor.shared.selection.focusEditable();
         // dom insert should take care not to insert inline content at the root
         // inline non-phrasing content should not be added in a paragraph-related
@@ -240,13 +240,15 @@ describe("wrapInlinesInBlocks", () => {
         editor.shared.history.addStep();
         expect(getContent(el)).toBe(
             unformat(`
-                <p>text</p>
+                <div class="o-paragraph">text</div>
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>[]
                 </div>
-                <p><br></p>
-                <div style="margin-bottom: 0px;">
-                    text<div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>
+                <div class="o-paragraph"><br></div>
+                <div>
+                    text
+                    <div contenteditable="false" style="display: inline;">inline</div>
+                    <span class="a">span</span>
                 </div>
             `)
         );
@@ -254,10 +256,10 @@ describe("wrapInlinesInBlocks", () => {
     test("wrap a mix of inline elements in div with br", async () => {
         // Second part should be wrapped automatically during initElementForEdition
         const { el, editor } = await setupEditor(
-            `<p>[]<br></p>text<br><div contenteditable="false" style="display: inline;">inline</div><br><span class="a">span</span>`
+            `<div>[]<br></div>text<br><div contenteditable="false" style="display: inline;">inline</div><br><span class="a">span</span>`
         );
-        const p = el.querySelector("p");
-        editor.shared.selection.setSelection({ anchorNode: p, anchorOffset: 0 });
+        const div = el.querySelector("div");
+        editor.shared.selection.setSelection({ anchorNode: div, anchorOffset: 0 });
         // dom insert should take care not to insert inline content at the root
         // inline non-phrasing content should not be added in a paragraph-related
         // element.
@@ -270,20 +272,20 @@ describe("wrapInlinesInBlocks", () => {
         editor.shared.history.addStep();
         expect(getContent(el)).toBe(
             unformat(`
-                <p>text</p>
+                <div class="o-paragraph">text</div>
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div>
                 </div>
                 <p>
                     <span class="a">span</span>[]
                 </p>
-                <p style="margin-bottom: 0px;">text</p>
-                <div style="margin-bottom: 0px;">
+                <div class="o-paragraph">text</div>
+                <div>
                     <div contenteditable="false" style="display: inline;">inline</div>
                 </div>
-                <p style="margin-bottom: 0px;">
+                <div class="o-paragraph">
                     <span class="a">span</span>
-                </p>
+                </div>
             `)
         );
     });

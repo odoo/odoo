@@ -209,7 +209,7 @@ test("toolbar works: can select font", async () => {
     expect(".o-we-toolbar").toHaveCount(0);
     setContent(el, "<p>[test]</p>");
     await waitFor(".o-we-toolbar");
-    expect(".o-we-toolbar [title='Font style']").toHaveText("Normal");
+    expect(".o-we-toolbar [title='Font style']").toHaveText("Paragraph");
 
     await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
     await contains(".o_font_selector_menu .dropdown-item:contains('Header 2')").click();
@@ -220,12 +220,13 @@ test("toolbar works: can select font", async () => {
 test("toolbar works: show the right font name", async () => {
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
-    for (const item of fontItems) {
+    const items = fontItems;
+    for (const item of items) {
         await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
         await animationFrame();
         const name = item.name.toString();
         let selector = `.o_font_selector_menu .dropdown-item:contains('${name}')`;
-        for (const tempItem of fontItems) {
+        for (const tempItem of items) {
             // we need to exclude the font names which have the current name as a substring.
             if (tempItem === item) {
                 continue;
@@ -244,7 +245,7 @@ test("toolbar works: show the right font name", async () => {
 test("toolbar works: show the right font name after undo", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
-    expect(".o-we-toolbar [title='Font style']").toHaveText("Normal");
+    expect(".o-we-toolbar [title='Font style']").toHaveText("Paragraph");
 
     await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
     await contains(".o_font_selector_menu .dropdown-item:contains('Header 2')").click();
@@ -253,7 +254,7 @@ test("toolbar works: show the right font name after undo", async () => {
     await press(["ctrl", "z"]);
     await animationFrame();
     expect(getContent(el)).toBe("<p>[test]</p>");
-    expect(".o-we-toolbar [title='Font style']").toHaveText("Normal");
+    expect(".o-we-toolbar [title='Font style']").toHaveText("Paragraph");
     await press(["ctrl", "y"]);
     await animationFrame();
     expect(getContent(el)).toBe("<h2>[test]</h2>");

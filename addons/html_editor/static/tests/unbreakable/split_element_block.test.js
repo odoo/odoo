@@ -5,23 +5,23 @@ import { getContent } from "../_helpers/selection";
 
 test("should replace splitElementBlock with insertLineBreak (selection start)", async () => {
     await testEditor({
-        contentBefore: `<div>[]ab</div>`,
+        contentBefore: `<div class="oe_unbreakable">[]ab</div>`,
         stepFunction: splitBlock,
-        contentAfter: `<div><br>[]ab</div>`,
+        contentAfter: `<div class="oe_unbreakable"><br>[]ab</div>`,
     });
 });
 test("should replace splitElementBlock with insertLineBreak (selection between)", async () => {
     await testEditor({
-        contentBefore: `<div>a[]b</div>`,
+        contentBefore: `<div class="oe_unbreakable">a[]b</div>`,
         stepFunction: splitBlock,
-        contentAfter: `<div>a<br>[]b</div>`,
+        contentAfter: `<div class="oe_unbreakable">a<br>[]b</div>`,
     });
 });
 test("should replace splitElementBlock with insertLineBreak (selection end)", async () => {
     await testEditor({
-        contentBefore: `<div>ab[]</div>`,
+        contentBefore: `<div class="oe_unbreakable">ab[]</div>`,
         stepFunction: splitBlock,
-        contentAfter: `<div>ab<br>[]<br></div>`,
+        contentAfter: `<div class="oe_unbreakable">ab<br>[]<br></div>`,
     });
 });
 test("should not split a contenteditable='false'", async () => {

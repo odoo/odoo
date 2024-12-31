@@ -582,14 +582,18 @@ describe("destroy", () => {
             }
             destroy() {
                 this.dependencies.dom.insert(
-                    parseHTML(this.document, `<div class="test">destroyed</div>`)
+                    parseHTML(this.document, `<div class="test oe_unbreakable">destroyed</div>`)
                 );
             }
         }
         const Plugins = [...MAIN_PLUGINS, TestPlugin];
-        const { editor } = await setupEditor(`<div>a[]b</div>`, { config: { Plugins } });
+        const { editor } = await setupEditor(`<div class="oe_unbreakable">a[]b</div>`, {
+            config: { Plugins },
+        });
         // Ensure dispatch when plugins are alive.
-        editor.shared.dom.insert(parseHTML(editor.document, `<div class="test">destroyed</div>`));
+        editor.shared.dom.insert(
+            parseHTML(editor.document, `<div class="test oe_unbreakable">destroyed</div>`)
+        );
         await animationFrame();
         expect.verifySteps(["dispatch"]);
         editor.destroy();

@@ -197,8 +197,7 @@ test("should make a few characters bold inside table (bold)", async () => {
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>`
-        ),
+            </table>`),
         stepFunction: bold,
         contentAfterEdit: unformat(`
             <table class="table table-bordered o_table o_selected_table">
@@ -219,8 +218,7 @@ test("should make a few characters bold inside table (bold)", async () => {
                         <td><p><br></p></td>
                     </tr>
             </tbody>
-            </table>`
-        ),
+            </table>`),
     });
 });
 
@@ -302,7 +300,7 @@ describe("inside container or inline with class already bold", () => {
     test("should force the font-weight to normal with an inline with class", async () => {
         await testEditor({
             styleContent: styleContentBold,
-            contentBefore: `<div>a<span class="boldClass">[b]</span>c</div>`,
+            contentBefore: `<div class="o-paragraph">a<span class="boldClass">[b]</span>c</div>`,
             stepFunction: bold,
             contentAfter: `<div>a<span class="boldClass"><span style="font-weight: normal;">[b]</span></span>c</div>`,
         });
@@ -311,9 +309,9 @@ describe("inside container or inline with class already bold", () => {
     test("should force the font-weight to normal", async () => {
         await testEditor({
             styleContent: styleContentBold,
-            contentBefore: `<div class="boldClass">a[b]c</div>`,
+            contentBefore: `<p class="boldClass">a[b]c</p>`,
             stepFunction: bold,
-            contentAfter: `<div class="boldClass">a<span style="font-weight: normal;">[b]</span>c</div>`,
+            contentAfter: `<p class="boldClass">a<span style="font-weight: normal;">[b]</span>c</p>`,
         });
     });
 
@@ -321,9 +319,9 @@ describe("inside container or inline with class already bold", () => {
         for (const tag of BOLD_TAGS) {
             await testEditor({
                 styleContent: styleContentBold,
-                contentBefore: `<div class="boldClass">a${tag("[b]")}c</div>`,
+                contentBefore: `<p class="boldClass">a${tag("[b]")}c</p>`,
                 stepFunction: bold,
-                contentAfter: `<div class="boldClass">a<span style="font-weight: normal;">[b]</span>c</div>`,
+                contentAfter: `<p class="boldClass">a<span style="font-weight: normal;">[b]</span>c</p>`,
             });
         }
     });
