@@ -80,6 +80,7 @@ export class AddSnippetDialog extends Component {
             this.state.groupSelected = this.props.groupSelected;
         });
 
+        this.currentInsertSnippetsCallID = 0;
         useEffect(
             () => {
                 this.insertSnippets();
@@ -113,6 +114,8 @@ export class AddSnippetDialog extends Component {
      * Inserts the snippets from the selected snippetGroup into the <iframe>.
      */
     async insertSnippets() {
+        const insertSnippetsCallID = ++this.currentInsertSnippetsCallID;
+
         // First, filter out snippets which are never supposed to be shown
         // (excluded ones, inner content ones, ...).
         let snippetsToDisplay = [...this.props.snippets.values()].filter(snippet => {
@@ -179,8 +182,8 @@ export class AddSnippetDialog extends Component {
             return;
         }
 
+        // Create the new 2-column structure
         this.iframeDocument.body.scrollTop = 0;
-        this.iframeDocument.body.innerHTML = "";
         const rowEl = document.createElement("div");
         rowEl.classList.add("row", "g-0", "o_snippets_preview_row");
         rowEl.style.setProperty("direction", this.props.frontendDirection);
@@ -192,121 +195,179 @@ export class AddSnippetDialog extends Component {
         rowEl.appendChild(rightColEl);
         this.iframeDocument.body.appendChild(rowEl);
 
-        for (const snippet of snippetsToDisplay) {
-            // Create cloned snippet.
-            let clonedSnippetEl;
-            let originalSnippet;
-            if (snippet.isCustom) {
-                originalSnippet = [...this.props.snippets.values()].filter(snip =>
-                    !snip.isCustom && snip.name === snippet.name
-                )[0];
-                if (originalSnippet.baseBody.querySelector(".s_dialog_preview")
-                    || originalSnippet.imagePreview
-                    // Specific case for "s_countdown" because it's hybrid (also
-                    // inner content). TODO: It might be possible to have a real
-                    // preview for "s_countdown".
-                    || originalSnippet.name === "s_countdown") {
-                    clonedSnippetEl = originalSnippet.baseBody.cloneNode(true);
-                }
-            }
-            if (!clonedSnippetEl) {
-                clonedSnippetEl = snippet.baseBody.cloneNode(true);
-            }
-            clonedSnippetEl.classList.remove("oe_snippet_body");
-            const snippetPreviewWrapEl = document.createElement("div");
-            snippetPreviewWrapEl.classList.add("o_snippet_preview_wrap", "position-relative", "d-none");
-            snippetPreviewWrapEl.dataset.snippetId = snippet.name;
-            snippetPreviewWrapEl.dataset.snippetKey = snippet.key;
-            snippetPreviewWrapEl.appendChild(clonedSnippetEl);
-            this.__onSnippetPreviewClick = this._onSnippetPreviewClick.bind(this);
-            snippetPreviewWrapEl.addEventListener("click", this.__onSnippetPreviewClick);
+        // Split the next computation in chunks. A first big chunk of snippets
+        // to be computed first, then the rest in smaller chunks. This allows to
+        // make sure that a tab with many snippets (or a one letter search for
+        // instance) can show something filling the screen quickly without a
+        // laggy effect, and without waiting for the full computation. Splitting
+        // the rest in smaller chunks allow to cancel the loading quickly if a
+        // new search is entered.
+        const BIG_CHUNK_SIZE = 6;
+        const SMALL_CHUNK_SIZE = 3;
+        const chunks = [snippetsToDisplay.splice(0, BIG_CHUNK_SIZE)];
+        while (snippetsToDisplay.length) {
+            chunks.push(snippetsToDisplay.splice(0, SMALL_CHUNK_SIZE));
+        }
+        let leftColSize = 0;
+        let rightColSize = 0;
+        for (const chunk of chunks) {
+            // First compute all snippets UI and put them in the left column,
+            // invisible. Parallelize image loading and wait for it before
+            // sorting the items in the right column.
+            const itemEls = await Promise.all(chunk.map(snippet => {
+                let containerEl = null;
 
-            // Add an "Install" button for installable snippets.
-            if (snippet.installable) {
-                snippetPreviewWrapEl.classList.add("o_snippet_preview_install");
-                clonedSnippetEl.dataset.moduleId = snippet.moduleId;
-                const installBtnEl = document.createElement("button");
-                installBtnEl.classList.add("o_snippet_preview_install_btn", "btn", "text-white", "rounded-1", "mx-auto", "p-2", "bottom-50");
-                installBtnEl.innerText = _t("Install %s", snippet.displayName);
-                snippetPreviewWrapEl.appendChild(installBtnEl);
-            }
-
-            // Replace the snippet with an image preview if one exists.
-            const imagePreview = snippet.imagePreview || originalSnippet?.imagePreview;
-            if (imagePreview) {
-                // Enforce no-padding for image previews
-                clonedSnippetEl.style.setProperty("padding", "0", "important");
-                const previewImgDivEl = document.createElement("div");
-                previewImgDivEl.classList.add("s_dialog_preview", "s_dialog_preview_image");
-                const previewImgEl = document.createElement("img");
-                previewImgEl.src = imagePreview;
-                previewImgDivEl.appendChild(previewImgEl);
-                clonedSnippetEl.innerHTML = "";
-                clonedSnippetEl.appendChild(previewImgDivEl);
-            }
-
-            clonedSnippetEl.classList.remove("o_dynamic_empty");
-
-            // Inserts preview into smallest column.
-            const leftColBottom = leftColEl.lastElementChild?.getBoundingClientRect().bottom || 0;
-            const rightColBottom = rightColEl.lastElementChild?.getBoundingClientRect().bottom || 0;
-            const isLeftColSmallest = leftColBottom <= rightColBottom;
-            const lowestColEl = isLeftColSmallest ? leftColEl : rightColEl;
-            lowestColEl.appendChild(snippetPreviewWrapEl);
-
-            // Custom snippet.
-            if (snippet.isCustom) {
-                const editCustomSnippetEl = document.createElement("div");
-                editCustomSnippetEl.classList.add("d-grid", "mt-2", "mx-5", "gap-2",
-                    "d-md-flex", "justify-content-md-end", "o_custom_snippet_edit");
-
-                const spanEl = document.createElement("span");
-                spanEl.classList.add("w-100");
-                spanEl.textContent = snippet.displayName;
-
-                const renameBtnEl = document.createElement("button");
-                renameBtnEl.classList.add("btn", "fa", "fa-pencil", "me-md-2");
-                renameBtnEl.type = "button";
-
-                const removeBtnEl = document.createElement("button");
-                removeBtnEl.classList.add("btn", "fa", "fa-trash");
-                removeBtnEl.type = "button";
-
-                editCustomSnippetEl.appendChild(spanEl);
-                editCustomSnippetEl.appendChild(renameBtnEl);
-                editCustomSnippetEl.appendChild(removeBtnEl);
-
-                const customSnippetWrapEl = document.createElement("div");
-                customSnippetWrapEl.classList.add("o_custom_snippet_wrap");
-                snippetPreviewWrapEl.parentNode.insertBefore(customSnippetWrapEl, snippetPreviewWrapEl);
-                customSnippetWrapEl.appendChild(snippetPreviewWrapEl);
-                customSnippetWrapEl.appendChild(editCustomSnippetEl);
-
-                this.__onRenameCustomBtnClick = this._onRenameCustomBtnClick.bind(this);
-                renameBtnEl.addEventListener("click", this.__onRenameCustomBtnClick);
-                this.__onDeleteCustomBtnClick = this._onDeleteCustomBtnClick.bind(this);
-                removeBtnEl.addEventListener("click", this.__onDeleteCustomBtnClick);
-            }
-
-            // Await images.
-            const imageEls = snippetPreviewWrapEl.querySelectorAll("img");
-            // TODO: move onceAllImagesLoaded in web_editor and to use it here
-            await Promise.all(Array.from(imageEls).map(imgEl => {
-                imgEl.setAttribute("loading", "eager");
-                return new Promise(resolve => {
-                    if (imgEl.complete) {
-                        resolve();
-                    } else {
-                        imgEl.onload = () => resolve();
-                        // If the image could not be loaded, we still want the
-                        // "d-none" class to be removed.
-                        imgEl.onerror = () => resolve();
+                // Create cloned snippet.
+                let clonedSnippetEl;
+                let originalSnippet;
+                if (snippet.isCustom) {
+                    originalSnippet = [...this.props.snippets.values()].filter(snip =>
+                        !snip.isCustom && snip.name === snippet.name
+                    )[0];
+                    if (originalSnippet.baseBody.querySelector(".s_dialog_preview")
+                        || originalSnippet.imagePreview
+                        // Specific case for "s_countdown" because it's hybrid (also
+                        // inner content). TODO: It might be possible to have a real
+                        // preview for "s_countdown".
+                        || originalSnippet.name === "s_countdown") {
+                        clonedSnippetEl = originalSnippet.baseBody.cloneNode(true);
                     }
-                });
+                }
+                if (!clonedSnippetEl) {
+                    clonedSnippetEl = snippet.baseBody.cloneNode(true);
+                }
+                clonedSnippetEl.classList.remove("oe_snippet_body");
+                const snippetPreviewWrapEl = document.createElement("div");
+                snippetPreviewWrapEl.classList.add("o_snippet_preview_wrap", "position-relative");
+                snippetPreviewWrapEl.dataset.snippetId = snippet.name;
+                snippetPreviewWrapEl.dataset.snippetKey = snippet.key;
+                snippetPreviewWrapEl.appendChild(clonedSnippetEl);
+                this.__onSnippetPreviewClick = this._onSnippetPreviewClick.bind(this);
+                snippetPreviewWrapEl.addEventListener("click", this.__onSnippetPreviewClick);
+                containerEl = snippetPreviewWrapEl;
+
+                // Add an "Install" button for installable snippets.
+                if (snippet.installable) {
+                    snippetPreviewWrapEl.classList.add("o_snippet_preview_install");
+                    clonedSnippetEl.dataset.moduleId = snippet.moduleId;
+                    const installBtnEl = document.createElement("button");
+                    installBtnEl.classList.add("o_snippet_preview_install_btn", "btn", "text-white", "rounded-1", "mx-auto", "p-2", "bottom-50");
+                    installBtnEl.innerText = _t("Install %s", snippet.displayName);
+                    snippetPreviewWrapEl.appendChild(installBtnEl);
+                }
+
+                // Replace the snippet with an image preview if one exists.
+                const imagePreview = snippet.imagePreview || originalSnippet?.imagePreview;
+                if (imagePreview) {
+                    // Enforce no-padding for image previews
+                    clonedSnippetEl.style.setProperty("padding", "0", "important");
+                    const previewImgDivEl = document.createElement("div");
+                    previewImgDivEl.classList.add("s_dialog_preview", "s_dialog_preview_image");
+                    const previewImgEl = document.createElement("img");
+                    previewImgEl.src = imagePreview;
+                    previewImgDivEl.appendChild(previewImgEl);
+                    clonedSnippetEl.innerHTML = "";
+                    clonedSnippetEl.appendChild(previewImgDivEl);
+                }
+
+                clonedSnippetEl.classList.remove("o_dynamic_empty");
+
+                // Custom snippet.
+                if (snippet.isCustom) {
+                    const editCustomSnippetEl = document.createElement("div");
+                    editCustomSnippetEl.classList.add("d-grid", "mt-2", "mx-5", "gap-2",
+                        "d-md-flex", "justify-content-md-end", "o_custom_snippet_edit");
+
+                    const spanEl = document.createElement("span");
+                    spanEl.classList.add("w-100");
+                    spanEl.textContent = snippet.displayName;
+
+                    const renameBtnEl = document.createElement("button");
+                    renameBtnEl.classList.add("btn", "fa", "fa-pencil", "me-md-2");
+                    renameBtnEl.type = "button";
+
+                    const removeBtnEl = document.createElement("button");
+                    removeBtnEl.classList.add("btn", "fa", "fa-trash");
+                    removeBtnEl.type = "button";
+
+                    editCustomSnippetEl.appendChild(spanEl);
+                    editCustomSnippetEl.appendChild(renameBtnEl);
+                    editCustomSnippetEl.appendChild(removeBtnEl);
+
+                    const customSnippetWrapEl = document.createElement("div");
+                    customSnippetWrapEl.classList.add("o_custom_snippet_wrap");
+                    customSnippetWrapEl.appendChild(snippetPreviewWrapEl);
+                    customSnippetWrapEl.appendChild(editCustomSnippetEl);
+                    containerEl = customSnippetWrapEl;
+
+                    this.__onRenameCustomBtnClick = this._onRenameCustomBtnClick.bind(this);
+                    renameBtnEl.addEventListener("click", this.__onRenameCustomBtnClick);
+                    this.__onDeleteCustomBtnClick = this._onDeleteCustomBtnClick.bind(this);
+                    removeBtnEl.addEventListener("click", this.__onDeleteCustomBtnClick);
+                }
+
+                // Will be sorted in the right columns after
+                containerEl.classList.add("invisible");
+                leftColEl.appendChild(containerEl);
+
+                // Await images.
+                const imageEls = snippetPreviewWrapEl.querySelectorAll("img");
+                // TODO: move onceAllImagesLoaded in web_editor and to use it here
+                return Promise.all(Array.from(imageEls).map(imgEl => {
+                    imgEl.setAttribute("loading", "eager");
+                    return new Promise(resolve => {
+                        if (imgEl.complete) {
+                            resolve();
+                        } else {
+                            imgEl.onload = () => resolve();
+                            // If the image could not be loaded, we still want the
+                            // "d-none" class to be removed.
+                            imgEl.onerror = () => resolve();
+                        }
+                    });
+                })).then(() => containerEl);
             }));
 
-            snippetPreviewWrapEl.classList.remove("d-none");
+            // During the asynchronous period, another call to insertSnippets
+            // could have been made. In that case, we should just stop here.
+            if (this.currentInsertSnippetsCallID !== insertSnippetsCallID) {
+                return;
+            }
+
+            // Sort items in the right column based on their size and the
+            // currently computed size of the column. Note that this does not
+            // compute the size of the column after each element addition: this
+            // is wildly inefficient. Instead: compute the sizes, then add them
+            // all in one go into the right column.
+            const leftColElements = [];
+            const rightColElements = [];
+            for (const itemEl of itemEls) {
+                const size = itemEl.getBoundingClientRect().height;
+                if (leftColSize <= rightColSize) {
+                    leftColElements.push(itemEl);
+                    leftColSize += size;
+                } else {
+                    rightColElements.push(itemEl);
+                    rightColSize += size;
+                }
+            }
+            for (const [colEl, colItemEls] of [
+                [leftColEl, leftColElements],
+                [rightColEl, rightColElements],
+            ]) {
+                for (const el of colItemEls) {
+                    colEl.appendChild(el);
+                    el.classList.remove("invisible");
+                }
+            }
+
+            // Only when the first chunk is loaded do we remove the previously
+            // loaded search.
+            while (rowEl.previousSibling) {
+                rowEl.previousSibling.remove();
+            }
         }
+
         this._updateSnippetContent(this.iframeDocument);
     }
     /**
