@@ -51,6 +51,7 @@ class account_journal(models.Model):
                       SELECT id, company_id
                         FROM account_bank_statement
                        WHERE journal_id = journal.id
+                         AND first_line_index IS NOT NULL
                     ORDER BY first_line_index DESC
                        LIMIT 1
                    ) statement ON TRUE
@@ -525,6 +526,10 @@ class account_journal(models.Model):
                 'nb_lines_outstanding_pay_account_balance': has_outstanding,
                 'last_balance': currency.format(journal.last_statement_id.balance_end_real),
                 'last_statement_id': journal.last_statement_id.id,
+                'last_statement_date': str(journal.last_statement_id.date),
+                'lock_date': str(journal.company_id.fiscalyear_lock_date),
+                'last_statement_visible': not journal.company_id.fiscalyear_lock_date or journal.last_statement_id.date and journal.company_id.fiscalyear_lock_date < journal.last_statement_id.date,
+                'has_invalid_statements': journal.has_invalid_statements,
                 'bank_statements_source': journal.bank_statements_source,
                 'is_sample_data': journal.has_statement_lines,
                 'nb_misc_operations': number_misc,
@@ -776,6 +781,7 @@ class account_journal(models.Model):
                              FROM account_bank_statement
                             WHERE journal_id = journal.id
                               AND company_id = ANY(%s)
+                              AND first_line_index IS NOT NULL
                          ORDER BY date DESC, id DESC
                             LIMIT 1
                    ) statement ON TRUE
@@ -1087,6 +1093,11 @@ class account_journal(models.Model):
                 'date_to': fields.Date.context_today(self),
                 'search_default_date_between': True
             }
+        return action
+
+    def open_invalid_statements_action(self):
+        self.ensure_one()
+        action = self.env["ir.actions.act_window"]._for_xml_id('account.action_bank_statement_tree')
         return action
 
     def _show_sequence_holes(self, domain):
