@@ -25,6 +25,19 @@ export function clickReview() {
         run: "click",
     };
 }
+export function selectFloatingOrder(index) {
+    return [
+        {
+            isActive: ["mobile"],
+            trigger: ".fa-caret-down",
+            run: "click",
+        },
+        {
+            trigger: `.list-container-items .btn:eq(${index})`,
+            run: "click",
+        },
+    ];
+}
 /**
  * Generates a sequence of actions to click on a displayed product, with optional additional
  * checks based on specific needs such as the next quantity and the next price.
