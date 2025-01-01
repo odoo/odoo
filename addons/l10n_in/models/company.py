@@ -84,3 +84,16 @@ class ResCompany(models.Model):
     def action_update_state_as_per_gstin(self):
         self.ensure_one()
         self.partner_id.action_update_state_as_per_gstin()
+
+    def _get_l10n_in_api_list(self):
+        return []
+
+    @api.onchange('vat')
+    def _onchange_vat(self):
+        if self.account_fiscal_country_id.code == 'IN' and (api_list := self._get_l10n_in_api_list()):
+            return {
+                'warning': {
+                    'title': _('Warning!'),
+                    'message': _('Updating the GSTIN will require re-establishing the connection for the following APIs: %s', ', '.join(api_list))
+                }
+            }
