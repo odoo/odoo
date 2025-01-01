@@ -95,9 +95,6 @@
             'project/static/tests/project_models.js',
             'project/static/tests/**/*.test.js',
         ],
-        'web.qunit_suite_tests': [
-            'project/static/tests/tours/**/*',
-        ],
         'web.assets_tests': [
             'project/static/tests/tours/**/*',
         ],
