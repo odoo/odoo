@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderDisplay">
-        <t t-if="order.lines.length">
+        <t t-set="lines" t-value="order.getSortedOrderlines()"/>
+        <t t-if="lines.length">
             <div class="d-flex flex-column flex-grow-1 overflow-hidden">
                 <div t-ref="scrollable" class="order-container d-flex flex-column flex-grow-1 overflow-y-auto text-start">
-                    <t t-foreach="order.lines" t-as="line" t-key="line_index">
+                    <t t-foreach="lines" t-as="line" t-key="line_index">
                         <t t-if="props.slots.default" t-slot="default" line="line" />
                         <Orderline t-else="" line="line" mode="this.props.mode" />
                     </t>
