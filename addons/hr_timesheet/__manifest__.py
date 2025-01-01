@@ -61,9 +61,6 @@ up a management by affair.
             'hr_timesheet/static/tests/hr_timesheet_models.js',
             'hr_timesheet/static/tests/**/*.test.js',
         ],
-        'web.qunit_suite_tests': [
-            'hr_timesheet/static/tests/legacy/**/*',
-        ],
         'project.webclient': [
             'hr_timesheet/static/src/services/**/*',
             'hr_timesheet/static/src/components/**/*',
