@@ -13,7 +13,7 @@ import { KanbanHeader } from "./kanban_header";
 import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { Component, onWillDestroy, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onWillDestroy, useEffect, useRef, useState, onPatched } from "@odoo/owl";
 import { evaluateExpr } from "@web/core/py_js/py";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
@@ -242,6 +242,27 @@ export class KanbanRenderer extends Component {
             },
             () => []
         );
+
+        onPatched(() => {
+            if (this.activeGroupId) {
+                const container = document.querySelector(".o_content");
+                const activeGroup = this.rootRef.el.querySelector(
+                    `.o_kanban_group[data-id="${this.activeGroupId}"]`
+                );
+                const activeCard = activeGroup.querySelector(".o_kanban_record");
+
+                if (activeCard) {
+                    const cardRect = activeCard.getBoundingClientRect();
+                    const containerRect = container.getBoundingClientRect();
+
+                    if (cardRect.right > containerRect.right) {
+                        container.scrollBy({ left: activeGroup.scrollWidth, behavior: "smooth" });
+                    }
+                }
+
+                delete this.activeGroupId;
+            }
+        });
     }
 
     // ------------------------------------------------------------------------
@@ -497,6 +518,7 @@ export class KanbanRenderer extends Component {
 
     async onGroupClick(group, ev) {
         if (!this.env.isSmall && group.isFolded) {
+            this.activeGroupId = group.id;
             await group.toggle();
             this.props.scrollTop();
         }
