@@ -545,15 +545,6 @@ patch(PosStore.prototype, {
             this.computeDiscountProductIdsForAllRewards.bind(this)
         );
 
-        for (const program of this.models["loyalty.program"].getAll()) {
-            if (program.date_to) {
-                program.date_to = DateTime.fromISO(program.date_to);
-            }
-            if (program.date_from) {
-                program.date_from = DateTime.fromISO(program.date_from);
-            }
-        }
-
         for (const rule of this.models["loyalty.rule"].getAll()) {
             rule.validProductIds = new Set(rule.raw.valid_product_ids);
         }
