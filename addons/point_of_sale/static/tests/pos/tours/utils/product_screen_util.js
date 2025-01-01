@@ -659,3 +659,29 @@ export function checkTotalAmount(amount) {
         trigger: `.order-summary .total:contains(${amount})`,
     };
 }
+
+export function selectCategoryAndAddProduct(categoryName, productName) {
+    return [
+        {
+            trigger: `.category-button > span:contains(${categoryName})`,
+            run: "click",
+        },
+        ...addOrderline(productName, "1"),
+    ];
+}
+
+export function verifyCategorySequence(categories) {
+    return categories.map((category, index) => ({
+        content: `Verify '${category}' category has sequence number ${index + 1}`,
+        trigger: `.category-button > span:contains("${category}")`,
+    }));
+}
+
+export function verifyOrderlineSequence(products) {
+    return products.map((productName, index) => ({
+        content: `Verify orderline for '${productName}' is at seq ${index + 1}`,
+        trigger: `.order-container .orderline:nth-child(${
+            index + 1
+        }) span:contains("${productName}")`,
+    }));
+}
