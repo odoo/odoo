@@ -1607,6 +1607,46 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ProductSearchTour', login="pos_user")
 
+    def test_sort_orderlines_by_product_categoryies(self):
+        """ Test to ensure orderlines are added to the cart in the correct order based on their categories"""
+        self.pos_desk_misc_test.write({'sequence': 0})
+        self.pos_cat_chair_test.write({'sequence': 1})
+
+        self.product_1_categ_seq_1 = self.env['product.template'].create({
+            'name': 'Product_1 Category sequence 1',
+            'available_in_pos': True,
+            'list_price': 1.00,
+            'taxes_id': False,
+            'pos_categ_ids': [(4, self.pos_desk_misc_test.id)],
+        })
+        self.product_2_categ_seq_1 = self.env['product.template'].create({
+            'name': 'Product_2 Category sequence 1',
+            'available_in_pos': True,
+            'list_price': 2.00,
+            'taxes_id': False,
+            'pos_categ_ids': [(4, self.pos_desk_misc_test.id)],
+        })
+        self.product_11_categ_seq_2 = self.env['product.template'].create({
+            'name': 'Product_11 Category sequence 2',
+            'available_in_pos': True,
+            'list_price': 3.00,
+            'taxes_id': False,
+            'pos_categ_ids': [(4, self.pos_cat_chair_test.id)],
+        })
+        self.product_22_categ_seq_2 = self.env['product.template'].create({
+            'name': 'Product_22 Category sequence 2',
+            'available_in_pos': True,
+            'list_price': 4.00,
+            'taxes_id': False,
+            'pos_categ_ids': [(4, self.pos_cat_chair_test.id)],
+        })
+
+        self.main_pos_config.write({
+            'orderlines_sequence_in_cart_by_category': True,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'SortOrderlinesByCategories', login="pos_user")
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
