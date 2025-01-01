@@ -921,6 +921,8 @@ export class Rtc extends Record {
         this.state.screenTrack?.stop();
         closeStream(this.state.sourceCameraStream);
         this.state.sourceCameraStream = null;
+        closeStream(this.state.sourceScreenStream);
+        this.state.sourceScreenStream = null;
         if (this.blurManager) {
             this.blurManager.close();
             this.blurManager = undefined;
