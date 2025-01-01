@@ -162,6 +162,15 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
             widgetValue = this.prevRibbonId;
         } else {
             this.prevRibbonId = this.$target[0].dataset.ribbonId;
+            this.prevRibbon = {
+                'name': this.$ribbon[0].textContent,
+                'position': this.$ribbon[0].classList.contains('o_ribbon_left')
+                    || this.$ribbon[0].classList.contains('o_tag_left') ? 'left' : 'right',
+                'style': this.$ribbon[0].classList.contains('o_ribbon_left')
+                    || this.$ribbon[0].classList.contains('o_ribbon_right') ? 'ribbon' : 'tag',
+                'bg_color': this.$ribbon[0].style.backgroundColor,
+                'text_color': this.$ribbon[0].style.color,
+            }
         }
         if (!previewMode) {
             this.ribbonEditMode = false;
@@ -392,8 +401,9 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
             ribbonId: ribbonId || false,
         });
         const ribbon = (
-            this.ribbons[ribbonId] ||
-            {name: '', bg_color: '', text_color: '', position: 'left', style: 'ribbon'}
+            this.ribbons[ribbonId]
+            || this.prevRibbon
+            || {name: '', bg_color: '', text_color: '', position: 'left', style: 'ribbon'}
         );
         // This option also manages other products' ribbon, therefore we need a
         // way to access all of them at once. With the content being in an iframe,
@@ -401,15 +411,14 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         const $editableDocument = $(this.$target[0].ownerDocument.body);
         const $ribbons = $editableDocument.find(`[data-ribbon-id="${ribbonId}"] .o_ribbon`);
         $ribbons.empty().append(ribbon.name);
-        let htmlClasses;
-        this.trigger_up('get_ribbon_classes', {callback: classes => htmlClasses = classes});
+        let htmlClasses = ['o_tag_left', 'o_tag_right', 'o_ribbon_left', 'o_ribbon_right'];
         $ribbons.removeClass(htmlClasses);
 
         $ribbons.addClass(this.PositionClasses[ribbon.style][ribbon.position]);
         $ribbons.css('background-color', ribbon.bg_color || '');
         $ribbons.css('color', ribbon.text_color || '');
 
-        if (!this.ribbons[ribbonId]) {
+        if (!ribbonId) {
             $editableDocument.find(`[data-ribbon-id="${ribbonId}"]`).each((index, product) => delete product.dataset.ribbonId);
         }
 
