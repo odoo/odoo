@@ -587,6 +587,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order_01_multi_payment_and_change', login="pos_user")
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order_02_decimal_order_quantity', login="pos_user")
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order_03_tax_position', login="pos_user")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FloatingOrderTour', login="pos_user")
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ProductScreenTour', login="pos_user")
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour', login="pos_user")
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenTour', login="pos_user")
