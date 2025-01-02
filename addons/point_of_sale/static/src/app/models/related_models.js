@@ -176,7 +176,10 @@ export class Base extends WithLazyGetterTrap {
         }
     }
 
-    formatDateOrTime(field) {
+    formatDateOrTime(field, type = "datetime") {
+        if (type == "date") {
+            return this[field].toLocaleString(DateTime.DATE_SHORT);
+        }
         return this[field].toLocaleString(DateTime.DATETIME_SHORT);
     }
 
