@@ -1,5 +1,4 @@
 import { DiscussClientAction } from "@mail/core/public_web/discuss_client_action";
-import { useState } from "@odoo/owl";
 import "@mail/discuss/core/public/discuss_client_action_patch";
 
 import { browser } from "@web/core/browser/browser";
@@ -9,7 +8,7 @@ import { patch } from "@web/core/utils/patch";
 patch(DiscussClientAction.prototype, {
     setup() {
         super.setup(...arguments);
-        this.rtc = useState(useService("discuss.rtc"));
+        this.rtc = useService("discuss.rtc");
     },
     async joinCallWithWelcomeSettings() {
         if (this.store.discuss_public_thread.default_display_mode !== "video_full_screen") {

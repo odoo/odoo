@@ -22,8 +22,8 @@ export class MessageReactionMenu extends Component {
     setup() {
         super.setup();
         this.root = useRef("root");
-        this.store = useState(useService("mail.store"));
-        this.ui = useState(useService("ui"));
+        this.store = useService("mail.store");
+        this.ui = useService("ui");
         this.state = useState({
             emojiLoaded: Boolean(loader.loaded),
             reaction: this.props.initialReaction

@@ -1,7 +1,7 @@
 import { Thread } from "@mail/core/common/thread_model";
 import { discussSidebarChannelIndicatorsRegistry } from "@mail/discuss/core/public_web/discuss_sidebar_categories";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -16,8 +16,8 @@ export class DiscussSidebarCallIndicator extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
-        this.rtc = useState(useService("discuss.rtc"));
+        this.store = useService("mail.store");
+        this.rtc = useService("discuss.rtc");
     }
 }
 

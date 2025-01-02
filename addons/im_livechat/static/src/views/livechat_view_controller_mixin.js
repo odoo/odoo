@@ -1,5 +1,3 @@
-import { useState } from "@odoo/owl";
-
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 
@@ -7,8 +5,8 @@ export const LivechatViewControllerMixin = (ViewController) =>
     class extends ViewController {
         setup() {
             super.setup(...arguments);
-            this.store = useState(useService("mail.store"));
-            this.ui = useState(useService("ui"));
+            this.store = useService("mail.store");
+            this.ui = useService("ui");
         }
 
         async openRecord(record) {

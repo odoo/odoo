@@ -12,7 +12,7 @@ import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
 import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/payment_status/payment_status";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, useState, onMounted } from "@odoo/owl";
+import { Component, onMounted } from "@odoo/owl";
 import { Numpad, enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
 import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
@@ -33,7 +33,7 @@ export class PaymentScreen extends Component {
 
     setup() {
         this.pos = usePos();
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.dialog = useService("dialog");
         this.invoiceService = useService("account_move");
         this.notification = useService("notification");

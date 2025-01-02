@@ -1,6 +1,6 @@
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 
-import { status, useComponent, useEffect, useRef, onWillUnmount } from "@odoo/owl";
+import { status, useComponent, useEffect, useRef, onWillUnmount, useState, toRaw } from "@odoo/owl";
 
 /**
  * This file contains various custom hooks.
@@ -136,17 +136,20 @@ export function useService(serviceName) {
         throw new Error(`Service ${serviceName} is not available`);
     }
     const service = services[serviceName];
-    if (serviceName in SERVICES_METADATA) {
+    if (SERVICES_METADATA[serviceName]) {
         if (service instanceof Function) {
             return _protectMethod(component, service);
         } else {
-            const methods = SERVICES_METADATA[serviceName];
+            const methods = SERVICES_METADATA[serviceName] ?? [];
             const result = Object.create(service);
             for (const method of methods) {
                 result[method] = _protectMethod(component, service[method]);
             }
             return result;
         }
+    }
+    if (toRaw(service) !== service) {
+        return useState(service);
     }
     return service;
 }

@@ -1,12 +1,11 @@
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
 import { patch } from "@web/core/utils/patch";
-import { useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 patch(MessagingMenu.prototype, {
     setup() {
         super.setup();
-        this.command = useState(useService("command"));
+        this.command = useService("command");
     },
     beforeOpen() {
         const res = super.beforeOpen(...arguments);
@@ -33,12 +32,8 @@ patch(MessagingMenu.prototype, {
                   ).length;
         // Needactions are already counted in the super call, but we want to discard them for channel so that there is only +1 per channel.
         const channelsNeedactionCounter = Object.values(this.store.Thread.records).reduce(
-            (acc, thread) => {
-                return (
-                    acc +
-                    (thread.model === "discuss.channel" ? thread.message_needaction_counter : 0)
-                );
-            },
+            (acc, thread) =>
+                acc + (thread.model === "discuss.channel" ? thread.message_needaction_counter : 0),
             0
         );
         return count + channelsContribution - channelsNeedactionCounter;

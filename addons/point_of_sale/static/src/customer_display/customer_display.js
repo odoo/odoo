@@ -1,4 +1,4 @@
-import { Component, useState, whenReady } from "@odoo/owl";
+import { Component, whenReady } from "@odoo/owl";
 import { OdooLogo } from "@point_of_sale/app/components/odoo_logo/odoo_logo";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { session } from "@web/session";
@@ -13,7 +13,7 @@ export class CustomerDisplay extends Component {
     setup() {
         this.session = session;
         this.dialog = useService("dialog");
-        this.order = useState(useService("customer_display_data"));
+        this.order = useService("customer_display_data");
     }
 
     get netWeight() {

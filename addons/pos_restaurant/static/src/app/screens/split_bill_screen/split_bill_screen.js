@@ -14,7 +14,7 @@ export class SplitBillScreen extends Component {
 
     setup() {
         this.pos = usePos();
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.qtyTracker = useState({});
         this.priceTracker = useState({});
 

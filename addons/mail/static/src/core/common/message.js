@@ -121,10 +121,10 @@ export class Message extends Component {
         this.hasTouch = hasTouch;
         this.messageBody = useRef("body");
         this.messageActions = useMessageActions();
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         this.shadowBody = useRef("shadowBody");
         this.dialog = useService("dialog");
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
         useChildSubEnv({

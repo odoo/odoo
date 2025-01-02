@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useMessageActions } from "./message_actions";
 import { useChildRef, useService } from "@web/core/utils/hooks";
@@ -18,7 +18,7 @@ export class MessageActionMenuMobile extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         this.modalRef = useChildRef();
         this.messageActions = useMessageActions();
         this.onClickModal = this.onClickModal.bind(this);

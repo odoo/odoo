@@ -25,7 +25,7 @@ export class Chatter extends Component {
     static defaultProps = { composer: true, threadId: false, twoColumns: false };
 
     setup() {
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         this.state = useState({
             jumpThreadPresent: 0,
             /** @type {import("models").Thread} */

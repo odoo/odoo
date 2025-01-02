@@ -57,7 +57,7 @@ export class GifPicker extends Component {
     setup() {
         super.setup();
         this.orm = useService("orm");
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         this.sequential = useSequential();
         useAutofocus();
         useOnBottomScrolled(

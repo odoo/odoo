@@ -10,8 +10,8 @@ export class PttAdBanner extends Component {
 
     setup() {
         super.setup();
-        this.pttExtService = useState(useService("discuss.ptt_extension"));
-        this.store = useState(useService("mail.store"));
+        this.pttExtService = useService("discuss.ptt_extension");
+        this.store = useService("mail.store");
         this.state = useState({
             wasDiscarded: browser.localStorage.getItem(PttAdBanner.LOCAL_STORAGE_KEY),
         });

@@ -45,7 +45,7 @@ export class ChatWindow extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         this.messageEdition = useMessageEdition();
         this.messageHighlight = useMessageHighlight();
         this.messageToReplyTo = useMessageToReplyTo();
@@ -56,7 +56,7 @@ export class ChatWindow extends Component {
             editingGuestName: false,
             editingName: false,
         });
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.contentRef = useRef("content");
         this.threadActions = useThreadActions();
         this.actionsMenuButtonHover = useHover("actionsMenuButton");

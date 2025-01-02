@@ -1,4 +1,4 @@
-import { markup } from "@odoo/owl";
+import { markup, reactive } from "@odoo/owl";
 
 import { parseVersion } from "@mail/utils/common/misc";
 import { browser } from "@web/core/browser/browser";
@@ -15,8 +15,32 @@ export const pttExtensionHookService = {
         const versionPromise =
             window.chrome?.runtime?.sendMessage(EXT_ID, { type: "ask-version" }) ??
             Promise.resolve("1.0.0.0");
-        let isEnabled = false;
-        let voiceActivated = false;
+        const self = reactive({
+            isEnabled: undefined,
+            voiceActivated: undefined,
+            notifyIsTalking(isTalking) {
+                sendMessage("is-talking", isTalking);
+            },
+            subscribe() {
+                sendMessage("subscribe");
+            },
+            unsubscribe() {
+                self.voiceActivated = false;
+                sendMessage("unsubscribe");
+            },
+            downloadURL: `https://chromewebstore.google.com/detail/discuss-push-to-talk/${EXT_ID}`,
+            get downloadText() {
+                const translation = _t(
+                    `The Push-to-Talk feature is only accessible within tab focus. To enable the Push-to-Talk functionality outside of this tab, we recommend downloading our %(anchor_start)sextension%(anchor_end)s.`
+                );
+                return markup(
+                    sprintf(escape(translation), {
+                        anchor_start: `<a href="${this.downloadURL}" target="_blank" class="text-reset text-decoration-underline">`,
+                        anchor_end: "</a>",
+                    })
+                );
+            },
+        });
 
         browser.addEventListener("message", ({ data, origin, source }) => {
             const rtc = env.services["discuss.rtc"];
@@ -31,7 +55,7 @@ export const pttExtensionHookService = {
             switch (data.type) {
                 case "push-to-talk-pressed":
                     {
-                        voiceActivated = false;
+                        self.voiceActivated = false;
                         const isFirstPress = !rtc.selfSession?.isTalking;
                         rtc.onPushToTalk();
                         if (rtc.selfSession?.isTalking) {
@@ -45,16 +69,16 @@ export const pttExtensionHookService = {
                     break;
                 case "toggle-voice":
                     {
-                        if (voiceActivated) {
+                        if (self.voiceActivated) {
                             rtc.setPttReleaseTimeout(0);
                         } else {
                             rtc.onPushToTalk();
                         }
-                        voiceActivated = !voiceActivated;
+                        self.voiceActivated = !self.voiceActivated;
                     }
                     break;
                 case "answer-is-enabled":
-                    isEnabled = true;
+                    self.isEnabled = true;
                     break;
             }
         });
@@ -66,7 +90,7 @@ export const pttExtensionHookService = {
          * @param {*} value
          */
         async function sendMessage(type, value) {
-            if (!isEnabled && type !== "ask-is-enabled") {
+            if (!self.isEnabled && type !== "ask-is-enabled") {
                 return;
             }
             const version = parseVersion(await versionPromise);
@@ -79,33 +103,7 @@ export const pttExtensionHookService = {
 
         sendMessage("ask-is-enabled");
 
-        return {
-            notifyIsTalking(isTalking) {
-                sendMessage("is-talking", isTalking);
-            },
-            subscribe() {
-                sendMessage("subscribe");
-            },
-            unsubscribe() {
-                voiceActivated = false;
-                sendMessage("unsubscribe");
-            },
-            get isEnabled() {
-                return isEnabled;
-            },
-            downloadURL: `https://chromewebstore.google.com/detail/discuss-push-to-talk/${EXT_ID}`,
-            get downloadText() {
-                const translation = _t(
-                    `The Push-to-Talk feature is only accessible within tab focus. To enable the Push-to-Talk functionality outside of this tab, we recommend downloading our %(anchor_start)sextension%(anchor_end)s.`
-                );
-                return markup(
-                    sprintf(escape(translation), {
-                        anchor_start: `<a href="${this.downloadURL}" target="_blank" class="text-reset text-decoration-underline">`,
-                        anchor_end: "</a>",
-                    })
-                );
-            },
-        };
+        return self;
     },
 };
 

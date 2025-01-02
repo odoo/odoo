@@ -21,9 +21,9 @@ export class MessagingMenu extends Component {
     setup() {
         super.setup();
         this.discussSystray = useDiscussSystray();
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         this.hasTouch = hasTouch;
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.state = useState({
             activeIndex: null,
             adding: false,

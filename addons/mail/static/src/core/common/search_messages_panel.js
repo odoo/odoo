@@ -1,4 +1,4 @@
-import { Component, useState, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillUpdateProps } from "@odoo/owl";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -17,7 +17,7 @@ export class SearchMessagesPanel extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         this.messageSearch = useMessageSearch(this.props.thread);
         onWillUpdateProps((nextProps) => {
             if (this.props.thread.notEq(nextProps.thread)) {

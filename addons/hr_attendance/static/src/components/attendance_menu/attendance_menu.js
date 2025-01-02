@@ -15,7 +15,7 @@ export class ActivityMenu extends Component {
     static template = "hr_attendance.attendance_menu";
 
     setup() {
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.employee = false;
         this.state = useState({
             checkedIn: false,

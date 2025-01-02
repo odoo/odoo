@@ -4,7 +4,7 @@ import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_sidebar";
 import { useHover } from "@mail/utils/common/hooks";
 
-import { Component, useState, useSubEnv } from "@odoo/owl";
+import { Component, useSubEnv } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -24,7 +24,7 @@ export class DiscussSidebarSubchannel extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         this.hover = useHover(["root", "floating*"], {
             onHover: () => (this.floating.isOpen = true),
             onAway: () => (this.floating.isOpen = false),
@@ -69,7 +69,7 @@ export class DiscussSidebarChannel extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         this.hover = useHover(["root", "floating*"], {
             onHover: () => (this.floating.isOpen = true),
             onAway: () => (this.floating.isOpen = false),
@@ -154,8 +154,8 @@ export class DiscussSidebarCategory extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
-        this.discusscorePublicWebService = useState(useService("discuss.core.public.web"));
+        this.store = useService("mail.store");
+        this.discusscorePublicWebService = useService("discuss.core.public.web");
         this.hover = useHover(["root", "floating*"], {
             onHover: () => this.onHover(true),
             onAway: () => this.onHover(false),
@@ -200,10 +200,10 @@ export class DiscussSidebarCategories extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
-        this.discusscorePublicWebService = useState(useService("discuss.core.public.web"));
+        this.store = useService("mail.store");
+        this.discusscorePublicWebService = useService("discuss.core.public.web");
         this.orm = useService("orm");
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.command = useService("command");
         this.searchHover = useHover(["search-btn", "search-floating*"], {
             onHover: () => (this.searchFloating.isOpen = true),

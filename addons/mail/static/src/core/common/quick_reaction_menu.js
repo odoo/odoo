@@ -25,7 +25,7 @@ export class QuickReactionMenu extends Component {
 
     setup() {
         this.toggle = useRef("toggle");
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         this.picker = useEmojiPicker(
             null,
             { onSelect: this.toggleReaction.bind(this), class: "overflow-hidden rounded-2" },
@@ -35,7 +35,7 @@ export class QuickReactionMenu extends Component {
             }
         );
         this.dropdown = useState(useDropdownState());
-        this.frequentEmojiService = useState(useService("web.frequent.emoji"));
+        this.frequentEmojiService = useService("web.frequent.emoji");
         this.state = useState({ emojiLoaded: Boolean(loader.loaded) });
         if (!loader.loaded) {
             loader.onEmojiLoaded(() => (this.state.emojiLoaded = true));

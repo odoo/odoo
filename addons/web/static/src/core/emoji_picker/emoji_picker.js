@@ -94,14 +94,14 @@ export class EmojiPicker extends Component {
     setup() {
         this.gridRef = useRef("emoji-grid");
         this.navbarRef = useRef("navbar");
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.isMobileOS = isMobileOS();
         this.state = useState({
             activeEmojiIndex: 0,
             categoryId: null,
             searchTerm: "",
         });
-        this.frequentEmojiService = useState(useService("web.frequent.emoji"));
+        this.frequentEmojiService = useService("web.frequent.emoji");
         useAutofocus();
         onWillStart(async () => {
             const { categories, emojis } = await loadEmoji();
@@ -469,7 +469,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
     const component = useComponent();
     const targets = [];
     const state = useState({ isOpen: false });
-    const ui = useState(useService("ui"));
+    const ui = useService("ui");
     const dialog = useService("dialog");
     let remove;
     const newOptions = {

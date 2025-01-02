@@ -20,7 +20,7 @@ class AbstractAttachmentView extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         this.uiService = useService("ui");
         this.iframeViewerPdfRef = useRef("iframeViewerPdf");
         this.state = useState({
