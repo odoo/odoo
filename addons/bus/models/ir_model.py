@@ -1,10 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import models, fields
 
 
 class IrModel(models.Model):
     _inherit = 'ir.model'
+
+    is_bus_sync_enabled = fields.Boolean(
+        string='Enable Bus Sync',
+        help="Indicates whether synchronization via the message bus is enabled.",
+        default=False
+    )
 
     def _get_model_definitions(self, model_names_to_fetch):
         model_definitions = {}

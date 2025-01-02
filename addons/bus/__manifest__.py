@@ -6,6 +6,7 @@
     'depends': ['base', 'web'],
     'data': [
         'security/ir.model.access.csv',
+        'views/ir_model_views.xml'
     ],
     'installable': True,
     'auto_install': True,
