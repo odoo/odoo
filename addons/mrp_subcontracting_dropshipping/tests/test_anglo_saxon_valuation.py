@@ -276,11 +276,11 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         self.assertRecordValues(
             account_move.line_ids.sorted('balance'),
             [
-                {'name': 'product_a',                       'debit': 0.0,       'credit': 1800.0},
-                {'name': 'product_a',                       'debit': 0.0,       'credit': 1680.0},
-                {'name': '15% (Copy)',                      'debit': 0.0,       'credit': 270.0},
-                {'name': 'INV/2024/00001 installment #1',   'debit': 621.0,     'credit': 0.0},
-                {'name': 'INV/2024/00001 installment #2',   'debit': 1449.0,    'credit': 0.0},
-                {'name': 'product_a',                       'debit': 1680.0,    'credit': 0.0},
+                {'name': 'product_a',                           'debit': 0.0,       'credit': 1800.0},
+                {'name': 'product_a',                           'debit': 0.0,       'credit': 1680.0},
+                {'name': '15% (Copy)',                          'debit': 0.0,       'credit': 270.0},
+                {'name': f'{account_move.name} installment #1', 'debit': 621.0,     'credit': 0.0},
+                {'name': f'{account_move.name} installment #2', 'debit': 1449.0,    'credit': 0.0},
+                {'name': 'product_a',                           'debit': 1680.0,    'credit': 0.0},
             ]
         )
