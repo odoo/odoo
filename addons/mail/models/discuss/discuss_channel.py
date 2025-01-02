@@ -894,15 +894,7 @@ class DiscussChannel(models.Model):
 
     @api.model
     def _get_channels_as_member(self):
-        # 2 different queries because the 2 sub-queries together with OR are less efficient
-        member_domain = [("channel_type", "in", ("channel", "group")), ("is_member", "=", True)]
-        pinned_member_domain = [
-                ("channel_type", "not in", ("channel", "group")),
-                ("channel_member_ids", "any", [("is_self", "=", True), ("is_pinned", "=", True)]),
-            ]
-        channels = self.env["discuss.channel"].search(member_domain)
-        channels += self.env["discuss.channel"].search(pinned_member_domain)
-        return channels
+        return self.env["discuss.channel"]
 
     def _channel_basic_info(self):
         self.ensure_one()

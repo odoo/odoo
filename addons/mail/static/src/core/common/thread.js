@@ -1,7 +1,7 @@
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { Record } from "@mail/core/common/record";
-import { useVisible } from "@mail/utils/common/hooks";
+import { useLoadMore, useVisible } from "@mail/utils/common/hooks";
 
 import {
     Component,
@@ -104,26 +104,16 @@ export class Thread extends Component {
             "scrollend",
             () => (this.state.scrollTop = this.scrollableRef.el.scrollTop)
         );
-        this.loadOlderState = useVisible(
-            "load-older",
-            async () => {
-                await this.messageHighlight?.scrollPromise;
-                if (this.loadOlderState.isVisible) {
-                    toRaw(this.props.thread).fetchMoreMessages();
-                }
-            },
-            { ready: false }
-        );
-        this.loadNewerState = useVisible(
-            "load-newer",
-            async () => {
-                await this.messageHighlight?.scrollPromise;
-                if (this.loadNewerState.isVisible) {
-                    toRaw(this.props.thread).fetchMoreMessages("newer");
-                }
-            },
-            { ready: false }
-        );
+        this.loadOlderState = useLoadMore("load-older", {
+            preCheck: () => this.messageHighlight?.scrollPromise,
+            fn: () => toRaw(this.props.thread).fetchMoreMessages(),
+            ready: false,
+        });
+        this.loadNewerState = useLoadMore("load-newer", {
+            preCheck: () => this.messageHighlight?.scrollPromise,
+            fn: () => toRaw(this.props.thread).fetchMoreMessages("newer"),
+            ready: false,
+        });
         this.presentThresholdState = useVisible("present-treshold", () =>
             this.updateShowJumpPresent()
         );

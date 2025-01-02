@@ -88,7 +88,6 @@
                 </t>
             </div>
             <div class="o-mail-Discuss-main d-flex overflow-hidden flex-grow-1" t-ref="main">
-                <t t-if="ui.isSmall" t-call="mail.Discuss.loading"/>
                 <div class="o-mail-Discuss-core overflow-auto d-flex flex-grow-1" t-ref="core">
                     <t t-if="thread">
                         <div class="d-flex flex-column flex-grow-1">
@@ -121,12 +120,6 @@
             'active o-active shadow-none': mailbox.eq(store.discuss.thread),
         }" t-on-click="mailbox.setAsDiscussThread" t-esc="mailbox.display_name"
     />
-</t>
-
-<t t-name="mail.Discuss.loading">
-    <div t-if="store.channels.status === 'fetching'" class="d-flex flex-grow-1 align-items-center justify-content-center h-100 w-100 o-pointer-events-none">
-        <h4 class="text-muted opacity-50 o-visible-short-delay"><b><i class="o-mail-Discuss-mobileLoading fa fa-circle-o-notch fa-spin"/></b></h4>
-    </div>
 </t>
 
 </templates>

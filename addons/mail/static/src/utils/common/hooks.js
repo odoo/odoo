@@ -260,6 +260,26 @@ export function useVisible(refName, cb, { ready = true } = {}) {
     return state;
 }
 
+export function useLoadMore(refName, { preCheck, fn, ready }) {
+    const state = useVisible(
+        refName,
+        async () => {
+            await preCheck?.();
+            if (state.isVisible) {
+                state.ready = false;
+                state.loading = true;
+                Promise.resolve(fn()).then(() => {
+                    state.loading = false;
+                    state.ready = true;
+                });
+            }
+        },
+        { ready }
+    );
+    state.loading = false;
+    return state;
+}
+
 /**
  * @typedef {Object} MessageHighlight
  * @property {function} clearHighlight

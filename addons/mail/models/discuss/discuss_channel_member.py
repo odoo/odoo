@@ -35,6 +35,7 @@ class DiscussChannelMember(models.Model):
     fetched_message_id = fields.Many2one('mail.message', string='Last Fetched', index="btree_not_null")
     seen_message_id = fields.Many2one('mail.message', string='Last Seen', index="btree_not_null")
     new_message_separator = fields.Integer(help="Message id before which the separator should be displayed", default=0, required=True)
+    message_unread = fields.Boolean('Has Unread Messages', compute='_compute_message_unread', search="_search_message_unread", compute_sudo=True)
     message_unread_counter = fields.Integer('Unread Messages Counter', compute='_compute_message_unread', compute_sudo=True)
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='closed')
     custom_notifications = fields.Selection(
@@ -142,8 +143,21 @@ class DiscussChannelMember(models.Model):
             unread_counter_by_member = {res['id']: res['count'] for res in self.env.cr.dictfetchall()}
             for member in self:
                 member.message_unread_counter = unread_counter_by_member.get(member.id)
+                member.message_unread = bool(unread_counter_by_member.get(member.id))
         else:
             self.message_unread_counter = 0
+            self.message_unread = False
+
+    @api.model
+    def _search_message_unread(self, operator, operand):
+        is_in = True if operator == '=' and operand else False
+        message_ids = self.env['mail.message']._search([
+            ('id', '>', self.new_message_separator),
+            ('res_id', '=', self.channel_id.id),
+            ('model', '=', 'discuss.channel'),
+            ('message_type', 'not in', ('notification', 'user_notification'))
+        ])
+        return [('channel_id.message_ids', 'in' if is_in else 'not in', message_ids)]
 
     @api.depends("partner_id.name", "guest_id.name", "channel_id.display_name")
     def _compute_display_name(self):

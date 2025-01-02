@@ -14,58 +14,56 @@
             <div class="o-mail-DiscussSidebarCategories-searchClickable position-absolute z-1 opacity-0 cursor-pointer w-100 h-100"/>
         </div>
         <t t-foreach="store.discuss.allCategories" t-as="cat" t-key="cat_index">
-            <t t-if="cat.isVisible" t-call="mail.DiscussSidebarCategories.category">
-                <t t-set="category" t-value="cat"/>
-            </t>
+            <DiscussSidebarCategory t-if="cat.isVisible" category="cat"/>
         </t>
-    </t>
-
-    <t t-name="mail.DiscussSidebarCategories.category">
-        <DiscussSidebarCategory category="category"/>
-        <t t-if="category.open">
-            <DiscussSidebarChannel t-foreach="filteredThreads(category.threads)" t-as="thread" t-key="thread.localId" thread="thread"/>
-        </t>
-        <DiscussSidebarChannel t-elif="store.discuss.thread?.in(category.threads)" thread="store.discuss.thread"/>
-        <DiscussSidebarChannel t-elif="store.discuss.thread?.parent_channel_id?.in(category.threads)" thread="store.discuss.thread.parent_channel_id" />
     </t>
 
     <t t-name="mail.DiscussSidebarCategory">
+        <DiscussSidebarCategoryHeader category="props.category"/>
+        <t t-if="props.category.open">
+            <DiscussSidebarChannel t-foreach="env.filteredThreads(props.category.threads)" t-as="thread" t-key="thread.localId" thread="thread"/>
+            <span t-if="!state.allLoaded and loadMore.ready" class="pt-1" t-ref="load-more" t-on-click="() => this.load()">LOAD MORE</span>
+        </t>
+        <DiscussSidebarChannel t-elif="store.discuss.thread?.in(props.category.threads)" thread="store.discuss.thread"/>
+        <DiscussSidebarChannel t-elif="store.discuss.thread?.parent_channel_id?.in(props.category.threads)" thread="store.discuss.thread.parent_channel_id" />
+    </t>
+
+    <t t-name="mail.DiscussSidebarCategoryHeader">
         <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-view border p-2 mx-2 my-0 min-w-0 shadow-sm'" manual="true">
-            <t t-call="mail.DiscussSidebarCategory.main"/>
+            <t t-call="mail.DiscussSidebarCategoryHeader.main"/>
             <t t-set-slot="content">
                 <div class="overflow-hidden" t-ref="floating">
                     <span class="fw-bold text-uppercase o-xsmaller user-select-none text-muted" t-esc="category.name"/>
-                    <t t-call="mail.DiscussSidebarCategory.actions"/>
+                    <t t-call="mail.DiscussSidebarCategoryHeader.actions"/>
                 </div>
             </t>
         </Dropdown>
-        <t t-else="" t-call="mail.DiscussSidebarCategory.main"/>
+        <t t-else="" t-call="mail.DiscussSidebarCategoryHeader.main"/>
     </t>
 
-    <t t-name="mail.DiscussSidebarCategory.main">
-        <div class="o-mail-DiscussSidebarCategory d-flex align-items-center" t-att-class="{ 'mx-1 my-2 position-relative': store.discuss.isSidebarCompact, 'mt-1 me-2': !store.discuss.isSidebarCompact }" t-attf-class="#{category.extraClass}" name="header" t-ref="root">
+    <t t-name="mail.DiscussSidebarCategoryHeader.main">
+        <div class="o-mail-DiscussSidebarCategoryHeader d-flex align-items-center" t-att-class="{ 'mx-1 my-2 position-relative': store.discuss.isSidebarCompact, 'mt-1 me-2': !store.discuss.isSidebarCompact }" t-attf-class="#{category.extraClass}" name="header" t-ref="root">
             <button class="o-mail-DiscussSidebarCategory-toggler btn btn-link text-reset flex-grow-1 d-flex p-0 text-start opacity-100-hover opacity-75" t-att-class="{ 'mx-1 align-items-baseline': !store.discuss.isSidebarCompact, 'align-items-center justify-content-center border-0 o-compact': store.discuss.isSidebarCompact }" t-on-click="() => this.toggle()" name="toggler">
                 <t t-if="store.discuss.isSidebarCompact">
                     <i class="start-0 position-absolute" t-att-class="{
                         'oi oi-chevron-down': category.open,
                         'oi oi-chevron-right opacity-50': !category.open,
                     }"/>
-                    <span class="rounded p-1" t-att-class="{ 'opacity-50': !category.open }"><i t-if="store.channels.status === 'fetching'" class="fa fa-fw fa-circle-o-notch fa-spin"/><i t-else="" class="fa-fw fa-lg" t-att-class="category.icon ?? 'fa fa-user'"/></span>
+                    <span class="rounded p-1" t-att-class="{ 'opacity-50': !category.open }"><i class="fa-fw fa-lg" t-att-class="category.icon ?? 'fa fa-user'"/></span>
                 </t>
                 <t t-else="">
-                    <span t-if="store.channels.status === 'fetching'" class="o-visible-short-delay"><i class="o-mail-DiscussSidebarCategory-icon o-xsmaller mx-1 fa fa-fw fa-circle-o-notch fa-spin opacity-50"/></span>
-                    <i t-else="" class="o-mail-DiscussSidebarCategory-icon o-xsmaller mx-1" t-att-class="category.open ? 'oi oi-chevron-down opacity-100' : 'oi oi-chevron-right opacity-50'"/>
+                    <i class="o-mail-DiscussSidebarCategory-icon o-xsmaller mx-1" t-att-class="category.open ? 'oi oi-chevron-down opacity-100' : 'oi oi-chevron-right opacity-50'"/>
                     <span class="btn-sm p-0 text-uppercase text-break fw-bolder o-xsmaller text-muted" t-att-class="{ 'opacity-50': !category.open }"><t t-esc="category.name"/></span>
                 </t>
             </button>
-            <t t-if="actions.length and !store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarCategory.actions"/>
+            <t t-if="actions.length and !store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarCategoryHeader.actions"/>
             <div t-if="!category.open and store.getDiscussSidebarCategoryCounter(category.id) > 0" class="o-mail-DiscussSidebar-badge badge rounded-pill o-discuss-badge fw-bold" t-att-class="{ 'position-absolute top-0 o-compact': store.discuss.isSidebarCompact, 'me-1': !store.discuss.isSidebarCompact }">
                 <t t-esc="store.getDiscussSidebarCategoryCounter(category.id)"/>
             </div>
         </div>
     </t>
 
-    <t t-name="mail.DiscussSidebarCategory.actions">
+    <t t-name="mail.DiscussSidebarCategoryHeader.actions">
         <div class="d-flex">
             <div class="o-mail-DiscussSidebarCategory-actions" t-att-class="{ 'd-flex flex-column align-items-start pt-1': store.discuss.isSidebarCompact, 'btn-group btn-group-sm mx-1 o-gap-0_5': !store.discuss.isSidebarCompact }">
                 <t name="action-group">

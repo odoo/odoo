@@ -17,11 +17,5 @@ const StorePatch = {
             .filter((thread) => thread.model === "discuss.channel" && thread.selfMember)
             .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id);
     },
-    onStarted() {
-        super.onStarted();
-        if (this.discuss.isActive) {
-            this.channels.fetch();
-        }
-    },
 };
 patch(Store.prototype, StorePatch);

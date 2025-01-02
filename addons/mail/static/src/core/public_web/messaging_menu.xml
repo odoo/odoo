@@ -44,9 +44,7 @@
                 </NotificationItem>
                 <t t-set="itemIndex" t-value="itemIndex + 1"/>
             </t>
-            <t t-if="store.channels.status === 'fetching'">
-                <div class="d-flex align-items-center justify-content-center gap-2 py-4 px-2"><span class="o-visible-short-delay"><i class="fa fa-circle-o-notch fa-spin me-1"/> Loading…</span></div>
-            </t>
+            <span t-if="!state.allLoaded" class="pt-1" t-ref="load-more">LOAD MORE</span>
         </div>
     </div>
     <div t-if="ui.isSmall" class="o-mail-MessagingMenu-navbar d-flex border-top bg-view shadow-lg w-100 btn-group">
