@@ -107,6 +107,7 @@
             'website_sale/static/src/xml/website_sale_utils.xml',
             'website_sale/static/src/js/website_sale_recently_viewed.js',
             'website_sale/static/src/js/website_sale_tracking.js',
+            'website_sale/static/src/js/website_sale_navigation_buttons.js',
             'website/static/lib/multirange/multirange_custom.js',
             'website/static/src/interactions/multirange_input.js',
             'website_sale/static/src/xml/website_sale_image_viewer.xml',

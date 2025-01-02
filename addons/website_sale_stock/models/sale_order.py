@@ -97,7 +97,7 @@ class SaleOrder(models.Model):
     def _set_shop_warning_stock(self, desired_qty, new_qty):
         self.ensure_one()
         self.shop_warning = _(
-            'You ask for %(desired_qty)s products but only %(new_qty)s is available',
+            'You requested %(desired_qty)s products, but only %(new_qty)s are available in stock.'
             desired_qty=desired_qty, new_qty=new_qty
         )
         return self.shop_warning
