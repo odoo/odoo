@@ -43,7 +43,6 @@
 .o-mail-Composer-actions {
 
     button {
-        aspect-ratio: 1;
         &.o-small {
             margin: map-get($spacers, 1) / 2 !important;
             padding: map-get($spacers, 1) / 2 !important;
@@ -66,6 +65,9 @@
             .o-mail-Composer.o-focused & {
                 opacity: 40%;
             }
+        }
+        &.rounded-circle {
+            aspect-ratio: 1;
         }
         &.o-sendMessageActive {
             background-color: rgba($o-action, .75);
