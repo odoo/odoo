@@ -1189,7 +1189,7 @@ class PosSession(models.Model):
         split_cash_statement_line_vals = []
         split_cash_receivable_vals = []
         for payment, amounts in split_receivables_cash.items():
-            journal_id = payment.payment_method_id.journal_id.id
+            journal_id = payment.payment_method_id.journal_id
             split_cash_statement_line_vals.append(
                 self._get_split_statement_line_vals(
                     journal_id,
@@ -1211,7 +1211,7 @@ class PosSession(models.Model):
             if not float_is_zero(amounts['amount'] , precision_rounding=self.currency_id.rounding):
                 combine_cash_statement_line_vals.append(
                     self._get_combine_statement_line_vals(
-                        payment_method.journal_id.id,
+                        payment_method.journal_id,
                         amounts['amount'],
                         payment_method
                     )
@@ -1455,26 +1455,38 @@ class PosSession(models.Model):
         partial_args = {'account_id': out_account.id, 'move_id': self.move_id.id}
         return self._credit_amounts(partial_args, amount, amount_converted, force_company_currency=True)
 
-    def _get_combine_statement_line_vals(self, journal_id, amount, payment_method):
+    def _get_combine_statement_line_vals(self, journal, amount, payment_method):
+        amount_values = self._prepare_statement_line_amount_values(journal, amount)
         return {
             'date': fields.Date.context_today(self),
-            'amount': amount,
             'payment_ref': self.name,
             'pos_session_id': self.id,
-            'journal_id': journal_id,
+            'journal_id': journal.id,
             'counterpart_account_id': self._get_receivable_account(payment_method).id,
+            **amount_values
         }
 
-    def _get_split_statement_line_vals(self, journal_id, amount, payment):
+    def _get_split_statement_line_vals(self, journal, amount, payment):
         accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
+        amount_values = self._prepare_statement_line_amount_values(journal, amount)
         return {
             'date': fields.Date.context_today(self, timestamp=payment.payment_date),
-            'amount': amount,
             'payment_ref': payment.name,
             'pos_session_id': self.id,
-            'journal_id': journal_id,
+            'journal_id': journal.id,
             'counterpart_account_id': accounting_partner.property_account_receivable_id.id,
             'partner_id': accounting_partner.id,
+            **amount_values
+        }
+
+    def _prepare_statement_line_amount_values(self, journal, amount):
+        journal_currency = journal.currency_id or self.company_id.currency_id
+        if journal_currency == self.currency_id:
+            return {'amount': amount}
+        return {
+            'amount': self.currency_id._convert(amount, journal_currency, self.company_id, self.stop_at),
+            'amount_currency': amount,
+            'foreign_currency_id': self.currency_id.id,
         }
 
     def _update_quantities(self, vals, qty_to_add):
