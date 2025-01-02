@@ -481,7 +481,14 @@ class ProductTemplate(models.Model):
     def _onchange_type(self):
         if self.type == 'combo':
             if self.attribute_line_ids:
-                raise UserError(_("Combo products can't have attributes"))
+                raise UserError(_("Combo products can't have attributes."))
+            combo_items = self.env['product.combo.item'].sudo().search([
+                ('product_id', 'in', self.product_variant_ids.ids)
+            ])
+            if combo_items:
+                raise UserError(_(
+                    "This product is part of a combo, so its type can't be changed to \"combo\"."
+                ))
             self.purchase_ok = False
         return {}
 
