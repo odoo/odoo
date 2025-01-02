@@ -283,7 +283,7 @@ export class View extends Component {
                 {
                     actionId: this.env.config.actionId,
                     embeddedActionId: this.env.config.currentEmbeddedActionId,
-                    embeddedParentResId: context.active_id,
+                    embeddedParentResId: this.env.config.currentEmbeddedActionId && context.active_id,
                     loadActionMenus,
                     loadIrFilters,
                 }
