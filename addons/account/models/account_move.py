@@ -66,6 +66,9 @@ ALLOWED_MIMETYPES = {
     'application/vnd.oasis.opendocument.spreadsheet',
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-powerpoint',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'application/vnd.oasis.opendocument.presentation',
 }
 
 EMPTY = object()
