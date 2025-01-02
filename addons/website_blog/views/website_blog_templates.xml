@@ -235,6 +235,9 @@ list of filtered posts (by date or tag).
     <t t-if="opt_blog_post_breadcrumb and not opt_blog_post_regular_cover" t-call="website_blog.post_breadcrumbs">
         <t t-set="additionnal_classes" t-value="'mb-3 bg-transparent'"></t>
     </t>
+    <t t-if="not opt_blog_post_regular_cover">
+        <t t-call="website_blog.blog_post_info"/>
+    </t>
     <t t-set="editor_message">WRITE HERE OR DRAG BUILDING BLOCKS</t>
     <div t-field="blog_post.content"
         t-att-data-editor-message="editor_message"
@@ -281,25 +284,7 @@ list of filtered posts (by date or tag).
                         <h1 t-field="blog_post.name" id="o_wblog_post_name" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Title"/>
                         <div t-field="blog_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
                     </div>
-                    <div class="text-muted mb-2">
-                        <i class="fa fa-clock-o fa-fw"/>
-                        <span t-field="blog_post.post_date" class="text-muted" t-options="{'format': 'long', 'date_only': 'true'}"/>
-                        <span>by
-                            <t t-call="website_blog.post_author">
-                                <t t-set="additionnal_classes" t-value="'d-inline-flex me-2'"/>
-                                <t t-set="hide_date" t-value="True"/>
-                            </t>
-                        </span>
-                        <span t-if="len(blog_post.message_ids) > 0" class="text-nowrap ps-2 o_not_editable">|
-                            <i class="fa fa-comment text-muted me-1"/>
-                            <a href="#discussion">
-                                <t t-esc="len(blog_post.message_ids)"/>
-                                <t t-if="len(blog_post.message_ids)>1">Comments</t>
-                                <t t-else="">Comment</t>
-                            </a>
-                        </span>
-                        <span t-elif="is_view_active('website_blog.opt_blog_post_comment')">| No comments yet</span>
-                    </div>
+                    <t t-call="website_blog.blog_post_info"/>
                 </div>
 
                 <t t-call="website.record_cover">
