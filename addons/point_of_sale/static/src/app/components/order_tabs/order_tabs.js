@@ -1,6 +1,6 @@
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { ListContainer } from "@point_of_sale/app/components/list_container/list_container";
 
 export class OrderTabs extends Component {
@@ -17,7 +17,7 @@ export class OrderTabs extends Component {
     };
     setup() {
         this.pos = usePos();
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.dialog = useService("dialog");
     }
     async newFloatingOrder() {

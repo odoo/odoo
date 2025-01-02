@@ -71,7 +71,7 @@ export class Thread extends Component {
         this.applyScroll = this.applyScroll.bind(this);
         this.saveScroll = this.saveScroll.bind(this);
         this.registerMessageRef = this.registerMessageRef.bind(this);
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         this.state = useState({
             isReplyingTo: false,
             mountedAndLoaded: false,

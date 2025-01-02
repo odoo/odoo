@@ -1,4 +1,4 @@
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -14,8 +14,8 @@ export class CallActionList extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
-        this.rtc = useState(useService("discuss.rtc"));
+        this.store = useService("mail.store");
+        this.rtc = useService("discuss.rtc");
         this.callActions = useCallActions();
     }
 

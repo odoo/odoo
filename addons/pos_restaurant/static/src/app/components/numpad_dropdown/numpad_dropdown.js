@@ -17,7 +17,7 @@ export class NumpadDropdown extends Component {
 
     setup() {
         this.pos = usePos();
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.numberBuffer = useService("number_buffer");
         this.numberBuffer.use({
             triggerAtEnter: () => this.pos.searchOrder(this.state.buffer),

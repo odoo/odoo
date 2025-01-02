@@ -1,4 +1,4 @@
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
@@ -18,7 +18,7 @@ export class DiscussSidebar extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
     }
 
     get discussSidebarItems() {

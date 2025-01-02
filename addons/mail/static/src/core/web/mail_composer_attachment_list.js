@@ -1,9 +1,8 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { useState } from "@odoo/owl";
 import {
     many2ManyBinaryField,
-    Many2ManyBinaryField
+    Many2ManyBinaryField,
 } from "@web/views/fields/many2many_binary/many2many_binary_field";
 
 export class MailComposerAttachmentList extends Many2ManyBinaryField {
@@ -11,7 +10,7 @@ export class MailComposerAttachmentList extends Many2ManyBinaryField {
     /** @override */
     setup() {
         super.setup();
-        this.mailStore = useState(useService("mail.store"));
+        this.mailStore = useService("mail.store");
         this.attachmentUploadService = useService("mail.attachment_upload");
     }
     /**
