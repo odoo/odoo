@@ -1,7 +1,7 @@
 import { Composer } from "@mail/core/common/composer";
 import { markEventHandled } from "@web/core/utils/misc";
 
-import { useRef, useState } from "@odoo/owl";
+import { useRef } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
@@ -11,7 +11,7 @@ const composerPatch = {
     setup() {
         this.gifButton = useRef("gif-button");
         super.setup();
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
     },
     get pickerSettings() {
         const setting = super.pickerSettings;

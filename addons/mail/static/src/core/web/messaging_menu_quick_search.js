@@ -1,5 +1,5 @@
 import { onExternalClick } from "@mail/utils/common/hooks";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 import { useAutofocus, useService } from "@web/core/utils/hooks";
@@ -11,7 +11,7 @@ export class MessagingMenuQuickSearch extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         useAutofocus();
         onExternalClick("search", () => this.props.onClose());
     }

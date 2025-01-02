@@ -19,13 +19,13 @@ export class CallSettings extends Component {
     setup() {
         super.setup();
         this.notification = useService("notification");
-        this.store = useState(useService("mail.store"));
-        this.rtc = useState(useService("discuss.rtc"));
+        this.store = useService("mail.store");
+        this.rtc = useService("discuss.rtc");
         this.microphoneVolume = useMicrophoneVolume();
         this.state = useState({
             userDevices: [],
         });
-        this.pttExtService = useState(useService("discuss.ptt_extension"));
+        this.pttExtService = useService("discuss.ptt_extension");
         this.saveBackgroundBlurAmount = debounce(() => {
             browser.localStorage.setItem(
                 "mail_user_setting_background_blur_amount",

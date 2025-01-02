@@ -29,9 +29,9 @@ export class CallParticipantCard extends Component {
         this.contextMenuAnchorRef = useRef("contextMenuAnchor");
         this.root = useRef("root");
         this.popover = usePopover(CallContextMenu);
-        this.rtc = useState(useService("discuss.rtc"));
-        this.store = useState(useService("mail.store"));
-        this.ui = useState(useService("ui"));
+        this.rtc = useService("discuss.rtc");
+        this.store = useService("mail.store");
+        this.ui = useService("ui");
         this.rootHover = useHover("root");
         this.state = useState({ drag: false, dragPos: undefined });
         onMounted(() => {

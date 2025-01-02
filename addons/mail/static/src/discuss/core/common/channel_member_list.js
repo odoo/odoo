@@ -1,7 +1,7 @@
 import { ImStatus } from "@mail/core/common/im_status";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
-import { Component, onWillUpdateProps, onWillStart, useState } from "@odoo/owl";
+import { Component, onWillUpdateProps, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 import { useService } from "@web/core/utils/hooks";
@@ -13,7 +13,7 @@ export class ChannelMemberList extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         onWillStart(() => {
             if (this.props.thread.fetchMembersState === "not_fetched") {
                 this.props.thread.fetchChannelMembers();

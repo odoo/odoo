@@ -36,7 +36,7 @@ export class ChatBubble extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         const popoverRef = useChildRef();
         this.popover = usePopover(ChatBubblePreview, {
             animation: false,

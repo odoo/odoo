@@ -10,7 +10,7 @@ export class InstallScopedApp extends Component {
     static template = "web.InstallScopedApp";
     static components = { Dropdown };
     setup() {
-        this.pwa = useState(useService("pwa"));
+        this.pwa = useService("pwa");
         this.state = useState({ manifest: {}, showInstallUI: false });
         this.isDisplayStandalone = isDisplayStandalone();
         // BeforeInstallPrompt event can take while before the browser triggers it. Some will display

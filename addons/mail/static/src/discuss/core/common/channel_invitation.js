@@ -23,7 +23,7 @@ export class ChannelInvitation extends Component {
     setup() {
         super.setup();
         this.orm = useService("orm");
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         this.notification = useService("notification");
         this.suggestionService = useService("mail.suggestion");
         this.ui = useService("ui");

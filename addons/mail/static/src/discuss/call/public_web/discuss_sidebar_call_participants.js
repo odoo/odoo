@@ -20,8 +20,8 @@ export class DiscussSidebarCallParticipants extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
-        this.rtc = useState(useService("discuss.rtc"));
+        this.store = useService("mail.store");
+        this.rtc = useService("discuss.rtc");
         this.hover = useHover(["root", "floating*"], {
             onHover: () => (this.floating.isOpen = true),
             onAway: () => (this.floating.isOpen = false),

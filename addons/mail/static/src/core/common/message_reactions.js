@@ -1,4 +1,4 @@
-import { Component, useRef, useState } from "@odoo/owl";
+import { Component, useRef } from "@odoo/owl";
 
 import { MessageReactionList } from "@mail/core/common/message_reaction_list";
 import { useService } from "@web/core/utils/hooks";
@@ -11,7 +11,7 @@ export class MessageReactions extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         this.ui = useService("ui");
         this.addRef = useRef("add");
         this.emojiPicker = useEmojiPicker(this.addRef, {

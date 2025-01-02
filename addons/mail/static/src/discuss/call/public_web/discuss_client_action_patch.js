@@ -1,5 +1,4 @@
 import { DiscussClientAction } from "@mail/core/public_web/discuss_client_action";
-import { useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
@@ -7,7 +6,7 @@ import { patch } from "@web/core/utils/patch";
 patch(DiscussClientAction.prototype, {
     setup() {
         super.setup(...arguments);
-        this.rtc = useState(useService("discuss.rtc"));
+        this.rtc = useService("discuss.rtc");
     },
     /**
      * Checks if we are in a client action and if we have a query parameter requesting to join a call,

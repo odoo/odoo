@@ -1,5 +1,5 @@
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
-import { useComponent, useState } from "@odoo/owl";
+import { useComponent } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -31,7 +31,7 @@ threadActionsRegistry
         sequence: 2,
         setup() {
             const component = useComponent();
-            component.store = useState(useService("mail.store"));
+            component.store = useService("mail.store");
         },
         text: _t("Unstar all"),
     })

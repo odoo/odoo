@@ -1,4 +1,4 @@
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { FollowerSubtypeDialog } from "./follower_subtype_dialog";
@@ -21,7 +21,7 @@ export class FollowerList extends Component {
     setup() {
         super.setup();
         this.action = useService("action");
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         useVisible("load-more", (isVisible) => {
             if (isVisible) {
                 this.props.thread.loadMoreFollowers();

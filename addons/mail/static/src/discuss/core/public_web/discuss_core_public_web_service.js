@@ -76,7 +76,6 @@ export class DiscussCorePublicWeb {
 
 export const discussCorePublicWeb = {
     dependencies: ["bus_service", "discuss.rtc", "mail.store", "notification"],
-
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services

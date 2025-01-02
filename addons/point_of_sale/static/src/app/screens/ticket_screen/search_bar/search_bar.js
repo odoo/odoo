@@ -33,7 +33,7 @@ export class SearchBar extends Component {
     };
 
     setup() {
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         useAutofocus();
         useExternalListener(window, "click", this._hideOptions);
         this.filterOptionsList = [...this.props.config.filter.options.keys()];

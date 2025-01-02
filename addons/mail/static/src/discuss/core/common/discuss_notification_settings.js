@@ -6,7 +6,7 @@ export class DiscussNotificationSettings extends Component {
     static template = "mail.DiscussNotificationSettings";
 
     setup() {
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         this.state = useState({
             selectedDuration: false,
         });

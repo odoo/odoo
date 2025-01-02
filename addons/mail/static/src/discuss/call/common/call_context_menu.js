@@ -17,8 +17,8 @@ export class CallContextMenu extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
-        this.rtc = useState(useService("discuss.rtc"));
+        this.store = useService("mail.store");
+        this.rtc = useService("discuss.rtc");
         this.state = useState({
             downloadStats: {},
             uploadStats: {},

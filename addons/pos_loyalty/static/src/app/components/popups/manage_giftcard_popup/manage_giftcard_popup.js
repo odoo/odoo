@@ -21,7 +21,7 @@ export class ManageGiftCardPopup extends Component {
     };
 
     setup() {
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.state = useState({
             inputValue: this.props.startingValue,
             amountValue: "",

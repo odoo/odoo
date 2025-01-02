@@ -28,7 +28,7 @@ export class ActivityController extends Component {
         this.dialog = useService("dialog");
         this.action = useService("action");
         this.store = useService("mail.store");
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         usePager(() => {
             const { count, hasLimitedCount, limit, offset } = this.model.root;
             return {
@@ -85,12 +85,9 @@ export class ActivityController extends Component {
     }
 
     scheduleActivity() {
-        this.dialog.add(
-            SelectCreateDialog,
-            this.getSelectCreateDialogProps,
-            {
-                onClose: () => this.model.load(this.getSearchProps()),
-            });
+        this.dialog.add(SelectCreateDialog, this.getSelectCreateDialogProps, {
+            onClose: () => this.model.load(this.getSearchProps()),
+        });
     }
 
     openActivityFormView(resId, activityTypeId) {

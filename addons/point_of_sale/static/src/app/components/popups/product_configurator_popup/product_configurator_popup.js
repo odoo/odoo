@@ -122,7 +122,7 @@ export class ProductConfiguratorPopup extends Component {
             computeProductProduct: this.computeProductProduct.bind(this),
         });
         this.pos = usePos();
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.inputArea = useRef("input-area");
         this.state = useState({
             productTemplate: this.props.productTemplate,

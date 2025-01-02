@@ -14,7 +14,7 @@ patch(ChatWindow.prototype, {
     setup() {
         super.setup(...arguments);
         this.livechatService = useService("im_livechat.livechat");
-        this.chatbotService = useState(useService("im_livechat.chatbot"));
+        this.chatbotService = useService("im_livechat.chatbot");
         this.livechatState = useState({ showCloseConfirmation: false });
     },
 

@@ -1,4 +1,4 @@
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
@@ -21,7 +21,7 @@ export class ControlButtons extends Component {
     };
     setup() {
         this.pos = usePos();
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.dialog = useService("dialog");
         this.notification = useService("notification");
     }

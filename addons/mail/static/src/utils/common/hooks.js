@@ -379,7 +379,7 @@ export function useMicrophoneVolume() {
 }
 
 export function useSelection({ refName, model, preserveOnClickAwayPredicate = () => false }) {
-    const ui = useState(useService("ui"));
+    const ui = useService("ui");
     const ref = useRef(refName);
     function onSelectionChange() {
         const activeElement = ref.el?.getRootNode().activeElement;
@@ -531,7 +531,7 @@ export function useSequential() {
 }
 
 export function useDiscussSystray() {
-    const ui = useState(useService("ui"));
+    const ui = useService("ui");
     return {
         class: "o-mail-DiscussSystray-class",
         get contentClass() {
