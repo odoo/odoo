@@ -998,10 +998,17 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
 
     def test_downpayment_with_fixed_taxed_product(self):
+        """This test will make sure that a unique downpayment line will be created for the fixed tax"""
         tax_1 = self.env['account.tax'].create({
             'name': '10',
-            'amount_type': 'fixed',
             'amount': 10,
+            'amount_type': 'fixed',
+        })
+
+        tax_2 = self.env['account.tax'].create({
+            'name': '5 incl',
+            'amount': 5,
+            'price_include_override': 'tax_included',
         })
 
         product_a = self.env['product.product'].create({
@@ -1011,15 +1018,27 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'taxes_id': [tax_1.id],
         })
 
+        product_b = self.env['product.product'].create({
+            'name': 'Product B',
+            'available_in_pos': True,
+            'lst_price': 5.0,
+            'taxes_id': [tax_2.id],
+        })
+
         partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
 
         sale_order = self.env['sale.order'].create({
             'partner_id': partner_test.id,
-            'order_line': [Command.create({
+            'order_line': [(0, 0, {
                 'product_id': product_a.id,
                 'name': product_a.name,
                 'product_uom_qty': 1,
                 'price_unit': product_a.lst_price,
+            }), (0, 0, {
+                'product_id': product_b.id,
+                'name': product_b.name,
+                'product_uom_qty': 1,
+                'price_unit': product_b.lst_price,
             })],
         })
         sale_order.action_confirm()
@@ -1034,4 +1053,4 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'down_payment_product_id': self.downpayment_product.id,
         })
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentLinesPerFixedTax', login="accountman")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentFixedTax', login="accountman")

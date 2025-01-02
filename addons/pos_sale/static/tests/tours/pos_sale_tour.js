@@ -403,7 +403,7 @@ registry.category("web_tour.tours").add("PosSaleWarning", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("PoSDownPaymentLinesPerFixedTax", {
+registry.category("web_tour.tours").add("PoSDownPaymentFixedTax", {
     steps: () =>
         [
             Chrome.startPoS(),
@@ -412,9 +412,12 @@ registry.category("web_tour.tours").add("PoSDownPaymentLinesPerFixedTax", {
             Order.hasLine({
                 productName: "Down Payment",
                 quantity: "1.0",
-                price: "22",
+                price: "1.00",
             }),
-            Order.hasNoTax(),
-            ProductScreen.totalAmountIs(22.0),
+            Order.hasLine({
+                productName: "Down Payment",
+                quantity: "1.0",
+                price: "22.00",
+            }),
         ].flat(),
 });
