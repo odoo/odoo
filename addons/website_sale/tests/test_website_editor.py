@@ -268,3 +268,39 @@ class TestWebsiteSaleEditor(HttpCase):
             'website_published': True,
         })
         self.start_tour(self.env['website'].get_client_action_url('/shop'), 'website_sale_restricted_editor_ui', login='restricted')
+
+    def test_website_sale_add_image_mimetype(self):
+        if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo "
+                            "data for accurate and reliable results.")
+            return
+        self.start_tour(self.env['website'].get_client_action_url('/shop'),
+                        "website_sale_add_image_mimetype", login='admin')
+
+        attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', 'ir.attachment'),
+            ('name', 'like', '%webp'),
+            ('description', 'not like', 'format: %'),
+        ])
+        self.assertEqual(len(attachments), 3, "Should have uploaded 3 attachments")
+        for attachment in attachments:
+            self.assertEqual(attachment.mimetype, "image/webp",
+                             "Attachment mimetype should be image/webp")
+
+    def test_website_sale_add_image_mimetype_no_webp(self):
+        if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo "
+                            "data for accurate and reliable results.")
+            return
+        self.start_tour(self.env['website'].get_client_action_url('/shop'),
+                        "website_sale_add_image_mimetype_no_webp", login='admin')
+
+        attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', 'ir.attachment'),
+            ('name', 'like', '%webp'),
+            ('description', 'not like', 'format: %'),
+        ])
+        self.assertEqual(len(attachments), 3, "Should have uploaded 3 attachments")
+        for attachment in attachments:
+            self.assertEqual(attachment.mimetype, "image/png", "Attachment mimetype should be "
+                                                               "image/png")

@@ -32,6 +32,7 @@ import {
     getDataURLBinarySize,
 } from "@web_editor/js/editor/image_processing";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
+import { canExportCanvasAsWebp } from "@web/core/utils/image_processing";
 import { pick } from "@web/core/utils/objects";
 import { _t } from "@web/core/l10n/translation";
 import {
@@ -6197,6 +6198,13 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         // This does not update the target.
         await this._applyOptions(false);
     },
+    /**
+     * @override
+     */
+    async cleanForSave() {
+        const img = this._getImg();
+        delete img.dataset.width;
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -6226,18 +6234,11 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     /**
      * @see this.selectClass for parameters
      */
-    selectFormat(previewMode, widgetValue, params) {
-        const values = widgetValue.split(' ');
+    async selectFormat(previewMode, widgetValue, params) {
+        const [resizeWidth, mimetype] = widgetValue.split(" ");
         const image = this._getImg();
-        image.dataset.resizeWidth = values[0];
-        if (image.dataset.shape) {
-            // If the image has a shape, modify its originalMimetype attribute.
-            image.dataset.originalMimetype = values[1];
-        } else {
-            // If the image does not have a shape, modify its mimetype
-            // attribute.
-            image.dataset.mimetype = values[1];
-        }
+        image.dataset.resizeWidth = resizeWidth;
+        this._setImageMimetype(image, mimetype);
         return this._applyOptions();
     },
     /**
@@ -6295,19 +6296,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         const img = this._getImg();
         const _super = this._super.bind(this);
 
-        // Make sure image is loaded because we need its naturalWidth
-        await new Promise((resolve, reject) => {
-            if (img.complete) {
-                resolve();
-                return;
-            }
-            img.addEventListener('load', resolve, {once: true});
-            img.addEventListener('error', resolve, {once: true});
-        });
-
         switch (methodName) {
             case 'selectFormat':
-                return img.naturalWidth + ' ' + this._getImageMimetype(img);
+                return await this._getCurrentFormat(img);
             case 'setFilter':
                 return img.dataset.filter;
             case 'glFilter':
@@ -6336,9 +6327,16 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             return;
         }
         const $select = $(uiFragment).find('we-select[data-name=format_select_opt]');
-        (await this._computeAvailableFormats()).forEach(([value, [label, targetFormat]]) => {
-            $select.append(`<we-button data-select-format="${Math.round(value)} ${targetFormat}" class="o_we_badge_at_end">${label} <span class="badge rounded-pill text-bg-dark">${targetFormat.split('/')[1]}</span></we-button>`);
-        });
+        (await this._computeAvailableFormats()).forEach(
+            ([value, [label, targetFormat, isDisabled]]) => {
+                const selectFormat = `${Math.round(value)} ${targetFormat}`;
+                const unavailableOptionDependencies = isDisabled ? ' data-dependencies="fake"' : "";
+                const mimetypeBadge = targetFormat.split("/")[1];
+                $select.append(
+                    `<we-button data-select-format="${selectFormat}" class="o_we_badge_at_end"${unavailableOptionDependencies}>${label} <span class="badge rounded-pill text-bg-dark">${mimetypeBadge}</span></we-button>`
+                );
+            }
+        );
 
         if (!['image/jpeg', 'image/webp'].includes(this._getImageMimetype(img))) {
             const optQuality = uiFragment.querySelector('we-range[data-set-quality]');
@@ -6358,28 +6356,53 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             return [];
         }
         const img = this._getImg();
-        const original = await loadImage(this.originalSrc);
-        const maxWidth = img.dataset.width ? img.naturalWidth : original.naturalWidth;
-        const optimizedWidth = Math.min(maxWidth, this._computeMaxDisplayWidth());
+        const originalSize = await this._getOriginalSize();
+        const optimizedWidth = Math.min(originalSize, this._computeMaxDisplayWidth());
         this.optimizedWidth = optimizedWidth;
-        const widths = {
-            128: ['128px', 'image/webp'],
-            256: ['256px', 'image/webp'],
-            512: ['512px', 'image/webp'],
-            1024: ['1024px', 'image/webp'],
-            1920: ['1920px', 'image/webp'],
+        const optimizedMimetype = canExportCanvasAsWebp() ? "image/webp" : "image/jpeg";
+        const formatsByWidth = {
+            128: ["128px", optimizedMimetype],
+            256: ["256px", optimizedMimetype],
+            512: ["512px", optimizedMimetype],
+            1024: ["1024px", optimizedMimetype],
+            1920: ["1920px", optimizedMimetype],
         };
-        widths[img.naturalWidth] = [_t("%spx", img.naturalWidth), 'image/webp'];
-        widths[optimizedWidth] = [_t("%spx (Suggested)", optimizedWidth), 'image/webp'];
+        formatsByWidth[img.naturalWidth] = [_t("%spx", img.naturalWidth), optimizedMimetype];
+        formatsByWidth[optimizedWidth] = [
+            _t("%spx (Suggested)", optimizedWidth),
+            optimizedMimetype,
+        ];
         const mimetypeBeforeConversion = img.dataset.mimetypeBeforeConversion;
-        widths[maxWidth] = [_t("%spx (Original)", maxWidth), mimetypeBeforeConversion];
-        if (mimetypeBeforeConversion !== "image/webp") {
-            // Avoid a key collision by subtracting 0.1 - putting the webp
-            // above the original format one of the same size.
-            widths[maxWidth - 0.1] = [_t("%spx", maxWidth), 'image/webp'];
+        formatsByWidth[originalSize] = [
+            _t("%spx (Original)", originalSize),
+            mimetypeBeforeConversion,
+        ];
+        if (mimetypeBeforeConversion !== optimizedMimetype) {
+            // Avoid key collision and ensure the optimized format is above the
+            // original one of the same size.
+            formatsByWidth[originalSize - 0.1] = [_t("%spx", originalSize), optimizedMimetype];
         }
-        return Object.entries(widths)
-            .filter(([width]) => width <= maxWidth)
+
+        // If the currently selected format is unavailable, add it as an
+        // unselectable option.
+        // This handles cases such as:
+        // - Switching between a browser where webp is available and one where
+        //   webp is not
+        // - Changing the specs of the available formats, where some previously
+        //   used format cannot be selected anymore
+        // - External modification of the format
+        const currentFormat = await this._getCurrentFormat(img);
+        const [selectedSize, selectedMimetype] = currentFormat?.split(" ") || [];
+        if (
+            selectedSize &&
+            selectedMimetype &&
+            (!formatsByWidth[selectedSize] || formatsByWidth[selectedSize][1] !== selectedMimetype)
+        ) {
+            formatsByWidth[selectedSize - 0.2] = [_t("%spx", selectedSize), selectedMimetype, true];
+        }
+
+        return Object.entries(formatsByWidth)
+            .filter(([width]) => width <= originalSize)
             .sort(([v1], [v2]) => v1 - v2);
     },
     /**
@@ -6406,11 +6429,23 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             delete img.dataset.mimetype;
             return;
         }
-        const dataURL = await applyModifications(img, {mimetype: this._getImageMimetype(img)});
+        const targetMimetype = await this._getImageTargetMimetype();
+        const { dataURL, mimetype } = await applyModifications(
+            img,
+            {
+                mimetype: targetMimetype,
+            },
+            true // TODO: remove in master
+        );
         this._filesize = getDataURLBinarySize(dataURL) / 1024;
 
         if (update) {
             img.classList.add('o_modified_image_to_save');
+            if (!img.dataset.width) {
+                // Save image original width.
+                img.dataset.width = await this._getOriginalSize();
+            }
+            this._setImageMimetype(img, mimetype);
             const loadedImg = await loadImage(dataURL, img);
             this._applyImage(loadedImg);
             // Also apply to carousel thumbnail if applicable.
@@ -6445,12 +6480,12 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         await this._loadImageInfo();
         await this._rerenderXML();
         const img = this._getImg();
-        if (!['image/gif', 'image/svg+xml'].includes(img.dataset.mimetype)) {
+        if (
+            !["image/gif", "image/svg+xml"].includes(img.dataset.mimetype) ||
+            (img.dataset.shape && img.dataset.originalMimetype !== "image/gif")
+        ) {
             // Convert to recommended format and width.
-            img.dataset.mimetype = 'image/webp';
-            img.dataset.resizeWidth = this.optimizedWidth;
-        } else if (img.dataset.shape && img.dataset.originalMimetype !== "image/gif") {
-            img.dataset.originalMimetype = "image/webp";
+            this._setImageMimetype(img, canExportCanvasAsWebp() ? "image/webp" : "image/jpeg");
             img.dataset.resizeWidth = this.optimizedWidth;
         }
         await this._applyOptions();
@@ -6487,6 +6522,14 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     _getImageMimetype(img) {
         return img.dataset.mimetype;
+    },
+    /**
+     * @private
+     * @param {HTMLImageElement} img
+     * @param {string} mimetype
+     */
+    _setImageMimetype(img, mimetype) {
+        img.dataset.mimetype = mimetype;
     },
     /**
      * @private
@@ -6528,6 +6571,75 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             || 'customFilter' in params.optionsPossibleValues
             || params.optionsPossibleValues.setQuality
             || widgetName === 'format_select_opt';
+    },
+    /**
+     * @param {HTMLImageElement} [image] Override image element.
+     * @return {Promise<string>} The image's current width (selected format).
+     * @private
+     */
+    async _getImageWidth(image = this._getImg()) {
+        return Math.trunc(
+            image.dataset.resizeWidth || image.dataset.width || (await this._getOriginalSize())
+        ).toString();
+    },
+    /**
+     * @return {Promise<number>} The image's original size.
+     * @private
+     */
+    async _getOriginalSize() {
+        const image = this._getImg();
+        const storedOriginalWidth = Math.round(image.dataset.width);
+        if (storedOriginalWidth) {
+            return storedOriginalWidth;
+        } else {
+            const originalImage = await loadImage(this.originalSrc);
+            return originalImage.naturalWidth;
+        }
+    },
+    /**
+     * @param {HTMLImageElement} img
+     * @return {Promise<string>} The image's current format (widget value).
+     * @private
+     */
+    async _getCurrentFormat(img) {
+        return `${await this._getImageWidth(img)} ${this._getImageMimetype(img)}`;
+    },
+    /**
+     * Returns whether the format is the image's original format.
+     *
+     * @param {string} size
+     * @param {string} mimetype
+     * @param {HTMLImageElement} [image] Override image element.
+     * @return {Promise<boolean>}
+     * @private
+     */
+    async _isOriginalFormat(size, mimetype, image = this._getImg()) {
+        const originalMimetype = image.dataset.mimetypeBeforeConversion;
+        if (mimetype !== originalMimetype) {
+            return false;
+        }
+
+        const originalSize = await this._getOriginalSize();
+        return size.toString() === originalSize.toString();
+    },
+    /**
+     * Get the appropriate mimetype to applyModifications.
+     * Avoid implicit conversions.
+     * Only target available formats.
+     *
+     * @param {HTMLImageElement} [image] Override image element.
+     * @private
+     */
+    async _getImageTargetMimetype(image = this._getImg()) {
+        const currentSize = await this._getImageWidth(image);
+        const currentMimetype = this._getImageMimetype(image);
+
+        const isOriginalFormat = await this._isOriginalFormat(currentSize, currentMimetype);
+        if (!isOriginalFormat && ["image/webp", "image/jpeg"].includes(currentMimetype)) {
+            return canExportCanvasAsWebp() ? "image/webp" : "image/jpeg";
+        } else {
+            return currentMimetype;
+        }
     },
 });
 
@@ -6607,12 +6719,13 @@ registry.ImageTools = ImageHandlerOption.extend({
             activeOnStart: true,
             media: img,
             mimetype: this._getImageMimetype(img),
+            mimetypeOutputAttribute: img.dataset.shape ? "originalMimetype" : "mimetype",
         });
 
         await new Promise(resolve => {
             this.$target.one('image_cropper_destroyed', async () => {
                 if (isGif(this._getImageMimetype(img))) {
-                    img.dataset[img.dataset.shape ? 'originalMimetype' : 'mimetype'] = 'image/png';
+                    this._setImageMimetype(img, "image/png");
                 }
                 await this._reapplyCurrentShape();
                 resolve();
@@ -6681,6 +6794,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             activeOnStart: true,
             media: img,
             mimetype: this._getImageMimetype(img),
+            mimetypeOutputAttribute: img.dataset.shape ? "originalMimetype" : "mimetype",
         });
         await imageCropWrapper.component.mountedPromise;
         await imageCropWrapper.component.reset();
@@ -6688,6 +6802,11 @@ registry.ImageTools = ImageHandlerOption.extend({
         imageCropWrapperElement.remove();
 
         await this._reapplyCurrentShape();
+
+        // Reset to "Suggested" format
+        await this._computeAvailableFormats(); // Update this.optimizedWidth
+        const optimizedMimetype = canExportCanvasAsWebp() ? "image/webp" : "image/jpeg";
+        await this.selectFormat(false, `${this.optimizedWidth} ${optimizedMimetype}`);
     },
     /**
      * Resets the image rotation and translation
@@ -6717,15 +6836,13 @@ registry.ImageTools = ImageHandlerOption.extend({
             if (previewMode === 'reset' && img.dataset.shapeColors) {
                 // When we reset the shape we need to reapply the colors the
                 // user had selected.
+                this._applyShapeAndColors__previewMode = previewMode; // TODO: remove in master
                 await this._applyShapeAndColors(false, img.dataset.shapeColors.split(';'));
             } else {
                 // If the preview mode === false we want to save the colors
                 // as the user chose their shape
+                this._applyShapeAndColors__previewMode = previewMode; // TODO: remove in master
                 await this._applyShapeAndColors(saveData);
-                if (saveData && img.dataset.mimetype !== 'image/svg+xml') {
-                    img.dataset.originalMimetype = img.dataset.mimetype;
-                    img.dataset.mimetype = 'image/svg+xml';
-                }
                 // When the user selects a shape, we remove the data attributes
                 // that are not compatible with this shape.
                 if (saveData) {
@@ -6744,14 +6861,22 @@ registry.ImageTools = ImageHandlerOption.extend({
             }
         } else {
             // Re-applying the modifications and deleting the shapes
-            img.src = await applyModifications(img, {mimetype: this._getImageMimetype(img)});
+            const targetMimetype = await this._getImageTargetMimetype();
+            const { dataURL, mimetype } = await applyModifications(
+                img,
+                {
+                    mimetype: targetMimetype,
+                },
+                true // TODO: remove in master
+            );
+            img.src = dataURL;
             delete img.dataset.shape;
             delete img.dataset.shapeColors;
             delete img.dataset.fileName;
             delete img.dataset.shapeFlip;
             delete img.dataset.shapeRotate;
             if (saveData) {
-                img.dataset.mimetype = img.dataset.originalMimetype;
+                img.dataset.mimetype = mimetype;
                 delete img.dataset.originalMimetype;
             }
             // Also apply to carousel thumbnail if applicable.
@@ -6771,6 +6896,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         const oldColors = img.dataset.shapeColors.split(';');
         const newColors = oldColors.slice(0);
         newColors[newColorId] = this._getCSSColorValue(widgetValue === '' ? `o-color-${(newColorId + 1)}` : widgetValue);
+        this._applyShapeAndColors__previewMode = previewMode; // TODO: remove in master
         await this._applyShapeAndColors(true, newColors);
         img.classList.add('o_modified_image_to_save');
     },
@@ -7000,6 +7126,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      * theme colors are applied if not supplied
      */
     async _applyShapeAndColors(save, newColors) {
+        const previewMode = this._applyShapeAndColors__previewMode || false; // TODO: in master, replace with parameter
         const img = this._getImg();
         let shape = this.shapeCache[img.dataset.shape.split('/')[2]];
 
@@ -7013,12 +7140,14 @@ registry.ImageTools = ImageHandlerOption.extend({
             newColors = oldColors.map((color, i) => color !== null ? this._getCSSColorValue(`o-color-${(i + 1)}`) : null);
         }
         newColors.forEach((color, i) => shape = shape.replace(new RegExp(oldColors[i], 'g'), this._getCSSColorValue(color)));
+        this._writeShape__previewMode = previewMode; // TODO: remove in master, pass previewMode to _writeShape
         await this._writeShape(shape);
         if (save) {
             img.dataset.shapeColors = newColors.join(';');
         }
         // Also apply to carousel thumbnail if applicable.
         weUtils.forwardToThumbnail(img);
+        delete this._applyShapeAndColors__previewMode; // TODO: remove in master
     },
     /**
      * Sets the image in the supplied SVG and replace the src with a dataURL
@@ -7028,6 +7157,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      * in the document
      */
     async _writeShape(svgText) {
+        const previewMode = this._writeShape__previewMode; // TODO: in master, replace with parameter
         const img = this._getImg();
         let needToRefreshPublicWidgets = false;
         let hasHoverEffect = false;
@@ -7040,6 +7170,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             hasHoverEffect = true;
         }
 
+        this.computeShape__previewMode = previewMode; // TODO: replace with parameter in master
         const dataURL = await this.computeShape(svgText, img);
 
         let clonedImgEl = null;
@@ -7065,6 +7196,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         if (needToRefreshPublicWidgets) {
             await this._refreshPublicWidgets();
         }
+        delete this._writeShape__previewMode; // TODO: remove in master
         return loadedImg;
     },
     /**
@@ -7076,6 +7208,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      * in the document
      */
     async computeShape(svgText, img) {
+        const previewMode = this.computeShape__previewMode; // TODO: in master, replace with parameter
         const initialImageWidth = img.naturalWidth;
 
         const svg = new DOMParser().parseFromString(svgText, 'image/svg+xml').documentElement;
@@ -7108,13 +7241,17 @@ registry.ImageTools = ImageHandlerOption.extend({
         // We will store the image in base64 inside the SVG.
         // applyModifications will return a dataURL with the current filters
         // and size options.
-        const options = {
-            mimetype: this._getImageMimetype(img),
-            perspective: svg.dataset.imgPerspective || null,
-            imgAspectRatio: svg.dataset.imgAspectRatio || null,
-            svgAspectRatio: svgAspectRatio,
-        };
-        const imgDataURL = await applyModifications(img, options);
+        const targetMimetype = await this._getImageTargetMimetype(img);
+        const { dataURL: imgDataURL, mimetype } = await applyModifications(
+            img,
+            {
+                mimetype: targetMimetype,
+                perspective: svg.dataset.imgPerspective || null,
+                imgAspectRatio: svg.dataset.imgAspectRatio || null,
+                svgAspectRatio: svgAspectRatio,
+            },
+            true /* TODO: remove in master */
+        );
         svg.removeChild(svg.querySelector('#preview'));
         svg.querySelectorAll("image").forEach(image => {
             image.setAttribute("xlink:href", imgDataURL);
@@ -7141,6 +7278,11 @@ registry.ImageTools = ImageHandlerOption.extend({
         const dataURL = await createDataURL(blob);
         const imgFilename = (img.dataset.originalSrc.split('/').pop()).split('.')[0];
         img.dataset.fileName = `${imgFilename}.svg`;
+        if (previewMode === false) {
+            img.dataset.mimetype = "image/svg+xml";
+            img.dataset.originalMimetype = mimetype;
+        }
+        delete this.computeShape__previewMode; // TODO: remove in master
         return dataURL;
     },
     /**
@@ -7325,6 +7467,16 @@ registry.ImageTools = ImageHandlerOption.extend({
             return img.dataset.originalMimetype;
         }
         return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _setImageMimetype(img, mimetype) {
+        if (img.dataset.shape) {
+            img.dataset.originalMimetype = mimetype;
+        } else {
+            this._super(...arguments);
+        }
     },
     /**
      * Gets the CSS value of a color variable name so it can be used on shapes.

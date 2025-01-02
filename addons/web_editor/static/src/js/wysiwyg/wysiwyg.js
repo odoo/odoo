@@ -20,6 +20,7 @@ import weUtils from "@web_editor/js/common/utils";
 import { isSelectionInSelectors, peek } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { PeerToPeer, RequestError } from "@web_editor/js/wysiwyg/PeerToPeer";
 import { uniqueId } from "@web/core/utils/functions";
+import { canExportCanvasAsWebp, convertCanvasToDataURL } from "@web/core/utils/image_processing";
 import { groupBy } from "@web/core/utils/arrays";
 import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
@@ -3559,11 +3560,19 @@ export class Wysiwyg extends Component {
                 ctx.fillStyle = 'rgb(255, 255, 255)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
-                altData[size] = {
-                    'image/jpeg': canvas.toDataURL('image/jpeg', 0.75).split(',')[1],
+
+                const generateAltData = (mimetype) => {
+                    const imageData = convertCanvasToDataURL(canvas, mimetype, 0.75);
+                    if (imageData.mimetype === mimetype) {
+                        if (!altData[size]) {
+                            altData[size] = {};
+                        }
+                        altData[size][imageData.mimetype] = imageData.base64Part;
+                    }
                 };
-                if (size !== originalSize) {
-                    altData[size]['image/webp'] = canvas.toDataURL('image/webp', 0.75).split(',')[1];
+                generateAltData("image/jpeg");
+                if (size !== originalSize && canExportCanvasAsWebp()) {
+                    generateAltData("image/webp");
                 }
             }
         }

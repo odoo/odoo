@@ -1,5 +1,9 @@
 /** @odoo-module **/
 
+import {
+    convertCanvasToDataURL,
+    extractMimetypeFromDataURL,
+} from "@web/core/utils/image_processing";
 import { pick } from "@web/core/utils/objects";
 import {getAffineApproximation, getProjective} from "@web_editor/js/editor/perspective_utils";
 
@@ -19,6 +23,12 @@ const modifierFields = [
     "mimetypeBeforeConversion",
 ];
 export const isGif = (mimetype) => mimetype === 'image/gif';
+
+/**
+ * applyModifications cache
+ * @type {Object.<string, ApplyModificationsReturnType>}
+ */
+const applyModificationsCache = {};
 
 // webgl color filters
 const _applyAll = (result, filter, filters) => {
@@ -195,20 +205,41 @@ const glFilters = {
         applyAll(filter, filters);
     },
 };
+
+/**
+ * @typedef {{dataURL: string, mimetype: string}} ApplyModificationsReturnType
+ */
 /**
  * Applies data-attributes modifications to an img tag and returns a dataURL
  * containing the result. This function does not modify the original image.
+ * Caches results in memory for better performance.
  *
  * @param {HTMLImageElement} img the image to which modifications are applied
- * @returns {string} dataURL of the image with the applied modifications
+ * @param {boolean} returnResultWithMimetype false by default to not break
+ * compatibility, *must* be set to true. TODO: remove in master
+ * @returns {Promise<ApplyModificationsReturnType>} dataURL of the image
+ * with the applied modifications and the actual output mimetype.
  */
-export async function applyModifications(img, dataOptions = {}) {
+export async function applyModifications(img, dataOptions = {}, returnResultWithMimetype = false) {
     const data = Object.assign({
         glFilter: '',
         filter: '#0000',
         quality: '75',
         forceModification: false,
     }, img.dataset, dataOptions);
+
+    const cacheKey = JSON.stringify(data);
+    const cachedResult = applyModificationsCache[cacheKey];
+    if (cachedResult) {
+
+        // TODO: remove in master, see jsdoc for returnResultWithMimetype parameter
+        if (!returnResultWithMimetype) {
+            return cachedResult.dataURL;
+        }
+
+        return cachedResult;
+    }
+
     let {
         width,
         height,
@@ -338,13 +369,34 @@ export async function applyModifications(img, dataOptions = {}) {
     ctx.fillRect(0, 0, result.width, result.height);
 
     // Quality
-    const dataURL = result.toDataURL(mimetype, quality / 100);
-    const newSize = getDataURLBinarySize(dataURL);
+    const imageData = convertCanvasToDataURL(result, mimetype, quality / 100);
+    const newSize = getDataURLBinarySize(imageData.dataURL);
     const originalSize = _getImageSizeFromCache(originalSrc);
     const isChanged = !!perspective || !!glFilter ||
         original.width !== result.width || original.height !== result.height ||
         original.width !== croppedImg.width || original.height !== croppedImg.height;
-    return (isChanged || originalSize >= newSize) ? dataURL : await _loadImageDataURL(originalSrc);
+
+    // TODO: remove in master, see jsdoc for returnResultWithMimetype parameter
+    if (!returnResultWithMimetype) {
+        return isChanged || originalSize >= newSize
+            ? imageData.dataURL
+            : await _loadImageDataURL(originalSrc);
+    }
+
+    let returnValue;
+    if (isChanged || originalSize >= newSize) {
+        returnValue = {
+            dataURL: imageData.dataURL,
+            mimetype: imageData.mimetype,
+        };
+    } else {
+        const originalDataURL = await _loadImageDataURL(originalSrc);
+        returnValue = {
+            dataURL: originalDataURL,
+            mimetype: extractMimetypeFromDataURL(originalDataURL),
+        };
+    }
+    return (applyModificationsCache[cacheKey] = returnValue);
 }
 
 /**

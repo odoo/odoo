@@ -15,6 +15,7 @@ const MY_IMAGE =
     "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
 const PRODUCT_IMAGE =
     "R0lGODlhDAAMAKIFAF5LAP/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAAMlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7";
+const DUMMY_WEBP = "UklGRiwAAABXRUJQVlA4TB8AAAAv/8F/EAcQEREQCCT7e89QRP8z/vOf//znP//5z/8BAA==";
 
 let serverData;
 let target;
@@ -72,6 +73,17 @@ QUnit.module("Fields", (hooks) => {
                         { id: 12, display_name: "gold", color: 2 },
                         { id: 14, display_name: "silver", color: 5 },
                     ],
+                },
+                "ir.attachment": {
+                    fields: {
+                        mimetype: { string: "File mimetype" },
+                        datas: { string: "File data" },
+                    },
+                    methods: {
+                        create_unique() {
+                            return [0];
+                        },
+                    },
                 },
             },
         };
@@ -858,6 +870,94 @@ QUnit.module("Fields", (hooks) => {
                 getUnique(target.querySelector(".o_field_image img")),
                 "1659688620000"
             );
+        }
+    );
+
+    QUnit.test(
+        "ImageField sends the correct mimetype on webp to png implicit conversion",
+        async (assert) => {
+            let isMocked = false;
+            const imageData = Uint8Array.from([...atob(DUMMY_WEBP)].map((c) => c.charCodeAt(0)));
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `<form>
+                    <field name="document" widget="image" options="{'size': [90, 90]}"/>
+                </form>`,
+                mockRPC(route, { model, method, args }) {
+                    if (model === "ir.attachment" && method === "create_unique") {
+                        const attachment = args[0][0];
+                        if (
+                            attachment.mimetype !== "image/jpeg" &&
+                            attachment.description.startsWith("resize:")
+                        ) {
+                            assert.step("upload");
+                            const expectedMimetype = isMocked ? "image/png" : "image/webp";
+                            assert.strictEqual(
+                                attachment.mimetype,
+                                expectedMimetype,
+                                "the uploaded attachment should have the right mimetype"
+                            );
+                            return Promise.resolve([0]);
+                        }
+                    }
+                },
+            });
+
+            assert.strictEqual(
+                target.querySelector('div[name="document"] img').dataset.src,
+                "data:image/png;base64,coucou==",
+                "the image should have the initial src"
+            );
+
+            async function uploadWebp() {
+                // Whitebox: replace the event target before the event is
+                // handled by the field so that we can modify the files that it
+                // will take into account. This relies on the fact that it reads
+                // the files from event.target and not from a direct reference
+                // to the input element.
+                const fileInput = target.querySelector("input[type=file]");
+                const fakeInput = {
+                    files: [new File([imageData], "fake_file.webp", { type: "image/webp" })],
+                };
+                fileInput.addEventListener(
+                    "change",
+                    (ev) => {
+                        Object.defineProperty(ev, "target", {
+                            value: fakeInput,
+                            configurable: true,
+                        });
+                    },
+                    { capture: true }
+                );
+
+                fileInput.dispatchEvent(new Event("change"));
+                // It can take some time to encode the data as a base64 url.
+                await new Promise((resolve) => setTimeout(resolve, 50));
+                // Wait for a render
+                await nextTick();
+                assert.verifySteps(
+                    ["upload", "upload"],
+                    "two modified images should have been uploaded"
+                );
+            }
+
+            await uploadWebp();
+
+            // Mock
+            const _original = HTMLCanvasElement.prototype.toDataURL;
+            HTMLCanvasElement.prototype.toDataURL = function (type, quality) {
+                return _original.call(this, type === "image/webp" ? "image/png" : type, quality);
+            };
+            isMocked = true;
+
+            await uploadWebp();
+
+            // Unmock
+            HTMLCanvasElement.prototype.toDataURL = _original;
+            isMocked = false;
         }
     );
 });
