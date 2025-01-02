@@ -5,6 +5,7 @@ import { Macro } from "@web/core/macro";
 import { browser } from "@web/core/browser/browser";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import * as hoot from "@odoo/hoot-dom";
+import { patch } from "@web/core/utils/patch";
 
 export class TourAutomatic {
     mode = "auto";
@@ -35,73 +36,74 @@ export class TourAutomatic {
         setupEventActions(document.createElement("div"));
         const macroSteps = this.steps
             .filter((step) => step.index >= this.currentIndex)
-            .flatMap((step) => {
-                return [
-                    {
-                        action: async () => {
-                            if (this.debugMode) {
-                                console.groupCollapsed(step.describeMe);
-                                console.log(step.stringify);
+            .flatMap((step) => [
+                {
+                    action: async () => {
+                        if (this.debugMode) {
+                            console.groupCollapsed(step.describeMe);
+                            console.log(step.stringify);
+                        } else {
+                            console.log(step.describeMe);
+                        }
+                        if (step.break && this.debugMode) {
+                            // eslint-disable-next-line no-debugger
+                            debugger;
+                        }
+                        // This delay is important for making the current set of tour tests pass.
+                        // IMPROVEMENT: Find a way to remove this delay.
+                        await new Promise((resolve) => requestAnimationFrame(resolve));
+                        if (this.config.stepDelay > 0) {
+                            await hoot.delay(this.config.stepDelay);
+                        }
+                    },
+                },
+                {
+                    initialDelay: () => (this.previousStepIsJustACheck ? 0 : null),
+                    trigger: () => step.findTrigger(),
+                    timeout: (step.timeout || 10000) + this.config.stepDelay,
+                    action: async () => {
+                        if (this.checkForUndeterminisms) {
+                            try {
+                                await step.checkForUndeterminisms();
+                            } catch (error) {
+                                this.throwError([
+                                    ...this.currentStep.describeWhyIFailed,
+                                    error.message,
+                                ]);
+                            }
+                        }
+                        this.previousStepIsJustACheck = !this.currentStep.hasAction;
+                        if (this.debugMode) {
+                            if (!step.skipped && this.showPointerDuration > 0 && step.element) {
+                                // Useful in watch mode.
+                                pointer.pointTo(step.element, this);
+                                await hoot.delay(this.showPointerDuration);
+                                pointer.hide();
+                            }
+                            console.log(step.element);
+                            if (step.skipped) {
+                                console.log("This step has been skipped");
                             } else {
-                                console.log(step.describeMe);
+                                console.log("This step has run successfully");
                             }
-                            if (step.break && this.debugMode) {
-                                // eslint-disable-next-line no-debugger
-                                debugger;
-                            }
-                            // This delay is important for making the current set of tour tests pass.
-                            // IMPROVEMENT: Find a way to remove this delay.
-                            await new Promise((resolve) => requestAnimationFrame(resolve));
-                            if (this.config.stepDelay > 0) {
-                                await hoot.delay(this.config.stepDelay);
-                            }
-                        },
+                            console.groupEnd();
+                        }
+                        const result = await step.doAction();
+                        if (step.pause && this.debugMode) {
+                            await this.pause();
+                        }
+                        tourState.setCurrentIndex(step.index + 1);
+                        return result;
                     },
-                    {
-                        initialDelay: () => {
-                            return this.previousStepIsJustACheck ? 0 : null;
-                        },
-                        trigger: () => step.findTrigger(),
-                        timeout: (step.timeout || 10000) + this.config.stepDelay,
-                        action: async () => {
-                            if (this.checkForUndeterminisms) {
-                                try {
-                                    await step.checkForUndeterminisms();
-                                } catch (error) {
-                                    this.throwError([
-                                        ...this.currentStep.describeWhyIFailed,
-                                        error.message,
-                                    ]);
-                                }
-                            }
-                            this.previousStepIsJustACheck = !this.currentStep.hasAction;
-                            if (this.debugMode) {
-                                if (!step.skipped && this.showPointerDuration > 0 && step.element) {
-                                    // Useful in watch mode.
-                                    pointer.pointTo(step.element, this);
-                                    await hoot.delay(this.showPointerDuration);
-                                    pointer.hide();
-                                }
-                                console.log(step.element);
-                                if (step.skipped) {
-                                    console.log("This step has been skipped");
-                                } else {
-                                    console.log("This step has run successfully");
-                                }
-                                console.groupEnd();
-                            }
-                            const result = await step.doAction();
-                            if (step.pause && this.debugMode) {
-                                await this.pause();
-                            }
-                            tourState.setCurrentIndex(step.index + 1);
-                            return result;
-                        },
-                    },
-                ];
-            });
+                },
+            ]);
 
         const end = () => {
+            //Tour is finished, it's too late to console.
+            patch(console, {
+                error: () => {},
+                warn: () => {},
+            });
             delete window.hoot;
             transitionConfig.disabled = false;
             tourState.clear();
@@ -113,7 +115,7 @@ export class TourAutomatic {
 
         this.macro = new Macro({
             name: this.name,
-            checkDelay: this.checkDelay || 300,
+            checkDelay: this.checkDelay || 200,
             steps: macroSteps,
             onError: (error) => {
                 this.throwError([error]);
