@@ -2,7 +2,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { isToday } from "@mail/utils/common/dates";
 import { useHover } from "@mail/utils/common/hooks";
 
-import { Component, useRef, useState } from "@odoo/owl";
+import { Component, useRef } from "@odoo/owl";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { useService } from "@web/core/utils/hooks";
@@ -37,7 +37,7 @@ export class NotificationItem extends Component {
         super.setup();
         this.isToday = isToday;
         this.DateTime = DateTime;
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.markAsReadRef = useRef("markAsRead");
         this.rootHover = useHover("root");
     }

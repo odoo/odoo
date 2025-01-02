@@ -1,4 +1,4 @@
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -11,7 +11,7 @@ export class BusConnectionAlert extends Component {
     static props = {};
 
     setup() {
-        this.busMonitoring = useState(useService("bus.monitoring_service"));
+        this.busMonitoring = useService("bus.monitoring_service");
     }
 
     /**

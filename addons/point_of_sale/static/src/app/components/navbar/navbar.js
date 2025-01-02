@@ -39,7 +39,7 @@ export class Navbar extends Component {
     static props = {};
     setup() {
         this.pos = usePos();
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.state = useState({ searchBarOpen: false });
         this.debug = useService("debug");
         this.dialog = useService("dialog");
