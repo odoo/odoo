@@ -90,6 +90,18 @@ patch(PortalComposer.prototype, {
      */
     prepareMessageData() {
         const options = super.prepareMessageData(...arguments);
+        if (this.options.force_submit_url === "/mail/message/update_content") {
+            return {
+                attachment_ids: this.options.post_data.attachment_ids,
+                attachment_tokens: this.attachments.map((a) => a.access_token),
+                body: this.options.post_data.body,
+                hash: this.options.hash,
+                message_id: parseInt(this.options.default_message_id),
+                pid: this.options.pid,
+                rating_value: this.ratingInputEl.value,
+                token: this.options.token,
+            };
+        }
         return Object.assign(options || {}, {
             message_id: this.options.default_message_id,
             post_data: { ...options.post_data, rating_value: this.ratingInputEl.value },
