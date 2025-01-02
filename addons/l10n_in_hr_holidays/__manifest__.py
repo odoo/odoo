@@ -5,6 +5,7 @@
     'version': '1.0',
     'category': 'Human Resources/Time Off',
     'summary': 'Leave Management of Indian Localization',
+    'description': 'The Indian Time Off module provides additional features to the application. With it, you\'ll be able to define Sandwich Leaves on your time off type, including weekends or holidays in the duration of the employee leave\'s request.',
     'countries': ['in'],
     'depends': ['hr_holidays'],
     'auto_install': ['hr_holidays'],
