@@ -55,6 +55,20 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         self.env.ref('website_blog.opt_sidebar_blog_index_follow_us').active = False
         self.start_tour("/blog", 'blog_autocomplete_with_date')
 
+    def test_blog_context_and_social_media(self):
+        self.env.ref('website.default_website').write({
+            'social_facebook': "https://www.facebook.com/Odoo",
+            'social_twitter': 'https://twitter.com/Odoo',
+            'social_linkedin': 'https://www.linkedin.com/company/odoo',
+            'social_youtube': 'https://www.youtube.com/user/OpenERPonline',
+            'social_github': 'https://github.com/odoo',
+            'social_instagram': 'https://www.instagram.com/explore/tags/odoo/',
+            'social_tiktok': 'https://www.tiktok.com/@odoo',
+            'social_discord': 'https://discord.com/servers/discord-town-hall-169256939211980800',
+        })
+        self.env.ref('website_blog.opt_blog_sidebar_show').active = True
+        self.start_tour("/blog", "blog_context_and_social_media", login="admin")
+
     def test_avatar_comment(self):
         mail_message = self.env['mail.message'].create({
             'author_id': self.user_public.partner_id.id,
