@@ -313,22 +313,6 @@ registry.category("web_tour.tours").add("PoSDownPaymentAmount", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("PoSDownPaymentLinesPerFixedTax", {
-    test: true,
-    steps: () =>
-        [
-            Dialog.confirm("Open session"),
-            PosSale.downPaymentFirstOrder("+20"),
-            Order.hasLine({
-                productName: "Down Payment",
-                quantity: "1.0",
-                price: "22",
-            }),
-            Order.hasNoTax(),
-            ProductScreen.totalAmountIs(22.0),
-        ].flat(),
-});
-
 registry.category("web_tour.tours").add("PosSettleOrder4", {
     test: true,
     url: "/pos/ui",
@@ -372,5 +356,23 @@ registry.category("web_tour.tours").add("PosSettleOrder5", {
             PosSale.settleNthOrder(1),
             ProductScreen.selectedOrderlineHas("Product A", "1.00"),
             Chrome.clickMenuOption("Backend"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PoSDownPaymentFixedTax", {
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            PosSale.downPaymentFirstOrder("+20"),
+            Order.hasLine({
+                productName: "Down Payment",
+                quantity: "1.0",
+                price: "1.00",
+            }),
+            Order.hasLine({
+                productName: "Down Payment",
+                quantity: "1.0",
+                price: "22.00",
+            }),
         ].flat(),
 });
