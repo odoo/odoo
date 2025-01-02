@@ -10,6 +10,14 @@
     }
 
     .ui-menu-item {
+        > a.ui-state-active {
+            margin: 0;
+            border: none;
+            font-weight: $font-weight-normal;
+            color: $dropdown-link-hover-color;
+            background-color: $dropdown-link-hover-bg;
+        }
+
         &.o_m2o_dropdown_option, &.o_m2o_start_typing, &.o_m2o_no_result {
             text-indent: $o-dropdown-hpadding * .5;
         }
@@ -28,6 +36,10 @@
             a.ui-menu-item-wrapper, a.ui-state-active, a.ui-state-active:hover {
                 background: none;
             }
+        }
+
+        &.o_m2o_start_typing > a.ui-state-active {
+            color: $dropdown-link-color;
         }
     }
 }
