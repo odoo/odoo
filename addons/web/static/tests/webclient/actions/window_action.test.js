@@ -2585,6 +2585,38 @@ test("action and get_views rpcs are cached", async () => {
     expect.verifySteps(["/web/action/load", "web_search_read"]);
 });
 
+test("get_views rpcs are cached (different context.active_id)", async () => {
+    class IrActionsAct_Window extends models.Model {
+        _name = "ir.actions.act_window";
+    }
+    defineModels([IrActionsAct_Window]);
+
+    stepAllNetworkCalls();
+
+    await mountWithCleanup(WebClient);
+    expect.verifySteps(["/web/webclient/translations", "/web/webclient/load_menus"]);
+
+    await getService("action").doAction({
+        name: "Partner",
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "kanban"]],
+        context: { active_id: 33 },
+    });
+    expect(".o_kanban_view").toHaveCount(1);
+    expect.verifySteps(["get_views", "web_search_read"]);
+
+    await getService("action").doAction({
+        name: "Partner",
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "kanban"]],
+        context: { active_id: 44 },
+    });
+    expect(".o_kanban_view").toHaveCount(1);
+    expect.verifySteps(["web_search_read"]);
+});
+
 test.tags("desktop");
 test("pushState also changes the title of the tab", async () => {
     await mountWithCleanup(WebClient);
