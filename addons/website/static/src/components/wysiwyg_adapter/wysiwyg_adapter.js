@@ -836,6 +836,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 priority: 90,
                 description: _t('Insert a rating snippet'),
                 fontawesome: 'fa-star-half-o',
+                keywords: ["rate", "star"],
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_rating"]');
