@@ -68,7 +68,7 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="mail.mail_activity_plan_view_search"/>
             <field name="context">{'default_res_model': 'hr.employee'}</field>
-            <field name="domain">[('res_model', '=', 'hr.employee')]</field>
+            <field name="domain">[('res_model', '=', 'hr.employee'), '|', ('company_id', 'in', allowed_company_ids), ('company_id', '=', False)]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create an Activity Plan
