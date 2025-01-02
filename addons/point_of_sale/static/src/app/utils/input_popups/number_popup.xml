@@ -12,6 +12,7 @@
             <div t-if="props.feedback(this.state.buffer)" class="p-2 mx-auto mt-n2 mb-2" t-esc="props.feedback(this.state.buffer)" />
             <Numpad buttons="props.buttons" class="'p-1 rounded-3 bg-200'"/>
             <t t-set-slot="footer">
+<<<<<<< 18.0
                 <div class="d-flex flex-grow-1 justify-content-center">
                     <button t-att-disabled="!props.isValid(state.buffer)" class="btn btn-primary btn-lg lh-lg o-default-button me-2" tabindex="1" t-on-click="confirm">
                         <t t-esc="props.confirmButtonLabel || 'Ok'" />
@@ -20,6 +21,11 @@
                         <t t-esc="'Discard'" />
                     </button>
                 </div>
+||||||| 492331d417c26dbde2eaf7426f39d7e7a87dedbf
+                <button t-att-disabled="!props.isValid(state.buffer)" class="btn btn-primary o-default-button" t-on-click="confirm">Ok</button>
+=======
+                <button t-att-disabled="!props.isValid(state.buffer)" class="btn btn-primary o-default-button" tabindex="1" t-on-click="confirm">Ok</button>
+>>>>>>> b5098a171db11296ccde684021b340b8c753326c
             </t>
         </Dialog>
     </t>

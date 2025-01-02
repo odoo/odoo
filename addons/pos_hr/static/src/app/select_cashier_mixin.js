@@ -47,10 +47,25 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
                 });
             }
         }
+<<<<<<< 18.0
         if (!inputPin || employee._pin !== Sha1.hash(inputPin)) {
             notification.add(_t("PIN not found"), {
                 type: "warning",
                 title: _t(`Wrong PIN`),
+||||||| 492331d417c26dbde2eaf7426f39d7e7a87dedbf
+        if (!inputPin || employee._pin !== Sha1.hash(inputPin)) {
+            dialog.add(AlertDialog, {
+                title: _t("Incorrect Password"),
+                body: _t("Please try again."),
+=======
+        if (!inputPin && typeof inputPin !== "string") {
+            return false;
+        }
+        if (employee._pin !== Sha1.hash(inputPin)) {
+            dialog.add(AlertDialog, {
+                title: _t("Incorrect Password"),
+                body: _t("Please try again."),
+>>>>>>> b5098a171db11296ccde684021b340b8c753326c
             });
             return false;
         }
