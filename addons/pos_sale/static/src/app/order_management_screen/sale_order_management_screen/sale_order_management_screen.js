@@ -360,8 +360,8 @@ export class SaleOrderManagementScreen extends Component {
     }
 
     _createDownpaymentLines(sale_order, total_down_payment, clickedOrder, down_payment_product) {
-        //This function will create all the downpaymentlines. We will create on downpayment line per unique tax combination
-
+        //This function will create all the downpaymentlines. We will create one downpayment line per unique tax combination
+        const percentage = total_down_payment / sale_order.amount_total;
         const grouped = {};
         sale_order.order_line.forEach((obj) => {
             const sortedTaxes = obj.tax_id.slice().sort((a, b) => a - b);
@@ -371,6 +371,12 @@ export class SaleOrderManagementScreen extends Component {
             }
             grouped[key].push(obj);
         });
+
+        // We need one unique line for the fixed amount taxes
+        let fixed_taxes_downpayment = 0;
+        const fixed_taxes_tab = [];
+        const down_payment_line_to_create = [];
+
         Object.keys(grouped).forEach((key) => {
             const group = grouped[key];
             const tab = group.map((line) => ({
@@ -380,10 +386,28 @@ export class SaleOrderManagementScreen extends Component {
                 total: line.price_total,
             }));
 
-            // Compute the part of the downpayment that should be assigned to this group
-            const total_price = group.reduce((total, line) => (total += line.price_total), 0);
-            const ratio = total_price / sale_order.amount_total;
-            const down_payment_line_price = total_down_payment * ratio;
+            // We compute the values for the fixed taxes downpayment
+            const fixed_taxes = group[0].tax_id.filter(
+                (id) => this.pos.models["account.tax"].get(id).amount_type === "fixed"
+            );
+            const total_qty = group.reduce((total, line) => (total += line.product_uom_qty), 0);
+            fixed_taxes.forEach((tax_id) => {
+                const tax = this.pos.models["account.tax"].get(tax_id);
+                fixed_taxes_downpayment += tax.amount * total_qty * percentage;
+                fixed_taxes_tab.push(tab);
+            });
+
+            // We need to remove the amount of the fixed tax as they will have a separate line
+            const fixed_tax_total_amount = fixed_taxes.reduce((total, tax_id) => {
+                const tax = this.pos.models["account.tax"].get(tax_id);
+                return total + tax.amount;
+            }, 0);
+            const total_price = group.reduce(
+                (total, line) =>
+                    (total += line.price_total - line.product_uom_qty * fixed_tax_total_amount),
+                0
+            );
+            const down_payment_line_price = total_price * percentage;
             // We apply the taxes and keep the same price
             const new_price = this.pos.compute_price_force_price_include(
                 group[0].tax_id
@@ -391,6 +415,29 @@ export class SaleOrderManagementScreen extends Component {
                     .map((tax_id) => this.pos.models["account.tax"].get(tax_id)),
                 down_payment_line_price
             );
+            down_payment_line_to_create.push({
+                price: new_price,
+                tab: tab,
+                tax_ids: group[0].tax_id.filter(
+                    (id) => this.pos.models["account.tax"].get(id).amount_type !== "fixed"
+                ),
+            });
+        });
+
+        if (fixed_taxes_downpayment !== 0) {
+            // We try to merge the fixed taxes in one line that has no tax if possible
+            const line = down_payment_line_to_create.find((line) => !line.tax_ids.length);
+            if (line) {
+                line.price += fixed_taxes_downpayment;
+            } else {
+                down_payment_line_to_create.push({
+                    price: fixed_taxes_downpayment,
+                    tab: fixed_taxes_tab.flat(),
+                    tax_ids: [],
+                });
+            }
+        }
+        for (const down_payment_line of down_payment_line_to_create) {
             this.pos.get_order().add_orderline(
                 new Orderline(
                     { env: this.env },
@@ -398,17 +445,15 @@ export class SaleOrderManagementScreen extends Component {
                         pos: this.pos,
                         order: this.pos.get_order(),
                         product: down_payment_product,
-                        price: new_price,
+                        price: down_payment_line.price,
                         price_type: "automatic",
                         sale_order_origin_id: clickedOrder,
-                        down_payment_details: tab,
-                        tax_ids: group[0].tax_id.filter(
-                            (id) => this.pos.models["account.tax"].get(id).amount_type !== "fixed"
-                        ),
+                        down_payment_details: down_payment_line.tab,
+                        tax_ids: down_payment_line.tax_ids,
                     }
                 )
             );
-        });
+        }
     }
 
     async _getSaleOrder(id) {
