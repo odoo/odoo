@@ -222,7 +222,7 @@ class Cart(PaymentPortal):
         values = order_sudo._cart_update_line_quantity(line_id, quantity, **kwargs)
 
         values['cart_quantity'] = order_sudo.cart_quantity
-        values['cart_ready'] = order_sudo._is_cart_ready()
+        values['cart_ready'] = not order_sudo._get_cart_warning()
         values['amount'] = order_sudo.amount_total
         values['minor_amount'] = payment_utils.to_minor_currency_units(
             order_sudo.amount_total, order_sudo.currency_id
