@@ -362,3 +362,15 @@ registry.category("web_tour.tours").add("PosSettleOrderShipLater", {
             ReceiptScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosSettleOrder5", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.selectedOrderlineHas("Product A", "1.00"),
+            Chrome.clickMenuOption("Backend"),
+        ].flat(),
+});
