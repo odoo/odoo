@@ -937,6 +937,25 @@ test("can import (export) contextual domain", async function () {
     expect.verifySteps(["web_search_read"]);
 });
 
+test("can import (export) action xml id", async function () {
+    const listId = 1;
+    const spreadsheetData = {
+        lists: {
+            [listId]: {
+                id: listId,
+                columns: ["foo"],
+                domain: [],
+                model: "partner",
+                orderBy: [],
+                actionXmlId: "spreadsheet.test_action"
+            },
+        },
+    };
+    const model = await createModelWithDataSource({ spreadsheetData });
+    expect(model.getters.getListDefinition(listId).actionXmlId).toBe("spreadsheet.test_action");
+    expect(model.exportData().lists[listId].actionXmlId).toBe("spreadsheet.test_action");
+});
+
 test("Load list spreadsheet with models that cannot be accessed", async function () {
     let hasAccessRights = true;
     const { model } = await createSpreadsheetWithList({
