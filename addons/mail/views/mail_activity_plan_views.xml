@@ -61,7 +61,7 @@
                                 <field name="res_model"/>
                             </group>
                             <group name="company_id" groups="base.group_multi_company">
-                                <field name="company_id"/>
+                                <field name="company_id" domain="[('id', '=', allowed_company_ids)]"/>
                             </group>
                         </group>
                         <notebook>
