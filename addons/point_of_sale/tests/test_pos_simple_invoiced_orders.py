@@ -234,14 +234,13 @@ class TestPosSimpleInvoicedOrders(TestPoSCommon):
                     'invoice': {
                         'line_ids': [
                             {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False},
-                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True, 'partially_reconciled': True},
                         ]
                     },
                     'payments': [
                         ((self.cash_pm1, 200), {
                             'line_ids': [
-                                # needs to check the residual because it's supposed to be partial reconciled
-                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 200, 'reconciled': False, 'amount_residual': -100},
+                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 200, 'reconciled': False, 'partially_reconciled': True, 'amount_residual': -100},
                                 {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 200, 'credit': 0, 'reconciled': False, 'amount_residual': 200},
                             ]
                         }),
@@ -278,14 +277,13 @@ class TestPosSimpleInvoicedOrders(TestPoSCommon):
                     'invoice': {
                         'line_ids': [
                             {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False},
-                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True, 'partially_reconciled': True},
                         ]
                     },
                     'payments': [
                         ((self.bank_pm1, 200), {
                             'line_ids': [
-                                # needs to check the residual because it's supposed to be partial reconciled
-                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 200, 'reconciled': False, 'amount_residual': -100},
+                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 200, 'reconciled': False, 'partially_reconciled': True, 'amount_residual': -100},
                                 {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 200, 'credit': 0, 'reconciled': False, 'amount_residual': 200},
                             ]
                         }),
@@ -322,14 +320,13 @@ class TestPosSimpleInvoicedOrders(TestPoSCommon):
                     'invoice': {
                         'line_ids': [
                             {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False},
-                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True, 'partially_reconciled': True},
                         ]
                     },
                     'payments': [
                         ((self.cash_split_pm1, 200), {
                             'line_ids': [
-                                # needs to check the residual because it's supposed to be partial reconciled
-                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 200, 'reconciled': False, 'amount_residual': -100},
+                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 200, 'reconciled': False, 'partially_reconciled': True, 'amount_residual': -100},
                                 {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 200, 'credit': 0, 'reconciled': False, 'amount_residual': 200},
                             ]
                         }),
@@ -366,14 +363,13 @@ class TestPosSimpleInvoicedOrders(TestPoSCommon):
                     'invoice': {
                         'line_ids': [
                             {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False},
-                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': True, 'partially_reconciled': True},
                         ]
                     },
                     'payments': [
                         ((self.bank_split_pm1, 200), {
                             'line_ids': [
-                                # needs to check the residual because it's supposed to be partial reconciled
-                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 200, 'reconciled': False, 'amount_residual': -100},
+                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 200, 'reconciled': False, 'partially_reconciled': True, 'amount_residual': -100},
                                 {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 200, 'credit': 0, 'reconciled': False, 'amount_residual': 200},
                             ]
                         }),
@@ -632,14 +628,13 @@ class TestPosSimpleInvoicedOrders(TestPoSCommon):
                     'invoice': {
                         'line_ids': [
                             {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False, 'amount_residual': 0},
-                            # needs to check the residual because it's supposed to be partial reconciled
-                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False, 'amount_residual': 50},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False, 'partially_reconciled': True, 'amount_residual': 50},
                         ]
                     },
                     'payments': [
                         ((self.cash_pm1, 50), {
                             'line_ids': [
-                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 50, 'reconciled': True},
+                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 50, 'reconciled': True, 'partially_reconciled': True},
                                 {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 50, 'credit': 0, 'reconciled': False},
                             ]
                         }),
@@ -676,14 +671,13 @@ class TestPosSimpleInvoicedOrders(TestPoSCommon):
                     'invoice': {
                         'line_ids': [
                             {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False, 'amount_residual': 0},
-                            # needs to check the residual because it's supposed to be partial reconciled
-                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False, 'amount_residual': 50},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False, 'partially_reconciled': True, 'amount_residual': 50},
                         ]
                     },
                     'payments': [
                         ((self.bank_pm1, 50), {
                             'line_ids': [
-                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 50, 'reconciled': True},
+                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 50, 'reconciled': True, 'partially_reconciled': True},
                                 {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 50, 'credit': 0, 'reconciled': False},
                             ]
                         }),
@@ -720,14 +714,13 @@ class TestPosSimpleInvoicedOrders(TestPoSCommon):
                     'invoice': {
                         'line_ids': [
                             {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False, 'amount_residual': 0},
-                            # needs to check the residual because it's supposed to be partial reconciled
-                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False, 'amount_residual': 50},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False, 'partially_reconciled': True, 'amount_residual': 50},
                         ]
                     },
                     'payments': [
                         ((self.bank_split_pm1, 50), {
                             'line_ids': [
-                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 50, 'reconciled': True},
+                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 50, 'reconciled': True, 'partially_reconciled': True},
                                 {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 50, 'credit': 0, 'reconciled': False},
                             ]
                         }),
@@ -764,14 +757,13 @@ class TestPosSimpleInvoicedOrders(TestPoSCommon):
                     'invoice': {
                         'line_ids': [
                             {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 100, 'reconciled': False, 'amount_residual': 0},
-                            # needs to check the residual because it's supposed to be partial reconciled
-                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False, 'amount_residual': 50},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 100, 'credit': 0, 'reconciled': False, 'partially_reconciled': True, 'amount_residual': 50},
                         ]
                     },
                     'payments': [
                         ((self.cash_split_pm1, 50), {
                             'line_ids': [
-                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 50, 'reconciled': True},
+                                {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 50, 'reconciled': True, 'partially_reconciled': True},
                                 {'account_id': self.pos_receivable_account.id, 'partner_id': False, 'debit': 50, 'credit': 0, 'reconciled': False},
                             ]
                         }),
