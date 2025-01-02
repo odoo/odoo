@@ -622,11 +622,6 @@ class MrpBomLine(models.Model):
         compute='_compute_child_line_ids')
     attachments_count = fields.Integer('Attachments Count', compute='_compute_attachments_count')
     tracking = fields.Selection(related='product_id.tracking')
-    manual_consumption = fields.Boolean(
-        'Highlight Consumption', default=False,
-        readonly=False, store=True, copy=True,
-        help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
-             "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.")
 
     _bom_qty_zero = models.Constraint(
         'CHECK (product_qty>=0)',

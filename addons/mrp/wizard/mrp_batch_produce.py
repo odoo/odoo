@@ -116,6 +116,7 @@ class MrpBatchProduce(models.TransientModel):
         if not productions.product_id.tracking == 'serial':
             for production in reversed(productions):
                 production.qty_producing = production.product_uom_qty
+                production.move_raw_ids.manual_consumption = True
                 production.set_qty_producing()
 
         if mark_done:
