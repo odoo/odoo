@@ -798,6 +798,7 @@ export class OdooEditor extends EventTarget {
                         handle = null;
                         const fontSize = parseInt(fontSizeInput.value);
                         if (fontSize > 0) {
+                            getDeepRange(this.editable, { correctTripleClick: true, select: true });
                             if (!this.isSelectionInEditable()) {
                                 this.historyResetLatestComputedSelection(true);
                             }
