@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
 import { closestElement } from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
@@ -199,9 +200,52 @@ export class MassMailingWysiwyg extends Wysiwyg {
      * @override
      */
     _getEditorOptions() {
+        const [powerboxItems, powerboxCategories] = this._getSnippetsPowerboxItems();
         const options = super._getEditorOptions(...arguments);
-        const finalOptions = { ...options, autoActivateContentEditable: false, allowCommandVideo: false };
+        const finalOptions = {
+            ...options,
+            autoActivateContentEditable: false,
+            allowCommandVideo: false,
+            powerboxItems,
+            powerboxCategories,
+        };
         return finalOptions;
+    }
+
+    /**
+     * Returns the snippets commands for the powerbox
+     *
+     * @private
+     */
+    _getSnippetsPowerboxItems() {
+        const snippetCommandCallback = (selector) => {
+            const range = this.getDeepRange();
+            const block = this.closestElement(
+                range.endContainer,
+                "p, div, ol, ul, cl, h1, h2, h3, h4, h5, h6"
+            );
+            if (block) {
+                this.snippetsMenuBus.trigger("INSERT_SNIPPET", {
+                    snippetSelector: selector,
+                    block,
+                });
+            }
+        };
+        const commands = [
+            {
+                category: _t("Mass mailing"),
+                name: _t("Rating"),
+                priority: 90,
+                description: _t("Insert a rating snippet"),
+                keywords: ["rate", "star"],
+                fontawesome: "fa-star-half-o",
+                isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
+                callback: () => {
+                    snippetCommandCallback(".oe_snippet_body[data-snippet='s_rating']");
+                },
+            },
+        ];
+        return [commands, [{ name: _t("Mass mailing"), priority: 20 }]];
     }
 }
 
