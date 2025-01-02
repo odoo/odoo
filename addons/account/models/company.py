@@ -291,16 +291,20 @@ class ResCompany(models.Model):
 
     @api.constrains('account_opening_move_id', 'fiscalyear_last_day', 'fiscalyear_last_month')
     def _check_fiscalyear_last_day(self):
-        # if the user explicitly chooses the 29th of February we allow it:
+        # if the user explicitly chooses the 28/29th of February we allow it:
         # there is no "fiscalyear_last_year" so we do not know his intentions.
-        for rec in self:
-            if rec.fiscalyear_last_day == 29 and rec.fiscalyear_last_month == '2':
-                continue
+        def last_date_of_feb(year):
+            is_leap_year = (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0)
+            return 29 if is_leap_year else 28
 
+        for rec in self:
             if rec.account_opening_date:
                 year = rec.account_opening_date.year
             else:
                 year = datetime.now().year
+
+            if  rec.fiscalyear_last_month == '2' and last_date_of_feb(year) == rec.fiscalyear_last_day:
+                continue
 
             max_day = calendar.monthrange(year, int(rec.fiscalyear_last_month))[1]
             if rec.fiscalyear_last_day > max_day:
