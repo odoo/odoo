@@ -214,6 +214,9 @@ adduser --disabled-password --gecos "" --shell /usr/sbin/nologin odoo
 mv /etc/sudoers.d/010_pi-nopasswd /etc/sudoers.d/010_odoo-nopasswd
 sed -i 's/pi/odoo/g' /etc/sudoers.d/010_odoo-nopasswd
 
+# Allow "sudo" git commands even if Odoo directory is owned by odoo user
+git config --global --add safe.directory /home/pi/odoo
+
 # copy the odoo.conf file to the overwrite directory
 mv -v "/home/pi/odoo/addons/iot_box_image/configuration/odoo.conf" "/home/pi/"
 chown odoo:odoo "/home/pi/odoo.conf"
