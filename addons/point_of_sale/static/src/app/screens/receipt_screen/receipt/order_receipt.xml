@@ -128,7 +128,7 @@
             <t t-if="order.shipping_date">
                 <div class="pos-receipt-order-data">
                     Expected delivery:
-                    <div><t t-esc="order.formatDateOrTime('shipping_date')" /></div>
+                    <div><t t-esc="order.formatDateOrTime('shipping_date', 'date')" /></div>
                 </div>
             </t>
 
