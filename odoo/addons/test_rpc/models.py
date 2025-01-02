@@ -11,7 +11,6 @@ class Test_RpcModel_A(models.Model):
     field_b1 = fields.Many2one("test_rpc.model_b", string="required field", required=True)
     field_b2 = fields.Many2one("test_rpc.model_b", string="restricted field", ondelete="restrict")
 
-    @api.model
     @api.private
     def read_group(self, *a, **kw):
         return super().read_group(*a, **kw)
@@ -26,6 +25,14 @@ class Test_RpcModel_A(models.Model):
     @api.model
     def not_depending_on_id(self, vals=None):
         return f"got {vals}"
+
+    @api.model
+    def int8(self):
+        return 1 << 32
+
+    @api.model
+    def bigint(self):
+        return 1 << 64
 
 
 class Test_RpcModel_B(models.Model):

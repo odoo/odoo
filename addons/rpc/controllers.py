@@ -15,6 +15,11 @@ from odoo.tools.misc import frozendict
 # XML-RPC helpers
 # ==========================================================
 
+MIN_INT4 = -1 << 31
+MAX_INT4 = ~MIN_INT4
+MIN_INT8 = -1 << 63
+MAX_INT8 = ~MIN_INT8
+
 # XML-RPC fault codes. Some care must be taken when changing these: the
 # constants are also defined client-side and must remain in sync.
 # User code must use the exceptions defined in ``odoo.exceptions`` (not
@@ -69,6 +74,20 @@ def xmlrpc_handle_exception_string(e):
 class OdooMarshaller(xmlrpc.client.Marshaller):
     dispatch = dict(xmlrpc.client.Marshaller.dispatch)
 
+    def dump_long(self, value, write):
+        if MIN_INT4 <= value <= MAX_INT4:
+            write("<value><int>")
+            write(str(int(value)))
+            write("</int></value>\n")
+        elif MIN_INT8 <= value <= MAX_INT8:
+            write("<value><i8>")
+            write(str(int(value)))
+            write("</i8></value>\n")
+        else:
+            write("<value><biginteger>")
+            write(str(int(value)))
+            write("</biginteger></value>\n")
+
     def dump_frozen_dict(self, value, write):
         value = dict(value)
         self.dump_struct(value, write)
@@ -97,6 +116,7 @@ class OdooMarshaller(xmlrpc.client.Marshaller):
         # XML 1.0 disallows control characters, remove them otherwise they break clients
         return super().dump_unicode(value.translate(CONTROL_CHARACTERS), write)
 
+    dispatch[int] = dump_long
     dispatch[frozendict] = dump_frozen_dict
     dispatch[bytes] = dump_bytes
     dispatch[datetime] = dump_datetime
