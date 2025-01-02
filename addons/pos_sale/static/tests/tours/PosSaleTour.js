@@ -285,23 +285,6 @@ registry.category("web_tour.tours").add("PosShipLaterNoDefault", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("PoSDownPaymentLinesPerFixedTax", {
-    test: true,
-    steps: () =>
-        [
-            ProductScreen.confirmOpeningPopup(),
-            ProductScreen.clickQuotationButton(),
-            ProductScreen.downPayment20PercentFirstOrder(),
-            Order.hasLine({
-                productName: "Down Payment",
-                quantity: "1.0",
-                price: "22",
-            }),
-            Order.hasNoTax(),
-            ProductScreen.totalAmountIs(22.0), 
-        ].flat(),
-});
-
 registry.category("web_tour.tours").add("PoSDownPaymentAmount", {
     test: true,
     steps: () =>
@@ -353,5 +336,24 @@ registry.category("web_tour.tours").add("PosSettleOrderShipLater", {
             PaymentScreen.remainingIs('0.0'),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PoSDownPaymentFixedTax", {
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.downPayment20PercentFirstOrder(),
+            Order.hasLine({
+                productName: "Down Payment",
+                quantity: "1.0",
+                price: "1.00",
+            }),
+            Order.hasLine({
+                productName: "Down Payment",
+                quantity: "1.0",
+                price: "22.00",
+            }),
         ].flat(),
 });
