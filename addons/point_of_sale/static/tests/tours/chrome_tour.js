@@ -10,10 +10,10 @@ import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 
 registry.category("web_tour.tours").add("ChromeTour", {
     checkDelay: 50,
-    steps: () =>
+    steps: (args) =>
         [
             Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
+            Dialog.confirm(args.registerName),
             Chrome.clickMenuButton(),
             Chrome.clickMenuDropdownOption("Cash In/Out"),
             Chrome.fillTextArea(".cash-reason", "MOBT"),

@@ -2065,9 +2065,10 @@ class HttpCase(TransactionCase):
             'debug': kwargs.get('debug', False),
             'startUrl': url_path,
             'delayToCheckUndeterminisms': kwargs.pop('delay_to_check_undeterminisms', int(os.getenv("ODOO_TOUR_DELAY_TO_CHECK_UNDETERMINISMS", "0")) or 0),
+            'tourArgs': kwargs.pop('tour_args', {}),
         }
         code = kwargs.pop('code', f"odoo.startTour({tour_name!r}, {json.dumps(options)})")
-        ready = kwargs.pop('ready', f"odoo.isTourReady({tour_name!r})")
+        ready = kwargs.pop('ready', f"odoo.isTourReady({tour_name!r}, {json.dumps(options.get('tourArgs'))})")
         timeout = kwargs.pop('timeout', 60)
 
         if options["delayToCheckUndeterminisms"] > 0:

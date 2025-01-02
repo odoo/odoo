@@ -77,7 +77,7 @@ export const tourService = {
             sequence: 30,
         }));
 
-        function getTourFromRegistry(tourName) {
+        function getTourFromRegistry(tourName, tourArgs) {
             let tour = null;
             if (tourRegistry.contains(tourName)) {
                 tour = tourRegistry.get(tourName);
@@ -96,7 +96,7 @@ export const tourService = {
 
             return {
                 ...tour,
-                steps: tour.steps(),
+                steps: tour.steps(tourArgs),
                 name: tourName,
                 wait_for: tour.wait_for || Promise.resolve(),
             };
@@ -129,7 +129,7 @@ export const tourService = {
 
         async function startTour(tourName, options = {}) {
             pointer.stop();
-            const tourFromRegistry = getTourFromRegistry(tourName);
+            const tourFromRegistry = getTourFromRegistry(tourName, options.tourArgs);
 
             if (!tourFromRegistry && !options.fromDB) {
                 // Sometime tours are not loaded depending on the modules.
@@ -175,7 +175,7 @@ export const tourService = {
             if (tourConfig.fromDB) {
                 tour = await getTourFromDB(tourName);
             } else if (tourRegistry.contains(tourName)) {
-                tour = getTourFromRegistry(tourName);
+                tour = getTourFromRegistry(tourName, tourConfig.tourArgs);
             }
 
             if (!tour) {
@@ -278,7 +278,9 @@ export const tourService = {
         }
 
         odoo.startTour = startTour;
-        odoo.isTourReady = (tourName) => getTourFromRegistry(tourName).wait_for.then(() => true);
+        odoo.isTourReady = (tourName, tourArgs) => {
+            return getTourFromRegistry(tourName, tourArgs).wait_for.then(() => true);
+        };
 
         return {
             startTour,
