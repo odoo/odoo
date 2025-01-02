@@ -24,7 +24,10 @@ following:
     'installable': True,
     'assets': {
         'point_of_sale._assets_pos': [
-            'pos_razorpay/static/**/*',
+            'pos_razorpay/static/src/**/*',
+        ],
+        'web.assets_tests': [
+            'pos_razorpay/static/tests/tours/**/*',
         ],
     },
     'license': 'LGPL-3',
