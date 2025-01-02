@@ -1467,3 +1467,10 @@ class SaleOrder(models.Model):
             self._force_lines_to_invoice_policy_order()
             invoice = self._create_invoices(final=True)
             invoice.action_post()
+
+    def get_rewards_data(self):
+        self.ensure_one()
+        self._update_programs_and_rewards()
+        return {
+            'claimable_rewards_count': len(self._get_claimable_rewards()),
+        }

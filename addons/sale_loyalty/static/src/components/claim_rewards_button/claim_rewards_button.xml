@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sale_loyalty.ClaimRewardsButton">
+        <ViewButton string.translate="Rewards"
+                    clickParams="clickParams"
+                    className="className"
+                    record="props.record"
+                    disabled="!state.hasClaimableRewards"/>
+    </t>
+</templates>
