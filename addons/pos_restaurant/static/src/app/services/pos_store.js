@@ -61,7 +61,7 @@ patch(PosStore.prototype, {
         }
     },
     async wsSyncTableCount(data) {
-        if (data.login_number === this.session.login_number) {
+        if (data.login_number == this.session.login_number) {
             this.computeTableCount(data);
             return;
         }
