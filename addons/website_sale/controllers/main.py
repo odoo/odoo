@@ -1541,6 +1541,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return request.redirect("/shop/payment")
 
+    @route('/shop/check_cart', type='jsonrpc', auth='public', website=True, sitemap=False)
+    def shop_check_cart(self, ready_to_be_paid=False, **kwargs):
+        """Early check of cart state before final payment step.
+        """
+        order_sudo = request.website.sale_get_order()
+        if ready_to_be_paid:
+            order_sudo._check_cart_is_ready_to_be_paid()
+        elif warning := order_sudo._get_cart_warning():
+            raise ValidationError(warning)
+
     # === CHECKOUT FLOW - EXTRA STEP METHODS === #
 
     @route(['/shop/extra_info'], type='http', auth="public", website=True, sitemap=False)
