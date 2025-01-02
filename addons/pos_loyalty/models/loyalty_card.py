@@ -31,8 +31,16 @@ class LoyaltyCard(models.Model):
             return self.env.ref('pos_loyalty.mail_coupon_template', False)
         return super()._get_default_template()
 
+<<<<<<< saas-18.1
     def _mail_get_partner_fields(self, introspect_fields=False):
         return super()._mail_get_partner_fields(introspect_fields=introspect_fields) + ['source_pos_order_partner_id']
+||||||| d425795ee00815602931135bb83633d202a4ac3b
+    def _get_mail_partner(self):
+        return super()._get_mail_partner() or self.source_pos_order_id.partner_id
+=======
+    def _get_mail_partner(self):
+        return super()._get_mail_partner() or self.sudo().source_pos_order_id.partner_id
+>>>>>>> 67823704fd9be4344896a02e2f9a04e69633a19f
 
     def _get_signature(self):
         return self.source_pos_order_id.user_id.signature or super()._get_signature()
