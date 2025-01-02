@@ -43,7 +43,7 @@ export class ProductScreen extends Component {
     setup() {
         super.setup();
         this.pos = usePos();
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.dialog = useService("dialog");
         this.notification = useService("notification");
         this.numberBuffer = useService("number_buffer");

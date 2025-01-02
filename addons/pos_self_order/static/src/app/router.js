@@ -1,4 +1,4 @@
-import { Component, onWillRender, useState, xml } from "@odoo/owl";
+import { Component, onWillRender, xml } from "@odoo/owl";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { zip } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
@@ -24,7 +24,7 @@ export class Router extends Component {
     static template = xml`<t t-slot="{{activeSlot}}" t-props="slotProps"/>`;
 
     setup() {
-        this.router = useState(useService("router"));
+        this.router = useService("router");
         this.activeSlot = "default";
         this.slotProps = {};
         this.routes = {};

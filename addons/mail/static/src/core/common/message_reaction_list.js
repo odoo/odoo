@@ -15,7 +15,7 @@ export class MessageReactionList extends Component {
     setup() {
         super.setup();
         this.loadEmoji = loadEmoji;
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         this.ui = useService("ui");
         this.preview = useDropdownState();
         this.hover = useHover(["reactionButton", "reactionList*"], {

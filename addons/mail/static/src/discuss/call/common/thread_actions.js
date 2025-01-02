@@ -1,7 +1,7 @@
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 import { CallSettings } from "@mail/discuss/call/common/call_settings";
 
-import { useComponent, useState } from "@odoo/owl";
+import { useComponent } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -23,7 +23,7 @@ threadActionsRegistry
         sequenceQuick: 30,
         setup() {
             const component = useComponent();
-            component.rtc = useState(useService("discuss.rtc"));
+            component.rtc = useService("discuss.rtc");
         },
     })
     .add("camera-call", {
@@ -42,7 +42,7 @@ threadActionsRegistry
         sequenceQuick: (component) => (component.env.inDiscussApp ? 25 : 35),
         setup() {
             const component = useComponent();
-            component.rtc = useState(useService("discuss.rtc"));
+            component.rtc = useService("discuss.rtc");
         },
     })
     .add("settings", {
@@ -63,7 +63,7 @@ threadActionsRegistry
         sequenceGroup: 30,
         setup() {
             const component = useComponent();
-            component.rtc = useState(useService("discuss.rtc"));
+            component.rtc = useService("discuss.rtc");
         },
         toggle: true,
     });

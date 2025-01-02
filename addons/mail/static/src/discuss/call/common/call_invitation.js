@@ -9,7 +9,7 @@ export class CallInvitation extends Component {
     setup() {
         super.setup();
         this.rtc = useService("discuss.rtc");
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.state = useState({ videoStream: null });
         this.videoRef = useRef("video");
         onWillUnmount(() => {

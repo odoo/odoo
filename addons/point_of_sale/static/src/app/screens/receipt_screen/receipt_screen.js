@@ -16,7 +16,7 @@ export class ReceiptScreen extends Component {
         super.setup();
         this.pos = usePos();
         useErrorHandlers();
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.renderer = useService("renderer");
         this.notification = useService("notification");
         this.dialog = useService("dialog");

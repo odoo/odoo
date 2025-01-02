@@ -23,7 +23,7 @@ export class PartnerList extends Component {
 
     setup() {
         this.pos = usePos();
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.notification = useService("notification");
         this.dialog = useService("dialog");
 

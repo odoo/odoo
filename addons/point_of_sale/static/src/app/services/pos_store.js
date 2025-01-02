@@ -1,7 +1,7 @@
 /* global waitForWebfonts */
 
 import { Mutex } from "@web/core/utils/concurrency";
-import { markRaw } from "@odoo/owl";
+import { markRaw, reactive } from "@odoo/owl";
 import { floatIsZero } from "@web/core/utils/numbers";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
@@ -58,7 +58,9 @@ export class PosStore extends WithLazyGetterTrap {
     ];
     constructor({ traps, env, deps }) {
         super({ traps });
-        this.ready = this.setup(env, deps).then(() => this);
+        const reactiveSelf = reactive(this);
+        reactiveSelf.ready = reactiveSelf.setup(env, deps).then(() => reactiveSelf);
+        return reactiveSelf;
     }
     // use setup instead of constructor because setup can be patched.
     async setup(

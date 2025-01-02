@@ -26,7 +26,7 @@ export class FollowerSubtypeDialog extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         this.state = useState({
             /** @type {SubtypeData[]} */
             subtypes: [],

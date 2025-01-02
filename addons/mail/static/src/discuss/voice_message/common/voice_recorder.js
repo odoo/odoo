@@ -41,7 +41,7 @@ export function useVoiceRecorder() {
     });
     /** @type {ReturnType<typeof import("@web/core/notifications/notification_service").notificationService.start>} */
     const notification = useService("notification");
-    const store = useState(useService("mail.store"));
+    const store = useService("mail.store");
     const config = { bitRate: 128 }; // 128 or 160 kbit/s – mid-range bitrate quality
     onWillUnmount(() => {
         if (state.recording) {
