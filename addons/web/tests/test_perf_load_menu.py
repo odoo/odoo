@@ -61,11 +61,11 @@ class TestPerfSessionInfo(common.HttpCase):
     def test_visible_menu_ids(self):
         self.env.registry.clear_all_caches()
         self.env.invalidate_all()
-        # cold ormcache (only web: 5, all module: 14)
-        with self.assertQueryCount(14):
+        # cold ormcache (only web: 5, all module: 14, has group_account_readonly: 16)
+        with self.assertQueryCount(16):
             self.env['ir.ui.menu']._visible_menu_ids()
 
-        # cold fields cache - warm orm cache (only web: 0, all module: 0)
+        # cold fields cache - warm orm cache (only web: 0, all module: 0, has group_account_readonly: 1)
         self.env.invalidate_all()
-        with self.assertQueryCount(0):
+        with self.assertQueryCount(1):
             self.env['ir.ui.menu']._visible_menu_ids()
