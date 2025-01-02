@@ -1,6 +1,6 @@
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { Thread } from "./thread_model";
 import { _t } from "@web/core/l10n/translation";
 
@@ -25,7 +25,7 @@ export class ThreadIcon extends Component {
 
     setup() {
         super.setup();
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
     }
 
     get correspondent() {

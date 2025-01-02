@@ -25,7 +25,7 @@ export class MentionList extends Component {
             isFetching: false,
         });
         this.orm = useService("orm");
-        this.store = useState(useService("mail.store"));
+        this.store = useService("mail.store");
         this.suggestionService = useService("mail.suggestion");
         this.sequential = useSequential();
         this.ref = useAutofocus({ mobile: true });

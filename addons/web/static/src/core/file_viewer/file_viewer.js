@@ -56,7 +56,7 @@ export class FileViewer extends Component {
             scale: 1,
             angle: 0,
         });
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         useEffect(
             (el) => {
                 if (el) {

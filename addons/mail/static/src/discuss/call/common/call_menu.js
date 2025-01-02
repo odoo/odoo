@@ -1,4 +1,4 @@
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -9,7 +9,7 @@ export class CallMenu extends Component {
     static template = "discuss.CallMenu";
     setup() {
         super.setup();
-        this.rtc = useState(useService("discuss.rtc"));
+        this.rtc = useService("discuss.rtc");
         this.callActions = useCallActions();
     }
 

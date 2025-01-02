@@ -35,7 +35,7 @@ export class ClosePosPopup extends Component {
         this.report = useService("report");
         this.hardwareProxy = useService("hardware_proxy");
         this.dialog = useService("dialog");
-        this.ui = useState(useService("ui"));
+        this.ui = useService("ui");
         this.state = useState(this.getInitialState());
         this.confirm = useAsyncLockedMethod(this.confirm);
     }
