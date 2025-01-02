@@ -10,6 +10,9 @@ from odoo.addons.sale.tests.common import SaleCommon
 class TestSaleComboConfigurator(HttpCase, SaleCommon):
 
     def test_sale_combo_configurator(self):
+        if self.env['ir.module.module']._get('sale_management').state != 'installed':
+            self.skipTest("Sale App is not installed, Sale menu is not accessible.")
+
         no_variant_attribute = self.env['product.attribute'].create({
             'name': "No variant attribute",
             'create_variant': 'no_variant',
