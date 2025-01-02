@@ -12,7 +12,7 @@
             <div t-if="props.feedback(this.state.buffer)" class="p-2 mx-auto" t-esc="props.feedback(this.state.buffer)" />
             <Numpad buttons="props.buttons" class="'mx-auto my-3 w-75 max-width-325px'"/>
             <t t-set-slot="footer">
-                <button t-att-disabled="!props.isValid(state.buffer)" class="btn btn-primary o-default-button" t-on-click="confirm">Ok</button>
+                <button t-att-disabled="!props.isValid(state.buffer)" class="btn btn-primary o-default-button" tabindex="1" t-on-click="confirm">Ok</button>
             </t>
         </Dialog>
     </t>

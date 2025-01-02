@@ -52,7 +52,10 @@ export function useCashierSelector(
                 });
             }
         }
-        if (!inputPin || employee._pin !== Sha1.hash(inputPin)) {
+        if (!inputPin && typeof inputPin !== "string") {
+            return false;
+        }
+        if (employee._pin !== Sha1.hash(inputPin)) {
             dialog.add(AlertDialog, {
                 title: _t("Incorrect Password"),
                 body: _t("Please try again."),
