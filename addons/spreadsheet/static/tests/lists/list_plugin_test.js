@@ -684,6 +684,28 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         assert.verifySteps(["web_search_read"]);
     });
 
+    QUnit.test("can import (export) action xml id", async function (assert) {
+        const listId = 1;
+        const spreadsheetData = {
+            lists: {
+                [listId]: {
+                    id: listId,
+                    columns: ["foo"],
+                    domain: [],
+                    model: "partner",
+                    orderBy: [],
+                    actionXmlId: "spreadsheet.test_action"
+                },
+            },
+        };
+        const model = await createModelWithDataSource({ spreadsheetData });
+        assert.strictEqual(
+            model.getters.getListDefinition(listId).actionXmlId,
+            "spreadsheet.test_action"
+        );
+        assert.strictEqual(model.exportData().lists[listId].actionXmlId, "spreadsheet.test_action");
+    });
+
     QUnit.test(
         "Load list spreadsheet with models that cannot be accessed",
         async function (assert) {
