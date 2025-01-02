@@ -325,6 +325,9 @@ export class Message extends Record {
         if (this.isEmpty) {
             return _t("This message has been removed");
         }
+        if (this.notificationType === "call") {
+            return _t("%(caller)s started a call", { caller: this.author.name });
+        }
         if (!this.body) {
             return "";
         }
@@ -335,6 +338,8 @@ export class Message extends Record {
         switch (this.notificationType) {
             case "pin":
                 return "fa fa-thumb-tack";
+            case "call":
+                return "fa fa-phone";
         }
         return null;
     }
