@@ -282,8 +282,8 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             [
                 {'name': 'product_a',           'debit': 0.0,       'credit': 1800.0},
                 {'name': 'Tax 15% (Copy)',      'debit': 0.0,       'credit': 270.0},
-                {'name': 'INV/2024/00001',      'debit': 621.0,     'credit': 0.0},
-                {'name': 'INV/2024/00001',      'debit': 1449.0,    'credit': 0.0},
+                {'name': account_move.name,     'debit': 621.0,     'credit': 0.0},
+                {'name': account_move.name,     'debit': 1449.0,    'credit': 0.0},
                 {'name': 'product_a',           'debit': 0.0,       'credit': 840 * 2},
                 {'name': 'product_a',           'debit': 840 * 2,   'credit': 0.0},
             ]
