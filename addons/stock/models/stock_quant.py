@@ -111,7 +111,7 @@ class StockQuant(models.Model):
         'Scheduled Date', compute='_compute_inventory_date', store=True, readonly=False,
         help="Next date the On Hand Quantity should be counted.")
     last_count_date = fields.Date(compute='_compute_last_count_date', help='Last time the Quantity was Updated')
-    inventory_quantity_set = fields.Boolean(store=True, compute='_compute_inventory_quantity_set', readonly=False, default=False)
+    inventory_quantity_set = fields.Boolean(store=True, compute='_compute_inventory_quantity_set', readonly=False)
     is_outdated = fields.Boolean('Quantity has been moved since last count', compute='_compute_is_outdated', search='_search_is_outdated')
     user_id = fields.Many2one(
         'res.users', 'Assigned To', help="User assigned to do product count.",
@@ -183,10 +183,13 @@ class StockQuant(models.Model):
         )
         return super()._search(domain, *args, **kwargs)
 
-    @api.depends('inventory_quantity')
+    @api.depends('inventory_quantity', 'inventory_quantity_set')
     def _compute_inventory_diff_quantity(self):
         for quant in self:
-            quant.inventory_diff_quantity = quant.inventory_quantity - quant.quantity
+            if quant.inventory_quantity_set:
+                quant.inventory_diff_quantity = quant.inventory_quantity - quant.quantity
+            else:
+                quant.inventory_diff_quantity = 0
 
     @api.depends('inventory_quantity')
     def _compute_inventory_quantity_set(self):
@@ -301,6 +304,8 @@ class StockQuant(models.Model):
                     quant.inventory_date = fields.Date.today()
                 quants |= quant
             else:
+                if 'inventory_quantity' not in vals:
+                    vals['inventory_quantity_set'] = vals.get('inventory_quantity_set', False)
                 quant = super().create(vals)
                 _add_to_cache(quant)
                 quants |= quant
@@ -1003,6 +1008,8 @@ class StockQuant(models.Model):
             ).lot_stock_id
 
     def _apply_inventory(self):
+        # Consider the inventory_quantity as set => recompute the inventory_diff_quantity if needed
+        self.inventory_quantity_set = True
         move_vals = []
         for quant in self:
             # Create and validate a move so that the quant matches its `inventory_quantity`.
