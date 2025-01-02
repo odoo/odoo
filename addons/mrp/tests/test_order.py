@@ -294,16 +294,17 @@ class TestMrpOrder(TestMrpCommon):
         details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
             ml.lot_id = lot_1
-            ml.quantity = 20
+            ml.quantity = 21
         details_operation_form.save()
         mo.move_raw_ids[1].picked = True
+        mo.move_raw_ids[1]._onchange_quantity()
         update_quantity_wizard = self.env['change.production.qty'].create({
             'mo_id': mo.id,
             'product_qty': 4,
         })
         update_quantity_wizard.change_prod_qty()
 
-        self.assertEqual(mo.move_raw_ids.filtered(lambda m: m.product_id == p1).quantity, 20, 'Update the produce quantity should not impact already produced quantity.')
+        self.assertEqual(mo.move_raw_ids.filtered(lambda m: m.product_id == p1).quantity, 21, 'Update the produce quantity should not impact already produced quantity.')
         self.assertEqual(mo.move_finished_ids.product_uom_qty, 4)
         mo.button_mark_done()
 
@@ -4278,8 +4279,8 @@ class TestMrpOrder(TestMrpCommon):
             ],
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': self.product_2.id, 'product_qty': 2, 'manual_consumption': True}),
-                (0, 0, {'product_id': self.product_1.id, 'product_qty': 4, 'manual_consumption': True})
+                (0, 0, {'product_id': self.product_2.id, 'product_qty': 2}),
+                (0, 0, {'product_id': self.product_1.id, 'product_qty': 4})
             ]})
         mo = mo_form.save()
         mo.action_confirm()
