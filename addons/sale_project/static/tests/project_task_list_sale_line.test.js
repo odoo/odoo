@@ -1,13 +1,11 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { check, queryAll, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { defineModels, mountView } from "@web/../tests/web_test_helpers";
+import { mountView } from "@web/../tests/web_test_helpers";
 import { mailModels } from "@mail/../tests/mail_test_helpers";
 import { defineProjectModels, projectModels } from "@project/../tests/project_models";
-import { SaleOrderLine } from "./project_task_model";
 
 describe.current.tags("desktop");
-defineModels([SaleOrderLine]);
 defineProjectModels();
 
 test("cannot edit sale_line_id when partners are different", async () => {
@@ -22,7 +20,7 @@ test("cannot edit sale_line_id when partners are different", async () => {
         { id: 2, partner_id: 102, sale_line_id: 2 },
     ];
 
-    SaleOrderLine._records = [
+    projectModels.SaleOrderLine._records = [
         { id: 1, name: "order1" },
         { id: 2, name: "order2" },
     ];

@@ -24,4 +24,5 @@ export class SaleOrderLine extends models.Model {
 Object.assign(projectModels, {
     ProjectMilestone,
     ProjectTask,
+    SaleOrderLine,
 });
