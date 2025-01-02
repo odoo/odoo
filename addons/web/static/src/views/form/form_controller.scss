@@ -42,16 +42,6 @@
         }
 
     }
-
-    @include media-breakpoint-down(md) {
-        .o_cell:has(+ :is(.o_wrap_label, .o_wrap_field_boolean)),
-        .o_cell.o_wrap_input,
-        .o_wrap_field_boolean,
-        .o_cell_custom:not(.o_wrap_label),
-        .o_cell:first-child:last-child {
-            margin-bottom: map-get($spacers, 3);
-        }
-    }
 }
 
 
