@@ -4304,24 +4304,26 @@ class BaseModel(metaclass=MetaModel):
         if not (regular_fields or property_fields):
             return
 
+        # If company_field is `0`, then record[company_field] will simply reference the current record
+        company_field = (
+            0 if self._name == 'res.company' else
+            'company_id' if 'company_id' in self._fields else
+            'company_ids' if 'company_ids' in self._fields else
+            None
+        )
+        if regular_fields and company_field is None:
+            _logger.warning(_(
+                "Skipping a company check for model %(model_name)s. Its fields %(field_names)s are set as company-dependent, "
+                "but the model doesn't have a `company_id` or `company_ids` field!",
+                model_name=self.model_name, field_names=regular_fields
+            ))
+
         inconsistencies = []
         for record in self:
             # The first part of the check verifies that all records linked via relation fields are compatible
             # with the company of the origin document, i.e. `self.account_id.company_id == self.company_id`
-            if regular_fields:
-                if self._name == 'res.company':
-                    companies = record
-                elif 'company_id' in self:
-                    companies = record.company_id
-                elif 'company_ids' in self:
-                    companies = record.company_ids
-                else:
-                    _logger.warning(_(
-                        "Skipping a company check for model %(model_name)s. Its fields %(field_names)s are set as company-dependent, "
-                        "but the model doesn't have a `company_id` or `company_ids` field!",
-                        model_name=self.model_name, field_names=regular_fields
-                    ))
-                    continue
+            if regular_fields and company_field is not None:
+                companies = record[company_field]
                 for name in regular_fields:
                     corecord = record.sudo()[name]
                     if corecord:
@@ -4342,20 +4344,23 @@ class BaseModel(metaclass=MetaModel):
 
         if inconsistencies:
             lines = [_("Incompatible companies on records:")]
-            company_msg = _lt("- Record is company “%(company)s” and “%(field)s” (%(fname)s: %(values)s) belongs to another company.")
-            record_msg = _lt("- “%(record)s” belongs to company “%(company)s” and “%(field)s” (%(fname)s: %(values)s) belongs to another company.")
-            root_company_msg = _lt("- Only a root company can be set on “%(record)s”. Currently set to “%(company)s”")
+            company_msg = _("- Record is company “%(company)s” and “%(field)s” (%(fname)s: %(values)s) belongs to another company.")
+            record_msg = _("- “%(record)s” belongs to company “%(company)s” and “%(field)s” (%(fname)s: %(values)s) belongs to another company.")
+            record_companies_msg = _("- “%(record)s” belongs to companies %(company)s but “%(field)s” (%(fname)s: %(values)s) belongs to another company.")
+            root_company_msg = _("- Only a root company can be set on “%(record)s”. Currently set to “%(company)s”")
             for record, name, corecords in inconsistencies[:5]:
                 if record._name == 'res.company':
-                    msg, company = company_msg, record
+                    msg, company_name = company_msg, record.display_name
                 elif record == corecords and name == 'company_id':
-                    msg, company = root_company_msg, record.company_id
+                    msg, company_name = root_company_msg, record.company_id.display_name
+                elif 'company_id' in record._fields:
+                    msg, company_name = record_msg, record.company_id.display_name
                 else:
-                    msg, company = record_msg, record.company_id
+                    msg, company_name = record_companies_msg, ", ".join(f"“{c.display_name}”" for c in record.company_ids)
                 field = self.env['ir.model.fields']._get(self._name, name)
-                lines.append(str(msg) % {
+                lines.append(msg % {
                     'record': record.display_name,
-                    'company': company.display_name,
+                    'company': company_name,
                     'field': field.field_description,
                     'fname': field.name,
                     'values': ", ".join(repr(rec.display_name) for rec in corecords),
