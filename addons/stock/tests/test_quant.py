@@ -1303,6 +1303,32 @@ class StockQuant(TransactionCase):
         history = self.env['stock.move.line'].search(action['domain'])
         self.assertTrue(history)
 
+    def test_diff_unset_after_create(self):
+        """
+        Test that validating moves does not set new quant's inventory_diff_quantity
+        """
+        warehouse = self.env.ref('stock.warehouse0')
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.in_type_id.id,
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [Command.create({
+                'name': 'Lovely move',
+                'product_id': self.product.id,
+                'location_id': self.ref('stock.stock_location_suppliers'),
+                'location_dest_id': self.stock_location.id,
+                'product_uom_qty': 5,
+                'product_uom': self.product.uom_id.id,
+            })],
+        })
+        picking.action_confirm()
+        picking.move_ids.quantity = 5.0
+        picking.move_ids.picked = True
+        picking.button_validate()
+        quant = self.product.stock_quant_ids.filtered(lambda q: q.location_id == self.stock_location)
+        self.assertTrue(quant)
+        self.assertEqual(quant.inventory_diff_quantity, 0)
+
     def test_reserve_fractional_qty(self):
         lot1 = self.env['stock.lot'].create({'name': 'lot1', 'product_id': self.product_serial.id})
         lot2 = self.env['stock.lot'].create({'name': 'lot2', 'product_id': self.product_serial.id})
