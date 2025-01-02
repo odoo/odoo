@@ -40,7 +40,8 @@ registry.category("web_tour.tours").add("event_buy_tickets", {
         },
         {
             content: "Fill attendees details",
-            trigger: 'form[id="attendee_registration"] .btn[type=submit]',
+            trigger: '.modal form[id="attendee_registration"] .btn[type=submit]',
+            run: "hover",
         },
         {
             trigger: ".modal#modal_attendees_registration input[name*='1-email']",
