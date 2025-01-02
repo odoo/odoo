@@ -61,13 +61,17 @@ registerBackendAndFrontendTour("question", {
     content: _t("Click to post your question."),
     tooltipPosition: "bottom",
     run: "click",
-}, {
+},
+{
+    trigger: ".o_wforum_content_wrapper h3:contains(test)",
+},
+{
     isActive: ["auto"],
     trigger: ".modal .modal-header button.btn-close",
     run: "click",
 },
 {
-    trigger: "a:contains(\"Reply\").collapsed",
+    trigger: "a:contains(Reply).collapsed",
     content: _t("Click to reply."),
     tooltipPosition: "bottom",
     run: "click",
@@ -87,9 +91,13 @@ registerBackendAndFrontendTour("question", {
     content: _t("Click to post your answer."),
     tooltipPosition: "bottom",
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_wforum_content_wrapper h3:contains(test)",
+},
+{
     isActive: ["auto"],
-    trigger: ".modal .modal-header button.btn-close",
+    trigger: ".modal:contains(thanks for posting!) .modal-header button.btn-close",
     run: "click",
 }, {
     trigger: ".o_wforum_validate_toggler[data-karma]:first",
