@@ -178,11 +178,7 @@ export function shippingDateExists() {
 
 export function shippingDateIsToday() {
     // format the date in US, the language used by the tests
-    const expectedDelivery = new Date().toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-    });
+    const expectedDelivery = new Date().toLocaleString("en-US", luxon.DateTime.DATE_SHORT);
 
     return [
         {
