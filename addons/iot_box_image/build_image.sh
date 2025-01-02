@@ -181,19 +181,17 @@ find "${MOUNT_POINT}"/ -type f -name "*.iotpatch"|while read iotpatch; do
     done
 done
 
-# cleanup
-umount -fv "${MOUNT_POINT}"/boot/
-umount -lv "${MOUNT_POINT}"/
-rm -rfv "${MOUNT_POINT}"
-kpartx -dv "${LOOP_IOT_PATH}"  # /dev/loop1
-losetup -d "${LOOP_IOT_PATH}"  # /dev/loop1
-
 echo "Running zerofree..."
 zerofree -v "${LOOP_IOT_ROOT}" || true
 
 sleep 10
 
-kpartx -dv "${LOOP_IOT_PATH}"
+# cleanup
+umount -fv "${MOUNT_POINT}"/boot/
+umount -lv "${MOUNT_POINT}"/
+rm -rfv "${MOUNT_POINT}"
 kpartx -dv "${LOOP_RASPIOS_PATH}"
+kpartx -dv "${LOOP_IOT_PATH}"  # /dev/loop1
+losetup -d "${LOOP_IOT_PATH}"  # /dev/loop1
 
 echo "Image build finished."
