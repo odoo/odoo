@@ -48,6 +48,14 @@ class SaleOrderLine(models.Model):
     def get_description_following_lines(self):
         return self.name.splitlines()[1:]
 
+    def _get_order_date(self):
+        self.ensure_one()
+        if self.order_id.website_id and self.state == 'draft':
+            # cart prices must always be computed based on the current time, not on the order
+            # creation date.
+            return fields.Datetime.now()
+        return super()._get_order_date()
+
     def _get_shop_warning(self, clear=True):
         self.ensure_one()
         warn = self.shop_warning

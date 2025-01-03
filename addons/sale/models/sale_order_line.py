@@ -428,7 +428,7 @@ class SaleOrderLine(models.Model):
                     line.product_id,
                     line.product_uom_qty or 1.0,
                     uom=line.product_uom,
-                    date=line.order_id.date_order,
+                    date=line._get_order_date(),
                 )
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
@@ -451,6 +451,10 @@ class SaleOrderLine(models.Model):
                     ),
                     fiscal_position=line.order_id.fiscal_position_id,
                 )
+
+    def _get_order_date(self):
+        self.ensure_one()
+        return self.order_id.date_order
 
     def _get_display_price(self):
         """Compute the displayed unit price for a given line.
@@ -487,7 +491,7 @@ class SaleOrderLine(models.Model):
         self.product_id.ensure_one()
 
         pricelist_rule = self.pricelist_item_id
-        order_date = self.order_id.date_order or fields.Date.today()
+        order_date = self._get_order_date() or fields.Date.today()
         product = self.product_id.with_context(**self._get_product_price_context())
         qty = self.product_uom_qty or 1.0
         uom = self.product_uom or self.product_id.uom_id
@@ -531,7 +535,7 @@ class SaleOrderLine(models.Model):
         self.product_id.ensure_one()
 
         pricelist_rule = self.pricelist_item_id
-        order_date = self.order_id.date_order or fields.Date.today()
+        order_date = self._get_order_date() or fields.Date.today()
         product = self.product_id.with_context(**self._get_product_price_context())
         qty = self.product_uom_qty or 1.0
         uom = self.product_uom
