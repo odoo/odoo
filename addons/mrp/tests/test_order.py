@@ -4985,6 +4985,25 @@ class TestMrpOrder(TestMrpCommon):
         not_done_picking = mo.picking_ids.filtered(lambda picking: picking.state != "done")
         self.assertEqual(not_done_picking.move_ids.product_uom_qty, 3.0)
 
+    def test_wo_date_finished_on_done_unplanned_mo(self):
+        """
+        Checks that the work order's date_finished and leave_id.date_to fields are equal to
+        the date_finished field on a done manufacturing order that was not planned.
+        """
+        production_form = Form(self.env['mrp.production'])
+        production_form.bom_id = self.bom_4
+        production = production_form.save()
+
+        production.action_confirm()
+
+        self.assertFalse(production.workorder_ids[0].date_finished)
+        self.assertFalse(production.workorder_ids[0].leave_id)
+
+        production.button_mark_done()
+
+        self.assertEqual(production.workorder_ids[0].date_finished, production.date_finished)
+        self.assertEqual(production.workorder_ids[0].leave_id.date_to, production.date_finished)
+
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
