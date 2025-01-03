@@ -36,12 +36,15 @@ class ProductRibbon(models.Model):
         required=True,
         default='manual'
     )
-    new_period = fields.Integer(default=30)\
+    new_period = fields.Integer(default=30)
+
+    def _get_automatic_assigns(self):
+        return ['new', 'sale']
 
     @api.constrains('assign')
     def _check_assign(self):
         for record in self:
-            if record.assign in ['new', 'sale']:
+            if record.assign in self._get_automatic_assigns():
                 existing_ribbons = self.search([
                     ('id', '!=', record.id),
                     ('assign', '=', record.assign)
@@ -65,18 +68,25 @@ class ProductRibbon(models.Model):
         if manually_set_ribbon:
             return manually_set_ribbon
 
-        all_ribbons = self.sudo().search([('assign', '!=', 'manual')])
-        for ribbon in all_ribbons:
+        auto_assign_ribbons = self.sudo().search([('assign', '!=', 'manual')])
+        for ribbon in auto_assign_ribbons:
             if ribbon._match_assign(product, product_prices):
                 return ribbon
         return self
 
     def _match_assign(self, product, product_prices):
-        if self.assign == 'sale' and product_prices:
-            sale_product_grid = 'base_price' in product_prices
-            sale_product_images = product_prices.get('list_price', 0) != product_prices.get('price', 0)
-            return sale_product_grid or sale_product_images
-        if (self.assign == 'new'
-            and self.new_period >= (fields.Datetime.today() - product.publish_date).days):
-            return True
-        return False
+        is_sale_assign = (
+            self.assign == 'sale'
+            and product_prices
+            and (
+                'base_price' in product_prices
+                or product_prices.get('list_price', 0) != product_prices.get('price', 0)
+            )
+        )
+
+        is_new_assign = (
+            self.assign == 'new'
+            and self.new_period >= (fields.Datetime.today() - product.publish_date).days
+        )
+
+        return is_sale_assign or is_new_assign
