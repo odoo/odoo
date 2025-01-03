@@ -25,6 +25,7 @@ test("Suggestions are shown after delimiter was used in text (:)", async () => {
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: serverState.publicPartnerId }),
         ],
+        livechat_active: true,
     });
     await start();
     await openDiscuss(channelId);
@@ -46,6 +47,7 @@ test("Cannot mention other channels in a livechat", async () => {
                 Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ partner_id: serverState.publicPartnerId }),
             ],
+            livechat_active: true,
         },
         {
             channel_type: "channel",
