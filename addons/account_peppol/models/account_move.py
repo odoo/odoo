@@ -22,6 +22,11 @@ class AccountMove(models.Model):
         string='PEPPOL status',
         copy=False,
     )
+    peppol_notify_pending = fields.Boolean(
+        string="Notify User About Peppol Invoice",
+        default=False,
+        help="Indicates whether this invoice requires user notification about its receipt via Peppol",
+    )
 
     def action_cancel_peppol_documents(self):
         # if the peppol_move_state is processing/done

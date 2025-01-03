@@ -28,5 +28,23 @@
                 </div>
             </xpath>
         </template>
+        <record id="mail_notification_peppol_incoming_invoices" model="mail.template">
+            <field name="name">Peppol Invoice Notification</field>
+            <field name="email_to">{{ object.company_id.account_peppol_contact_email }}</field>
+            <field name="use_default_to" eval="False"/>
+            <field name="subject">You Have New Peppol Invoices</field>
+            <field name="model_id" ref="model_account_edi_proxy_client_user"/>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p>Dear User,</p>
+    <p>You have received new invoices via Peppol today:</p>
+    <p>Total invoice(s) received: <t t-out="ctx['invoice_count']"/></p>
+    <p>Please review them at your earliest convenience.</p>
+    <p>Best regards,</p>
+    <br/>
+    <t t-out="object.company_id.name"/>
+</div>
+            </field>
+        </record>
     </data>
 </odoo>

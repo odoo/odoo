@@ -26,4 +26,14 @@
         <field name="code">model._cron_peppol_get_participant_status()</field>
         <field name="state">code</field>
     </record>
+
+    <record id="ir_cron_notify_incoming_peppol_invoices" model="ir.cron">
+        <field name="name">PEPPOL: Notify incoming invoices</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="model_id" ref="model_account_edi_proxy_client_user"/>
+        <field name="code">model._cron_notify_incoming_peppol_invoices()</field>
+        <field name="state">code</field>
+        <field name="active">True</field>
+    </record>
 </odoo>

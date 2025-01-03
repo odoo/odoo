@@ -105,6 +105,28 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ['in_verification', 'sender', 'smp_registration'])])
         edi_users._peppol_get_participant_status()
 
+    @api.model
+    def _cron_notify_incoming_peppol_invoices(self):
+        for user in self.search([
+            ('proxy_type', '=', 'peppol'),
+        ]):
+            incoming_peppol_invoices = self.env['account.move'].search([
+                ('company_id.account_edi_proxy_client_ids', '=', user.id),
+                ('peppol_notify_pending', '=', True),
+                ('move_type', '=', 'in_invoice'),
+            ])
+            if not incoming_peppol_invoices:
+                continue
+
+            incoming_peppol_invoices_count = len(incoming_peppol_invoices)
+
+            self.env.ref('account_peppol.mail_notification_peppol_incoming_invoices').with_context(
+                invoice_count=incoming_peppol_invoices_count,
+            ).send_mail(user.id)
+
+            incoming_peppol_invoices['peppol_notify_pending'] = False
+            self.env.cr.commit()
+
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
@@ -136,6 +158,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             'move_type': 'in_invoice',
             'peppol_move_state': peppol_state,
             'peppol_message_uuid': uuid,
+            'peppol_notify_pending': True,
         })
         if 'is_in_extractable_state' in move._fields:
             move.is_in_extractable_state = False
@@ -149,6 +172,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             ),
             attachment_ids=attachment.ids,
         )
+
         attachment.write({'res_model': 'account.move', 'res_id': move.id})
         return True
 
