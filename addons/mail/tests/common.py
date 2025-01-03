@@ -1102,6 +1102,10 @@ class MailCase(MockEmail):
             if not notif.message:
                 return ""
             return f"{tuple(json.loads(notif.channel))},  # {json.loads(notif.message).get('type')}"
+
+        def notif_to_string(notif):
+            return f"{format_notif(notif)}\n{notif.message}"
+
         try:
             with self.mock_bus():
                 yield
@@ -1109,12 +1113,12 @@ class MailCase(MockEmail):
             if get_params:
                 channels, message_items = get_params()
             found_bus_notifs = self.assertBusNotifications(channels, message_items=message_items)
-            new_line = "\n"
+            new_lines = "\n\n"
             self.assertEqual(
                 self._new_bus_notifs,
                 found_bus_notifs,
-                f"\nExpected:\n{new_line.join(found_bus_notifs.mapped(format_notif))}"
-                f"\nResult:\n{new_line.join(self._new_bus_notifs.mapped(format_notif))}"
+                f"\n\nExpected:\n{new_lines[0].join(found_bus_notifs.mapped(format_notif))}"
+                f"\n\nResult:\n{new_lines.join(self._new_bus_notifs.mapped(notif_to_string))}",
             )
 
     @contextmanager
@@ -1403,33 +1407,31 @@ class MailCase(MockEmail):
         """
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         bus_notifs = self.env['bus.bus'].sudo().search([('channel', 'in', [json_dump(channel) for channel in channels])])
-        new_line = "\n"
+        new_lines = "\n\n"
 
         def notif_to_string(notif):
-            message = json.loads(notif.message)
-            payload = json_dump(message.get("payload"))
-            return f"{notif.channel}  # {message.get('type')} - {payload[0:120]}{'…' if len(payload) > 120 else ''}"
+            return f"{notif.channel}\n{notif.message}"
 
         self.assertEqual(
             bus_notifs.mapped("channel"),
             [json_dump(channel) for channel in channels],
-            f"\nExpected:\n{new_line.join([json_dump(channel) for channel in channels])}"
-            f"\nReturned:\n{new_line.join([notif_to_string(notif) for notif in bus_notifs])}",
+            f"\n\nExpected:\n{new_lines[0].join([json_dump(channel) for channel in channels])}"
+            f"\n\nReturned:\n{new_lines.join([notif_to_string(notif) for notif in bus_notifs])}",
         )
-        notif_messages = [n.message for n in bus_notifs]
         for expected in message_items or []:
-            for notification in notif_messages:
-                if json_dump(expected) == notification:
+            for notification in bus_notifs:
+                if json.loads(json_dump(expected)) == json.loads(notification.message):
                     break
             else:
-                matching_notifs = [m for m in notif_messages if json.loads(m).get("type") == expected.get("type")]
+                matching_notifs = [n for n in bus_notifs if json.loads(n.message).get("type") == expected.get("type")]
                 if len(matching_notifs) == 1:
-                    self.assertEqual(expected, json.loads(matching_notifs[0]))
+                    self.assertEqual(expected, json.loads(matching_notifs[0].message))
                 if not matching_notifs:
-                    matching_notifs = notif_messages
+                    matching_notifs = bus_notifs
                 raise AssertionError(
-                    "No notification was found with the expected value.\nExpected:\n%s\nReturned:\n%s"
-                    % (json_dump(expected), ",\n".join(matching_notifs))
+                    "No notification was found with the expected value.\n\n"
+                    f"Expected:\n{json_dump(expected)}\n\n"
+                    f"Returned:\n{new_lines.join([notif_to_string(notif) for notif in matching_notifs])}"
                 )
         if check_unique:
             self.assertEqual(len(bus_notifs), len(channels))
