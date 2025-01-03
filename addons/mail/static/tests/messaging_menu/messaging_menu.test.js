@@ -96,6 +96,18 @@ test("rendering with chat push notification default permissions", async () => {
     await contains(".o-mail-NotificationItem", { text: "Turn on notifications" });
 });
 
+test("can quickly dismiss 'Turn on notification' suggestion", async () => {
+    patchBrowserNotification("default");
+    await start();
+    await contains(".o-mail-MessagingMenu-counter");
+    await contains(".o-mail-MessagingMenu-counter", { text: "1" });
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem", { text: "Turn on notifications" });
+    await click(".o-mail-NotificationItem:contains(Turn on notifications) [title='Dismiss']");
+    await contains(".o-mail-NotificationItem", { text: "Turn on notifications", count: 0 });
+});
+
 test("rendering with chat push notification permissions denied", async () => {
     patchBrowserNotification("denied");
     await start();
