@@ -142,12 +142,12 @@ export class TableUIPlugin extends Plugin {
         if (!td) {
             return;
         }
-        const withAddStep = (fn) => {
-            return (...args) => {
+        const withAddStep =
+            (fn) =>
+            (...args) => {
                 fn(...args);
                 this.dependencies.history.addStep();
             };
-        };
         const tableMethods = {
             moveColumn: withAddStep(this.dependencies.table.moveColumn),
             addColumn: withAddStep(this.dependencies.table.addColumn),
@@ -156,6 +156,8 @@ export class TableUIPlugin extends Plugin {
             addRow: withAddStep(this.dependencies.table.addRow),
             removeRow: withAddStep(this.dependencies.table.removeRow),
             resetTableSize: withAddStep(this.dependencies.table.resetTableSize),
+            clearColumnContent: withAddStep(this.dependencies.table.clearColumnContent),
+            clearRowContent: withAddStep(this.dependencies.table.clearRowContent),
         };
         if (td.cellIndex === 0) {
             this.rowMenu.open({

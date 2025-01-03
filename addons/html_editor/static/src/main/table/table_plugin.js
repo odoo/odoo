@@ -46,6 +46,8 @@ function isUnremovableTableComponent(node, root) {
  * @property { TablePlugin['removeColumn'] } removeColumn
  * @property { TablePlugin['removeRow'] } removeRow
  * @property { TablePlugin['resetTableSize'] } resetTableSize
+ * @property { TablePlugin['clearColumnContent'] } clearColumnContent
+ * @property { TablePlugin['clearRowContent'] } clearRowContent
  */
 
 /**
@@ -64,6 +66,8 @@ export class TablePlugin extends Plugin {
         "moveColumn",
         "moveRow",
         "resetTableSize",
+        "clearColumnContent",
+        "clearRowContent",
     ];
     resources = {
         user_commands: [
@@ -341,6 +345,23 @@ export class TablePlugin extends Plugin {
                 cStyle.width = "";
             }
         });
+    }
+    /**
+     * @param {HTMLTableCellElement} cell
+     */
+    clearColumnContent(cell) {
+        const table = closestElement(cell, "table");
+        const cells = [...closestElement(cell, "tr").querySelectorAll("th, td")];
+        const index = cells.findIndex((td) => td === cell);
+        table
+            .querySelectorAll(`tr td:nth-of-type(${index + 1})`)
+            .forEach((td) => (td.innerHTML = "<p><br></p>"));
+    }
+    /**
+     * @param {HTMLTableRowElement} row
+     */
+    clearRowContent(row) {
+        row.querySelectorAll("td").forEach((td) => (td.innerHTML = "<p><br></p>"));
     }
     deleteTable(table) {
         table =
