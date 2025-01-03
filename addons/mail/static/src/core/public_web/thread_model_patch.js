@@ -118,13 +118,13 @@ patch(Thread.prototype, {
             });
         });
     },
-    async leaveChannel() {
-        if (this.channel_type !== "group" && this.create_uid === this.store.self.userId) {
+    async leaveChannel({ force = false } = {}) {
+        if (this.channel_type !== "group" && this.create_uid === this.store.self.userId && !force) {
             await this.askLeaveConfirmation(
                 _t("You are the administrator of this channel. Are you sure you want to leave?")
             );
         }
-        if (this.channel_type === "group") {
+        if (this.channel_type === "group" && !force) {
             await this.askLeaveConfirmation(
                 _t(
                     "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"

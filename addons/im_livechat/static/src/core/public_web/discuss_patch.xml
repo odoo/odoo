@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Discuss" t-inherit-mode="extension">
+        <xpath expr="//Composer" position="replace">
+            <t t-if="thread.channel_type === 'livechat' and thread?.livechat_active === false">
+                <span class="bg-200 py-2 mt-3 text-center fst-italic d-flex-inline justify-content-center fw-bold text-muted">This livechat conversation has ended</span>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
+        <xpath expr="//*[@name='thread content']" position="replace">
+            <t>$0</t>
+            <t t-if="props.chatWindow.livechatStep === CW_LIVECHAT_STEP.CONFIRM_CLOSE">
+                <CloseConfirmation onCloseConfirmationDialog.bind="onCloseConfirmationDialog" onClickLeaveConversation.bind="close"/>
+            </t>
+        </xpath>
+        <xpath expr="//Composer" position="replace">
+            <t t-if="thread.channel_type === 'livechat' and thread?.livechat_active === false">
+                <span class="bg-200 py-1 text-center fst-italic fw-bold text-muted">This livechat conversation has ended</span>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>
