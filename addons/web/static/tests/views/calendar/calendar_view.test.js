@@ -2944,6 +2944,69 @@ test(`Colors: dynamic filters with another color source`, async () => {
     ).toHaveClass("o_cw_filter_color_4");
 });
 
+test(`Colors: dynamic filters with no color source`, async () => {
+    Event._records = [
+        {
+            id: 8,
+            user_id: 4,
+            name: "event 8",
+            start: "2016-12-11 09:00:00",
+            stop: "2016-12-11 10:00:00",
+            is_all_day: false,
+            attendee_ids: [1, 2, 3],
+            type_id: 3,
+        },
+        {
+            id: 9,
+            user_id: 4,
+            name: "event 9",
+            start: "2016-12-11 19:00:00",
+            stop: "2016-12-11 20:00:00",
+            is_all_day: false,
+            attendee_ids: [1, 2, 3],
+            type_id: 1,
+        },
+        {
+            id: 10,
+            user_id: 4,
+            name: "event 10",
+            start: "2016-12-11 12:00:00",
+            stop: "2016-12-11 13:00:00",
+            is_all_day: false,
+            attendee_ids: [1, 2, 3],
+            type_id: 2,
+        },
+    ];
+
+    onRpc("event.type", "search_read", () => {
+        expect.step("fetching event.type filter colors");
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop">
+                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id"/>
+                <field name="type_id" filters="1" color="color"/>
+            </calendar>
+        `,
+    });
+    expect.verifySteps([]);
+
+    await toggleSectionFilter("attendee_ids");
+    expect.verifySteps(["fetching event.type filter colors"]);
+    await displayCalendarPanel();
+    expect(
+        `.o_calendar_filter[data-name="type_id"] .o_calendar_filter_item[data-value="1"]`
+    ).toHaveClass("o_cw_filter_color_1");
+    expect(
+        `.o_calendar_filter[data-name="type_id"] .o_calendar_filter_item[data-value="2"]`
+    ).toHaveClass("o_cw_filter_color_2");
+    expect(
+        `.o_calendar_filter[data-name="type_id"] .o_calendar_filter_item[data-value="3"]`
+    ).toHaveClass("o_cw_filter_color_4");
+});
+
 test(`create event with filters`, async () => {
     Event._fields.user_id = fields.Many2one({ relation: "calendar.users", default: 5 });
     Event._fields.partner_id = fields.Many2one({ relation: "calendar.partner", default: 3 });
