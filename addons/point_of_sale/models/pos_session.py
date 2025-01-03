@@ -1079,10 +1079,6 @@ class PosSession(models.Model):
         outstanding_account = payment_method.outstanding_account_id
         destination_account = self._get_receivable_account(payment_method)
 
-        if float_compare(amounts['amount'], 0, precision_rounding=self.currency_id.rounding) < 0:
-            # revert the accounts because account.payment doesn't accept negative amount.
-            outstanding_account, destination_account = destination_account, outstanding_account
-
         account_payment = self.env['account.payment'].create({
             'amount': abs(amounts['amount']),
             'journal_id': payment_method.journal_id.id,
@@ -1093,6 +1089,12 @@ class PosSession(models.Model):
             'pos_session_id': self.id,
             'company_id': self.company_id.id,
         })
+
+        if float_compare(amounts['amount'], 0, precision_rounding=self.currency_id.rounding) < 0:
+            # revert the accounts because account.payment doesn't accept negative amount.
+            account_payment.outstanding_account_id = account_payment.destination_account_id
+            account_payment.destination_account_id = account_payment.outstanding_account_id
+
         account_payment.action_post()
 
         diff_amount_compare_to_zero = self.currency_id.compare_amounts(diff_amount, 0)
