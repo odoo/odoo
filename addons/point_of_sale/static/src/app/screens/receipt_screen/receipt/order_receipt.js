@@ -60,4 +60,7 @@ export class OrderReceipt extends Component {
     doesAnyOrderlineHaveTaxLabel() {
         return this.order.lines.some((line) => line.taxGroupLabels);
     }
+    getPortalURL() {
+        return `${this.props.data.base_url}/pos/ticket`;
+    }
 }
