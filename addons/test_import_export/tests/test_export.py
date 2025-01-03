@@ -127,6 +127,23 @@ class TestExport(XlsxCreatorCase):
                           {'field_type': 'char', 'id': 'login', 'string': 'Login'},
                           {'field_type': 'boolean', 'id': 'active', 'string': 'Active'}])
 
+    def test_import_compatible_export(self):
+        test_model = 'res.company'
+
+        res = self.url_open(
+            "/web/export/get_fields",
+            data=json.dumps({"params": {"model": test_model,
+                                        'import_compat': True,
+                                        'domain': []}}),
+            headers={"Content-Type": "application/json"}
+        )
+        res = json.loads(res.content)['result']
+
+        model_fields = self.env['ir.model.fields'].search([('model', '=', test_model)])
+        expected_fields = set(f.name for f in model_fields.filtered(lambda field: field.readonly == False)) | {'id'}
+
+        self.assertEqual(expected_fields, set(field['id'] for field in res))
+
 
 @tagged('-at_install', 'post_install')
 class TestGroupedExport(XlsxCreatorCase):
