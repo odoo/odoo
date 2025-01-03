@@ -14,6 +14,8 @@ export class TableMenu extends Component {
         addRow: Function,
         removeRow: Function,
         resetTableSize: Function,
+        clearColumnContent: Function,
+        clearRowContent: Function,
         overlay: Object,
         dropdownState: Object,
         target: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
@@ -85,6 +87,12 @@ export class TableMenu extends Component {
                 text: _t("Reset Size"),
                 action: (target) => this.props.resetTableSize(target.closest("table")),
             },
+            {
+                name: "clear_content",
+                icon: "fa-times-circle",
+                text: _t("Clear content"),
+                action: this.props.clearColumnContent.bind(this),
+            },
         ].filter(Boolean);
     }
 
@@ -125,6 +133,12 @@ export class TableMenu extends Component {
                 icon: "fa-table",
                 text: _t("Reset Size"),
                 action: (target) => this.props.resetTableSize(target.closest("table")),
+            },
+            {
+                name: "clear_content",
+                icon: "fa-times-circle",
+                text: _t("Clear content"),
+                action: (target) => this.props.clearRowContent(target.parentElement),
             },
         ].filter(Boolean);
     }
