@@ -569,7 +569,7 @@ class PosSession(models.Model):
             }
 
         self.post_close_register_message()
-
+        self.config_id._notify(('CLOSING_SESSION', {'login_number': self.env.context.get('login_number', False)}))
         return {'successful': True}
 
     def post_close_register_message(self):
