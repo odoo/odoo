@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from . import push_device_config
+
 # core models (required for mixins)
 from . import mail_alias
 from . import mail_alias_domain
