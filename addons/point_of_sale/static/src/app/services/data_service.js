@@ -535,7 +535,7 @@ export class PosData extends Reactive {
                 this.synchronizeServerDataInIndexedDB({ [model]: [baseData] });
             }
 
-            return result || true;
+            return result;
         } catch (error) {
             let throwErr = true;
             const uuids = this.network.unsyncData.map((d) => d.uuid);
