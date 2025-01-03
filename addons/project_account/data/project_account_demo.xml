@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="product_product_screw_driver" model="product.product">
+            <field name="name">Screw Driver</field>
+            <field name="categ_id" ref="product.product_category_goods"/>
+            <field name="standard_price">100.00</field>
+            <field name="list_price">150.00</field>
+            <field name="type">consu</field>
+            <field name="weight">0.75</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+        </record>
+        <!-- aal for 'Other Revenues' section -->
+        <record id="other_revenues_line_1" model="account.analytic.line">
+            <field name="name">extra tips 1</field>
+            <field name="unit_amount">1</field>
+            <field name="account_id" ref="project.analytic_profitable_project"/>
+            <field name="amount">20.0</field>
+        </record>
+        <record id="other_revenues_line_2" model="account.analytic.line">
+            <field name="name">extra tips 2</field>
+            <field name="unit_amount">1</field>
+            <field name="account_id" ref="project.analytic_profitable_project"/>
+            <field name="amount">40.0</field>
+        </record>
+        <!-- aal for 'Other Costs' section -->
+        <record id="other_costs_line_1" model="account.analytic.line">
+            <field name="name">sandwiches</field>
+            <field name="unit_amount">1</field>
+            <field name="account_id" ref="project.analytic_profitable_project"/>
+            <field name="amount">-8.0</field>
+        </record>
+        <record id="other_costs_line_2" model="account.analytic.line">
+            <field name="name">parking ticket</field>
+            <field name="unit_amount">1</field>
+            <field name="account_id" ref="project.analytic_profitable_project"/>
+            <field name="amount">-20.0</field>
+        </record>
+        <!-- account.move for 'Vendor Bills' section -->
+        <record id="vendor_bills_profitability" model="account.move">
+            <field name="name">/</field>
+            <field name="ref"></field>
+            <field name="move_type">in_invoice</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="line_ids" eval="[
+                Command.create({
+                    'quantity': 1.0,
+                    'product_id': ref('project_account.product_product_screw_driver'),
+                    'analytic_distribution': {ref('project.analytic_profitable_project'): 100.0},
+                }),
+            ]"/>
+        </record>
+    </data>
+</odoo>

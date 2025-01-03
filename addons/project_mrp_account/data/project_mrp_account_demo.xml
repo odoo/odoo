@@ -18,6 +18,7 @@
             <field name="location_dest_id" ref="stock.stock_location_stock"/>
             <field name="bom_id" ref="mrp.mrp_bom_drawer"/>
         </record>
+        <!-- bom used when creating a MO. its data is expected to fill the 'Manufacturing Orders' section-->
         <record id="mrp_production_dinning_table_2" model="mrp.production">
             <field name="product_id" ref="project_mrp_account.product_product_dinning_table"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
@@ -25,6 +26,7 @@
             <field name="location_src_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_stock"/>
             <field name="bom_id" ref="mrp.mrp_bom_wood_panel"/>
+            <field name="project_id" ref="project.project_a_very_profitable_project"/>
         </record>
 
         <!-- Function confirm MO -->

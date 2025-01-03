@@ -136,7 +136,7 @@ class TestAnalytics(TestStockCommon):
             {
                 'revenues': {'data': [], 'total': {'invoiced': 0.0, 'to_invoice': 0.0}},
                 'costs': {
-                    'data': [{'id': 'other_costs', 'sequence': 15, 'billed': 1300.0, 'to_bill': 0.0}],
+                    'data': [{'id': 'other_costs', 'sequence': 12, 'billed': 1300.0, 'to_bill': 0.0}],
                     'total': {'billed': 1300.0, 'to_bill': 0.0}
                 }
             }

@@ -26,12 +26,38 @@
             <field name="date" eval="time.strftime('%Y-%m-10')"/>
         </record>
 
-        <function name="action_submit" model="hr.expense">
-            <value model="hr.expense" eval="[ref('transportation_expense'), ref('restaurant_expense')]"/>
-        </function>
-
-        <function name="action_approve" model="hr.expense">
-            <value model="hr.expense" eval="[ref('transportation_expense'), ref('restaurant_expense')]"/>
-        </function>
+        <!-- expense for the 'Expenses' section in the 'cost' group-->
+        <record id="restaurant_expense_profitability" model="hr.expense">
+            <field name="name">Restaurant jojo</field>
+            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="analytic_distribution" eval="{ref('project.analytic_profitable_project'): 100}"/>
+            <field name="product_id" ref="hr_expense.expense_product_meal"/>
+            <field name="total_amount_currency" eval="1100.0"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="date" eval="time.strftime('%Y-%m-10')"/>
+        </record>
+        <!-- invoice generated for the expense above -->
+        <record id="expense_move_profitability" model="account.move">
+            <field name="name">/</field>
+            <field name="expense_ids" eval="[Command.link(ref('project_hr_expense.restaurant_expense_profitability'))]"/>
+            <field name="ref">Restaurant jojo</field>
+            <field name="move_type">in_invoice</field>
+            <field name="partner_id" ref="hr.employee_al"/>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="line_ids" eval="[
+                Command.create({
+                    'name' : 'Ronnie Hart: Restaurant jojo',
+                    'quantity': 1.0,
+                    'price_unit': 320.0,
+                    'product_id': ref('hr_expense.expense_product_meal'),
+                    'product_uom_id': ref('uom.product_uom_unit'),
+                    'analytic_distribution': {ref('project.analytic_profitable_project'): 100.0},
+                    'expense_id': ref('project_hr_expense.restaurant_expense_profitability'),
+                    'partner_id': ref('hr.employee_al'),
+                    'journal_id': ref('hr_expense.hr_expense_account_journal'),
+                    'invoice_date': time.strftime('%Y-%m-10'),
+                }),
+            ]"/>
+        </record>
     </data>
 </odoo>

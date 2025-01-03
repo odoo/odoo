@@ -167,6 +167,17 @@
             <field name="project_template_id" ref="sale_project.so_template_project"/>
         </record>
 
+        <record id="product_service_deliver_timesheet_global" model="product.product">
+            <field name="name">Junior Architect (Invoice on Timesheets) (task only)</field>
+            <field name="categ_id" ref="product.product_category_services"/>
+            <field name="list_price">100.00</field>
+            <field name="standard_price">85.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="service_policy">delivered_timesheet</field>
+            <field name="service_tracking">task_global_project</field>
+        </record>
+
         <record id="product_service_deliver_milestones" model="product.product">
             <field name="name">Kitchen Assembly (Milestones)</field>
             <field name="categ_id" ref="product.product_category_services"/>
@@ -178,6 +189,18 @@
             <field name="service_type" model="product.product" eval="'milestones' if obj().env.user.has_group('project.group_project_milestone') else 'manual'" />
             <field name="service_tracking">task_in_project</field>
             <field name="project_template_id" ref="sale_project.so_template_project"/>
+        </record>
+
+        <record id="product_service_deliver_milestones_global" model="product.product">
+            <field name="name">Kitchen Assembly (Milestones) (task only)</field>
+            <field name="categ_id" ref="product.product_category_services"/>
+            <field name="list_price">500</field>
+            <field name="standard_price">420.00</field>
+            <field name="type">service</field>
+            <field name="invoice_policy">delivery</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="service_type" model="product.product" eval="'milestones' if obj().env.user.has_group('project.group_project_milestone') else 'manual'" />
+            <field name="service_tracking">task_global_project</field>
         </record>
 
         <record id="product_product_elevator_installation" model="product.product">
@@ -240,6 +263,17 @@
             <field name="project_template_id" ref="sale_project.so_template_project"/>
         </record>
 
+        <record id="product_service_deliver_manual_global" model="product.product">
+            <field name="name">Furniture Delivery (Manual) (task only)</field>
+            <field name="categ_id" ref="product.product_category_services"/>
+            <field name="list_price">200</field>
+            <field name="standard_price">150.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="service_policy">delivered_manual</field>
+            <field name="service_tracking">task_global_project</field>
+        </record>
+
         <!-- Sales order 'sale_order_1' (AGR) -->
         <record id="sale_order_1" model="sale.order">
             <field name="partner_id" ref="base.res_partner_2"/>
@@ -299,6 +333,93 @@
             <field name="sequence" eval="3"/>
             <field name="product_id" ref="product_service_deliver_manual"/>
             <field name="product_uom_qty">1</field>
+        </record>
+
+        <!-- datas for the profitability project -->
+        <!-- sale line used for the 'Timesheets (Billed on Milestones)' section of the 'revenues' group -->
+        <record id="sale_line_profitability_milestone" model="sale.order.line">
+            <field name="order_id" ref="sale_project.sale_order_project_profitability"/>
+            <field name="sequence" eval="4"/>
+            <field name="product_id" ref="product_service_deliver_milestones_global"/>
+            <field name="product_uom_qty">4</field>
+        </record>
+
+        <record id="project_profitability_milestone_1" model="project.milestone">
+            <field name="name">Cabinets</field>
+            <field name="project_id" ref="project.project_a_very_profitable_project"/>
+            <field name="is_reached">True</field>
+            <field name="sale_line_id" ref="sale_line_profitability_milestone"/>
+            <field name="quantity_percentage">0.25</field>
+        </record>
+        <!-- aal used for the 'Timesheets (Billed on Milestones)' section of the 'costs' group -->
+        <record id="sale_line_profitability_milestone_task_timesheet_1" model="account.analytic.line">
+            <field name="name">Prepare</field>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="date" eval="(DateTime.now() + relativedelta(weekday=1,weeks=-2)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">4.00</field>
+            <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_profitability_milestone'))]"/>
+            <field name="project_id" ref="project.project_a_very_profitable_project"/>
+            <field name="so_line" ref="sale_line_profitability_milestone"/>
+        </record>
+
+        <!-- sale line used for the 'Timesheets (Billed on Timesheets)' section of the 'revenues' group -->
+        <record id="sale_line_profitability_delivered" model="sale.order.line">
+            <field name="order_id" ref="sale_project.sale_order_project_profitability"/>
+            <field name="sequence" eval="4"/>
+            <field name="product_id" ref="product_service_deliver_timesheet_global"/>
+            <field name="product_uom_qty">20</field>
+        </record>
+        <!-- aal used for the 'Timesheets (Billed on Timesheets)' section of the 'costs' group -->
+        <record id="sale_line_profitability_delivered_task_timesheet_1" model="account.analytic.line">
+            <field name="name">Research and Development</field>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="date" eval="(DateTime.now() + relativedelta(weekday=1,weeks=-2)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">4.00</field>
+            <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_profitability_delivered'))]"/>
+            <field name="project_id" ref="project.project_a_very_profitable_project"/>
+        </record>
+        <!-- aal used for the 'Timesheets (Fixed Price)' section of the 'costs' group -->
+        <record id="sale_line_profitability_prepaid_task_timesheet_1" model="account.analytic.line">
+            <field name="name">Research and Development</field>
+            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="date" eval="(DateTime.now() + relativedelta(weekday=1,weeks=-2)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">4.00</field>
+            <field name="task_id" search="[('sale_line_id', '=', ref('sale_project.sale_line_profitability_prepaid'))]"/>
+            <field name="project_id" ref="project.project_a_very_profitable_project"/>
+        </record>
+
+        <record id="project_task_non_billable" model="project.task">
+            <field name="name">Internal training</field>
+            <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="project_id" ref="project.project_a_very_profitable_project"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+        </record>
+        <!-- aal used for the 'Timesheets (Non-Billable)' section of the 'costs' group -->
+        <record id="project_task_non_billable_timesheet_1" model="account.analytic.line">
+            <field name="name">Technical training</field>
+            <field name="employee_id" ref="hr.employee_admin"/>
+            <field name="date" eval="(DateTime.now() + relativedelta(months=-2, days=-10)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">8.00</field>
+            <field name="project_id" ref="project.project_a_very_profitable_project"/>
+            <field name="task_id" ref="project_task_non_billable"/>
+        </record>
+        <!-- sale line used for the 'Timesheets (Billed Manually)' section of the 'revenues' group -->
+        <record id="sale_line_profitability_manual" model="sale.order.line">
+            <field name="order_id" ref="sale_project.sale_order_project_profitability"/>
+            <field name="sequence" eval="3"/>
+            <field name="product_id" ref="product_service_deliver_manual_global"/>
+            <field name="product_uom_qty" eval="1"/>
+            <field name="qty_delivered" eval="1"/>
+        </record>
+        <!-- aal used for the 'Timesheets (Billed Manually)' section of the 'costs' group -->
+        <record id="sale_line_profitability_manual_timesheet_1" model="account.analytic.line">
+            <field name="name">Packing bisous</field>
+            <field name="employee_id" ref="hr.employee_admin"/>
+            <field name="date" eval="(DateTime.now() + relativedelta(weekday=3,weeks=-2)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">6.00</field>
+            <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_profitability_manual'))]"/>
+            <field name="project_id" ref="project.project_a_very_profitable_project"/>
+            <field name="so_line" ref="sale_line_profitability_manual"/>
         </record>
 
         <!-- Sale Order 'sale_order_2' (Delta PC) -->
@@ -451,7 +572,16 @@
                 'state': '03_approved',
             }"/>
         </function>
-
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('sale_line_id', '=', ref('sale_timesheet.sale_line_profitability_milestone'))]"/>
+            <value eval="{
+                'milestone_id': ref('project.project_home_construction_milestone_3'),
+                'stage_id': ref('project.project_stage_1'),
+                'user_ids':[Command.link(ref('base.user_admin'))],
+                'state': '03_approved',
+            }"/>
+        </function>
+        
         <!-- Change order dates -->
         <record id="sale_order_1" model="sale.order">
             <field name="date_order" eval="datetime.now() + relativedelta(weekday=0, weeks=-3)"/>
