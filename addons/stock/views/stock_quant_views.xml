@@ -37,6 +37,7 @@
                     <filter name="on_hand" string="On Hand" domain="[('on_hand', '=', True)]"/>
                     <filter name="to_count" string="To Count" domain="[('inventory_date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter name="to_apply" string="To Apply" domain="[('inventory_quantity_set', '=', True)]"/>
+                    <separator/>
                     <filter name="priority_products" string="Starred Products" domain="[('is_favorite', '=', True)]"/>
                     <separator/>
                     <filter name="in_stock" string="In Stock" domain="[('quantity', '&gt;', 0.0)]"/>

@@ -1241,12 +1241,12 @@
 
         <!-- Expense bill for sale_order_1 -->
         <record id="account_analytic_line_exp_1" model="account.analytic.line">
-            <field name="name" model="account.analytic.line" eval="obj().env.ref('product.expense_product').get_product_multiline_description_sale()"/>
+            <field name="name" model="account.analytic.line" eval="obj().env.ref('product.product_restaurant').get_product_multiline_description_sale()"/>
             <field name="account_id" search="[('partner_id', '=', ref('base.res_partner_2'))]"/>
             <field name="partner_id" ref="base.partner_root"/>
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
             <field name="amount">-100.00</field>
-            <field name="product_id" ref="product.expense_product"/>
+            <field name="product_id" ref="product.product_restaurant"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="unit_amount">1.00</field>
         </record>
@@ -1265,12 +1265,12 @@
 
         <!-- Expense bill for sale_order_2 -->
         <record id="account_analytic_line_exp_2" model="account.analytic.line">
-            <field name="name" model="account.analytic.line" eval="obj().env.ref('product.expense_hotel').get_product_multiline_description_sale()"/>
+            <field name="name" model="account.analytic.line" eval="obj().env.ref('product.product_hotel').get_product_multiline_description_sale()"/>
             <field name="account_id" search="[('partner_id', '=', ref('base.res_partner_4'))]"/>
             <field name="partner_id" ref="base.partner_demo"/>
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
             <field name="amount">-75.00</field>
-            <field name="product_id" ref="product.expense_hotel"/>
+            <field name="product_id" ref="product.product_hotel"/>
             <field name="product_uom_id" ref="uom.product_uom_day"/>
             <field name="unit_amount">1.00</field>
         </record>
