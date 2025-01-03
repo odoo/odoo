@@ -44,8 +44,10 @@ export class ChatHub extends Record {
         },
     });
 
-    closeAll() {
-        [...this.opened, ...this.folded].forEach((cw) => cw.close());
+    async closeAll() {
+        for (const cw of [...this.opened, ...this.folded]) {
+            await cw.close();
+        }
     }
 
     onRecompute() {

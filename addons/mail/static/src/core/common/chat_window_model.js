@@ -16,6 +16,7 @@ export class ChatWindow extends Record {
         return super.insert(...arguments);
     }
 
+    actionsDisabled = false;
     thread = Record.one("Thread");
     autofocus = 0;
     hidden = false;

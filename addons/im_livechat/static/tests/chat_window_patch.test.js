@@ -32,6 +32,7 @@ test("closing a chat window with no message from admin side unpins it", async ()
             Command.create({ partner_id: partnerId_2 }),
         ],
         channel_type: "livechat",
+        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");

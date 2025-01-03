@@ -2,12 +2,9 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
         <xpath expr="//*[@name='thread content']" position="replace">
-           <FeedbackPanel t-if="props.chatWindow.hasFeedbackPanel" onClickClose="() => this.close()" onClickNewSession="() => this.onClickNewSession()" thread="thread"/>
+           <FeedbackPanel t-if="props.chatWindow.livechatStep === CW_LIVECHAT_STEP.FEEDBACK" onClickClose="() => this.close()" onClickNewSession="() => this.onClickNewSession()" thread="thread"/>
            <t t-else="">
             <t>$0</t>
-            <t t-if="this.livechatState.showCloseConfirmation">
-                <CloseConfirmation onCloseConfirmationDialog.bind="onCloseConfirmationDialog" onClickLeaveConversation.bind="close"/>
-            </t>
            </t>
         </xpath>
         <xpath expr="//*[@t-ref='needactionCounter']" position="replace">

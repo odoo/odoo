@@ -98,6 +98,7 @@ test("livechats are sorted by last activity time in the sidebar: most recent at 
                 Command.create({ guest_id: guestId_1 }),
             ],
             channel_type: "livechat",
+            livechat_active: true,
             livechat_operator_id: serverState.partnerId,
         },
         {
@@ -110,6 +111,7 @@ test("livechats are sorted by last activity time in the sidebar: most recent at 
                 Command.create({ guest_id: guestId_2 }),
             ],
             channel_type: "livechat",
+            livechat_active: true,
             livechat_operator_id: serverState.partnerId,
         },
     ]);

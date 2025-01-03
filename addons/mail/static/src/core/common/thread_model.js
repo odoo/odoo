@@ -591,7 +591,9 @@ export class Thread extends Record {
     }
 
     async leave() {
-        await this.store.env.services.orm.call("discuss.channel", "action_unfollow", [this.id]);
+        await this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [
+            this.id,
+        ]);
     }
 
     /**

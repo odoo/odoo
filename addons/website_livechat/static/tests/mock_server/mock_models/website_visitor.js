@@ -36,6 +36,7 @@ export class WebsiteVisitor extends models.ServerModel {
                 anonymous_name: visitor_name,
                 channel_member_ids: membersToAdd,
                 channel_type: "livechat",
+                livechat_active: true,
                 livechat_operator_id: serverState.partnerId,
             });
             if (!visitor.partner_id) {
