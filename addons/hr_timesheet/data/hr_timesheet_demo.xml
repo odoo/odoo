@@ -3821,4 +3821,26 @@
         <field name="uom_id" ref="uom.product_uom_hour"/>
     </record>
 
+    <!-- Deletable embedded actions & associated filters -->
+    <record id="project_my_timesheets_embedded_action" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="name">My Timesheets</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="action_id" ref="hr_timesheet.act_hr_timesheet_line_by_project"/>
+        <field name="is_deletable">True</field>
+        <field name="parent_res_id" ref="project.project_project_1"/>
+        <field name="default_view_mode">list</field>
+        <field name="domain">[('allow_timesheets', '=', True)]</field>
+        <field name="groups_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_user'))]"/>
+    </record>
+    <record id="ir_filter_my_timesheets_tasks" model="ir.filters">
+        <field name="name">My Timesheets filter</field>
+        <field name="action_id" ref="hr_timesheet.act_hr_timesheet_line_by_project"/>
+        <field name="model_id">account.analytic.line</field>
+        <field name="domain">[("user_id", "=", uid)]</field>
+        <field name="embedded_action_id" ref="hr_timesheet.project_my_timesheets_embedded_action"/>
+        <field name="embedded_parent_res_id" ref="project.project_project_1"/>
+        <field name="is_default">True</field>
+    </record>
+
 </odoo>

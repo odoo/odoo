@@ -75,6 +75,7 @@ class TestEmbeddedActionsBase(TransactionCaseWithUserDemo):
             'parent_res_model': 'res.partner',
             'parent_action_id': self.parent_action.id,
             'action_id': self.action_2.id,
+            'is_deletable': True,
         })
         try:
             embedded_action_custo.unlink()
