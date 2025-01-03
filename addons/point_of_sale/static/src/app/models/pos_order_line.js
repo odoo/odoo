@@ -321,14 +321,18 @@ export class PosOrderline extends Base {
             // don't merge discounted orderlines
             this.get_discount() === 0 &&
             floatIsZero(price - order_line_price - orderline.get_price_extra(), this.currency) &&
-            !(
-                this.product_id.tracking === "lot" &&
-                (this.pickingType.use_create_lots || this.pickingType.use_existing_lots)
-            ) &&
+            !this.isLotTracked() &&
             this.full_product_name === orderline.full_product_name &&
             isSameCustomerNote &&
             !this.refunded_orderline_id &&
             !orderline.isPartOfCombo()
+        );
+    }
+
+    isLotTracked() {
+        return (
+            this.product_id.tracking === "lot" &&
+            (this.pickingType.use_create_lots || this.pickingType.use_existing_lots)
         );
     }
 
