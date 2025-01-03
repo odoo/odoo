@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from base64 import b64decode
-from cups import IPPError, IPP_PRINTER_IDLE, IPP_PRINTER_PROCESSING, IPP_PRINTER_STOPPED
+from cups import IPPError, IPP_PRINTER_IDLE, IPP_PRINTER_PROCESSING, IPP_PRINTER_STOPPED, CUPS_FORMAT_AUTO
 import dbus
 import io
 import logging
@@ -70,8 +70,8 @@ class PrinterDriver(Driver):
     def __init__(self, identifier, device):
         super(PrinterDriver, self).__init__(identifier, device)
         self.device_type = 'printer'
-        self.device_connection = device['device-class'].lower()
-        self.device_name = device['device-make-and-model']
+        self.device_connection = device['connection_type']
+        self.device_name = device['name']
         self.state = {
             'status': 'connecting',
             'message': 'Connecting to printer',
@@ -85,61 +85,37 @@ class PrinterDriver(Driver):
             '': self._action_default,
         })
 
-        self.receipt_protocol = 'star' if 'STR_T' in device['device-id'] else 'escpos'
+        self.receipt_protocol = 'star' if 'STR_T' in device['protocol'] else 'escpos'
 
-        if any(cmd in device['device-id'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']):
+        if any(cmd in device['protocol'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']):
             self.device_subtype = "receipt_printer"
-        elif any(cmd in device['device-id'] for cmd in ['COMMAND SET:ZPL;', 'CMD:ESCLABEL;']):
+        elif any(cmd in device['protocol'] for cmd in ['COMMAND SET:ZPL;', 'CMD:ESCLABEL;']):
             self.device_subtype = "label_printer"
         else:
             self.device_subtype = "office_printer"
-        if 'direct' in self.device_connection and any(cmd in device['device-id'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']):
+        if 'direct' in self.device_connection and any(cmd in device['protocol'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']):
             self.print_status()
 
     @classmethod
     def supported(cls, device):
-        if device.get('supported', False):
-            return True
-        protocol = ['dnssd', 'lpd', 'socket']
-        if (
-                any(x in device['url'] for x in protocol)
-                and device['device-make-and-model'] != 'Unknown'
-                or (
-                'direct' in device['device-class']
-                and 'serial=' in device['url']
-        )
-        ):
-            model = cls.get_device_model(device)
-            ppd_file = ''
-            for ppd in PPDs:
-                if model and model in PPDs[ppd]['ppd-product']:
-                    ppd_file = ppd
-                    break
-            with cups_lock:
-                if ppd_file:
-                    conn.addPrinter(name=device['identifier'], ppdname=ppd_file, device=device['url'])
-                else:
-                    conn.addPrinter(name=device['identifier'], device=device['url'])
+        model = cls.get_device_model(device)
+        ppd_param = next(({'ppdname':ppd} for ppd in PPDs if PPDs[ppd]['ppd-product'] == model), {})
+        with cups_lock:
+            conn.addPrinter(name=device['identifier'], device=device['url'], **ppd_param)
 
-                conn.setPrinterInfo(device['identifier'], device['device-make-and-model'])
-                conn.enablePrinter(device['identifier'])
-                conn.acceptJobs(device['identifier'])
-                conn.setPrinterUsersAllowed(device['identifier'], ['all'])
-                conn.addPrinterOptionDefault(device['identifier'], "usb-no-reattach", "true")
-                conn.addPrinterOptionDefault(device['identifier'], "usb-unidir", "true")
-            return True
-        return False
+            conn.enablePrinter(device['identifier'])
+            conn.acceptJobs(device['identifier'])
+            conn.setPrinterUsersAllowed(device['identifier'], ['all'])
+            conn.addPrinterOptionDefault(device['identifier'], "usb-no-reattach", "true")
+            conn.addPrinterOptionDefault(device['identifier'], "usb-unidir", "true")
+        return True
 
     @classmethod
     def get_device_model(cls, device):
-        device_model = ""
-        if device.get('device-id'):
-            for device_id in [device_lo for device_lo in device['device-id'].split(';')]:
-                if any(x in device_id for x in ['MDL', 'MODEL']):
-                    device_model = device_id.split(':')[1]
-                    break
-        elif device.get('device-make-and-model'):
-            device_model = device['device-make-and-model']
+        device_model = next(
+            (p_id.split(':')[1] for p_id in device['protocol'].split(';') if any(i in ['MDL', 'MODEL'] for i in p_id)),
+            device['identifier']
+        )
         return re.sub(r"[\(].*?[\)]", "", device_model).strip()
 
     @classmethod
@@ -180,27 +156,15 @@ class PrinterDriver(Driver):
         }
         event_manager.device_changed(self)
 
-    def print_raw(self, data, landscape=False, duplex=True):
+    def print_raw(self, document, uuid=None):
+        """Print raw data to the printer
+        :param document: the raw data to print
+        :param uuid: the id of the print job
         """
-        Print raw data to the printer
-        :param data: The data to print
-        :param landscape: Print in landscape mode (Default: False)
-        :param duplex: Print in duplex mode (recto-verso) (Default: True)
-        """
-        options = []
-        if landscape:
-            options.extend(['-o', 'orientation-requested=4'])
-        if not duplex:
-            options.extend(['-o', 'sides=one-sided'])
-        cmd = ["lp", "-d", self.device_identifier, *options]
-
-        _logger.debug("Printing using command: %s", cmd)
-        process = subprocess.Popen(cmd, stdin=subprocess.PIPE)
-        process.communicate(data)
-        if process.returncode != 0:
-            # The stderr isn't meaningful, so we don't log it ('No such file or directory')
-            _logger.error('Printing failed: printer with the identifier "%s" could not be found',
-                          self.device_identifier)
+        pid = conn.createJob(self.device_identifier, uuid or "Odoo print job",  {'document-format': CUPS_FORMAT_AUTO})
+        conn.startDocument(self.device_identifier, pid, uuid or "Odoo print job", CUPS_FORMAT_AUTO, 1)
+        conn.writeRequestData(document, len(document))
+        conn.finishDocument(self.device_identifier)
 
     def print_receipt(self, data):
         receipt = b64decode(data['receipt'])
@@ -398,7 +362,7 @@ class PrinterDriver(Driver):
             self.print_raw(drawer)
 
     def _action_default(self, data):
-        self.print_raw(b64decode(data['document']))
+        self.print_raw(document=b64decode(data['document']), uuid=data['print_id'])
         send_to_controller(self.connection_type, {'print_id': data['print_id'], 'device_identifier': self.device_identifier})
 
 
