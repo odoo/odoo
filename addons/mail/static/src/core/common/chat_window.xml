@@ -12,14 +12,14 @@
         t-on-keydown="onKeydown"
         tabindex="1"
     >
-        <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100 z-1 shadow-sm" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall and !state.actionsDisabled }">
+        <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100 z-1 shadow-sm" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall and !props.chatWindow.actionsDisabled }">
             <t t-if="hasActionsMenu">
                 <div class="d-flex text-truncate">
                     <Dropdown position="'left-start'" onStateChanged="isOpen => this.onActionsMenuStateChanged(isOpen)" menuClass="'d-flex flex-column py-0'">
                         <button
                             class="o-mail-ChatWindow-command o-actionsMenu btn rounded-0 d-flex align-items-center px-2 py-1 my-0 w-100 rounded-end-0"
                             t-att-class="{ 'rounded-top-3': !ui.isSmall, 'o-active': state.actionsMenuOpened, 'o-hover': actionsMenuButtonHover.isHover and !parentChannelHover.isHover }"
-                            t-att-disabled="state.editingName or state.actionsDisabled"
+                            t-att-disabled="state.editingName or props.chatWindow.actionsDisabled"
                             t-att-title="actionsMenuTitleText"
                             t-ref="actionsMenuButton"
                         >
@@ -116,7 +116,7 @@
 </t>
 
 <t t-name="mail.ChatWindow.quickAction">
-    <button class="o-mail-ChatWindow-command btn d-flex opacity-100-hover align-items-center" style="aspect-ratio: 1;" t-att-class="{ 'border border-secondary rounded-circle o-small p-2 my-1': ui.isSmall, 'opacity-25 p-1': !ui.isSmall }" t-attf-class="{{ itemClass }}" t-att-title="action.name" t-att-disabled="state.actionsDisabled" t-on-click.stop="() => action.onSelect()"><i t-att-class="ui.isSmall ? 'fa-lg' : ''" t-attf-class="{{ action.icon }}"/></button>
+    <button class="o-mail-ChatWindow-command btn d-flex opacity-100-hover align-items-center" style="aspect-ratio: 1;" t-att-class="{ 'border border-secondary rounded-circle o-small p-2 my-1': ui.isSmall, 'opacity-25 p-1': !ui.isSmall }" t-attf-class="{{ itemClass }}" t-att-title="action.name" t-att-disabled="props.chatWindow.actionsDisabled" t-on-click.stop="() => action.onSelect()"><i t-att-class="ui.isSmall ? 'fa-lg' : ''" t-attf-class="{{ action.icon }}"/></button>
 </t>
 
 <t t-name="mail.ChatWindow.dropdownAction">

@@ -60,6 +60,7 @@ test("Display livechat custom username if defined", async () => {
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
+        livechat_active: true,
         livechat_operator_id: serverState.partnerId,
     });
     await start();
@@ -84,6 +85,7 @@ test("Display livechat custom name in typing status", async () => {
             Command.create({ partner_id: serverState.partnerId }),
         ],
         channel_type: "livechat",
+        livechat_active: true,
         livechat_operator_id: partnerId,
     });
     await start();
