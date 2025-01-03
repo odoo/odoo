@@ -95,7 +95,7 @@
 
             <div t-if="['url', 'qr_code_and_url'].includes(props.data.headerData.company.point_of_sale_ticket_portal_url_display_mode) and props.data.pos_qr_code">
                 <div class="pos-receipt-order-data" t-attf-class="{{ props.data.ticket_portal_url_display_mode === 'qr_code_and_url' ? 'mt-3' : '' }}">
-                    Portal URL: <t t-out="props.data.base_url"/>/pos/ticket
+                    Portal URL: <t t-esc="getPortalURL()"/>
                 </div>
             </div>
 
