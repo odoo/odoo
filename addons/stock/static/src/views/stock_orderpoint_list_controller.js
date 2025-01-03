@@ -24,20 +24,14 @@ export class StockOrderpointListController extends ListController {
         if (action) {
             await this.actionService.doAction(action);
         }
-        return this.actionService.doAction('stock.action_replenishment', {
-            stackPosition: 'replaceCurrentAction',
-        });
+        return this.actionService.doAction({type: 'ir.actions.client', tag: 'reload'});
     }
 
     async onClickSnooze() {
         const resIds = await this.model.root.getResIds(true);
-        this.actionService.doAction('stock.action_orderpoint_snooze', {
+        return this.actionService.doAction('stock.action_orderpoint_snooze', {
             additionalContext: { default_orderpoint_ids: resIds },
-            onClose: () => {
-                this.actionService.doAction('stock.action_replenishment', {
-                    stackPosition: 'replaceCurrentAction',
-                });
-            }
+            onClose: () => { this.actionService.doAction({type: 'ir.actions.client', tag: 'reload'}); },
         });
     }
 }
