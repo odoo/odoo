@@ -678,7 +678,8 @@ export class CalendarModel extends Model {
         const { colorFieldName } = filterInfo;
         const shouldFetchColor =
             colorFieldName &&
-            `${fieldName}.${colorFieldName}` !== fields[fieldMapping.color].related;
+            (!fieldMapping.color ||
+                `${fieldName}.${colorFieldName}` !== fields[fieldMapping.color].related);
         let rawColors = [];
         if (shouldFetchColor) {
             const relatedIds = rawFilters.map(({ id }) => id);
