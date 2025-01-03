@@ -155,9 +155,24 @@ class PosSession(models.Model):
         data[0]['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
         data[0]['_has_available_products'] = self._pos_has_valid_product()
         data[0]['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
+        data[0]['_pos_product_view_setting'] = self._get_pos_product_view_setting()
         return {
             'data': data,
             'fields': fields
+        }
+    
+    @api.model
+    def save_product_view_setting(self, setting):
+        IrConfigParameter = self.env['ir.config_parameter'].sudo()
+        for key, value in setting.items():
+            IrConfigParameter.set_param(f'point_of_sale.{key}', value)
+
+    def _get_pos_product_view_setting(self):
+        IrConfigParameter = self.env['ir.config_parameter'].sudo()
+        settings = ['product_cover_mode', 'product_high_resolution']
+        return {
+            setting: IrConfigParameter.get_param(f'point_of_sale.{setting}', default=False)
+            for setting in settings
         }
 
     def load_data(self, models_to_load, only_data=False):

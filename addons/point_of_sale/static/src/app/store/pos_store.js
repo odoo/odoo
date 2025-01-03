@@ -137,6 +137,7 @@ export class PosStore extends Reactive {
         }
         this.closeOtherTabs();
         this.showScreen(this.firstScreen);
+        this.productViewSetting = this.session._pos_product_view_setting;
     }
 
     get firstScreen() {
@@ -496,6 +497,24 @@ export class PosStore extends Reactive {
         } else {
             return "flex-row-reverse justify-content-between m-1";
         }
+    }
+    toggleProductCoverMode() {
+        this.productViewSetting.product_cover_mode = !this.productViewSetting.product_cover_mode;
+        this.saveProductViewSetting();
+    }
+    toggleProductHighResolution() {
+        this.productViewSetting.product_high_resolution =
+            !this.productViewSetting.product_high_resolution;
+        this.saveProductViewSetting();
+    }
+    saveProductViewSetting() {
+        this.data.call("pos.session", "save_product_view_setting", [this.productViewSetting]);
+    }
+    get productCoverMode() {
+        return this.productViewSetting.product_cover_mode;
+    }
+    get productHighResolution() {
+        return this.productViewSetting.product_high_resolution;
     }
     getProductPriceFormatted(product, p) {
         const formattedUnitPrice = this.env.utils.formatCurrency(this.getProductPrice(product, p));

@@ -11,7 +11,7 @@
             <div t-if="props.productInfo" class="product-information-tag" t-on-click.stop="props.onProductInfoClick" t-att-class="{'red-tag' : props.showWarning}">
                 <i class="product-information-tag-logo fa fa-info" role="img" aria-label="Product Information" title="Product Information" />
             </div>
-            <div t-if="props.imageUrl" class="product-img">
+            <div t-if="props.imageUrl" t-attf-class="{{props.imageFitMode === 'contain' ? 'object-contain' : 'object-cover'}} product-img">
                 <img class="w-100" t-att-src="props.imageUrl" t-att-alt="props.name" />
             </div>
             <div class="product-content d-flex flex-column justify-content-between h-100 mx-2 py-1">

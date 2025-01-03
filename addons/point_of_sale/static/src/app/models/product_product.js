@@ -185,18 +185,20 @@ export class ProductProduct extends Base {
         const rules = !pricelist ? [] : this.cachedPricelistRules[pricelist?.id] || [];
         return rules.find((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
     }
-    getImageUrl() {
+    getImageUrl(high_resolution = false) {
+        const imageField = high_resolution ? "image_256" : "image_128";
         return (
             (this.image_128 &&
-                `/web/image?model=product.product&field=image_128&id=${this.id}&unique=${this.write_date}`) ||
+                `/web/image?model=product.product&field=${imageField}&id=${this.id}&unique=${this.write_date}`) ||
             ""
         );
     }
 
-    getTemplateImageUrl() {
+    getTemplateImageUrl(high_resolution = false) {
+        const imageField = high_resolution ? "image_256" : "image_128";
         return (
             (this.image_128 &&
-                `/web/image?model=product.template&field=image_128&id=${this.raw.product_tmpl_id}&unique=${this.write_date}`) ||
+                `/web/image?model=product.template&field=${imageField}&id=${this.raw.product_tmpl_id}&unique=${this.write_date}`) ||
             ""
         );
     }

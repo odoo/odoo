@@ -297,7 +297,7 @@ export class ProductScreen extends Component {
     }
 
     getProductImage(product) {
-        return product.getTemplateImageUrl();
+        return product.getTemplateImageUrl(this.pos.productHighResolution);
     }
 
     get searchWord() {

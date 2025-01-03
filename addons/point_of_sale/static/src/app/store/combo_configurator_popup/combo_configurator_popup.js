@@ -132,4 +132,8 @@ export class ComboConfiguratorPopup extends Component {
         this.props.getPayload(this.getSelectedComboLines());
         this.props.close();
     }
+
+    get showHighResolutionImages() {
+        return this.pos.showHighResolutionImages;
+    }
 }

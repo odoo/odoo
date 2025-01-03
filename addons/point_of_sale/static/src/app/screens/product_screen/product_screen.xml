@@ -34,7 +34,8 @@
                             imageUrl="pos.config.show_product_images and this.getProductImage(product)"
                             onClick.bind="() => this.addProductToOrder(product)"
                             productInfo="true"
-                            onProductInfoClick.bind="() => this.onProductInfoClick(product)" />
+                            onProductInfoClick.bind="() => this.onProductInfoClick(product)"
+                            imageFitMode="pos.productCoverMode ? 'cover' : 'contain'" />
                     </div>
                     <div t-else="" class="flex-grow-1 text-center mt-5">
                         <p t-if="searchWord">No products found for <b>"<t t-esc="searchWord"/>"</b> in this category.</p>

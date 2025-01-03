@@ -14,11 +14,13 @@ export class ProductCard extends Component {
         onClick: { type: Function, optional: true },
         onProductInfoClick: { type: Function, optional: true },
         showWarning: { type: Boolean, optional: true },
+        imageFitMode: { type: String, optional: true },
     };
     static defaultProps = {
         onClick: () => {},
         onProductInfoClick: () => {},
         class: "",
         showWarning: false,
+        imageFitMode: "contain",
     };
 }

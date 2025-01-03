@@ -53,6 +53,14 @@
                         <DropdownItem t-if="this.env.debug" onSelected="() => debug.toggleWidget()">
                             Debug Window
                         </DropdownItem>
+                        <DropdownItem t-if="this.env.debug" onSelected="() => pos.toggleProductCoverMode()">
+                            <t t-if="pos.productCoverMode">Fit Image Inside</t>
+                            <t t-else="">Fill Image to Edges</t>
+                        </DropdownItem>
+                        <DropdownItem t-if="this.env.debug" onSelected="() => pos.toggleProductHighResolution()">
+                            <t t-if="pos.productHighResolution">Show Low Resolution Images</t>
+                            <t t-else="">Show High Resolution Images</t>
+                        </DropdownItem>
                     </t>
                 </Dropdown>
             </div>
