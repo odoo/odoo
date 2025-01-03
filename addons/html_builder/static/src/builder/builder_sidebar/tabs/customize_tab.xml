@@ -11,7 +11,12 @@
         <t t-else="">
             <div t-ref="content">
                 <t t-foreach="props.currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
-                    <OptionsContainer editingElement="optionsContainer.element" options="optionsContainer.options"/>
+                    <OptionsContainer
+                        editingElement="optionsContainer.element"
+                        options="optionsContainer.options"
+                        isRemovable="optionsContainer.isRemovable"
+                        removeElement.bind="removeElement"
+                        cloneElement.bind="cloneElement"/>
                 </t>
             </div>
         </t>

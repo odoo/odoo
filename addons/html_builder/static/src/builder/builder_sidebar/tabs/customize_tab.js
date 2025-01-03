@@ -20,4 +20,12 @@ export class CustomizeTab extends Component {
             this.state.hasContent = hasContent;
         });
     }
+
+    removeElement(el) {
+        this.env.editor.shared.remove.removeElement(el);
+    }
+
+    cloneElement(el) {
+        this.env.editor.shared.clone.cloneElement(el);
+    }
 }

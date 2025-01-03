@@ -358,7 +358,7 @@ test("no need to define 'isActive' method for custom action if the widget alread
         a
         </div>`);
     await contains(":iframe .s_test").click();
-    expect(".options-container button").toHaveText("Info");
+    expect(".options-container .we-bg-options-container button").toHaveText("Info");
 });
 
 describe("dependencies", () => {

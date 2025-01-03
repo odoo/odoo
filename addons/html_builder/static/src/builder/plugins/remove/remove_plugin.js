@@ -24,7 +24,7 @@ const unremovableNodePredicates = [
     (node) => node.matches(unremovableSelectors),
 ];
 
-function isRemovable(el) {
+export function isRemovable(el) {
     return !unremovableNodePredicates.some((p) => p(el));
 }
 
@@ -36,6 +36,7 @@ export class RemovePlugin extends Plugin {
     resources = {
         get_overlay_buttons: this.getActiveOverlayButtons.bind(this),
     };
+    static shared = ["removeElement"];
 
     setup() {
         this.target = null;
@@ -52,7 +53,7 @@ export class RemovePlugin extends Plugin {
         buttons.push({
             class: "oe_snippet_remove bg-danger fa fa-trash",
             handler: () => {
-                this.removeElement();
+                this.removeCurrentTarget();
                 this.dependencies.history.addStep();
             },
         });
@@ -88,7 +89,13 @@ export class RemovePlugin extends Plugin {
         );
     }
 
-    removeElement() {
+    removeElement(el) {
+        this.dispatchTo("update_containers", el);
+        this.removeCurrentTarget();
+        this.dependencies.history.addStep();
+    }
+
+    removeCurrentTarget() {
         // Get the elements having options containers.
         let optionsTargetEls = this.getOptionsContainersElements();
 
@@ -148,7 +155,7 @@ export class RemovePlugin extends Plugin {
             this.dispatchTo("update_containers", parentEl);
             optionsTargetEls = this.getOptionsContainersElements();
             if (this.isEmptyAndRemovable(parentEl, optionsTargetEls)) {
-                this.removeElement();
+                this.removeCurrentTarget();
             }
         }
 

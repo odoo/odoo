@@ -25,6 +25,7 @@ import { useSetupAction } from "@web/search/action_hook";
 import { BuilderActionsPlugin } from "../plugins/builder_actions_plugin";
 import { BuilderOptionsPlugin } from "../plugins/builder_options_plugin";
 import { BuilderOverlayPlugin } from "../plugins/builder_overlay/builder_overlay_plugin";
+import { ClonePlugin } from "../plugins/clone/clone_plugin";
 import { DropZonePlugin } from "../plugins/drop_zone_plugin";
 import { DropZoneSelectorPlugin } from "../plugins/dropzone_selector_plugin";
 import { GridLayoutPlugin } from "../plugins/grid_layout/grid_layout_plugin";
@@ -53,6 +54,7 @@ const BUILDER_PLUGIN = [
     GridLayoutPlugin,
     ReplacePlugin,
     RemovePlugin,
+    ClonePlugin,
     DropZonePlugin,
     MediaWebsitePlugin,
     SetupEditorPlugin,

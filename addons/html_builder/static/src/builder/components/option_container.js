@@ -10,6 +10,9 @@ export class OptionsContainer extends Component {
     static props = {
         options: { type: Array },
         editingElement: true, // HTMLElement from iframe
+        isRemovable: false,
+        removeElement: { type: Function },
+        cloneElement: { type: Function },
     };
 
     setup() {
@@ -24,5 +27,14 @@ export class OptionsContainer extends Component {
 
     get title() {
         return getSnippetName(this.env.getEditingElement());
+    }
+
+    // Actions of the buttons in the title bar.
+    removeElement() {
+        this.props.removeElement(this.props.editingElement);
+    }
+
+    cloneElement() {
+        this.props.cloneElement(this.props.editingElement);
     }
 }

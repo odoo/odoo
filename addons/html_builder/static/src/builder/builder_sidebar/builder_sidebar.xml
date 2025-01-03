@@ -30,7 +30,7 @@
                 <BlockTab snippetModel="snippetModel" installSnippetModule.bind="installSnippetModule"/>
             </t>
             <t t-if="state.activeTab === 'customize'">
-                <CustomizeTab currentOptionsContainers="state.currentOptionsContainers" />
+                <CustomizeTab currentOptionsContainers="state.currentOptionsContainers"/>
             </t>
             <t t-if="state.activeTab === 'theme'">
                 theme

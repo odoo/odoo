@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
+import { isRemovable } from "./remove/remove_plugin";
 
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builder-options";
@@ -61,6 +62,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 id: previousElementToIdMap.get(element) || uniqueId(),
                 element,
                 options,
+                isRemovable: isRemovable(element),
             }));
         this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
     }
