@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 from odoo import _, api, Command, fields, models
-from odoo.tools import OrderedSet, float_is_zero
+from odoo.tools import OrderedSet, float_round
 from odoo.exceptions import ValidationError
 
 
@@ -215,6 +215,26 @@ class StockMove(models.Model):
             not self.env.context.get('skip_mark_picked') \
             and self.uom_id.compare(self.product_uom_qty, self.quantity) != 0:
             self.picked = True
+        return self._onchange_quantity_warning()
+
+    @api.onchange('uom_id')
+    def _onchange_quantity_warning(self):
+        if self.product_id.tracking != 'serial':
+            return
+        product_uom = self.product_id.uom_id
+        quantity = self.uom_id._compute_quantity(self.quantity, product_uom)
+        rounded_quantity = float_round(quantity, precision_digits=0, rounding_method='UP')
+        if not product_uom.compare(quantity, rounded_quantity):
+            return
+        self.quantity = product_uom._compute_quantity(
+            rounded_quantity, self.uom_id, rounding_method='UP')
+        return {
+            'warning': {
+                'title': self.env._("Fractional quantity"),
+                'message': self.env._("Products tracked by serial numbers cannot be produced in fractional amounts."
+                                      " The quantity has been rounded up."),
+            }
+        }
 
     @api.constrains('quantity', 'raw_material_production_id')
     def _check_negative_quantity(self):
