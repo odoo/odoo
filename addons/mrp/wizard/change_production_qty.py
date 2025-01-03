@@ -25,6 +25,21 @@ class ChangeProductionQty(models.TransientModel):
             res['product_qty'] = self.env['mrp.production'].browse(res['mo_id']).product_qty
         return res
 
+    @api.onchange('product_qty')
+    def _onchange_quantity_warning(self):
+        if self.mo_id.product_tracking != 'serial':
+            return
+        whole_qty = self.mo_id.product_id._get_whole_serial_quantity(self.product_qty, self.mo_id.uom_id)
+        if self.mo_id.uom_id.compare(whole_qty, self.product_qty):
+            self.product_qty = whole_qty
+            return {
+                'warning': {
+                    'title': self.env._("Fractional quantity"),
+                    'message': self.env._("Products tracked by serial numbers cannot be produced in fractional amounts."
+                                          " The quantity has been rounded up."),
+                }
+            }
+
     @api.model
     def _update_finished_moves(self, production, new_qty, old_qty):
         """ Update finished product and its byproducts. This method only update
@@ -60,6 +75,8 @@ class ChangeProductionQty(models.TransientModel):
             production = wizard.mo_id
             old_production_qty = production.product_qty
             new_production_qty = wizard.product_qty
+            if production.product_tracking == 'serial':
+                new_production_qty = production.product_id._get_whole_serial_quantity(new_production_qty, production.uom_id)
 
             factor = new_production_qty / old_production_qty
             update_info = production._update_raw_moves(factor)
