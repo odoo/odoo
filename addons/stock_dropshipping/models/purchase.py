@@ -22,3 +22,10 @@ class PurchaseOrder(models.Model):
 
     def action_view_dropship(self):
         return self._get_action_view_picking(self.picking_ids.filtered(lambda p: p.is_dropship))
+
+    def _prepare_group_vals(self):
+        res = super()._prepare_group_vals()
+        sale_orders = self.order_line.sale_order_id
+        if len(sale_orders) == 1:
+            res['sale_id'] = sale_orders.id
+        return res
