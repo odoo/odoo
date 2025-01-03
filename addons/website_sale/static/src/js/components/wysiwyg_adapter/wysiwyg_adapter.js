@@ -9,7 +9,7 @@ patch(WysiwygAdapterComponent.prototype, {
         await super.init(...arguments);
 
         let ribbons = [];
-        if (this._isProductListPage()) {
+        if (this._isProductListPageOrProductPage()) {
             ribbons = await this.orm.searchRead(
                 'product.ribbon',
                 [['assign', '=', 'manual']],
@@ -45,7 +45,7 @@ patch(WysiwygAdapterComponent.prototype, {
      * @private
      */
     async _saveRibbons() {
-        if (!this._isProductListPage()) {
+        if (!this._isProductListPageOrProductPage()) {
             return;
         }
         const originalIds = Object.keys(this.originalRibbons).map(id => parseInt(id));
@@ -124,8 +124,10 @@ patch(WysiwygAdapterComponent.prototype, {
      *
      * @private
      */
-    _isProductListPage() {
-        return this.options.editable && this.options.editable.find('#products_grid').length !== 0;
+    _isProductListPageOrProductPage() {
+        return (this.options.editable
+        && (this.options.editable.find('#products_grid').length !== 0
+        || this.options.editable.find('#product_detail').length !== 0));
     },
 
     //--------------------------------------------------------------------------

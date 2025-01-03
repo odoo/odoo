@@ -15,24 +15,12 @@ class ProductRibbon(models.Model):
         ondelete={'out_of_stock': 'cascade'}
     )
 
-    @api.constrains('assign')
-    def _check_assign(self):
-        super()._check_assign()
-        for record in self:
-            if record.assign in ['out_of_stock']:
-                existing_ribbons = self.search([
-                    ('id', '!=', record.id),
-                    ('assign', '=', record.assign)
-                ], limit=1)
-                if existing_ribbons:
-                    raise ValidationError(
-                        _(
-                            "Only one record with the assign %s is allowed." ,
-                            dict(self._fields['assign'].selection).get(record.assign)
-                        )
-                    )
+    def _get_automatic_assigns(self):
+        return super()._get_automatic_assigns() + ['out_of_stock']
 
     def _match_assign(self, product, product_prices):
-        if self.assign == 'out_of_stock':
-            return product._is_sold_out()
-        return super()._match_assign(product, product_prices)
+        is_assign_out_of_stock = (
+            self.assign == 'out_of_stock'
+            and product._is_sold_out()
+        )
+        return  is_assign_out_of_stock or super()._match_assign(product, product_prices)
