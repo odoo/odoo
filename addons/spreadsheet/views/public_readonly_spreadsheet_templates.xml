@@ -15,7 +15,7 @@
                 <div t-out="spreadsheet_name" class="text-primary fw-bold ps-3"/>
                 <div class="fst-italic flex-fill ps-3">
                     Frozen and copied on <span t-field="share.create_date"/>
-                    <div class="d-inline-flex">
+                    <div class="d-inline-flex" t-if="props['downloadExcelUrl']">
                         <a class="btn btn-secondary btn-block o_download_btn" t-att-href="props['downloadExcelUrl']" title="Download"><i class="fa fa-download"/></a>
                     </div>
                 </div>
