@@ -13,7 +13,7 @@ from odoo import api, fields, models, _
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import float_is_zero, SQL, format_datetime
+from odoo.tools import SQL, float_is_zero, float_round, format_datetime
 from odoo.tools.misc import OrderedSet, format_date, groupby as tools_groupby, topological_sort
 
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
@@ -1021,6 +1021,36 @@ class MrpProduction(models.Model):
     @api.onchange('qty_producing')
     def _onchange_qty_producing(self):
         self._change_producing()
+        return self._onchange_quantity_warning()
+
+    @api.onchange('product_id', 'product_qty', 'uom_id')
+    def _onchange_quantity_warning(self):
+        if self.product_id.tracking != 'serial':
+            return
+        product_uom = self.product_id.uom_id
+
+        quantity_to_produce = self.uom_id._compute_quantity(self.product_qty, product_uom)
+        rounded_quantity_to_produce = float_round(quantity_to_produce, precision_digits=0, rounding_method='UP')
+        if wrong_quantity_to_produce := product_uom.compare(
+                quantity_to_produce, rounded_quantity_to_produce):
+            self.product_qty = product_uom._compute_quantity(
+                rounded_quantity_to_produce, self.uom_id, rounding_method='UP')
+
+        quantity_producing = self.uom_id._compute_quantity(self.qty_producing, product_uom)
+        rounded_quantity_producing = float_round(quantity_producing, precision_digits=0, rounding_method='UP')
+        if wrong_quantity_producing := product_uom.compare(
+                quantity_to_produce, rounded_quantity_to_produce):
+            self.qty_producing = product_uom._compute_quantity(
+                rounded_quantity_producing, self.uom_id, rounding_method='UP')
+
+        if wrong_quantity_to_produce or wrong_quantity_producing:
+            return {
+                'warning': {
+                    'title': self.env._("Fractional quantity"),
+                    'message': self.env._("Products tracked by serial numbers cannot be produced in fractional amounts."
+                                          " The quantity has been rounded up."),
+                }
+            }
 
     @api.onchange('lot_producing_ids')
     def _onchange_lot_producing(self):
@@ -1922,6 +1952,8 @@ class MrpProduction(models.Model):
                 # If there's no BoM, we simply rely on the quantity specified by the user.
                 if not order.bom_id:
                     expected_qty = bomless_factor * move.product_uom_qty
+                    if move.product_id.tracking == 'serial':
+                        expected_qty = float_round(expected_qty, precision_digits=0, rounding_method='UP')
                 # The extra moves could be originally added by the BoM (but later removed and readded) or completely
                 # foreign. If it's the former, we need to try some heuristics to match them with BoM lines with no
                 # corresponding moves. For now, we simply check whether the move has the same UoM and product id as
