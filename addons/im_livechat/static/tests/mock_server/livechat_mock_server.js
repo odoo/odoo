@@ -70,6 +70,7 @@ async function get_session(request) {
             chatbot_current_step_id: channelVals.chatbot_current_step_id,
             id: -1,
             isLoaded: true,
+            livechat_active: true,
             livechat_operator_id: mailDataHelpers.Store.one(
                 ResPartner.browse(channelVals.livechat_operator_id),
                 makeKwArgs({ fields: ["user_livechat_username", "write_date"] })
@@ -104,11 +105,11 @@ async function visitor_leave_session(request) {
     const DiscussChannel = this.env["discuss.channel"];
 
     const { channel_id } = await parseRequestParams(request);
-    const channel = DiscussChannel.search_read([["id", "=", channel_id]]);
+    const [channel] = DiscussChannel.search_read([["id", "=", channel_id]]);
     if (!channel) {
         return;
     }
-    DiscussChannel._close_livechat_session(channel);
+    DiscussChannel._close_livechat_session(channel_id);
 }
 registerRoute("/im_livechat/feedback", feedback);
 /** @type {RouteCallback} */

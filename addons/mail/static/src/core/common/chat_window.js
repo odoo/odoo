@@ -50,7 +50,6 @@ export class ChatWindow extends Component {
         this.messageHighlight = useMessageHighlight();
         this.messageToReplyTo = useMessageToReplyTo();
         this.state = useState({
-            actionsDisabled: false,
             actionsMenuOpened: false,
             jumpThreadPresent: 0,
             editingGuestName: false,
@@ -136,7 +135,7 @@ export class ChatWindow extends Component {
     }
 
     onClickHeader() {
-        if (this.ui.isSmall || this.state.editingName || this.state.actionsDisabled) {
+        if (this.ui.isSmall || this.state.editingName || this.props.chatWindow.actionsDisabled) {
             return;
         }
         this.toggleFold();

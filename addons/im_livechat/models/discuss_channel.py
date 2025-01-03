@@ -19,7 +19,7 @@ class DiscussChannel(models.Model):
     anonymous_name = fields.Char('Anonymous Name')
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')], ondelete={'livechat': 'cascade'})
     duration = fields.Float('Duration', compute='_compute_duration', help='Duration of the session in hours')
-    livechat_active = fields.Boolean('Is livechat ongoing?', help='Livechat session is active until visitor leaves the conversation.')
+    livechat_active = fields.Boolean('Is livechat ongoing?', help='Livechat session is active until visitor or operator leaves the conversation.')
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel', index='btree_not_null')
     livechat_operator_id = fields.Many2one('res.partner', string='Operator', index='btree_not_null')
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
@@ -52,6 +52,7 @@ class DiscussChannel(models.Model):
         fields = [
             "anonymous_name",
             "chatbot_current_step",
+            "livechat_active",
             Store.One("country_id", ["code", "name"], rename="anonymous_country"),
             self._field_store_repr("livechat_operator_id"),
         ]
@@ -123,6 +124,7 @@ class DiscussChannel(models.Model):
                 member.sudo()._rtc_leave_call()
             # sudo: discuss.channel - visitor left the conversation, state must be updated
             self.sudo().livechat_active = False
+            self.sudo()._bus_send_store(Store(self, "livechat_active"))
             # avoid useless notification if the channel is empty
             if not self.message_ids:
                 return
@@ -255,3 +257,10 @@ class DiscussChannel(models.Model):
 
     def _types_allowing_unfollow(self):
         return super()._types_allowing_unfollow() + ["livechat"]
+
+    def _action_unfollow(self, partner=None, guest=None):
+        if partner and self.channel_type == "livechat" and len(self.channel_member_ids) <= 2:
+            # sudo: discuss.channel - last operator left the conversation, state must be updated
+            self.sudo().livechat_active = False
+            self._bus_send_store(Store(self, "livechat_active"))
+        super()._action_unfollow(partner, guest)
