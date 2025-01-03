@@ -93,7 +93,10 @@ patch(MessagingMenu.prototype, {
             displayName: _t("Turn on notifications"),
             iconSrc: this.store.odoobot.avatarUrl,
             partner: this.store.odoobot,
-            isShown: this.store.discuss.activeTab === "main" && this.shouldAskPushPermission,
+            isShown:
+                this.store.discuss.activeTab === "main" &&
+                this.shouldAskPushPermission &&
+                !this.store.isNotificationPermissionDismissed,
         };
     },
     get tabs() {
