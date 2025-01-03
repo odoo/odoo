@@ -57,3 +57,15 @@ class SaleOrderLine(models.Model):
             for line in self:
                 if line.purchase_line_count > 0:
                     line.product_updatable = False
+
+    def _purchase_service_prepare_order_values(self, supplierinfo):
+        res = super()._purchase_service_prepare_order_values(supplierinfo)
+        dropship_operation = self.env['stock.picking.type'].search([
+            ('company_id', '=', res['company_id']),
+            ('default_location_src_id.usage', '=', 'supplier'),
+            ('default_location_dest_id.usage', '=', 'customer'),
+        ], limit=1, order='sequence')
+        if dropship_operation:
+            res['dest_address_id'] = self.order_id.partner_shipping_id.id
+            res['picking_type_id'] = dropship_operation.id
+        return res
