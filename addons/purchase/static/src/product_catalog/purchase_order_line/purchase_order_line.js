@@ -8,6 +8,7 @@ export class ProductCatalogPurchaseOrderLine extends ProductCatalogOrderLine {
         packaging: { type: Object, optional: true },
         purchase_uom: { type: Object, optional: true },
         uom: Object,
+        last_invoice_date: { type: 'datetime', optional: true },
     };
 
     get highlightUoM() {

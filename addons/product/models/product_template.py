@@ -550,6 +550,16 @@ class ProductTemplate(models.Model):
             domain = combine([domain, [('product_variant_ids', operator, value)]])
         return domain
 
+    def get_prioritized_product(self, journal_type=''):
+        res = self.env['account.move'].search([
+            ('partner_id', '=', self.env.context.get('partner_id')),
+            ('state', '=', 'posted'),
+            ('journal_id.type', '=', journal_type)
+        ]).sorted('invoice_date', reverse=True).mapped('invoice_line_ids.product_id')
+        if self.env.context.get('is_product_id'):
+            return res
+        return res.mapped('product_tmpl_id')
+
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         # Only use the product.product heuristics if there is a search term and the domain

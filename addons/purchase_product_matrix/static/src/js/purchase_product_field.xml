@@ -16,4 +16,10 @@
         </xpath>
     </t>
 
+    <t t-name="purchase_product_matrix.ProductLabelSectionAutocomplete" t-inherit="web.AutoComplete">
+        <xpath expr="//a[@class='dropdown-item ui-menu-item-wrapper text-truncate']" position="attributes">
+            <attribute name="t-att-class">{'text-info': isPrioritized(option_index)}</attribute>
+        </xpath>
+    </t>
+
 </templates>

@@ -15,5 +15,13 @@
                 </span>
             </span>
         </xpath>
+        <xpath expr="//div[hasclass('o_product_catalog_quantity')]" position="after">
+            <div t-elif="!isInOrder() and props.last_invoice_date">
+                <span class="text-muted text-info">
+                    <i class="fa fa-clock-o"></i> Last:
+                    <t t-esc="props.last_invoice_date"/>
+                </span>
+            </div>
+        </xpath>
     </t>
 </templates>

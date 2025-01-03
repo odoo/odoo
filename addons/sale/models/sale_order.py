@@ -2076,12 +2076,27 @@ class SaleOrder(models.Model):
             **kwargs,
         )
         res = super()._get_product_catalog_order_data(products, **kwargs)
+
+        invoices = self.env['account.move'].search([
+            ('partner_id', '=', self.partner_id.id),
+            ('state', '=', 'posted'),
+            ('journal_id.type', '=', 'sale'),
+            ('invoice_line_ids.product_id', 'in', products.ids),
+        ])
+
+        last_invoice_dates = {}
+        for product in products:
+            product_invoices = invoices.filtered(lambda inv: product.id in inv.invoice_line_ids.mapped('product_id').ids)
+            last_invoice_date = max(product_invoices.mapped('invoice_date'), default=False)
+            last_invoice_dates[product.id] = last_invoice_date.strftime("%m/%d/%y") if last_invoice_date else False
+
         for product in products:
             res[product.id]['price'] = pricelist.get(product.id)
             if product.sale_line_warn != 'no-message' and product.sale_line_warn_msg:
                 res[product.id]['warning'] = product.sale_line_warn_msg
             if product.sale_line_warn == "block":
                 res[product.id]['readOnly'] = True
+            res[product.id]['last_invoice_date'] = last_invoice_dates.get(product.id)
         return res
 
     def _get_product_catalog_record_lines(self, product_ids, **kwargs):

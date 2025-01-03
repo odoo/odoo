@@ -1248,7 +1248,10 @@ class SaleOrderLine(models.Model):
     @api.readonly
     def action_add_from_catalog(self):
         order = self.env['sale.order'].browse(self.env.context.get('order_id'))
-        return order.with_context(child_field='order_line').action_add_from_catalog()
+        res = order.with_context(child_field='order_line').action_add_from_catalog()
+        kanban_view_id = self.env.ref('sale.product_view_kanban_catalog_sale_only').id
+        res['views'][0] = (kanban_view_id, 'kanban')
+        return res
 
     #=== BUSINESS METHODS ===#
 

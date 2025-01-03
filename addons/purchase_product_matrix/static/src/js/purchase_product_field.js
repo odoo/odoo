@@ -7,9 +7,14 @@ import { useRecordObserver } from "@web/model/relational_model/utils";
 import {
     ProductLabelSectionAndNoteField
 } from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field";
+import { PurchaseProductLabelSectionFieldAutocomplete } from "@purchase/components/product_label_section/product_label_section";
 
 export class PurchaseOrderLineProductField extends ProductLabelSectionAndNoteField {
     static template = "purchase.PurchaseProductField";
+    static components = {
+        ...ProductLabelSectionAndNoteField.components,
+        Many2XAutocomplete: PurchaseProductLabelSectionFieldAutocomplete,
+    };
     setup() {
         super.setup();
         this.dialog = useService("dialog");
