@@ -13,7 +13,7 @@
             <xpath expr="//field[@name='vat']" position="replace">
                 <field name="l10n_latam_identification_type_id" options="{'no_open': True, 'no_create': True}" placeholder="Type" class="oe_inline" domain="country_id and ['|', ('country_id', '=', False), ('country_id', '=', country_id)] or []" required="True" readonly="parent_id"/>
                 <span class="oe_read_only"> - </span>
-                <field name="vat" placeholder="Number" class="oe_inline" readonly="parent_id"/>
+                <field name="vat" placeholder="Number" class="oe_inline" readonly="parent_id" required="l10n_latam_identification_type_id"/>
             </xpath>
         </field>
     </record>
