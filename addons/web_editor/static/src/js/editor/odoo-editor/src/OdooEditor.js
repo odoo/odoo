@@ -1859,6 +1859,26 @@ export class OdooEditor extends EventTarget {
         return didDeselectTable;
     }
 
+    deselectHr(isTableSelected = false) {
+        const selection = this.document.getSelection();
+        if (selection && !selection.isCollapsed && !isTableSelected) {
+            return;
+        }
+        this.observerUnactive("deselectHr");
+        let didDeselectHr = false;
+        for (const hr of this.editable.querySelectorAll(".o_selected_hr")) {
+            const nearestTd = isTableSelected && closestElement(hr, ".o_selected_td");
+            if (!isTableSelected || nearestTd) {
+                hr.classList.remove("o_selected_hr");
+                if (!hr.classList.length) {
+                    hr.removeAttribute("class");
+                }
+                didDeselectHr = true;
+            }
+        }
+        this.observerActive("deselectHr");
+        return didDeselectHr;
+    }
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -2430,6 +2450,17 @@ export class OdooEditor extends EventTarget {
         this.observerActive('_stopContenteditable');
     }
 
+    _handleSelectionInHr() {
+        const traversedNodes = getTraversedNodes(this.editable);
+        let isHrSelected = false;
+        for (const node of traversedNodes) {
+            if (node.nodeName === "HR") {
+                node.setAttribute("class", "o_selected_hr");
+                isHrSelected = true;
+            }
+        }
+        return isHrSelected;
+    }
     // TABLE MANAGEMENT
     // ================
 
@@ -4025,6 +4056,13 @@ export class OdooEditor extends EventTarget {
             if (!appliedCustomSelection) {
                 this.deselectTable();
             }
+        }
+        let appliedCustomHrSelection = false;
+        if (!selection.isCollapsed) {
+            appliedCustomHrSelection = this._handleSelectionInHr();
+        }
+        if (!appliedCustomHrSelection || appliedCustomSelection) {
+            this.deselectHr(appliedCustomSelection);
         }
         const isSelectionInEditable = this.isSelectionInEditable(selection);
         if (!appliedCustomSelection) {
