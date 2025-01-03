@@ -293,3 +293,57 @@ class TestDropship(common.TransactionCase):
         self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
         self.assertTrue((purchase.date_planned - purchase.date_order).days == 10, "The first supplier has a delay of 10 days")
         self.assertTrue(purchase.amount_untaxed == 8, "The price should be 4 * 2")
+
+    def test_add_dropship_product_to_subcontracted_service_po(self):
+        """
+        P1, a service product subcontracted to vendor V
+        P2, a dropshipped product provided by V
+        Confirm a SO with 1 x P1. On the generated PO, add 1 x P2 and confirm.
+        It should create a dropship picking. Process the picking. It should add
+        one SOL for P2.
+        """
+        supplier = self.dropship_product.seller_ids.partner_id
+        delivery_addr = self.env['res.partner'].create({
+            'name': 'Super Address',
+            'type': 'delivery',
+            'parent_id': self.customer.id,
+        })
+
+        subcontracted_service = self.env['product.product'].create({
+            'name': 'SuperService',
+            'type': 'service',
+            'service_to_purchase': True,
+            'seller_ids': [(0, 0, {'partner_id': supplier.id})],
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'partner_shipping_id': delivery_addr.id,
+            'order_line': [(0, 0, {
+                'product_id': subcontracted_service.id,
+                'product_uom_qty': 1.00,
+            })],
+        })
+        so.action_confirm()
+        po = so._get_purchase_orders()
+        self.assertTrue(po)
+
+        po.order_line = [(0, 0, {
+            'product_id': self.dropship_product.id,
+            'product_qty': 1.00,
+            'product_uom_id': self.dropship_product.uom_id.id,
+        })]
+        po.button_confirm()
+        dropship = po.picking_ids
+        self.assertTrue(dropship.is_dropship)
+        self.assertRecordValues(dropship.move_ids, [
+            {'product_id': self.dropship_product.id, 'partner_id': delivery_addr.id},
+        ])
+
+        dropship.move_ids.quantity = 1
+        dropship.button_validate()
+        self.assertEqual(dropship.state, 'done')
+        self.assertRecordValues(so.order_line, [
+            {'product_id': subcontracted_service.id, 'product_uom_qty': 1.0, 'qty_delivered': 0.0},
+            {'product_id': self.dropship_product.id, 'product_uom_qty': 0.0, 'qty_delivered': 1.0},
+        ])
