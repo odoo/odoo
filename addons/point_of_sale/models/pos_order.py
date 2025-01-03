@@ -118,15 +118,11 @@ class PosOrder(models.Model):
 
     def _prepare_combo_line_uuids(self, order_vals):
         acc = {}
-        for line in order_vals['lines']:
-            if line[0] not in [0, 1]:
-                continue
+        lines = [line[2] for line in order_vals['lines'] if line[0] in [0, 1]]
 
-            line = line[2]
-
-            if line.get('combo_line_ids'):
-                filtered_lines = list(filter(lambda l: l[2].get('id') and l[2].get('id') in line.get('combo_line_ids'), order_vals['lines']))
-                acc[line['uuid']] = [l[2]['uuid'] for l in filtered_lines]
+        for line in lines:
+            if combo_line_ids := line.get('combo_line_ids'):
+                acc[line['uuid']] = [l['uuid'] for l in lines if l.get('id') in combo_line_ids]
 
             line['combo_line_ids'] = False
             line['combo_parent_id'] = False
