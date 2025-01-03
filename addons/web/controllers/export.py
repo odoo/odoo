@@ -364,7 +364,7 @@ class Export(http.Controller):
         fields = Model.fields_get(
             attributes=[
                 'type', 'string', 'required', 'relation_field', 'default_export_compatible',
-                'relation', 'definition_record', 'definition_record_field',
+                'relation', 'definition_record', 'definition_record_field', 'exportable', 'readonly',
             ],
         )
 
