@@ -11,7 +11,6 @@ export function makeStore(env, { localRegistry } = {}) {
     const recordByLocalId = reactive(new Map());
     // fake store for now, until it becomes a model
     /** @type {import("models").Store} */
-    Store.env = env;
     let store = new Store();
     store.env = env;
     store.Model = Store;
@@ -144,7 +143,6 @@ export function makeStore(env, { localRegistry } = {}) {
         Model._ = markRaw(new ModelInternal());
         Object.assign(Model, {
             Class,
-            env,
             records: reactive({}),
         });
         Models[Model.getName()] = Model;
