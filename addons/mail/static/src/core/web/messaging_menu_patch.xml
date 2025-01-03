@@ -76,6 +76,7 @@
                         <a t-if="ui.isSmall" class="btn fa fa-bell" />
                         <t t-else="">
                             <a class="btn btn-primary px-2 py-1 smaller">Enable</a>
+                            <span t-if="!hasTouch()" t-on-click.stop="() => this.store.isNotificationPermissionDismissed = true" class="text-dark bg-transparent oi oi-close opacity-50 opacity-100-hover" title="Dismiss"></span>
                         </t>
                     </t>
                 </NotificationItem>
