@@ -96,6 +96,18 @@ class PurchaseOrderLine(models.Model):
                 if virtual_available < 0:
                     line.forecasted_issue = True
 
+    @api.onchange('product_qty')
+    def _onchange_product_qty_warning(self):
+        if self.product_id.tracking == 'serial' and not self.product_qty.is_integer():
+            self.product_qty = float_round(self.product_qty, precision_digits=0, rounding_method='UP')
+            return {
+                'warning': {
+                    'title': self.env._("Fractional quantity"),
+                    'message': self.env._("Products tracked with serial numbers cannot be purchased in fractional amounts."
+                                          " The quantity has been rounded up to the nearest whole number."),
+                }
+            }
+
     @api.model_create_multi
     def create(self, vals_list):
         lines = super().create(vals_list)

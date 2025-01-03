@@ -2886,8 +2886,7 @@ class TestStockMove(TestStockCommon):
     def test_link_assign_9(self):
         """ Create an uom "3 units" which is 3 times the units but without rounding. Create 3
         quants in stock and two chained moves. The first move will bring the 3 quants but the
-        second only validate 2 and create a backorder for the last one. Check that the reservation
-        is correctly cleared up for the last one.
+        second only validate 2 and create a backorder for the last one.
         """
         uom_3units = self.env['uom.uom'].create({
             'name': '3 units',
@@ -2942,31 +2941,24 @@ class TestStockMove(TestStockCommon):
                 ml.quantity = 0
         picking_pack_cust.move_ids.picked = True
         res_dict_for_back_order = picking_pack_cust.button_validate()
+
         backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id')).with_context(res_dict_for_back_order['context'])
         backorder_wizard.process()
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_pack_cust.id)])
+
         backordered_move = backorder.move_ids
-
-        # due to the rounding, the backordered quantity is 0.999 ; we shoudln't be able to reserve
-        # 0.999 on a tracked by serial number quant
         backordered_move._action_assign()
-        self.assertEqual(backordered_move.quantity, 0)
+        # Missing 1 unit means our 3-pack is lacking 0,33, which is 0,99 units.
+        self.assertRecordValues(backordered_move, [
+            {'quantity': 0.33, 'uom_id': uom_3units.id, 'product_qty': 0.99},
+        ])
 
-        # force the serial number and validate
-        lot3 = self.env['stock.lot'].search([('name', '=', "lot3")])
-        backorder.write({'move_line_ids': [(0, 0, {
-            'product_id': self.product_serial.id,
-            'uom_id': self.uom_unit.id,
-            'quantity': 1,
-            'lot_id': lot3.id,
-            'package_id': False,
-            'result_package_id': False,
-            'location_id': backordered_move.location_id.id,
-            'location_dest_id': backordered_move.location_dest_id.id,
-            'move_id': backordered_move.id,
-        })]})
-        backorder.move_ids.picked = True
+        backordered_move.picked = True
         backorder.button_validate()
+        # Trying to allocate a serially tracked product in fractional amounts will round the quantity reserved.
+        self.assertRecordValues(backorder.move_line_ids, [
+            {'quantity_product_uom': 1.0, 'uom_id': self.uom_unit.id, 'lot_id': lot_id.id},
+        ])
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.customer_location), 3)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.pack_location), 0)
