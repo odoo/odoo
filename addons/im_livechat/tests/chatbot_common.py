@@ -9,6 +9,7 @@ class ChatbotCase(MailCommon, common.HttpCase):
     @classmethod
     def setUpClass(cls):
         super(ChatbotCase, cls).setUpClass()
+        cls.maxDiff = None
 
         cls.chatbot_script = cls.env['chatbot.script'].create({
             'title': 'Testing Bot',
