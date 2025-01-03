@@ -1324,25 +1324,95 @@ class TestStockQuant(TestStockCommon):
         self.assertTrue(quant)
         self.assertEqual(quant.inventory_diff_quantity, 0)
 
-    def test_reserve_fractional_qty(self):
-        lot1 = self.env['stock.lot'].create({'name': 'lot1', 'product_id': self.product_serial.id})
-        lot2 = self.env['stock.lot'].create({'name': 'lot2', 'product_id': self.product_serial.id})
-        for lot in (lot1, lot2):
-            self.env['stock.quant']._update_available_quantity(
-                product_id=self.product_serial,
-                location_id=self.stock_location,
-                quantity=1,
-                lot_id=lot,
-            )
+    def test_reserve_fractional_qty1(self):
+        """Test reservation of a product tracked with a serial number where
+        `demand < stock < demand + 1 and floor(demand) = floor(stock)'"""
+        self.env['stock.quant']._update_available_quantity(
+            product_id=self.product_serial,
+            location_id=self.stock_location,
+            quantity=1.3,
+        )
         move = self.env['stock.move'].create({
             'location_id': self.stock_location.id,
             'location_dest_id': self.shelf_2.id,
             'product_id': self.product_serial.id,
-            'product_uom_qty': 1.1,
+            'product_uom_qty': 1.4,
         })
         move._action_confirm()
         move._action_assign()
-        self.assertFalse(move.quantity)
+        self.assertEqual(move.quantity, 1.0)
+
+    def test_reserve_fractional_qty2(self):
+        """Test reservation of a product tracked with a serial number where
+        `demand < stock < demand + 1 and floor(demand) ≠ floor(stock)'"""
+        self.env['stock.quant']._update_available_quantity(
+            product_id=self.product_serial,
+            location_id=self.stock_location,
+            quantity=2.3,
+        )
+        move = self.env['stock.move'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.shelf_1.id,
+            'product_id': self.product_serial.id,
+            'product_uom_qty': 1.4,
+        })
+        move._action_confirm()
+        move._action_assign()
+        self.assertEqual(move.quantity, 2.0)
+
+    def test_reserve_fractional_qty3(self):
+        """Test reservation of a product tracked with a serial number where
+        `stock < demand < stock + 1'"""
+        self.env['stock.quant']._update_available_quantity(
+            product_id=self.product_serial,
+            location_id=self.stock_location,
+            quantity=1.4,
+        )
+        move = self.env['stock.move'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.shelf_1.id,
+            'product_id': self.product_serial.id,
+            'product_uom_qty': 1.3,
+        })
+        move._action_confirm()
+        move._action_assign()
+        self.assertEqual(move.quantity, 1.0)
+
+    def test_reserve_fractional_qty4(self):
+        """Test reservation of a product tracked with a serial number where
+        `demand < stock > demand + 1'"""
+        self.env['stock.quant']._update_available_quantity(
+            product_id=self.product_serial,
+            location_id=self.stock_location,
+            quantity=3.0,
+        )
+        move = self.env['stock.move'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.shelf_1.id,
+            'product_id': self.product_serial.id,
+            'product_uom_qty': 1.3,
+        })
+        move._action_confirm()
+        move._action_assign()
+        self.assertEqual(move.quantity, 2.0)
+
+    def test_reserve_fractional_qty5(self):
+        """Test reservation of a product tracked with a serial number where
+        `stock < demand > stock + 1'"""
+        self.env['stock.quant']._update_available_quantity(
+            product_id=self.product_serial,
+            location_id=self.stock_location,
+            quantity=1.3,
+        )
+        move = self.env['stock.move'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.shelf_1.id,
+            'product_id': self.product_serial.id,
+            'product_uom_qty': 3.0,
+        })
+        move._action_confirm()
+        move._action_assign()
+        self.assertEqual(move.quantity, 1.0)
 
     def test_lot_of_product_different_from_quant(self):
         """
