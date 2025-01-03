@@ -29,13 +29,13 @@ class MrpConsumptionWarning(models.TransientModel):
             for line in existing_moves_lines:
                 if line.mrp_production_id != production:
                     continue
-                line.move_id.quantity = line.product_expected_qty_uom
+                line.move_id.quantity = line._get_expected_quantity()
                 line.move_id.picked = True
         self.env['stock.move'].create([{
             'product_id': line.product_id.id,
             'uom_id': (line.uom_id or line.product_id.uom_id).id,
-            'product_uom_qty': line.product_expected_qty_uom,
-            'quantity': line.product_expected_qty_uom,
+            'product_uom_qty': line._get_expected_quantity(),
+            'quantity': line._get_expected_quantity(),
             'raw_material_production_id': line.mrp_production_id.id,
             'additional': True,
             'picked': True,
@@ -65,3 +65,8 @@ class MrpConsumptionWarningLine(models.TransientModel):
     product_consumed_qty_uom = fields.Float("Consumed", readonly=True)
     product_expected_qty_uom = fields.Float("To Consume", readonly=True)
     move_id = fields.Many2one('stock.move', readonly=True)
+
+    def _get_expected_quantity(self):
+        self.ensure_one()
+        return self.product_id._get_whole_serial_quantity(
+            self.product_expected_qty_uom, self.uom_id) or self.product_expected_qty_uom
