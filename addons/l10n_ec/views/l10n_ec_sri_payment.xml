@@ -23,11 +23,11 @@
         <field name="model">l10n_ec.sri.payment</field>
         <field name="type">list</field>
         <field name="arch" type="xml">
-            <list string="Payment Method" create="0" edit="0">
+            <list string="Payment Method" create="0">
                 <field name="sequence" widget="handle"/>
-                <field name="code"/>
-                <field name="name"/>
-                <field name="active" widget="boolean_toggle"/>
+                <field name="code" readonly="1"/>
+                <field name="name" readonly="1"/>
+                <field name="active" widget="boolean_toggle" readonly="1"/>
             </list>
         </field>
     </record>
