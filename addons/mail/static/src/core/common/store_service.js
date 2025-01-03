@@ -10,6 +10,7 @@ import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
 import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
+import { browser } from "@web/core/browser/browser";
 
 /**
  * @typedef {{isSpecial: boolean, channel_types: string[], label: string, displayName: string, description: string}} SpecialMention
@@ -148,6 +149,26 @@ export class Store extends BaseStore {
             init_messaging: {},
         };
     }
+
+    isNotificationPermissionDismissed = Record.attr(false, {
+        compute() {
+            return (
+                browser.localStorage.getItem("mail.user_setting.push_notification_dismissed") ===
+                "true"
+            );
+        },
+        /** @this {import("models").DiscussApp} */
+        onUpdate() {
+            if (this.isNotificationPermissionDismissed) {
+                browser.localStorage.setItem(
+                    "mail.user_setting.push_notification_dismissed",
+                    "true"
+                );
+            } else {
+                browser.localStorage.removeItem("mail.user_setting.push_notification_dismissed");
+            }
+        },
+    });
 
     messagePostMutex = new Mutex();
 
@@ -495,8 +516,14 @@ export class Store extends BaseStore {
      * Get the parameters to pass to the message post route.
      */
     async getMessagePostParams({ body, postData, thread }) {
-        const { attachments, cannedResponseIds, emailAddSignature, isNote, mentionedChannels, mentionedPartners } =
-            postData;
+        const {
+            attachments,
+            cannedResponseIds,
+            emailAddSignature,
+            isNote,
+            mentionedChannels,
+            mentionedPartners,
+        } = postData;
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions = this.getMentionsFromText(body, {
             mentionedChannels,
