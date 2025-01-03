@@ -492,7 +492,7 @@ class AccountEdiCommon(models.AbstractModel):
         logs = []
         lines_values = []
         for line_tree in tree.iterfind(xpath):
-            line_values = self._retrieve_line_vals(line_tree, invoice.move_type, qty_factor)
+            line_values = self._retrieve_invoice_line_vals(line_tree, invoice.move_type, qty_factor)
             line_values['tax_ids'], tax_logs = self._retrieve_taxes(
                 invoice, line_values, invoice.journal_id.type,
             )
@@ -502,6 +502,26 @@ class AccountEdiCommon(models.AbstractModel):
             lines_values.append(line_values)
             lines_values += self._retrieve_line_charges(invoice, line_values, line_values['tax_ids'])
         return lines_values, logs
+
+    def _retrieve_invoice_line_vals(self, tree, document_type=False, qty_factor=1):
+        # Start and End date (enterprise fields)
+        deferred_values = {}
+        start_date = end_date = None
+        if self.env['account.move.line']._fields.get('deferred_start_date'):
+            start_date_node = tree.find('./{*}InvoicePeriod/{*}StartDate')
+            end_date_node = tree.find('./{*}InvoicePeriod/{*}EndDate')
+            if start_date_node is not None and end_date_node is not None:  # there is a constraint forcing none or the two to be set
+                start_date = start_date_node.text
+                end_date = end_date_node.text
+            deferred_values = {
+                'deferred_start_date': start_date,
+                'deferred_end_date': end_date,
+            }
+
+        return {
+            **self._retrieve_line_vals(tree, document_type, qty_factor),
+            **deferred_values,
+        }
 
     def _retrieve_line_vals(self, tree, document_type=False, qty_factor=1):
         """
@@ -647,20 +667,6 @@ class AccountEdiCommon(models.AbstractModel):
             elif delivered_qty == 0:
                 quantity = price_subtotal / price_unit
 
-        # Start and End date (enterprise fields)
-        deferred_values = {}
-        start_date = end_date = None
-        if self.env['account.move.line']._fields.get('deferred_start_date'):
-            start_date_node = tree.find('./{*}InvoicePeriod/{*}StartDate')
-            end_date_node = tree.find('./{*}InvoicePeriod/{*}EndDate')
-            if start_date_node is not None and end_date_node is not None:  # there is a constraint forcing none or the two to be set
-                start_date = start_date_node.text
-                end_date = end_date_node.text
-            deferred_values = {
-                'deferred_start_date': start_date,
-                'deferred_end_date': end_date,
-            }
-
         return {
             # vals to be written on the document line
             'name': self._find_value(xpath_dict['name'], tree),
@@ -671,7 +677,6 @@ class AccountEdiCommon(models.AbstractModel):
             'discount': discount,
             'tax_nodes': self._get_tax_nodes(tree),  # see `_retrieve_taxes`
             'charges': charges,  # see `_retrieve_line_charges`
-            **deferred_values,
         }
 
     def _import_product(self, **product_vals):
