@@ -141,6 +141,7 @@ test("list of table commands in first column", async () => {
         "insert_left",
         "insert_right",
         "delete",
+        "clear_content",
     ]);
 });
 
@@ -165,6 +166,7 @@ test("list of table commands in second column", async () => {
         "insert_left",
         "insert_right",
         "delete",
+        "clear_content",
     ]);
 });
 
@@ -189,6 +191,7 @@ test("list of table commands in last column", async () => {
         "insert_left",
         "insert_right",
         "delete",
+        "clear_content",
     ]);
 });
 
@@ -220,6 +223,7 @@ test("list of table commands in first row", async () => {
         "insert_above",
         "insert_below",
         "delete",
+        "clear_content",
     ]);
 });
 
@@ -246,6 +250,7 @@ test("list of table commands in second row", async () => {
         "insert_above",
         "insert_below",
         "delete",
+        "clear_content",
     ]);
 });
 
@@ -272,6 +277,7 @@ test("list of table commands in last row", async () => {
         "insert_above",
         "insert_below",
         "delete",
+        "clear_content",
     ]);
 });
 
@@ -352,6 +358,51 @@ test("basic delete column operation", async () => {
     );
 });
 
+test("basic clear column content operation", async () => {
+    const { el, editor } = await setupEditor(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td class="a"><p>1[]</p></td><td class="b"><p>2</p></td></tr>
+                <tr><td class="c"><p>3</p></td><td class="d"><h1>4</h1></td></tr>
+            </tbody>
+        </table>`)
+    );
+    expect(".o-we-table-menu").toHaveCount(0);
+
+    // hover on td to show col ui
+    await hover(el.querySelector("td.b"));
+    await waitFor(".o-we-table-menu");
+
+    // click on it to open dropdown
+    await click(".o-we-table-menu");
+    await waitFor("div[name='clear_content']");
+
+    // clear content of the column
+    await click("div[name='clear_content']");
+    // not sure about selection...
+    expect(getContent(el)).toBe(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td class="a"><p>1[]</p></td><td class="b"><p><br></p></td></tr>
+                <tr><td class="c"><p>3</p></td><td class="d"><p><br></p></td></tr>
+            </tbody>
+        </table>`)
+    );
+
+    undo(editor);
+    expect(getContent(el)).toBe(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td class="a"><p>1[]</p></td><td class="b"><p>2</p></td></tr>
+                <tr><td class="c"><p>3</p></td><td class="d"><h1>4</h1></td></tr>
+            </tbody>
+        </table>`)
+    );
+});
+
 test("basic delete row operation", async () => {
     const { el, editor } = await setupEditor(
         unformat(`
@@ -391,6 +442,51 @@ test("basic delete row operation", async () => {
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
+            </tbody>
+        </table>`)
+    );
+});
+
+test("basic clear row content operation", async () => {
+    const { el, editor } = await setupEditor(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td class="a"><p>1[]</p></td><td class="b"><p>2</p></td></tr>
+                <tr><td class="c"><p>3</p></td><td class="d"><h2>4</h2></td></tr>
+            </tbody>
+        </table>`)
+    );
+    expect(".o-we-table-menu").toHaveCount(0);
+
+    // hover on td to show col ui
+    await hover(el.querySelector("td.c"));
+    await waitFor(".o-we-table-menu");
+
+    // click on it to open dropdown
+    await click(".o-we-table-menu");
+    await waitFor("div[name='clear_content']");
+
+    // clear content of the row
+    await click("div[name='clear_content']");
+    // not sure about selection...
+    expect(getContent(el)).toBe(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td class="a"><p>1[]</p></td><td class="b"><p>2</p></td></tr>
+                <tr><td class="c"><p><br></p></td><td class="d"><p><br></p></td></tr>
+            </tbody>
+        </table>`)
+    );
+
+    undo(editor);
+    expect(getContent(el)).toBe(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td class="a"><p>1[]</p></td><td class="b"><p>2</p></td></tr>
+                <tr><td class="c"><p>3</p></td><td class="d"><h2>4</h2></td></tr>
             </tbody>
         </table>`)
     );
