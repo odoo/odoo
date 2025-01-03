@@ -35,7 +35,7 @@ class L10nLatamDocumentType(models.Model):
         return document_number.zfill(6)
 
     def _is_doc_type_vendor(self):
-        return self.country_id.code == 'CL' and self.code in ('46', '61')
+        return self.code == '46'
 
     def _is_doc_type_export(self):
         return self.code in ['110', '111', '112'] and self.country_id.code == 'CL'
