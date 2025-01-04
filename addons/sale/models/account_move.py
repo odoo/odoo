@@ -112,7 +112,7 @@ class AccountMove(models.Model):
                 for sale_line in line.sale_line_ids:
                     todo.add((sale_line.order_id, invoice.name))
         for (order, name) in todo:
-            order.message_post(body=_("Invoice %s paid", name))
+            order.sudo().message_post(body=_("Invoice %s paid", name))
         return res
 
     def _action_invoice_ready_to_be_sent(self):
