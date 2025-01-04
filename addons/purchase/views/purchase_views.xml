@@ -38,17 +38,13 @@
             action="product.product_category_action_form" id="menu_product_category_config_purchase"
             parent="purchase.menu_product_in_config_purchase" sequence="3" />
 
-         <menuitem
-            id="menu_unit_of_measure_in_config_purchase" name="Units of Measures"
-            parent="menu_purchase_config" sequence="40" groups="uom.group_uom" />
+        <menuitem
+              action="uom.product_uom_form_action" id="menu_purchase_uom_form_action" active="False" name="Units &amp; Packagings"
+              parent="purchase.menu_product_in_config_purchase" sequence="5" groups="base.group_no_one"/>
 
         <menuitem
-              action="uom.product_uom_form_action" id="menu_purchase_uom_form_action" active="False"
-              parent="purchase.menu_unit_of_measure_in_config_purchase" sequence="5" groups="base.group_no_one"/>
-
-        <menuitem
-             action="uom.product_uom_categ_form_action" id="menu_purchase_uom_categ_form_action"
-             parent="purchase.menu_unit_of_measure_in_config_purchase" sequence="10" groups="uom.group_uom"/>
+             action="uom.product_uom_form_action" id="menu_purchase_uom_form_action" name="Units of Measure"
+             parent="purchase.menu_product_in_config_purchase" sequence="10" groups="uom.group_uom"/>
 
     <!-- Products Control Menu -->
     <menuitem id="menu_purchase_products" name="Products" parent="purchase.menu_purchase_root" sequence="5"/>
@@ -235,7 +231,6 @@
                                     <field name="state" column_invisible="True"/>
                                     <field name="product_type" column_invisible="True"/>
                                     <field name="product_uom_id" column_invisible="True" groups="!uom.group_uom"/>
-                                    <field name="product_uom_category_id" column_invisible="True"/>
                                     <field name="invoice_lines" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
                                     <field
@@ -276,7 +271,6 @@
                                         <field name="company_id" invisible="1"/>
                                         <group invisible="display_type">
                                             <group>
-                                                <field name="product_uom_category_id" invisible="1"/>
                                                 <field name="product_id"
                                                        context="{'partner_id': parent.partner_id}"
                                                        widget="many2one_barcode"

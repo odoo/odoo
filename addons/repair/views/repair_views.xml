@@ -111,7 +111,6 @@
                                 <field name="lot_id" context="{'default_product_id': product_id}" groups="stock.group_production_lot" invisible="tracking not in ['serial', 'lot']" readonly="state == 'done'" required="state=='done' and tracking in ['serial', 'lot']"/>
                                 <button name="action_generate_serial" type="object" class="btn btn-primary fa fa-plus-square-o" aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" invisible="lot_id"/>
                             </div>
-                            <field name="product_uom_category_id" invisible="1"/>
                             <label for="product_qty" invisible="not product_id"/>
                             <div class="o_row" invisible="not product_id">
                                 <field name="product_qty" readonly="tracking == 'serial' or state in ('done', 'cancel')"/>
@@ -157,7 +156,6 @@
                                 <field name="additional" column_invisible="True"/>
                                 <field name="move_lines_count" column_invisible="True"/>
                                 <field name="is_locked" column_invisible="True"/>
-                                <field name="product_uom_category_id" column_invisible="True"/>
                                 <field name="is_storable" column_invisible="True"/>
                                 <field name="has_tracking" column_invisible="True"/>
                                 <field name="display_assign_serial" column_invisible="True"/>

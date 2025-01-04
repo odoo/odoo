@@ -346,7 +346,7 @@ class ProductProduct(models.Model):
 
     @api.onchange('uom_po_id')
     def _onchange_uom(self):
-        if self.uom_id and self.uom_po_id and self.uom_id.category_id != self.uom_po_id.category_id:
+        if self.uom_id and self.uom_po_id:
             self.uom_po_id = self.uom_id
 
     @api.onchange('default_code')

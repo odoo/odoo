@@ -118,12 +118,9 @@ class ProductTemplate(models.Model):
               JOIN product_product prod_variant ON line.product_id = prod_variant.id
               JOIN product_template prod_template ON prod_variant.product_tmpl_id = prod_template.id
               JOIN uom_uom template_uom ON prod_template.uom_id = template_uom.id
-              JOIN uom_category template_uom_cat ON template_uom.category_id = template_uom_cat.id
               JOIN uom_uom line_uom ON line.product_uom_id = line_uom.id
-              JOIN uom_category line_uom_cat ON line_uom.category_id = line_uom_cat.id
              WHERE prod_template.id IN %s
                AND line.parent_state = 'posted'
-               AND template_uom_cat.id != line_uom_cat.id
              LIMIT 1
         """, [tuple(self.ids)])
         if self._cr.fetchall():
