@@ -116,12 +116,11 @@ class ProductTemplate(models.Model):
         default=_get_default_uom_id, required=True,
         help="Default unit of measure used for all stock operations.")
     uom_name = fields.Char(string='Unit of Measure Name', related='uom_id.name', readonly=True)
-    uom_category_id = fields.Many2one('uom.category', string='UoM Category', related="uom_id.category_id")
     uom_po_id = fields.Many2one(
         'uom.uom', 'Purchase Unit',
-        domain="[('category_id', '=', uom_category_id)]",
         compute='_compute_uom_po_id', required=True, readonly=False, store=True, precompute=True,
         help="Default unit of measure used for purchase orders. It must be in the same category as the default unit of measure.")
+    uom_ids = fields.Many2many('uom.uom', string='Packagings', help="Packagings which can be used for sales")
     company_id = fields.Many2one(
         'res.company', 'Company', index=True)
     packaging_ids = fields.One2many(
@@ -466,11 +465,6 @@ class ProductTemplate(models.Model):
                 "Combos allow to choose one product amongst a selection of choices per category."
             )
         return tooltip
-
-    @api.constrains('uom_id', 'uom_po_id')
-    def _check_uom(self):
-        if any(template.uom_id and template.uom_po_id and template.uom_id.category_id != template.uom_po_id.category_id for template in self):
-            raise ValidationError(_('The default Unit of Measure and the purchase Unit of Measure must be in the same category.'))
 
     @api.onchange('uom_id')
     def _onchange_uom_id(self):

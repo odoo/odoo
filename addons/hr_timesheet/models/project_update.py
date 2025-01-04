@@ -27,7 +27,7 @@ class ProjectUpdate(models.Model):
     def create(self, vals_list):
         updates = super().create(vals_list)
         encode_uom = self.env.company.timesheet_encode_uom_id
-        ratio = self.env.ref("uom.product_uom_hour").ratio / encode_uom.ratio
+        ratio = self.env.ref("uom.product_uom_hour").factor / encode_uom.factor
         for update in updates:
             project = update.project_id
             project.sudo().last_update_id = update

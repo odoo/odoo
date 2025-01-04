@@ -88,32 +88,25 @@ class TestOnchangeProductId(TransactionCase):
 
         po_line.write({'product_qty': 3, 'product_uom_id': self.ref("uom.product_uom_dozen")})
         self.assertEqual(1200, po_line.price_unit, "Unit price should be 1200 for one Dozen")
-        ipad_uom = self.env['uom.category'].create({'name': 'Ipad Unit'})
         ipad_lot = self.env['uom.uom'].create({
             'name': 'Ipad',
-            'category_id': ipad_uom.id,
-            'uom_type': 'reference',
-            'rounding': 0.001
         })
         ipad_lot_10 = self.env['uom.uom'].create({
             'name': '10 Ipad',
-            'category_id': ipad_uom.id,
-            'uom_type': 'bigger',
-            'rounding': 0.001,
-            "factor_inv": 10
+            'relative_factor': 10,
+            'relative_uom_id': ipad_lot.id,
         })
         product_ipad = self.env['product.product'].create({
             'name': 'Conference Chair',
             'standard_price': 100,
             'uom_id': ipad_lot.id,
-            'uom_po_id': ipad_lot.id,
         })
         po_line2 = self.po_line_model.create({
             'name': product_ipad.name,
             'product_id': product_ipad.id,
             'order_id': po.id,
             'product_qty': 5,
-            'product_uom_id': ipad_uom.id,
+            'product_uom_id': ipad_lot_10.id,
             'date_planned': fields.Date().today()
         })
 

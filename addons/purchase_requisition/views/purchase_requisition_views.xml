@@ -86,7 +86,6 @@
                                 <field name="product_description_variants" invisible="product_description_variants == ''"/>
                                 <field name="product_qty"/>
                                 <field name="qty_ordered" optional="show" column_invisible="parent.requisition_type == 'purchase_template'"/>
-                                <field name="product_uom_category_id" column_invisible="True"/>
                                 <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show" required="product_id"/>
                                 <field name="analytic_distribution" widget="analytic_distribution"
                                        optional="hide"
@@ -100,7 +99,6 @@
                                            domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" />
                                     <field name="product_qty"/>
                                     <field name="qty_ordered"/>
-                                    <field name="product_uom_category_id" invisible="1"/>
                                     <field name="product_uom_id" groups="uom.group_uom"/>
                                     <field name="analytic_distribution" widget="analytic_distribution"
                                            groups="analytic.group_analytic_accounting"

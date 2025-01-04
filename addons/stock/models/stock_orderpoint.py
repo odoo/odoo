@@ -171,12 +171,6 @@ class StockWarehouseOrderpoint(models.Model):
     def _compute_days_to_order(self):
         self.days_to_order = 0
 
-    @api.constrains('product_id')
-    def _check_product_uom(self):
-        ''' Check if the UoM has the same category as the product standard UoM '''
-        if any(orderpoint.product_id.uom_id.category_id != orderpoint.product_uom.category_id for orderpoint in self):
-            raise ValidationError(_('You have to select a product unit of measure that is in the same category as the default unit of measure of the product'))
-
     @api.constrains('product_min_qty', 'product_max_qty')
     def _check_min_max_qty(self):
         if any(orderpoint.product_min_qty > orderpoint.product_max_qty for orderpoint in self):

@@ -61,14 +61,7 @@ class HrExpense(models.Model):
         comodel_name='uom.uom',
         string="Unit of Measure",
         compute='_compute_uom_id', precompute=True, store=True,
-        domain="[('category_id', '=', product_uom_category_id)]",
         copy=True,
-    )
-    product_uom_category_id = fields.Many2one(
-        comodel_name='uom.category',
-        string="UoM Category",
-        related='product_id.uom_id.category_id',
-        readonly=True,
     )
     product_has_cost = fields.Boolean(compute='_compute_from_product')  # Whether the product has a cost (standard_price) or not
     product_has_tax = fields.Boolean(string="Whether tax is defined on a selected product", compute='_compute_from_product')

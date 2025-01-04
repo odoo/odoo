@@ -66,7 +66,7 @@ class AccountInvoiceReport(models.Model):
         ],
         'product.product': ['product_tmpl_id', 'standard_price'],
         'product.template': ['categ_id'],
-        'uom.uom': ['category_id', 'factor', 'name', 'uom_type'],
+        'uom.uom': ['factor', 'name'],
         'res.currency.rate': ['currency_id', 'name'],
         'res.partner': ['country_id'],
     }
