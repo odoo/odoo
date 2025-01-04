@@ -303,15 +303,8 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
     def test_pos_not_groupable_product(self):
         #Create a UoM Category that is not pos_groupable
-        uom_category = self.env['uom.category'].create({
-            'name': 'Test',
-            'is_pos_groupable': False,
-        })
         uom = self.env['uom.uom'].create({
             'name': 'Test',
-            'category_id': uom_category.id,
-            'uom_type': 'reference',
-            'rounding': 0.01
         })
         product_a = self.env['product.product'].create({
             'name': 'Product A',

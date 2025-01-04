@@ -65,11 +65,11 @@ class StockMove(models.Model):
              "Lowering this quantity does not generate a backorder."
              "Changing this quantity on assigned moves affects "
              "the product reservation, and should be done with care.")
+    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom = fields.Many2one(
-        'uom.uom', "UoM", required=True, domain="[('category_id', '=', product_uom_category_id)]",
+        'uom.uom', "UoM", required=True, domain="[('id', 'in', allowed_uom_ids)]",
         compute="_compute_product_uom", store=True, readonly=False, precompute=True,
     )
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     # TDE FIXME: make it stored, otherwise group will not work
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template',
@@ -199,6 +199,11 @@ class StockMove(models.Model):
     show_lots_text = fields.Boolean("Show lot_name", compute="_compute_show_info")
 
     _product_location_index = models.Index("(product_id, location_id, location_dest_id, company_id, state)")
+
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids')
+    def _compute_allowed_uom_ids(self):
+        for move in self:
+            move.allowed_uom_ids = move.product_id.uom_id | move.product_id.uom_ids
 
     @api.depends('product_id')
     def _compute_product_uom(self):
@@ -626,25 +631,6 @@ Please change the quantity done or the rounding precision of your unit of measur
                 and not move.show_lots_text\
                 and move.has_tracking != 'none'\
                 and (move.picking_type_id.use_existing_lots or move.state == 'done' or move.origin_returned_move_id.id)
-
-    @api.constrains('product_uom')
-    def _check_uom(self):
-        moves_error = self.filtered(lambda move: move.product_id.uom_id.category_id != move.product_uom.category_id)
-        if moves_error:
-            user_warnings = [
-                _('You cannot perform moves because their unit of measure has a different category from their product unit of measure.'),
-                *(
-                    _('%(product_name)s --> Product UoM is %(product_uom)s (%(product_uom_category)s) - Move UoM is %(move_uom)s (%(move_uom_category)s)',
-                      product_name=move.product_id.display_name,
-                      product_uom=move.product_id.uom_id.name,
-                      product_uom_category=move.product_id.uom_id.category_id.name,
-                      move_uom=move.product_uom.name,
-                      move_uom_category=move.product_uom.category_id.name)
-                    for move in moves_error
-                ),
-                _('Blocking: %s', ' ,'.join(moves_error.mapped('name')))
-            ]
-            raise UserError('\n\n'.join(user_warnings))
 
     @api.model
     def default_get(self, fields_list):

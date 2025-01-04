@@ -1042,10 +1042,9 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
     def test_16_multi_uom(self):
         yards_uom = self.env['uom.uom'].create({
-            'category_id': self.env.ref('uom.uom_categ_length').id,
             'name': 'Yards',
-            'factor_inv': 0.9144,
-            'uom_type': 'bigger',
+            'relative_factor': 0.9144,
+            'relative_uom_id': self.env.ref('uom.product_uom_meter').id,
         })
         product = self.env['product.product'].create({
             'name': 'Test Product',

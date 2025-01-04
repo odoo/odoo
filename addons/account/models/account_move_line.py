@@ -322,12 +322,7 @@ class AccountMoveLine(models.Model):
         comodel_name='uom.uom',
         string='Unit of Measure',
         compute='_compute_product_uom_id', store=True, readonly=False, precompute=True,
-        domain="[('category_id', '=', product_uom_category_id)]",
         ondelete="restrict",
-    )
-    product_uom_category_id = fields.Many2one(
-        comodel_name='uom.category',
-        related='product_id.uom_id.category_id',
     )
     quantity = fields.Float(
         string='Quantity',
@@ -1219,18 +1214,6 @@ class AccountMoveLine(models.Model):
                     raise UserError(_("Account %s is of receivable type, but is used in a purchase operation.", line.account_id.code))
                 if (line.display_type == 'payment_term') ^ (account_type == 'liability_payable'):
                     raise UserError(_("Any journal item on a payable account must have a due date and vice versa."))
-
-    @api.constrains('product_uom_id')
-    def _check_product_uom_category_id(self):
-        for line in self:
-            if line.product_uom_id and line.product_id and line.product_uom_id.category_id != line.product_id.product_tmpl_id.uom_id.category_id:
-                raise UserError(_(
-                    "The Unit of Measure (UoM) '%(uom)s' you have selected for product '%(product)s', "
-                    "is incompatible with its category : %(category)s.",
-                    uom=line.product_uom_id.name,
-                    product=line.product_id.name,
-                    category=line.product_id.product_tmpl_id.uom_id.category_id.name
-                ))
 
     def _affect_tax_report(self):
         self.ensure_one()

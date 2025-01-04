@@ -31,8 +31,8 @@ class PurchaseOrderLine(models.Model):
         digits='Discount',
         store=True, readonly=False)
     taxes_id = fields.Many2many('account.tax', string='Taxes', context={'active_test': False})
-    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
+    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('id', 'in', allowed_uom_ids)]")
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, index='btree_not_null', ondelete='restrict')
     product_type = fields.Selection(related='product_id.type', readonly=True)
     price_unit = fields.Float(
@@ -309,6 +309,11 @@ class PurchaseOrderLine(models.Model):
             return {'warning': warning}
         return {}
 
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.product_uom_id')
+    def _compute_allowed_uom_ids(self):
+        for line in self:
+            line.allowed_uom_ids = line.product_id.uom_id | line.product_id.uom_ids | line.product_id.seller_ids.product_uom_id
+
     @api.depends('product_qty', 'product_uom_id', 'company_id', 'order_id.partner_id')
     def _compute_price_unit_and_date_planned_and_name(self):
         for line in self:
@@ -441,7 +446,7 @@ class PurchaseOrderLine(models.Model):
             )['total_void']
             price_unit = price_unit / qty
         if self.product_uom_id.id != self.product_id.uom_id.id:
-            price_unit *= self.product_uom_id.factor / self.product_id.uom_id.factor
+            price_unit *= self.product_id.uom_id.factor / self.product_uom_id.factor
         return price_unit
 
     def action_add_from_catalog(self):

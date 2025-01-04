@@ -1146,7 +1146,6 @@
                                                options="{'product_field': 'product_id', 'account_field': 'account_id', 'amount_field': 'price_subtotal'}"
                                                business_domain_compute="parent.move_type in ['out_invoice', 'out_refund', 'out_receipt'] and 'invoice' or parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] and 'bill' or 'general'"/>
                                         <field name="quantity" optional="show"/>
-                                        <field name="product_uom_category_id" column_invisible="True"/>
                                         <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show" width="92px"/>
                                         <!-- /l10n_in_edi.test_edi_json -->
                                         <!-- required for @api.onchange('product_id') -->
@@ -1236,7 +1235,6 @@
                                                 <label for="name" string="Note" invisible="display_type != 'line_note'"/>
                                                 <field name="name" widget="text" nolabel="1"/>
                                                 <field name="quantity"/>
-                                                <field name="product_uom_category_id" invisible="1"/>
                                                 <field name="product_uom_id" groups="uom.group_uom"/>
                                                 <field name="price_unit"/>
                                                 <field name="discount" string="Disc.%"/>
