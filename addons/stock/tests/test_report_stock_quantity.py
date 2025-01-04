@@ -23,8 +23,7 @@ class TestReportStockQuantity(tests.TransactionCase):
             'name': 'Base Warehouse',
             'code': 'TESTWH'
         })
-        cls.categ_unit = cls.env.ref('uom.product_uom_categ_unit')
-        cls.uom_unit = cls.env['uom.uom'].search([('category_id', '=', cls.categ_unit.id), ('uom_type', '=', 'reference')], limit=1)
+        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
         # replenish

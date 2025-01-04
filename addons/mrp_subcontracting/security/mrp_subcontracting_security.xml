@@ -129,18 +129,4 @@
             ]</field>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>
-
-    <record id="uom_subcontracting_rule" model="ir.rule">
-        <field name="name">UoM Subcontractor</field>
-        <field name="model_id" ref="uom.model_uom_uom"/>
-        <field name="domain_force">[
-        '|',
-            '|',
-                ('category_id', 'in', user.partner_id.commercial_partner_id.bom_ids.product_id.product_tmpl_id.uom_id.category_id.ids),
-                ('category_id', 'in', user.partner_id.commercial_partner_id.bom_ids.product_tmpl_id.uom_id.category_id.ids),
-            ('category_id', 'in', user.partner_id.commercial_partner_id.bom_ids.bom_line_ids.product_id.product_tmpl_id.uom_id.category_id.ids),
-            ]</field>
-        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
-    </record>
-
 </odoo>

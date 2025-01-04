@@ -17,7 +17,6 @@
                                     domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                 <field name="name"/>
                                 <field name="quantity"/>
-                                <field name="product_uom_category_id" invisible="1"/>
                                 <field name="uom_id" groups="uom.group_uom"/>
                                 <field name="price_unit"/>
                                 <field name="discount" groups="sale.group_discount_per_so_line"/>
@@ -60,7 +59,6 @@
                             <field name="name" optional="show"/>
                             <field name="quantity"/>
                             <field name="uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
-                            <field name="product_uom_category_id" column_invisible="True"/>
                             <field name="price_unit"/>
                             <field name="discount"
                                 width="50px"

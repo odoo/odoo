@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import ValidationError
-
 from odoo.addons.uom.tests.common import UomCommon
 
 
@@ -25,84 +23,16 @@ class TestUom(UomCommon):
 
         # Regression test for side-effect of commit 311c77bb - converting 1234 Grams
         # into Kilograms should work even if grams are rounded to 1.
-        self.uom_gram.write({'rounding': 1})
         qty = self.uom_gram._compute_quantity(1234, self.uom_kgm)
         self.assertEqual(qty, 1.24, "Converted quantity does not correspond.")
 
     def test_20_rounding(self):
         product_uom = self.env['uom.uom'].create({
             'name': 'Score',
-            'factor_inv': 20,
-            'uom_type': 'bigger',
-            'rounding': 1.0,
-            'category_id': self.env.ref('uom.product_uom_categ_unit').id
+            'relative_factor': 20,
+            'relative_uom_id': self.uom_unit.id,
         })
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit of Measure')]).digits = 0
 
         qty = self.uom_unit._compute_quantity(2, product_uom)
         self.assertEqual(qty, 1, "Converted quantity should be rounded up.")
-
-    def test_30_reference_uniqueness(self):
-        """ Check the uniqueness of the reference UoM in a category """
-        time_category = self.env.ref('uom.product_uom_categ_unit')
-
-        with self.assertRaises(ValidationError):
-            self.env['uom.uom'].create({
-                'name': 'Second Time Reference',
-                'factor_inv': 1,
-                'uom_type': 'reference',
-                'rounding': 1.0,
-                'category_id': time_category.id
-            })
-
-    def test_40_custom_uom(self):
-        """ A custom UoM is an UoM in a category without measurement type. It should behave like a normal UoM """
-        category = self.env['uom.category'].create({
-            'name': 'Custom UoM category',
-        })
-
-        # at first we can not create a non reference in custom category
-        with self.assertRaises(ValidationError):
-            self.env['uom.uom'].create({
-                'name': 'Bigger UoM of my category',
-                'factor_inv': 42,
-                'uom_type': 'bigger',
-                'rounding': 0.5,
-                'category_id': category.id
-            })
-
-        # create the reference
-        self.env['uom.uom'].create({
-            'name': 'Reference UoM of my category',
-            'factor_inv': 1,
-            'uom_type': 'reference',
-            'rounding': 1.0,
-            'category_id': category.id
-        })
-
-        # we can create another UoM now
-        self.env['uom.uom'].create({
-            'name': 'Bigger UoM of my category',
-            'factor_inv': 42,
-            'uom_type': 'bigger',
-            'rounding': 0.5,
-            'category_id': category.id
-        })
-
-        # we can not create a second reference in custom category
-        with self.assertRaises(ValidationError):
-            self.env['uom.uom'].create({
-                'name': 'Second Time Reference',
-                'factor_inv': 1,
-                'uom_type': 'reference',
-                'rounding': 1.0,
-                'category_id': category.id
-            })
-
-    def test_50_check_ratio(self):
-        with self.assertRaises(ValidationError):
-            self.env['uom.uom'].create({
-                'name': 'Custom UoM',
-                'uom_type': 'bigger',
-                'ratio': 0,
-                'category_id': self.env.ref('uom.product_uom_categ_unit').id
-            })

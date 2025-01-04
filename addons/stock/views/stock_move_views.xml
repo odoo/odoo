@@ -78,7 +78,6 @@
                     <field name="additional" column_invisible="True"/>
                     <field name="move_lines_count" column_invisible="True"/>
                     <field name="is_locked" column_invisible="True"/>
-                    <field name="product_uom_category_id" column_invisible="True"/>
                     <field name="product_id" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0"/>
                     <field name="is_initial_demand_editable" column_invisible="True"/>
                     <field name="is_quantity_done_editable" column_invisible="True"/>
@@ -138,7 +137,6 @@
                     <field name="picking_type_entire_packs" invisible="1"/>
                     <field name="display_assign_serial" invisible="1"/>
                     <field name="display_import_lot" invisible="1"/>
-                    <field name="product_uom_category_id" invisible="1"/>
                     <field name="product_uom" invisible="1" groups="!uom.group_uom"/>
                     <field name="picking_code" invisible="1"/>
                     <field name="has_tracking" invisible="1"/>
@@ -179,7 +177,6 @@
                     <field name="company_id" column_invisible="True" force_save="1"/>
                     <field name="picking_id" column_invisible="True" force_save="1"/>
                     <field name="move_id" column_invisible="True" force_save="1" />
-                    <field name="product_uom_category_id" column_invisible="True"/>
                     <field name="product_id" column_invisible="True"/>
                     <field name="package_level_id" column_invisible="True"/>
                     <field name="location_id" column_invisible="True"/>
@@ -242,7 +239,6 @@
                     <field name="picking_code" column_invisible="True"/>
                     <field name="picking_location_id" column_invisible="True"/>
                     <field name="picking_location_dest_id" column_invisible="True"/>
-                    <field name="product_uom_category_id" column_invisible="True"/>
                     <field name="location_id" column_invisible="True"/>
                     <field name="location_dest_id" column_invisible="True"/>
                     <field name="quant_id" column_invisible="context.get('picking_code') == 'incoming'"
@@ -290,7 +286,6 @@
                             </group>
                             <group name="main_grp_col2">
                                 <field name="product_id" readonly="state == 'done'"/>
-                                <field name="product_uom_category_id" invisible="1"/>
                                 <label for="product_uom_qty"/>
                                 <div class="o_row">
                                     <field name="product_uom_qty" readonly="state == 'done'"/>

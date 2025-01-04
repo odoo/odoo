@@ -360,10 +360,9 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
     def test_04_multi_uom(self):
         yards_uom = self.env['uom.uom'].create({
-            'category_id': self.env.ref('uom.uom_categ_length').id,
             'name': 'Yards',
-            'factor_inv': 0.9144,
-            'uom_type': 'bigger',
+            'relative_factor': 0.91,
+            'relative_uom_id': self.env.ref('uom.product_uom_meter').id,
         })
         self.product_id_2.write({
             'uom_id': self.env.ref('uom.product_uom_meter').id,
@@ -384,7 +383,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         })
         po.button_confirm()
         picking = po.picking_ids[0]
-        picking.move_line_ids.write({'quantity': 3.66})
+        picking.move_line_ids.write({'quantity': 3.64})
         picking.move_ids.picked = True
         picking.button_validate()
         self.assertEqual(po.order_line.mapped('qty_received'), [4.0], 'Purchase: no conversion error on receipt in different uom"')

@@ -98,7 +98,6 @@ class SaleOrderLine(models.Model):
         # not anymore since the field must be considered editable for product configurator logic
         # without modifying the related product_id when updated.
         domain=[('sale_ok', '=', True)])
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', depends=['product_id'])
 
     product_template_attribute_value_ids = fields.Many2many(
         related='product_id.product_template_attribute_value_ids',
@@ -131,8 +130,9 @@ class SaleOrderLine(models.Model):
         comodel_name='uom.uom',
         string="Unit of Measure",
         compute='_compute_product_uom_id',
-        store=True, readonly=False, precompute=True, ondelete='restrict',
-        domain="[('category_id', '=', product_uom_category_id)]")
+        domain='[("id", "in", allowed_uom_ids)]',
+        store=True, readonly=False, precompute=True, ondelete='restrict')
+    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     linked_line_id = fields.Many2one(
         string="Linked Order Line",
         comodel_name='sale.order.line',
@@ -488,6 +488,11 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_uom_id or (line.product_id.uom_id.id != line.product_uom_id.id):
                 line.product_uom_id = line.product_id.uom_id
+
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids')
+    def _compute_allowed_uom_ids(self):
+        for line in self:
+            line.allowed_uom_ids = line.product_id.uom_id | line.product_id.uom_ids
 
     @api.depends('product_id', 'company_id')
     def _compute_tax_ids(self):
@@ -880,8 +885,7 @@ class SaleOrderLine(models.Model):
                 qty = unit_amount_sum / count
             else:
                 qty = unit_amount_sum
-            if so_line.product_uom_id.category_id == uom.category_id:
-                qty = uom._compute_quantity(qty, so_line.product_uom_id, rounding_method='HALF-UP')
+            qty = uom._compute_quantity(qty, so_line.product_uom_id, rounding_method='HALF-UP')
             result[so_line.id] += qty
 
         return result

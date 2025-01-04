@@ -137,10 +137,10 @@ class ProjectProject(models.Model):
             # if the timesheet has no product_uom_id then we take the one of the project
             total_time = 0.0
             for product_uom, unit_amount in timesheet_time_dict[project.id]:
-                factor = (product_uom or project.timesheet_encode_uom_id).factor_inv
+                factor = (product_uom or project.timesheet_encode_uom_id).factor
                 total_time += unit_amount * (1.0 if project.encode_uom_in_days else factor)
             # Now convert to the proper unit of measure set in the settings
-            total_time *= project.timesheet_encode_uom_id.factor
+            total_time /= project.timesheet_encode_uom_id.factor
             project.total_timesheet_time = int(round(total_time))
 
     @api.model_create_multi

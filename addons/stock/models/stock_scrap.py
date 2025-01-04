@@ -21,11 +21,11 @@ class StockScrap(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product', domain="[('type', '=', 'consu')]",
         required=True, check_company=True)
+    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom_id = fields.Many2one(
-        'uom.uom', 'Unit of Measure',
+        'uom.uom', 'Unit of Measure', domain="[('id', 'in', allowed_uom_ids)]",
         compute="_compute_product_uom_id", store=True, readonly=False, precompute=True,
-        required=True, domain="[('category_id', '=', product_uom_category_id)]")
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+        required=True)
     tracking = fields.Selection(string='Product Tracking', readonly=True, related="product_id.tracking")
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial',
@@ -57,6 +57,11 @@ class StockScrap(models.Model):
         comodel_name='stock.scrap.reason.tag',
         string='Scrap Reason',
     )
+
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.product_uom_id')
+    def _compute_allowed_uom_ids(self):
+        for scrap in self:
+            scrap.allowed_uom_ids = scrap.product_id.uom_id | scrap.product_id.uom_ids | scrap.product_id.seller_ids.product_uom_id
 
     @api.depends('product_id')
     def _compute_product_uom_id(self):

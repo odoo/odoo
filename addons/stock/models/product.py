@@ -886,6 +886,23 @@ class ProductTemplate(models.Model):
             }
         return res
 
+    @api.onchange('uom_id')
+    def _onchange_uom_id(self):
+        moves = self.env['stock.move'].sudo().search_count(
+            [('product_id', 'in', self.with_context(active_test=False).product_variant_ids.ids)], limit=1
+        )
+        if moves:
+            return {
+                'warning': {
+                    'title': _('Warning!'),
+                    'message': _(
+                        'This product has been used in at least one inventory movement. '
+                        'It is not advised to change the Unit of Measure since it can lead to inconsistencies. '
+                        'The existing moves will not be recalculated with the new unit of measure.'
+                    )
+                }
+            }
+
     def write(self, vals):
         if 'company_id' in vals and vals['company_id']:
             products_changing_company = self.filtered(lambda product: product.company_id.id != vals['company_id'])
@@ -906,12 +923,6 @@ class ProductTemplate(models.Model):
                 if quant:
                     raise UserError(_("This product's company cannot be changed as long as there are quantities of it belonging to another company."))
 
-        if 'uom_id' in vals:
-            new_uom = self.env['uom.uom'].browse(vals['uom_id'])
-            updated = self.filtered(lambda template: template.uom_id != new_uom)
-            done_moves = self.env['stock.move'].sudo().search([('product_id', 'in', updated.with_context(active_test=False).mapped('product_variant_ids').ids)], limit=1)
-            if done_moves:
-                raise UserError(_("You cannot change the unit of measure as there are already stock moves for this product. If you want to change the unit of measure, you should rather archive this product and create a new one."))
         if 'is_storable' in vals and not vals['is_storable'] and sum(self.mapped('nbr_reordering_rules')) != 0:
             raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
         if any('is_storable' in vals and vals['is_storable'] != prod_tmpl.is_storable for prod_tmpl in self):
@@ -1111,12 +1122,11 @@ class UomUom(models.Model):
 
     def write(self, values):
         # Users can not update the factor if open stock moves are based on it
-        if 'factor' in values or 'factor_inv' in values or 'category_id' in values:
+        keys_to_protect = {'factor', 'relative_factor', 'relative_uom_id', 'category_id'}
+        if any(key in values for key in keys_to_protect):
             changed = self.filtered(
                 lambda u: any(u[f] != values[f] if f in values else False
-                              for f in {'factor', 'factor_inv'})) + self.filtered(
-                lambda u: any(u[f].id != int(values[f]) if f in values else False
-                              for f in {'category_id'}))
+                              for f in keys_to_protect))
             if changed:
                 error_msg = _(
                     "You cannot change the ratio of this unit of measure"

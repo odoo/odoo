@@ -66,6 +66,8 @@ class TestDashboardProject(TestProjectDashboardCommon):
 
     def test_get_sale_item_data_various_sols(self):
         """This test ensures that the sols are computed and put into the correct profitability sections"""
+        hour_uom_id = self.env.ref('uom.product_uom_hour').id
+        unit_uom_id = self.env.ref('uom.product_uom_unit').id
         sol_service_1, sol_service_2, sol_service_3, sol_service_4 = self.dashboardSaleOrderLine.create([{
                 'product_id': self.product_milestone.id,
                 'product_uom_qty': 1,

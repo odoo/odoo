@@ -356,10 +356,8 @@ class TestPurchase(AccountTestInvoicingCommon):
         uom_dozens = self.env.ref('uom.product_uom_dozen')
         uom_pairs = self.env['uom.uom'].create({
             'name': 'Pairs',
-            'category_id': uom_units.category_id.id,
-            'uom_type': 'bigger',
-            'factor_inv': 2,
-            'rounding': 1,
+            'relative_factor': 2,
+            'relative_uom_id': uom_units.id,
         })
         product_data = {
             'name': 'SuperProduct',

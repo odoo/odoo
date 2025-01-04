@@ -406,7 +406,6 @@
                                     TODO: at some point we want to fix this in the framework so that an invisible field is not required.
                                 -->
                                 <field name="sequence" invisible="1"/>
-                                <field name="product_uom_category_id" invisible="1"/>
                                 <group>
                                     <group invisible="display_type">
                                         <field name="product_updatable" invisible="1"/>
@@ -524,7 +523,6 @@
                                 <field name="sequence" widget="handle" />
                                 <!-- We do not display the type because we don't want the user to be bothered with that information if he has no section or note. -->
                                 <field name="display_type" column_invisible="True"/>
-                                <field name="product_uom_category_id" column_invisible="True"/>
                                 <field name="product_type" column_invisible="True"/>
                                 <field name="product_updatable" column_invisible="True"/>
                                 <field name="is_downpayment" column_invisible="True"/>
@@ -628,7 +626,7 @@
                                     required="not display_type and not is_downpayment"
                                     context="{'company_id': parent.company_id}"
                                     groups="uom.group_uom"
-                                    options='{"no_open": True}'
+                                    options='{"no_open": True, "no_create": True}'
                                     width="60px"
                                     optional="show"/>
                                 <field

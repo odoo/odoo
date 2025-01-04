@@ -27,11 +27,11 @@ class StockMoveLine(models.Model):
         check_company=True, index=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True, required=True, index=True)
     product_id = fields.Many2one('product.product', 'Product', ondelete="cascade", check_company=True, domain="[('type', '!=', 'service')]", index=True)
+    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom_id = fields.Many2one(
-        'uom.uom', 'Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]",
+        'uom.uom', 'Unit of Measure', required=True, domain="[('id', 'in', allowed_uom_ids)]",
         compute="_compute_product_uom_id", store=True, readonly=False, precompute=True,
     )
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_category_name = fields.Char(related="product_id.categ_id.complete_name", string="Product Category")
     quantity = fields.Float(
         'Quantity', digits='Product Unit of Measure', copy=False, store=True,
@@ -87,17 +87,21 @@ class StockMoveLine(models.Model):
     origin = fields.Char(related='move_id.origin', string='Source')
     description_picking = fields.Text(string="Description picking")
     quant_id = fields.Many2one('stock.quant', "Pick From", store=False)  # Dummy field for the detailed operation view
-    product_packaging_qty = fields.Float(string="Reserved Packaging Quantity", compute='_compute_product_packaging_qty')
     picking_location_id = fields.Many2one(related='picking_id.location_id')
     picking_location_dest_id = fields.Many2one(related='picking_id.location_dest_id')
 
     _free_reservation_index = models.Index("""(id, company_id, product_id, lot_id, location_id, owner_id, package_id)
         WHERE (state IS NULL OR state NOT IN ('cancel', 'done')) AND quantity_product_uom > 0 AND picked IS NOT TRUE""")
 
-    @api.depends('product_uom_id.category_id', 'product_id.uom_id.category_id', 'move_id.product_uom', 'product_id.uom_id')
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.product_uom_id')
+    def _compute_allowed_uom_ids(self):
+        for line in self:
+            line.allowed_uom_ids = line.product_id.uom_id | line.product_id.uom_ids | line.product_id.seller_ids.product_uom_id
+
+    @api.depends('move_id.product_uom', 'product_id.uom_id')
     def _compute_product_uom_id(self):
         for line in self:
-            if not line.product_uom_id or line.product_uom_id.category_id != line.product_id.uom_id.category_id:
+            if not line.product_uom_id:
                 if line.move_id.product_uom:
                     line.product_uom_id = line.move_id.product_uom.id
                 else:
