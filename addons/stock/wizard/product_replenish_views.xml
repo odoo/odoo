@@ -12,14 +12,13 @@
                         readonly="not product_has_variants"
                         options="{'no_open': 1, 'no_create': 1}" class="fw-bold"/> is
                     <field name="forecasted_quantity"/>
-                    <field class="ps-1" name="forecast_uom_id" domain="[('category_id', '=', product_uom_category_id)]" groups="uom.group_uom" readonly="1"/>
+                    <field class="ps-1" name="forecast_uom_id" groups="uom.group_uom" readonly="1"/>
                     <field name="forecast_uom_id" groups="!uom.group_uom" invisible="1"/>
                 </p>
                 <group>
                     <group>
                         <field name="product_tmpl_id" invisible="1"/>
                         <field name="product_has_variants" invisible="1"/>
-                        <field name="product_uom_category_id" invisible="1"/>
                         <field name="allowed_route_ids" invisible="1"/>
                         <field name="company_id" invisible="1"/>
                         <label for="quantity"/>
@@ -27,7 +26,6 @@
                             <field name="quantity" />
                             <field name="product_uom_id" groups="!uom.group_uom" invisible="1"/>
                             <field name="product_uom_id"
-                                domain="[('category_id', '=', product_uom_category_id)]"
                                 groups="uom.group_uom"
                                 options="{'no_open': 1, 'no_create': 1}"/>
                         </div>

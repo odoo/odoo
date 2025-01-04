@@ -12,9 +12,9 @@
 ^XA^CI28
                             <t t-set="price_unformatted" t-value="pricelist._get_product_price(product, 1)"/>
                             <t t-set="price" t-value="currency_id.format(pricelist._get_product_price(product, 1))"/>
-                            <t t-set="reference_unit_name" t-value="product.uom_id.category_id.uom_ids.filtered(lambda u: u.uom_type == 'reference').name"/>
-                            <t t-set="price_per_unit" t-value="currency_id.format(price_unformatted / product.uom_id.factor_inv)"/>
-                            <t t-set="show_price_per_unit" t-value="product.uom_id.factor_inv != 1"/>
+                            <t t-set="reference_unit_name" t-value="product.uom_id.relative_uom_id.name"/>
+                            <t t-set="price_per_unit" t-value="currency_id.format(price_unformatted / product.uom_id.factor)"/>
+                            <t t-set="show_price_per_unit" t-value="product.uom_id.factor != 1 and reference_unit_name"/>
 
                             <t t-if="'normal' in zpl_template" t-call="stock.normal_zpl_label" />
                             <t t-elif="'small' in zpl_template" t-call="stock.small_zpl_label" />

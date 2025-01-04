@@ -93,9 +93,9 @@ class TestMrpOrder(TestMrpCommon):
         for move in man_order.move_raw_ids:
             self.assertEqual(move.date, date_start)
         first_move = man_order.move_raw_ids.filtered(lambda move: move.product_id == self.product_2)
-        self.assertEqual(first_move.product_qty, test_quantity / self.bom_1.product_qty * self.product_4.uom_id.factor_inv * 2)
+        self.assertEqual(first_move.product_qty, test_quantity / self.bom_1.product_qty * self.product_4.uom_id.factor * 2)
         first_move = man_order.move_raw_ids.filtered(lambda move: move.product_id == self.product_1)
-        self.assertEqual(first_move.product_qty, test_quantity / self.bom_1.product_qty * self.product_4.uom_id.factor_inv * 4)
+        self.assertEqual(first_move.product_qty, test_quantity / self.bom_1.product_qty * self.product_4.uom_id.factor * 4)
 
         # produce product
         mo_form = Form(man_order)
@@ -2051,10 +2051,8 @@ class TestMrpOrder(TestMrpCommon):
         uom_L = self.env.ref('uom.product_uom_litre')
         uom_cL = self.env['uom.uom'].create({
             'name': 'cL',
-            'category_id': uom_L.category_id.id,
-            'uom_type': 'smaller',
-            'factor': 100,
-            'rounding': 1,
+            'relative_factor': 0.01,
+            'relative_uom_id': uom_L.id,
         })
         uom_units.rounding = 1
         uom_L.rounding = 0.01
@@ -2129,26 +2127,20 @@ class TestMrpOrder(TestMrpCommon):
         picking_type = self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')])[0]
 
         # the overall decimal accuracy is set to 3 digits
-        precision = self.env.ref('product.decimal_product_uom')
+        precision = self.env.ref('uom.decimal_product_uom')
         precision.digits = 3
 
         # define L and ml, L has rounding .001 but ml has rounding .01
         # when producing e.g. 187.5ml, it will be rounded to .188L
-        categ_test = self.env['uom.category'].create({'name': 'Volume Test'})
-
-        uom_L = self.env['uom.uom'].create({
-            'name': 'Test Liters',
-            'category_id': categ_test.id,
-            'uom_type': 'reference',
-            'rounding': 0.001
-        })
 
         uom_ml = self.env['uom.uom'].create({
             'name': 'Test ml',
-            'category_id': categ_test.id,
-            'uom_type': 'smaller',
-            'rounding': 0.01,
-            'factor_inv': 0.001,
+            'relative_factor': 1,
+        })
+        uom_L = self.env['uom.uom'].create({
+            'name': 'Test Liters',
+            'relative_factor': 1000,
+            'relative_uom_id': uom_ml.id,
         })
 
         # create a product component and the final product using the component
@@ -3475,10 +3467,8 @@ class TestMrpOrder(TestMrpCommon):
 
         self.box250 = self.env['uom.uom'].create({
             'name': 'box250',
-            'category_id': self.env.ref('uom.product_uom_categ_unit').id,
-            'ratio': 250.0,
-            'uom_type': 'bigger',
-            'rounding': 1.0,
+            'relative_factor': 250.0,
+            'relative_uom_id': self.uom_unit.id,
         })
 
         test_bom = self.env['mrp.bom'].create({

@@ -617,7 +617,7 @@ class AccountEdiCommon(models.AbstractModel):
                 ]
                 if uom_infered_xmlid:
                     product_uom = self.env.ref(uom_infered_xmlid[0], raise_if_not_found=False) or self.env['uom.uom']
-        if product and product_uom and product_uom.category_id != product.product_tmpl_id.uom_id.category_id:
+        if product and product_uom and not product_uom._has_common_reference(product.product_tmpl_id.uom_id):
             # uom incompatibility
             product_uom = self.env['uom.uom']
 

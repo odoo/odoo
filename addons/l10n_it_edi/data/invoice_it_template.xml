@@ -18,7 +18,7 @@
                     </CodiceArticolo>
                     <Descrizione t-out="format_alphanumeric(it_values['descrizione'], 1000)"/>
                     <Quantita t-out="format_float(it_values['quantita'], it_values['quantita_pd'])"/>
-                    <UnitaMisura t-if="line.product_uom_id and line.product_uom_id.category_id != env.ref('uom.product_uom_categ_unit')"
+                    <UnitaMisura t-if="line.product_uom_id and not line.product_uom_id._has_common_reference(env.ref('uom.product_uom_unit'))"
                                  t-out="format_alphanumeric(line.product_uom_id.name, 10)"/>
                     <PrezzoUnitario t-out="format_float(it_values['prezzo_unitario'], 8)"/>
                     <ScontoMaggiorazione t-foreach="it_values['sconto_maggiorazione_list']" t-as="sconto_maggiorazione">

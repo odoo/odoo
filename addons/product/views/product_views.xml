@@ -170,7 +170,14 @@
                         </page>
                         <page string="Sales" name="sales" invisible="1 or not sale_ok">
                             <group name="sale">
-                                <group string="Upsell &amp; Cross-Sell" name="upsell" invisible="1"/>
+                                <group string="Upsell &amp; Cross-Sell" name="upsell" invisible="1">
+                                    <field
+                                        name="uom_ids"
+                                        options="{'no_quick_create': True, 'edit_tags': True}"
+                                        groups="uom.group_uom"
+                                        force_save="1"
+                                        context="{'product_id': product_variant_id if product_variant_count == 1 else False, 'product_ids': product_variant_ids, 'show_variant_name': product_variant_count > 1}"/>
+                                </group>
                                 <group name="extra_info" string="Extra Info">
                                     <field name="product_tag_ids" widget="many2many_tags" context="{'product_template_id': id}"/>
                                 </group>
@@ -384,6 +391,12 @@
                                 </div>
                             </group>
                             <group name="sales" string="Sales">
+                                <field
+                                    name="uom_ids"
+                                    options="{'no_quick_create': True, 'edit_tags': True}"
+                                    groups="uom.group_uom"
+                                    force_save="1"
+                                    context="{'product_id': id}"/>
                                 <field name="product_tag_ids" widget="many2many_tags" readonly="1"/>
                                 <field name="additional_product_tag_ids" widget="many2many_tags" context="{'product_variant_id': id}"/>
                             </group>

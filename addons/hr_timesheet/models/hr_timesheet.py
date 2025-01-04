@@ -425,9 +425,7 @@ class AccountAnalyticLine(models.Model):
         if not uom_hours:
             uom_hours = self.env['uom.uom'].create({
                 'name': "Hours",
-                'category_id': self.env.ref('uom.uom_categ_wtime').id,
-                'factor': 8,
-                'uom_type': "smaller",
+                'relative_factor': 1,
             })
             self.env['ir.model.data'].create({
                 'name': 'product_uom_hour',

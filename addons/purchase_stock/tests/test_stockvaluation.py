@@ -67,7 +67,6 @@ class TestStockValuation(TransactionCase):
         })
         cls.env.ref('base.EUR').active = True
 
-
     def test_different_uom(self):
         """ Set a quantity to replenish via the "Buy" route
         where product_uom is different from purchase uom
@@ -78,14 +77,12 @@ class TestStockValuation(TransactionCase):
         # Create and set a new weight unit.
         kgm = self.env.ref('uom.product_uom_kgm')
         ap = self.env['uom.uom'].create({
-            'category_id': kgm.category_id.id,
             'name': 'Algerian Pounds',
-            'uom_type': 'bigger',
-            'ratio': 2.47541,
-            'rounding': 0.001,
+            'relative_factor': 2.475,
+            'relative_uom_id': kgm.id,
         })
         kgm_price = 100
-        ap_price = kgm_price / ap.factor
+        ap_price = kgm_price * ap.factor / kgm.factor
 
         self.product1.uom_id = ap
         self.product1.uom_po_id = kgm
@@ -124,7 +121,7 @@ class TestStockValuation(TransactionCase):
             ap._compute_quantity(replenishment_uom_qty, kgm, rounding_method='HALF-UP'),
             'Quantities does not match')
 
-        # Recieve products
+        # Receive products
         last_po_id.button_confirm()
         picking = last_po_id.picking_ids[0]
         move = picking.move_ids[0]
@@ -1952,10 +1949,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         uom_unit = self.env.ref('uom.product_uom_unit')
         uom_hundred = self.env['uom.uom'].create({
             'name': '100 x U',
-            'category_id': uom_unit.category_id.id,
-            'ratio': 100.0,
-            'uom_type': 'bigger',
-            'rounding': uom_unit.rounding,
+            'relative_factor': 100.0,
+            'relative_uom_id': uom_unit.id,
         })
         self.product1.write({
             'uom_id': uom_unit.id,

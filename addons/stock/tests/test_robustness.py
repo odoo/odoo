@@ -50,15 +50,6 @@ class TestRobustness(TransactionCase):
 
         # assert the reservation
         self.assertEqual(quant.reserved_quantity, 12)
-        self.assertEqual(move1.product_qty, 12)
-
-        # change the factor
-        with self.assertRaises(UserError):
-            with self.cr.savepoint():
-                move1.product_uom.factor = 0.05
-
-        # assert the reservation
-        self.assertEqual(quant.reserved_quantity, 12)
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(move1.product_qty, 12)
 
@@ -129,7 +120,7 @@ class TestRobustness(TransactionCase):
             package_id=package
         )
 
-        # reserve a dozen
+        # reserve 10 units
         move1 = self.env['stock.move'].create({
             'name': 'test_uom_rounding',
             'location_id': self.stock_location.id,

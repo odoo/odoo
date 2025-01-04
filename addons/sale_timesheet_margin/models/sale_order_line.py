@@ -25,10 +25,7 @@ class SaleOrderLine(models.Model):
                 line = line.with_company(line.company_id)
                 product_cost = mapped_sol_timesheet_amount.get(line.id, line.product_id.standard_price)
                 product_uom = line.product_uom_id or line.product_id.uom_id
-                if (
-                    product_uom != line.company_id.project_time_mode_id
-                    and product_uom.category_id.id == line.company_id.project_time_mode_id.category_id.id
-                ):
+                if product_uom != line.company_id.project_time_mode_id:
                     product_cost = product_uom._compute_quantity(
                         product_cost,
                         line.company_id.project_time_mode_id

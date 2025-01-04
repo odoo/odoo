@@ -209,7 +209,8 @@ class PurchaseOrderLine(models.Model):
             )['total_void']
             price_unit = price_unit / qty
         if self.product_uom_id.id != self.product_id.uom_id.id:
-            price_unit *= self.product_uom_id.factor / self.product_id.uom_id.factor
+            price_unit /= self.product_uom_id.factor
+            price_unit *= self.product_id.uom_id.factor
         if order.currency_id != order.company_id.currency_id:
             price_unit = order.currency_id._convert(
                 price_unit, order.company_id.currency_id, self.company_id, self.date_order or fields.Date.today(), round=False)

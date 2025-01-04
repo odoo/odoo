@@ -30,8 +30,7 @@ class ProductTemplate(models.Model):
         company_uom = self.env.company.timesheet_encode_uom_id
         for record in self:
             if not record.uom_id or record.uom_id != uom_unit or\
-               product_uom_hour.factor == record.uom_id.factor or\
-               record.uom_id.category_id not in [product_uom_hour.category_id, uom_unit.category_id]:
+               product_uom_hour.factor == record.uom_id.factor:
                 record.service_upsell_threshold_ratio = False
                 continue
             else:

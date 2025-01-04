@@ -2,11 +2,11 @@
 <odoo>
     <data>
         <template id="label_production_view">
-            <t t-set="uom_categ_unit" t-value="env.ref('uom.product_uom_categ_unit')"/>
+            <t t-set="uom_unit" t-value="env.ref('uom.product_uom_unit')"/>
             <t t-foreach="docs" t-as="production">
                 <t t-foreach="production.move_finished_ids" t-as="move">
                     <t t-foreach="move.move_line_ids" t-as="move_line">
-                        <t t-if="move_line.product_uom_id.category_id == uom_categ_unit">
+                        <t t-if="move_line.product_id.uom_id._has_common_reference(uom_unit)">
                             <t t-set="qty" t-value="int(move_line.quantity)"/>
                         </t>
                         <t t-else="">

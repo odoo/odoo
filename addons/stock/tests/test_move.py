@@ -2073,6 +2073,7 @@ class StockMove(TransactionCase):
 
         # 6 units are available in stock
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 6.0)
+        self.product.write({'uom_ids': [(4, self.uom_dozen.id)]})
 
         # the move should not be reserved
         move = self.env['stock.move'].create({
@@ -2094,7 +2095,7 @@ class StockMove(TransactionCase):
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 2.0)
         move._action_assign()
         self.assertEqual(move.state, 'confirmed')
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 8.0)
+        self.assertAlmostEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 8.0)
 
         # make 12 units available, this time the move should be reservable
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 4.0)
@@ -2102,19 +2103,6 @@ class StockMove(TransactionCase):
         self.assertEqual(move.state, 'assigned')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0.0)
         move.picked = True
-        # Check it isn't possible to set any value to quantity
-        with self.assertRaises(UserError):
-            move.quantity = 0.1
-            move._action_done()
-
-        with self.assertRaises(UserError):
-            move.quantity = 1.1
-            move._action_done()
-
-        with self.assertRaises(UserError):
-            move.quantity = 0.9
-            move._action_done()
-
         move.quantity = 1
         move._action_done()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.customer_location), 12.0)
@@ -2929,8 +2917,8 @@ class StockMove(TransactionCase):
         move_pack_cust._action_assign()
         self.assertEqual(move_pack_cust.state, 'partially_available')
         move_line_pack_cust = move_pack_cust.move_line_ids
-        self.assertEqual(move_line_pack_cust.quantity, 6)
-        self.assertEqual(move_line_pack_cust.product_uom_id.id, self.uom_unit.id)
+        self.assertEqual(move_line_pack_cust.quantity, 0.5)
+        self.assertEqual(move_line_pack_cust.product_uom_id.id, self.uom_dozen.id)
 
         # move a dozen on the backorder to see how we handle the extra move
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_stock_pack.id)])
@@ -3033,10 +3021,8 @@ class StockMove(TransactionCase):
         """
         uom_3units = self.env['uom.uom'].create({
             'name': '3 units',
-            'category_id': self.uom_unit.category_id.id,
-            'factor_inv': 3,
-            'rounding': 1,
-            'uom_type': 'bigger',
+            'relative_factor': 3,
+            'relative_uom_id': self.uom_unit.id,
         })
         for i in range(1, 4):
             lot_id = self.env['stock.lot'].create({
@@ -6619,11 +6605,10 @@ class StockMove(TransactionCase):
         # Firstly, we test changing the quantity and the uom together: 2 dozens = 24 reserved units
         ml.write({'quantity': 2, 'product_uom_id': self.uom_dozen.id})
         self.assertEqual(quant.reserved_quantity, 24)
-        self.assertEqual(ml.quantity * self.uom_dozen.ratio, 24)
         # Secondly, we test changing only the uom: 2 units -> expected 2 units
         ml.write({'product_uom_id': self.uom_unit.id})
         self.assertEqual(quant.reserved_quantity, 2)
-        self.assertEqual(ml.quantity * self.uom_unit.ratio, 2)
+        self.assertEqual(ml.quantity * self.uom_unit.factor, 2)
 
     def test_move_line_qty_with_quant_in_different_uom(self):
         """

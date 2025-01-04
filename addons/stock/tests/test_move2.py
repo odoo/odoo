@@ -2672,26 +2672,20 @@ class TestStockUOM(TestStockCommon):
     def test_pickings_transfer_with_different_uom_and_back_orders(self):
         """ Picking transfer with diffrent unit of meassure. """
         # weight category
-        categ_test = self.env['uom.category'].create({'name': 'Bigger than tons'})
 
         T_LBS = self.env['uom.uom'].create({
             'name': 'T-LBS',
-            'category_id': categ_test.id,
-            'uom_type': 'reference',
-            'rounding': 0.01
         })
         T_GT = self.env['uom.uom'].create({
             'name': 'T-GT',
-            'category_id': categ_test.id,
-            'uom_type': 'bigger',
-            'rounding': 0.0000001,
-            'factor_inv': 2240.00,
+            'relative_factor': 2240.00,
+            'relative_uom_id': T_LBS.id,
         })
         T_TEST = self.env['product.product'].create({
             'name': 'T_TEST',
             'is_storable': True,
-            'uom_id': T_LBS.id,
             'uom_po_id': T_LBS.id,
+            'uom_ids': [(4, T_LBS.id)],
             'tracking': 'lot',
         })
 
@@ -2731,7 +2725,9 @@ class TestStockUOM(TestStockCommon):
         back_order_in = self.env['stock.picking'].search([('backorder_id', '=', picking_in.id)])
 
         self.assertEqual(len(back_order_in), 1.00, 'There should be one back order created')
-        self.assertEqual(back_order_in.move_ids.product_qty, 91640.00, 'There should be one back order created')
+        # picking_in: 42760.00 / 2240 -> 19.0892857
+        # backorder: 60 - 19.0892857 -> 40.9107143 * 2240
+        self.assertEqual(back_order_in.move_ids.product_qty, 91640.000032, 'There should be one back order created')
 
     def test_move_product_with_different_uom(self):
         """ Product defined in g with 0.01 rounding

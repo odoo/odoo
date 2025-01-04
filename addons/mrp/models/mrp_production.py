@@ -84,15 +84,14 @@ class MrpProduction(models.Model):
         'Quantity To Produce', digits='Product Unit of Measure',
         readonly=False, required=True, tracking=True, precompute=True,
         compute='_compute_product_qty', store=True, copy=True)
+    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom_id = fields.Many2one(
-        'uom.uom', 'Product Unit of Measure',
-        readonly=False, required=True, compute='_compute_uom_id', store=True, copy=True, precompute=True,
-        domain="[('category_id', '=', product_uom_category_id)]")
+        'uom.uom', 'Product Unit of Measure', domain="[('id', 'in', allowed_uom_ids)]",
+        readonly=False, required=True, compute='_compute_uom_id', store=True, copy=True, precompute=True)
     lot_producing_id = fields.Many2one(
         'stock.lot', string='Lot/Serial Number', copy=False,
         domain="[('product_id', '=', product_id)]", check_company=True)
     qty_producing = fields.Float(string="Quantity Producing", digits='Product Unit of Measure', copy=False)
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type', copy=True, readonly=False,
@@ -402,6 +401,11 @@ class MrpProduction(models.Model):
                 or bom.product_id and bom.product_id != production.product_id
             ):
                 production.product_id = bom.product_id or bom.product_tmpl_id.product_variant_id
+
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.bom_ids', 'product_id.bom_ids.product_uom_id')
+    def _compute_allowed_uom_ids(self):
+        for production in self:
+            production.allowed_uom_ids = production.product_id.uom_id | production.product_id.uom_ids | production.product_id.bom_ids.product_uom_id
 
     @api.depends('product_id', 'never_product_template_attribute_value_ids')
     def _compute_bom_id(self):
@@ -1182,7 +1186,7 @@ class MrpProduction(models.Model):
         for production in self:
             if not production.bom_id:
                 continue
-            factor = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id) / production.bom_id.product_qty
+            factor = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id, round=False) / production.bom_id.product_qty
             _boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id, never_attribute_values=production.never_product_template_attribute_value_ids)
             for bom_line, line_data in lines:
                 if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom' or\
