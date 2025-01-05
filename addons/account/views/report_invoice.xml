@@ -136,6 +136,11 @@
                                             <td name="td_quantity" class="text-end text-nowrap">
                                                 <span t-field="line.quantity">3.00</span>
                                                 <span t-field="line.product_uom_id"  groups="uom.group_uom">units</span>
+                                                <span t-if="line.product_uom_id != line.product_id.uom_id" groups="uom.group_uom" class="text-muted small">
+                                                    <br/>
+                                                    <t t-set="product_uom_qty" t-value="line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)"/>
+                                                    <span t-out="product_uom_qty" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit'}" data-oe-demo="3.00"/> <span t-field="line.product_id.uom_id" data-oe-demo="units"/>
+                                                </span>
                                             </td>
                                             <td name="td_price_unit" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                                 <span class="text-nowrap" t-field="line.price_unit">9.00</span>

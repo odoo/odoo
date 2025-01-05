@@ -163,7 +163,6 @@
                                 <field name="description_picking" string="Description" optional="hide"/>
                                 <field name="date" optional="hide"/>
                                 <field name="date_deadline" optional="hide"/>
-                                <field name="product_packaging_id" groups="product.group_stock_packaging"/>
                                 <field name="product_uom_qty" string="Demand" readonly="state in ('done', 'cancel')"/>
                                 <field name="forecast_expected_date" column_invisible="True"/>
                                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" column_invisible="parent.state != 'draft'" invisible="forecast_availability &lt; 0 and repair_line_type == 'add'"/>

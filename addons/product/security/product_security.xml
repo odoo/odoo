@@ -6,11 +6,6 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
-    <record id="group_stock_packaging" model="res.groups">
-        <field name="name">Manage Product Packaging</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
-    </record>
-
     <record id="group_product_variant" model="res.groups">
         <field name="name">Manage Product Variants</field>
         <field name="category_id" ref="base.module_category_hidden"/>
@@ -58,12 +53,6 @@
     <record model="ir.rule" id="product_supplierinfo_comp_rule">
         <field name="name">product supplierinfo company rule</field>
         <field name="model_id" ref="model_product_supplierinfo"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]</field>
-    </record>
-
-    <record model="ir.rule" id="product_packaging_comp_rule">
-        <field name="name">product packaging company rule</field>
-        <field name="model_id" ref="model_product_packaging"/>
         <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]</field>
     </record>
 

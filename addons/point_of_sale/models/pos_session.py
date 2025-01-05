@@ -129,7 +129,7 @@ class PosSession(models.Model):
     def _load_pos_data_models(self, config_id):
         return ['pos.config', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.pack.operation.lot', 'pos.payment', 'pos.payment.method', 'pos.printer',
             'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.template', 'product.product', 'product.attribute', 'product.attribute.custom.value',
-            'product.template.attribute.line', 'product.template.attribute.value', 'product.combo', 'product.combo.item', 'product.packaging', 'res.users', 'res.partner',
+            'product.template.attribute.line', 'product.template.attribute.value', 'product.combo', 'product.combo.item', 'res.users', 'res.partner', 'product.uom',
             'decimal.precision', 'uom.uom', 'res.country', 'res.country.state', 'res.lang', 'product.pricelist', 'product.pricelist.item', 'product.category',
             'account.cash.rounding', 'account.fiscal.position', 'account.fiscal.position.tax', 'stock.picking.type', 'res.currency', 'pos.note', 'ir.ui.view', 'product.tag', 'ir.module.module']
 
@@ -1839,7 +1839,7 @@ class PosSession(models.Model):
     def find_product_by_barcode(self, barcode, config_id):
         product_fields = self.env['product.product']._load_pos_data_fields(config_id)
         product_template_fields = self.env['product.template']._load_pos_data_fields(config_id)
-        product_packaging_fields = self.env['product.packaging']._load_pos_data_fields(config_id)
+        packaging_fields = self.env['product.uom']._load_pos_data_fields(config_id)
         product_tmpl_attr_value_fields = self.env['product.template.attribute.value']._load_pos_data_fields(config_id)
         product_context = {**self.env.context, 'display_default_code': False}
         product = self.env['product.product'].search([
@@ -1864,18 +1864,18 @@ class PosSession(models.Model):
         packaging_params = {
             'search_params': {
                 'domain': domain,
-                'fields': ['name', 'barcode', 'product_id', 'qty'],
+                'fields': ['barcode', 'product_id', 'uom_id'],
             },
         }
         packaging_params['search_params']['domain'] = [['barcode', '=', barcode]]
-        packaging = self.env['product.packaging'].search(packaging_params['search_params']['domain'])
+        packaging = self.env['product.uom'].search(packaging_params['search_params']['domain'])
         product = packaging.product_id.with_context(product_context)
         condition = packaging and packaging.product_id
         return {
             'product.product': product.read(product_fields, load=False) if condition else [],
             'product.template.attribute.value': product.product_template_attribute_value_ids.read(product_tmpl_attr_value_fields, load=False) if condition else [],
             'product.template': product.product_tmpl_id.read(product_template_fields, load=False) if condition else [],
-            'product.packaging': packaging.read(product_packaging_fields, load=False) if condition else [],
+            'product.uom': packaging.read(packaging_fields, load=False) if condition else [],
         }
 
     def get_total_discount(self):

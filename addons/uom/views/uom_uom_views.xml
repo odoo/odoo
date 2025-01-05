@@ -4,7 +4,7 @@
         <field name="name">uom.uom.list</field>
         <field name="model">uom.uom</field>
         <field name="arch" type="xml">
-            <list string="Units of Measure">
+            <list string="Units &amp; Packagings">
                 <field name="name"/>
                 <field name="relative_factor" invisible="relative_factor == 1 and not relative_uom_id" digits="[12, 3]"/>
                 <field name="relative_uom_id"/>
@@ -48,7 +48,7 @@
     </record>
 
     <record id="product_uom_form_action" model="ir.actions.act_window">
-        <field name="name">Units of Measure</field>
+        <field name="name">Units &amp; Packagings</field>
         <field name="res_model">uom.uom</field>
         <field name="view_id" ref="product_uom_tree_view"/>
         <field name="search_view_id" ref="uom_uom_view_search"/>

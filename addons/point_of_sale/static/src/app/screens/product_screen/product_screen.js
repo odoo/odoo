@@ -173,7 +173,7 @@ export class ProductScreen extends Component {
         let product = this.pos.models["product.product"].getBy("barcode", code.base_code);
 
         if (!product) {
-            const productPackaging = this.pos.models["product.packaging"].getBy(
+            const productPackaging = this.pos.models["product.uom"].getBy(
                 "barcode",
                 code.base_code
             );

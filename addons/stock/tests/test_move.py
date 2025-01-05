@@ -5879,9 +5879,9 @@ class StockMove(TransactionCase):
         sml1 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == self.product)
         sml2 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product2)
         sml3 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product4)
-        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}_']
-        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}_']
-        aggregate_val_3 = aggregate_values[f'{product4.id}_{product4.name}__{sml3.product_uom_id.id}_']
+        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
+        aggregate_val_3 = aggregate_values[f'{product4.id}_{product4.name}__{sml3.product_uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 10)
         self.assertEqual(aggregate_val_1['quantity'], 6)
         self.assertEqual(aggregate_val_2['qty_ordered'], 10)
@@ -5907,9 +5907,9 @@ class StockMove(TransactionCase):
         sml1 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == self.product)
         sml2 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product2)
         sml3 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product4)
-        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}_']
-        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}_']
-        aggregate_val_3 = aggregate_values[f'{product4.id}_{product4.name}__{sml3.product_uom_id.id}_']
+        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
+        aggregate_val_3 = aggregate_values[f'{product4.id}_{product4.name}__{sml3.product_uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 10)
         self.assertEqual(aggregate_val_1['quantity'], 6)
         self.assertEqual(aggregate_val_2['qty_ordered'], 10)
@@ -5923,10 +5923,10 @@ class StockMove(TransactionCase):
         sml2 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product2)
         sml3 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3)
         sml4 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product4)
-        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}_']
-        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}_']
-        aggregate_val_3 = aggregate_values[f'{product3.id}_{product3.name}__{sml3.product_uom_id.id}_']
-        aggregate_val_4 = aggregate_values[f'{product4.id}_{product4.name}__{sml4.product_uom_id.id}_']
+        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
+        aggregate_val_3 = aggregate_values[f'{product3.id}_{product3.name}__{sml3.product_uom_id.id}']
+        aggregate_val_4 = aggregate_values[f'{product4.id}_{product4.name}__{sml4.product_uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 4)
         self.assertEqual(aggregate_val_1['quantity'], 4)
         self.assertEqual(aggregate_val_2['qty_ordered'], 8)
@@ -5949,9 +5949,9 @@ class StockMove(TransactionCase):
         sml1 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == self.product)
         sml2 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product2)
         sml3 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product4)
-        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}_']
-        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}_']
-        aggregate_val_3 = aggregate_values[f'{product4.id}_{product4.name}__{sml3.product_uom_id.id}_']
+        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
+        aggregate_val_3 = aggregate_values[f'{product4.id}_{product4.name}__{sml3.product_uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 10)
         self.assertEqual(aggregate_val_1['quantity'], 6)
         self.assertEqual(aggregate_val_2['qty_ordered'], 10)
@@ -5965,10 +5965,10 @@ class StockMove(TransactionCase):
         sml2 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product2)
         sml3 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3)
         sml4 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product4)
-        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}_']
-        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}_']
-        aggregate_val_3 = aggregate_values[f'{product3.id}_{product3.name}__{sml3.product_uom_id.id}_']
-        aggregate_val_4 = aggregate_values[f'{product4.id}_{product4.name}__{sml4.product_uom_id.id}_']
+        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{sml1.product_uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sml2.product_uom_id.id}']
+        aggregate_val_3 = aggregate_values[f'{product3.id}_{product3.name}__{sml3.product_uom_id.id}']
+        aggregate_val_4 = aggregate_values[f'{product4.id}_{product4.name}__{sml4.product_uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 4)
         self.assertEqual(aggregate_val_1['quantity'], 4)
         self.assertEqual(aggregate_val_2['qty_ordered'], 8)
@@ -5982,8 +5982,8 @@ class StockMove(TransactionCase):
         self.assertEqual(len(aggregate_values), 2)
         sml1 = second_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3)
         sm2 = second_backorder.move_ids.filtered(lambda ml: ml.product_id == product2)
-        aggregate_val_1 = aggregate_values[f'{product3.id}_{product3.name}__{sml1.product_uom_id.id}_']
-        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sm2.product_uom.id}_']
+        aggregate_val_1 = aggregate_values[f'{product3.id}_{product3.name}__{sml1.product_uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}__{sm2.product_uom.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 3)
         self.assertEqual(aggregate_val_1['quantity'], 3)
         self.assertEqual(aggregate_val_2['qty_ordered'], 2)
@@ -6039,7 +6039,7 @@ class StockMove(TransactionCase):
             'location_dest_id': move2.location_dest_id.id,
         })
         aggregate_values = picking.move_line_ids._get_aggregated_product_quantities()
-        aggregated_val = aggregate_values[f'{self.product.id}_{self.product.name}__{self.product.uom_id.id}_']
+        aggregated_val = aggregate_values[f'{self.product.id}_{self.product.name}__{self.product.uom_id.id}']
         self.assertEqual(aggregated_val['qty_ordered'], 15)
         picking.move_ids.picked = True
         picking.button_validate()
@@ -6088,11 +6088,11 @@ class StockMove(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.customer_location), 15)
 
         aggregate_values1 = picking.move_line_ids[0]._get_aggregated_product_quantities(strict=True)
-        aggregated_val = aggregate_values1[f'{self.product.id}_{self.product.name}__{self.product.uom_id.id}_']
+        aggregated_val = aggregate_values1[f'{self.product.id}_{self.product.name}__{self.product.uom_id.id}']
         self.assertEqual(aggregated_val['qty_ordered'], 5)
 
         aggregate_values2 = picking.move_line_ids[1]._get_aggregated_product_quantities(strict=True)
-        aggregated_val = aggregate_values2[f'{self.product.id}_{self.product.name}__{self.product.uom_id.id}_']
+        aggregated_val = aggregate_values2[f'{self.product.id}_{self.product.name}__{self.product.uom_id.id}']
         self.assertEqual(aggregated_val['qty_ordered'], 10)
 
     def test_move_line_aggregated_product_quantities_incomplete_package(self):
@@ -6130,94 +6130,22 @@ class StockMove(TransactionCase):
         picking.backorder_ids.action_cancel()
 
         aggregate_values = picking.move_line_ids._get_aggregated_product_quantities()
-        aggregated_val = aggregate_values[f'{self.product.id}_{self.product.name}__{self.product.uom_id.id}_']
+        aggregated_val = aggregate_values[f'{self.product.id}_{self.product.name}__{self.product.uom_id.id}']
         self.assertEqual(aggregated_val['qty_ordered'], 15)
         self.assertEqual(aggregated_val['quantity'], 5)
 
         aggregate_values = picking.move_line_ids._get_aggregated_product_quantities(strict=True)
-        aggregated_val = aggregate_values[f'{self.product.id}_{self.product.name}__{self.product.uom_id.id}_']
+        aggregated_val = aggregate_values[f'{self.product.id}_{self.product.name}__{self.product.uom_id.id}']
         self.assertEqual(aggregated_val['qty_ordered'], 5)
         self.assertEqual(aggregated_val['quantity'], 5)
 
         aggregate_values = picking.move_line_ids._get_aggregated_product_quantities(except_package=True)
-        aggregated_val = aggregate_values[f'{self.product.id}_{self.product.name}__{self.product.uom_id.id}_']
+        aggregated_val = aggregate_values[f'{self.product.id}_{self.product.name}__{self.product.uom_id.id}']
         self.assertEqual(aggregated_val['qty_ordered'], 10)
         self.assertEqual(aggregated_val['quantity'], False)
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 20)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.customer_location), 5)
-
-    def test_move_line_aggregated_product_quantities_packagings(self):
-        """ Test the `stock.move.line` method `_get_aggregated_product_quantities`,
-        which returns data used to print delivery slips, with product packagings
-        """
-        self.env.user.groups_id += self.env.ref("product.group_stock_packaging")
-        packaging_of_4 = self.env['product.packaging'].create({
-            'name': 'pack of 4',
-            'product_id': self.product.id,
-            'qty': 4
-        })
-        packaging_of_5 = self.env['product.packaging'].create({
-            'name': 'pack of 5',
-            'product_id': self.product.id,
-            'qty': 5
-        })
-        packaging_of_2_dozen = self.env['product.packaging'].create({
-            'name': 'pack of 2 dozen',
-            'product_id': self.product.id,
-            'qty': 24,
-        })
-        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 25)
-        delivery_form = self.env['stock.picking'].create({
-            'state': 'draft',
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
-        })
-        delivery_form = Form(delivery_form)
-        with delivery_form.move_ids_without_package.new() as move:
-            move.product_id = self.product
-            move.product_uom_qty = 4
-        with delivery_form.move_ids_without_package.new() as move:
-            move.product_id = self.product
-            move.product_uom_qty = 10
-        with delivery_form.move_ids_without_package.new() as move:
-            move.product_id = self.product
-            move.product_uom = self.uom_dozen
-            move.product_uom_qty = 2
-        with delivery_form.move_ids_without_package.new() as move:
-            move.product_id = self.product
-            move.product_uom_qty = 3
-        delivery = delivery_form.save()
-        delivery.action_assign()
-
-        self.assertEqual(delivery.move_ids_without_package[0].product_packaging_id, packaging_of_4)
-        self.assertEqual(delivery.move_ids_without_package[1].product_packaging_id, packaging_of_5)
-        self.assertEqual(delivery.move_ids_without_package[2].product_packaging_id, packaging_of_2_dozen)
-        self.assertFalse(delivery.move_ids_without_package[3].product_packaging_id)
-
-        for move in delivery.move_ids_without_package:
-            move.quantity = move.product_uom_qty
-        aggregate_values = delivery.move_line_ids._get_aggregated_product_quantities()
-        self.assertEqual(len(aggregate_values), 4, "Each packaging should have their own line")
-        aggregate_val_1 = aggregate_values[f'{self.product.id}_{self.product.name}__{self.product.uom_id.id}_{packaging_of_4}']
-        aggregate_val_2 = aggregate_values[f'{self.product.id}_{self.product.name}__{self.product.uom_id.id}_{packaging_of_5}']
-        aggregate_val_3 = aggregate_values[f'{self.product.id}_{self.product.name}__{self.uom_dozen.id}_{packaging_of_2_dozen}']
-        aggregate_val_4 = aggregate_values[f'{self.product.id}_{self.product.name}__{self.product.uom_id.id}_']
-        self.assertEqual(aggregate_val_1['qty_ordered'], 4)
-        self.assertEqual(aggregate_val_1['quantity'], 4)
-        self.assertEqual(aggregate_val_1['packaging_qty'], 1)
-        self.assertEqual(aggregate_val_1['packaging_quantity'], 1)
-        self.assertEqual(aggregate_val_2['qty_ordered'], 10)
-        self.assertEqual(aggregate_val_2['quantity'], 10)
-        self.assertEqual(aggregate_val_2['packaging_qty'], 2)
-        self.assertEqual(aggregate_val_2['packaging_quantity'], 2)
-        self.assertEqual(aggregate_val_3['qty_ordered'], 2)
-        self.assertEqual(aggregate_val_3['quantity'], 2)
-        self.assertEqual(aggregate_val_3['packaging_qty'], 1)
-        self.assertEqual(aggregate_val_3['packaging_quantity'], 1)
-        self.assertEqual(aggregate_val_4['qty_ordered'], 3)
-        self.assertEqual(aggregate_val_4['quantity'], 3)
-        self.assertFalse(aggregate_val_4.get('packaging_qty'))
-        self.assertFalse(aggregate_val_4.get('packaging_quantity'))
 
     def test_move_sn_warning(self):
         """ Check that warnings pop up when duplicate SNs added or when SN isn't in
