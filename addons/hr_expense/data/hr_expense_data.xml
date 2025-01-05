@@ -28,6 +28,9 @@
             <field name="categ_id" ref="product.product_category_expenses"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/transport.svg"/>
         </record>
+        <record id="uom.product_uom_km" model="uom.uom">
+            <field name="active" eval="True"/>
+        </record>
         <record id="expense_product_mileage" model="product.product">
             <field name="name">Mileage</field>
             <field name="standard_price">1.0</field>

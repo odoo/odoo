@@ -544,7 +544,6 @@ class TestSaleService(TestCommonSaleTimesheet):
             'day': 8.0,
             'hour': 1.0,
             'unit': 1.0,
-            'gram': 0.0,
         }
 
         project = self.project_global.copy({'tasks': False})
@@ -709,11 +708,6 @@ class TestSaleService(TestCommonSaleTimesheet):
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 8,
             'product_uom_id': self.env.ref('uom.product_uom_hour').id,  # 8 hours
-        }, {
-            'order_id': self.sale_order.id,
-            'product_id': self.product_delivery_timesheet3.id,
-            'product_uom_qty': 1,
-            'product_uom_id': self.env.ref('uom.product_uom_dozen').id,  # 0 hours
         }, {
             'order_id': self.sale_order.id,
             'product_id': self.product_delivery_timesheet3.id,
