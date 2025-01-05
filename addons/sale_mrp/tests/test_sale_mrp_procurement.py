@@ -314,7 +314,11 @@ class TestSaleMrpProcurement(TransactionCase):
             'product_min_qty': 0,
             'product_max_qty': 0,
             'trigger': 'auto',
-            'qty_multiple': 0.01,
+            'replenishment_uom_id': self.env['uom.uom'].create({
+                'name': 'test uom',
+                'relative_factor': 0.01,
+                'relative_uom_id': uom_gram.id,
+            }).id,
         })
 
         so = self.env['sale.order'].create({
