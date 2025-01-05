@@ -13,6 +13,7 @@ class UomUom(models.Model):
         # from deletion (and warn in case of modification)
         return [
             "product_uom_dozen",
+            "product_uom_pack_6",
         ]
 
     # widget used in the webclient when this unit is the one used to encode timesheets.
