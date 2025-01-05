@@ -15,7 +15,6 @@ class TestSaleTimesheetReport(TestCommonSaleTimesheet):
         # Change product uom from hours to days
         self.product_order_timesheet3.write({
             'uom_id': uom_days,
-            'uom_po_id': uom_days,
         })
 
         sale_order = self.env['sale.order'].create({

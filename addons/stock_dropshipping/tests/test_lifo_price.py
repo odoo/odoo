@@ -41,7 +41,6 @@ class TestLifoPrice(ValuationReconciliationTestCommon):
         #         product.write({'list_price': value})
         product_form.lst_price = 100.0
         product_form.uom_id = self.env.ref('uom.product_uom_kgm')
-        product_form.uom_po_id = self.env.ref('uom.product_uom_kgm')
         # these are not available (visible) in either product or variant
         # for views, apparently from the UI you can only set the product
         # category (or hand-assign the property_* version which seems...)

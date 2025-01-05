@@ -47,7 +47,6 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'type': 'service',
             'invoice_policy': 'order',
             'uom_id': uom_hour.id,
-            'uom_po_id': uom_hour.id,
             'default_code': 'SERV-ORDERED1',
             'service_tracking': 'no',
             'project_id': False,
@@ -59,7 +58,6 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'type': 'service',
             'invoice_policy': 'order',
             'uom_id': uom_hour.id,
-            'uom_po_id': uom_hour.id,
             'default_code': 'SERV-ORDERED2',
             'service_tracking': 'task_global_project',
             'project_id': cls.project_global.id,
@@ -71,7 +69,6 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'type': 'service',
             'invoice_policy': 'order',
             'uom_id': uom_hour.id,
-            'uom_po_id': uom_hour.id,
             'default_code': 'SERV-ORDERED3',
             'service_tracking': 'task_in_project',
             'project_id': False,  # will create a project
@@ -83,7 +80,6 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'type': 'service',
             'invoice_policy': 'order',
             'uom_id': uom_hour.id,
-            'uom_po_id': uom_hour.id,
             'default_code': 'SERV-ORDERED4',
             'service_tracking': 'project_only',
             'project_id': False,
@@ -632,7 +628,6 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'type': 'service',
             'invoice_policy': 'order',
             'uom_id': self.uom_hour.id,
-            'uom_po_id': self.uom_hour.id,
             'default_code': 'c1',
             'service_tracking': 'task_in_project',
             'project_id': False,  # will create a project,
@@ -659,7 +654,6 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'type': 'service',
             'invoice_policy': 'order',
             'uom_id': self.env.ref('uom.product_uom_hour').id,
-            'uom_po_id': self.env.ref('uom.product_uom_hour').id,
         })
         sale_line_id, sale_line_name = self.env['sale.order.line'].with_context(
             default_partner_id=self.partner.id,
@@ -768,7 +762,6 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
                 "service_tracking": "task_global_project",
                 "invoice_policy": "order",
                 "uom_id": uom_hour.id,
-                "uom_po_id": uom_hour.id,
                 "project_id": multi_company_project.id,
             })
             for company in [company_a, company_b]

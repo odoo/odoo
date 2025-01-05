@@ -25,7 +25,6 @@ class TestProjectProfitabilityCommon(Common):
             'list_price': 10,
             'invoice_policy': 'order',
             'uom_id': uom_unit_id,
-            'uom_po_id': uom_unit_id,
         })
 
         # Create service products
@@ -38,7 +37,6 @@ class TestProjectProfitabilityCommon(Common):
             'invoice_policy': 'delivery',
             'service_type': 'manual',
             'uom_id': cls.uom_hour.id,
-            'uom_po_id': cls.uom_hour.id,
             'default_code': 'SERV-ORDERED2',
             'service_tracking': 'task_global_project',
             'project_id': cls.project.id,
@@ -150,7 +148,6 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             'invoice_policy': 'delivery',
             'service_type': 'manual',
             'uom_id': self.uom_hour.id,
-            'uom_po_id': self.uom_hour.id,
             'default_code': 'SERV-ORDERED2',
             'service_tracking': 'task_global_project',
             'project_id': self.project.id,

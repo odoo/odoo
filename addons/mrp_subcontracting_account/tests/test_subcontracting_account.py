@@ -516,7 +516,6 @@ class TestBomPriceSubcontracting(TestBomPriceCommon):
 
     def test_01_compute_price_subcontracting_cost(self):
         """Test calculation of bom cost with subcontracting."""
-        self.table_head.uom_po_id = self.dozen
         partner = self.env['res.partner'].create({
             'name': 'A name can be a Many2one...'
         })
@@ -532,7 +531,8 @@ class TestBomPriceSubcontracting(TestBomPriceCommon):
             }, {
                 'partner_id': partner.id,
                 'product_tmpl_id': self.table_head.product_tmpl_id.id,
-                'price': 120.0,  # 10 by Unit because uom_po_id is in dozen
+                'price': 120.0,
+                'product_uom_id': self.dozen.id,
             }
         ])
         self.assertEqual(suppliers.mapped('is_subcontractor'), [True, True])

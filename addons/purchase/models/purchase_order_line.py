@@ -275,7 +275,7 @@ class PurchaseOrderLine(models.Model):
         if not self.product_id:
             return
 
-        self.product_uom_id = self.product_id.uom_po_id or self.product_id.uom_id
+        self.product_uom_id = self.product_id.uom_id
         product_lang = self.product_id.with_context(
             lang=get_lang(self.env, self.partner_id.lang).code,
             partner_id=None,
@@ -335,7 +335,7 @@ class PurchaseOrderLine(models.Model):
                     # Avoid to modify the price unit if there is no price list for this partner and
                     # the line has already one to avoid to override unit price set manually.
                     continue
-                po_line_uom = line.product_uom_id or line.product_id.uom_po_id
+                po_line_uom = line.product_uom_id or line.product_id.uom_id
                 price_unit = line.env['account.tax']._fix_tax_included_price_company(
                     line.product_id.uom_id._compute_price(line.product_id.standard_price, po_line_uom),
                     line.product_id.supplier_taxes_id,
@@ -535,7 +535,7 @@ class PurchaseOrderLine(models.Model):
     @api.model
     def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, company_id, supplier, po):
         partner = supplier.partner_id
-        uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id, rounding_method='HALF-UP')
+        uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_id, rounding_method='HALF-UP')
         # _select_seller is used if the supplier have different price depending
         # the quantities ordered.
         today = fields.Date.today()
@@ -543,7 +543,9 @@ class PurchaseOrderLine(models.Model):
             partner_id=partner,
             quantity=uom_po_qty,
             date=po.date_order and max(po.date_order.date(), today) or today,
-            uom_id=product_id.uom_po_id)
+            uom_id=product_id.uom_id)
+        if seller and seller.product_uom_id != product_uom:
+            uom_po_qty = product_id.uom_id._compute_quantity(uom_po_qty, seller.product_uom_id, rounding_method='HALF-UP')
 
         product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id in company_id.parent_ids)
         taxes = po.fiscal_position_id.map_tax(product_taxes)
@@ -570,7 +572,7 @@ class PurchaseOrderLine(models.Model):
             'name': name,
             'product_qty': uom_po_qty,
             'product_id': product_id.id,
-            'product_uom_id': product_id.uom_po_id.id,
+            'product_uom_id': seller.product_uom_id.id or product_uom.id,
             'price_unit': price_unit,
             'date_planned': date_planned,
             'taxes_id': [(6, 0, taxes.ids)],

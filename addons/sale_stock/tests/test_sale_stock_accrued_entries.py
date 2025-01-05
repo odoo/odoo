@@ -17,7 +17,6 @@ class TestAccruedStockSaleOrders(AccountTestInvoicingCommon):
             'list_price': 30.0,
             'type': 'consu',
             'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
             'invoice_policy': 'delivery',
         })
         cls.sale_order = cls.env['sale.order'].with_context(tracking_disable=True).create({

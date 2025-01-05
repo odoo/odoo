@@ -85,13 +85,13 @@ class TestStockValuation(TransactionCase):
         ap_price = kgm_price * ap.factor / kgm.factor
 
         self.product1.uom_id = ap
-        self.product1.uom_po_id = kgm
 
         # Set vendor
         vendor = self.env['res.partner'].create(dict(name='The Replenisher'))
         supplierinfo = self.env['product.supplierinfo'].create({
             'partner_id': vendor.id,
             'price': kgm_price,
+            'product_uom_id': kgm.id,
         })
         self.product1.seller_ids = [(4, supplierinfo.id, 0)]
 
@@ -146,7 +146,7 @@ class TestStockValuation(TransactionCase):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 10.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 100.0,
                     'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 }),
@@ -189,7 +189,7 @@ class TestStockValuation(TransactionCase):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 10.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 11.0,
                     'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 }),
@@ -230,7 +230,7 @@ class TestStockValuation(TransactionCase):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 10.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 100.0,
                     'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 }),
@@ -264,7 +264,7 @@ class TestStockValuation(TransactionCase):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 10.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 100.0,
                     'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 }),
@@ -441,7 +441,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 10.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 100.0,
                     'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 }),
@@ -500,7 +500,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 10.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 10.0,
                     'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 }),
@@ -527,7 +527,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 10.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 20.0,
                     'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 }),
@@ -663,7 +663,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'product_id': self.product1.id,
                     'taxes_id': [(4, tax_with_no_account.id)],
                     'product_qty': 10.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 10.0,
                     'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 }),
@@ -716,7 +716,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 1.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 100.0, # 50$
                     'date_planned': date_po,
                 }),
@@ -798,7 +798,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 1.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 100.0,  # 100€ = 150$
                     'date_planned': date_po,
                 }),
@@ -849,7 +849,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 1500.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 3.30125,
                 }),
             ],
@@ -883,7 +883,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 1500.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 3.30125,
                 }),
             ],
@@ -956,7 +956,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 1.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 105.0,  # 50$
                     'taxes_id': [(4, tax.id)],
                     'date_planned': date_po,
@@ -1042,7 +1042,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 1.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 100.0,  # 50$
                     'taxes_id': [(4, tax_without_account.id)],
                 }),
@@ -1105,7 +1105,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 1.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 100.0,
                     'date_planned': date_po,
                 }),
@@ -1224,7 +1224,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 1.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 100.0,
                     'date_planned': date_po,
                 }),
@@ -1232,7 +1232,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': product_standard.name,
                     'product_id': product_standard.id,
                     'product_qty': 1.0,
-                    'product_uom_id': product_standard.uom_po_id.id,
+                    'product_uom_id': product_standard.uom_id.id,
                     'price_unit': 40.0,
                     'date_planned': date_po,
                 }),
@@ -1396,7 +1396,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': product_avg.name,
                     'product_id': product_avg.id,
                     'product_qty': 1.0,
-                    'product_uom_id': product_avg.uom_po_id.id,
+                    'product_uom_id': product_avg.uom_id.id,
                     'price_unit': 30.0,
                     'date_planned': date_po,
                 })
@@ -1497,7 +1497,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': product_avg.name,
                     'product_id': product_avg.id,
                     'product_qty': 1.0,
-                    'product_uom_id': product_avg.uom_po_id.id,
+                    'product_uom_id': product_avg.uom_id.id,
                     'price_unit': 30.0,
                     'date_planned': date,
                 })
@@ -1623,7 +1623,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                         'name': product_avg.name,
                         'product_id': product_avg.id,
                         'product_qty': 10.0,
-                        'product_uom_id': product_avg.uom_po_id.id,
+                        'product_uom_id': product_avg.uom_id.id,
                         'price_unit': 30.0,
                         'date_planned': date_po,
                     })
@@ -1954,7 +1954,6 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         })
         self.product1.write({
             'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
         })
 
         self.product1.categ_id.property_cost_method = 'fifo'
@@ -2743,7 +2742,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 1.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 100.0,
                     'taxes_id': False,
                 }),
@@ -2803,7 +2802,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': product.name,
                     'product_id': product.id,
                     'product_qty': 3.0,
-                    'product_uom_id': product.uom_po_id.id,
+                    'product_uom_id': product.uom_id.id,
                     'price_unit': 100.0,
                     'taxes_id': False,
                 }),
@@ -2921,7 +2920,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 12.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 100.0,
                     'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 }),
@@ -2967,7 +2966,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 12.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 100.0,
                     'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 }),
@@ -3007,7 +3006,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     'name': self.product1.name,
                     'product_id': self.product1.id,
                     'product_qty': 1.0,
-                    'product_uom_id': self.product1.uom_po_id.id,
+                    'product_uom_id': self.product1.uom_id.id,
                     'price_unit': 100.0,
                     'taxes_id': False,
                 }),
@@ -3357,7 +3356,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                         'name': self.product1.name,
                         'product_id': self.product1.id,
                         'product_qty': 1.0,
-                        'product_uom_id': self.product1.uom_po_id.id,
+                        'product_uom_id': self.product1.uom_id.id,
                         'price_unit': 1000.0,
                         'taxes_id': False,
                     }),

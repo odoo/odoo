@@ -140,7 +140,6 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         p.is_storable = True
         p.categ_id = cls.env.ref('product.product_category_goods')
         p.uom_id = uom_id
-        p.uom_po_id = uom_id
         p.route_ids.clear()
         for r in routes:
             p.route_ids.add(r)
@@ -995,10 +994,9 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         })
         # Compo D has 1 vendor with a min qty of 1 dozen
         self.component_d.write({
-            'uom_po_id': self.uom_dozen.id,
             'route_ids': [Command.link(buy_route.id)],
             'seller_ids': [
-                Command.create({'partner_id': self.partner_a.id, 'min_qty': 1, 'price': 10}),
+                Command.create({'partner_id': self.partner_a.id, 'product_uom_id': self.uom_dozen.id, 'min_qty': 1, 'price': 10}),
             ]
         })
 
