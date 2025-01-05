@@ -17,7 +17,6 @@ class TestSaleTimesheetDashboard(Common):
             'type': 'service',
             'invoice_policy': 'delivery',
             'uom_id': cls.uom_hour.id,
-            'uom_po_id': cls.uom_hour.id,
             'default_code': 'SERV-DELI1',
             'service_type': 'timesheet',
             'service_tracking': 'no',

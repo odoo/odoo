@@ -2684,7 +2684,6 @@ class TestStockUOM(TestStockCommon):
         T_TEST = self.env['product.product'].create({
             'name': 'T_TEST',
             'is_storable': True,
-            'uom_po_id': T_LBS.id,
             'uom_ids': [(4, T_LBS.id)],
             'tracking': 'lot',
         })
@@ -2746,7 +2745,6 @@ class TestStockUOM(TestStockCommon):
             'name': 'Product G',
             'is_storable': True,
             'uom_id': self.uom_gm.id,
-            'uom_po_id': self.uom_gm.id,
         })
 
         stock_location = self.env['stock.location'].browse(self.stock_location)

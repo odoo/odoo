@@ -116,10 +116,6 @@ class ProductTemplate(models.Model):
         default=_get_default_uom_id, required=True,
         help="Default unit of measure used for all stock operations.")
     uom_name = fields.Char(string='Unit of Measure Name', related='uom_id.name', readonly=True)
-    uom_po_id = fields.Many2one(
-        'uom.uom', 'Purchase Unit',
-        compute='_compute_uom_po_id', required=True, readonly=False, store=True, precompute=True,
-        help="Default unit of measure used for purchase orders. It must be in the same category as the default unit of measure.")
     uom_ids = fields.Many2many('uom.uom', string='Packagings', help="Packagings which can be used for sales")
     company_id = fields.Many2one(
         'res.company', 'Company', index=True)
@@ -180,12 +176,6 @@ class ProductTemplate(models.Model):
 
     def _compute_purchase_ok(self):
         pass
-
-    @api.depends('uom_id')
-    def _compute_uom_po_id(self):
-        for template in self:
-            if not template.uom_po_id:
-                template.uom_po_id = template.uom_id
 
     def _compute_item_count(self):
         for template in self:
@@ -449,11 +439,6 @@ class ProductTemplate(models.Model):
                 "Combos allow to choose one product amongst a selection of choices per category."
             )
         return tooltip
-
-    @api.onchange('uom_id')
-    def _onchange_uom_id(self):
-        if self.uom_id:
-            self.uom_po_id = self.uom_id.id
 
     @api.onchange('type')
     def _onchange_type(self):

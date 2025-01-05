@@ -335,7 +335,6 @@ class TestSaleProductVariants(ProductAttributesCommon, SaleCommon):
         cls.product_template_2lines_2attributes = cls.env['product.template'].create({
             'name': '2 lines 2 attributes',
             'uom_id': cls.uom_unit.id,
-            'uom_po_id': cls.uom_unit.id,
             'categ_id': cls.product_category.id,
             'attribute_line_ids': [
                 Command.create({

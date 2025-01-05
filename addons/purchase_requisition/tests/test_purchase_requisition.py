@@ -126,7 +126,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         # create an empty blanket order
         line1 = (0, 0, {
             'product_id': product2.id,
-            'product_uom_id': product2.uom_po_id.id,
+            'product_uom_id': product2.uom_id.id,
             'price_unit': 41,
             'product_qty': 10,
         })
@@ -326,7 +326,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         # create an empty blanket order
         line1 = (0, 0, {
             'product_id': self.product_13.id,
-            'product_uom_id': self.product_13.uom_po_id.id,
+            'product_uom_id': self.product_13.uom_id.id,
             'price_unit': 41,
             'product_qty': 10,
         })

@@ -994,7 +994,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         product = self.env['product.product'].create({
             'name': 'Test Product',
             'uom_id': self.env.ref('uom.product_uom_meter').id,
-            'uom_po_id': yards_uom.id,
         })
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
@@ -1071,7 +1070,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         uom_km_id = self.ref("uom.product_uom_km")
         self.product_b.write({
             'uom_id': uom_m_id,
-            'uom_po_id': uom_m_id,
         })
 
         so = self._get_new_sale_order(product=self.product_a)

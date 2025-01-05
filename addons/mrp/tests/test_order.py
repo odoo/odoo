@@ -1770,14 +1770,12 @@ class TestMrpOrder(TestMrpCommon):
             'name': 'Plastic Laminate',
             'is_storable': True,
             'uom_id': unit.id,
-            'uom_po_id': unit.id,
             'tracking': 'serial',
         })
         ply_veneer = self.env['product.product'].create({
             'name': 'Ply Veneer',
             'is_storable': True,
             'uom_id': unit.id,
-            'uom_po_id': unit.id,
         })
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': plastic_laminate.product_tmpl_id.id,
@@ -2065,13 +2063,11 @@ class TestMrpOrder(TestMrpCommon):
             'name': 'Consumable Component',
             'type': 'consu',
             'uom_id': uom_cL.id,
-            'uom_po_id': uom_cL.id,
         })
         storable_component = self.env['product.product'].create({
             'name': 'Storable Component',
             'is_storable': True,
             'uom_id': uom_cL.id,
-            'uom_po_id': uom_cL.id,
         })
         self.env['stock.quant']._update_available_quantity(storable_component, self.env.ref('stock.stock_location_stock'), 100)
 
@@ -2149,7 +2145,6 @@ class TestMrpOrder(TestMrpCommon):
             'is_storable': True,
             'tracking': 'lot',
             'uom_id': uom_L.id,
-            'uom_po_id': uom_L.id,
         })
 
         product_final = self.env['product.product'].create({
@@ -2157,7 +2152,6 @@ class TestMrpOrder(TestMrpCommon):
             'is_storable': True,
             'tracking': 'lot',
             'uom_id': uom_L.id,
-            'uom_po_id': uom_L.id,
         })
 
         # the products are tracked by lot, so we go through _generate_consumed_move_line

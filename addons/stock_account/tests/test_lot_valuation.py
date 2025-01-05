@@ -207,7 +207,6 @@ class TestLotValuation(TestStockValuationCommon):
             'tracking': 'lot',
             'is_storable': True,
             'uom_id': self.uom_unit.id,
-            'uom_po_id': self.uom_unit.id,
             'categ_id': self.env.ref('product.product_category_goods').id,
             'attribute_line_ids': [
                 Command.create({
